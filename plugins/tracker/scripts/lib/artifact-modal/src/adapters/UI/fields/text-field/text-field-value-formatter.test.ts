@@ -18,35 +18,45 @@
  *
  */
 
-import { formatExistingValue } from "./text-field-value-formatter.js";
+import type { TextFieldArtifactValue } from "./text-field-value-formatter";
+import { formatExistingValue } from "./text-field-value-formatter";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "@tuleap/plugin-tracker-constants";
 
 describe("formatExistingValue", () => {
     it.each([
-        ["text", "The D3 S is cool", { value: "The D3 S is cool", format: "text" }],
         [
-            "html",
+            TEXT_FORMAT_TEXT,
+            "The D3 S is cool",
+            { value: "The D3 S is cool", format: TEXT_FORMAT_TEXT } as TextFieldArtifactValue,
+        ],
+        [
+            TEXT_FORMAT_HTML,
             "<p> The <strong>D3 S</strong> is cool</p>",
             {
                 value: "<p> The <strong>D3 S</strong> is cool</p>",
-                format: "html",
-            },
+                format: TEXT_FORMAT_HTML,
+            } as TextFieldArtifactValue,
         ],
         [
-            "commonmark",
+            TEXT_FORMAT_COMMONMARK,
             "The **D3 S** is cool",
             {
                 value: "<p>The <strong>D3 S</strong> is cool</p>",
-                format: "html",
+                format: TEXT_FORMAT_HTML,
                 commonmark: "The **D3 S** is cool",
-            },
+            } as TextFieldArtifactValue,
         ],
     ])(
         `returns the %s value from an artifact in an object`,
         (expected_format, expected_content, artifact_value) => {
             const text_field_value = formatExistingValue(artifact_value);
 
-            expect(text_field_value.content).toEqual(expected_content);
-            expect(text_field_value.format).toEqual(expected_format);
+            expect(text_field_value.content).toStrictEqual(expected_content);
+            expect(text_field_value.format).toStrictEqual(expected_format);
         }
     );
 });

@@ -23,8 +23,31 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
-export function formatExistingValue(artifact_value) {
+interface TextFieldArtifactBasicValue {
+    readonly value: string;
+    readonly format: TextFieldFormat;
+}
+
+interface TextFieldArtifactValueWithCommonMark extends TextFieldArtifactBasicValue {
+    readonly commonmark: string;
+}
+
+export type TextFieldArtifactValue = TextFieldArtifactBasicValue &
+    TextFieldArtifactValueWithCommonMark;
+
+export interface TextFieldValue {
+    readonly content: string;
+    readonly format: TextFieldFormat;
+}
+
+export interface TextFieldValueModel {
+    readonly field_id: number;
+    readonly value: TextFieldValue;
+}
+
+export function formatExistingValue(artifact_value: TextFieldArtifactValue): TextFieldValue {
     switch (artifact_value.format) {
         case TEXT_FORMAT_TEXT:
             return {

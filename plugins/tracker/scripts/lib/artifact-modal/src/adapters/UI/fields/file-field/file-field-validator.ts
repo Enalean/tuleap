@@ -18,9 +18,34 @@
  */
 
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import type { TextFieldValueModel } from "../text-field/text-field-value-formatter";
+import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 
-export function validateFileField(file_value_model, text_field_value_models, followup_value_model) {
-    if (typeof file_value_model === "undefined") {
+interface TextFieldImage {
+    readonly id: number;
+    readonly download_href: string;
+}
+
+export interface FileValueModel {
+    readonly field_id: number;
+    readonly value: ReadonlyArray<number>;
+    readonly images_added_by_text_fields: ReadonlyArray<TextFieldImage>;
+}
+
+export interface FollowupValueModel {
+    readonly body: string;
+    readonly format: TextFieldFormat;
+}
+
+type ValidatedFileFieldValue = Pick<FileFieldValueModel, "field_id" | "value">;
+
+export function validateFileField(
+    file_value_model: FileValueModel | undefined,
+    text_field_value_models: ReadonlyArray<TextFieldValueModel>,
+    followup_value_model: FollowupValueModel
+): ValidatedFileFieldValue | null {
+    if (file_value_model === undefined) {
         return null;
     }
 
@@ -35,7 +60,7 @@ export function validateFileField(file_value_model, text_field_value_models, fol
             file_id
         );
 
-        if (typeof file_added_by_text_field === "undefined") {
+        if (file_added_by_text_field === null) {
             return true;
         }
 
@@ -49,17 +74,27 @@ export function validateFileField(file_value_model, text_field_value_models, fol
     return { field_id, value: filtered_value };
 }
 
-function findFileThatWasAddedByATextField(images_added_by_text_fields, file_id) {
-    return images_added_by_text_fields.find(({ id }) => id === file_id);
+function findFileThatWasAddedByATextField(
+    images_added_by_text_fields: ReadonlyArray<TextFieldImage>,
+    file_id: number
+): TextFieldImage | null {
+    return images_added_by_text_fields.find(({ id }) => id === file_id) ?? null;
 }
 
-function isFileReferencedByAnyTextField(file, text_field_value_models) {
+function isFileReferencedByAnyTextField(
+    file: TextFieldImage,
+    text_field_value_models: ReadonlyArray<TextFieldValueModel>
+): boolean {
     return text_field_value_models.some(({ value }) =>
         isFileReferencedByAnEditor(file, value.content, value.format)
     );
 }
 
-function isFileReferencedByAnEditor(file, text_content, text_format) {
+function isFileReferencedByAnEditor(
+    file: TextFieldImage,
+    text_content: string,
+    text_format: TextFieldFormat
+): boolean {
     if (!text_content) {
         return false;
     }
@@ -69,6 +104,6 @@ function isFileReferencedByAnEditor(file, text_content, text_format) {
     );
 }
 
-function isTextFieldInHTMLOrMarkdownFormat(text_format) {
+function isTextFieldInHTMLOrMarkdownFormat(text_format: TextFieldFormat): boolean {
     return text_format === TEXT_FORMAT_HTML || text_format === TEXT_FORMAT_COMMONMARK;
 }
