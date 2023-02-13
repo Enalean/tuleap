@@ -97,6 +97,7 @@ use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
+use Tuleap\InviteBuddy\InvitationToOneRecipientWithoutVerificationSender;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
@@ -719,14 +720,17 @@ class RouteCollector
                     $invite_buddy_configuration,
                     new InvitationLimitChecker($invitation_dao, $invite_buddy_configuration)
                 ),
-                new InvitationEmailNotifier(new LocaleSwitcher()),
                 $user_manager,
-                $invitation_dao,
                 \BackendLogger::getDefaultLogger(),
-                $instrumentation,
-                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
                 $members_manager_checker,
-                new \ProjectHistoryDao(),
+                new InvitationToOneRecipientWithoutVerificationSender(
+                    new InvitationEmailNotifier(new LocaleSwitcher()),
+                    $invitation_dao,
+                    $invitation_dao,
+                    $instrumentation,
+                    new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+                    new \ProjectHistoryDao(),
+                ),
             ),
             new ProjectHistoryDao(),
             new SapiEmitter(),

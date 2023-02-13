@@ -33,6 +33,7 @@ use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
+use Tuleap\InviteBuddy\InvitationToOneRecipientWithoutVerificationSender;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
@@ -96,14 +97,17 @@ class InvitationsResource extends AuthenticatedResource
                 $invite_buddy_configuration,
                 new InvitationLimitChecker($dao, $invite_buddy_configuration)
             ),
-            new InvitationEmailNotifier(new LocaleSwitcher()),
             $user_manager,
-            $dao,
             \BackendLogger::getDefaultLogger(),
-            new InvitationInstrumentation(Prometheus::instance()),
-            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
-            new \ProjectHistoryDao(),
+            new InvitationToOneRecipientWithoutVerificationSender(
+                new InvitationEmailNotifier(new LocaleSwitcher()),
+                $dao,
+                $dao,
+                new InvitationInstrumentation(Prometheus::instance()),
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+                new \ProjectHistoryDao(),
+            ),
         );
 
 
