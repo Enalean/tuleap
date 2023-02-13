@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function formatComputedFieldValue(field_value) {
+export interface ComputedFieldValue {
+    readonly field_id: number;
+    readonly is_autocomputed: boolean;
+    readonly manual_value: number | string;
+}
+
+type ComputedFieldAutoComputedValue = Pick<ComputedFieldValue, "field_id" | "is_autocomputed">;
+type ComputedFieldManualValue = Pick<ComputedFieldValue, "field_id" | "manual_value">;
+
+export function formatComputedFieldValue(
+    field_value: ComputedFieldValue | undefined
+): ComputedFieldAutoComputedValue | ComputedFieldManualValue | null {
     if (field_value === undefined) {
         return null;
     }
 
-    const is_autocomputed = Boolean(field_value.is_autocomputed);
+    const is_autocomputed = field_value.is_autocomputed;
     if (!is_autocomputed && field_value.manual_value === "") {
         return null;
     }
