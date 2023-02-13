@@ -30,11 +30,11 @@ use Tuleap\InviteBuddy\InvitationByIdRetrieverStub;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
-use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawer;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawerStub;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\Layout\Feedback\ISerializeFeedback;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -362,7 +362,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitation_sender
             ->expects(self::exactly(2))
             ->method('send')
-            ->willThrowException(new MustBeProjectAdminToInvitePeopleInProjectException());
+            ->willThrowException(new UserIsNotAllowedToManageProjectMembersException());
 
         $controller = $this->buildController(
             RetrieveUserByIdStub::withUser($from_user),
@@ -521,7 +521,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                     ?\PFUser $arg_resent_from_user,
                 ) use ($from_user): array {
                     if ((int) $arg_from_user->getId() === (int) $from_user->getId()) {
-                        throw new MustBeProjectAdminToInvitePeopleInProjectException();
+                        throw new UserIsNotAllowedToManageProjectMembersException();
                     }
 
                     if (

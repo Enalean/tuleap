@@ -52,6 +52,8 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -303,6 +305,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             ),
             $configuration,
             $project_presenters_builder,
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
         );
         $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($current_user->user, $project);
 

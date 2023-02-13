@@ -25,7 +25,7 @@ namespace Tuleap\InviteBuddy;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -81,7 +81,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -121,7 +120,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -179,7 +177,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWith($project),
-                $this->createMock(MembershipDelegationDao::class),
                 $project_member_adder,
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -222,18 +219,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
-            ->expects(self::never())
-            ->method('addProjectMember');
+            ->method('addProjectMember')
+            ->willThrowException(new UserIsNotAllowedToManageProjectMembersException());
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
         $this->logger
             ->expects(self::once())
             ->method('error')
-            ->with("User #104 has been invited by user #102 to project #111, but user #102 is not project admin");
-
-        $delegation_dao = $this->createMock(MembershipDelegationDao::class);
-        $delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(false);
+            ->with("User #104 has been invited to project #111 by user #102, but user #102 is not project admin.");
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -243,7 +237,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWith($project),
-                $delegation_dao,
                 $project_member_adder,
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -305,7 +298,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWith($project),
-                $this->createMock(MembershipDelegationDao::class),
                 $project_member_adder,
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -362,7 +354,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWith($project),
-                $this->createMock(MembershipDelegationDao::class),
                 $project_member_adder,
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -417,7 +408,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -484,7 +474,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -537,7 +526,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -595,7 +583,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,
@@ -654,7 +641,6 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectMemberAccordingToInvitationAdder(
                 $user_manager,
                 ProjectByIDFactoryStub::buildWithoutProject(),
-                $this->createMock(MembershipDelegationDao::class),
                 $this->createMock(ProjectMemberAdder::class),
                 $this->invitation_instrumentation,
                 $this->logger,

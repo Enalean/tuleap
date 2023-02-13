@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Routing;
 
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembersStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -36,7 +36,7 @@ final class RejectNonProjectMembersAdministratorMiddlewareTest extends \Tuleap\T
     {
         $middleware = new RejectNonProjectMembersAdministratorMiddleware(
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
-            $this->createMock(MembershipDelegationDao::class),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
         );
 
         $handler = RequestHandlerInterfaceStub::buildSelf();
@@ -58,33 +58,7 @@ final class RejectNonProjectMembersAdministratorMiddlewareTest extends \Tuleap\T
 
         $middleware = new RejectNonProjectMembersAdministratorMiddleware(
             ProvideCurrentUserStub::buildWithUser($user),
-            $this->createMock(MembershipDelegationDao::class),
-        );
-
-        $handler = RequestHandlerInterfaceStub::buildSelf();
-
-        $request = (new NullServerRequest())->withAttribute(\Project::class, $project);
-
-        $middleware->process($request, $handler);
-
-        self::assertTrue($handler->hasBeenCalled());
-        self::assertSame($user, $handler->getCapturedRequest()->getAttribute(\PFUser::class));
-    }
-
-    public function testProcessSuccessWhenUserHasDelegatedPermissions(): void
-    {
-        $project = ProjectTestBuilder::aProject()->build();
-        $user    = UserTestBuilder::aUser()
-            ->withoutSiteAdministrator()
-            ->build();
-
-        $delegation_dao = $this->createMock(MembershipDelegationDao::class);
-        $delegation_dao->method('doesUserHasMembershipDelegation')
-            ->willReturn(true);
-
-        $middleware = new RejectNonProjectMembersAdministratorMiddleware(
-            ProvideCurrentUserStub::buildWithUser($user),
-            $delegation_dao,
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
         );
 
         $handler = RequestHandlerInterfaceStub::buildSelf();
@@ -104,13 +78,9 @@ final class RejectNonProjectMembersAdministratorMiddlewareTest extends \Tuleap\T
             ->withoutSiteAdministrator()
             ->build();
 
-        $delegation_dao = $this->createMock(MembershipDelegationDao::class);
-        $delegation_dao->method('doesUserHasMembershipDelegation')
-            ->willReturn(false);
-
         $middleware = new RejectNonProjectMembersAdministratorMiddleware(
             ProvideCurrentUserStub::buildWithUser($user),
-            $delegation_dao,
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
         );
 
         $handler = RequestHandlerInterfaceStub::buildSelf();

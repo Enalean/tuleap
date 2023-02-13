@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\ListOfProjectPresentersBuilder;
 use Tuleap\Project\ProjectPresenter;
 
@@ -31,6 +33,7 @@ class InviteBuddiesPresenterBuilder
         private InvitationLimitChecker $limit_checker,
         private InviteBuddyConfiguration $invite_buddy_configuration,
         private ListOfProjectPresentersBuilder $project_presenters_builder,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
     ) {
     }
 
@@ -42,14 +45,17 @@ class InviteBuddiesPresenterBuilder
 
         $projects_presenters = array_reduce(
             $this->project_presenters_builder->getProjectPresenters($user),
-            static function (array $accumulator, ProjectPresenter $presenter) use ($current_project): array {
-                if ($presenter->is_current_user_admin) {
+            function (array $accumulator, ProjectPresenter $presenter) use ($user, $current_project): array {
+                try {
+                    $this->members_manager_checker->checkUserCanManageProjectMembers($user, $presenter->getProject());
                     $accumulator[] = new ProjectToBeInvitedIntoPresenter(
                         $presenter->id,
                         $presenter->icon,
                         $presenter->project_name,
                         $current_project && $presenter->id === (int) $current_project->getId(),
                     );
+                } catch (UserIsNotAllowedToManageProjectMembersException) {
+                    // skip the project if user cannot manage members
                 }
 
                 return $accumulator;

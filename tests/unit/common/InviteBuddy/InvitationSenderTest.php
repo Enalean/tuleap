@@ -29,7 +29,9 @@ use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembersStub;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
@@ -46,7 +48,6 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private InvitationDao|MockObject $dao;
     private TestLogger $logger;
     private InvitationInstrumentation&MockObject $instrumentation;
-    private MockObject&MembershipDelegationDao $delegation_dao;
     private \ProjectHistoryDao&MockObject $history_dao;
 
     protected function setUp(): void
@@ -60,20 +61,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao             = $this->createMock(InvitationDao::class);
         $this->logger          = new TestLogger();
         $this->instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $this->delegation_dao  = $this->createMock(MembershipDelegationDao::class);
         $this->history_dao     = $this->createMock(\ProjectHistoryDao::class);
-
-        $this->sender = new InvitationSender(
-            $this->gate_keeper,
-            $this->email_notifier,
-            $this->user_manager,
-            $this->dao,
-            $this->logger,
-            $this->instrumentation,
-            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
-            $this->delegation_dao,
-            $this->history_dao,
-        );
 
         ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 5);
     }
@@ -90,7 +78,10 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('markAsSent');
         $this->instrumentation->method('incrementPlatformInvitation');
 
-        $this->sender->send($this->current_user, ["john@example.com"], null, null, null);
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+        $sender->send($this->current_user, ["john@example.com"], null, null, null);
     }
 
     public function testItDoesNothingIfAllConditionsAreNotOk(): void
@@ -103,7 +94,10 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com"], null, null, null);
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+        $sender->send($this->current_user, ["john@example.com"], null, null, null);
     }
 
     public function testItSendAnInvitationForEachEmailAndLogStatus(): void
@@ -172,8 +166,12 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('markAsSent');
 
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+
         self::assertEmpty(
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
+            $sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
         );
     }
 
@@ -255,92 +253,12 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('markAsSent');
 
-        self::assertEmpty(
-            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::canManageMembers()
         );
-    }
-
-    public function testItSendAnInvitationForAProjectIfUserHasDelegation(): void
-    {
-        $project_id = 111;
-        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
-
-        $current_user = UserTestBuilder::aUser()
-            ->withId(123)
-            ->withoutSiteAdministrator()
-            ->withMemberOf($project)
-            ->build();
-
-        $this->delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(true);
-
-        $known_user = $this->createMock(\PFUser::class);
-        $known_user->method('getId')->willReturn(1001);
-
-        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(3);
-
-        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
-        $this->user_manager
-            ->method('getUserByEmail')
-            ->willReturnCallback(
-                fn (string $email): ?\PFUser => match ($email) {
-                    "john@example.com" => null,
-                    "doe@example.com" => $known_user,
-                }
-            );
-
-        $this->email_notifier
-            ->expects(self::exactly(2))
-            ->method("send")
-            ->willReturnCallback(
-                fn(
-                    \PFUser $user,
-                    InvitationRecipient $recipient,
-                    ?string $custom_message,
-                    ConcealedString $token,
-                    ?\Project $project,
-                ): bool => match (true) {
-                    $user === $current_user && $custom_message === "A custom message" &&
-                    (
-                        ($recipient->user === null && $recipient->email === "john@example.com") ||
-                        ($recipient->user === $known_user && $recipient->email === "doe@example.com")
-                    ) => true,
-                }
-            );
-
-        $this->dao
-            ->expects(self::exactly(2))
-            ->method('create')
-            ->willReturnCallback(
-                fn (
-                    int $created_on,
-                    int $from_user_id,
-                    string $to_email,
-                    ?int $to_user_id,
-                    ?int $to_project_id,
-                    ?string $custom_message,
-                    SplitTokenVerificationString $verifier,
-                ): int => match (true) {
-                    $from_user_id === 123 && $custom_message === "A custom message" &&
-                    (
-                        ($to_email === "john@example.com" && $to_user_id === null) ||
-                        ($to_email === "doe@example.com" && $to_user_id === 1001)
-                    ) => 1
-                }
-            );
-
-        $this->instrumentation
-            ->expects(self::exactly(2))
-            ->method('incrementProjectInvitation');
-        $this->history_dao
-            ->expects(self::exactly(2))
-            ->method('addHistory');
-
-        $this->dao
-            ->expects(self::exactly(2))
-            ->method('markAsSent');
 
         self::assertEmpty(
-            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
+            $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
         );
     }
 
@@ -355,8 +273,6 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMemberOf($project)
             ->build();
 
-        $this->delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(false);
-
         $this->email_notifier
             ->expects(self::never())
             ->method("send");
@@ -365,9 +281,12 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('create');
 
-        $this->expectException(MustBeProjectAdminToInvitePeopleInProjectException::class);
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
-        $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+        $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
     }
 
     public function testItIgnoresEmptyEmails(): void
@@ -405,7 +324,12 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('incrementPlatformInvitation');
 
-        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null, null, null));
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+        self::assertEmpty(
+            $sender->send($this->current_user, ["", null, "doe@example.com"], null, null, null)
+        );
     }
 
     public function testItReturnsEmailsInFailureAndLogStatus(): void
@@ -461,9 +385,13 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->expects(self::once())->method('markAsError');
         $this->dao->expects(self::once())->method('markAsSent');
 
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+
         self::assertEquals(
             ["john@example.com"],
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null)
+            $sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null)
         );
         self::assertTrue(
             $this->logger->hasError("Unable to send invitation from user #123 to john@example.com")
@@ -517,13 +445,32 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(UnableToSendInvitationsException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null);
+        $sender = $this->buildInvitationSender(
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers()
+        );
+        $sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null);
 
         self::assertTrue(
             $this->logger->hasError("Unable to send invitation from user #123 to john@example.com")
         );
         self::assertTrue(
             $this->logger->hasError("Unable to send invitation from user #123 to doe@example.com")
+        );
+    }
+
+    private function buildInvitationSender(
+        EnsureUserCanManageProjectMembers $members_manager_checker,
+    ): InvitationSender {
+        return new InvitationSender(
+            $this->gate_keeper,
+            $this->email_notifier,
+            $this->user_manager,
+            $this->dao,
+            $this->logger,
+            $this->instrumentation,
+            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            $members_manager_checker,
+            $this->history_dao,
         );
     }
 }

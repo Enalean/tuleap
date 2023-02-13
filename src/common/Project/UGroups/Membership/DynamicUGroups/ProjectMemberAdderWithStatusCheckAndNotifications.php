@@ -25,6 +25,7 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 use BaseLanguage;
 use Feedback;
 use Tuleap\Mail\MailFactory;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 
 class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMemberAdder
@@ -71,7 +72,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (NoEmailForUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('No email for user account'));
-        } catch (NotProjectAdminException $e) {
+        } catch (UserIsNotAllowedToManageProjectMembersException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Must be project admin to add a project member'));
         }
     }
@@ -81,7 +82,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      * @throws AlreadyProjectMemberException
      * @throws NoEmailForUserException
-     * @throws NotProjectAdminException
+     * @throws UserIsNotAllowedToManageProjectMembersException
      */
     public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {

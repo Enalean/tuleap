@@ -140,6 +140,7 @@ use Tuleap\Project\Admin\Invitations\ManageProjectInvitationsController;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
@@ -704,6 +705,8 @@ class RouteCollector
 
         $delegation_dao = new MembershipDelegationDao();
 
+        $members_manager_checker = new UserCanManageProjectMembersChecker($delegation_dao);
+
         return new ManageProjectInvitationsController(
             $user_manager,
             new CSRFSynchronizerTokenProvider(),
@@ -722,13 +725,13 @@ class RouteCollector
                 \BackendLogger::getDefaultLogger(),
                 $instrumentation,
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
-                $delegation_dao,
+                $members_manager_checker,
                 new \ProjectHistoryDao(),
             ),
             new ProjectHistoryDao(),
             new SapiEmitter(),
             new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
-            new RejectNonProjectMembersAdministratorMiddleware($user_manager, $delegation_dao),
+            new RejectNonProjectMembersAdministratorMiddleware($user_manager, $members_manager_checker),
         );
     }
 
@@ -1125,7 +1128,6 @@ class RouteCollector
                         new ProjectMemberAccordingToInvitationAdder(
                             $user_manager,
                             $project_manager,
-                            new MembershipDelegationDao(),
                             ProjectMemberAdderWithStatusCheckAndNotifications::build(),
                             $invitation_instrumentation,
                             $logger,

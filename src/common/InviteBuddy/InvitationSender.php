@@ -27,7 +27,8 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 
 class InvitationSender
 {
@@ -39,7 +40,7 @@ class InvitationSender
         private LoggerInterface $logger,
         private InvitationInstrumentation $instrumentation,
         private SplitTokenFormatter $split_token_formatter,
-        private MembershipDelegationDao $delegation_dao,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
         private \ProjectHistoryDao $history_dao,
     ) {
     }
@@ -51,7 +52,7 @@ class InvitationSender
      *
      * @throws InvitationSenderGateKeeperException
      * @throws UnableToSendInvitationsException
-     * @throws MustBeProjectAdminToInvitePeopleInProjectException
+     * @throws UserIsNotAllowedToManageProjectMembersException
      */
     public function send(
         PFUser $from_user,
@@ -137,7 +138,7 @@ class InvitationSender
     }
 
     /**
-     * @throws MustBeProjectAdminToInvitePeopleInProjectException
+     * @throws UserIsNotAllowedToManageProjectMembersException
      */
     private function checkUserCanInviteIntoProject(?\Project $project, PFUser $from_user): void
     {
@@ -145,14 +146,6 @@ class InvitationSender
             return;
         }
 
-        if ($from_user->isAdmin((int) $project->getID())) {
-            return;
-        }
-
-        if ($this->delegation_dao->doesUserHasMembershipDelegation((int) $from_user->getId(), (int) $project->getID())) {
-            return;
-        }
-
-        throw new MustBeProjectAdminToInvitePeopleInProjectException();
+        $this->members_manager_checker->checkUserCanManageProjectMembers($from_user, $project);
     }
 }
