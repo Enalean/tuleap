@@ -716,7 +716,7 @@ class RouteCollector
                     $invite_buddy_configuration,
                     new InvitationLimitChecker($invitation_dao, $invite_buddy_configuration)
                 ),
-                new InvitationEmailNotifier(),
+                new InvitationEmailNotifier(new LocaleSwitcher()),
                 $user_manager,
                 $invitation_dao,
                 \BackendLogger::getDefaultLogger(),
@@ -1128,7 +1128,8 @@ class RouteCollector
                             new MembershipDelegationDao(),
                             ProjectMemberAdderWithStatusCheckAndNotifications::build(),
                             $invitation_instrumentation,
-                            $logger
+                            $logger,
+                            new InvitationEmailNotifier(new LocaleSwitcher()),
                         ),
                         $invitation_instrumentation,
                         $logger,

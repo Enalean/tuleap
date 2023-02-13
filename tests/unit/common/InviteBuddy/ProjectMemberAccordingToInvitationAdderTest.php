@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Psr\Log\Test\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -47,6 +48,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -55,6 +57,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             new NullLogger(),
+            $email_notifier,
         );
 
         $project_member_adder
@@ -86,7 +89,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -95,6 +99,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $project_member_adder
@@ -103,11 +108,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::never())
             ->method('incrementProjectInvitation');
-
-        $logger
-            ->expects(self::once())
-            ->method('info')
-            ->with('User #201 has been invited to project #111, but need to be active first. Waiting for site admin approval');
 
         $adder->addUserToProjectAccordingToInvitation(
             UserTestBuilder::aUser()->withId(self::NEW_USER_ID)->withStatus($status)->build(),
@@ -119,6 +119,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+
+        self::assertTrue(
+            $logger->hasInfo('User #201 has been invited to project #111, but need to be active first. Waiting for site admin approval')
         );
     }
 
@@ -143,7 +147,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -152,6 +157,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $project_member_adder
@@ -160,11 +166,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::never())
             ->method('incrementProjectInvitation');
-
-        $logger
-            ->expects(self::once())
-            ->method('error')
-            ->with('User #201 has been invited by user #102 to project #111, but we cannot find user #102');
 
         $adder->addUserToProjectAccordingToInvitation(
             UserTestBuilder::anActiveUser()->withId(self::NEW_USER_ID)->build(),
@@ -176,6 +177,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+
+        self::assertTrue(
+            $logger->hasError('User #201 has been invited by user #102 to project #111, but we cannot find user #102')
         );
     }
 
@@ -194,7 +199,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -203,6 +209,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $project_member_adder
@@ -211,11 +218,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::never())
             ->method('incrementProjectInvitation');
-
-        $logger
-            ->expects(self::once())
-            ->method('error')
-            ->with('User #201 has been invited by user #102 to project #111, but user #102 is not active nor restricted');
 
         $adder->addUserToProjectAccordingToInvitation(
             UserTestBuilder::anActiveUser()->withId(self::NEW_USER_ID)->build(),
@@ -227,6 +229,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+
+        self::assertTrue(
+            $logger->hasError('User #201 has been invited by user #102 to project #111, but user #102 is not active nor restricted')
         );
     }
 
@@ -245,7 +251,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -254,6 +261,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $delegation_dao
@@ -267,11 +275,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->expects(self::never())
             ->method('incrementProjectInvitation');
 
-        $logger
-            ->expects(self::once())
-            ->method('error')
-            ->with('User #201 has been invited by user #102 to project #111, but user #102 is not project admin');
-
         $adder->addUserToProjectAccordingToInvitation(
             UserTestBuilder::anActiveUser()->withId(self::NEW_USER_ID)->build(),
             InvitationToEmail::fromInvitation(
@@ -282,6 +285,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+
+        self::assertTrue(
+            $logger->hasError('User #201 has been invited by user #102 to project #111, but user #102 is not project admin')
         );
     }
 
@@ -295,12 +302,17 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->withAdministratorOf($project)
             ->build();
 
+        $just_created_user = UserTestBuilder::anActiveUser()
+            ->withId(self::NEW_USER_ID)
+            ->build();
+
         $user_manager               = RetrieveUserByIdStub::withUser($from_user);
         $project_retriever          = ProjectByIDFactoryStub::buildWithoutProject();
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -309,6 +321,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $delegation_dao
@@ -322,13 +335,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             ->expects(self::never())
             ->method('incrementProjectInvitation');
 
-        $logger
-            ->expects(self::once())
-            ->method('error')
-            ->with('User #201 has been invited to project #111, but it appears that this project is not valid.');
-
         $adder->addUserToProjectAccordingToInvitation(
-            UserTestBuilder::anActiveUser()->withId(self::NEW_USER_ID)->build(),
+            $just_created_user,
             InvitationToEmail::fromInvitation(
                 InvitationTestBuilder::aSentInvitation(1)
                     ->from(self::FROM_USER_ID)
@@ -337,6 +345,10 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+
+        self::assertTrue(
+            $logger->hasError('User #201 has been invited to project #111, but it appears that this project is not valid.')
         );
     }
 
@@ -359,7 +371,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new NullLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -368,6 +381,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $delegation_dao
@@ -415,7 +429,8 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = $this->createMock(LoggerInterface::class);
+        $logger                     = new NullLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -424,6 +439,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
+            $email_notifier,
         );
 
         $delegation_dao
@@ -449,6 +465,70 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
                     ->build(),
                 new ConcealedString('secret')
             )
+        );
+    }
+
+    public function testRestrictedUserInProjectWithoutRestricted(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+
+        $from_user = UserTestBuilder::anActiveUser()
+            ->withId(self::FROM_USER_ID)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $just_created_user = UserTestBuilder::aRestrictedUser()
+            ->withId(self::NEW_USER_ID)
+            ->build();
+
+        $user_manager               = RetrieveUserByIdStub::withUser($from_user);
+        $project_retriever          = ProjectByIDFactoryStub::buildWith($project);
+        $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
+        $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
+        $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
+        $logger                     = new TestLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+
+        $adder = new ProjectMemberAccordingToInvitationAdder(
+            $user_manager,
+            $project_retriever,
+            $delegation_dao,
+            $project_member_adder,
+            $invitation_instrumentation,
+            $logger,
+            $email_notifier,
+        );
+
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($just_created_user, $project, $from_user)
+            ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($just_created_user, $project));
+
+        $invitation_instrumentation
+            ->expects(self::never())
+            ->method('incrementProjectInvitation');
+
+        $email_notifier
+            ->expects(self::once())
+            ->method('informThatCannotAddRestrictedUserToProjectNotAllowingRestricted')
+            ->with($from_user, $just_created_user, $project);
+
+        $adder->addUserToProjectAccordingToInvitation(
+            $just_created_user,
+            InvitationToEmail::fromInvitation(
+                InvitationTestBuilder::aSentInvitation(1)
+                    ->from(self::FROM_USER_ID)
+                    ->to('doe@example.com')
+                    ->toProjectId(self::PROJECT_ID)
+                    ->build(),
+                new ConcealedString('secret')
+            )
+        );
+
+        self::assertTrue(
+            $logger->hasError("Unable to add restricted user #201 to project #111.")
         );
     }
 }

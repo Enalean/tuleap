@@ -37,6 +37,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -94,7 +95,7 @@ class InvitationsResource extends AuthenticatedResource
                 $invite_buddy_configuration,
                 new InvitationLimitChecker($dao, $invite_buddy_configuration)
             ),
-            new InvitationEmailNotifier(),
+            new InvitationEmailNotifier(new LocaleSwitcher()),
             $user_manager,
             $dao,
             \BackendLogger::getDefaultLogger(),

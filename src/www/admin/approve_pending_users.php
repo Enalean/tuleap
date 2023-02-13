@@ -126,7 +126,8 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             new MembershipDelegationDao(),
             ProjectMemberAdderWithStatusCheckAndNotifications::build(),
             $invitation_instrumentation,
-            $logger
+            $logger,
+            new \Tuleap\InviteBuddy\InvitationEmailNotifier(new LocaleSwitcher()),
         );
 
         foreach ($users_array as $user_id) {
