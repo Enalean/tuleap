@@ -93,22 +93,15 @@ class AdminSavePermissionsControllerTest extends TestCase
         $history_dao
             ->expects(self::exactly(3))
             ->method('groupAddHistory')
-            ->withConsecutive(
-                [
-                    'perm_granted_for_mediawiki_standalone_readers',
-                    'Developers,QA',
-                    self::PROJECT_ID,
-                ],
-                [
-                    'perm_granted_for_mediawiki_standalone_writers',
-                    'QA',
-                    self::PROJECT_ID,
-                ],
-                [
-                    'perm_granted_for_mediawiki_standalone_admins',
-                    'Developers',
-                    self::PROJECT_ID,
-                ]
+            ->willReturnCallback(
+                function (string $field_name, string $value, int $project_id): void {
+                    match (true) {
+                        $field_name === 'perm_granted_for_mediawiki_standalone_readers' && $value === 'Developers,QA' && $project_id === self::PROJECT_ID,
+                           $field_name === 'perm_granted_for_mediawiki_standalone_writers' && $value === 'QA' && $project_id === self::PROJECT_ID,
+                           $field_name === 'perm_granted_for_mediawiki_standalone_admins' && $value === 'Developers' && $project_id === self::PROJECT_ID => true,
+                        default => throw new \LogicException(sprintf('Not expected call to groupAddHistory (%s | %s | %d)', $field_name, $value, $project_id))
+                    };
+                }
             );
 
         $response = $controller->handle($request);

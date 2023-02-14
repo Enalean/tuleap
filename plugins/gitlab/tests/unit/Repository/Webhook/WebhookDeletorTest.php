@@ -299,9 +299,13 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger
             ->method('info')
-            ->withConsecutive(
-                ['Deleting previous hook for the_full_url'],
-                ['Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found']
+            ->willReturnCallback(
+                function (string $message): void {
+                    match ($message) {
+                        'Deleting previous hook for the_full_url',
+                        'Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found' => true,
+                    };
+                }
             );
 
         $this->dao

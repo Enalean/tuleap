@@ -120,8 +120,12 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_204 = new \Project(['group_id' => 204]);
         $project_205 = new \Project(['group_id' => 205]);
         $this->project_manager->expects(self::exactly(2))->method('getValidProject')
-            ->withConsecutive([204], [205])
-            ->willReturnOnConsecutiveCalls($project_204, $project_205);
+            ->willReturnCallback(
+                fn (int $project_id): \Project => match ($project_id) {
+                    204 => $project_204,
+                    205 => $project_205,
+                }
+            );
 
         $result = $this->app_factory->getAppsAuthorizedByUser($user);
         $this->assertEquals(
