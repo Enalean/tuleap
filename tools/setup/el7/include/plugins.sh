@@ -132,11 +132,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if [ ! -L "${git_home}/.gitolite/hooks/common/post-receive" ]; then
-        ${ln} -s "${tuleap_src_plugins}/git/hooks/post-receive-gitolite" \
-            "${git_home}/.gitolite/hooks/common/post-receive"
-        plugin_git_configured="true"
-    fi
+    ${tuleapcfg} site-deploy:gitolite3-hooks
 
     if ! $(${tuleapcfg} systemctl is-enabled tuleap-process-system-events-git.timer); then
         ${tuleapcfg} systemctl enable "tuleap-process-system-events-git.timer"
