@@ -79,6 +79,8 @@ $results = $dao->getHistory(
     $by ? UserManager::instance()->findUser($by) : null,
 );
 
+$event_manager = EventManager::instance();
+
 $renderer = new AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     _('Editing Project'),
@@ -86,7 +88,7 @@ $renderer->renderANoFramedPresenter(
     'project-history',
     new ProjectHistoryPresenter(
         $project,
-        new ProjectHistoryResultsPresenter($results),
+        new ProjectHistoryResultsPresenter($results, $event_manager),
         $limit,
         $offset,
         new ProjectHistorySearchPresenter(
@@ -96,7 +98,8 @@ $renderer->renderANoFramedPresenter(
             $value,
             $startDate,
             $endDate,
-            $by
+            $by,
+            $event_manager,
         )
     )
 );
