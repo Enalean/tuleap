@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
+declare(strict_types=1);
 
-use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
-use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+namespace Tuleap\Project\Admin\ProjectMembers;
 
-interface ProjectMemberAdder
+interface EnsureUserCanManageProjectMembers
 {
-    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void;
-
     /**
-     * @throws UserIsNotActiveOrRestrictedException
-     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
-     * @throws AlreadyProjectMemberException
-     * @throws NoEmailForUserException
      * @throws UserIsNotAllowedToManageProjectMembersException
      */
-    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void;
+    public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void;
 }

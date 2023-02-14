@@ -20,8 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\InviteBuddy;
+namespace Tuleap\Project\Admin\ProjectMembers;
 
-final class MustBeProjectAdminToInvitePeopleInProjectException extends \Exception
+final class EnsureUserCanManageProjectMembersStub implements EnsureUserCanManageProjectMembers
 {
+    private function __construct(private bool $can_manage_members)
+    {
+    }
+
+    public static function canManageMembers(): self
+    {
+        return new self(true);
+    }
+
+    public static function cannotManageMembers(): self
+    {
+        return new self(false);
+    }
+
+    public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
+    {
+        if (! $this->can_manage_members) {
+            throw new UserIsNotAllowedToManageProjectMembersException();
+        }
+    }
 }

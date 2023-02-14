@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UserPermissionsDao;
 
@@ -35,7 +38,7 @@ class AddProjectMember
         private \EventManager $event_manager,
         private \ProjectHistoryDao $history_dao,
         private \UGroupBinding $ugroup_binding,
-        private MembershipDelegationDao $membership_delegation_dao,
+        private EnsureUserCanManageProjectMembers $members_members_checker,
     ) {
     }
 
@@ -50,10 +53,13 @@ class AddProjectMember
                 new \UGroupUserDao(),
                 new \UGroupManager()
             ),
-            new MembershipDelegationDao(),
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
         );
     }
 
+    /**
+     * @throws UserIsNotAllowedToManageProjectMembersException
+     */
     public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         if (\ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted() && $project->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED) {
@@ -62,9 +68,7 @@ class AddProjectMember
         if ($this->dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             throw new AlreadyProjectMemberException(_('User is already member of the project'));
         }
-        if (! $project_admin->isAdmin((int) $project->getID()) && ! $this->membership_delegation_dao->doesUserHasMembershipDelegation($project_admin->getId(), $project->getID())) {
-            throw new NotProjectAdminException();
-        }
+        $this->members_members_checker->checkUserCanManageProjectMembers($project_admin, $project);
 
         $this->dao->addUserAsProjectMember((int) $project->getID(), (int) $user->getId());
 

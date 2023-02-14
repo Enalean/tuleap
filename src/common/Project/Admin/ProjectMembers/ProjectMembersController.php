@@ -50,7 +50,6 @@ use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -118,17 +117,9 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
      */
     private $synchronized_project_membership_detector;
     /**
-     * @var MembershipDelegationDao
-     */
-    private $membership_delegation_dao;
-    /**
      * @var ProjectRetriever
      */
     private $project_retriever;
-    /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
 
     public function __construct(
         ProjectMembersDAO $members_dao,
@@ -139,9 +130,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         UGroupManager $ugroup_manager,
         UserImport $user_importer,
         ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        MembershipDelegationDao $membership_delegation_dao,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
         private ListOfPendingInvitationsPresenterBuilder $pending_invitations_presenter_builder,
     ) {
         $this->members_dao                              = $members_dao;
@@ -152,9 +142,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $this->ugroup_manager                           = $ugroup_manager;
         $this->user_importer                            = $user_importer;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
-        $this->membership_delegation_dao                = $membership_delegation_dao;
         $this->project_retriever                        = $project_retriever;
-        $this->administrator_checker                    = $administrator_checker;
     }
 
     public static function buildSelf(): self
@@ -191,11 +179,10 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 ProjectMemberAdderWithStatusCheckAndNotifications::build()
             ),
             ProjectRetriever::buildSelf(),
-            new ProjectAdministratorChecker(),
             new SynchronizedProjectMembershipDetector(
                 new SynchronizedProjectMembershipDao()
             ),
-            new MembershipDelegationDao(),
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
             new ListOfPendingInvitationsPresenterBuilder(
                 $configuration,
                 $invitation_dao,
@@ -208,6 +195,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                     ),
                     $configuration,
                     new ProjectPresentersBuilder(),
+                    new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
                 ),
             ),
         );
@@ -218,16 +206,9 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $user    = $request->getCurrentUser();
         try {
-            $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
-        } catch (ForbiddenException $e) {
-            if (
-                ! $this->membership_delegation_dao->doesUserHasMembershipDelegation(
-                    $user->getId(),
-                    $project->getID()
-                )
-            ) {
-                throw $e;
-            }
+            $this->members_manager_checker->checkUserCanManageProjectMembers($user, $project);
+        } catch (UserIsNotAllowedToManageProjectMembersException $e) {
+            throw new ForbiddenException($e->getMessage());
         }
 
         if ($project->getStatus() !== Project::STATUS_ACTIVE && ! $user->isSuperUser()) {

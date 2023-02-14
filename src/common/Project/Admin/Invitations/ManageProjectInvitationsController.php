@@ -33,10 +33,10 @@ use Tuleap\InviteBuddy\InvitationHistoryEntry;
 use Tuleap\InviteBuddy\InvitationNotFoundException;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
-use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawer;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
@@ -112,7 +112,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
 
         try {
             $this->invitation_sender->send($from_user, [$invitation->to_email], $project, $invitation->custom_message, $user);
-        } catch (MustBeProjectAdminToInvitePeopleInProjectException | InvitationSenderGateKeeperException) {
+        } catch (UserIsNotAllowedToManageProjectMembersException | InvitationSenderGateKeeperException) {
             return $this->fallbackInvitationFromCurrentUser($invitation, $project, $user);
         } catch (UnableToSendInvitationsException $exception) {
             return $this->createResponseForUser($user, $project, new NewFeedback(
@@ -131,7 +131,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
     {
         try {
             $this->invitation_sender->send($user, [$invitation->to_email], $project, null, $user);
-        } catch (MustBeProjectAdminToInvitePeopleInProjectException) {
+        } catch (UserIsNotAllowedToManageProjectMembersException) {
             throw new ForbiddenException(
                 _("You don't have permission to manage members of this project.")
             );

@@ -26,7 +26,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -34,7 +35,7 @@ final class RejectNonProjectMembersAdministratorMiddleware implements Middleware
 {
     public function __construct(
         private ProvideCurrentUser $user_manager,
-        private MembershipDelegationDao $membership_delegation_dao,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
     ) {
     }
 
@@ -49,26 +50,14 @@ final class RejectNonProjectMembersAdministratorMiddleware implements Middleware
         }
 
         $user = $this->user_manager->getCurrentUser();
-        $this->checkUserCanManageProjectMembers($user, $project);
+        try {
+            $this->members_manager_checker->checkUserCanManageProjectMembers($user, $project);
+        } catch (UserIsNotAllowedToManageProjectMembersException $e) {
+            throw new ForbiddenException($e->getMessage());
+        }
 
         $enriched_request = $request->withAttribute(\PFUser::class, $user);
 
         return $handler->handle($enriched_request);
-    }
-
-    private function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
-    {
-        $is_project_admin = $user->isAdmin((int) $project->getID());
-        if ($is_project_admin) {
-            return;
-        }
-
-        if ($this->membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
-            return;
-        }
-
-        throw new ForbiddenException(
-            gettext("You don't have permission to manage members of this project.")
-        );
     }
 }

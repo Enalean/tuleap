@@ -27,7 +27,6 @@ use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -123,7 +122,6 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $project_member_adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_manager,
-            new MembershipDelegationDao(),
             ProjectMemberAdderWithStatusCheckAndNotifications::build(),
             $invitation_instrumentation,
             $logger,

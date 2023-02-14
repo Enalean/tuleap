@@ -29,7 +29,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectHistoryDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembersStub;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -40,10 +42,6 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    /**
-     * @var AddProjectMember
-     */
-    private $add_project_member;
     /**
      * @var \PFUser
      */
@@ -80,10 +78,6 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\MockInterface|\UGroupBinding
      */
     private $ugroup_binding;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|MembershipDelegationDao|(MembershipDelegationDao&\PHPUnit\Framework\MockObject\MockObject)
-     */
-    private \PHPUnit\Framework\MockObject\MockObject|MembershipDelegationDao $delegation_dao;
 
     protected function setUp(): void
     {
@@ -98,19 +92,10 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->an_active_project_id, $this->an_active_user_id)
             ->andReturnFalse()
             ->byDefault();
-        $this->user_manager       = M::mock(\UserManager::class);
-        $this->event_manager      = M::mock(\EventManager::class);
-        $this->history_dao        = M::mock(ProjectHistoryDao::class);
-        $this->ugroup_binding     = M::mock(\UGroupBinding::class);
-        $this->delegation_dao     = $this->createMock(MembershipDelegationDao::class);
-        $this->add_project_member = new AddProjectMember(
-            $this->user_permissions_dao,
-            $this->user_manager,
-            $this->event_manager,
-            $this->history_dao,
-            $this->ugroup_binding,
-            $this->delegation_dao,
-        );
+        $this->user_manager   = M::mock(\UserManager::class);
+        $this->event_manager  = M::mock(\EventManager::class);
+        $this->history_dao    = M::mock(ProjectHistoryDao::class);
+        $this->ugroup_binding = M::mock(\UGroupBinding::class);
     }
 
     public function testItAddsUserAsProjectMember(): void
@@ -122,7 +107,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao->shouldReceive('addHistory')->with($this->an_active_project, $project_admin, M::any(), 'added_user', 'foo', ['foo'])->once();
         $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->with($this->an_active_project)->once();
 
-        $this->add_project_member->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
     }
 
     public function testItDoesntAddUserThatIsAlreadyAProjectMember(): void
@@ -134,7 +120,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(AlreadyProjectMemberException::class);
 
-        $this->add_project_member->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
     }
 
     public function testItDoesntAddARestrictedUserToAPrivateWithoutRestrictedProject(): void
@@ -149,7 +136,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
 
-        $this->add_project_member->addProjectMember($user, $project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $project, $project_admin);
     }
 
     public function testItAddsARestrictedUserToAPublicProject(): void
@@ -165,7 +153,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao->shouldReceive('addHistory')->atLeast()->once();
         $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
-        $this->add_project_member->addProjectMember($user, $project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $project, $project_admin);
     }
 
     public function testItAddsARestrictedUserToAPublicInclRestrictedProject(): void
@@ -181,7 +170,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao->shouldReceive('addHistory')->atLeast()->once();
         $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
-        $this->add_project_member->addProjectMember($user, $project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $project, $project_admin);
     }
 
     public function testItAddsARestrictedUserToAPrivateProject(): void
@@ -197,36 +187,23 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao->shouldReceive('addHistory')->atLeast()->once();
         $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
-        $this->add_project_member->addProjectMember($user, $project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $project, $project_admin);
     }
 
     public function testItThrowsExceptionIfProjectAdminIsNotProjectAdmin(): void
     {
         $project_admin = UserTestBuilder::anActiveUser()->build();
-        $this->delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(false);
 
         $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->never();
         $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any())->never();
         $this->history_dao->shouldReceive('addHistory')->never();
         $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->never();
 
-        $this->expectException(NotProjectAdminException::class);
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
-        $this->add_project_member->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
-    }
-
-    public function testItAddsUserAsProjectMemberWhenProjectAdminIsNotProjectAdminButHasPermissionDelegation(): void
-    {
-        $project_admin = UserTestBuilder::anActiveUser()->build();
-
-        $this->delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(true);
-
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->with($this->an_active_project_id, $this->an_active_user_id)->once();
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', ['group_id' => $this->an_active_project_id, 'user_id' => $this->an_active_user_id, 'user_unix_name' => 'foo'])->once();
-        $this->history_dao->shouldReceive('addHistory')->with($this->an_active_project, $project_admin, M::any(), 'added_user', 'foo', ['foo'])->once();
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->with($this->an_active_project)->once();
-
-        $this->add_project_member->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::cannotManageMembers())
+            ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
     }
 
     public function testItGeneratesAUnixIdForNewProjectMembersWithUnixAccountButNoUnixId(): void
@@ -243,7 +220,8 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('assignNextUnixUid')->with($user)->once()->ordered();
         $this->user_manager->shouldReceive('updateDb')->with($user)->once()->ordered();
 
-        $this->add_project_member->addProjectMember($user, $this->an_active_project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $this->an_active_project, $project_admin);
     }
 
     public function testItDoesntGeneratesAUnixIdForNewProjectMembersWithUnixAccountThatAlreadyHaveAnUnixId(): void
@@ -260,6 +238,20 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldNotReceive('assignNextUnixUid');
         $this->user_manager->shouldNotReceive('updateDb');
 
-        $this->add_project_member->addProjectMember($user, $this->an_active_project, $project_admin);
+        $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
+            ->addProjectMember($user, $this->an_active_project, $project_admin);
+    }
+
+    private function buildAddProjectMember(
+        EnsureUserCanManageProjectMembers $members_manager_checker,
+    ): AddProjectMember {
+        return new AddProjectMember(
+            $this->user_permissions_dao,
+            $this->user_manager,
+            $this->event_manager,
+            $this->history_dao,
+            $this->ugroup_binding,
+            $members_manager_checker,
+        );
     }
 }

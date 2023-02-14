@@ -53,7 +53,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             new NullLogger(),
@@ -95,7 +94,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -153,7 +151,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -205,7 +202,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -236,62 +232,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
     }
 
-    public function testDoesNothingIfUserWhoInvitedIsNotProjectAdminNorHasPermissionDelegation(): void
-    {
-        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-
-        $from_user = UserTestBuilder::anActiveUser()
-            ->withId(self::FROM_USER_ID)
-            ->withoutSiteAdministrator()
-            ->withMemberOf($project)
-            ->build();
-
-        $user_manager               = RetrieveUserByIdStub::withUser($from_user);
-        $project_retriever          = ProjectByIDFactoryStub::buildWithoutProject();
-        $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
-        $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
-        $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
-        $logger                     = new TestLogger();
-        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
-
-        $adder = new ProjectMemberAccordingToInvitationAdder(
-            $user_manager,
-            $project_retriever,
-            $delegation_dao,
-            $project_member_adder,
-            $invitation_instrumentation,
-            $logger,
-            $email_notifier,
-        );
-
-        $delegation_dao
-            ->method('doesUserHasMembershipDelegation')
-            ->willReturn(false);
-
-        $project_member_adder
-            ->expects(self::never())
-            ->method('addProjectMember');
-        $invitation_instrumentation
-            ->expects(self::never())
-            ->method('incrementProjectInvitation');
-
-        $adder->addUserToProjectAccordingToInvitation(
-            UserTestBuilder::anActiveUser()->withId(self::NEW_USER_ID)->build(),
-            InvitationToEmail::fromInvitation(
-                InvitationTestBuilder::aSentInvitation(1)
-                    ->from(self::FROM_USER_ID)
-                    ->to('doe@example.com')
-                    ->toProjectId(self::PROJECT_ID)
-                    ->build(),
-                new ConcealedString('secret')
-            )
-        );
-
-        self::assertTrue(
-            $logger->hasError('User #201 has been invited by user #102 to project #111, but user #102 is not project admin')
-        );
-    }
-
     public function testDoesNothingIfProjectCannotBeFound(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -317,7 +257,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -377,7 +316,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -435,7 +373,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,
@@ -493,7 +430,6 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
             $project_retriever,
-            $delegation_dao,
             $project_member_adder,
             $invitation_instrumentation,
             $logger,

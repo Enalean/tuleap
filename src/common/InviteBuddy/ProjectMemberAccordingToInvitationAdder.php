@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\AlreadyProjectMemberException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\NoEmailForUserException;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\NotProjectAdminException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
 use Tuleap\User\Account\Register\InvitationToEmail;
@@ -39,7 +38,6 @@ final class ProjectMemberAccordingToInvitationAdder
     public function __construct(
         private RetrieveUserById $user_manager,
         private ProjectByIDFactory $project_retriever,
-        private MembershipDelegationDao $delegation_dao,
         private ProjectMemberAdder $project_member_adder,
         private InvitationInstrumentation $invitation_instrumentation,
         private LoggerInterface $logger,
@@ -71,11 +69,6 @@ final class ProjectMemberAccordingToInvitationAdder
             return;
         }
 
-        if (! $from_user->isAdmin($invitation_to_email->to_project_id) && ! $this->delegation_dao->doesUserHasMembershipDelegation((int) $just_created_user->getId(), $invitation_to_email->to_project_id)) {
-            $this->logger->error("User #{$just_created_user->getId()} has been invited by user #{$invitation_to_email->from_user_id} to project #{$invitation_to_email->to_project_id}, but user #{$invitation_to_email->from_user_id} is not project admin");
-            return;
-        }
-
         try {
             $project = $this->project_retriever->getValidProjectById($invitation_to_email->to_project_id);
         } catch (\Project_NotFoundException $e) {
@@ -88,7 +81,7 @@ final class ProjectMemberAccordingToInvitationAdder
         try {
             $this->project_member_adder->addProjectMember($just_created_user, $project, $from_user);
             $this->invitation_instrumentation->incrementProjectInvitation();
-        } catch (NotProjectAdminException) {
+        } catch (UserIsNotAllowedToManageProjectMembersException) {
             $this->logger->error(
                 "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id} by user #{$from_user->getId()}, but user #{$from_user->getId()} is not project admin."
             );

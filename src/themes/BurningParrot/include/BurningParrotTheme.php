@@ -59,6 +59,8 @@ use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\CachedProjectPresentersBuilder;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -252,6 +254,7 @@ class BurningParrotTheme extends BaseLayout
             ),
             $configuration,
             $project_presenters_builder,
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
         );
         $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($this->current_user->user, $project);
 

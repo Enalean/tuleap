@@ -37,6 +37,8 @@ class ProjectPresenter
     public bool $is_public_incl_restricted  = false;
     public bool $is_private_incl_restricted = false;
 
+    private Project $project;
+
     public function __construct(
         public int $id,
         string $project_name,
@@ -45,6 +47,8 @@ class ProjectPresenter
         bool $is_current_user_admin,
         Project $project,
     ) {
+        $this->project = $project;
+
         $this->project_name          = $project_name;
         $this->project_uri           = $project_uri;
         $this->project_config_uri    = $project_config_uri;
@@ -60,5 +64,10 @@ class ProjectPresenter
             $this->is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
         }
+    }
+
+    public function getProject(): Project
+    {
+        return $this->project;
     }
 }
