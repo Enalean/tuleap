@@ -38,12 +38,14 @@ final class HandleUpdateArtifactStub implements HandleUpdateArtifact
     private int $unlink_reverse_artifact_method_call_count;
     private int $link_reverse_artifact_method_call_count;
     private int $update_forward_artifact_method_call_count;
+    private int $update_type_of_reverse_links_method_call_count;
 
     private function __construct(private ?Throwable $exception)
     {
-        $this->unlink_reverse_artifact_method_call_count = 0;
-        $this->link_reverse_artifact_method_call_count   = 0;
-        $this->update_forward_artifact_method_call_count = 0;
+        $this->unlink_reverse_artifact_method_call_count      = 0;
+        $this->link_reverse_artifact_method_call_count        = 0;
+        $this->update_forward_artifact_method_call_count      = 0;
+        $this->update_type_of_reverse_links_method_call_count = 0;
     }
 
     public static function build(): self
@@ -90,5 +92,16 @@ final class HandleUpdateArtifactStub implements HandleUpdateArtifact
     public function getUpdateForwardArtifactMethodCallCount(): int
     {
         return $this->update_forward_artifact_method_call_count;
+    }
+
+    public function updateTypeOfReverseLinks(Artifact $current_artifact, PFUser $submitter, CollectionOfReverseLinks $added_reverse_link, ?NewChangesetCommentRepresentation $comment = null,): Ok|Err
+    {
+        $this->update_type_of_reverse_links_method_call_count++;
+        return Result::ok(null);
+    }
+
+    public function getUpdateTypeOfReverseLinksMethodCallCount(): int
+    {
+        return $this->update_type_of_reverse_links_method_call_count;
     }
 }

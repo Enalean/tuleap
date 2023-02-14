@@ -128,6 +128,7 @@ final class PUTHandlerTest extends TestCase
         $this->handle([]);
         self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
     }
 
     public function testItUpdatesArtifactLikeBeforeWhenAllLinkKeyIsNotProvidedOrForwardDirectionIsProvidedInAllLinkKey(): void
@@ -136,6 +137,7 @@ final class PUTHandlerTest extends TestCase
         $this->handle([]);
         self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
     }
 
     public function testItDoesNotMakesTheReverseOfAnArtifactIfTheParentKeyWasGiven(): void
@@ -160,6 +162,7 @@ final class PUTHandlerTest extends TestCase
         $this->handle($values);
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
@@ -185,6 +188,7 @@ final class PUTHandlerTest extends TestCase
         $this->handle($values);
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
@@ -217,6 +221,7 @@ final class PUTHandlerTest extends TestCase
         $this->handle($values);
         self::assertSame(1, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 

@@ -73,6 +73,12 @@ final class PUTHandler
                                                       ->mapErr(
                                                           [FaultMapper::class, 'mapToRestException']
                                                       );
+
+                        try {
+                            $this->artifact_update_handler->updateTypeOfReverseLinks($artifact, $submitter, $stored_reverse_links->differenceByType($reverse_link_collection), $comment);
+                        } catch (Tracker_NoChangeException $exception) {
+                            //Do nothing
+                        }
                     }
                     try {
                         $this->artifact_update_handler->updateForwardLinks($artifact, $submitter, $changeset_values, $comment);

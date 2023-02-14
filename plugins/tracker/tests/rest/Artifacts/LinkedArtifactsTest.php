@@ -112,8 +112,8 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1);
-        $this->assertReverseLinkExist($artifact_id_3, $artifact_id_1);
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, null);
+        $this->assertReverseLinkExist($artifact_id_3, $artifact_id_1, null);
 
         $body = json_encode(
             [
@@ -124,7 +124,7 @@ final class LinkedArtifactsTest extends TrackerBase
                             [
                                 "id"        => $artifact_id_2,
                                 "direction" => "reverse",
-                                "type"      => "",
+                                "type"      => "_is_child",
                             ],
                         ],
                     ],
@@ -139,7 +139,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1);
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1, "_is_child");
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
@@ -152,15 +152,18 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertEmpty($linked_artifacts_collection["collection"]);
     }
 
-    private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id): void
+    private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id, ?string $expected_type): void
     {
+        $type = $expected_type ? urlencode($expected_type) : '';
+
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $source_artifact_id) . '/linked_artifacts?direction=forward')
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $source_artifact_id) . '/linked_artifacts?nature=' . $type . '&direction=forward')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
         $this->assertNotEmpty($linked_artifacts_collection["collection"]);
         $this->assertEquals($artifact_id, $linked_artifacts_collection["collection"][0]["id"]);
     }

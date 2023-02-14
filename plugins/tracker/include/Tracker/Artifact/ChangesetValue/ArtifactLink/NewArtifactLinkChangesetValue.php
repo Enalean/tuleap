@@ -73,6 +73,18 @@ final class NewArtifactLinkChangesetValue
         );
     }
 
+    public static function fromUpdatedTypeValue(int $field_id, CollectionOfForwardLinks $submitted_reverse_link_values_converted_into_forward_link): self
+    {
+        return new self(
+            $field_id,
+            new CollectionOfForwardLinks([]),
+            new CollectionOfForwardLinks([]),
+            $submitted_reverse_link_values_converted_into_forward_link,
+            null,
+            new CollectionOfReverseLinks([])
+        );
+    }
+
     public static function fromRemovedValues(int $field_id, CollectionOfForwardLinks $values_to_remove): self
     {
         return new self(
