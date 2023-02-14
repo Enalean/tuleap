@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Stubs;
+namespace Tuleap\InviteBuddy;
 
-final class RetrieveUserByEmailStub implements \Tuleap\User\RetrieveUserByEmail
+use PFUser;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
+interface InvitationToOneRecipientSender
 {
-    private function __construct(private ?\PFUser $user)
-    {
-    }
-
-    public static function withUser(\PFUser $user): self
-    {
-        return new self($user);
-    }
-
-    public static function withNoUser(): self
-    {
-        return new self(null);
-    }
-
-    public function getUserByEmail(string $email): ?\PFUser
-    {
-        if ($this->user && $this->user->getEmail() === $email) {
-            return $this->user;
-        }
-
-        return null;
-    }
+    /**
+     * @return Ok<true>|Err<Fault>
+     */
+    public function sendToRecipient(
+        PFUser $from_user,
+        InvitationRecipient $recipient,
+        ?\Project $project,
+        ?string $custom_message,
+        ?PFUser $resent_from_user,
+    ): Ok|Err;
 }

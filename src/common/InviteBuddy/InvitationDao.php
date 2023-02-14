@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByIdRetriever, InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever, PendingInvitationsWithdrawer
+class InvitationDao extends DataAccessObject implements InvitationByIdRetriever, InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever, PendingInvitationsWithdrawer, InvitationCreator, InvitationStatusUpdater
 {
     public function __construct(
         private SplitTokenVerificationStringHasher $hasher,

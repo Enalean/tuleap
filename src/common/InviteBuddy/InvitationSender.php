@@ -24,24 +24,21 @@ namespace Tuleap\InviteBuddy;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\User\RetrieveUserByEmail;
 
 class InvitationSender
 {
     public function __construct(
         private InvitationSenderGateKeeper $gate_keeper,
-        private InvitationEmailNotifier $email_notifier,
-        private \UserManager $user_manager,
-        private InvitationDao $dao,
+        private RetrieveUserByEmail $user_manager,
         private LoggerInterface $logger,
-        private InvitationInstrumentation $instrumentation,
-        private SplitTokenFormatter $split_token_formatter,
         private EnsureUserCanManageProjectMembers $members_manager_checker,
-        private \ProjectHistoryDao $history_dao,
+        private InvitationToOneRecipientSender $one_recipient_sender,
     ) {
     }
 
@@ -76,52 +73,16 @@ class InvitationSender
                 $email,
             );
 
-            $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+            $this->one_recipient_sender
+                ->sendToRecipient($from_user, $recipient, $project, $custom_message, $resent_from_user)
+                ->orElse(
+                    function (Fault $fault) use ($email, &$failures): Err {
+                        Fault::writeToLogger($fault, $this->logger);
+                        $failures[] = $email;
 
-            $invitation_id = $this->dao->create(
-                $now,
-                (int) $from_user->getId(),
-                $email,
-                $recipient->getUserId(),
-                $to_project_id,
-                $custom_message,
-                $secret,
-            );
-
-            $token = $this->split_token_formatter->getIdentifier(
-                new SplitToken($invitation_id, $secret)
-            );
-
-            $successfully_sent = $this->email_notifier->send(
-                $from_user,
-                $recipient,
-                $custom_message,
-                $token,
-                $project,
-                $resent_from_user,
-            );
-            if ($successfully_sent) {
-                if ($project) {
-                    $this->instrumentation->incrementProjectInvitation();
-                    $this->history_dao->addHistory(
-                        $project,
-                        $from_user,
-                        new \DateTimeImmutable(),
-                        $resent_from_user
-                            ? InvitationHistoryEntry::InvitationResent->value
-                            : InvitationHistoryEntry::InvitationSent->value,
-                        '',
-                        [],
-                    );
-                } else {
-                    $this->instrumentation->incrementPlatformInvitation();
-                }
-                $this->dao->markAsSent($invitation_id);
-            } else {
-                $this->logger->error("Unable to send invitation from user #{$from_user->getId()} to $email");
-                $this->dao->markAsError($invitation_id);
-                $failures[] = $email;
-            }
+                        return Result::err($fault);
+                    },
+                );
         }
 
         if (count($failures) === count($emails)) {
