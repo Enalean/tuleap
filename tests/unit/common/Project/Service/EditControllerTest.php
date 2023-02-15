@@ -134,7 +134,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager->addClosureOnEvent(AddMissingService::NAME, fn (AddMissingService $event) => $event->addService($service_to_activate));
 
         $service_updator = $this->createMock(ServiceUpdator::class);
-        $service_updator->expects($this->once())->method('addSystemService')->with($project, $service_to_activate, $current_user);
+        $service_updator->expects($this->once())->method('addSystemService')->with($project, $service_to_activate);
 
         $controller = new EditController(
             ProjectByIDFactoryStub::buildWith($project),
