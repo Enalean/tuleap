@@ -17,21 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Router } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
-import OverviewPane from "../components/OverviewPane.vue";
-import { VIEW_OVERVIEW_NAME } from "../constants";
-import { buildVueOverviewBaseUrl } from "./base-url-builders";
+export const buildBaseUrl = (
+    location: Location,
+    repository_id: string,
+    project_id: string
+): URL => {
+    const base_url = new URL("/plugins/git/", location.origin);
+    base_url.searchParams.set("action", "pull-requests");
+    base_url.searchParams.set("repo_id", encodeURIComponent(repository_id));
+    base_url.searchParams.set("group_id", encodeURIComponent(project_id));
 
-export function createOverviewRouter(base_url: URL): Router {
-    return createRouter({
-        history: createWebHashHistory(buildVueOverviewBaseUrl(base_url).toString()),
-        routes: [
-            {
-                path: "/pull-requests/:id/overview",
-                name: VIEW_OVERVIEW_NAME,
-                component: OverviewPane,
-            },
-        ],
-    });
-}
+    return base_url;
+};
+
+export const buildVueOverviewBaseUrl = (base_url: URL): URL => {
+    const overview_base_url = new URL(base_url);
+    overview_base_url.searchParams.set("tab", "overview");
+
+    return overview_base_url;
+};

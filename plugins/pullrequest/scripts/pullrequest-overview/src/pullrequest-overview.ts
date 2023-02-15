@@ -25,15 +25,14 @@ import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { OVERVIEW_APP_BASE_URL_KEY } from "./constants";
 import OverviewApp from "./components/OverviewApp.vue";
 import { createOverviewRouter } from "./router/router";
+import { buildBaseUrl } from "./router/base-url-builders";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
-    const repository_id = getDatasetItemOrThrow(mount_point, "repositoryId");
-    const project_id = getDatasetItemOrThrow(mount_point, "projectId");
-
-    const base_url = new URL("/plugins/git/", window.location.origin);
-    base_url.searchParams.set("action", "pull-requests");
-    base_url.searchParams.set("repo_id", encodeURIComponent(repository_id));
-    base_url.searchParams.set("group_id", encodeURIComponent(project_id));
+    const base_url = buildBaseUrl(
+        window.location,
+        getDatasetItemOrThrow(mount_point, "repositoryId"),
+        getDatasetItemOrThrow(mount_point, "projectId")
+    );
 
     createApp(OverviewApp)
         .provide(OVERVIEW_APP_BASE_URL_KEY, readonly(base_url))
