@@ -18,16 +18,14 @@
  */
 
 import { displaySuccess } from "./feedback-display";
+import { initGettextSync } from "@tuleap/gettext";
 
 describe("feedback-display", () => {
     describe("displaySuccess", () => {
         beforeEach(() => {
             document.body.innerHTML = `
                 <div id="invite-buddies-modal">
-                    <div id="invite-buddies-modal-feedback"
-                        data-success-feedback-message="Invitation has been successfully sent to:"
-                        data-failure-feedback-message="Invitation could not be sent to:"
-                    >
+                    <div id="invite-buddies-modal-feedback">
                         <div class="tlp-alert-error">Previous error</div>
                     </div>
                     <div id="invite-buddies-modal-body"></div>
@@ -41,15 +39,27 @@ describe("feedback-display", () => {
         });
 
         it("Clear existing feedbacks, display the success one and inform that emails have been sent", () => {
-            displaySuccess(["wendy@example.com", "peter@example.com"], { failures: [] });
+            const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
+
+            displaySuccess(
+                ["wendy@example.com", "peter@example.com"],
+                { failures: [] },
+                gettext_provider
+            );
 
             expect(document.body).toMatchSnapshot();
         });
 
         it("Extracts emails that are in error to display a warning", () => {
-            displaySuccess(["wendy@example.com", "peter@example.com"], {
-                failures: ["peter@example.com"],
-            });
+            const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
+
+            displaySuccess(
+                ["wendy@example.com", "peter@example.com"],
+                {
+                    failures: ["peter@example.com"],
+                },
+                gettext_provider
+            );
 
             expect(document.body).toMatchSnapshot();
         });

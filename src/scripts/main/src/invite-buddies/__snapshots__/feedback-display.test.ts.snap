@@ -10,8 +10,6 @@ exports[`feedback-display displaySuccess Clear existing feedbacks, display the s
     
                     
     <div
-      data-failure-feedback-message="Invitation could not be sent to:"
-      data-success-feedback-message="Invitation has been successfully sent to:"
       id="invite-buddies-modal-feedback"
     >
       <div
@@ -50,8 +48,6 @@ exports[`feedback-display displaySuccess Extracts emails that are in error to di
     
                     
     <div
-      data-failure-feedback-message="Invitation could not be sent to:"
-      data-success-feedback-message="Invitation has been successfully sent to:"
       id="invite-buddies-modal-feedback"
     >
       <div

@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import { initFeedbacks } from "../../invite-buddies/feedback-display";
 import { initNotificationsOnFormSubmit } from "../../invite-buddies/send-notifications";
 import { createModal, EVENT_TLP_MODAL_HIDDEN, EVENT_TLP_MODAL_SHOWN } from "@tuleap/tlp-modal";
 
-export function init(): void {
+export async function init(): Promise<void> {
     const modal_element = document.getElementById("invite-buddies-modal");
     if (!modal_element) {
         return;
@@ -31,6 +32,20 @@ export function init(): void {
     if (buttons.length <= 0) {
         return;
     }
+
+    const language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        throw new Error("Not able to find the user language.");
+    }
+    const gettext_provider = await initGettext(
+        language,
+        "invite-buddies",
+        (locale) =>
+            import(
+                /* webpackChunkName: "invitation-po-" */ "../../invite-buddies/po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
 
     const modal = createModal(modal_element);
     for (const button of buttons) {
@@ -55,5 +70,5 @@ export function init(): void {
     modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, initFeedbacks);
     modal.addEventListener(EVENT_TLP_MODAL_SHOWN, initFeedbacks);
 
-    initNotificationsOnFormSubmit();
+    initNotificationsOnFormSubmit(gettext_provider);
 }

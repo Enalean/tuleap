@@ -1857,14 +1857,8 @@ msgstr "Seleção inválida de categorias"
 msgid "Invitation complete!"
 msgstr "Convite finalizado!"
 
-msgid "Invitation could not be sent to:"
-msgstr "O convite não pôde ser enviado para:"
-
 msgid "Invitation has been resent"
 msgstr ""
-
-msgid "Invitation has been successfully sent to:"
-msgstr "Convite enviado com sucesso para:"
 
 msgid "Invitation has been withdrawn"
 msgstr ""
