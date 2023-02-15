@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Router } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
-import OverviewPane from "../components/OverviewPane.vue";
-import { VIEW_OVERVIEW_NAME } from "../constants";
-import { buildVueOverviewBaseUrl } from "./base-url-builders";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
-export function createOverviewRouter(base_url: URL): Router {
-    return createRouter({
-        history: createWebHashHistory(buildVueOverviewBaseUrl(base_url).toString()),
-        routes: [
-            {
-                path: "/pull-requests/:id/overview",
-                name: VIEW_OVERVIEW_NAME,
-                component: OverviewPane,
-            },
-        ],
-    });
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
 }

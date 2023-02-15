@@ -19,11 +19,18 @@
 
 <template>
     <nav class="tlp-tabs">
-        <router-link v-bind:to="{ name: VIEW_OVERVIEW_NAME }" class="tlp-tab tlp-tab-active">{{
-            $gettext("Overview")
-        }}</router-link>
-        <a class="tlp-tab" v-bind:href="buildUrlForView('commits')">{{ $gettext("Commits") }}</a>
-        <a class="tlp-tab" v-bind:href="buildUrlForView('files')">{{ $gettext("Changes") }}</a>
+        <router-link
+            v-bind:to="{ name: VIEW_OVERVIEW_NAME }"
+            class="tlp-tab tlp-tab-active"
+            data-test="tab-overview"
+            >{{ $gettext("Overview") }}</router-link
+        >
+        <a class="tlp-tab" v-bind:href="buildUrlForView('commits')" data-test="tab-commits">{{
+            $gettext("Commits")
+        }}</a>
+        <a class="tlp-tab" v-bind:href="buildUrlForView('files')" data-test="tab-changes">{{
+            $gettext("Changes")
+        }}</a>
     </nav>
 </template>
 
