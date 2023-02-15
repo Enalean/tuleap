@@ -126,6 +126,9 @@ seed_data() {
 setup_system_configuration() {
     sudo -u codendiadm /usr/bin/tuleap config-set sys_project_approval 0
     sudo -u codendiadm /usr/bin/tuleap config-set project_admin_can_choose_visibility 1
+
+    # Email are relayed to mailhog catch all
+    echo "relayhost = mailhog:1025" >> /etc/postfix/main.cf
 }
 
 setup_lhs
