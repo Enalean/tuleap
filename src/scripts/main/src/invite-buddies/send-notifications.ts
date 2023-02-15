@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { GettextProvider } from "@tuleap/gettext";
 import { post } from "@tuleap/tlp-fetch";
 import { activateSpinner, deactivateSpinner } from "./spinner-activation";
 import { handleError } from "./handle-error";
 import { displaySuccess } from "./feedback-display";
 
-export function initNotificationsOnFormSubmit(): void {
+export function initNotificationsOnFormSubmit(gettext_provider: GettextProvider): void {
     const form = document.getElementById("invite-buddies-modal");
     if (!(form instanceof HTMLFormElement)) {
         return;
@@ -30,11 +31,14 @@ export function initNotificationsOnFormSubmit(): void {
 
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-        sendNotifications(form);
+        sendNotifications(form, gettext_provider);
     });
 }
 
-export async function sendNotifications(form: HTMLFormElement): Promise<void> {
+export async function sendNotifications(
+    form: HTMLFormElement,
+    gettext_provider: GettextProvider
+): Promise<void> {
     const email_input = form.querySelector("input[name=invite_buddies_email]");
     if (!(email_input instanceof HTMLInputElement)) {
         throw Error("Unable to find email field");
@@ -72,7 +76,7 @@ export async function sendNotifications(form: HTMLFormElement): Promise<void> {
         });
 
         const response_body = await response.json();
-        displaySuccess(emails, response_body);
+        displaySuccess(emails, response_body, gettext_provider);
     } catch (rest_error) {
         await handleError(rest_error);
     } finally {

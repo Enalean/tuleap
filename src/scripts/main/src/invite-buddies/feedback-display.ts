@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { GettextProvider } from "@tuleap/gettext";
+
 export function initFeedbacks(): void {
     clearFeedback();
     const modal_body = document.getElementById("invite-buddies-modal-body");
@@ -43,7 +45,11 @@ export function displayError(message: string): void {
     feedback.appendChild(alert);
 }
 
-export function displaySuccess(emails: string[], response_body: { failures: string[] }): void {
+export function displaySuccess(
+    emails: string[],
+    response_body: { failures: string[] },
+    gettext_provider: GettextProvider
+): void {
     const modal_body = document.getElementById("invite-buddies-modal-body");
     if (!modal_body) {
         throw Error("Unable to find body");
@@ -69,7 +75,9 @@ export function displaySuccess(emails: string[], response_body: { failures: stri
         alert_success.classList.add("alert");
         alert_success.appendChild(
             document.createTextNode(
-                feedback.dataset.successFeedbackMessage + " " + successful_emails.join(", ")
+                gettext_provider.gettext("Invitation has been successfully sent to:") +
+                    " " +
+                    successful_emails.join(", ")
             )
         );
         feedback.appendChild(alert_success);
@@ -82,7 +90,9 @@ export function displaySuccess(emails: string[], response_body: { failures: stri
         alert_warning.classList.add("alert");
         alert_warning.appendChild(
             document.createTextNode(
-                feedback.dataset.failureFeedbackMessage + " " + response_body.failures.join(", ")
+                gettext_provider.gettext("Invitation could not be sent to:") +
+                    " " +
+                    response_body.failures.join(", ")
             )
         );
         feedback.appendChild(alert_warning);
