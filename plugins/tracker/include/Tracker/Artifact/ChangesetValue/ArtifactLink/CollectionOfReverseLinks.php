@@ -46,4 +46,15 @@ final class CollectionOfReverseLinks
         );
         return new CollectionOfReverseLinks($difference);
     }
+
+    public function differenceByType(self $other_links): CollectionOfReverseLinks
+    {
+        $type_not_present_here = [];
+        foreach ($other_links->links as $our_link) {
+            if (! in_array($our_link, $this->links)) {
+                $type_not_present_here[] = $our_link;
+            }
+        }
+        return new self($type_not_present_here);
+    }
 }

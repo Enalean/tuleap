@@ -90,6 +90,37 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
     }
 
     /**
+     * @throws FieldValidationException
+     * @throws Tracker_Exception
+     * @throws Tracker_NoChangeException
+     */
+    private function updateArtifactTypeLink(
+        Artifact $artifact_to_update,
+        PFUser $submitter,
+        array $formatted_value,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): void {
+        $comment_body   = '';
+        $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
+        if ($comment) {
+            $comment_body   = $comment->body;
+            $comment_format = $comment->format;
+        }
+
+        $new_changeset = NewChangeset::fromFieldsDataArray(
+            $artifact_to_update,
+            $formatted_value,
+            $comment_body,
+            CommentFormatIdentifier::fromFormatString($comment_format),
+            [],
+            $submitter,
+            (new \DateTimeImmutable())->getTimestamp(),
+            new CreatedFileURLMapping()
+        );
+        $this->changeset_creator->create($new_changeset, PostCreationContext::withNoConfig(true));
+    }
+
+    /**
      * @return Ok<null>|Err<Fault>
      * @throws Tracker_NoChangeException
      * @throws Tracker_Exception
@@ -189,6 +220,43 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
         $this->updateArtifact($current_artifact, $submitter, $changeset_values_container, $comment);
+    }
+
+    /**
+     * @throws FieldValidationException
+     * @throws \Tracker_NoChangeException
+     * @throws \Tracker_Exception
+     * @return Ok<null>|Err<Fault>
+     */
+    public function updateTypeOfReverseLinks(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        CollectionOfReverseLinks $added_reverse_link,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): Ok|Err {
+        $result = Result::ok(null);
+        foreach ($added_reverse_link->links as $reverse_link) {
+            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
+                fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
+                        $source_artifact_link_to_be_added = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
+
+                        $new_changeset_value = NewArtifactLinkChangesetValue::fromUpdatedTypeValue(
+                            $artifact_link_field->getId(),
+                            $source_artifact_link_to_be_added
+                        );
+
+                        $container = new ChangesetValuesContainer([], $new_changeset_value);
+                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        return null;
+                    },
+                )
+            );
+            if (Result::isErr($result)) {
+                break;
+            }
+        }
+        return $result;
     }
 
     /**

@@ -44,6 +44,7 @@ final class ArtifactUpdateHandlerTest extends TestCase
 {
     private const CURRENT_ARTIFACT_ID = 10;
     private const SOURCE_ARTIFACT_ID  = 18;
+    private const ARTIFACT_TYPE       = "_is_child";
 
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
@@ -140,13 +141,13 @@ final class ArtifactUpdateHandlerTest extends TestCase
         $removed_link          = ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID);
         $removed_reverse_links = new CollectionOfReverseLinks([$removed_link]);
 
-        $artifact_unlinker = new ArtifactUpdateHandler(
+        $artifact_updater = new ArtifactUpdateHandler(
             $this->changeset_creator,
             $this->form_element_factory,
             $this->artifact_retriever,
             $this->createMock(EventManager::class)
         );
-        return $artifact_unlinker->addReverseLink($artifact, $user, $removed_reverse_links);
+        return $artifact_updater->addReverseLink($artifact, $user, $removed_reverse_links);
     }
 
     public function testItReturnsAFaultWhenTheSourceArtifactCannotBeRetrieved(): void
@@ -165,6 +166,33 @@ final class ArtifactUpdateHandlerTest extends TestCase
 
         $result = $this->linkReverseArtifact();
 
+        self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value);
+    }
+
+    private function updateTypeOfReverseLinks(): Ok|Err
+    {
+        $artifact                   = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
+        $user                       = UserTestBuilder::aUser()->build();
+        $updated_link               = ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, self::ARTIFACT_TYPE);
+        $updated_reverse_links_type = new CollectionOfReverseLinks([$updated_link]);
+
+        $artifact_updater = new ArtifactUpdateHandler(
+            $this->changeset_creator,
+            $this->form_element_factory,
+            $this->artifact_retriever,
+            $this->createMock(EventManager::class)
+        );
+        return $artifact_updater->updateTypeOfReverseLinks($artifact, $user, $updated_reverse_links_type);
+    }
+
+    public function testItUpdateTheReverseLinkType(): void
+    {
+        $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
+
+        $result = $this->updateTypeOfReverseLinks();
         self::assertSame(1, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);

@@ -73,4 +73,17 @@ interface HandleUpdateArtifact
         ChangesetValuesContainer $changeset_values_container,
         ?NewChangesetCommentRepresentation $comment = null,
     ): void;
+
+    /**
+     * @throws FieldValidationException
+     * @throws \Tracker_NoChangeException
+     * @throws \Tracker_Exception
+     * @return Ok<null>|Err<Fault>
+     */
+    public function updateTypeOfReverseLinks(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        CollectionOfReverseLinks $added_reverse_link,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): Ok|Err;
 }
