@@ -208,7 +208,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         try {
             $this->members_manager_checker->checkUserCanManageProjectMembers($user, $project);
         } catch (UserIsNotAllowedToManageProjectMembersException $e) {
-            throw new ForbiddenException($e->getMessage());
+            throw new ForbiddenException(_("You don't have permission to access administration of this project."), $e);
         }
 
         if ($project->getStatus() !== Project::STATUS_ACTIVE && ! $user->isSuperUser()) {

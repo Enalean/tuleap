@@ -60,6 +60,7 @@
                 <button
                     type="button"
                     class="tlp-button-secondary tlp-button-outline invite-buddies-button"
+                    data-test="invite-buddies-button"
                     {{# is_limit_reached }}
                     disabled
                     title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"

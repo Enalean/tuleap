@@ -42,6 +42,7 @@
                         multiple
                         class="tlp-input"
                         id="invite-buddies-email"
+                        data-test="invite-buddies-email"
                         name="invite_buddies_email"
                         placeholder="peter@example.com, wendy@example.com, …"
                         required
@@ -83,13 +84,13 @@
                 </div>
             </div>
             <div class="tlp-modal-footer" id="invite-buddies-modal-footer">
-                <button type="reset" class="tlp-button-primary tlp-modal-action invite-buddies-modal-close" data-dismiss="modal">
+                <button type="reset" class="tlp-button-primary tlp-modal-action invite-buddies-modal-close" data-test="invite-buddies-close" data-dismiss="modal">
                     {{# gettext }}Close{{/ gettext }}
                 </button>
                 <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                     {{# gettext }}Cancel{{/ gettext }}
                 </button>
-                <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="invite-buddies-submit">
                     <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                     {{# gettext }}Send invitation{{/ gettext }}
                 </button>
