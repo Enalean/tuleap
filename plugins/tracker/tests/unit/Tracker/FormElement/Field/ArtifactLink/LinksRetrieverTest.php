@@ -78,8 +78,13 @@ class LinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_artifact_factory->expects(self::exactly(3))
             ->method('getArtifactById')
-            ->withConsecutive([83], [93], [103])
-            ->willReturnOnConsecutiveCalls($art_83, $art_93, $art_103);
+            ->willReturnCallback(
+                fn (int $art_id): Artifact => match ($art_id) {
+                    83 => $art_83,
+                    93 => $art_93,
+                    103 => $art_103,
+                }
+            );
 
         $reverse_links = $this->retriever->retrieveReverseLinksFromTracker($artifact, $user, $target_tracker);
 

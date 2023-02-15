@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Workflow;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
@@ -112,26 +113,21 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $changeset_value_field_not_changed_1 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
         $changeset_value_field_not_changed_2 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
-        $this->artifact->method('getValue')->withConsecutive(
-            [$this->field_changed],
-            [$this->field_not_changed_2],
-            [$this->field_not_changed_2]
-        )->willReturnOnConsecutiveCalls(
-            $changeset_value_field_changed,
-            $changeset_value_field_not_changed_1,
-            $changeset_value_field_not_changed_2
+        $this->artifact->method('getValue')->willReturnCallback(
+            fn (Tracker_FormElement_Field $field): Tracker_Artifact_ChangesetValue => match ($field) {
+                $this->field_changed       => $changeset_value_field_changed,
+                $this->field_not_changed_1 => $changeset_value_field_not_changed_1,
+                $this->field_not_changed_2 => $changeset_value_field_not_changed_2,
+            }
         );
 
-        $this->field_changed->method('getListValueById')->withConsecutive(
-            [self::ORIGINAL_FIELD_CHANGED_VALUE_ID],
-            [self::FIRST_VALUE_ID],
-            [self::SECOND_VALUE_ID],
-            [self::THIRD_VALUE_ID]
-        )->willReturnOnConsecutiveCalls(
-            $this->value_from_artifact,
-            $this->test_value_1,
-            $this->test_value_2,
-            $this->test_value_3
+        $this->field_changed->method('getListValueById')->willReturnCallback(
+            fn (int $value_id): \Tracker_FormElement_Field_List_Bind_StaticValue => match ($value_id) {
+                self::ORIGINAL_FIELD_CHANGED_VALUE_ID => $this->value_from_artifact,
+                self::FIRST_VALUE_ID => $this->test_value_1,
+                self::SECOND_VALUE_ID => $this->test_value_2,
+                self::THIRD_VALUE_ID => $this->test_value_3,
+            }
         );
 
         $changeset_value_field_changed->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
@@ -162,12 +158,13 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getValue')->with($this->field_changed)->willReturn($changeset_value);
         $changeset_value->method('getValue')->willReturn([self::ORIGINAL_FIELD_CHANGED_VALUE_ID]);
 
-        $this->workflow->method('getTransition')->withConsecutive(
-            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_3->getId()]
-        )->willReturnOnConsecutiveCalls(null, $this->transition_1, $this->transition_2);
-
+        $this->workflow->method('getTransition')->willReturnCallback(
+            fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_1->getId() => null,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_2->getId() => $this->transition_1,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_3->getId() => $this->transition_2,
+            }
+        );
 
         $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
         $this->condition_2->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
@@ -206,11 +203,13 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
             $this->tracker
         )->willReturn(false);
 
-        $this->workflow->method('getTransition')->withConsecutive(
-            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_3->getId()]
-        )->willReturnOnConsecutiveCalls(null, $this->transition_1, $this->transition_2);
+        $this->workflow->method('getTransition')->willReturnCallback(
+            fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_1->getId() => null,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_2->getId() => $this->transition_1,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_3->getId() => $this->transition_2,
+            }
+        );
 
         $this->workflow->method('getGlobalRulesManager')->willReturn($this->tracker_rules_manager);
         $this->tracker_rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
@@ -230,11 +229,13 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getWorkflow')->willReturn($this->workflow);
         $this->workflow->method('isUsed')->willReturn(true);
 
-        $this->workflow->method('getTransition')->withConsecutive(
-            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_3->getId()]
-        )->willReturnOnConsecutiveCalls(null, $this->transition_1, $this->transition_2);
+        $this->workflow->method('getTransition')->willReturnCallback(
+            fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_1->getId() => null,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_2->getId() => $this->transition_1,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_3->getId() => $this->transition_2,
+            }
+        );
 
 
         $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
@@ -245,7 +246,12 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
             [$this->rule_1, $this->rule_2, $this->rule_3, $this->rule_4]
         );
 
-        $this->form_element_factory->method('getFieldById')->withConsecutive([202], [203])->willReturnOnConsecutiveCalls($this->field_not_changed_1, $this->field_not_changed_2);
+        $this->form_element_factory->method('getFieldById')->willReturnCallback(
+            fn (int $field_id): Tracker_FormElement_Field => match ($field_id) {
+                202 => $this->field_not_changed_1,
+                203 => $this->field_not_changed_2,
+            }
+        );
 
         $changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
@@ -268,23 +274,22 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->artifact->method('getWorkflow')->willReturn($this->workflow);
         $this->workflow->method('isUsed')->willReturn(true);
 
-        $this->field_changed->method('getListValueById')->withConsecutive(
-            [self::ORIGINAL_FIELD_CHANGED_VALUE_ID],
-            [self::FIRST_VALUE_ID],
-            [self::SECOND_VALUE_ID],
-            [self::FOURTH_VALUE_ID]
-        )->willReturnOnConsecutiveCalls(
-            $this->value_from_artifact,
-            $this->test_value_1,
-            $this->test_value_2,
-            $this->test_value_4
+        $this->field_changed->method('getListValueById')->willReturnCallback(
+            fn (int $field_id): \Tracker_FormElement_Field_List_Bind_StaticValue => match ($field_id) {
+                self::ORIGINAL_FIELD_CHANGED_VALUE_ID => $this->value_from_artifact,
+                self::FIRST_VALUE_ID => $this->test_value_1,
+                self::SECOND_VALUE_ID => $this->test_value_2,
+                self::FOURTH_VALUE_ID => $this->test_value_4,
+            }
         );
 
-        $this->workflow->method('getTransition')->withConsecutive(
-            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
-            [$this->value_from_artifact->getId(), $this->test_value_4->getId()]
-        )->willReturnOnConsecutiveCalls(null, $this->transition_1, $this->transition_2);
+        $this->workflow->method('getTransition')->willReturnCallback(
+            fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_1->getId() => null,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_2->getId() => $this->transition_1,
+                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_4->getId() => $this->transition_2,
+            }
+        );
 
         $this->condition_1->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
         $this->condition_2->method('isUserAllowedToSeeTransition')->with($this->user, $this->tracker)->willReturn(true);
@@ -294,7 +299,12 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
             [$this->rule_1, $this->rule_2, $this->rule_3, $this->rule_4]
         );
 
-        $this->form_element_factory->method('getFieldById')->withConsecutive([202], [203])->willReturnOnConsecutiveCalls($this->field_not_changed_1, $this->field_not_changed_2);
+        $this->form_element_factory->method('getFieldById')->willReturnCallback(
+            fn (int $field_id): Tracker_FormElement_Field => match ($field_id) {
+                202 => $this->field_not_changed_1,
+                203 => $this->field_not_changed_2,
+            }
+        );
 
         $changeset_value = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
@@ -366,12 +376,11 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->condition_1 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
         $this->condition_2 = $this->createStub(\Workflow_Transition_Condition_Permissions::class);
 
-        $this->condition_factory->method("getPermissionsCondition")->withConsecutive(
-            [$this->transition_1],
-            [$this->transition_2]
-        )->willReturnOnConsecutiveCalls(
-            $this->condition_1,
-            $this->condition_2
+        $this->condition_factory->method("getPermissionsCondition")->willReturnCallback(
+            fn (Transition $transition): \Workflow_Transition_Condition_Permissions => match ($transition) {
+                $this->transition_1 => $this->condition_1,
+                $this->transition_2 => $this->condition_2,
+            }
         );
     }
 
