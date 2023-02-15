@@ -115,3 +115,11 @@
         background: var(--tlp-danger-color-transparent-90);
     }
 }
+
+.tlp-alert-title,
+.tlp-alert-title:last-child {
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+}

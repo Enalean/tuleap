@@ -26,6 +26,7 @@ import {
 import type { GettextProvider } from "@tuleap/gettext";
 import { render } from "lit/html.js";
 import { stripLitExpressionComments } from "../../../test-helper";
+import { initGettextSync } from "@tuleap/gettext";
 
 const emptyFunction = (): void => {
     //Do nothing
@@ -36,9 +37,7 @@ describe(`FormatSelect`, () => {
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
-        gettext_provider = {
-            gettext: (msgid): string => msgid,
-        };
+        gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
     });
 
     function getSelectBox(): HTMLSelectElement {
