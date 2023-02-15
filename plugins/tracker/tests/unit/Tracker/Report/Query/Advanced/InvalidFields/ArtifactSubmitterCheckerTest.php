@@ -20,6 +20,7 @@
 namespace unit\Tracker\Report\Query\Advanced\InvalidFields;
 
 use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -68,11 +69,12 @@ class ArtifactSubmitterCheckerTest extends TestCase
                                ->with($this->wrapper, $this->field)
                                ->willReturn(['user_1', '', 'fake_user']);
 
-        $this->user_manager->method('getUserByLoginName')->withConsecutive(["user_1"], ['fake_user'])
-                           ->willReturnOnConsecutiveCalls(
-                               $this->createStub(\PFUser::class),
-                               null
-                           );
+        $this->user_manager->method('getUserByLoginName')->willReturnCallback(
+            fn (string $username): ?\PFUser => match ($username) {
+                "user_1" => UserTestBuilder::aUser()->build(),
+                "fake_user" => null
+            }
+        );
 
         $this->expectException(SubmittedByUserDoesntExistException::class);
 
