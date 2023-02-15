@@ -1,4 +1,5 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { buildVueOverviewURL } from "../../helpers/vue-overview-url-builder";
 
 export default PullRequestSummaryController;
 
@@ -46,6 +47,13 @@ function PullRequestSummaryController(
     }
 
     function goToOverview() {
+        if (SharedPropertiesService.isVueOverviewShown()) {
+            window.location.assign(
+                buildVueOverviewURL(window.location, self.pull_request).toString()
+            );
+            return;
+        }
+
         $state.go("overview", { id: self.pull_request.id });
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./overview-wrapper.tpl.html";
-
-export default {
-    templateUrl: "overview-wrapper.tpl.html",
-    controller,
-};
-
-controller.$inject = ["SharedPropertiesService"];
-
-function controller(SharedPropertiesService) {
-    const self = this;
-
-    Object.assign(self, {
-        is_vue_overview_shown: SharedPropertiesService.isVueOverviewShown(),
-    });
+declare module "*.vue" {
+    import type { DefineComponent } from "vue";
+    const component: DefineComponent;
+    export default component;
 }

@@ -32,8 +32,6 @@ import MainController from "./app-controller.js";
 import FileDiffComponent from "./file-diff/file-diff-component.js";
 import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
 import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
-import OverviewWrapper from "./overview/overview-wrapper-component.js";
-import VueOverComponent from "./overview/vue-over/vue-over-component.js";
 
 import DashboardDirective from "./dashboard/dashboard-directive.js";
 import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-request-summary-directive.js";
@@ -97,8 +95,6 @@ export default angular
     .component("fileDiff", FileDiffComponent)
     .component("fileUnidiff", UnidiffComponent)
     .component("sideBySideDiff", SideBySideDiffComponent)
-    .component("overviewWrapper", OverviewWrapper)
-    .component("vueOverComponent", VueOverComponent)
 
     .directive("dashboard", DashboardDirective)
     .directive("pullRequestSummary", PullRequestSummaryDirective)

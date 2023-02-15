@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2023 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <div class="test">{{ getUIIsUnderConstructionText() }}</div>
+    <div>
+        <router-view />
+    </div>
 </template>
 
-<script setup lang="ts">
-import { getUIIsUnderConstructionText } from "../../gettext-catalog";
-</script>
+<script setup lang="ts"></script>
