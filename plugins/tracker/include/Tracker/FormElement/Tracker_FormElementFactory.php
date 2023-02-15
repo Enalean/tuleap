@@ -347,7 +347,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedFieldByNameForUser($tracker_id, $field_name, PFUser $user): ?Tracker_FormElement_Field
     {
         $field = $this->getUsedFieldByName($tracker_id, $field_name);
-        if ($field && $field->userCanRead($user)) {
+        if ($field instanceof Tracker_FormElement_Field && $field->userCanRead($user)) {
             return $field;
         }
         return null;
