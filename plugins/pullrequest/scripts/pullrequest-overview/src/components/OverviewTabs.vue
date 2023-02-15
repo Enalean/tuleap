@@ -37,20 +37,20 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { useGettext } from "vue3-gettext";
-import { useRoute } from "vue-router";
-import { OVERVIEW_APP_BASE_URL_KEY, VIEW_OVERVIEW_NAME } from "../constants";
+import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
 
 const { $gettext } = useGettext();
-const route = useRoute();
 
 const base_url: URL | undefined = inject(OVERVIEW_APP_BASE_URL_KEY);
-if (!base_url) {
-    throw new Error(`Could not find the injection key '${OVERVIEW_APP_BASE_URL_KEY}'`);
+const pull_request_id: string | undefined = inject(PULL_REQUEST_ID_KEY);
+
+if (!base_url || !pull_request_id) {
+    throw new Error(`Could not find the needed injection key`);
 }
 
 const buildUrlForView = (view_name: string) => {
     const view_url = new URL("", base_url.toString());
-    view_url.hash = `#/pull-requests/${route.params.id}/${view_name}`;
+    view_url.hash = `#/pull-requests/${pull_request_id}/${view_name}`;
 
     return view_url.toString();
 };

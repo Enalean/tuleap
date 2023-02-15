@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
-
-export const OVERVIEW_APP_BASE_URL_KEY: InjectionKey<URL> = Symbol();
-export const PULL_REQUEST_ID_KEY: InjectionKey<string> = Symbol();
-export const VIEW_OVERVIEW_NAME = "overview";
+export interface PullRequestInfo {
+    readonly title: string;
+}
