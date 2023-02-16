@@ -111,7 +111,13 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
         }
 
         try {
-            $this->invitation_sender->send($from_user, [$invitation->to_email], $project, $invitation->custom_message, $user);
+            $sent_invitation_result = $this->invitation_sender->send(
+                $from_user,
+                [$invitation->to_email],
+                $project,
+                $invitation->custom_message,
+                $user
+            );
         } catch (UserIsNotAllowedToManageProjectMembersException | InvitationSenderGateKeeperException) {
             return $this->fallbackInvitationFromCurrentUser($invitation, $project, $user);
         } catch (UnableToSendInvitationsException $exception) {
@@ -121,10 +127,30 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
             ));
         }
 
-        return $this->createResponseForUser($user, $project, new NewFeedback(
-            \Feedback::SUCCESS,
-            _('Invitation has been resent')
-        ));
+        $feedback = match (true) {
+            ! empty($sent_invitation_result->known_users_added_to_project_members) => new NewFeedback(
+                \Feedback::INFO,
+                _('User is already registered and has been added to project.')
+            ),
+            ! empty($sent_invitation_result->known_users_not_alive) => new NewFeedback(
+                \Feedback::WARN,
+                _('User is already registered but is not active yet.')
+            ),
+            ! empty($sent_invitation_result->known_users_are_restricted) => new NewFeedback(
+                \Feedback::WARN,
+                _('User is already registered but is restricted and the project does not accept restricted users.')
+            ),
+            ! empty($sent_invitation_result->already_project_members) => new NewFeedback(
+                \Feedback::INFO,
+                _('User is already registered and project member.')
+            ),
+            default => new NewFeedback(
+                \Feedback::SUCCESS,
+                _('Invitation has been resent')
+            )
+        };
+
+        return $this->createResponseForUser($user, $project, $feedback);
     }
 
     private function fallbackInvitationFromCurrentUser(Invitation $invitation, \Project $project, \PFUser $user): ResponseInterface
@@ -153,15 +179,15 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
         try {
             $invitation = $this->invitation_retriever->searchById($invitation_id);
         } catch (InvitationNotFoundException $e) {
-            throw new NotFoundException(_('The invitation you want to withdraw cannot be found. Maybe it has already been removed?'));
+            throw new NotFoundException(_('The invitation cannot be found. Maybe it has already been completed or removed?'));
         }
 
         if ($invitation->to_project_id !== (int) $project->getID()) {
-            throw new NotFoundException();
+            throw new NotFoundException(_('The invitation cannot be found. Maybe it has already been completed or removed?'));
         }
 
         if (! $invitation->to_email) {
-            throw new NotFoundException();
+            throw new NotFoundException(_('The invitation cannot be found. Maybe it has already been completed or removed?'));
         }
 
         return $invitation;

@@ -28,12 +28,18 @@ namespace Tuleap\InviteBuddy;
 final class SentInvitationResult
 {
     /**
-     * @param string[] $failures
+     * @param string[]  $failures
      * @param \PFUser[] $already_project_members
+     * @param \PFUser[] $known_users_added_to_project_members
+     * @param \PFUser[] $known_users_not_alive
+     * @param \PFUser[] $known_users_are_restricted
      */
     public function __construct(
         public readonly array $failures,
         public readonly array $already_project_members,
+        public readonly array $known_users_added_to_project_members,
+        public readonly array $known_users_not_alive,
+        public readonly array $known_users_are_restricted,
     ) {
     }
 }

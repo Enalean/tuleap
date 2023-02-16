@@ -19,6 +19,7 @@
 
 import type { GettextProvider } from "@tuleap/gettext";
 import { html, render } from "lit/html.js";
+import type { TemplateResult } from "lit";
 
 export function initFeedbacks(): void {
     clearFeedback();
@@ -51,9 +52,17 @@ interface User {
     readonly display_name: string;
 }
 
+interface InvitationResponse {
+    readonly failures: string[];
+    readonly already_project_members: User[];
+    readonly known_users_added_to_project_members: User[];
+    readonly known_users_not_alive: User[];
+    readonly known_users_are_restricted: User[];
+}
+
 export function displaySuccess(
     emails: string[],
-    response_body: { failures: string[]; already_project_members: User[] },
+    response_body: InvitationResponse,
     gettext_provider: GettextProvider
 ): void {
     const modal_body = document.getElementById("invite-buddies-modal-body");
@@ -97,35 +106,69 @@ export function displaySuccess(
         `;
     }
 
-    let alert_already_members = html``;
-    if (response_body.already_project_members.length > 0) {
-        const title = gettext_provider.ngettext(
+    const alert_already_members = getAlertForUsers(
+        "info",
+        response_body.already_project_members,
+        gettext_provider.ngettext(
             "Already project member",
             "Already project members",
             response_body.already_project_members.length
-        );
-
-        const description = gettext_provider.ngettext(
+        ),
+        gettext_provider.ngettext(
             "The following user is already project member, they have been ignored:",
             "The following users are already project members, they have been ignored:",
             response_body.already_project_members.length
-        );
+        ),
+        "already-member"
+    );
 
-        alert_already_members = html`
-            <div class="tlp-alert-info alert-info alert">
-                <p class="tlp-alert-title">${title}</p>
-                <p>${description}</p>
-                <ul>
-                    ${response_body.already_project_members.map(
-                        (user) =>
-                            html`<li data-test="already-member">
-                                <code>${user.email}</code> ${user.display_name}
-                            </li>`
-                    )}
-                </ul>
-            </div>
-        `;
-    }
+    const alert_known_users_added = getAlertForUsers(
+        "info",
+        response_body.known_users_added_to_project_members,
+        gettext_provider.ngettext(
+            "Already registered",
+            "Already registered",
+            response_body.known_users_added_to_project_members.length
+        ),
+        gettext_provider.ngettext(
+            "The following user is already registered on the platform, they are now member of the project:",
+            "The following users are already registered on the platform, they are now member of the project:",
+            response_body.known_users_added_to_project_members.length
+        ),
+        "known-user-added"
+    );
+
+    const alert_known_users_not_alive = getAlertForUsers(
+        "danger",
+        response_body.known_users_not_alive,
+        gettext_provider.ngettext(
+            "Not active",
+            "Not active",
+            response_body.known_users_not_alive.length
+        ),
+        gettext_provider.ngettext(
+            "The following user is not active, they cannot be added as member of the project:",
+            "The following users are not active, they cannot be added as member of the project:",
+            response_body.known_users_not_alive.length
+        ),
+        "not-alive"
+    );
+
+    const alert_known_users_are_retricted = getAlertForUsers(
+        "danger",
+        response_body.known_users_are_restricted,
+        gettext_provider.ngettext(
+            "Restricted users",
+            "Restricted users",
+            response_body.known_users_are_restricted.length
+        ),
+        gettext_provider.ngettext(
+            "The following user is restricted, they cannot be added as member of the project because it does not accepted restricted users:",
+            "The following users are restricted, they cannot be added as member of the project because it does not accepted restricted users:",
+            response_body.known_users_are_restricted.length
+        ),
+        "restricted"
+    );
 
     let alert_not_sent = html``;
     if (response_body.failures.length > 0) {
@@ -155,7 +198,38 @@ export function displaySuccess(
         `;
     }
 
-    render(html`${alert_not_sent} ${alert_success} ${alert_already_members}`, feedback);
+    render(
+        html`${alert_known_users_not_alive} ${alert_known_users_are_retricted} ${alert_not_sent}
+        ${alert_success} ${alert_known_users_added} ${alert_already_members}`,
+        feedback
+    );
+}
+
+function getAlertForUsers(
+    level: "danger" | "info",
+    users: User[],
+    title: string,
+    description: string,
+    data_test: string
+): TemplateResult {
+    if (users.length <= 0) {
+        return html``;
+    }
+
+    return html`
+        <div class="tlp-alert-${level} alert-${level} alert">
+            <p class="tlp-alert-title">${title}</p>
+            <p>${description}</p>
+            <ul>
+                ${users.map(
+                    (user) =>
+                        html`<li data-test="${data_test}">
+                            <code>${user.email}</code> ${user.display_name}
+                        </li>`
+                )}
+            </ul>
+        </div>
+    `;
 }
 
 function clearFeedback(): void {
@@ -173,12 +247,13 @@ function getFeedbacksContainer(): HTMLElement {
     return feedback;
 }
 
-function isEmailASuccess(
-    response_body: { failures: string[]; already_project_members: User[] },
-    email: string
-): boolean {
+function isEmailASuccess(response_body: InvitationResponse, email: string): boolean {
     return (
         response_body.failures.some((failure) => email === failure) === false &&
-        response_body.already_project_members.some((user) => email === user.email) === false
+        response_body.already_project_members.some((user) => email === user.email) === false &&
+        response_body.known_users_added_to_project_members.some((user) => email === user.email) ===
+            false &&
+        response_body.known_users_not_alive.some((user) => email === user.email) === false &&
+        response_body.known_users_are_restricted.some((user) => email === user.email) === false
     );
 }

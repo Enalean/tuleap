@@ -532,7 +532,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                         && $arg_custom_message === null
                         && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
                     ) {
-                        return new SentInvitationResult([], []);
+                        return new SentInvitationResult([], [], [], [], []);
                     }
 
                     throw new \Exception('Unexpected call te send()');
@@ -604,7 +604,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                         && $arg_custom_message === null
                         && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
                     ) {
-                        return new SentInvitationResult([], []);
+                        return new SentInvitationResult([], [], [], [], []);
                     }
 
                     throw new \Exception('Unexpected call te send()');
@@ -663,7 +663,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                 $this->project,
                 'Viens on est bien',
                 $this->user,
-            )->willReturn(new SentInvitationResult([], []));
+            )->willReturn(new SentInvitationResult([], [], [], [], []));
 
         $controller = $this->buildController(
             RetrieveUserByIdStub::withUser($from_user),

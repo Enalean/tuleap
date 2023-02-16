@@ -731,6 +731,7 @@ class RouteCollector
                     new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
                     new \ProjectHistoryDao(),
                 ),
+                ProjectMemberAdderWithStatusCheckAndNotifications::build(),
             ),
             new ProjectHistoryDao(),
             new SapiEmitter(),
