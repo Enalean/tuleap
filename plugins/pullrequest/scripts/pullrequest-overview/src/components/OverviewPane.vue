@@ -22,7 +22,15 @@
         <div class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header pull-request-header">
-                    <h2>{{ $gettext("Pullrequest") }}</h2>
+                    <h2 v-if="pull_request_info" data-test="pullrequest-title">
+                        {{ pull_request_info.title }}
+                    </h2>
+                    <h2 v-if="pull_request_info === null">
+                        <span
+                            class="tlp-skeleton-text"
+                            data-test="pullrequest-title-skeleton"
+                        ></span>
+                    </h2>
                 </div>
 
                 <overview-tabs />
@@ -36,8 +44,28 @@
 </template>
 
 <script setup lang="ts">
-import OverviewTabs from "./OverviewTabs.vue";
+import { provide, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { useRoute } from "vue-router";
+import OverviewTabs from "./OverviewTabs.vue";
+import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
+import type { PullRequestInfo } from "../api/types";
+import { PULL_REQUEST_ID_KEY } from "../constants";
 
 const { $gettext } = useGettext();
+
+const route = useRoute();
+const pull_request_id = String(route.params.id);
+const pull_request_info = ref<PullRequestInfo | null>(null);
+
+provide(PULL_REQUEST_ID_KEY, pull_request_id);
+
+fetchPullRequestInfo(pull_request_id).match(
+    (result) => {
+        pull_request_info.value = result;
+    },
+    () => {
+        // Do nothing, we don't have a way to display errors yet
+    }
+);
 </script>
