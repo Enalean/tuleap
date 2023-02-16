@@ -41,9 +41,11 @@ final class AutolinkExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatesLinksAutomaticallyForSupportedSchemes(): void
     {
-        $result = $this->converter->convertToHtml(
+        $result = $this->converter->convert(
             <<<MARKDOWN_CONTENT
             https://example.com
+
+            https://sub_domain.example.com
 
             http://example.com
 
@@ -56,11 +58,12 @@ final class AutolinkExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(
             <<<EXPECTED_HTML
             <p><a href="https://example.com">https://example.com</a></p>
+            <p><a href="https://sub_domain.example.com">https://sub_domain.example.com</a></p>
             <p><a href="http://example.com">http://example.com</a></p>
             <p>ftp://example.com</p>
             <p>foo@example.com</p>\n
             EXPECTED_HTML,
-            $result
+            $result->getContent()
         );
     }
 }
