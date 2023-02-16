@@ -96,7 +96,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         );
     }
 
-    public function testAnEmptyValueForListFieldShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
+    public function testAnEmptyValueForListFieldAtUpdateShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
     {
         $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
             ->with($this->tracker)
@@ -113,6 +113,44 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
         $this->assertEquals(
             [22 => [100]],
+            $this->initializator->process($this->artifact, $fields_data)
+        );
+    }
+
+    public function testAnEmptyValueForListFieldAtCreationShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
+    {
+        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field->method('getId')->willReturn(22);
+
+        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+            ->with($this->tracker)
+            ->andReturns([$list_field]);
+
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+
+        $fields_data = [];
+
+        $this->assertEquals(
+            [22 => [100]],
+            $this->initializator->process($this->artifact, $fields_data)
+        );
+    }
+
+    public function testCreationWithListFieldValueHasTheSelectedValue(): void
+    {
+        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field->method('getId')->willReturn(22);
+
+        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+            ->with($this->tracker)
+            ->andReturns([$list_field]);
+
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+
+        $fields_data = [22 => [234]];
+
+        $this->assertEquals(
+            [22 => [234]],
             $this->initializator->process($this->artifact, $fields_data)
         );
     }
