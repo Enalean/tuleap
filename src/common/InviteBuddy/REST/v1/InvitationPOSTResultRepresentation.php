@@ -22,21 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\REST\v1;
 
+use Tuleap\InviteBuddy\SentInvitationResult;
+use Tuleap\User\REST\UserRepresentation;
+
 /**
  * @psalm-immutable
  */
 final class InvitationPOSTResultRepresentation
 {
     /**
-     * @var string[]
-     */
-    public $failures;
-
-    /**
      * @param string[] $failures
+     * @param UserRepresentation[] $already_project_members
      */
-    public function __construct(array $failures)
+    private function __construct(public array $failures, public array $already_project_members)
     {
-        $this->failures = $failures;
+    }
+
+    public static function fromResult(SentInvitationResult $result): self
+    {
+        return new self(
+            $result->failures,
+            array_map(
+                static fn (\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                $result->already_project_members,
+            ),
+        );
     }
 }

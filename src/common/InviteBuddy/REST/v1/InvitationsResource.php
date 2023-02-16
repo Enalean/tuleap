@@ -112,10 +112,11 @@ class InvitationsResource extends AuthenticatedResource
 
 
         try {
-            $project  = $invitation->project_id
+            $project = $invitation->project_id
                 ? \ProjectManager::instance()->getValidProjectById($invitation->project_id)
                 : null;
-            $failures = $sender->send(
+
+            $result = $sender->send(
                 $current_user,
                 array_filter($invitation->emails),
                 $project,
@@ -123,7 +124,7 @@ class InvitationsResource extends AuthenticatedResource
                 null,
             );
 
-            return new InvitationPOSTResultRepresentation($failures);
+            return InvitationPOSTResultRepresentation::fromResult($result);
         } catch (\Project_NotFoundException | UserIsNotAllowedToManageProjectMembersException) {
             throw new RestException(404);
         } catch (InvitationSenderGateKeeperException $e) {

@@ -119,7 +119,9 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEmpty(
-            $sender->send($current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
+            $sender
+                ->send($current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
+                ->failures
         );
 
         $calls = $one_recipient_sender->getCalls();
@@ -153,6 +155,8 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $known_user = UserTestBuilder::aUser()
             ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
             ->withEmail('doe@example.com')
             ->build();
 
@@ -170,7 +174,9 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         self::assertEmpty(
-            $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
+            $sender
+                ->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
+                ->failures
         );
 
         $calls = $one_recipient_sender->getCalls();
@@ -242,7 +248,9 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $one_recipient_sender,
         );
         self::assertEmpty(
-            $sender->send($current_user, ["", null, "doe@example.com"], null, null, null)
+            $sender
+                ->send($current_user, ["", null, "doe@example.com"], null, null, null)
+                ->failures
         );
 
         $calls = $one_recipient_sender->getCalls();
@@ -291,12 +299,54 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(
             ["john@example.com"],
-            $sender->send($current_user, ["john@example.com", "doe@example.com"], null, null, null)
+            $sender
+                ->send($current_user, ["john@example.com", "doe@example.com"], null, null, null)
+                ->failures
         );
         self::assertTrue(
             $logger->hasError("Unable to send invitation from user #123 to john@example.com")
         );
         self::assertCount(2, $one_recipient_sender->getCalls());
+    }
+
+    public function testItIgnoresUserThatIsAlreadyProjectMember(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withEmail('doe@example.com')
+            ->withoutSiteAdministrator()
+            ->withMemberOf($project)
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $logger = new TestLogger();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            $logger,
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+        );
+
+        self::assertEquals(
+            [$known_user],
+            $sender
+                ->send($current_user, ["doe@example.com"], $project, null, null)
+                ->already_project_members
+        );
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
+        self::assertFalse($logger->hasRecords(\Feedback::ERROR));
     }
 
     public function testItRaisesAnExceptionIfEveryEmailsAreInFailure(): void

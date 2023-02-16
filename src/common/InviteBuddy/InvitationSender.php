@@ -45,8 +45,6 @@ class InvitationSender
     /**
      * @param string[] $emails
      *
-     * @return string[] emails in failure
-     *
      * @throws InvitationSenderGateKeeperException
      * @throws UnableToSendInvitationsException
      * @throws UserIsNotAllowedToManageProjectMembersException
@@ -57,7 +55,7 @@ class InvitationSender
         ?\Project $project,
         ?string $custom_message,
         ?PFUser $resent_from_user,
-    ): array {
+    ): SentInvitationResult {
         $to_project_id = $project ? (int) $project->getID() : null;
         $this->checkUserCanInviteIntoProject($project, $from_user);
 
@@ -66,16 +64,23 @@ class InvitationSender
 
         $now = (new \DateTimeImmutable())->getTimestamp();
 
-        $failures = [];
+        $failures               = [];
+        $already_project_member = [];
         foreach ($emails as $email) {
-            $recipient = new InvitationRecipient(
-                $this->user_manager->getUserByEmail($email),
-                $email,
-            );
+            $user = $this->user_manager->getUserByEmail($email);
+            if ($project && $user && $user->isMember((int) $project->getID())) {
+                $already_project_member[] = $user;
+                continue;
+            }
 
             $this->one_recipient_sender
-                ->sendToRecipient($from_user, $recipient, $project, $custom_message, $resent_from_user)
-                ->orElse(
+                ->sendToRecipient(
+                    $from_user,
+                    new InvitationRecipient($user, $email),
+                    $project,
+                    $custom_message,
+                    $resent_from_user,
+                )->orElse(
                     function (Fault $fault) use ($email, &$failures): Err {
                         Fault::writeToLogger($fault, $this->logger);
                         $failures[] = $email;
@@ -95,7 +100,7 @@ class InvitationSender
             );
         }
 
-        return $failures;
+        return new SentInvitationResult($failures, $already_project_member);
     }
 
     /**

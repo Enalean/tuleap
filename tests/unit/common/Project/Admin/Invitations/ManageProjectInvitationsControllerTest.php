@@ -32,6 +32,7 @@ use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawer;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawerStub;
+use Tuleap\InviteBuddy\SentInvitationResult;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\Layout\Feedback\ISerializeFeedback;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
@@ -519,7 +520,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                     ?\Project $arg_project,
                     ?string $arg_custom_message,
                     ?\PFUser $arg_resent_from_user,
-                ) use ($from_user): array {
+                ) use ($from_user): SentInvitationResult {
                     if ((int) $arg_from_user->getId() === (int) $from_user->getId()) {
                         throw new UserIsNotAllowedToManageProjectMembersException();
                     }
@@ -531,7 +532,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                         && $arg_custom_message === null
                         && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
                     ) {
-                        return [];
+                        return new SentInvitationResult([], []);
                     }
 
                     throw new \Exception('Unexpected call te send()');
@@ -591,7 +592,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                     ?\Project $arg_project,
                     ?string $arg_custom_message,
                     ?\PFUser $arg_resent_from_user,
-                ) use ($from_user): array {
+                ) use ($from_user): SentInvitationResult {
                     if ((int) $arg_from_user->getId() === (int) $from_user->getId()) {
                         throw new InvitationSenderGateKeeperException();
                     }
@@ -603,7 +604,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                         && $arg_custom_message === null
                         && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
                     ) {
-                        return [];
+                        return new SentInvitationResult([], []);
                     }
 
                     throw new \Exception('Unexpected call te send()');
@@ -662,7 +663,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
                 $this->project,
                 'Viens on est bien',
                 $this->user,
-            );
+            )->willReturn(new SentInvitationResult([], []));
 
         $controller = $this->buildController(
             RetrieveUserByIdStub::withUser($from_user),

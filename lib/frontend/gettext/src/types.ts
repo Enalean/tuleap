@@ -19,6 +19,7 @@
 
 export interface GettextProvider {
     gettext(msgid: string): string;
+    ngettext(singular: string, plural: string, n: number): string;
 }
 
 // See https://github.com/smhg/gettext-parser for the file format reference

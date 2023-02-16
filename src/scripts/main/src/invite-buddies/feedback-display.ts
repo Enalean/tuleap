@@ -18,6 +18,7 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
+import { html, render } from "lit/html.js";
 
 export function initFeedbacks(): void {
     clearFeedback();
@@ -45,9 +46,14 @@ export function displayError(message: string): void {
     feedback.appendChild(alert);
 }
 
+interface User {
+    readonly email: string;
+    readonly display_name: string;
+}
+
 export function displaySuccess(
     emails: string[],
-    response_body: { failures: string[] },
+    response_body: { failures: string[]; already_project_members: User[] },
     gettext_provider: GettextProvider
 ): void {
     const modal_body = document.getElementById("invite-buddies-modal-body");
@@ -62,41 +68,94 @@ export function displaySuccess(
 
     const feedback = getFeedbacksContainer();
 
-    const successful_emails = emails.filter((email) => !isEmailAFailure(response_body, email));
+    const successful_emails = emails.filter((email) => isEmailASuccess(response_body, email));
 
     modal_body.classList.add("invite-buddies-email-sent");
     modal_footer.classList.add("invite-buddies-email-sent");
     clearFeedback();
 
+    let alert_success = html``;
     if (successful_emails.length > 0) {
-        const alert_success = document.createElement("div");
-        alert_success.classList.add("tlp-alert-success");
-        alert_success.classList.add("alert-success");
-        alert_success.classList.add("alert");
-        alert_success.appendChild(
-            document.createTextNode(
-                gettext_provider.gettext("Invitation has been successfully sent to:") +
-                    " " +
-                    successful_emails.join(", ")
-            )
+        const title = gettext_provider.ngettext(
+            "Invitation successfully sent",
+            "Invitations successfully sent",
+            successful_emails.length
         );
-        feedback.appendChild(alert_success);
+
+        alert_success = html`
+            <div class="tlp-alert-success alert-success alert">
+                <p class="tlp-alert-title">${title}</p>
+                <ul>
+                    ${successful_emails.map(
+                        (email) =>
+                            html`<li data-test="success">
+                                <code>${email}</code>
+                            </li>`
+                    )}
+                </ul>
+            </div>
+        `;
     }
 
-    if (response_body.failures.length > 0) {
-        const alert_warning = document.createElement("div");
-        alert_warning.classList.add("tlp-alert-warning");
-        alert_warning.classList.add("alert-warning");
-        alert_warning.classList.add("alert");
-        alert_warning.appendChild(
-            document.createTextNode(
-                gettext_provider.gettext("Invitation could not be sent to:") +
-                    " " +
-                    response_body.failures.join(", ")
-            )
+    let alert_already_members = html``;
+    if (response_body.already_project_members.length > 0) {
+        const title = gettext_provider.ngettext(
+            "Already project member",
+            "Already project members",
+            response_body.already_project_members.length
         );
-        feedback.appendChild(alert_warning);
+
+        const description = gettext_provider.ngettext(
+            "The following user is already project member, they have been ignored:",
+            "The following users are already project members, they have been ignored:",
+            response_body.already_project_members.length
+        );
+
+        alert_already_members = html`
+            <div class="tlp-alert-info alert-info alert">
+                <p class="tlp-alert-title">${title}</p>
+                <p>${description}</p>
+                <ul>
+                    ${response_body.already_project_members.map(
+                        (user) =>
+                            html`<li data-test="already-member">
+                                <code>${user.email}</code> ${user.display_name}
+                            </li>`
+                    )}
+                </ul>
+            </div>
+        `;
     }
+
+    let alert_not_sent = html``;
+    if (response_body.failures.length > 0) {
+        const title = gettext_provider.ngettext(
+            "An invitation could not be sent",
+            "Some invitations could not be sent",
+            response_body.failures.length
+        );
+
+        const description = gettext_provider.gettext(
+            "An error occurred while trying to send an invitation to:"
+        );
+
+        alert_not_sent = html`
+            <div class="tlp-alert-warning alert-warning alert">
+                <p class="tlp-alert-title">${title}</p>
+                <p>${description}</p>
+                <ul>
+                    ${response_body.failures.map(
+                        (email) =>
+                            html`<li data-test="could-not-be-sent">
+                                <code>${email}</code>
+                            </li>`
+                    )}
+                </ul>
+            </div>
+        `;
+    }
+
+    render(html`${alert_not_sent} ${alert_success} ${alert_already_members}`, feedback);
 }
 
 function clearFeedback(): void {
@@ -114,6 +173,12 @@ function getFeedbacksContainer(): HTMLElement {
     return feedback;
 }
 
-function isEmailAFailure(response_body: { failures: string[] }, email: string): boolean {
-    return response_body.failures.some((failure) => email === failure);
+function isEmailASuccess(
+    response_body: { failures: string[]; already_project_members: User[] },
+    email: string
+): boolean {
+    return (
+        response_body.failures.some((failure) => email === failure) === false &&
+        response_body.already_project_members.some((user) => email === user.email) === false
+    );
 }

@@ -43,11 +43,13 @@ describe("feedback-display", () => {
 
             displaySuccess(
                 ["wendy@example.com", "peter@example.com"],
-                { failures: [] },
+                { failures: [], already_project_members: [] },
                 gettext_provider
             );
 
-            expect(document.body).toMatchSnapshot();
+            expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(2);
+            expect(document.body.querySelectorAll("[data-test=already-member]")).toHaveLength(0);
+            expect(document.body.querySelectorAll("[data-test=could-not-be-sent]")).toHaveLength(0);
         });
 
         it("Extracts emails that are in error to display a warning", () => {
@@ -57,11 +59,33 @@ describe("feedback-display", () => {
                 ["wendy@example.com", "peter@example.com"],
                 {
                     failures: ["peter@example.com"],
+                    already_project_members: [],
                 },
                 gettext_provider
             );
 
-            expect(document.body).toMatchSnapshot();
+            expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
+            expect(document.body.querySelectorAll("[data-test=already-member]")).toHaveLength(0);
+            expect(document.body.querySelectorAll("[data-test=could-not-be-sent]")).toHaveLength(1);
+        });
+
+        it("should display users that are already project members", () => {
+            const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
+
+            displaySuccess(
+                ["wendy@example.com", "peter@example.com"],
+                {
+                    failures: [],
+                    already_project_members: [
+                        { email: "peter@example.com", display_name: "Peter Pan (pan)" },
+                    ],
+                },
+                gettext_provider
+            );
+
+            expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
+            expect(document.body.querySelectorAll("[data-test=already-member]")).toHaveLength(1);
+            expect(document.body.querySelectorAll("[data-test=could-not-be-sent]")).toHaveLength(0);
         });
     });
 });

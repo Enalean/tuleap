@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GettextProvider } from "@tuleap/gettext";
-import { initGettextSync } from "@tuleap/gettext";
+declare(strict_types=1);
 
-export function createGettextProviderPassthrough(): GettextProvider {
-    return initGettextSync("tuleap-testmanagement", {}, "en_US");
+namespace Tuleap\InviteBuddy;
+
+/**
+ * @psalm-immutable
+ */
+final class SentInvitationResult
+{
+    /**
+     * @param string[] $failures
+     * @param \PFUser[] $already_project_members
+     */
+    public function __construct(
+        public readonly array $failures,
+        public readonly array $already_project_members,
+    ) {
+    }
 }
