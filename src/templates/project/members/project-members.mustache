@@ -58,11 +58,10 @@
                                             {{# gettext }}Resend invitation{{/ gettext }}
                                         </a>
                                         <button
-                                            type="submit"
-                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                                            name="withdraw-invitation"
+                                            type="button"
                                             data-test="withdraw-invitation"
-                                            value="{{ id }}"
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline withdraw-invitation-button"
+                                            data-target-modal-id="withdraw-invitation-modal-{{ id }}"
                                         >
                                             <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
                                             {{# gettext }}Withdraw invitation{{/ gettext }}
@@ -72,6 +71,42 @@
                             {{/ invitations }}
                         </tbody>
                     </table>
+                    {{# invitations }}
+                        <div id="withdraw-invitation-modal-{{ id }}"
+                             class="tlp-modal tlp-modal-danger"
+                             role="dialog"
+                             aria-labelledby="withdraw-invitation-modal-{{ id }}-label"
+                        >
+                            <div class="tlp-modal-header">
+                                <h1 class="tlp-modal-title" id="withdraw-invitation-modal-{{ id }}-label">
+                                    {{# gettext }}Withdraw invitation{{/ gettext }}
+                                </h1>
+                                <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                                    <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <div class="tlp-modal-body">
+                                <p>{{# gettext }}You're about to withdraw %s invitation from this project. | <b>{{ email }}</b>{{/ gettext }}</p>
+                                <p>{{# gettext }}This person will still be able to register by herself but won't be automatically a project member.{{/ gettext }}</p>
+                                <p>{{# gettext }}Please confirm your action.{{/ gettext }}</p>
+                            </div>
+
+                            <div class="tlp-modal-footer">
+                                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                                    {{# gettext }}Cancel{{/ gettext }}
+                                </button>
+                                <button type="submit"
+                                        name="withdraw-invitation"
+                                        data-test="withdraw-invitation-confirm"
+                                        value="{{ id }}"
+                                        class="tlp-button-danger tlp-modal-action"
+                                >
+                                    {{# gettext }}Withdraw invitation{{/ gettext }}
+                                </button>
+                            </div>
+                        </div>
+                    {{/ invitations }}
                 </form>
             </div>
         </section>
