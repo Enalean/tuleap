@@ -22,7 +22,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class GitActionsForkTests extends \Tuleap\Test\PHPUnit\TestCase
+final class GitActionsForkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

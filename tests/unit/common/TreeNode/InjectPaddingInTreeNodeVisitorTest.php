@@ -20,7 +20,7 @@
 
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TreeNodeInjectPaddingInTreeNodeVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+class InjectPaddingInTreeNodeVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItInjectsPadding(): void
     {

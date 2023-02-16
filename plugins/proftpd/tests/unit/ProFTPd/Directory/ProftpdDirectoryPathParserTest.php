@@ -20,7 +20,7 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-class DirectoryPathParser_CleanPathTest extends \Tuleap\Test\PHPUnit\TestCase
+class ProftpdDirectoryPathParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private DirectoryPathParser $parser;
 

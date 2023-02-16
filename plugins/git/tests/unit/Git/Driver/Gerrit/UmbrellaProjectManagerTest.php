@@ -25,7 +25,7 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends \Tuleap\Test\PHPUnit\TestCase
+class UmbrellaProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
