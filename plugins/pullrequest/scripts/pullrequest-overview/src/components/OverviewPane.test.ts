@@ -23,15 +23,14 @@ import { okAsync } from "neverthrow";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import * as router from "vue-router";
 import * as tuleap_api from "../api/tuleap-rest-querier";
-import { getGlobalTestOptions } from "../tests-helpers/global-options-for-tests";
 import OverviewPane from "./OverviewPane.vue";
 
 vi.mock("vue-router");
 
-const PULLREQUEST_ID = "15";
-
 describe("OverviewPane", () => {
-    it("Should fetch the pullrequest info and display its title", async () => {
+    it("Should fetch the pull request info using its id provided in th route parameters", async () => {
+        const PULLREQUEST_ID = "15";
+
         vi.spyOn(router, "useRoute").mockImplementationOnce(
             () =>
                 ({
@@ -47,18 +46,10 @@ describe("OverviewPane", () => {
             })
         );
 
-        const wrapper = shallowMount(OverviewPane, {
-            global: {
-                ...getGlobalTestOptions(),
-            },
-        });
-
-        expect(wrapper.find("[data-test=pullrequest-title-skeleton]").exists()).toBe(true);
+        shallowMount(OverviewPane);
 
         await flushPromises();
 
         expect(tuleap_api.fetchPullRequestInfo).toHaveBeenCalledWith(PULLREQUEST_ID);
-        expect(wrapper.find("[data-test=pullrequest-title]").text()).toBe("My pull request title");
-        expect(wrapper.find("[data-test=pullrequest-title-skeleton]").exists()).toBe(false);
     });
 });

@@ -19,24 +19,17 @@
 
 <template>
     <div class="tlp-framed">
-        <div class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header pull-request-header">
-                    <h2 v-if="pull_request_info" data-test="pullrequest-title">
-                        {{ pull_request_info.title }}
-                    </h2>
-                    <h2 v-if="pull_request_info === null">
-                        <span
-                            class="tlp-skeleton-text"
-                            data-test="pullrequest-title-skeleton"
-                        ></span>
-                    </h2>
-                </div>
+        <overview-app-header v-bind:pull_request="pull_request_info" />
 
-                <overview-tabs />
-
-                <section class="tlp-pane-section pull-request-tab-content">
-                    <section id="pull-request-overview">{{ $gettext("Overview") }}</section>
+        <div class="tlp-pane pullrequest-overview-content-pane">
+            <div class="tlp-pane-container pullrequest-overview-threads">
+                <section class="tlp-pane-section">
+                    <p class="empty-state-text">Threads of comments section</p>
+                </section>
+            </div>
+            <div class="tlp-pane-container pullrequest-overview-info">
+                <section class="tlp-pane-section">
+                    <p class="empty-state-text">Pull request info section</p>
                 </section>
             </div>
         </div>
@@ -45,14 +38,11 @@
 
 <script setup lang="ts">
 import { provide, ref } from "vue";
-import { useGettext } from "vue3-gettext";
 import { useRoute } from "vue-router";
-import OverviewTabs from "./OverviewTabs.vue";
+import OverviewAppHeader from "./OverviewAppHeader.vue";
 import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
 import type { PullRequestInfo } from "../api/types";
 import { PULL_REQUEST_ID_KEY } from "../constants";
-
-const { $gettext } = useGettext();
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);
@@ -69,3 +59,26 @@ fetchPullRequestInfo(pull_request_id).match(
     }
 );
 </script>
+
+<style lang="scss">
+.pullrequest-overview-header {
+    margin-bottom: 0;
+    border-bottom: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.pullrequest-overview-content-pane {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.pullrequest-overview-threads {
+    background-color: var(--tlp-background-color-lighter-50);
+}
+
+.pullrequest-overview-info {
+    flex: 0 1 50%;
+}
+</style>
