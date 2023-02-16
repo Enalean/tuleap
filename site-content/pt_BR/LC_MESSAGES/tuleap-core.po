@@ -3679,8 +3679,8 @@ msgid "The header background has been successfully changed"
 msgstr "O fundo do cabeçalho foi alterado com sucesso"
 
 msgid ""
-"The invitation you want to withdraw cannot be found. Maybe it has already "
-"been removed?"
+"The invitation cannot be found. Maybe it has already been completed or "
+"removed?"
 msgstr ""
 
 msgid ""
@@ -4331,6 +4331,20 @@ msgstr "O grupo de usuários não existe"
 
 msgid "User is already member of the project"
 msgstr "O usuário já é membro do projeto"
+
+msgid "User is already registered and has been added to project."
+msgstr ""
+
+msgid "User is already registered and project member."
+msgstr ""
+
+msgid "User is already registered but is not active yet."
+msgstr ""
+
+msgid ""
+"User is already registered but is restricted and the project does not accept "
+"restricted users."
+msgstr ""
 
 msgid "User name"
 msgstr "Nome do usuário"

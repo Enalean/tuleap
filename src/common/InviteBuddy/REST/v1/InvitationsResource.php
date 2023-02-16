@@ -41,6 +41,7 @@ use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -108,6 +109,7 @@ class InvitationsResource extends AuthenticatedResource
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
                 new \ProjectHistoryDao(),
             ),
+            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
         );
 
 

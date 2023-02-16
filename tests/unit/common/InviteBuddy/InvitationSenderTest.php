@@ -32,6 +32,9 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembersStub;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
@@ -63,6 +66,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ["john@example.com"], null, null, null);
         self::assertTrue($one_recipient_sender->hasBeenCalled());
@@ -89,6 +93,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ["john@example.com"], null, null, null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -116,6 +121,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
 
         self::assertEmpty(
@@ -142,7 +148,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($calls[1]['resent_from_user']);
     }
 
-    public function testItSendAnInvitationForAProjectIfUserIsProjectAdmin(): void
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationIfCurrentUserIsProjectAdmin(): void
     {
         $project_id = 111;
         $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
@@ -165,22 +171,29 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user);
+
         $sender = new InvitationSender(
             $gate_keeper,
             RetrieveUserByEmailStub::withUser($known_user),
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::canManageMembers(),
             $one_recipient_sender,
+            $project_member_adder,
         );
 
-        self::assertEmpty(
-            $sender
-                ->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
-                ->failures
-        );
+        $sent_invitation_result = $sender
+            ->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+
+        self::assertEmpty($sent_invitation_result->failures);
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_added_to_project_members);
 
         $calls = $one_recipient_sender->getCalls();
-        self::assertCount(2, $calls);
+        self::assertCount(1, $calls);
 
         self::assertSame($current_user, $calls[0]['from_user']);
         self::assertEquals('john@example.com', $calls[0]['recipient']->email);
@@ -188,13 +201,98 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($project, $calls[0]['project']);
         self::assertEquals('A custom message', $calls[0]['custom_message']);
         self::assertNull($calls[0]['resent_from_user']);
+    }
 
-        self::assertSame($current_user, $calls[1]['from_user']);
-        self::assertEquals('doe@example.com', $calls[1]['recipient']->email);
-        self::assertSame($known_user, $calls[1]['recipient']->user);
-        self::assertSame($project, $calls[1]['project']);
-        self::assertEquals('A custom message', $calls[1]['custom_message']);
-        self::assertNull($calls[1]['resent_from_user']);
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationButUserIsNotActive(): void
+    {
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user)
+            ->willThrowException(new UserIsNotActiveOrRestrictedException());
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $project_member_adder,
+        );
+
+        $sent_invitation_result = $sender
+            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_not_alive);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
+    }
+
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationButUserIsRestrictedAndProjectDoesNotAcceptIt(): void
+    {
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user)
+            ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($known_user, $project));
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $project_member_adder,
+        );
+
+        $sent_invitation_result = $sender
+            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_are_restricted);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
     }
 
     public function testExceptionWhenInvitationForAProjectAndUserIsNotProjectAdminAndHasNoDelegation(): void
@@ -224,6 +322,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
         self::assertFalse($one_recipient_sender->hasBeenCalled());
@@ -246,6 +345,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TestLogger(),
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
         self::assertEmpty(
             $sender
@@ -295,6 +395,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
 
         self::assertEquals(
@@ -337,6 +438,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::canManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
 
         self::assertEquals(
@@ -383,6 +485,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger,
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
             $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
         );
         $sender->send($current_user, ["john@example.com", "doe@example.com"], null, null, null);
 

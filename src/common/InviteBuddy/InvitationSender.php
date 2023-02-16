@@ -29,6 +29,11 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
 use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\AlreadyProjectMemberException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\NoEmailForUserException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
 use Tuleap\User\RetrieveUserByEmail;
 
 class InvitationSender
@@ -39,6 +44,7 @@ class InvitationSender
         private LoggerInterface $logger,
         private EnsureUserCanManageProjectMembers $members_manager_checker,
         private InvitationToOneRecipientSender $one_recipient_sender,
+        private ProjectMemberAdder $project_member_adder,
     ) {
     }
 
@@ -64,12 +70,32 @@ class InvitationSender
 
         $now = (new \DateTimeImmutable())->getTimestamp();
 
-        $failures               = [];
-        $already_project_member = [];
+        $failures                   = [];
+        $already_project_members    = [];
+        $known_users_added          = [];
+        $known_users_not_alive      = [];
+        $known_users_are_restricted = [];
         foreach ($emails as $email) {
             $user = $this->user_manager->getUserByEmail($email);
             if ($project && $user && $user->isMember((int) $project->getID())) {
-                $already_project_member[] = $user;
+                $already_project_members[] = $user;
+                continue;
+            }
+
+            if ($project && $user) {
+                try {
+                    $this->project_member_adder->addProjectMember($user, $project, $from_user);
+                    $known_users_added[] = $user;
+                } catch (UserIsNotActiveOrRestrictedException) {
+                    $known_users_not_alive[] = $user;
+                } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted) {
+                    $known_users_are_restricted[] = $user;
+                } catch (AlreadyProjectMemberException) {
+                    $already_project_members[] = $user;
+                } catch (NoEmailForUserException) {
+                    // We have retrieved a user thanks to the email and they don't have an email O_o
+                    // We can ignore, we could not send the email anyway
+                }
                 continue;
             }
 
@@ -100,7 +126,13 @@ class InvitationSender
             );
         }
 
-        return new SentInvitationResult($failures, $already_project_member);
+        return new SentInvitationResult(
+            $failures,
+            $already_project_members,
+            $known_users_added,
+            $known_users_not_alive,
+            $known_users_are_restricted,
+        );
     }
 
     /**
