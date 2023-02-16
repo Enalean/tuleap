@@ -18,11 +18,11 @@
     }
   },
   "dependencies": {
-    "dompurify": "^2.3.6"
+    "dompurify": "^3.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^2.3.3"
+    "@types/dompurify": "^2.4.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

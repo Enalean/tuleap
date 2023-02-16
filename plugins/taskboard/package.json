@@ -14,12 +14,12 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
-    "dompurify": "^2.3.6",
+    "dompurify": "^3.0.0",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",
     "p-retry": "^4.5.0",
     "vue": "^2.7.8",
-    "vue-dompurify-html": "^2.5.1",
+    "vue-dompurify-html": "^4.0.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@types/dompurify": "^2.3.2",
+    "@types/dompurify": "^2.4.0",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.5",
     "@types/mustache": "^4.1.2",
