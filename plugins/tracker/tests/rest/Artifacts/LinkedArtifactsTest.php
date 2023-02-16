@@ -152,6 +152,57 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertEmpty($linked_artifacts_collection["collection"]);
     }
 
+    public function testPOSTArtifacts(): void
+    {
+        $project_id = $this->getProjectId(self::PROJECT_SHORTNAME);
+        $tracker_id = $this->tracker_ids[$project_id][self::TRACKER_SHORTNAME];
+        $field_id   = $this->getAUsedFieldId($tracker_id, self::FIELD_SHORTNAME);
+
+        $tracker = $this->tracker_representations[$tracker_id];
+        foreach ($tracker['fields'] as $field) {
+            if ($field['name'] === 'status') {
+                $status_field_id       = $field['field_id'];
+                $this->status_value_id = $field['values'][0]['id'];
+            }
+        }
+
+        $artifact_id_1 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+
+        $body = json_encode(
+            [
+                "tracker" => [
+                    "id" => $tracker_id,
+                ],
+                'values' => [
+                    [
+                        "field_id" => $field_id,
+                        "all_links" => [
+                            [
+                                "id" => $artifact_id_1,
+                                "direction" => "forward",
+                                "type" => "",
+                            ],
+                        ],
+                    ],
+                    [
+                        'field_id' => $status_field_id,
+                        'bind_value_ids' => [$this->status_value_id],
+                    ],
+                ],
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('POST', "artifacts")->withBody($this->stream_factory->createStream($body))
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertReverseLinkExist($json['id'], $artifact_id_1, "");
+    }
+
     private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id, ?string $expected_type): void
     {
         $type = $expected_type ? urlencode($expected_type) : '';

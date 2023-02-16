@@ -35,7 +35,7 @@ final class AllLinkPayloadParser
      * @param LinkWithDirectionRepresentation[] $all_links
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public static function buildLinksToUpdate(array $all_links): CollectionOfReverseLinks
+    public static function buildReverseLinks(array $all_links): CollectionOfReverseLinks
     {
         $reverse_links = [];
         foreach ($all_links as $link) {
@@ -51,7 +51,7 @@ final class AllLinkPayloadParser
      * @param LinkWithDirectionRepresentation[] $all_links
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public static function buildForwardLinksToUpdate(array $all_links): CollectionOfForwardLinks
+    public static function buildForwardLinks(array $all_links): CollectionOfForwardLinks
     {
         $forward_links = [];
         foreach ($all_links as $link) {

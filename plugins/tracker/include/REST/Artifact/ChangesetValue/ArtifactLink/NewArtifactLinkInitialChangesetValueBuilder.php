@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class NewArtifactLinkInitialChangesetValueBuilder
 {
@@ -36,58 +37,59 @@ final class NewArtifactLinkInitialChangesetValueBuilder
      */
     public function buildFromPayload(
         \Tracker_FormElement_Field_ArtifactLink $link_field,
-        array $payload,
+        ArtifactValuesRepresentation $payload,
     ): NewArtifactLinkInitialChangesetValue {
-        $payload_has_parent_key = $this->doesPayloadHaveAParentKey($payload);
-        $payload_has_links_key  = $this->doesPayloadHaveALinksKey($payload);
+        $valid_payload = ValidArtifactLinkPayloadBuilder::buildPayloadAndCheckValidity($payload);
 
-        if (! $payload_has_parent_key && ! $payload_has_links_key) {
-            throw new \Tracker_FormElement_InvalidFieldValueException(
-                'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
+        if ($valid_payload->isAllLinksPayload()) {
+            return NewArtifactLinkInitialChangesetValue::fromParts(
+                $link_field->getId(),
+                $this->buildForward($payload),
+                $this->buildParent($payload),
             );
         }
 
         return NewArtifactLinkInitialChangesetValue::fromParts(
             $link_field->getId(),
-            $this->buildLinks($payload_has_links_key, $payload),
-            $this->buildParent($payload_has_parent_key, $payload),
+            $this->buildLinks($payload),
+            $this->buildParent($payload),
         );
     }
 
-    private function doesPayloadHaveAParentKey(array $payload): bool
-    {
-        return array_key_exists(self::PARENT_KEY, $payload);
-    }
-
-    private function doesPayloadHaveALinksKey(array $payload): bool
-    {
-        return array_key_exists(self::LINKS_KEY, $payload)
-            && is_array($payload[self::LINKS_KEY]);
-    }
-
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private function buildParent(bool $payload_has_parent_key, array $payload): ?NewParentLink
+    private function buildParent(ArtifactValuesRepresentation $payload): ?NewParentLink
     {
-        if (! $payload_has_parent_key) {
+        if ($payload->parent === null) {
             return null;
         }
-        return RESTNewParentLinkProxy::fromRESTPayload($payload[self::PARENT_KEY]);
+        return RESTNewParentLinkProxy::fromRESTPayload($payload->toArray()[self::PARENT_KEY]);
     }
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private function buildLinks(bool $payload_has_links_key, array $payload): CollectionOfForwardLinks
+    private function buildLinks(ArtifactValuesRepresentation $payload): CollectionOfForwardLinks
     {
-        if (! $payload_has_links_key) {
+        if ($payload->links === null) {
             return new CollectionOfForwardLinks([]);
         }
         $links = array_map(
             static fn(array $link_payload) => RESTForwardLinkProxy::fromPayload($link_payload),
-            $payload[self::LINKS_KEY]
+            $payload->toArray()[self::LINKS_KEY]
         );
         return new CollectionOfForwardLinks($links);
+    }
+
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
+    private function buildForward(ArtifactValuesRepresentation $payload): CollectionOfForwardLinks
+    {
+        if ($payload->all_links === null) {
+            return new CollectionOfForwardLinks([]);
+        }
+        return AllLinkPayloadParser::buildForwardLinks($payload->all_links);
     }
 }
