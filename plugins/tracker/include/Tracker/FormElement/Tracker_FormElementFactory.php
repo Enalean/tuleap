@@ -937,10 +937,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Duplicate a formElement
      * @param int $from_tracker_id
      * @param int $to_tracker_id
-     * @param array $ugroup_mapping
      * @return array the mapping between old formElements and new ones
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $ugroup_mapping)
+    public function duplicate($from_tracker_id, $to_tracker_id)
     {
         $mapping = [];
 
