@@ -4043,6 +4043,13 @@ msgstr ""
 "Cette permission donne le droit de voir (GET/OPTIONS) l'ensemble du contenu "
 "de la plateforme via l'API REST"
 
+msgid ""
+"This person will still be able to register by herself but won't be "
+"automatically a project member."
+msgstr ""
+"Cette personne sera toujours en mesure de s'enregistrer par elle-même, mais "
+"ne sera plus automatiquement ajoutée en tant que membre de projet."
+
 msgid "This project doesn't allow short name edition."
 msgstr "Ce projet n'autorise pas l'édition du nom court."
 
@@ -5085,6 +5092,9 @@ msgid "You will now be emailed followups to this entire forum."
 msgstr ""
 "Vous recevrez désormais un courrier électronique pour chaque message posté "
 "sur ce forum."
+
+msgid "You're about to withdraw %s invitation from this project."
+msgstr "Vous êtes sur le point d'annuler l'invitation de %s pour ce projet."
 
 msgid "Your account has been created"
 msgstr "Votre compte a été créé"

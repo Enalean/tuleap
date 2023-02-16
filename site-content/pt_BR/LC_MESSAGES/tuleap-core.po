@@ -3990,6 +3990,11 @@ msgstr ""
 "Esta permissão concede ao usuário o direito de ver todo o conteúdo da "
 "plataforma através da API REST (GET/OPTIONS)"
 
+msgid ""
+"This person will still be able to register by herself but won't be "
+"automatically a project member."
+msgstr ""
+
 msgid "This project doesn't allow short name edition."
 msgstr "Este projeto não permite a edição de nomes reduzidos."
 
@@ -4994,6 +4999,9 @@ msgstr "Você não receberá mais emails deste fórum."
 
 msgid "You will now be emailed followups to this entire forum."
 msgstr "Agora você receberá por email todos os acompanhamentos deste Fórum."
+
+msgid "You're about to withdraw %s invitation from this project."
+msgstr ""
 
 msgid "Your account has been created"
 msgstr ""

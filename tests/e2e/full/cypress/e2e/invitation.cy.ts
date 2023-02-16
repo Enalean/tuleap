@@ -78,6 +78,7 @@ describe("Invitations", () => {
             cy.contains("tr", invitee_email).within(() => {
                 cy.get("[data-test=withdraw-invitation]").click();
             });
+            cy.get("[data-test=withdraw-invitation-confirm]").click();
             cy.contains("Invitation has been withdrawn");
             cy.contains("tr", invitee_email).should("not.exist");
         });
