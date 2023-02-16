@@ -23,6 +23,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Artifact\Artifact;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_DateReminderManager
 {
     protected $tracker;
@@ -51,10 +52,8 @@ class Tracker_DateReminderManager
 
     /**
      * Process nightly job to send reminders
-     *
-     * @return Void
      */
-    public function process()
+    public function process(): void
     {
         $logger = BackendLogger::getDefaultLogger();
         if (! ($this->tracker->isNotificationStopped() || $this->tracker->isDeleted())) {
@@ -62,13 +61,17 @@ class Tracker_DateReminderManager
             $reminders      = $remiderFactory->getTrackerReminders(false);
             foreach ($reminders as $reminder) {
                 $logger->debug("[TDR] Processing reminder on " . $reminder->getField()->getName() . " (id: " . $reminder->getId() . ")");
-                $artifacts = $this->getArtifactsByreminder($reminder);
+                $artifacts = $this->getArtifactsByReminder($reminder);
 
                 if (count($artifacts) == 0) {
-                    $logger->debug("[TDR] No artifact match");
+                    $logger->debug("[TDR] No matching artifact.");
                 }
                 foreach ($artifacts as $artifact) {
-                    $logger->debug("[TDR] Artifact #" . $artifact->getId() . " match");
+                    if (! $reminder->mustNotifyClosedArtifacts() && ! $artifact->isOpen()) {
+                        $logger->debug("[TDR] Artifact #" . $artifact->getId() . " matches but is not open. As per reminder configuration, skipping.");
+                        continue;
+                    }
+                    $logger->debug("[TDR] Artifact #" . $artifact->getId() . " matches");
                     $this->sendReminderNotification($reminder, $artifact);
                 }
             }
@@ -159,8 +162,6 @@ class Tracker_DateReminderManager
      */
     protected function sendReminderNotification(Tracker_DateReminder $reminder, Artifact $artifact)
     {
-        $tracker = $this->getTracker();
-
         // 1. Get the recipients list
         $recipients = $reminder->getRecipients($artifact);
 
@@ -348,7 +349,7 @@ class Tracker_DateReminderManager
      *
      * @return Array
      */
-    public function getArtifactsByreminder(Tracker_DateReminder $reminder)
+    public function getArtifactsByReminder(Tracker_DateReminder $reminder)
     {
         $time_string = '-';
         if ($reminder->getNotificationType() == 0) {

@@ -744,6 +744,7 @@ CREATE TABLE tracker_reminder (
     notification_type TINYINT(1) DEFAULT 0,
     distance INT( 11 ) DEFAULT 0,
     status TINYINT(1) DEFAULT 1,
+    notify_closed_artifacts BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (reminder_id)
 ) ENGINE=InnoDB;
 

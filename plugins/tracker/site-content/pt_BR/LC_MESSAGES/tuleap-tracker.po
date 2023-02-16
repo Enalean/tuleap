@@ -114,6 +114,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #, php-format
+msgid "'%s' is not a valid value for reminder notify closed artifacts"
+msgstr ""
+
+#, php-format
 msgid "'%s' is not supported for the operator %s."
 msgstr ""
 
@@ -1791,6 +1795,9 @@ msgstr ""
 msgid "New tracker"
 msgstr ""
 
+msgid "No"
+msgstr ""
+
 msgid "No Tracker pending for Deletion"
 msgstr ""
 
@@ -1900,6 +1907,9 @@ msgid "Notifications"
 msgstr "Notificações"
 
 msgid "Notified people"
+msgstr ""
+
+msgid "Notify closed artifacts"
 msgstr ""
 
 msgid ""
@@ -3797,6 +3807,9 @@ msgid "Workflow mode is incompatible with PostAction of type %s"
 msgstr ""
 
 msgid "XML file doesn't have correct format"
+msgstr ""
+
+msgid "Yes"
 msgstr ""
 
 msgid "Yes, I am sure!"

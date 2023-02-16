@@ -79,12 +79,13 @@ class Tracker_DateReminderFactory
     public function addNewReminder(HTTPRequest $request): bool
     {
         try {
-            $fieldId          = $this->date_reminder_renderer->validateFieldId($request);
-            $notificationType = $this->date_reminder_renderer->validateNotificationType($request);
-            $distance         = $this->date_reminder_renderer->validateDistance($request);
-            $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
-            $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
-            $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
+            $fieldId                 = $this->date_reminder_renderer->validateFieldId($request);
+            $notificationType        = $this->date_reminder_renderer->validateNotificationType($request);
+            $distance                = $this->date_reminder_renderer->validateDistance($request);
+            $notified                = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
+            $ugroups                 = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
+            $roles                   = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
+            $notify_closed_artifacts = $this->date_reminder_renderer->validateNotifyClosedArtifacts($request);
             if (! empty($ugroups)) {
                 $ugroups = join(",", $ugroups);
             } else {
@@ -103,12 +104,18 @@ class Tracker_DateReminderFactory
             $ugroups,
             $roles,
             $notificationType,
-            $distance
+            $distance,
+            (bool) $notify_closed_artifacts
         );
         if ($reminder) {
             $roles      = implode(",", $roles);
             $historyDao = new ProjectHistoryDao();
-            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName() . ":" . $fieldId, $this->getTracker()->getGroupId(), [$distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles]);
+            $historyDao->groupAddHistory(
+                "tracker_date_reminder_add",
+                $this->getTracker()->getName() . ":" . $fieldId,
+                $this->getTracker()->getGroupId(),
+                [$distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles . ', Notify closed artifacts: ' . $notify_closed_artifacts],
+            );
             return (bool) $reminder;
         } else {
             $errorMessage = sprintf(dgettext('tuleap-tracker', 'Cannot add new date reminder on the field %1$s for the tracker %2$s'), $this->getTracker()->getId(), $fieldId);
@@ -195,12 +202,13 @@ class Tracker_DateReminderFactory
     public function editTrackerReminder(Tracker_DateReminder $reminder, HTTPRequest $request)
     {
         try {
-            $notificationType = $this->date_reminder_renderer->validateNotificationType($request);
-            $distance         = $this->date_reminder_renderer->validateDistance($request);
-            $status           = $this->date_reminder_renderer->validateStatus($request);
-            $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
-            $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
-            $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
+            $notificationType        = $this->date_reminder_renderer->validateNotificationType($request);
+            $distance                = $this->date_reminder_renderer->validateDistance($request);
+            $status                  = $this->date_reminder_renderer->validateStatus($request);
+            $notify_closed_artifacts = $this->date_reminder_renderer->validateNotifyClosedArtifacts($request);
+            $notified                = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
+            $ugroups                 = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
+            $roles                   = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (! empty($ugroups)) {
                 $ugroups = join(",", $ugroups);
             } else {
@@ -223,11 +231,17 @@ class Tracker_DateReminderFactory
             $notificationType,
             $distance,
             $status,
+            (bool) $notify_closed_artifacts,
         );
         if ($updateReminder) {
             $roles      = implode(",", $roles);
             $historyDao = new ProjectHistoryDao();
-            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName() . ":" . $reminder->getId(), $this->getTracker()->getGroupId(), ["Id: " . $reminderId . ", Type: " . $notificationType . ", ProjectUGroup(s): " . $ugroups . ", Tracker Role(s): " . $roles . ", Day(s): " . $distance . ", Status: " . $status]);
+            $historyDao->groupAddHistory(
+                "tracker_date_reminder_edit",
+                $this->getTracker()->getName() . ":" . $reminder->getId(),
+                $this->getTracker()->getGroupId(),
+                ["Id: " . $reminder->getId() . ", Type: " . $notificationType . ", ProjectUGroup(s): " . $ugroups . ", Tracker Role(s): " . $roles . ", Day(s): " . $distance . ", Status: " . $status . ", Notify closed artifacts: " . $notify_closed_artifacts],
+            );
             return $updateReminder;
         } else {
             $errorMessage = sprintf(dgettext('tuleap-tracker', 'Cannot update the date reminder %1$s'), $reminder->getId());
@@ -260,6 +274,7 @@ class Tracker_DateReminderFactory
                     break;
             }
         }
+
         return new Tracker_DateReminder(
             $row['reminder_id'],
             $row['tracker_id'],
@@ -268,7 +283,8 @@ class Tracker_DateReminderFactory
             $roles,
             $row['notification_type'],
             $row['distance'],
-            $row['status']
+            $row['status'],
+            (bool) $row['notify_closed_artifacts'],
         );
     }
 
