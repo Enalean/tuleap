@@ -35,20 +35,18 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "ColorPickerPaletteRow",
-    props: {
-        colors: Array,
-        selectedColor: String,
-    },
-    methods: {
-        updateColor(color) {
-            this.$emit("color-update", color);
-        },
-        isCurrentColor(color_name) {
-            return this.selectedColor === color_name;
-        },
-    },
-};
+<script setup lang="ts">
+const props = defineProps<{ colors: string[]; selected_color: string }>();
+
+const emit = defineEmits<{
+    (e: "color-update", value: string): void;
+}>();
+
+function updateColor(color: string): void {
+    emit("color-update", color);
+}
+
+function isCurrentColor(color_name: string): boolean {
+    return props.selected_color === color_name;
+}
 </script>

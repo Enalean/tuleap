@@ -20,13 +20,13 @@
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 
 export default vite.defineLibConfig({
     plugins: [vue(), POGettextPlugin.vite()],
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/index.js"),
+            entry: path.resolve(__dirname, "src/index.ts"),
             name: "TuleapTrackerColorPicker",
         },
         rollupOptions: {

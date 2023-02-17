@@ -20,50 +20,48 @@
 <template>
     <div
         class="colorpicker-switch"
-        v-bind:class="{ 'colorpicker-switch-to-old-palette': !isOldPaletteShown }"
+        v-bind:class="{ 'colorpicker-switch-to-old-palette': !is_old_palette_shown }"
     >
         <a
-            v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
+            v-bind:class="{ 'colorpicker-switch-disabled': is_switch_disabled }"
             v-bind:title="switch_title"
             v-on:click.prevent="switchPalette"
             href="#"
         >
             <i class="fa fa-random"></i>
-            <span v-if="isOldPaletteShown" v-translate>Switch to default colors</span>
-            <span v-else v-translate>Switch to old colors</span>
+            <span v-if="is_old_palette_shown">{{ $gettext("Switch to default colors") }}</span>
+            <span v-else>{{ $gettext("Switch to old colors") }}</span>
         </a>
     </div>
 </template>
 
-<script>
-export default {
-    name: "ColorPickerSwitch",
-    props: {
-        isOldPaletteShown: Boolean,
-        switchDefaultPaletteLabel: String,
-        switchOldPaletteLabel: String,
-        switchDisabledTitle: String,
-        isSwitchDisabled: Boolean,
-    },
-    computed: {
-        switch_title() {
-            return this.isSwitchDisabled
-                ? this.$gettext(
-                      "You can't switch to old colors because the field is currently being used by the card background color semantic"
-                  )
-                : "";
-        },
-    },
-    methods: {
-        switchPalette(event) {
-            event.stopPropagation();
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+import { computed } from "vue";
 
-            if (this.isSwitchDisabled) {
-                return;
-            }
+const props = defineProps<{ is_switch_disabled: boolean; is_old_palette_shown: boolean }>();
 
-            this.$emit("switch-palette");
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const switch_title = computed((): string =>
+    props.is_switch_disabled
+        ? $gettext(
+              "You can't switch to old colors because the field is currently being used by the card background color semantic"
+          )
+        : ""
+);
+
+const emit = defineEmits<{
+    (e: "switch-palette"): void;
+}>();
+
+function switchPalette(event: MouseEvent): void {
+    event.stopPropagation();
+
+    if (props.is_switch_disabled) {
+        return;
+    }
+
+    emit("switch-palette");
+}
 </script>

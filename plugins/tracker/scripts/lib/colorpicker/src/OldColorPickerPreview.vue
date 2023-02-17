@@ -20,39 +20,37 @@
 <template>
     <img
         class="old-color-picker-preview"
-        v-bind:src="previewImage"
+        v-bind:src="preview_image"
         v-bind:style="{ 'background-color': color }"
         v-on:click="setTransparent"
         v-bind:title="color"
-        alt="/themes/FlamingParrot/images/blank16x16.png"
     />
 </template>
 
-<script>
-export default {
-    name: "OldColorPickerPreview",
-    props: {
-        color: String,
-    },
-    computed: {
-        previewImage() {
-            const base_url = "/themes/FlamingParrot/images/";
+<script setup lang="ts">
+import { computed } from "vue";
 
-            if (this.color.length) {
-                return base_url + "blank16x16.png";
-            }
+const props = defineProps<{ color: string }>();
 
-            return base_url + "ic/layer-transparent.png";
-        },
-    },
-    methods: {
-        setTransparent() {
-            if (this.color.length) {
-                return;
-            }
+const preview_image = computed((): string => {
+    const base_url = "/themes/FlamingParrot/images/";
 
-            this.$emit("color-update");
-        },
-    },
-};
+    if (props.color.length) {
+        return base_url + "blank16x16.png";
+    }
+
+    return base_url + "ic/layer-transparent.png";
+});
+
+const emit = defineEmits<{
+    (e: "color-update", value: string): void;
+}>();
+
+function setTransparent(): void {
+    if (props.color.length) {
+        return;
+    }
+
+    emit("color-update", "");
+}
 </script>
