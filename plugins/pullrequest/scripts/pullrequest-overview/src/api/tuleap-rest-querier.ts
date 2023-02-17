@@ -20,10 +20,14 @@
 import { getJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { PullRequestInfo } from "./types";
+import type { PullRequestInfo, UserInfo } from "./types";
 
 export const fetchPullRequestInfo = (
     pullrequest_id: string
 ): ResultAsync<PullRequestInfo, Fault> => {
     return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pullrequest_id)}`);
+};
+
+export const fetchUserInfo = (user_id: number): ResultAsync<UserInfo, Fault> => {
+    return getJSON(uri`/api/v1/users/${encodeURIComponent(user_id)}`);
 };

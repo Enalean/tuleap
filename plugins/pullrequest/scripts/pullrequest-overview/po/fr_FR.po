@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Author"
+msgstr "Auteur"
+
 msgid "Changes"
 msgstr "Changements"
 
