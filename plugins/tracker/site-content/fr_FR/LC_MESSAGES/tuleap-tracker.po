@@ -857,10 +857,6 @@ msgstr ""
 "est manquant."
 
 #, php-format
-msgid "Cannot delete the date reminder %1$s"
-msgstr "Impossible de supprimer le Rappel sur date de tracker %1$s"
-
-#, php-format
 msgid "Cannot update conditions of transition with id '%d'"
 msgstr ""
 "Impossible de mettre à jour les conditions de la transition ayant pour id "
@@ -2474,6 +2470,10 @@ msgstr "L'effort restant ne peux pas être supérieur à l'effort total."
 
 msgid "Remaining effort cannot be negative."
 msgstr "L'effort restant ne peut pas être négatif."
+
+#, php-format
+msgid "Reminder with ID %d not found."
+msgstr "Le rappel avec l'ID %d n'a pas été trouvé."
 
 #, php-format
 msgid "Reminder: '%1$s' %2$s for '%3$s'"

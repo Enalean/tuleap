@@ -113,6 +113,14 @@ class Tracker_DateReminderManager
         $date_reminder_renderer = $this->getDateReminderRenderer();
         $reminder_factory       = $date_reminder_renderer->getDateReminderFactory();
         $reminder               = $reminder_factory->getReminder($reminder_id);
+        if ($reminder === null) {
+            throw new Tracker_DateReminderException(
+                sprintf(
+                    dgettext('tuleap-tracker', "Reminder with ID %d not found."),
+                    $reminder_id,
+                )
+            );
+        }
         $this->checkReminderMatchTracker($reminder);
 
         return $reminder;

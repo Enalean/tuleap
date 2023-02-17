@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\DateReminder\DateReminderDao;
+
 class Tracker_DateReminderRenderer
 {
     protected $tracker;
@@ -32,7 +34,7 @@ class Tracker_DateReminderRenderer
     public function __construct(Tracker $tracker)
     {
         $this->tracker             = $tracker;
-        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker, $this);
+        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker, $this, new DateReminderDao());
     }
 
     /**
