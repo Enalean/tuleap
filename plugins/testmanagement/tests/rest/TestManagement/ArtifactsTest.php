@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement;
 
 
-final class ArtifactsTest extends BaseTest
+final class ArtifactsTest extends TestManagementRESTTestCase
 {
     public function testItPostAnArtifactWithStepDefinitionFieldId(): int
     {

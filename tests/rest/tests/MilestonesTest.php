@@ -107,7 +107,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
             $milestone['resources']['milestones']
         );
 
-        $this->arrayHasKey($milestone['sub_milestone_type']);
+        self::assertArrayHasKey('sub_milestone_type', $milestone);
     }
 
     private function assertGETResourcesBacklog(array $milestone): void
