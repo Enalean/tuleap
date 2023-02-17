@@ -25,7 +25,7 @@ use REST_TestDataBuilder;
 /**
  * @group TestManagementTest
  */
-final class ProjectTest extends BaseTest
+final class ProjectTest extends TestManagementRESTTestCase
 {
     public function testGetCampaigns(): void
     {

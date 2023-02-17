@@ -125,7 +125,7 @@ final class TaskboardCellTest extends \RestBase
     /**
      * @return array<string, int>
      */
-    public function getUserNameAndExpectedStatusCode(): array
+    public static function getUserNameAndExpectedStatusCode(): array
     {
         return [
             'REST API User 1' => [REST_TestDataBuilder::TEST_USER_1_NAME, 200],

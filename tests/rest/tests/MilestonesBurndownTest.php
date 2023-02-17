@@ -23,7 +23,7 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
-class MilestoneBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class MilestonesBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSBurndown(): void
     {

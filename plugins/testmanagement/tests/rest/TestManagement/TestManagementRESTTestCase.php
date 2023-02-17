@@ -23,12 +23,10 @@ namespace Tuleap\TestManagement;
 use RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
-
 /**
  * @group TestManagementTest
  */
-abstract class BaseTest extends RestBase
+abstract class TestManagementRESTTestCase extends RestBase
 {
     protected $project_id;
     protected $project_with_attachment_id;
