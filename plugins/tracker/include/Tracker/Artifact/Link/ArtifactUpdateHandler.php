@@ -134,33 +134,28 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
     ): Ok|Err {
         $result = Result::ok(null);
         foreach ($removed_reverse_links->links as $reverse_link) {
-            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->match(
-                function (Artifact $source_artifact) use ($current_artifact, $reverse_link, $submitter, $comment) {
-                    return $this->getArtifactLinkField($source_artifact)->match(
-                        function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
-                            $source_artifact_link_to_be_removed = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
+            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
+                fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
+                        $source_artifact_link_to_be_removed = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
 
-                            $new_changeset_value = NewArtifactLinkChangesetValue::fromRemovedValues(
-                                $artifact_link_field->getId(),
-                                $source_artifact_link_to_be_removed
-                            );
+                        $new_changeset_value = NewArtifactLinkChangesetValue::fromRemovedValues(
+                            $artifact_link_field->getId(),
+                            $source_artifact_link_to_be_removed
+                        );
 
-                            $container           = new ChangesetValuesContainer([], $new_changeset_value);
-                            $validate_link_event = $this->event->dispatch(
-                                ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, $container->getFieldsData()[$artifact_link_field->getId()])
-                            );
-                            if ($validate_link_event->isValid() === false) {
-                                return Result::ok(null);
-                            }
-                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
-                            return Result::ok(null);
-                        },
-                        static fn(Fault $fault) => Result::err($fault)
-                    );
-                },
-                static fn(Fault $fault) => Result::err($fault)
+                        $container           = new ChangesetValuesContainer([], $new_changeset_value);
+                        $validate_link_event = $this->event->dispatch(
+                            ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, $container->getFieldsData()[$artifact_link_field->getId()])
+                        );
+                        if ($validate_link_event->isValid() === false) {
+                            return null;
+                        }
+                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        return null;
+                    },
+                )
             );
-
             if (Result::isErr($result)) {
                 break;
             }
@@ -174,32 +169,30 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
      * @throws Tracker_Exception
      * @throws FieldValidationException
      */
-    public function addReverseLink(
+    public function updateTypeAndAddReverseLinks(
         Artifact $current_artifact,
         PFUser $submitter,
         CollectionOfReverseLinks $added_reverse_link,
+        CollectionOfReverseLinks $updated_reverse_link_type,
         ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err {
-        $result = Result::ok(null);
-        foreach ($added_reverse_link->links as $reverse_link) {
-            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->match(
-                function (Artifact $source_artifact) use ($current_artifact, $reverse_link, $submitter, $comment) {
-                    return $this->getArtifactLinkField($source_artifact)->match(
-                        function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
-                            $source_artifact_link_to_be_added = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
+        $result               = Result::ok(null);
+        $reverse_links_update = array_merge($added_reverse_link->links, $updated_reverse_link_type->links);
+        foreach ($reverse_links_update as $reverse_link) {
+            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
+                fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
+                        $source_artifact_link_to_be_added = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
 
-                            $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedValues(
-                                $artifact_link_field->getId(),
-                                $source_artifact_link_to_be_added
-                            );
-                            $container           = new ChangesetValuesContainer([], $new_changeset_value);
-                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
-                            return Result::ok(null);
-                        },
-                        static fn(Fault $fault) => Result::err($fault)
-                    );
-                },
-                static fn(Fault $fault) => Result::err($fault)
+                        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
+                            $artifact_link_field->getId(),
+                            $source_artifact_link_to_be_added
+                        );
+                        $container           = new ChangesetValuesContainer([], $new_changeset_value);
+                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        return null;
+                    },
+                )
             );
             if (Result::isErr($result)) {
                 break;
@@ -220,43 +213,6 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
         $this->updateArtifact($current_artifact, $submitter, $changeset_values_container, $comment);
-    }
-
-    /**
-     * @throws FieldValidationException
-     * @throws \Tracker_NoChangeException
-     * @throws \Tracker_Exception
-     * @return Ok<null>|Err<Fault>
-     */
-    public function updateTypeOfReverseLinks(
-        Artifact $current_artifact,
-        PFUser $submitter,
-        CollectionOfReverseLinks $added_reverse_link,
-        ?NewChangesetCommentRepresentation $comment = null,
-    ): Ok|Err {
-        $result = Result::ok(null);
-        foreach ($added_reverse_link->links as $reverse_link) {
-            $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
-                fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
-                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
-                        $source_artifact_link_to_be_added = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
-
-                        $new_changeset_value = NewArtifactLinkChangesetValue::fromUpdatedTypeValue(
-                            $artifact_link_field->getId(),
-                            $source_artifact_link_to_be_added
-                        );
-
-                        $container = new ChangesetValuesContainer([], $new_changeset_value);
-                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
-                        return null;
-                    },
-                )
-            );
-            if (Result::isErr($result)) {
-                break;
-            }
-        }
-        return $result;
     }
 
     /**

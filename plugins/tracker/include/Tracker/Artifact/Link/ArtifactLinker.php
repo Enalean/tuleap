@@ -75,7 +75,7 @@ final class ArtifactLinker
         $artifact_link_field = $artlink_fields[0];
 
         $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
-        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedValues(
+        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
             $artifact_link_field->getId(),
             $existing_links->differenceById($forward_links),
         );

@@ -134,12 +134,11 @@ final class ArtifactUpdateHandlerTest extends TestCase
         self::assertNull($result->value);
     }
 
-    private function linkReverseArtifact(): Ok|Err
+    private function updateTypeAndAddReverseLinks(CollectionOfReverseLinks $added_links, CollectionOfReverseLinks $updated_type): Ok|Err
     {
-        $artifact              = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
-        $user                  = UserTestBuilder::aUser()->build();
-        $removed_link          = ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID);
-        $removed_reverse_links = new CollectionOfReverseLinks([$removed_link]);
+        $artifact = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
+        $user     = UserTestBuilder::aUser()->build();
+
 
         $artifact_updater = new ArtifactUpdateHandler(
             $this->changeset_creator,
@@ -147,12 +146,15 @@ final class ArtifactUpdateHandlerTest extends TestCase
             $this->artifact_retriever,
             $this->createMock(EventManager::class)
         );
-        return $artifact_updater->addReverseLink($artifact, $user, $removed_reverse_links);
+        return $artifact_updater->updateTypeAndAddReverseLinks($artifact, $user, $added_links, $updated_type);
     }
 
     public function testItReturnsAFaultWhenTheSourceArtifactCannotBeRetrieved(): void
     {
-        $result = $this->linkReverseArtifact();
+        $added_link          = ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID);
+        $added_reverse_links = new CollectionOfReverseLinks([$added_link]);
+
+        $result = $this->updateTypeAndAddReverseLinks($added_reverse_links, new CollectionOfReverseLinks([]));
 
         self::assertSame(0, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isErr($result));
@@ -164,27 +166,14 @@ final class ArtifactUpdateHandlerTest extends TestCase
         $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
 
-        $result = $this->linkReverseArtifact();
+        $added_link          = ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID);
+        $added_reverse_links = new CollectionOfReverseLinks([$added_link]);
+
+        $result = $this->updateTypeAndAddReverseLinks($added_reverse_links, new CollectionOfReverseLinks([]));
 
         self::assertSame(1, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);
-    }
-
-    private function updateTypeOfReverseLinks(): Ok|Err
-    {
-        $artifact                   = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
-        $user                       = UserTestBuilder::aUser()->build();
-        $updated_link               = ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, self::ARTIFACT_TYPE);
-        $updated_reverse_links_type = new CollectionOfReverseLinks([$updated_link]);
-
-        $artifact_updater = new ArtifactUpdateHandler(
-            $this->changeset_creator,
-            $this->form_element_factory,
-            $this->artifact_retriever,
-            $this->createMock(EventManager::class)
-        );
-        return $artifact_updater->updateTypeOfReverseLinks($artifact, $user, $updated_reverse_links_type);
     }
 
     public function testItUpdateTheReverseLinkType(): void
@@ -192,7 +181,10 @@ final class ArtifactUpdateHandlerTest extends TestCase
         $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
 
-        $result = $this->updateTypeOfReverseLinks();
+        $updated_link               = ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, self::ARTIFACT_TYPE);
+        $updated_reverse_links_type = new CollectionOfReverseLinks([$updated_link]);
+
+        $result = $this->updateTypeAndAddReverseLinks(new CollectionOfReverseLinks([]), $updated_reverse_links_type);
         self::assertSame(1, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);

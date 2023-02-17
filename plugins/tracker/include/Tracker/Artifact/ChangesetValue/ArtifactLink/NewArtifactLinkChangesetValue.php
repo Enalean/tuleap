@@ -61,25 +61,13 @@ final class NewArtifactLinkChangesetValue
         );
     }
 
-    public static function fromAddedValues(int $field_id, CollectionOfForwardLinks $submitted_values): self
+    public static function fromAddedAndUpdatedTypeValues(int $field_id, CollectionOfForwardLinks $submitted_values): self
     {
         return new self(
             $field_id,
             $submitted_values,
             new CollectionOfForwardLinks([]),
             $submitted_values,
-            null,
-            new CollectionOfReverseLinks([])
-        );
-    }
-
-    public static function fromUpdatedTypeValue(int $field_id, CollectionOfForwardLinks $submitted_reverse_link_values_converted_into_forward_link): self
-    {
-        return new self(
-            $field_id,
-            new CollectionOfForwardLinks([]),
-            new CollectionOfForwardLinks([]),
-            $submitted_reverse_link_values_converted_into_forward_link,
             null,
             new CollectionOfReverseLinks([])
         );
