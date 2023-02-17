@@ -28,7 +28,7 @@ use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class CommentNotEmpty_validateTest extends \Tuleap\Test\PHPUnit\TestCase
+class CommentNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

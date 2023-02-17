@@ -25,7 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker;
 
-class ConfigConformanceAsserterTest extends \Tuleap\Test\PHPUnit\TestCase
+class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

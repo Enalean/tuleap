@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends \Tuleap\Test\PHPUnit\TestCase
+class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

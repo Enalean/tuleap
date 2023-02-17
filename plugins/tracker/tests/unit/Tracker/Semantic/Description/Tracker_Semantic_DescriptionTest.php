@@ -27,7 +27,7 @@ use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 
-class SemanticDescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
+class Tracker_Semantic_DescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
