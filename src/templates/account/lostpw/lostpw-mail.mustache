@@ -1,0 +1,22 @@
+<p>{{# gettext }}Hello %s, | {{ current_user_real_name }}{{/ gettext }}</p>
+
+<p>
+{{# gettext }}
+    Someone (presumably you) on the %s site requested a password change through email verification. If this was not you, ignore this message and nothing will happen.
+    | {{ instance_name }}
+{{/ gettext }}
+</p>
+
+<p>
+    {{# gettext }}
+        If you requested this verification, visit the following URL to change your password:
+    {{/ gettext }}
+    <br>
+    <a href="{{ reset_link }}">{{ reset_link }}</a>
+</p>
+
+<p>
+    {{# gettext }}Best regards,{{/ gettext }}
+    <br>
+    {{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}
+</p>

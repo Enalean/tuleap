@@ -54,7 +54,7 @@ class Verifier
      * @throws \Tuleap\User\Password\Reset\ExpiredTokenException
      * @throws \Tuleap\User\Password\Reset\InvalidTokenException
      */
-    public function getUser(SplitToken $token): \PFUser
+    public function getUser(SplitToken $token): ?\PFUser
     {
         $row = $this->dao->getTokenInformationById($token->getID());
 

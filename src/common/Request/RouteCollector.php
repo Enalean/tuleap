@@ -69,6 +69,8 @@ use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\date\Admin\RelativeDatesDisplayController;
 use Tuleap\date\Admin\RelativeDatesDisplaySaveController;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Error\FrontendErrorCollectorController;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
@@ -189,6 +191,11 @@ use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
+use Tuleap\User\Account\LostPassword\DisplayLostPasswordController;
+use Tuleap\User\Account\LostPassword\DisplayResetPasswordController;
+use Tuleap\User\Account\LostPassword\LostPasswordController;
+use Tuleap\User\Account\LostPassword\ResetPasswordController;
+use Tuleap\User\Account\LostPassword\UserFromConfirmationHashRetriever;
 use Tuleap\User\Account\Register\AccountRegister;
 use Tuleap\User\Account\Register\AfterSuccessfulUserRegistration;
 use Tuleap\User\Account\Register\ConfirmationHashEmailSender;
@@ -212,11 +219,16 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Account\UserWellKnownChangePasswordController;
+use Tuleap\User\Password\Change\PasswordChanger;
+use Tuleap\User\Password\Reset\LostPasswordDAO;
+use Tuleap\User\Password\Reset\ResetTokenSerializer;
+use Tuleap\User\Password\Reset\Verifier;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\AvatarGenerator;
 use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use Tuleap\User\SessionManager;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
@@ -1040,6 +1052,91 @@ class RouteCollector
         );
     }
 
+    public static function getDisplayLostPasswordController(): DisplayLostPasswordController
+    {
+        return new DisplayLostPasswordController(
+            TemplateRendererFactory::build(),
+            new \Tuleap\Layout\IncludeCoreAssets(),
+            EventManager::instance(),
+        );
+    }
+
+    public static function getDisplayResetPasswordController(): DisplayResetPasswordController
+    {
+        $renderer_factory = TemplateRendererFactory::build();
+        $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
+
+        return new DisplayResetPasswordController(
+            $renderer_factory,
+            $core_assets,
+            new UserFromConfirmationHashRetriever(
+                new ResetTokenSerializer(),
+                new Verifier(
+                    new LostPasswordDAO(),
+                    new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher(),
+                    \UserManager::instance(),
+                )
+            ),
+            new DisplayLostPasswordController($renderer_factory, $core_assets, EventManager::instance()),
+            new LocaleSwitcher(),
+            new PasswordConfigurationRetriever(new PasswordConfigurationDAO()),
+        );
+    }
+
+    public static function getResetPasswordController(): DispatchableWithRequest
+    {
+        $user_manager = \UserManager::instance();
+
+        return new ResetPasswordController(
+            new UserFromConfirmationHashRetriever(
+                new ResetTokenSerializer(),
+                new Verifier(
+                    new LostPasswordDAO(),
+                    new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher(),
+                    $user_manager,
+                )
+            ),
+            self::getDisplayResetPasswordController(),
+            self::getDisplayLostPasswordController(),
+            new LocaleSwitcher(),
+            new PasswordChanger(
+                $user_manager,
+                new SessionManager($user_manager, new \SessionDao(), new \RandomNumberGenerator()),
+                new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\LostPasswordDAO()),
+                EventManager::instance(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            TemplateRendererFactory::build(),
+            new \Tuleap\Layout\IncludeCoreAssets(),
+        );
+    }
+
+    public static function getLostPasswordController(): DispatchableWithRequest
+    {
+        $renderer_factory = TemplateRendererFactory::build();
+        $event_manager    = EventManager::instance();
+        $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
+
+        return new LostPasswordController(
+            \UserManager::instance(),
+            new \Tuleap\User\Password\Reset\Creator(
+                new \Tuleap\User\Password\Reset\LostPasswordDAO(),
+                new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()
+            ),
+            new ResetTokenSerializer(),
+            new LocaleSwitcher(),
+            $renderer_factory,
+            $event_manager,
+            $core_assets,
+            new DisplayLostPasswordController(
+                $renderer_factory,
+                $core_assets,
+                $event_manager,
+            ),
+            \BackendLogger::getDefaultLogger(),
+        );
+    }
+
     public static function getDisplayRegisterFormController(): DispatchableWithRequest
     {
         $event_manager = EventManager::instance();
@@ -1296,6 +1393,12 @@ class RouteCollector
 
             $r->post('/avatar', [self::class, 'postAccountAvatar']);
             $r->post('/logout', [self::class, 'postLogoutAccount']);
+
+            $r->get('/lostpw', [self::class, 'getDisplayLostPasswordController']);
+            $r->post('/lostpw', [self::class, 'getLostPasswordController']);
+
+            $r->get('/lostlogin.php', [self::class, 'getDisplayResetPasswordController']);
+            $r->post('/reset-lostpw', [self::class, 'getResetPasswordController']);
 
             $r->post('/remove_from_project/{project_id:\d+}', [self::class, 'postAccountRemoveFromProject']);
 

@@ -171,30 +171,6 @@ msgstr ""
 "<A HREF=\"%1$s\"><u>Faça o login primeiro</u></A>><span class=\"highlight\"> "
 "para postar mensagens</span>"
 
-msgid ""
-"<B>Confirmation mailed</B><P>An email has been sent to the address you have "
-"on file. Follow the instructions in the email to change your account "
-"password."
-msgstr ""
-"<B>Confirmação enviada por email</B>P>Um email foi enviado para o endereço "
-"que você tem no sistema. Siga as instruções no email para alterar a senha da "
-"sua conta."
-
-msgid ""
-"<B>Lost your password?</B><P>Hey... losing your password is serious "
-"business. It compromises the security of your account, your projects, and "
-"this site.<P>Clicking on the button below will email a URL to the email "
-"address we have on file for you. In this URL is a 128-bit confirmation hash "
-"key for your account. Visiting the URL will allow you to change your "
-"password online and login."
-msgstr ""
-"<B>Perdeu a sua senha?</B>>P>Hey... perder a sua senha é um assunto sério. "
-"Compromete a segurança da sua conta, dos seus projetos, e este site."
-"<P>Clicando no botão abaixo irá enviar um URL para o endereço de email que "
-"temos vinculado ao seu usuário. Neste URL está uma chave hash de confirmação "
-"de 128 bits para a sua conta. Visitar a URL permitirá que você altere sua "
-"senha online e faça o login."
-
 #, php-format
 msgid ""
 "<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
@@ -593,6 +569,9 @@ msgid ""
 msgstr ""
 "Uma alteração de email foi solicitada, por favor verifique sua caixa de "
 "email para completar a alteração."
+
+msgid "An email has been sent to the address we have on file,"
+msgstr ""
 
 msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
@@ -1413,6 +1392,9 @@ msgstr "Preferência de formato de email atualizado com sucesso"
 msgid "Email is already validated"
 msgstr ""
 
+msgid "Email me a recovery link"
+msgstr ""
+
 msgid "Email not sent"
 msgstr "Email não enviado"
 
@@ -1469,6 +1451,11 @@ msgstr ""
 
 msgid "Enter the Message ID"
 msgstr "Digite o ID da mensagem"
+
+msgid ""
+"Enter your login name below to receive a link allowing you to change your "
+"password."
+msgstr ""
 
 msgid "Error"
 msgstr "Erro"
@@ -1647,6 +1634,9 @@ msgstr "Permissões globais"
 msgid "Global utils"
 msgstr "Utilidades globais"
 
+msgid "Go to login page"
+msgstr ""
+
 msgid "Go to my home page"
 msgstr "Ir para minha página inicial"
 
@@ -1767,6 +1757,11 @@ msgstr ""
 msgid "If the reference pattern is specific to one service, select it here"
 msgstr ""
 "Se o padrão de referência é específico para um serviço, selecione-o aqui"
+
+msgid ""
+"If you requested this verification, visit the following URL to change your "
+"password:"
+msgstr ""
 
 msgid ""
 "If your instance can not access the Internet, it is preferable to disable "
@@ -2065,15 +2060,6 @@ msgstr ""
 msgid "Logout"
 msgstr "Logout"
 
-msgid "Lost Account Password"
-msgstr "Senha da conta perdida"
-
-msgid "Lost Password"
-msgstr "Senha perdida"
-
-msgid "Lost Password Confirmation"
-msgstr "Confirmação de senha perdida"
-
 msgid "Low traffic, highly recommended."
 msgstr "Baixo tráfego, altamente recomendado."
 
@@ -2275,12 +2261,6 @@ msgstr "Nunca"
 
 msgid "New"
 msgstr "Novo"
-
-msgid "New Password"
-msgstr "Nova Senha"
-
-msgid "New Password (repeat)"
-msgstr "Nova senha (repetir)"
 
 #, php-format
 msgid "New User Registered: %1$s"
@@ -2509,6 +2489,12 @@ msgstr "Senha"
 
 msgid "Password policy"
 msgstr "Políticas de senhas"
+
+msgid "Password recovered"
+msgstr ""
+
+msgid "Password recovery"
+msgstr ""
 
 msgid "Password robustness"
 msgstr "Robustez da senha"
@@ -3029,6 +3015,9 @@ msgstr ""
 msgid "Recently"
 msgstr "Recentemente"
 
+msgid "Recovery link sent"
+msgstr ""
+
 msgid "Red"
 msgstr "Vermelho"
 
@@ -3229,6 +3218,9 @@ msgstr "Gravar informação"
 msgid "Save new avatar"
 msgstr "Gravar novo avatar"
 
+msgid "Save password"
+msgstr ""
+
 msgid "Save settings"
 msgstr "Gravar configurações"
 
@@ -3264,9 +3256,6 @@ msgstr "Selecione"
 
 msgid "Semicolon"
 msgstr "Ponto e vírgula"
-
-msgid "Send Lost Password Hash"
-msgstr "Enviar Senha Perdida Hash"
 
 msgid "Send a welcome email to the user"
 msgstr "Envie um email de boas-vindas ao usuário"
@@ -3403,29 +3392,11 @@ msgstr "Alguns campos não existem: %s"
 msgid "Some mandatory categories are missing"
 msgstr "Algumas categorias obrigatórias estão faltando"
 
-#, php-format
 msgid ""
-"Someone (presumably you) on the %1$s site requested a\n"
-"password change through email verification. If this was\n"
-"not you,ignore this message and nothing will happen.\n"
-"\n"
-"If you requested this verification, visit the following URL\n"
-"to change your password:\n"
-"\n"
-"%2$s\n"
-"\n"
-" -- The %1$s Team"
+"Someone (presumably you) on the %s site requested a password change through "
+"email verification. If this was not you, ignore this message and nothing "
+"will happen."
 msgstr ""
-"Alguém (presumivelmente você) no site %1$s solicitou um\n"
-"alteração de senha através de verificação de email. Se não foi\n"
-"você, ignore esta mensagem e nada vai acontecer.\n"
-"\n"
-"Se você solicitou esta verificação, visite o seguinte URL\n"
-"para alterar a sua senha:\n"
-"\n"
-"%2$s\n"
-"\n"
-" -- A Equipe %1$s"
 
 msgid "Source code management"
 msgstr "Gestão do código fonte"
@@ -4499,7 +4470,6 @@ msgstr ""
 msgid "Welcome to your new project"
 msgstr "Bem vindo ao seu novo projeto"
 
-#, php-format
 msgid "Welcome, %1$s. You may now change your lost password."
 msgstr "Bem-vindo, %1$s. Agora você pode alterar a sua senha perdida."
 
@@ -4596,6 +4566,11 @@ msgstr "Ano"
 
 msgid "Yesterday"
 msgstr "Ontem"
+
+msgid ""
+"You already asked a recovery link recently, please check your email for the "
+"link to recover your password."
+msgstr ""
 
 msgid ""
 "You appear to be double-posting this message, since it has the same subject "
@@ -4814,6 +4789,9 @@ msgstr ""
 msgid "You can not delete system user groups"
 msgstr "Não é possível excluir grupos de usuários do sistema"
 
+msgid "You can now log in with your new password."
+msgstr ""
+
 msgid "You can only edit your own widgets."
 msgstr "Você pode editar apenas seus próprios widgets."
 
@@ -4928,6 +4906,9 @@ msgstr ""
 "%s%s\n"
 "\n"
 "-- A Equipe %s"
+
+msgid "You have successfully recovered your password,"
+msgstr ""
 
 msgid ""
 "You invited %1$s with email %2$s to register to %3$s and join the project "
@@ -5131,6 +5112,9 @@ msgid "but it must be approved by an administrator"
 msgstr ""
 
 msgid "check your email for the link to activate your account."
+msgstr ""
+
+msgid "check your email for the link to recover your password."
 msgstr ""
 
 msgid "commits at once"

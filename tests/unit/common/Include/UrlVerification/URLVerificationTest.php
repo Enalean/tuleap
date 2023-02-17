@@ -70,17 +70,7 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                ['REQUEST_URI' => '/account/lostpw.php', 'SCRIPT_NAME' => '/account/lostpw.php']
-            )
-        );
-        $this->assertTrue(
-            $urlVerification->isScriptAllowedForAnonymous(
                 ['REQUEST_URI' => '/account/lostlogin.php', 'SCRIPT_NAME' => '/account/lostlogin.php']
-            )
-        );
-        $this->assertTrue(
-            $urlVerification->isScriptAllowedForAnonymous(
-                ['REQUEST_URI' => '/account/lostpw-confirm.php', 'SCRIPT_NAME' => '/account/lostpw-confirm.php']
             )
         );
 

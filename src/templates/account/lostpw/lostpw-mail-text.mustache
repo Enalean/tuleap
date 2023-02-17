@@ -1,0 +1,17 @@
+{{# gettext }}Hello %s, | {{ current_user_real_name }}{{/ gettext }}
+
+{{# gettext }}
+    Someone (presumably you) on the %s site requested a password change through email verification. If this was not you, ignore this message and nothing will happen.
+    | {{ instance_name }}
+{{/ gettext }}
+
+
+{{# gettext }}
+    If you requested this verification, visit the following URL to change your password:
+{{/ gettext }}
+
+{{ reset_link }}
+
+{{# gettext }}Best regards,{{/ gettext }}
+
+{{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}

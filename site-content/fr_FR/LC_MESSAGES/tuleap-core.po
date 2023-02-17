@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -175,30 +175,6 @@ msgid ""
 msgstr ""
 "<A HREF=\"%1$s\"><u>Connectez-vous en premier</u></A><span class=\"highlight"
 "\"> pour poster un message</span>"
-
-msgid ""
-"<B>Confirmation mailed</B><P>An email has been sent to the address you have "
-"on file. Follow the instructions in the email to change your account "
-"password."
-msgstr ""
-"<B>Demande de confirmation envoyée</B><P>Un message électronique vient "
-"d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les "
-"instructions incluses dans ce message pour changer votre mot de passe."
-
-msgid ""
-"<B>Lost your password?</B><P>Hey... losing your password is serious "
-"business. It compromises the security of your account, your projects, and "
-"this site.<P>Clicking on the button below will email a URL to the email "
-"address we have on file for you. In this URL is a 128-bit confirmation hash "
-"key for your account. Visiting the URL will allow you to change your "
-"password online and login."
-msgstr ""
-"<B>Mot de passe perdu ?</B><P>Hé... la perte d'un mot de passe est à prendre "
-"au sérieux. Cela peut compromettre la sécurité de votre compte, de vos "
-"projets et du site.<P>En cliquant sur le bouton ci-dessous, un message "
-"électronique comportant un lien (URL). Dans ce lien se trouve une clé de "
-"confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de "
-"changer mot de passe puis de vous connecter."
 
 #, php-format
 msgid ""
@@ -595,6 +571,9 @@ msgid ""
 msgstr ""
 "Un changement d'adresse de courriel a été demandé, vérifiez vos messages "
 "pour finaliser le changement."
+
+msgid "An email has been sent to the address we have on file,"
+msgstr "Un e-mail vient d'être envoyé à l'adresse de votre compte utilisateur,"
 
 msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
@@ -1425,6 +1404,9 @@ msgstr "La préférence de format de courriel a été mise à jour"
 msgid "Email is already validated"
 msgstr "L'email est déjà validé"
 
+msgid "Email me a recovery link"
+msgstr "Envoyez moi un lien de récupération"
+
 msgid "Email not sent"
 msgstr "E-mail pas envoyé"
 
@@ -1481,6 +1463,13 @@ msgstr ""
 
 msgid "Enter the Message ID"
 msgstr "Entrer l'identifiant (ID) du message"
+
+msgid ""
+"Enter your login name below to receive a link allowing you to change your "
+"password."
+msgstr ""
+"Entrez votre nom de login ci dessous pour recevoir un lien vous permettant "
+"de changer votre mot de passe."
 
 msgid "Error"
 msgstr "Erreur"
@@ -1661,6 +1650,9 @@ msgstr "Permissions globales"
 msgid "Global utils"
 msgstr "Utilitaires globaux"
 
+msgid "Go to login page"
+msgstr "Aller à la page de connexion"
+
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
@@ -1782,6 +1774,13 @@ msgstr ""
 msgid "If the reference pattern is specific to one service, select it here"
 msgstr ""
 "Si le modèle de référence est spécifique à un service, le spécifier ici"
+
+msgid ""
+"If you requested this verification, visit the following URL to change your "
+"password:"
+msgstr ""
+"Si vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-"
+"dessous pour changer votre mot de passe :"
 
 msgid ""
 "If your instance can not access the Internet, it is preferable to disable "
@@ -2087,15 +2086,6 @@ msgstr "Nom de login"
 msgid "Logout"
 msgstr "Se déconnecter"
 
-msgid "Lost Account Password"
-msgstr "Mot de passe perdu"
-
-msgid "Lost Password"
-msgstr "Mot de passe perdu"
-
-msgid "Lost Password Confirmation"
-msgstr "Confirmation de la perte du mot de passe"
-
 msgid "Low traffic, highly recommended."
 msgstr "Trafic faible, fortement recommandé."
 
@@ -2297,12 +2287,6 @@ msgstr "Jamais"
 
 msgid "New"
 msgstr "Nouveau"
-
-msgid "New Password"
-msgstr "Nouveau mot de passe"
-
-msgid "New Password (repeat)"
-msgstr "Nouveau mot de passe (confirmez)"
 
 #, php-format
 msgid "New User Registered: %1$s"
@@ -2532,6 +2516,12 @@ msgstr "Mot de passe"
 
 msgid "Password policy"
 msgstr "Politique des mots de passe"
+
+msgid "Password recovered"
+msgstr "Mot de passe réinitialisé"
+
+msgid "Password recovery"
+msgstr "Récupération du mot de passe"
 
 msgid "Password robustness"
 msgstr "Robustesse du mot de passe"
@@ -3067,6 +3057,9 @@ msgstr ""
 msgid "Recently"
 msgstr "Récemment"
 
+msgid "Recovery link sent"
+msgstr "Lien de réinitialisation envoyé"
+
 msgid "Red"
 msgstr "Rouge"
 
@@ -3267,6 +3260,9 @@ msgstr "Enregistrer les informations"
 msgid "Save new avatar"
 msgstr "Sauvegarder le nouvel avatar"
 
+msgid "Save password"
+msgstr "Sauvegarder le mot de passe"
+
 msgid "Save settings"
 msgstr "Enregister"
 
@@ -3302,9 +3298,6 @@ msgstr "Sélectionner"
 
 msgid "Semicolon"
 msgstr "Point virgule"
-
-msgid "Send Lost Password Hash"
-msgstr "Envoyer la clé pour le mot de passe perdu"
 
 msgid "Send a welcome email to the user"
 msgstr "Envoyer un mail de bienvenue à l'utilisateur"
@@ -3441,31 +3434,14 @@ msgstr "Des champs n'existent pas : %s"
 msgid "Some mandatory categories are missing"
 msgstr "Des catégories sont manquantes"
 
-#, php-format
 msgid ""
-"Someone (presumably you) on the %1$s site requested a\n"
-"password change through email verification. If this was\n"
-"not you,ignore this message and nothing will happen.\n"
-"\n"
-"If you requested this verification, visit the following URL\n"
-"to change your password:\n"
-"\n"
-"%2$s\n"
-"\n"
-" -- The %1$s Team"
+"Someone (presumably you) on the %s site requested a password change through "
+"email verification. If this was not you, ignore this message and nothing "
+"will happen."
 msgstr ""
-"Quelqu'un (nous supposons qu'il s'agit de vous) sur le site %1$s a demandé "
-"le\n"
-"changement de mot de passe avec vérification par e-mail. Si vous n'avez\n"
-"pas fait cette demande, ignorez tout simplement ce message.\n"
-"\n"
-"Si vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-"
-"dessous\n"
-"pour changer votre mot de passe :\n"
-"\n"
-"%2$s\n"
-"\n"
-" -- L'équipe %1$s"
+"Quelqu'un (nous supposons qu'il s'agit de vous) sur le site %s a demandé le "
+"changement de mot de passe avec vérification par e-mail. Si vous n'avez pas "
+"fait cette demande, ignorez tout simplement ce message."
 
 msgid "Source code management"
 msgstr "Gestion de code source"
@@ -4566,7 +4542,6 @@ msgstr "Bienvenue sur %s"
 msgid "Welcome to your new project"
 msgstr "Bienvenue dans votre nouveau projet"
 
-#, php-format
 msgid "Welcome, %1$s. You may now change your lost password."
 msgstr ""
 "Bienvenue, %1$s. Vous pouvez changer votre mot de passe perdu maintenant."
@@ -4665,6 +4640,14 @@ msgstr "Année"
 
 msgid "Yesterday"
 msgstr "Hier"
+
+msgid ""
+"You already asked a recovery link recently, please check your email for the "
+"link to recover your password."
+msgstr ""
+"Vous avez déjà demandé un lien de réinitialisation récemment, merci de "
+"regardez votre e-mail pour le lien permettant de réinitialiser votre mot de "
+"passe."
 
 msgid ""
 "You appear to be double-posting this message, since it has the same subject "
@@ -4892,6 +4875,9 @@ msgstr ""
 msgid "You can not delete system user groups"
 msgstr "Vous ne pouvez pas supprimer un groupe utilisateurs système"
 
+msgid "You can now log in with your new password."
+msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
+
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
 
@@ -5014,6 +5000,9 @@ msgstr ""
 "%s%s\n"
 "\n"
 "-- L'équipe %s"
+
+msgid "You have successfully recovered your password,"
+msgstr "Vous venez de réinitialiser votre mot de passe,"
 
 msgid ""
 "You invited %1$s with email %2$s to register to %3$s and join the project "
@@ -5237,6 +5226,11 @@ msgstr "mais il doit être approuvé par un administrateur"
 
 msgid "check your email for the link to activate your account."
 msgstr "regardez votre e-mail pour le lien permettant d'activer votre compte."
+
+msgid "check your email for the link to recover your password."
+msgstr ""
+"regardez votre e-mail pour le lien permettant de réinitialiser votre mot de "
+"passe."
 
 msgid "commits at once"
 msgstr "commits à la fois"

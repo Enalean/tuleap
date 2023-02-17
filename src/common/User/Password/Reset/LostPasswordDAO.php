@@ -29,7 +29,10 @@ class LostPasswordDAO extends DataAccessObject
 {
     private const MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS = 10 * 60;
 
-    public function create(int $user_id, string $verifier, int $current_time): ?int
+    /**
+     * @throws RecentlyCreatedCodeException
+     */
+    public function create(int $user_id, string $verifier, int $current_time): int
     {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($user_id, $verifier, $current_time): ?int {
@@ -40,7 +43,7 @@ class LostPasswordDAO extends DataAccessObject
                 );
 
                 if ($recently_created_code > 0) {
-                    return null;
+                    throw new RecentlyCreatedCodeException();
                 }
 
                 $db->run(
