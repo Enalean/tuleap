@@ -29,6 +29,7 @@
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
                 <section class="tlp-pane-section">
+                    <pull-request-author v-bind:pull_request_info="pull_request_info" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
@@ -46,6 +47,7 @@ import type { PullRequestInfo } from "../api/types";
 import { PULL_REQUEST_ID_KEY } from "../constants";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
+import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
 import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue";
 import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";

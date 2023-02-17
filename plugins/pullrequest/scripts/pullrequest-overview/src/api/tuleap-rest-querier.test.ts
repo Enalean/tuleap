@@ -21,7 +21,7 @@ import { describe, it, expect, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
-import { fetchPullRequestInfo } from "./tuleap-rest-querier";
+import { fetchPullRequestInfo, fetchUserInfo } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
 
@@ -44,6 +44,25 @@ describe("tuleap-rest-querier", () => {
                 uri`/api/v1/pull_requests/${pull_request_id}`
             );
             expect(result.value).toStrictEqual(pull_request_info);
+        });
+    });
+
+    describe("fetchUserInfo()", () => {
+        it("Given an user id, then it should fetch its info", async () => {
+            const user_id = 102;
+            const user_info = {
+                display_name: "Joe l'asticot",
+            };
+
+            vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(user_info));
+            const result = await fetchUserInfo(user_id);
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getJSON).toHaveBeenCalledWith(uri`/api/v1/users/${user_id}`);
+            expect(result.value).toStrictEqual(user_info);
         });
     });
 });

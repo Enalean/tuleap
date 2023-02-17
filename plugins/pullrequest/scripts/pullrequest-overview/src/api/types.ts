@@ -29,4 +29,11 @@ export interface PullRequestInfo {
     readonly branch_dest: string;
     readonly last_build_status: string;
     readonly last_build_date: string;
+    readonly user_id: number;
+}
+
+export interface UserInfo {
+    readonly avatar_url: string;
+    readonly user_url: string;
+    readonly display_name: string;
 }
