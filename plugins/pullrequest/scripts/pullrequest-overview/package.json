@@ -6,10 +6,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
+    "moment": "^2.29.4",
     "neverthrow": "^6.0.0",
     "vue": "^3.2.37",
     "vue-router": "^4.1.4",

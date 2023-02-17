@@ -18,13 +18,13 @@
  */
 
 import type { InjectionKey } from "vue";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date/src";
+import { inject } from "vue";
 
-export const OVERVIEW_APP_BASE_URL_KEY: InjectionKey<URL> = Symbol();
-export const PULL_REQUEST_ID_KEY: InjectionKey<string> = Symbol();
-export const USER_LOCALE_KEY: InjectionKey<string> = Symbol();
-export const USER_DATE_TIME_FORMAT_KEY: InjectionKey<string> = Symbol();
-export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: InjectionKey<RelativeDatesDisplayPreference> =
-    Symbol();
+export function strictInject<T>(key: InjectionKey<T>): T {
+    const resolved_injection = inject(key);
+    if (resolved_injection === undefined) {
+        throw new Error(`Could not find the injection key ${key.toString()}`);
+    }
 
-export const VIEW_OVERVIEW_NAME = "overview";
+    return resolved_injection;
+}

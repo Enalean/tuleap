@@ -29,7 +29,9 @@
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
                 <section class="tlp-pane-section">
-                    <p class="empty-state-text">Pull request info section</p>
+                    <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-stats v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-references v-bind:pull_request_info="pull_request_info" />
                 </section>
             </div>
         </div>
@@ -39,10 +41,14 @@
 <script setup lang="ts">
 import { provide, ref } from "vue";
 import { useRoute } from "vue-router";
-import OverviewAppHeader from "./OverviewAppHeader.vue";
 import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
 import type { PullRequestInfo } from "../api/types";
 import { PULL_REQUEST_ID_KEY } from "../constants";
+
+import OverviewAppHeader from "./OverviewAppHeader.vue";
+import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue";
+import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
+import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);

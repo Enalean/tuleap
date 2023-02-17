@@ -19,4 +19,14 @@
 
 export interface PullRequestInfo {
     readonly title: string;
+    readonly creation_date: string;
+    readonly short_stat: {
+        readonly lines_added: number;
+        readonly lines_removed: number;
+    };
+    readonly reference_src: string;
+    readonly branch_src: string;
+    readonly branch_dest: string;
+    readonly last_build_status: string;
+    readonly last_build_date: string;
 }

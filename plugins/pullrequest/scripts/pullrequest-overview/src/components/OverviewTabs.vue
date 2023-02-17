@@ -35,18 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
 import { useGettext } from "vue3-gettext";
 import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
+import { strictInject } from "../helpers/strict-inject";
 
 const { $gettext } = useGettext();
 
-const base_url: URL | undefined = inject(OVERVIEW_APP_BASE_URL_KEY);
-const pull_request_id: string | undefined = inject(PULL_REQUEST_ID_KEY);
-
-if (!base_url || !pull_request_id) {
-    throw new Error(`Could not find the needed injection key`);
-}
+const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
+const pull_request_id: string = strictInject(PULL_REQUEST_ID_KEY);
 
 const buildUrlForView = (view_name: string) => {
     const view_url = new URL("", base_url.toString());

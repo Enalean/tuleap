@@ -20,3 +20,9 @@ msgstr "Commits"
 
 msgid "Overview"
 msgstr "Résumé"
+
+msgid "Pull request date"
+msgstr "Date de la pull request"
+
+msgid "References"
+msgstr "Références"
