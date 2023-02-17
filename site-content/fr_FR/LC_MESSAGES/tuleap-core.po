@@ -735,7 +735,7 @@ msgid "Best Regards."
 msgstr "Cordialement."
 
 msgid "Best regards,"
-msgstr "Cordialement."
+msgstr "Cordialement,"
 
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
@@ -3703,9 +3703,10 @@ msgid ""
 msgid_plural ""
 "The following invitations have not been completed and become obsolete today."
 msgstr[0] ""
-"Les invitations suivantes n'ont pas été complétée et devienne obsolète "
-"aujourd'hui."
+"L'invitation suivante n'a pas été complétée et devient obsolète aujourd'hui."
 msgstr[1] ""
+"Les invitations suivantes n'ont pas été complétées et deviennent obsolètes "
+"aujourd'hui."
 
 msgid "The given license agreement is not valid for this project"
 msgstr "La license associée au fichier n'est pas valide pour ce projet"
@@ -4804,15 +4805,20 @@ msgstr ""
 " %2$s."
 
 #, php-format
-msgid "You are trying to send %s invitations, but the maximum is %s per day."
-msgstr ""
+msgid "You are trying to send %s invitation, but the maximum is %s per day."
+msgid_plural ""
+"You are trying to send %s invitations, but the maximum is %s per day."
+msgstr[0] ""
+"Vous êtes en train d'envoyer %s invitation, mais le maximum est de %s par "
+"jour."
+msgstr[1] ""
 "Vous êtes en train d'envoyer %s invitations, mais le maximum est de %s par "
 "jour."
 
 #, php-format
-msgid "You are trying to send one invitation."
+msgid "You are trying to send %s invitation."
 msgid_plural "You are trying to send %s invitations."
-msgstr[0] "Vous essayez d'envoyer une invitation."
+msgstr[0] "Vous essayez d'envoyer %s invitation."
 msgstr[1] "Vous essayez d'envoyer %s invitations."
 
 #, php-format
@@ -4887,9 +4893,9 @@ msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
 
 #, php-format
-msgid "You can only send one more invitation."
+msgid "You can only send %s more invitation."
 msgid_plural "You can only send %s more invitations."
-msgstr[0] "Vous ne pouvez envoyer plus qu'une seule invitation."
+msgstr[0] "Vous pouvez encore envoyer %s invitation."
 msgstr[1] "Vous pouvez encore envoyer %s invitations."
 
 msgid ""
