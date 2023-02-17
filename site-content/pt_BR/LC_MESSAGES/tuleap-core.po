@@ -4730,15 +4730,17 @@ msgstr ""
 " %2$s."
 
 #, php-format
-msgid "You are trying to send %s invitations, but the maximum is %s per day."
-msgstr ""
-"Você está tentando enviar %s convites, mas o máximo permitido é %s por dia."
+msgid "You are trying to send %s invitation, but the maximum is %s per day."
+msgid_plural ""
+"You are trying to send %s invitations, but the maximum is %s per day."
+msgstr[0] ""
+msgstr[1] ""
 
 #, php-format
-msgid "You are trying to send one invitation."
+msgid "You are trying to send %s invitation."
 msgid_plural "You are trying to send %s invitations."
-msgstr[0] "Você está tentando enviar um convite."
-msgstr[1] "Você está tentando enviar %s convites."
+msgstr[0] ""
+msgstr[1] ""
 
 #, php-format
 msgid ""
@@ -4813,10 +4815,10 @@ msgid "You can only edit your own widgets."
 msgstr "Você pode editar apenas seus próprios widgets."
 
 #, php-format
-msgid "You can only send one more invitation."
+msgid "You can only send %s more invitation."
 msgid_plural "You can only send %s more invitations."
-msgstr[0] "Você pode mandar apenas mais um convite."
-msgstr[1] "Você pode mandar apenas mais %s convites."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "You can override default names for the two special groups. This only applies "

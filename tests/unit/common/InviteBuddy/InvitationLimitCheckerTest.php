@@ -62,6 +62,20 @@ final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkForNewInvitations($nb_invitation_to_send, $user);
     }
 
+    public function testUserCanNotSendInvitationIfHeAlreadyExceedsLimitForTheDay(): void
+    {
+        $nb_invitation_to_send = 2;
+        $user                  = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+
+        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(6);
+
+        $this->expectException(InvitationSenderGateKeeperException::class);
+        $this->expectExceptionMessage('You are trying to send 2 invitations, but the maximum is 5 per day.');
+
+        $this->checker->checkForNewInvitations($nb_invitation_to_send, $user);
+    }
+
     public function testUserCanSendInvitationsIfHeDoesNotByPassLimit(): void
     {
         $nb_invitation_to_send = 3;
