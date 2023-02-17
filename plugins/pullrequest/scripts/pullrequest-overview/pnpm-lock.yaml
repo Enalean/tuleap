@@ -2,22 +2,28 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
+  '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.2.10
+  moment: ^2.29.4
   neverthrow: ^6.0.0
   vue: ^3.2.37
   vue-router: ^4.1.4
   vue3-gettext: ^2.2.1
 
 dependencies:
+  '@tuleap/date-helper': link:../../../../lib/frontend/date-helper
   '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
+  '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
+  moment: 2.29.4
   neverthrow: 6.0.0
   vue: 3.2.37
   vue-router: 4.1.5_vue@3.2.37
@@ -460,6 +466,10 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
     dev: true
+
+  /moment/2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: false
 
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
