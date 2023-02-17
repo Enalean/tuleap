@@ -18,79 +18,86 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\REST\Artifact;
+
+use PFUser;
+use Tracker;
+use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldDataFromValuesByField;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\BuildFieldsData;
+use Tuleap\Tracker\REST\FaultMapper;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class Tracker_REST_Artifact_ArtifactCreator
+class ArtifactCreator
 {
-    private FieldsDataBuilder $fields_data_builder;
-
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-    private FieldsDataFromValuesByFieldBuilder $values_by_field_builder;
-    private AddDefaultValuesToFieldsData $default_values_adder;
-
     public function __construct(
-        FieldsDataBuilder $fields_data_builder,
-        Tracker_ArtifactFactory $artifact_factory,
-        TrackerFactory $tracker_factory,
-        FieldsDataFromValuesByFieldBuilder $values_by_field_builder,
-        AddDefaultValuesToFieldsData $default_values_adder,
+        private BuildFieldsData $fields_data_builder,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private RetrieveTracker $tracker_factory,
+        private BuildFieldDataFromValuesByField $values_by_field_builder,
+        private AddDefaultValuesToFieldsData $default_values_adder,
+        private HandleUpdateArtifact $artifact_update_handler,
+        private VerifySubmissionPermissions $submission_permission_verifier,
     ) {
-        $this->fields_data_builder     = $fields_data_builder;
-        $this->artifact_factory        = $artifact_factory;
-        $this->tracker_factory         = $tracker_factory;
-        $this->values_by_field_builder = $values_by_field_builder;
-        $this->default_values_adder    = $default_values_adder;
     }
 
     /**
      *
-     * @param array $values
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
+     * @param ArtifactValuesRepresentation[] $values
      * @throws \Luracast\Restler\RestException
      */
-    public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values, bool $should_visit_be_recorded)
+    public function create(PFUser $submitter, TrackerReference $tracker_reference, array $values, bool $should_visit_be_recorded): ArtifactReference
     {
         $tracker          = $this->getTracker($tracker_reference);
         $changeset_values = $this->fields_data_builder->getFieldsDataOnCreate($values, $tracker);
-        $fields_data      = $this->default_values_adder->getUsedFieldsWithDefaultValue(
+
+        $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue(
             $tracker,
             $changeset_values->getFieldsData(),
-            $user
+            $submitter
         );
-        $this->checkUserCanSubmit($user, $tracker);
+        $this->checkUserCanSubmit($submitter, $tracker);
 
         return $this->returnReferenceOrError(
-            $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', $should_visit_be_recorded),
-            ''
+            $this->artifact_factory->createArtifact($tracker, $fields_data, $submitter, '', $should_visit_be_recorded),
+            '',
+            $submitter,
+            $changeset_values,
+            $values
         );
     }
 
     /**
      *
      * @param array $values
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
+     * @return ArtifactReference
      * @throws \Luracast\Restler\RestException
      */
-    public function createWithValuesIndexedByFieldName(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values)
+    public function createWithValuesIndexedByFieldName(PFUser $user, TrackerReference $tracker_reference, array $values)
     {
-        $tracker     = $this->getTracker($tracker_reference);
-        $fields_data = $this->values_by_field_builder->getFieldsDataOnCreate($values, $tracker);
-        $fields_data = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+        $tracker          = $this->getTracker($tracker_reference);
+        $changeset_values = $this->values_by_field_builder->getFieldsDataOnCreate($values, $tracker);
+        $fields_data      = $this->default_values_adder->getUsedFieldsWithDefaultValue($tracker, $changeset_values->getFieldsData(), $user);
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
             $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '', true),
-            'by_field'
+            'by_field',
+            $user,
+            $changeset_values,
+            $values
         );
     }
 
-    private function getTracker(Tuleap\Tracker\REST\TrackerReference $tracker_reference)
+    private function getTracker(TrackerReference $tracker_reference): Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
         if (! $tracker) {
@@ -99,10 +106,11 @@ class Tracker_REST_Artifact_ArtifactCreator
         return $tracker;
     }
 
-    private function returnReferenceOrError($artifact, $format)
+    private function returnReferenceOrError($artifact, $format, PFUser $submitter, InitialChangesetValuesContainer $changeset_values, array $values)
     {
         if ($artifact) {
-            return Tuleap\Tracker\REST\Artifact\ArtifactReference::build($artifact, $format);
+            $this->addReverseLinks($submitter, $changeset_values, $artifact, $values);
+            return ArtifactReference::build($artifact, $format);
         } else {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new \Luracast\Restler\RestException(400, $GLOBALS['Response']->getRawFeedback());
@@ -111,10 +119,31 @@ class Tracker_REST_Artifact_ArtifactCreator
         }
     }
 
-    public function checkUserCanSubmit(PFUser $user, Tracker $tracker)
+    public function checkUserCanSubmit(PFUser $user, Tracker $tracker): void
     {
-        if (! $tracker->userCanSubmitArtifact($user)) {
+        if (! $this->submission_permission_verifier->canUserSubmitArtifact($user, $tracker)) {
             throw new \Luracast\Restler\RestException(403, dgettext('tuleap-tracker', 'You can\'t submit an artifact because you do not have the right to submit all required fields'));
+        }
+    }
+
+    private function isLinkKeyUsed(array $values): bool
+    {
+        foreach ($values as $value) {
+            if (is_array($value->links)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function addReverseLinks(PFUser $submitter, InitialChangesetValuesContainer $changeset_values, Artifact $artifact, array $values): void
+    {
+        $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getReverseLinks();
+        if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
+            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection, new CollectionOfReverseLinks([]))
+                ->mapErr(
+                    [FaultMapper::class, 'mapToRestException']
+                );
         }
     }
 }

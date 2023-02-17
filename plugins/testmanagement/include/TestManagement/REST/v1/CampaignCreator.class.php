@@ -28,52 +28,24 @@ use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
-use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CampaignCreator
 {
-    /** @var Config */
-    private $config;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var DefinitionSelector */
-    private $definition_selector;
-
-    /** @var Tracker_REST_Artifact_ArtifactCreator */
-    private $artifact_creator;
-
-    /** @var ExecutionCreator */
-    private $execution_creator;
-
     public function __construct(
-        Config $config,
-        ProjectManager $project_manager,
-        Tracker_FormElementFactory $formelement_factory,
-        TrackerFactory $tracker_factory,
-        DefinitionSelector $definition_selector,
-        Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
-        ExecutionCreator $execution_creator,
+        private Config $config,
+        private ProjectManager $project_manager,
+        private Tracker_FormElementFactory $formelement_factory,
+        private TrackerFactory $tracker_factory,
+        private DefinitionSelector $definition_selector,
+        private ArtifactCreator $artifact_creator,
+        private ExecutionCreator $execution_creator,
     ) {
-        $this->config              = $config;
-        $this->project_manager     = $project_manager;
-        $this->formelement_factory = $formelement_factory;
-        $this->tracker_factory     = $tracker_factory;
-        $this->definition_selector = $definition_selector;
-        $this->artifact_creator    = $artifact_creator;
-        $this->execution_creator   = $execution_creator;
     }
 
     /**

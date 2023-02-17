@@ -115,8 +115,13 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         $link1_representation->direction = "forward";
         $link1_representation->type      = "";
 
+        $link2_representation            = new LinkWithDirectionRepresentation();
+        $link2_representation->id        = self::SECOND_ADDED_ARTIFACT_ID;
+        $link2_representation->direction = "reverse";
+        $link2_representation->type      = "";
+
         $payload            = new ArtifactValuesRepresentation();
-        $payload->all_links = [$link1_representation];
+        $payload->all_links = [$link1_representation, $link2_representation];
 
         $value = $this->build($payload);
 
@@ -127,6 +132,12 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertCount(1, $new_links->getArtifactLinks());
         [$first_link] = $new_links->getArtifactLinks();
         self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
+        self::assertNull($first_link->getType());
+
+        $reverse_links = $value->getReverseLinks();
+        self::assertCount(1, $reverse_links->links);
+        [$first_link] = $reverse_links->links;
+        self::assertSame(self::SECOND_ADDED_ARTIFACT_ID, $first_link->getSourceArtifactId());
         self::assertNull($first_link->getType());
     }
 }

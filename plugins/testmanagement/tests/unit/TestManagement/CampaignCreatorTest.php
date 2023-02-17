@@ -22,44 +22,28 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use ProjectManager;
+use Tracker;
 use Tracker_FormElementFactory;
-use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
+use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 
 final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var CampaignCreator */
-    private $campaign_creator;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var DefinitionSelector */
-    private $definition_selector;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Config */
-    private $config;
-
-    /** @var Tracker_REST_Artifact_ArtifactCreator */
-    private $artifact_creator;
-
-    /** @var ExecutionCreator */
-    private $execution_creator;
-
-    /** @var Tracker */
-    private $campaign_tracker;
-
-    /** @var PFUser */
-    private $user;
+    private CampaignCreator $campaign_creator;
+    private ProjectManager $project_manager;
+    private TrackerFactory $tracker_factory;
+    private DefinitionSelector $definition_selector;
+    private Tracker_FormElementFactory $formelement_factory;
+    private Config $config;
+    private ArtifactCreator $artifact_creator;
+    private ExecutionCreator $execution_creator;
+    private Tracker $campaign_tracker;
+    private PFUser $user;
 
     private $project_id          = 101;
     private $campaign_tracker_id = 444;
@@ -84,7 +68,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory     = Mockery::spy(\TrackerFactory::class);
         $this->definition_selector = Mockery::spy(\Tuleap\TestManagement\REST\v1\DefinitionSelector::class);
         $this->formelement_factory = Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->artifact_creator    = Mockery::spy(\Tracker_REST_Artifact_ArtifactCreator::class);
+        $this->artifact_creator    = Mockery::spy(ArtifactCreator::class);
         $this->config              = Mockery::spy(\Tuleap\TestManagement\Config::class);
         $this->execution_creator   = Mockery::spy(\Tuleap\TestManagement\REST\v1\ExecutionCreator::class);
 

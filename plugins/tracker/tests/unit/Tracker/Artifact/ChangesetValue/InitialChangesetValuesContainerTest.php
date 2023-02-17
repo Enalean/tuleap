@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,10 +50,14 @@ final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\Tes
             ForwardLinkStub::withType(41, 'custom_type'),
             ForwardLinkStub::withNoType(91),
         ]);
+        $reverse_links       = new CollectionOfReverseLinks([
+            ReverseLinkStub::withType(56, 'custom_type'),
+        ]);
         $artifact_link_value = NewArtifactLinkInitialChangesetValue::fromParts(
             self::ARTIFACT_LINK_FIELD_ID,
             $new_links,
-            null
+            null,
+            $reverse_links
         );
         $changeset_values    = new InitialChangesetValuesContainer($fields_data, $artifact_link_value);
 
@@ -64,7 +70,7 @@ final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertSame(
             [
                 'new_values' => '41,91',
-                'types'      => [41 => 'custom_type'],
+                'types' => [41 => 'custom_type'],
             ],
             $new_fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );

@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
-final class FieldsDataFromValuesByFieldBuilder
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
+
+final class FieldsDataFromValuesByFieldBuilder implements BuildFieldDataFromValuesByField
 {
-    public function __construct(private \Tracker_FormElementFactory $formelement_factory)
+    public function __construct(private \Tracker_FormElementFactory $formelement_factory, private NewArtifactLinkInitialChangesetValueBuilder $artifact_link_initial_builder,)
     {
     }
 
@@ -32,16 +35,21 @@ final class FieldsDataFromValuesByFieldBuilder
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): array
+    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
     {
-        $new_values = [];
+        $new_values    = [];
+        $artifact_link = null;
         foreach ($values as $field_name => $value) {
             $field = $this->getFieldByName($tracker, $field_name);
+            if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
+                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $value);
+                continue;
+            }
 
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValueByfield($value);
         }
 
-        return $new_values;
+        return new InitialChangesetValuesContainer($new_values, $artifact_link);
     }
 
     /**

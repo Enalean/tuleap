@@ -39,7 +39,6 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
-use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_URLVerification;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
@@ -108,12 +107,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
-use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
@@ -170,7 +170,6 @@ class ArtifactsResource extends AuthenticatedResource
     public const COMPLETE_TRACKER_STRUCTURE = 'complete';
 
     public const EMPTY_TYPE = '';
-
 
     private PostMoveArticfactRESTAction $post_move_action;
     private UserManager $user_manager;
@@ -749,13 +748,7 @@ class ArtifactsResource extends AuthenticatedResource
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
         $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
-        $updater                   = new ArtifactUpdater(
-            $fields_data_builder,
-            $changeset_creator,
-            $update_conditions_checker,
-        );
-
-        $artifact_factory =  Tracker_ArtifactFactory::instance();
+        $artifact_factory          =  Tracker_ArtifactFactory::instance();
 
         $reverse_link_retriever = new ReverseLinksRetriever(
             new ReverseLinksDao(),
@@ -902,7 +895,57 @@ class ArtifactsResource extends AuthenticatedResource
                 $target_tracker->getWorkflow()->disable();
             }
 
-            $creator = new Tracker_REST_Artifact_ArtifactCreator(
+            $usage_dao            = new ArtifactLinksUsageDao();
+            $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
+            $event_dispatcher     = EventManager::instance();
+            $transaction_executor = new DBTransactionExecutorWithConnection(
+                DBFactory::getMainTuleapDBConnection()
+            );
+
+            $changeset_creator = new NewChangesetCreator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $this->formelement_factory,
+                    new ArtifactLinkValidator(
+                        $this->artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        $usage_dao,
+                        $event_dispatcher,
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(\TransitionFactory::instance(), new SimpleWorkflowDao()),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance(),
+                        )
+                    )
+                ),
+                $fields_retriever,
+                $event_dispatcher,
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
+                $transaction_executor,
+                ArtifactChangesetSaver::build(),
+                new ParentLinkAction($this->artifact_factory),
+                new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
+                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetValueSaver(),
+                \WorkflowFactory::instance(),
+                new CommentCreator(
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                    \ReferenceManager::instance(),
+                    new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                    new ChangesetCommentIndexer(
+                        new ItemToIndexQueueEventBased($event_dispatcher),
+                        $event_dispatcher,
+                        new \Tracker_Artifact_Changeset_CommentDao(),
+                    ),
+                    new TextValueValidator(),
+                )
+            );
+
+            $artifact_link_initial_builder = new NewArtifactLinkInitialChangesetValueBuilder();
+            $creator                       = new ArtifactCreator(
                 new FieldsDataBuilder(
                     $this->formelement_factory,
                     new NewArtifactLinkChangesetValueBuilder(
@@ -912,15 +955,15 @@ class ArtifactsResource extends AuthenticatedResource
                             $this->artifact_factory
                         )
                     ),
-                    new NewArtifactLinkInitialChangesetValueBuilder()
+                    $artifact_link_initial_builder
                 ),
                 $this->artifact_factory,
                 $this->tracker_factory,
-                new FieldsDataFromValuesByFieldBuilder($this->formelement_factory),
-                $this->formelement_factory
+                new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
+                $this->formelement_factory,
+                new ArtifactUpdateHandler($changeset_creator, $this->formelement_factory, $this->artifact_factory, $this->event_manager),
+                SubmissionPermissionVerifier::instance()
             );
-
-            $artifact_reference = null;
 
             if (! empty($values)) {
                 $artifact_reference = $creator->create($user, $tracker, $values, true);
