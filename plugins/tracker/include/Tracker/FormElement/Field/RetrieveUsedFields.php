@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field;
 
+use Tracker_FormElement_Field;
+
 interface RetrieveUsedFields
 {
     /**
@@ -27,4 +29,6 @@ interface RetrieveUsedFields
      * @return \Tracker_FormElement_Field[]
      */
     public function getUsedFields(\Tracker $tracker): array;
+
+    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field;
 }
