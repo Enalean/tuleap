@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
+import type { Fault } from "@tuleap/fault";
 import { fetchUserInfo } from "../../api/tuleap-rest-querier";
 import type { PullRequestInfo, UserInfo } from "../../api/types";
 import PropertySkeleton from "./PropertySkeleton.vue";
@@ -50,6 +51,10 @@ const { $gettext } = useGettext();
 const author = ref<UserInfo | null>(null);
 const props = defineProps<{
     pull_request_info: PullRequestInfo | null;
+}>();
+
+const emit = defineEmits<{
+    (e: "tuleap-api-fault", fault: Fault): void;
 }>();
 
 watch(
@@ -63,8 +68,8 @@ watch(
             (result) => {
                 author.value = result;
             },
-            () => {
-                // Do nothing, we don't have a way to display errors yet
+            (fault) => {
+                emit("tuleap-api-fault", fault);
             }
         );
     }
