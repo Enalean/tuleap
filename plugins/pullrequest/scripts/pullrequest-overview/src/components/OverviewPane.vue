@@ -32,6 +32,7 @@
                     <pull-request-author v-bind:pull_request_info="pull_request_info" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
                 </section>
             </div>
@@ -50,6 +51,7 @@ import OverviewAppHeader from "./OverviewAppHeader.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
 import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue";
 import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
+import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 
 const route = useRoute();

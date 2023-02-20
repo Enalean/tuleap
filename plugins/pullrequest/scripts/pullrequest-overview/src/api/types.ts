@@ -17,6 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+type BuildStatus = "unknown" | "pending" | "fail" | "success";
+
+export const BUILD_STATUS_UNKNOWN: BuildStatus = "unknown";
+export const BUILD_STATUS_PENDING: BuildStatus = "pending";
+export const BUILD_STATUS_FAILED: BuildStatus = "fail";
+export const BUILD_STATUS_SUCCESS: BuildStatus = "success";
+
 export interface PullRequestInfo {
     readonly title: string;
     readonly creation_date: string;
@@ -27,7 +34,7 @@ export interface PullRequestInfo {
     readonly reference_src: string;
     readonly branch_src: string;
     readonly branch_dest: string;
-    readonly last_build_status: string;
+    readonly last_build_status: BuildStatus;
     readonly last_build_date: string;
     readonly user_id: number;
 }
