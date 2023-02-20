@@ -158,7 +158,7 @@ if ($special_cat === 'none') {
     . "(`groups`.type=1) AND "
         . "(`groups`.status='A') "
         . $sql_list_categorized
-        . "GROUP BY `groups`.group_id ORDER BY `groups`.group_name ";
+        . "ORDER BY `groups`.group_name ";
 } else {
 // now do limiting query
 
@@ -175,7 +175,7 @@ if ($special_cat === 'none') {
         . "(`groups`.type=1) AND "
     . "(`groups`.status='A') AND "
     . "trove_group_link.trove_cat_id=" . db_ei($form_cat) . " "
-    . "GROUP BY `groups`.group_id ORDER BY `groups`.group_name ";
+    . "ORDER BY `groups`.group_name ";
 }
 
 $limit           = TroveCatFactory::BROWSELIMIT;
