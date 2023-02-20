@@ -314,41 +314,47 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
     }
 }
 
+$users_rows = [];
+$dao        = new \Tuleap\User\Admin\PendingUsersDao();
 // No action - First time in this script
 // Show the list of pending user waiting for approval
-if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
-    $res = db_query(
-        "SELECT user.*, invitations.from_user_id
-            FROM user
-            LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
-            WHERE user.status='P'"
-    );
-    $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
+if ($page === ADMIN_APPROVE_PENDING_PAGE_PENDING) {
     if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
-        $res = db_query(
-            "SELECT user.*, invitations.from_user_id
-                FROM user
-                LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
-                WHERE user.status='P' OR user.status='V' OR user.status='W'"
-        );
-        $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
+        $users_rows = $dao->searchPendingAndValidatedUsers();
+        $msg        = $Language->getText('admin_approve_pending_users', 'no_pending');
+    } else {
+        $users_rows = $dao->searchPendingUsers();
+        $msg        = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
     }
-} elseif ($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
-    $res = db_query(
-        "SELECT user.*, invitations.from_user_id
-            FROM user
-            LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
-            WHERE user.status='V' OR user.status='W'"
-    );
-    $msg = $Language->getText('admin_approve_pending_users', 'no_validated');
+} elseif ($page === ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
+    $users_rows = $dao->searchValidatedUsers();
+    $msg        = $Language->getText('admin_approve_pending_users', 'no_validated');
 }
 
-$user_manager = UserManager::instance();
+$user_manager    = UserManager::instance();
+$project_manager = ProjectManager::instance();
+$current_user    = $user_manager->getCurrentUser();
 
 $users = [];
-while ($row = db_fetch_array($res)) {
+foreach ($users_rows as $row) {
     $invited_by_user            = $row['from_user_id'] ? $user_manager->getUserById((int) $row['from_user_id']) : null;
     $is_email_already_validated = $invited_by_user !== null;
+
+    $invited_in_project = null;
+    if (isset($row['to_project_id']) && $row['to_project_id']) {
+        try {
+            $project            = $project_manager->getValidProjectById((int) $row['to_project_id']);
+            $invited_in_project = new \Tuleap\Project\ProjectPresenter(
+                (int) $project->getID(),
+                $project->getPublicName(),
+                $project->getUrl(),
+                '/project/admin/?group_id=' . urlencode((string) $project->getID()),
+                $current_user->isAdmin((int) $project->getID()),
+                $project,
+            );
+        } catch (Project_NotFoundException $e) {
+        }
+    }
 
     $users[] = new Tuleap\User\Admin\PendingUserPresenter(
         $row['user_id'],
@@ -360,6 +366,7 @@ while ($row = db_fetch_array($res)) {
         $row['expiry_date'],
         $row['status'],
         $invited_by_user ? \Tuleap\User\Admin\UserPresenter::fromUser($invited_by_user) : null,
+        $invited_in_project,
         $is_email_already_validated,
     );
 }
