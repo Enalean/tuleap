@@ -52,6 +52,14 @@
                             </div>
                         </div>
                     {{/ invited_by_user }}
+                    {{# invited_in_project }}
+                        <div class="tlp-property siteadmin-pending-user-info-property">
+                            <label class="tlp-label">{{# gettext }}Invited in{{/ gettext }}</label>
+                            <div>
+                                <a href="{{ project_uri }}">{{ icon }} {{ project_name }}</a>
+                            </div>
+                        </div>
+                    {{/ invited_in_project }}
                 </div>
             </section>
         </div>

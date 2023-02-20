@@ -1921,6 +1921,9 @@ msgstr "Inviter quelqu'un à rejoindre %s"
 msgid "Invited by"
 msgstr "Invitation envoyée par"
 
+msgid "Invited in"
+msgstr "Invité dans"
+
 msgid "Is Public?"
 msgstr "Est public ?"
 
