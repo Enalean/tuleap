@@ -728,10 +728,6 @@ msgid ""
 msgstr ""
 
 #, php-format
-msgid "Cannot delete the date reminder %1$s"
-msgstr ""
-
-#, php-format
 msgid "Cannot update conditions of transition with id '%d'"
 msgstr ""
 
@@ -2198,6 +2194,10 @@ msgid "Remaining effort cannot be greater than total effort."
 msgstr ""
 
 msgid "Remaining effort cannot be negative."
+msgstr ""
+
+#, php-format
+msgid "Reminder with ID %d not found."
 msgstr ""
 
 #, php-format

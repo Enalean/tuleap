@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
@@ -901,18 +902,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     /**
      * Get all trackers having at least on active date reminder
-     *
-     * @return Array
      */
-    protected function getTrackersHavingDateReminders()
+    protected function getTrackersHavingDateReminders(): array
     {
         $trackers = [];
-        $dao      = new Tracker_DateReminderDao();
-        $dar      = $dao->getTrackersHavingDateReminders();
-        if ($dar && ! $dar->isError()) {
-            foreach ($dar as $row) {
-                $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
-            }
+        $dao      = new DateReminderDao();
+        foreach ($dao->getTrackersHavingDateReminders() as $tracker_id) {
+            $trackers[] = $this->getTrackerFactory()->getTrackerById($tracker_id);
         }
         return $trackers;
     }
