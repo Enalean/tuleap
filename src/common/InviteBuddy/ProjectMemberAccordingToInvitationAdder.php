@@ -78,6 +78,11 @@ final class ProjectMemberAccordingToInvitationAdder
             return;
         }
 
+        if ($just_created_user->isMember((int) $project->getID())) {
+            $this->invitation_instrumentation->incrementProjectInvitation();
+            return;
+        }
+
         try {
             $this->project_member_adder->addProjectMember($just_created_user, $project, $from_user);
             $this->invitation_instrumentation->incrementProjectInvitation();
