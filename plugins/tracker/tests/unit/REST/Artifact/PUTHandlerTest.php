@@ -106,7 +106,7 @@ final class PUTHandlerTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode($expected_status_code);
         $this->handle([]);
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
@@ -114,7 +114,7 @@ final class PUTHandlerTest extends TestCase
     {
         $this->artifact_updater = HandleUpdateArtifactStub::withException(new Tracker_NoChangeException(1, 'art #1'));
         $this->handle([]);
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
@@ -126,18 +126,16 @@ final class PUTHandlerTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(500);
         $this->handle([]);
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
     }
 
     public function testItUpdatesArtifactLikeBeforeWhenAllLinkKeyIsNotProvidedOrForwardDirectionIsProvidedInAllLinkKey(): void
     {
         $this->artifact_updater = HandleUpdateArtifactStub::build();
         $this->handle([]);
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
     }
 
     public function testItDoesNotMakesTheReverseOfAnArtifactIfTheParentKeyWasGiven(): void
@@ -161,8 +159,7 @@ final class PUTHandlerTest extends TestCase
 
         $this->handle($values);
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
@@ -187,8 +184,7 @@ final class PUTHandlerTest extends TestCase
 
         $this->handle($values);
         self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
@@ -220,8 +216,7 @@ final class PUTHandlerTest extends TestCase
 
         $this->handle($values);
         self::assertSame(1, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(1, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(1, $this->artifact_updater->getUpdateTypeOfReverseLinksMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getLinkAndUpdateTypeOfReverseArtifactMethodCallCount());
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 

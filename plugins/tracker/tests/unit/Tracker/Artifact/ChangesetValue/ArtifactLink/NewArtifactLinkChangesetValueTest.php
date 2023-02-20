@@ -94,7 +94,7 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
             ForwardLinkStub::withType(42, 'custom_type'),
             ForwardLinkStub::withNoType(572),
         ]);
-        $value        = NewArtifactLinkChangesetValue::fromAddedValues(self::FIELD_ID, $added_values);
+        $value        = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(self::FIELD_ID, $added_values);
 
         self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertSame($added_values, $value->getAddedValues());
