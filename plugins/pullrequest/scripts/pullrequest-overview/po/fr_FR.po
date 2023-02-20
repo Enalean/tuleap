@@ -21,11 +21,32 @@ msgstr "Changements"
 msgid "Commits"
 msgstr "Commits"
 
+msgid "Failure"
+msgstr "Échec"
+
+msgid "Failure on"
+msgstr "Échec le"
+
+msgid "Last CI status"
+msgstr "Statut intégration continue"
+
 msgid "Overview"
 msgstr "Résumé"
+
+msgid "Pending since"
+msgstr "En cours depuis"
 
 msgid "Pull request date"
 msgstr "Date de la pull request"
 
 msgid "References"
 msgstr "Références"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Success on"
+msgstr "Succès le"
+
+msgid "Unknown"
+msgstr "Inconnu"

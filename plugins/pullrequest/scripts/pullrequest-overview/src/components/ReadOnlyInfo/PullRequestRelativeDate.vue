@@ -24,6 +24,7 @@
         v-bind:placement="relative_date_placement"
         v-bind:preference="relative_date_preference"
         v-bind:locale="user_locale"
+        class="pullrequest-relative-date"
         data-test="pullrequest-relative-date"
     >
         {{ formatted_full_date }}

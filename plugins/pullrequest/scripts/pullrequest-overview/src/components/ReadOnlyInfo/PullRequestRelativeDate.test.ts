@@ -25,6 +25,7 @@ import {
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../constants";
+import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
 
 describe("PullRequestRelativeDate", () => {
     it("should display the provided date as a tlp-relative-date element while taking into account user prefs", () => {
@@ -33,7 +34,7 @@ describe("PullRequestRelativeDate", () => {
                 provide: {
                     [USER_DATE_TIME_FORMAT_KEY as symbol]: "d/m/Y H:i",
                     [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY as symbol]:
-                        "relative_first-absolute_shown",
+                        PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                     [USER_LOCALE_KEY as symbol]: "fr_FR",
                 },
                 stubs: {
