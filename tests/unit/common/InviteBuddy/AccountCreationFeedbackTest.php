@@ -71,7 +71,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(104)
             ->willReturn([]);
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
@@ -398,7 +398,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('send');
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
@@ -464,7 +464,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             );
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -516,7 +516,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("Invitation was referencing an unknown user #103");
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
@@ -573,7 +573,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('warning')
             ->with("Cannot send invitation feedback to inactive user #103");
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -631,7 +631,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("Unable to send invitation feedback to user #103 after registration of user #104");
 
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
 
         $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(
