@@ -22,36 +22,52 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
+use Tuleap\InviteBuddy\Invitation;
 use Tuleap\InviteBuddy\InvitationDao;
-use UserManager;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\User\RetrieveUserById;
 
-class InvitedByPresenterBuilder
+final class InvitedByPresenterBuilder
 {
-    /**
-     * @var InvitationDao
-     */
-    private $dao;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    public function __construct(InvitationDao $dao, UserManager $user_manager)
-    {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        private InvitationDao $dao,
+        private RetrieveUserById $user_manager,
+        private ProjectByIDFactory $project_manager,
+    ) {
     }
 
-    public function getInvitedByPresenter(\PFUser $user): InvitedByPresenter
+    public function getInvitedByPresenter(\PFUser $user, \PFUser $current_user): InvitedByPresenter
     {
-        $users = [];
-        foreach ($this->dao->searchUserIdThatInvitedUser((int) $user->getId()) as $row) {
-            $from_user = $this->user_manager->getUserById($row['from_user_id']);
-            if ($from_user) {
-                $users[] = new InvitedByUserPresenter($from_user);
+        $invited_by_users                   = [];
+        $has_used_an_invitation_to_register = false;
+        foreach ($this->dao->searchByCreatedUserId((int) $user->getId()) as $invitation) {
+            if ($invitation->status === Invitation::STATUS_USED) {
+                $has_used_an_invitation_to_register = true;
             }
+
+            $from_user = $this->user_manager->getUserById($invitation->from_user_id);
+            if (! $from_user) {
+                continue;
+            }
+
+            $invited_by = $this->getInvitedByUserPresenter($from_user, $invited_by_users);
+            if ($invitation->to_project_id) {
+                $project    = $this->project_manager->getProjectById($invitation->to_project_id);
+                $invited_by = $invited_by->withProject($project, $current_user);
+            }
+
+            $invited_by_users[$from_user->getId()] = $invited_by;
         }
 
-        return new InvitedByPresenter($users);
+        return new InvitedByPresenter(array_values($invited_by_users), $has_used_an_invitation_to_register);
+    }
+
+    private function getInvitedByUserPresenter(\PFUser $from_user, array $presenters): InvitedByUserPresenter
+    {
+        if (isset($presenters[$from_user->getId()])) {
+            return $presenters[$from_user->getId()];
+        }
+
+        return InvitedByUserPresenter::fromUser($from_user);
     }
 }

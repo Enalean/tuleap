@@ -23,8 +23,10 @@
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -336,26 +338,29 @@ $user_manager    = UserManager::instance();
 $project_manager = ProjectManager::instance();
 $current_user    = $user_manager->getCurrentUser();
 
+$invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
+$invited_by_builder         = new InvitedByPresenterBuilder(
+    new InvitationDao(
+        new SplitTokenVerificationStringHasher(),
+        new InvitationInstrumentation(Prometheus::instance())
+    ),
+    $user_manager,
+    $project_manager,
+);
+
+
 $users = [];
 foreach ($users_rows as $row) {
-    $invited_by_user            = $row['from_user_id'] ? $user_manager->getUserById((int) $row['from_user_id']) : null;
-    $is_email_already_validated = $invited_by_user !== null;
-
-    $invited_in_project = null;
-    if (isset($row['to_project_id']) && $row['to_project_id']) {
-        try {
-            $project            = $project_manager->getValidProjectById((int) $row['to_project_id']);
-            $invited_in_project = new \Tuleap\Project\ProjectPresenter(
-                (int) $project->getID(),
-                $project->getPublicName(),
-                $project->getUrl(),
-                '/project/admin/?group_id=' . urlencode((string) $project->getID()),
-                $current_user->isAdmin((int) $project->getID()),
-                $project,
-            );
-        } catch (Project_NotFoundException $e) {
-        }
+    $user = $user_manager->getUserById($row['user_id']);
+    if (! $user) {
+        continue;
     }
+
+    $invited_by = $invite_buddy_configuration->isFeatureEnabled()
+        ? $invited_by_builder->getInvitedByPresenter($user, $request->getCurrentUser())
+        : null;
+
+    $is_email_already_validated = $invited_by && $invited_by->has_used_an_invitation_to_register;
 
     $users[] = new Tuleap\User\Admin\PendingUserPresenter(
         $row['user_id'],
@@ -366,8 +371,7 @@ foreach ($users_rows as $row) {
         $row['register_purpose'],
         $row['expiry_date'],
         $row['status'],
-        $invited_by_user ? \Tuleap\User\Admin\UserPresenter::fromUser($invited_by_user) : null,
-        $invited_in_project,
+        $invited_by,
         $is_email_already_validated,
     );
 }

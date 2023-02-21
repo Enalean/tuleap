@@ -1,0 +1,21 @@
+<span class="tlp-avatar-mini">
+    {{# has_avatar }}
+        <img src="{{ avatar_url }}">
+    {{/ has_avatar }}
+</span>
+{{ display_name }}
+{{# invited_in_projects }}
+    {{# invited_in_more_than_one_project }}
+        {{# gettext }}in projects:{{/ gettext }}
+        <ul>
+            {{# projects }}
+                <li>{{ icon }} {{ project_name }}</li>
+            {{/ projects }}
+        </ul>
+    {{/ invited_in_more_than_one_project }}
+    {{^ invited_in_more_than_one_project }}
+        {{# projects }}
+            {{# gettext }}in project %s | {{ icon }} {{ project_name }}{{/ gettext }}
+        {{/ projects }}
+    {{/ invited_in_more_than_one_project }}
+{{/ invited_in_projects }}

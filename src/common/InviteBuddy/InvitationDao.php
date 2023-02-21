@@ -150,14 +150,6 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         );
     }
 
-    public function searchUserIdThatInvitedUser(int $user_id): array
-    {
-        return $this->getDB()->run(
-            "SELECT DISTINCT from_user_id FROM invitations WHERE created_user_id = ?",
-            $user_id,
-        );
-    }
-
     public function getInvitationsSentByUserForToday(int $user_id): int
     {
         $sql = "SELECT count(*)

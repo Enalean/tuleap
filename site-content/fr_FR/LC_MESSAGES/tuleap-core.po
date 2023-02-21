@@ -1921,9 +1921,6 @@ msgstr "Inviter quelqu'un à rejoindre %s"
 msgid "Invited by"
 msgstr "Invitation envoyée par"
 
-msgid "Invited in"
-msgstr "Invité dans"
-
 msgid "Is Public?"
 msgstr "Est public ?"
 
@@ -5256,6 +5253,12 @@ msgstr "champs obligatoires"
 #, php-format
 msgid "in %s"
 msgstr "dans %s"
+
+msgid "in project %s"
+msgstr "dans le projet %s"
+
+msgid "in projects:"
+msgstr "dans les projets :"
 
 msgid "last<br>month"
 msgstr "le mois<br>dernier"
