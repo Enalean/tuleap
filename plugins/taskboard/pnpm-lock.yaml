@@ -14,19 +14,19 @@ specifiers:
   '@tuleap/tlp-swatch-colors': workspace:*
   '@tuleap/vue2-gettext-init': workspace:*
   '@tuleap/vuex-store-wrapper-jest': workspace:*
-  '@types/dompurify': ^2.3.2
+  '@types/dompurify': ^2.4.0
   '@types/fscreen': ^1.0.1
   '@types/jquery': ^3.5.5
   '@types/mustache': ^4.1.2
   '@vue/test-utils': ^1.3.0
-  dompurify: ^2.3.6
+  dompurify: ^3.0.0
   fscreen: ^1.2.0
   jquery: ^3.6.0
   mustache: ^4.2.0
   p-retry: ^4.5.0
   vue: ^2.7.8
   vue-class-component: ^7.2.6
-  vue-dompurify-html: ^2.5.1
+  vue-dompurify-html: ^4.0.0
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
@@ -41,12 +41,12 @@ dependencies:
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
-  dompurify: 2.3.6
+  dompurify: 3.0.0
   fscreen: 1.2.0
   mustache: 4.2.0
   p-retry: 4.5.0
   vue: 2.7.8
-  vue-dompurify-html: 2.5.1_vue@2.7.8
+  vue-dompurify-html: 4.0.0_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
 
 devDependencies:
@@ -54,7 +54,7 @@ devDependencies:
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
-  '@types/dompurify': 2.3.2
+  '@types/dompurify': 2.4.0
   '@types/fscreen': 1.0.1
   '@types/jquery': 3.5.5
   '@types/mustache': 4.1.2
@@ -84,10 +84,10 @@ packages:
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
 
-  /@types/dompurify/2.3.2:
-    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
+  /@types/dompurify/2.4.0:
+    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
-      '@types/trusted-types': 2.0.1
+      '@types/trusted-types': 2.0.3
     dev: true
 
   /@types/fscreen/1.0.1:
@@ -112,8 +112,8 @@ packages:
     resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
     dev: true
 
-  /@types/trusted-types/2.0.1:
-    resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
+  /@types/trusted-types/2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
   /@vue/compiler-sfc/2.7.8:
@@ -181,8 +181,8 @@ packages:
     resolution: {integrity: sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==}
     dev: true
 
-  /dompurify/2.3.6:
-    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
+  /dompurify/3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
   /editorconfig/0.15.3:
@@ -388,13 +388,31 @@ packages:
       vue: 2.7.8
     dev: true
 
-  /vue-dompurify-html/2.5.1_vue@2.7.8:
-    resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
+  /vue-demi/0.13.11_vue@2.7.8:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
     peerDependencies:
-      vue: ^2.0.0
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
     dependencies:
-      dompurify: 2.3.6
       vue: 2.7.8
+    dev: false
+
+  /vue-dompurify-html/4.0.0_vue@2.7.8:
+    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+    dependencies:
+      dompurify: 3.0.0
+      vue: 2.7.8
+      vue-demi: 0.13.11_vue@2.7.8
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: false
 
   /vue-property-decorator/9.1.2_chk7q7rgeabwy64hfqmb36krqe:

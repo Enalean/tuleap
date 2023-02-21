@@ -15,7 +15,7 @@ specifiers:
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/tooltip': workspace:*
   '@types/codemirror': ^5.60.5
-  '@types/dompurify': ^2.3.4
+  '@types/dompurify': ^2.4.0
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
   angular-custom-elements: ^2.1.0
@@ -23,7 +23,7 @@ specifiers:
   angular-mocks: ^1.8.2
   angular-sanitize: ^1.8.2
   codemirror: ^5.62.0
-  dompurify: ^2.3.6
+  dompurify: ^3.0.0
   hybrids: ^8.1.8
   jquery: ^3.6.0
   moment: ^2.29.4
@@ -48,7 +48,7 @@ dependencies:
   angular-gettext: 2.4.2
   angular-sanitize: 1.8.3
   codemirror: 5.65.9
-  dompurify: 2.4.0
+  dompurify: 3.0.0
   hybrids: 8.1.8
   moment: 2.29.4
   neverthrow: 6.0.0
@@ -58,7 +58,7 @@ devDependencies:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
   '@tuleap/dom': link:../../../../lib/frontend/dom
   '@types/codemirror': 5.60.5
-  '@types/dompurify': 2.3.4
+  '@types/dompurify': 2.4.0
   angular-mocks: 1.8.3
   jquery: 3.6.1
 
@@ -70,10 +70,10 @@ packages:
       '@types/tern': 0.23.4
     dev: true
 
-  /@types/dompurify/2.3.4:
-    resolution: {integrity: sha512-EXzDatIb5EspL2eb/xPGmaC8pePcTHrkDCONjeisusLFrVfl38Pjea/R0YJGu3k9ZQadSvMqW0WXPI2hEo2Ajg==}
+  /@types/dompurify/2.4.0:
+    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
-      '@types/trusted-types': 2.0.2
+      '@types/trusted-types': 2.0.3
     dev: true
 
   /@types/estree/1.0.0:
@@ -86,8 +86,8 @@ packages:
       '@types/estree': 1.0.0
     dev: true
 
-  /@types/trusted-types/2.0.2:
-    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
+  /@types/trusted-types/2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
   /@uirouter/angularjs/1.0.30_angular@1.8.3:
@@ -131,8 +131,8 @@ packages:
     resolution: {integrity: sha512-19Jox5sAKpusTDgqgKB5dawPpQcY+ipQK7xoEI+MVucEF9qqFaXpeqY1KaoyGBso/wHQoDa4HMMxMjdsS3Zzzw==}
     dev: false
 
-  /dompurify/2.4.0:
-    resolution: {integrity: sha512-Be9tbQMZds4a3C6xTmz68NlMfeONA//4dOavl/1rNw50E+/QO0KVpbcU0PcaW0nsQxurXls9ZocqFxk8R2mWEA==}
+  /dompurify/3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
   /hybrids/8.1.8:

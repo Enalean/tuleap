@@ -10,7 +10,7 @@ specifiers:
   '@vue/test-utils': ^2.0.0
   '@vueuse/core': ^8.7.3
   vue: ^3.2.37
-  vue-dompurify-html: ^3.0.0-beta.3
+  vue-dompurify-html: ^4.0.0
 
 dependencies:
   '@fortawesome/fontawesome-free': 6.1.1
@@ -20,7 +20,7 @@ dependencies:
   '@tuleap/tlp-popovers': link:../tlp-popovers
   '@vueuse/core': 8.7.3_vue@3.2.37
   vue: 3.2.37
-  vue-dompurify-html: 3.0.0-beta.3_vue@3.2.37
+  vue-dompurify-html: 4.0.0_vue@3.2.37
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
@@ -177,8 +177,8 @@ packages:
   /csstype/2.6.20:
     resolution: {integrity: sha512-/WwNkdXfckNgw6S5R125rrW8ez139lBHWouiBvX8dfMFtcn6V81REDqnH7+CRpRipfYlyU1CmOnOxrmGcFOjeA==}
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
   /estree-walker/2.0.2:
@@ -235,13 +235,31 @@ packages:
       vue: 3.2.37
     dev: false
 
-  /vue-dompurify-html/3.0.0-beta.3_vue@3.2.37:
-    resolution: {integrity: sha512-2YPUtBA3ImJNicyePngA+VFoVGCMmA5hXpvCbxwTmGq2N6TlvaFLrUYtxzGa/1V6TU3Um2VKUXd1vYc50k8UTA==}
+  /vue-demi/0.13.11_vue@3.2.37:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
     peerDependencies:
-      vue: ^3.0.0
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
     dependencies:
-      dompurify: 2.3.4
       vue: 3.2.37
+    dev: false
+
+  /vue-dompurify-html/4.0.0_vue@3.2.37:
+    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+    dependencies:
+      dompurify: 3.0.0
+      vue: 3.2.37
+      vue-demi: 0.13.11_vue@3.2.37
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: false
 
   /vue/3.2.37:

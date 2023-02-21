@@ -4,12 +4,12 @@
   "dependencies": {
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
-    "dompurify": "^2.3.6"
+    "dompurify": "^3.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/bootstrap": "^4.5.0",
-    "@types/dompurify": "^2.3.2"
+    "@types/dompurify": "^2.4.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

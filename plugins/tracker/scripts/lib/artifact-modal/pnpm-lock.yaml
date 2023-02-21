@@ -24,7 +24,7 @@ specifiers:
   angular-custom-elements: ^2.1.0
   angular-gettext: ^2.4.2
   angular-mocks: ^1.8.2
-  dompurify: ^2.3.6
+  dompurify: ^3.0.0
   hybrids: ^8.1.8
   lodash: 2.4.0
   moment: ^2.29.4
@@ -51,7 +51,7 @@ dependencies:
   '@tuleap/tooltip': link:../../../../../lib/frontend/tooltip
   angular-custom-elements: 2.1.0
   angular-gettext: 2.4.2
-  dompurify: 2.3.6
+  dompurify: 3.0.0
   hybrids: 8.1.8
   lodash: 2.4.0
   moment: 2.29.4
@@ -105,8 +105,8 @@ packages:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}
     dev: false
 
-  /dompurify/2.3.6:
-    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
+  /dompurify/3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
   /graceful-fs/4.2.10:
