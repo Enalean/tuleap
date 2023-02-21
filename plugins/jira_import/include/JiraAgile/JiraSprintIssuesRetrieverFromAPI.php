@@ -57,7 +57,7 @@ final class JiraSprintIssuesRetrieverFromAPI implements JiraSprintIssuesRetrieve
         );
         foreach ($iterator as $issue) {
             if (! isset($issue['id']) || ! is_numeric($issue['id'])) {
-                throw new UnexpectedFormatException(sprintf('%s `issues` are supposed to have numerical `id`, `%s` given', $this->getUrlWithoutHost($sprint), $issue['id']));
+                throw new UnexpectedFormatException(sprintf('%s `issues` are supposed to have numerical `id`, `%s` given', $this->getUrlWithoutHost($sprint), $issue['id'] ?? 'null'));
             }
             $issue_ids[] = new ArtifactLinkChange((int) $issue['id']);
         }

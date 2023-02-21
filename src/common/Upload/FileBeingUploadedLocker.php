@@ -28,7 +28,7 @@ use Tuleap\Tus\TusLocker;
 final class FileBeingUploadedLocker implements TusLocker
 {
     /**
-     * @var array<int, resource>
+     * @var array<int, \SysvSemaphore>
      */
     private static $holded_semaphores = [];
 
@@ -58,10 +58,7 @@ final class FileBeingUploadedLocker implements TusLocker
         }
     }
 
-    /**
-     * @return resource
-     */
-    private function createSemaphore(TusFileInformation $file_information)
+    private function createSemaphore(TusFileInformation $file_information): \SysvSemaphore
     {
         $key = $this->getSemaphoreKey($file_information);
 
