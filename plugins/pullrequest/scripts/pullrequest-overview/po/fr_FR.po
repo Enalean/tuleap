@@ -12,14 +12,23 @@ msgstr ""
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occurred while doing one of your last actions."
+msgstr "Une erreur est survenue durant l’une de vos dernières actions."
+
 msgid "Author"
 msgstr "Auteur"
 
 msgid "Changes"
 msgstr "Changements"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Commits"
 msgstr "Commits"
+
+msgid "Error details"
+msgstr "Détails de l'erreur"
 
 msgid "Failure"
 msgstr "Échec"
@@ -29,6 +38,12 @@ msgstr "Échec le"
 
 msgid "Last CI status"
 msgstr "Statut intégration continue"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Oh snap!"
+msgstr "Oh mince !"
 
 msgid "Overview"
 msgstr "Résumé"
@@ -41,6 +56,9 @@ msgstr "Date de la pull request"
 
 msgid "References"
 msgstr "Références"
+
+msgid "Show details"
+msgstr "Voir les détails"
 
 msgid "Success"
 msgstr "Succès"

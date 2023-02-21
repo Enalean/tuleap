@@ -19,11 +19,24 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
-import { okAsync } from "neverthrow";
+import type { VueWrapper } from "@vue/test-utils";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import PullRequestAuthor from "./PullRequestAuthor.vue";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
 import type { PullRequestInfo } from "../../api/types";
+
+const getWrapper = (): VueWrapper => {
+    return mount(PullRequestAuthor, {
+        global: {
+            ...getGlobalTestOptions(),
+        },
+        props: {
+            pull_request_info: null,
+        },
+    });
+};
 
 describe("PullRequestAuthor", () => {
     it(`Should display a skeleton when:
@@ -38,15 +51,7 @@ describe("PullRequestAuthor", () => {
             })
         );
 
-        const wrapper = mount(PullRequestAuthor, {
-            global: {
-                ...getGlobalTestOptions(),
-            },
-            props: {
-                pull_request_info: null,
-            },
-        });
-
+        const wrapper = getWrapper();
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(false);
 
@@ -74,5 +79,26 @@ describe("PullRequestAuthor", () => {
         const author_name = wrapper.find("[data-test=pullrequest-author-name]");
         expect(author_name.attributes("href")).toBe("/url/to/author_profile_page.html");
         expect(author_name.text()).toBe("The Author");
+    });
+
+    it(`When an error occurres while loading the author info
+        Then it should emit a tuleap-api-fault event containing the fault`, async () => {
+        const api_fault = Fault.fromMessage("Forbidden");
+        vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(errAsync(api_fault));
+
+        const wrapper = getWrapper();
+
+        wrapper.setProps({
+            pull_request_info: {
+                user_id: 102,
+            } as PullRequestInfo,
+        });
+
+        await wrapper.vm.$nextTick();
+        await flushPromises();
+
+        const emitted_events = wrapper.emitted("tuleap-api-fault");
+        expect(emitted_events).toHaveLength(1);
+        expect((emitted_events ?? [])[0]).toStrictEqual([api_fault]);
     });
 });

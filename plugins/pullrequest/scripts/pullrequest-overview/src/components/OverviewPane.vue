@@ -29,7 +29,10 @@
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
                 <section class="tlp-pane-section">
-                    <pull-request-author v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-author
+                        v-bind:pull_request_info="pull_request_info"
+                        v-on:tuleap-api-fault="handleAPIFault($event)"
+                    />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
@@ -37,6 +40,7 @@
                 </section>
             </div>
         </div>
+        <pull-request-error-modal v-bind:fault="error" />
     </div>
 </template>
 
@@ -46,6 +50,7 @@ import { useRoute } from "vue-router";
 import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
 import type { PullRequestInfo } from "../api/types";
 import { PULL_REQUEST_ID_KEY } from "../constants";
+import type { Fault } from "@tuleap/fault";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
@@ -53,10 +58,12 @@ import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue"
 import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
 import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
+import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);
 const pull_request_info = ref<PullRequestInfo | null>(null);
+const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 
@@ -64,10 +71,14 @@ fetchPullRequestInfo(pull_request_id).match(
     (result) => {
         pull_request_info.value = result;
     },
-    () => {
-        // Do nothing, we don't have a way to display errors yet
+    (fault) => {
+        error.value = fault;
     }
 );
+
+function handleAPIFault(fault: Fault) {
+    error.value = fault;
+}
 </script>
 
 <style lang="scss">

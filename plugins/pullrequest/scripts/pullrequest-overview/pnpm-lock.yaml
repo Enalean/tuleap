@@ -7,6 +7,7 @@ specifiers:
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
+  '@tuleap/tlp-modal': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.2.10
@@ -21,6 +22,7 @@ dependencies:
   '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
+  '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   moment: 2.29.4
