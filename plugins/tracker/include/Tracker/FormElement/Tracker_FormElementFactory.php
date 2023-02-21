@@ -257,15 +257,13 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
     }
 
-    /**
-     * @return Tracker_FormElement_Field|null
-     */
-    public function getUsedFormElementFieldById(int $id)
+    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
     {
         $field = $this->getUsedFormElementById($id);
         if ($field instanceof Tracker_FormElement_Field) {
             return $field;
         }
+        return null;
     }
 
     /**
