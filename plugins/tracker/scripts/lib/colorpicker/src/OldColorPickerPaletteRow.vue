@@ -30,23 +30,22 @@
     </tr>
 </template>
 
-<script>
-export default {
-    name: "OldColorPickerPaletteRow",
-    props: {
-        shades: Array,
-    },
-    methods: {
-        getStyle(shade) {
-            return {
-                "background-color": shade,
-                color: shade,
-                background: shade,
-            };
-        },
-        updateColor(color) {
-            this.$emit("color-update", color);
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{ shades: string[] }>();
+
+function getStyle(shade: string): Record<string, string> {
+    return {
+        "background-color": shade,
+        color: shade,
+        background: shade,
+    };
+}
+
+const emit = defineEmits<{
+    (e: "color-update", value: string): void;
+}>();
+
+function updateColor(color: string): void {
+    emit("color-update", color);
+}
 </script>

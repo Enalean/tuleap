@@ -34,7 +34,7 @@
             <color-picker-palette
                 v-if="!is_old_palette_shown"
                 v-on:color-update="setColor"
-                v-bind:current-color="color"
+                v-bind:current_color="color"
             />
 
             <old-color-picker-palette v-if="is_old_palette_shown" v-on:color-update="setColor" />
@@ -42,26 +42,26 @@
             <!-- Set transparent when clicked -->
             <p v-if="is_old_palette_shown" class="old-color-preview">
                 <old-color-picker-preview
-                    color
+                    v-bind:color="color"
                     class="colorpicker-transparent-preview"
                     v-on:color-update="setColor"
                 />
-                <span class="old-colorpicker-no-color-label" v-on:click="setColor()" v-translate>
-                    No color
+                <span class="old-colorpicker-no-color-label" v-on:click="setColor()">
+                    {{ $gettext("No color") }}
                 </span>
             </p>
 
             <color-picker-switch
                 v-if="is_old_palette_enabled"
-                v-bind:is-switch-disabled="is_switch_disabled"
-                v-bind:is-old-palette-shown="is_old_palette_shown"
+                v-bind:is_switch_disabled="is_switch_disabled"
+                v-bind:is_old_palette_shown="is_old_palette_shown"
                 v-on:switch-palette="switchPalettes"
             />
         </div>
         <input
             class="colorpicker-input"
-            v-bind:id="inputId"
-            v-bind:name="inputName"
+            v-bind:id="input_id"
+            v-bind:name="input_name"
             v-bind:value="color"
             type="hidden"
             size="6"
@@ -70,63 +70,43 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import ColorPickerPalette from "./ColorPickerPalette.vue";
 import ColorPickerSwitch from "./ColorPickerSwitch.vue";
 
 import OldColorPickerPreview from "./OldColorPickerPreview.vue";
 import OldColorPickerPalette from "./OldColorPickerPalette.vue";
 import ColorPickerPreview from "./ColorPickerPreview.vue";
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "ColorPicker",
-    components: {
-        ColorPickerSwitch,
-        ColorPickerPalette,
-        ColorPickerPreview,
-        OldColorPickerPalette,
-        OldColorPickerPreview,
-    },
-    props: {
-        inputName: String,
-        inputId: String,
-        currentColor: String,
-        isSwitchDisabled: String,
-        isOldPaletteEnabled: String,
-    },
-    data() {
-        const is_hexa_color = this.currentColor.includes("#");
-        const show_old_preview = this.currentColor.length === 0 || is_hexa_color;
-        const is_switch_disabled = Boolean(this.isSwitchDisabled);
-        const is_old_palette_enabled = Boolean(this.isOldPaletteEnabled);
-        const is_old_palette_shown = is_old_palette_enabled && is_hexa_color && !is_switch_disabled;
+const { $gettext } = useGettext();
 
-        return {
-            color: this.currentColor,
-            is_old_palette_enabled,
-            is_old_palette_shown,
-            show_old_preview,
-            is_switch_disabled,
-        };
-    },
-    computed: {
-        isHexaColor() {
-            return this.color.includes("#");
-        },
-    },
-    methods: {
-        setColor(color = "") {
-            this.color = color;
+const props = defineProps<{
+    input_name: string;
+    input_id: string;
+    current_color: string;
+    is_switch_disabled: boolean;
+    is_old_palette_enabled: boolean;
+}>();
 
-            this.show_old_preview = !color.length || this.isHexaColor;
-        },
-        switchPalettes() {
-            this.is_old_palette_shown = this.is_old_palette_enabled && !this.is_old_palette_shown;
-        },
-        showRightPalette() {
-            this.is_old_palette_shown =
-                this.is_old_palette_enabled && this.isHexaColor && !this.is_switch_disabled;
-        },
-    },
-};
+const color = ref<string>(props.current_color);
+
+const is_hexa_color = computed((): boolean => color.value.includes("#"));
+const show_old_preview = computed((): boolean => color.value.length === 0 || is_hexa_color.value);
+const is_old_palette_shown = ref<boolean>(
+    props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled
+);
+
+function setColor(new_color = ""): void {
+    color.value = new_color;
+}
+
+function switchPalettes(): void {
+    is_old_palette_shown.value = props.is_old_palette_enabled && !is_old_palette_shown.value;
+}
+function showRightPalette(): void {
+    is_old_palette_shown.value =
+        props.is_old_palette_enabled && is_hexa_color.value && !props.is_switch_disabled;
+}
 </script>
