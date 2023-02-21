@@ -1009,6 +1009,9 @@ msgstr "Commit #%1$s introuvable dans ce projet"
 msgid "Commits"
 msgstr "Commits"
 
+msgid "Completed invitation"
+msgstr "Invitation terminée"
+
 msgid "Compromised password"
 msgstr "Mot de passe compromis"
 

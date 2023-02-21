@@ -149,7 +149,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
                 $from_user,
                 self::anything(),
                 InvitationHistoryEntry::InvitationSent->value,
-                '',
+                '1',
                 [],
             );
 
@@ -206,7 +206,7 @@ final class InvitationToOneRecipientWithoutVerificationSenderTest extends \Tulea
                 $from_user,
                 self::anything(),
                 InvitationHistoryEntry::InvitationResent->value,
-                '',
+                '1',
                 [],
             );
 

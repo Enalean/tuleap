@@ -33,7 +33,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestricted
 use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\RetrieveUserById;
 
-final class ProjectMemberAccordingToInvitationAdder
+final class ProjectMemberAccordingToInvitationAdder implements AddUserToProjectAccordingToInvitation
 {
     public function __construct(
         private RetrieveUserById $user_manager,
@@ -42,53 +42,57 @@ final class ProjectMemberAccordingToInvitationAdder
         private InvitationInstrumentation $invitation_instrumentation,
         private LoggerInterface $logger,
         private InvitationEmailNotifier $email_notifier,
+        private \ProjectHistoryDao $project_history_dao,
     ) {
     }
 
     public function addUserToProjectAccordingToInvitation(
         \PFUser $just_created_user,
-        Invitation|InvitationToEmail $invitation_to_email,
+        Invitation|InvitationToEmail $invitation,
     ): void {
-        if (! $invitation_to_email->to_project_id) {
+        if (! $invitation->to_project_id) {
             return;
         }
 
         if (! $just_created_user->isAlive()) {
-            $this->logger->info("User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but need to be active first. Waiting for site admin approval");
+            $this->logger->info("User #{$just_created_user->getId()} has been invited to project #{$invitation->to_project_id}, but need to be active first. Waiting for site admin approval");
             return;
         }
 
-        $from_user = $this->user_manager->getUserById($invitation_to_email->from_user_id);
+        $from_user = $this->user_manager->getUserById($invitation->from_user_id);
         if (! $from_user) {
-            $this->logger->error("User #{$just_created_user->getId()} has been invited by user #{$invitation_to_email->from_user_id} to project #{$invitation_to_email->to_project_id}, but we cannot find user #{$invitation_to_email->from_user_id}");
+            $this->logger->error("User #{$just_created_user->getId()} has been invited by user #{$invitation->from_user_id} to project #{$invitation->to_project_id}, but we cannot find user #{$invitation->from_user_id}");
             return;
         }
 
         if (! $from_user->isAlive()) {
-            $this->logger->error("User #{$just_created_user->getId()} has been invited by user #{$invitation_to_email->from_user_id} to project #{$invitation_to_email->to_project_id}, but user #{$invitation_to_email->from_user_id} is not active nor restricted");
+            $this->logger->error("User #{$just_created_user->getId()} has been invited by user #{$invitation->from_user_id} to project #{$invitation->to_project_id}, but user #{$invitation->from_user_id} is not active nor restricted");
             return;
         }
 
         try {
-            $project = $this->project_retriever->getValidProjectById($invitation_to_email->to_project_id);
+            $project = $this->project_retriever->getValidProjectById($invitation->to_project_id);
         } catch (\Project_NotFoundException $e) {
             $this->logger->error(
-                "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but it appears that this project is not valid."
+                "User #{$just_created_user->getId()} has been invited to project #{$invitation->to_project_id}, but it appears that this project is not valid."
             );
             return;
         }
 
         if ($just_created_user->isMember((int) $project->getID())) {
-            $this->invitation_instrumentation->incrementProjectInvitation();
+            $this->registerCompletedInvitation($project, $from_user, $invitation);
             return;
         }
 
         try {
             $this->project_member_adder->addProjectMember($just_created_user, $project, $from_user);
-            $this->invitation_instrumentation->incrementProjectInvitation();
+            $this->registerCompletedInvitation($project, $from_user, $invitation);
+
+            // clear membership cache so that we will know if user is already project member when processing the next invitation
+            $just_created_user->clearGroupData();
         } catch (UserIsNotAllowedToManageProjectMembersException) {
             $this->logger->error(
-                "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id} by user #{$from_user->getId()}, but user #{$from_user->getId()} is not project admin."
+                "User #{$just_created_user->getId()} has been invited to project #{$invitation->to_project_id} by user #{$from_user->getId()}, but user #{$from_user->getId()} is not project admin."
             );
         } catch (UserIsNotActiveOrRestrictedException $e) {
             $this->logger->error(
@@ -97,7 +101,7 @@ final class ProjectMemberAccordingToInvitationAdder
             );
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted) {
             $this->logger->error(
-                "Unable to add restricted user #{$just_created_user->getId()} to project #{$invitation_to_email->to_project_id}.",
+                "Unable to add restricted user #{$just_created_user->getId()} to project #{$invitation->to_project_id}.",
             );
             $this->email_notifier->informThatCannotAddRestrictedUserToProjectNotAllowingRestricted(
                 $from_user,
@@ -114,6 +118,20 @@ final class ProjectMemberAccordingToInvitationAdder
             );
         } catch (\Exception $e) {
             $this->logger->error("Got an unexpected error while adding an invited user to a project", ['exception' => $e]);
+            throw $e;
         }
+    }
+
+    private function registerCompletedInvitation(\Project $project, \PFUser $from_user, Invitation|InvitationToEmail $invitation): void
+    {
+        $this->invitation_instrumentation->incrementProjectInvitation();
+        $this->project_history_dao->addHistory(
+            $project,
+            $from_user,
+            new \DateTimeImmutable('now'),
+            InvitationHistoryEntry::InvitationCompleted->value,
+            (string) $invitation->id,
+            []
+        );
     }
 }

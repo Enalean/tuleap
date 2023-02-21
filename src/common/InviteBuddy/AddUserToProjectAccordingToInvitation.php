@@ -22,20 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-enum InvitationHistoryEntry: string
-{
-    case InvitationSent      = 'invitation_sent';
-    case InvitationWithdrawn = 'invitation_withdrawn';
-    case InvitationResent    = 'invitation_resent';
-    case InvitationCompleted = 'invitation_completed';
+use Tuleap\User\Account\Register\InvitationToEmail;
 
-    public function getLabel(): string
-    {
-        return match ($this) {
-            self::InvitationSent      => _('Sent invitation'),
-            self::InvitationWithdrawn => _('Withdrawn invitation'),
-            self::InvitationResent    => _('Resent invitation'),
-            self::InvitationCompleted => _('Completed invitation'),
-        };
-    }
+interface AddUserToProjectAccordingToInvitation
+{
+    public function addUserToProjectAccordingToInvitation(
+        \PFUser $just_created_user,
+        Invitation|InvitationToEmail $invitation,
+    ): void;
 }

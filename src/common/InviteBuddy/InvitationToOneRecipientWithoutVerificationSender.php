@@ -93,7 +93,7 @@ final class InvitationToOneRecipientWithoutVerificationSender implements Invitat
                 $resent_from_user
                     ? InvitationHistoryEntry::InvitationResent->value
                     : InvitationHistoryEntry::InvitationSent->value,
-                '',
+                (string) $invitation_id,
                 [],
             );
         } else {

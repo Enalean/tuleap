@@ -1137,6 +1137,7 @@ class RouteCollector
                             $invitation_instrumentation,
                             $logger,
                             new InvitationEmailNotifier(new LocaleSwitcher()),
+                            new ProjectHistoryDao(),
                         ),
                         $invitation_instrumentation,
                         $logger,

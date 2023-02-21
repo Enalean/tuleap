@@ -128,6 +128,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             $invitation_instrumentation,
             $logger,
             new \Tuleap\InviteBuddy\InvitationEmailNotifier(new LocaleSwitcher()),
+            new ProjectHistoryDao(),
         );
 
         foreach ($users_array as $user_id) {
