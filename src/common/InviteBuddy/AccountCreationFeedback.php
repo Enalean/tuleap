@@ -46,9 +46,8 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
             $context->invitation_to_email ? $context->invitation_to_email->id : null
         );
 
-        $this->invitation_instrumentation->incrementUsedInvitation();
-
         if ($context->invitation_to_email) {
+            $this->invitation_instrumentation->incrementUsedInvitation();
             $this->project_member_adder->addUserToProjectAccordingToInvitation($just_created_user, $context->invitation_to_email);
         }
 
