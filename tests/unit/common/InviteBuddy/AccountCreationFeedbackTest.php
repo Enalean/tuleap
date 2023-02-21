@@ -143,7 +143,94 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItAddUsersToProjectTheyHaveBeenInvitedInto(): void
+    public function testItAddUsersToAllProjectsTheyHaveBeenInvitedInto(): void
+    {
+        $project         = ProjectTestBuilder::aProject()->withId(111)->build();
+        $another_project = ProjectTestBuilder::aProject()->withId(112)->build();
+
+        $new_user = UserTestBuilder::anActiveUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $project_admin = UserTestBuilder::anActiveUser()
+            ->withId(102)
+            ->withAdministratorOf($project)
+            ->withAdministratorOf($another_project)
+            ->build();
+
+        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(112)
+            ->build();
+        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([
+            $not_in_project_invitation,
+            $used_invitation,
+            $another_invitation,
+        ]);
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::exactly(2))
+            ->method('addProjectMember')
+            ->willReturnCallback(
+                static function (\PFUser $arg_user, \Project $arg_project, \PFUser $arg_project_admin) use ($new_user, $project, $another_project, $project_admin): void {
+                    match (true) {
+                        $arg_user === $new_user && $arg_project_admin === $project_admin && ($arg_project === $project || $arg_project === $another_project) => true
+                    };
+                }
+            );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::exactly(2))->method('incrementProjectInvitation');
+
+        $this->email_notifier
+            ->expects(self::exactly(1))
+            ->method('send')
+            ->with($project_admin, $new_user)
+            ->willReturn(true);
+
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin);
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            $user_manager,
+            $this->email_notifier,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project, $another_project),
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+                $this->createMock(InvitationEmailNotifier::class),
+            ),
+            $this->invitation_instrumentation,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    $used_invitation,
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItAddOnlyOnceIfUSerIsInvitedTwiceInTheSameProjectFromTheSameUser(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
@@ -157,17 +244,43 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAdministratorOf($project)
             ->build();
 
+        $used_invitation    = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+
         $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+        $this->dao->method('searchByCreatedUserId')->willReturn([
+            $used_invitation,
+            $another_invitation,
+        ]);
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
-            ->expects(self::once())
+            ->expects(self::exactly(1))
             ->method('addProjectMember')
-            ->with($new_user, $project);
+            ->willReturnCallback(
+                static function (\PFUser $arg_user, \Project $arg_project, \PFUser $arg_project_admin) use ($new_user, $project, $project_admin): void {
+                    match (true) {
+                        $arg_user === $new_user && $arg_project_admin === $project_admin && $arg_project === $project => true
+                    };
+                }
+            );
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementProjectInvitation');
+        $this->invitation_instrumentation->expects(self::exactly(1))->method('incrementProjectInvitation');
+
+        $this->email_notifier
+            ->expects(self::exactly(1))
+            ->method('send')
+            ->with($project_admin, $new_user)
+            ->willReturn(true);
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -190,11 +303,100 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             RegisterFormContext::forAnonymous(
                 true,
                 InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->from(102)
-                        ->to('doe@example.com')
-                        ->toProjectId(111)
-                        ->build(),
+                    $used_invitation,
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItAddUsersToAllProjectsTheyHaveBeenInvitedIntoFromDifferentUsers(): void
+    {
+        $project         = ProjectTestBuilder::aProject()->withId(111)->build();
+        $another_project = ProjectTestBuilder::aProject()->withId(112)->build();
+
+        $new_user = UserTestBuilder::anActiveUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $project_admin = UserTestBuilder::anActiveUser()
+            ->withId(102)
+            ->withAdministratorOf($project)
+            ->build();
+
+        $another_project_admin = UserTestBuilder::anActiveUser()
+            ->withId(103)
+            ->withAdministratorOf($another_project)
+            ->build();
+
+        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
+            ->from(103)
+            ->to('doe@example.com')
+            ->toProjectId(112)
+            ->build();
+        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([
+            $not_in_project_invitation,
+            $used_invitation,
+            $another_invitation,
+        ]);
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::exactly(2))
+            ->method('addProjectMember')
+            ->willReturnCallback(
+                static function (\PFUser $arg_user, \Project $arg_project, \PFUser $arg_project_admin) use ($new_user, $project, $another_project, $project_admin, $another_project_admin): void {
+                    match (true) {
+                        $arg_user === $new_user && $arg_project_admin === $project_admin && $arg_project === $project,
+                        $arg_user === $new_user && $arg_project_admin === $another_project_admin && $arg_project === $another_project => true
+                    };
+                }
+            );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::exactly(2))->method('incrementProjectInvitation');
+
+        $this->email_notifier
+            ->expects(self::exactly(2))
+            ->method('send')
+            ->willReturnCallback(static fn (\PFUser $from_user, \PFUser $just_created_user) => match (true) {
+                $just_created_user === $new_user && ($from_user === $project_admin || $from_user === $another_project_admin) => true
+            });
+
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin, $another_project_admin);
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            $user_manager,
+            $this->email_notifier,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project, $another_project),
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+                $this->createMock(InvitationEmailNotifier::class),
+            ),
+            $this->invitation_instrumentation,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    $used_invitation,
                     new ConcealedString('secret')
                 )
             )
@@ -210,12 +412,18 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+
         $not_anymore_a_project_admin = UserTestBuilder::anActiveUser()
             ->withId(102)
             ->build();
 
         $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+        $this->dao->method('searchByCreatedUserId')->willReturn([$invitation]);
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
@@ -228,6 +436,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('error')
             ->with("User #104 has been invited to project #111 by user #102, but user #102 is not project admin.");
+
+        $this->email_notifier
+            ->expects(self::exactly(1))
+            ->method('send')
+            ->with($not_anymore_a_project_admin, $new_user)
+            ->willReturn(true);
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -250,11 +464,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             RegisterFormContext::forAnonymous(
                 true,
                 InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->from(102)
-                        ->to('doe@example.com')
-                        ->toProjectId(111)
-                        ->build(),
+                    $invitation,
                     new ConcealedString('secret')
                 )
             )
@@ -270,13 +480,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+
         $not_anymore_a_project_admin = UserTestBuilder::aUser()
             ->withStatus(\PFUser::STATUS_SUSPENDED)
             ->withId(102)
             ->build();
 
         $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+        $this->dao->method('searchByCreatedUserId')->willReturn([$invitation]);
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
@@ -289,6 +505,11 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('error')
             ->with("User #104 has been invited by user #102 to project #111, but user #102 is not active nor restricted");
+
+        $this->logger
+            ->expects(self::once())
+            ->method('warning')
+            ->with("Cannot send invitation feedback to inactive user #102");
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -311,11 +532,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             RegisterFormContext::forAnonymous(
                 true,
                 InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->from(102)
-                        ->to('doe@example.com')
-                        ->toProjectId(111)
-                        ->build(),
+                    $invitation,
                     new ConcealedString('secret')
                 )
             )
@@ -331,8 +548,14 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(102)
+            ->to('doe@example.com')
+            ->toProjectId(111)
+            ->build();
+
         $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+        $this->dao->method('searchByCreatedUserId')->willReturn([$invitation]);
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
@@ -342,9 +565,14 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
         $this->logger
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('error')
-            ->with("User #104 has been invited by user #102 to project #111, but we cannot find user #102");
+            ->willReturnCallback(static function (string $message): void {
+                match ($message) {
+                    "User #104 has been invited by user #102 to project #111, but we cannot find user #102",
+                    "Invitation was referencing an unknown user #102" => true
+                };
+            });
 
         $user_manager              = RetrieveUserByIdStub::withUsers($new_user);
         $account_creation_feedback = new AccountCreationFeedback(
@@ -367,11 +595,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             RegisterFormContext::forAnonymous(
                 true,
                 InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->from(102)
-                        ->to('doe@example.com')
-                        ->toProjectId(111)
-                        ->build(),
+                    $invitation,
                     new ConcealedString('secret')
                 )
             )
@@ -431,6 +655,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withStatus('A')
             ->build();
 
+        $an_invitation      = InvitationTestBuilder::aSentInvitation(1)
+            ->from(103)
+            ->to('doe@example.com')
+            ->build();
+        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(104)
+            ->to('doe@example.com')
+            ->build();
+
         $new_user = UserTestBuilder::aUser()
             ->withId(105)
             ->withEmail('doe@example.com')
@@ -445,12 +678,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(105)
             ->willReturn(
                 [
-                    [
-                        'from_user_id' => 103,
-                    ],
-                    [
-                        'from_user_id' => 104,
-                    ],
+                    $an_invitation, $another_invitation,
                 ]
             );
 
@@ -492,6 +720,11 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(103)
+            ->to('doe@example.com')
+            ->build();
+
         $this->dao
             ->method('saveJustCreatedUserThanksToInvitation');
 
@@ -499,13 +732,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('searchByCreatedUserId')
             ->with(104)
-            ->willReturn(
-                [
-                    [
-                        'from_user_id' => 103,
-                    ],
-                ]
-            );
+            ->willReturn([$an_invitation]);
 
         $this->email_notifier
             ->expects(self::never())
@@ -549,6 +776,11 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(103)
+            ->to('doe@example.com')
+            ->build();
+
         $this->dao
             ->method('saveJustCreatedUserThanksToInvitation');
 
@@ -556,13 +788,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('searchByCreatedUserId')
             ->with(104)
-            ->willReturn(
-                [
-                    [
-                        'from_user_id' => 103,
-                    ],
-                ]
-            );
+            ->willReturn([$an_invitation]);
 
         $this->email_notifier
             ->expects(self::never())
@@ -606,6 +832,11 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
+        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+            ->from(103)
+            ->to('doe@example.com')
+            ->build();
+
         $this->dao
             ->method('saveJustCreatedUserThanksToInvitation');
 
@@ -613,13 +844,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('searchByCreatedUserId')
             ->with(104)
-            ->willReturn(
-                [
-                    [
-                        'from_user_id' => 103,
-                    ],
-                ]
-            );
+            ->willReturn([$an_invitation]);
 
         $this->email_notifier
             ->expects(self::once())

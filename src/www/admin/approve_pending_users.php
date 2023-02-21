@@ -129,20 +129,21 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         );
 
         foreach ($users_array as $user_id) {
-            $invitation = $invitation_dao->searchInvitationUsedToRegister($user_id);
-            if (! $invitation || $invitation->to_user_id) {
-                continue;
-            }
+            foreach ($invitation_dao->searchByCreatedUserId($user_id) as $invitation) {
+                if ($invitation->to_user_id) {
+                    continue;
+                }
 
-            $just_created_user = $user_manager->getUserById($user_id);
-            if (! $just_created_user) {
-                continue;
-            }
+                $just_created_user = $user_manager->getUserById($user_id);
+                if (! $just_created_user) {
+                    continue;
+                }
 
-            $project_member_adder->addUserToProjectAccordingToInvitation(
-                $just_created_user,
-                $invitation,
-            );
+                $project_member_adder->addUserToProjectAccordingToInvitation(
+                    $just_created_user,
+                    $invitation,
+                );
+            }
         }
 
         if (count($users_array) > 1) {

@@ -112,13 +112,19 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         return $this->instantiateFromRow($row);
     }
 
+    /**
+     * @return Invitation[]
+     */
     public function searchByCreatedUserId(int $user_id): array
     {
-        return $this->getDB()->run(
-            "SELECT DISTINCT from_user_id FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
-            $user_id,
-            Invitation::STATUS_SENT,
-            Invitation::STATUS_USED,
+        return array_map(
+            fn (array $row): Invitation => $this->instantiateFromRow($row),
+            $this->getDB()->run(
+                "SELECT * FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
+                $user_id,
+                Invitation::STATUS_SENT,
+                Invitation::STATUS_USED,
+            )
         );
     }
 

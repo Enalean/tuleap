@@ -48,17 +48,35 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
 
         if ($context->invitation_to_email) {
             $this->invitation_instrumentation->incrementUsedInvitation();
-            $this->project_member_adder->addUserToProjectAccordingToInvitation($just_created_user, $context->invitation_to_email);
         }
 
-        foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $row) {
-            $from_user = $this->user_manager->getUserById($row['from_user_id']);
+        $already_warned_users_id     = [];
+        $same_project_from_same_user = [];
+        foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $invitation) {
+            if (! isset($same_project_from_same_user[$invitation->from_user_id])) {
+                $same_project_from_same_user[$invitation->from_user_id] = [];
+            }
+            if ($invitation->to_project_id) {
+                if (isset($same_project_from_same_user[$invitation->from_user_id][$invitation->to_project_id])) {
+                    continue;
+                }
+                $same_project_from_same_user[$invitation->from_user_id][$invitation->to_project_id] = true;
+                $this->project_member_adder->addUserToProjectAccordingToInvitation($just_created_user, $invitation);
+            }
+
+            if (isset($already_warned_users_id[$invitation->from_user_id])) {
+                continue;
+            }
+
+            $already_warned_users_id[$invitation->from_user_id] = true;
+
+            $from_user = $this->user_manager->getUserById($invitation->from_user_id);
             if (! $from_user) {
-                $this->logger->error("Invitation was referencing an unknown user #" . $row['from_user_id']);
+                $this->logger->error("Invitation was referencing an unknown user #" . $invitation->from_user_id);
                 continue;
             }
             if (! $from_user->isAlive()) {
-                $this->logger->warning("Cannot send invitation feedback to inactive user #" . $row['from_user_id']);
+                $this->logger->warning("Cannot send invitation feedback to inactive user #" . $invitation->from_user_id);
                 continue;
             }
 

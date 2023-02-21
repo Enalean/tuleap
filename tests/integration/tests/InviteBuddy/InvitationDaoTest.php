@@ -150,7 +150,7 @@ class InvitationDaoTest extends TestCase
         self::assertEquals(
             [101, 103],
             array_map(
-                static fn (array $row): int => $row['from_user_id'],
+                static fn (Invitation $invitation): int => $invitation->from_user_id,
                 $this->dao->searchByCreatedUserId(201),
             ),
         );

@@ -348,6 +348,63 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         );
     }
 
+    public function testItDoesNotTryToAddUserIfAlreadyProjectMemberThanksToAPreviouslyProcessedInvitation(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+
+        $from_user = UserTestBuilder::anActiveUser()
+            ->withId(self::FROM_USER_ID)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $just_created_user = UserTestBuilder::anActiveUser()
+            ->withId(self::NEW_USER_ID)
+            ->withMemberOf($project)
+            ->build();
+
+        $user_manager               = RetrieveUserByIdStub::withUser($from_user);
+        $project_retriever          = ProjectByIDFactoryStub::buildWith($project);
+        $delegation_dao             = $this->createMock(MembershipDelegationDao::class);
+        $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
+        $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
+        $logger                     = new NullLogger();
+        $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+
+        $adder = new ProjectMemberAccordingToInvitationAdder(
+            $user_manager,
+            $project_retriever,
+            $project_member_adder,
+            $invitation_instrumentation,
+            $logger,
+            $email_notifier,
+        );
+
+        $delegation_dao
+            ->method('doesUserHasMembershipDelegation')
+            ->willReturn(false);
+
+        $project_member_adder
+            ->expects(self::never())
+            ->method('addProjectMember');
+
+        $invitation_instrumentation
+            ->expects(self::once())
+            ->method('incrementProjectInvitation');
+
+        $adder->addUserToProjectAccordingToInvitation(
+            $just_created_user,
+            InvitationToEmail::fromInvitation(
+                InvitationTestBuilder::aSentInvitation(1)
+                    ->from(self::FROM_USER_ID)
+                    ->to('doe@example.com')
+                    ->toProjectId(self::PROJECT_ID)
+                    ->build(),
+                new ConcealedString('secret')
+            )
+        );
+    }
+
     public function testUserWithPermissionDelegationCanAddAProjectMember(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
