@@ -58,7 +58,7 @@ class ServiceUpdator
         }
     }
 
-    public function addSystemService(Project $project, \Service $service_data, PFUser $user): void
+    public function addSystemService(Project $project, \Service $service_data): void
     {
         $this->dao->create(
             $project->getID(),
@@ -76,6 +76,6 @@ class ServiceUpdator
 
         $this->project_manager->clear($project->getID());
 
-        $this->service_manager->toggleServiceUsage($project, $service_data->getShortName(), true);
+        $this->service_manager->toggleServiceUsage($project, $service_data->getShortName(), $service_data->isUsed());
     }
 }

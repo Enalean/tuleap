@@ -23,39 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UserPermissionsDao;
 
 class AddProjectMember
 {
-    /**
-     * @var UserPermissionsDao
-     */
-    private $dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var \UGroupBinding
-     */
-    private $ugroup_binding;
-
-    public function __construct(UserPermissionsDao $dao, \UserManager $user_manager, \EventManager $event_manager, \ProjectHistoryDao $history_dao, \UGroupBinding $ugroup_binding)
-    {
-        $this->dao            = $dao;
-        $this->user_manager   = $user_manager;
-        $this->event_manager  = $event_manager;
-        $this->history_dao    = $history_dao;
-        $this->ugroup_binding = $ugroup_binding;
+    public function __construct(
+        private UserPermissionsDao $dao,
+        private \UserManager $user_manager,
+        private \EventManager $event_manager,
+        private \ProjectHistoryDao $history_dao,
+        private \UGroupBinding $ugroup_binding,
+        private EnsureUserCanManageProjectMembers $members_members_checker,
+    ) {
     }
 
     public static function build(): self
@@ -68,11 +52,15 @@ class AddProjectMember
             new \UGroupBinding(
                 new \UGroupUserDao(),
                 new \UGroupManager()
-            )
+            ),
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
         );
     }
 
-    public function addProjectMember(\PFUser $user, \Project $project): void
+    /**
+     * @throws UserIsNotAllowedToManageProjectMembersException
+     */
+    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         if (\ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted() && $project->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
@@ -80,6 +68,7 @@ class AddProjectMember
         if ($this->dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             throw new AlreadyProjectMemberException(_('User is already member of the project'));
         }
+        $this->members_members_checker->checkUserCanManageProjectMembers($project_admin, $project);
 
         $this->dao->addUserAsProjectMember((int) $project->getID(), (int) $user->getId());
 
@@ -97,7 +86,14 @@ class AddProjectMember
             ]
         );
 
-        $this->history_dao->groupAddHistory('added_user', $user->getUserName(), $project->getID(), [$user->getUserName()]);
+        $this->history_dao->addHistory(
+            $project,
+            $project_admin,
+            new \DateTimeImmutable('now'),
+            'added_user',
+            $user->getUserName(),
+            [$user->getUserName()],
+        );
 
         $this->ugroup_binding->reloadUgroupBindingInProject($project);
     }

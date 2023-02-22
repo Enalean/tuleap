@@ -34,6 +34,7 @@ use PFUser;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\User\PasswordVerifier;
 use Tuleap\User\UserNameNormalizer;
 use UserManager;
 
@@ -109,9 +110,32 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_sync         = \Mockery::spy(\LDAP_UserSync::class);
         $this->user_manager      = \Mockery::spy(UserManager::class);
+        $password_verifier       = new PasswordVerifier(
+            new class implements \PasswordHandler {
+                public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
+                {
+                    return true;
+                }
+
+                public function computeHashPassword(ConcealedString $plain_password): string
+                {
+                    return 'hash';
+                }
+
+                public function isPasswordNeedRehash(string $hash_password): bool
+                {
+                    return false;
+                }
+
+                public function computeUnixPassword(ConcealedString $plain_password): string
+                {
+                    return 'hash';
+                }
+            }
+        );
         $this->ldap_user_manager = \Mockery::mock(
             \LDAP_UserManager::class,
-            [$this->ldap, $this->user_sync, $this->username_normalizer]
+            [$this->ldap, $this->user_sync, $this->username_normalizer, $password_verifier]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

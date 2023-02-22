@@ -76,7 +76,7 @@ class DynamicUGroupMembersUpdater
     /**
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
-    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user): void
+    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user, PFUser $project_admin): void
     {
         if (
             $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
@@ -87,19 +87,19 @@ class DynamicUGroupMembersUpdater
 
         switch ($ugroup->getId()) {
             case ProjectUGroup::PROJECT_ADMIN:
-                $this->addProjectAdministrator($project, $user);
+                $this->addProjectAdministrator($project, $user, $project_admin);
                 break;
             case ProjectUGroup::WIKI_ADMIN:
-                $this->addWikiAdministrator($project, $user);
+                $this->addWikiAdministrator($project, $user, $project_admin);
                 break;
             case ProjectUGroup::FORUM_ADMIN:
-                $this->addForumAdministrator($project, $user);
+                $this->addForumAdministrator($project, $user, $project_admin);
                 break;
             case ProjectUGroup::NEWS_WRITER:
-                $this->addNewsEditor($project, $user);
+                $this->addNewsEditor($project, $user, $project_admin);
                 break;
             case ProjectUGroup::NEWS_ADMIN:
-                $this->addNewsAdministrator($project, $user);
+                $this->addNewsAdministrator($project, $user, $project_admin);
                 break;
         }
     }
@@ -128,9 +128,9 @@ class DynamicUGroupMembersUpdater
         }
     }
 
-    private function addProjectAdministrator(Project $project, PFUser $user)
+    private function addProjectAdministrator(Project $project, PFUser $user, PFUser $project_admin)
     {
-        $this->ensureUserIsProjectMember($project, $user);
+        $this->ensureUserIsProjectMember($project, $user, $project_admin);
 
         $this->user_permissions_dao->addUserAsProjectAdmin($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserBecomesProjectAdmin($project, $user));
@@ -154,9 +154,9 @@ class DynamicUGroupMembersUpdater
         $this->event_manager->processEvent($event);
     }
 
-    private function addWikiAdministrator(Project $project, PFUser $user)
+    private function addWikiAdministrator(Project $project, PFUser $user, PFUser $project_admin)
     {
-        $this->ensureUserIsProjectMember($project, $user);
+        $this->ensureUserIsProjectMember($project, $user, $project_admin);
 
         $this->user_permissions_dao->addUserAsWikiAdmin($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserBecomesWikiAdmin($project, $user));
@@ -168,16 +168,16 @@ class DynamicUGroupMembersUpdater
         $this->event_manager->processEvent(new UserIsNoLongerWikiAdmin($project, $user));
     }
 
-    private function ensureUserIsProjectMember(Project $project, PFUser $user)
+    private function ensureUserIsProjectMember(Project $project, PFUser $user, PFUser $project_admin)
     {
         if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
-            $this->project_member_adder->addProjectMember($user, $project);
+            $this->project_member_adder->addProjectMemberWithFeedback($user, $project, $project_admin);
         }
     }
 
-    private function addForumAdministrator(Project $project, PFUser $user)
+    private function addForumAdministrator(Project $project, PFUser $user, PFUser $project_admin)
     {
-        $this->ensureUserIsProjectMember($project, $user);
+        $this->ensureUserIsProjectMember($project, $user, $project_admin);
         $this->user_permissions_dao->addUserAsForumAdmin($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserBecomesForumAdmin($project, $user));
     }
@@ -188,9 +188,9 @@ class DynamicUGroupMembersUpdater
         $this->event_manager->processEvent(new UserIsNoLongerForumAdmin($project, $user));
     }
 
-    private function addNewsEditor(Project $project, PFUser $user)
+    private function addNewsEditor(Project $project, PFUser $user, PFUser $project_admin)
     {
-        $this->ensureUserIsProjectMember($project, $user);
+        $this->ensureUserIsProjectMember($project, $user, $project_admin);
         $this->user_permissions_dao->addUserAsNewsEditor($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserBecomesNewsWriter($project, $user));
     }
@@ -201,9 +201,9 @@ class DynamicUGroupMembersUpdater
         $this->event_manager->processEvent(new UserIsNoLongerNewsWriter($project, $user));
     }
 
-    private function addNewsAdministrator(Project $project, PFUser $user)
+    private function addNewsAdministrator(Project $project, PFUser $user, PFUser $project_admin)
     {
-        $this->ensureUserIsProjectMember($project, $user);
+        $this->ensureUserIsProjectMember($project, $user, $project_admin);
         $this->user_permissions_dao->addUserAsNewsAdmin($project->getID(), $user->getId());
         $this->event_manager->processEvent(new UserBecomesNewsAdministrator($project, $user));
     }

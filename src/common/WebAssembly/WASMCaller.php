@@ -24,5 +24,5 @@ namespace Tuleap\WebAssembly;
 
 interface WASMCaller
 {
-    public function call(string $json_input): string;
+    public function call(string $wasm_path, string $json_input): string;
 }

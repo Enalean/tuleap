@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from "moment";
 import { getSelectedValues } from "./field-values-formatter.js";
 import { NewFileToAttach } from "../domain/fields/file-field/NewFileToAttach";
+
+// Moment does not actually "export default" which leads to `"moment_1.default" is not a function` error (but only in jest)
+jest.mock("moment", () => ({
+    default: jest.requireActual("moment"),
+}));
 
 describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {
@@ -359,31 +363,10 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        describe("Given a tracker containing a date field", function () {
-            it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
-                jest.spyOn(moment.fn, "format").mockImplementation(() => {});
-                const artifact_values = {
-                    824: { field_id: 824, value: "2015-05-29T00:00:00+02:00" },
-                };
-                const tracker = {
-                    fields: [
-                        {
-                            field_id: 824,
-                            label: "nondrying",
-                            name: "indisciplined",
-                            permissions: ["read", "update", "create"],
-                            type: "date",
-                        },
-                    ],
-                };
-                const output = getSelectedValues(artifact_values, tracker);
-                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD");
-                expect(output[824].field_id).toBe(824);
-                expect(output[824].permissions).toEqual(["read", "update", "create"]);
-            });
-
-            it("with the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
-                jest.spyOn(moment.fn, "format").mockImplementation(() => {});
+        describe("Given a tracker containing a date field", () => {
+            it(`Given a map of artifact field values containing that field,
+                When I get the fields' selected values,
+                Then a map of objects containing the formatted artifact value will be returned`, () => {
                 const artifact_values = {
                     609: { field_id: 609, value: "2015-06-02T18:09:43+03:00" },
                 };
@@ -395,14 +378,14 @@ describe("TuleapArtifactFieldValues", () => {
                             name: "",
                             permissions: ["read", "update", "create"],
                             type: "date",
-                            is_time_displayed: "true",
+                            is_time_displayed: true,
                         },
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm");
                 expect(output[609].field_id).toBe(609);
                 expect(output[609].permissions).toEqual(["read", "update", "create"]);
+                expect(output[609].value).toEqual(expect.any(String));
             });
         });
 

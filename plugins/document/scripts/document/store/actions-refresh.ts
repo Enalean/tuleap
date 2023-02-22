@@ -19,7 +19,7 @@
 
 import { getItem } from "../api/rest-querier";
 import type { ActionContext } from "vuex";
-import type { Embedded, Link, RootState, Wiki } from "../type";
+import type { Embedded, Item, Link, RootState, Wiki } from "../type";
 
 export const refreshLink = async (
     context: ActionContext<RootState, RootState>,
@@ -27,10 +27,7 @@ export const refreshLink = async (
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceLinkWithNewVersion", {
-        existing_item: item_to_refresh,
-        new_version: up_to_date_item,
-    });
+    context.commit("replaceFolderContentByItem", up_to_date_item, { root: true });
 };
 
 export const refreshWiki = async (
@@ -39,20 +36,16 @@ export const refreshWiki = async (
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceWikiWithNewVersion", {
-        existing_item: item_to_refresh,
-        new_version: up_to_date_item,
-    });
+    context.commit("replaceFolderContentByItem", up_to_date_item, { root: true });
 };
 
 export const refreshEmbeddedFile = async (
     context: ActionContext<RootState, RootState>,
     item_to_refresh: Embedded
-): Promise<void> => {
+): Promise<Item> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceEmbeddedFilesWithNewVersion", {
-        existing_item: item_to_refresh,
-        new_version: up_to_date_item,
-    });
+    context.commit("replaceFolderContentByItem", up_to_date_item, { root: true });
+
+    return up_to_date_item;
 };

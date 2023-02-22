@@ -1,0 +1,81 @@
+/**
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+
+.first-timer-modal {
+    z-index: 2007;
+}
+
+.first-timer-modal-title {
+    margin: var(--tlp-large-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing);
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 2.6875rem;
+    text-align: center;
+}
+
+.first-timer-modal-subtitle {
+    margin: 0 var(--tlp-small-spacing);
+    color: var(--tlp-dimmed-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.625rem;
+    text-align: center;
+}
+
+.first-timer-modal-separator {
+    width: 30px;
+    margin: var(--tlp-x-large-spacing) auto;
+}
+
+.first-timer-modal-instructions {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 var(--tlp-medium-spacing);
+    gap: var(--tlp-small-spacing);
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.first-timer-success-confetti-canvas {
+    position: absolute;
+    z-index: 2006;
+    width: 100vw;
+
+    // 100vw will include scrollbars if any. So make sure that the canvas
+    // does not exceed 100% to not include them, else we will have an
+    // horizontal scroll until the canvas disappear.
+    max-width: 100%;
+    height: 100vh;
+}
+
+.has-sidebar {
+    .first-timer-success-confetti-canvas {
+        margin: 0 0 0 -1 * global-variables.$sidebar-expanded-width;
+    }
+
+    &.sidebar-collapsed {
+        .first-timer-success-confetti-canvas {
+            margin: 0 0 0 -1 * global-variables.$sidebar-collapsed-width;
+        }
+    }
+}

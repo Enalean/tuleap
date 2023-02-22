@@ -24,7 +24,7 @@
         type="button"
         role="menuitem"
         data-test="document-dropdown-menu-unlock-item"
-        v-on:click.prevent="unlockDocument"
+        v-on:click.prevent="unlockDocumentItem"
         data-shortcut-lock-document
     >
         <i class="fa-solid fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
@@ -32,29 +32,25 @@
     </button>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../../type";
-import { State } from "vuex-class";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import type { LockActions } from "../../../../store/lock/lock-actions";
+import { computed } from "vue";
 
-@Component
-export default class UnlockItem extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    @State
-    private readonly user_id!: number;
+const { unlockDocument } = useNamespacedActions<LockActions>("lock", ["unlockDocument"]);
 
-    get can_unlock_document(): boolean {
-        if (this.item.lock_info === null) {
-            return false;
-        }
-
-        return this.item.user_can_write;
+const can_unlock_document = computed((): boolean => {
+    if (props.item.lock_info === null) {
+        return false;
     }
 
-    async unlockDocument(): Promise<void> {
-        await this.$store.dispatch("lock/unlockDocument", this.item);
-    }
+    return props.item.user_can_write;
+});
+
+async function unlockDocumentItem(): Promise<void> {
+    await unlockDocument(props.item);
 }
 </script>

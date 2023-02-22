@@ -28,6 +28,7 @@ use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
@@ -38,9 +39,6 @@ use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
 use TuleapCfg\Command\SetupTuleap\SetupTuleap;
-use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
-use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3;
-use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 final class Tuleap
 {
@@ -159,38 +157,18 @@ final class Tuleap
         $output->writeln('<info>Ensure Tuleap knows it\'s under supervisord control</info>');
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
 
-        $output->writeln('<info>Regenerate configurations for nginx</info>');
-        $site_deploy_nginx = new SiteDeployNginx(
-            $logger,
-            __DIR__ . '/../../../../',
-            '/etc/nginx',
-            $server_name,
-            false,
+        $output->writeln('<info>Run Site Deploy</info>');
+        $this->process_factory->getProcessWithoutTimeout(['/usr/bin/tuleap-cfg', 'site-deploy'])->mustRun(
+            /** @param Process::ERR|Process::OUT $type */
+            fn (string $type, string $data): mixed => match ($type) {
+                Process::ERR => $output->writeln('<error>' . trim($data) . '</error>'),
+                Process::OUT => $output->writeln('<info>' . trim($data) . '</info>'),
+            }
         );
-        $site_deploy_nginx->configure();
-
-        $output->writeln('<info>Regenerate configuration for fpm</info>');
-        $site_deploy_fpm = SiteDeployFPM::buildForPHP80(
-            $logger,
-            'codendiadm',
-            false
-        );
-        $site_deploy_fpm->forceDeploy();
-
-        $output->writeln('<info>Regenerate configuration for gitolite3</info>');
-        $site_deploy_gitolite3 = new SiteDeployGitolite3();
-        $site_deploy_gitolite3->deploy($logger);
 
         $output->writeln('<info>Regenerate configuration for apache</info>');
         $configure_apache = new ConfigureApache('/');
         $configure_apache->configure();
-
-        $output->writeln('<info>Run forgeupgrade</info>');
-        $forge_upgrade = new ForgeUpgrade(
-            DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
-            $logger,
-        );
-        $forge_upgrade->runUpdate();
 
         $ca_trust = new CATrust($this->process_factory, $logger);
         $ca_trust->update();

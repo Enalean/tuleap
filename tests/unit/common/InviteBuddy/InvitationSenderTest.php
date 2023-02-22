@@ -23,307 +23,478 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
-use UserManager;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembersStub;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 
-class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationSenderGateKeeper
-     */
-    private $gate_keeper;
-    /**
-     * @var InvitationSender
-     */
-    private $sender;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationInstrumentation
-     */
-    private $instrumentation;
-
     protected function setUp(): void
     {
-        $this->current_user = Mockery::mock(\PFUser::class);
-        $this->current_user->shouldReceive(['getId' => 123]);
-
-        $this->gate_keeper     = Mockery::mock(InvitationSenderGateKeeper::class);
-        $this->email_notifier  = Mockery::mock(InvitationEmailNotifier::class);
-        $this->user_manager    = Mockery::mock(UserManager::class);
-        $this->dao             = Mockery::mock(InvitationDao::class);
-        $this->logger          = Mockery::mock(LoggerInterface::class);
-        $this->instrumentation = Mockery::mock(InvitationInstrumentation::class);
-
-        $this->sender = new InvitationSender(
-            $this->gate_keeper,
-            $this->email_notifier,
-            $this->user_manager,
-            $this->dao,
-            $this->logger,
-            $this->instrumentation
-        );
-
         ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 5);
     }
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
 
-        $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
-        $this->dao->shouldReceive('save');
-        $this->instrumentation->shouldReceive('increment');
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
-        $this->sender->send($this->current_user, ["john@example.com"], null);
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+        $sender->send($current_user, ["john@example.com"], null, null, null);
+        self::assertTrue($one_recipient_sender->hasBeenCalled());
     }
 
     public function testItDoesNothingIfAllConditionsAreNotOk(): void
     {
-        $this->gate_keeper
-            ->shouldReceive('checkNotificationsCanBeSent')
-            ->andThrow(InvitationSenderGateKeeperException::class);
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->email_notifier->shouldReceive("send")->never();
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper
+            ->method('checkNotificationsCanBeSent')
+            ->willThrowException(new InvitationSenderGateKeeperException());
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com"], null);
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+        $sender->send($current_user, ["john@example.com"], null, null, null);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
     }
 
     public function testItSendAnInvitationForEachEmailAndLogStatus(): void
     {
-        $known_user = Mockery::mock(\PFUser::class);
-        $known_user->shouldReceive(['getId' => 1001]);
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(3);
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withEmail('doe@example.com')
+            ->build();
 
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager
-            ->shouldReceive('getUserByEmail')
-            ->with("john@example.com")
-            ->andReturnNull();
-        $this->user_manager
-            ->shouldReceive('getUserByEmail')
-            ->with("doe@example.com")
-            ->andReturn($known_user);
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
 
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                "A custom message"
-            )
-            ->once()
-            ->andReturnTrue();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) use ($known_user) {
-                        return $recipient->user === $known_user && $recipient->email === "doe@example.com";
-                    }
-                ),
-                "A custom message"
-            )
-            ->once()
-            ->andReturnTrue();
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, "A custom message", "sent")
-            ->once();
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "sent")
-            ->once();
-
-        $this->instrumentation
-            ->shouldReceive('increment')
-            ->twice();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
 
         self::assertEmpty(
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message")
+            $sender
+                ->send($current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
+                ->failures
         );
+
+        $calls = $one_recipient_sender->getCalls();
+        self::assertCount(2, $calls);
+
+        self::assertSame($current_user, $calls[0]['from_user']);
+        self::assertEquals('john@example.com', $calls[0]['recipient']->email);
+        self::assertNull($calls[0]['recipient']->user);
+        self::assertNull($calls[0]['project']);
+        self::assertEquals('A custom message', $calls[0]['custom_message']);
+        self::assertNull($calls[0]['resent_from_user']);
+
+        self::assertSame($current_user, $calls[1]['from_user']);
+        self::assertEquals('doe@example.com', $calls[1]['recipient']->email);
+        self::assertSame($known_user, $calls[1]['recipient']->user);
+        self::assertNull($calls[1]['project']);
+        self::assertEquals('A custom message', $calls[1]['custom_message']);
+        self::assertNull($calls[1]['resent_from_user']);
+    }
+
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationIfCurrentUserIsProjectAdmin(): void
+    {
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user);
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $project_member_adder,
+        );
+
+        $sent_invitation_result = $sender
+            ->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+
+        self::assertEmpty($sent_invitation_result->failures);
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_added_to_project_members);
+
+        $calls = $one_recipient_sender->getCalls();
+        self::assertCount(1, $calls);
+
+        self::assertSame($current_user, $calls[0]['from_user']);
+        self::assertEquals('john@example.com', $calls[0]['recipient']->email);
+        self::assertNull($calls[0]['recipient']->user);
+        self::assertSame($project, $calls[0]['project']);
+        self::assertEquals('A custom message', $calls[0]['custom_message']);
+        self::assertNull($calls[0]['resent_from_user']);
+    }
+
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationButUserIsNotActive(): void
+    {
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user)
+            ->willThrowException(new UserIsNotActiveOrRestrictedException());
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $project_member_adder,
+        );
+
+        $sent_invitation_result = $sender
+            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_not_alive);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
+    }
+
+    public function testItAddsUserToProjectInsteadOfSendingAnInvitationButUserIsRestrictedAndProjectDoesNotAcceptIt(): void
+    {
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($project)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($known_user, $project, $current_user)
+            ->willThrowException(new CannotAddRestrictedUserToProjectNotAllowingRestricted($known_user, $project));
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $project_member_adder,
+        );
+
+        $sent_invitation_result = $sender
+            ->send($current_user, ["doe@example.com"], $project, "A custom message", null);
+
+        self::assertEquals([$known_user], $sent_invitation_result->known_users_are_restricted);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
+    }
+
+    public function testExceptionWhenInvitationForAProjectAndUserIsNotProjectAdminAndHasNoDelegation(): void
+    {
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
+
+        $project_id = 111;
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->withoutSiteAdministrator()
+            ->withMemberOf($project)
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+        $sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
     }
 
     public function testItIgnoresEmptyEmails(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
 
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "doe@example.com";
-                    }
-                ),
-                null
-            )
-            ->once()
-            ->andReturnTrue();
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
 
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
-            ->once();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            new TestLogger(),
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+        self::assertEmpty(
+            $sender
+                ->send($current_user, ["", null, "doe@example.com"], null, null, null)
+                ->failures
+        );
 
-        $this->instrumentation
-            ->shouldReceive('increment')
-            ->once();
+        $calls = $one_recipient_sender->getCalls();
+        self::assertCount(1, $calls);
 
-        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
+        self::assertSame($current_user, $calls[0]['from_user']);
+        self::assertEquals('doe@example.com', $calls[0]['recipient']->email);
+        self::assertNull($calls[0]['recipient']->user);
+        self::assertNull($calls[0]['project']);
+        self::assertNull($calls[0]['custom_message']);
+        self::assertNull($calls[0]['resent_from_user']);
     }
 
     public function testItReturnsEmailsInFailureAndLogStatus(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
 
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                null
-            )
-            ->once()
-            ->andReturnFalse();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "doe@example.com";
-                    }
-                ),
-                null
-            )
-            ->once()
-            ->andReturnTrue();
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withReturnCallback(
+            fn(
+                \PFUser $from_user,
+                InvitationRecipient $recipient,
+                ?\Project $project,
+                ?string $custom_message,
+                ?\PFUser $resent_from_user,
+            ): Ok|Err => match (true) {
+                $current_user === $from_user && $custom_message === null &&
+                    $recipient->user === null && $recipient->email === "john@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to john@example.com")),
+                $current_user === $from_user && $custom_message === null &&
+                    $recipient->user === null && $recipient->email === "doe@example.com" => Result::ok(true),
+            }
+        );
 
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
-            ->once();
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
-            ->once();
-
-        $this->instrumentation
-            ->shouldReceive('increment')
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to john@example.com")
-            ->once();
+        $logger = new TestLogger();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            $logger,
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
 
         self::assertEquals(
             ["john@example.com"],
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null)
+            $sender
+                ->send($current_user, ["john@example.com", "doe@example.com"], null, null, null)
+                ->failures
         );
+        self::assertTrue(
+            $logger->hasError("Unable to send invitation from user #123 to john@example.com")
+        );
+        self::assertCount(2, $one_recipient_sender->getCalls());
+    }
+
+    public function testItIgnoresUserThatIsAlreadyProjectMember(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
+
+        $known_user = UserTestBuilder::aUser()
+            ->withId(1001)
+            ->withEmail('doe@example.com')
+            ->withoutSiteAdministrator()
+            ->withMemberOf($project)
+            ->build();
+
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+
+
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withOk();
+
+        $logger = new TestLogger();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withUser($known_user),
+            $logger,
+            EnsureUserCanManageProjectMembersStub::canManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+
+        self::assertEquals(
+            [$known_user],
+            $sender
+                ->send($current_user, ["doe@example.com"], $project, null, null)
+                ->already_project_members
+        );
+        self::assertFalse($one_recipient_sender->hasBeenCalled());
+        self::assertFalse($logger->hasRecords(\Feedback::ERROR));
     }
 
     public function testItRaisesAnExceptionIfEveryEmailsAreInFailure(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $current_user = UserTestBuilder::aUser()
+            ->withId(123)
+            ->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
 
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                null
-            )
-            ->once()
-            ->andReturnFalse();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "doe@example.com";
-                    }
-                ),
-                null
-            )
-            ->once()
-            ->andReturnFalse();
-
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
-            ->once();
-        $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "error")
-            ->once();
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to john@example.com")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to doe@example.com")
-            ->once();
+        $gate_keeper = $this->createMock(InvitationSenderGateKeeper::class);
+        $gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
 
         $this->expectException(UnableToSendInvitationsException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null);
+        $one_recipient_sender = InvitationToOneRecipientSenderStub::withReturnCallback(
+            fn(
+                \PFUser $from_user,
+                InvitationRecipient $recipient,
+                ?\Project $project,
+                ?string $custom_message,
+                ?\PFUser $resent_from_user,
+            ): Ok|Err => match (true) {
+                $current_user === $from_user && $custom_message === null &&
+                $recipient->user === null && $recipient->email === "john@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to john@example.com")),
+                $current_user === $from_user && $custom_message === null &&
+                $recipient->user === null && $recipient->email === "doe@example.com" => Result::err(Fault::fromMessage("Unable to send invitation from user #123 to doe@example.com")),
+            }
+        );
+
+        $logger = new TestLogger();
+        $sender = new InvitationSender(
+            $gate_keeper,
+            RetrieveUserByEmailStub::withNoUser(),
+            $logger,
+            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
+            $one_recipient_sender,
+            $this->createMock(ProjectMemberAdder::class),
+        );
+        $sender->send($current_user, ["john@example.com", "doe@example.com"], null, null, null);
+
+        self::assertTrue(
+            $logger->hasError("Unable to send invitation from user #123 to john@example.com")
+        );
+        self::assertTrue(
+            $logger->hasError("Unable to send invitation from user #123 to doe@example.com")
+        );
+        self::assertCount(2, $one_recipient_sender->getCalls());
     }
 }

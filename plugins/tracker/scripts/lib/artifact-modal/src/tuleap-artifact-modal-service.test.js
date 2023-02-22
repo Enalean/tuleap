@@ -21,7 +21,7 @@ import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
-import * as modal_creation_mode_state from "./modal-creation-mode-state.js";
+import * as modal_creation_mode_state from "./modal-creation-mode-state.ts";
 import * as rest_service from "./rest/rest-service";
 import * as form_tree_builder from "./model/form-tree-builder.js";
 import * as workflow_field_values_filter from "./model/workflow-field-values-filter.js";

@@ -31,9 +31,6 @@ const entry_points = {
     "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
-    "administration-style": "./themes/BurningParrot/css/administration.scss",
-    "scrum-style": "./themes/BurningParrot/css/scrum.scss",
-    "kanban-style": "./themes/BurningParrot/css/kanban.scss",
 };
 
 const webpack_config_for_themes = {
@@ -44,28 +41,6 @@ const webpack_config_for_themes = {
         rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
-};
-
-const webpack_config_for_typescript = {
-    entry: {
-        "artifact-additional-action": "./scripts/artifact-additional-action/src/index.ts",
-        administration: "./scripts/administration/administration.ts",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_po_files,
-        ],
-    },
-    plugins: [manifest_plugin],
-    resolve: {
-        extensions: [".ts", ".js"],
-    },
 };
 
 const webpack_config_for_charts = {
@@ -92,8 +67,6 @@ const webpack_config_for_charts = {
 const webpack_config_for_javascript = {
     entry: {
         "home-burndowns": "./scripts/home.js",
-        "scrum-header": "./scripts/scrum-header.js",
-        "permission-per-group": "./scripts/permissions-per-group/src/index.js",
         "planning-admin": "./scripts/planning-admin.js",
     },
     context,
@@ -104,88 +77,11 @@ const webpack_config_for_javascript = {
         tuleap: "tuleap",
         jquery: "jQuery",
     },
-    module: {
-        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
-};
-
-const webpack_config_for_kanban = {
-    entry: {
-        kanban: "./scripts/kanban/src/app/app.js",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-        jquery: "jQuery",
-        ckeditor4: "CKEDITOR",
-    },
-    resolve: {
-        alias: {
-            // deduplicate angular that is also used by artifact-modal and angular-async
-            angular$: path.resolve(__dirname, "./scripts/kanban/node_modules/angular"),
-            "angular-sanitize$": path.resolve(
-                __dirname,
-                "./scripts/kanban/node_modules/angular-sanitize"
-            ),
-            // deduplicate lodash that is also used by artifact-modal
-            lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
-            // deduplicate moment that is also used by artifact-modal and card-fields
-            moment$: path.resolve(__dirname, "./scripts/kanban/node_modules/moment"),
-        },
-        extensions: [".ts", ".js"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_ng_cache_loader,
-            webpack_configurator.rule_angular_gettext_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
-};
-
-const webpack_config_for_planning_v2 = {
-    entry: {
-        "planning-v2": "./scripts/planning-v2/src/app/app.js",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-        jquery: "jQuery",
-        ckeditor4: "CKEDITOR",
-    },
-    resolve: {
-        alias: {
-            // angular alias for the artifact modal (otherwise it is included twice)
-            angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
-            "angular-sanitize$": path.resolve(
-                __dirname,
-                "./scripts/planning-v2/node_modules/angular-sanitize"
-            ),
-        },
-        extensions: [".ts", ".js"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_ng_cache_loader,
-            webpack_configurator.rule_angular_gettext_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
+    plugins: [manifest_plugin],
 };
 
 module.exports = [
     webpack_config_for_themes,
     webpack_config_for_charts,
-    webpack_config_for_typescript,
     webpack_config_for_javascript,
-    webpack_config_for_kanban,
-    webpack_config_for_planning_v2,
 ];

@@ -27,6 +27,15 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
+    /**
+     * @var \Mockery\LegacyMockInterface&\Mockery\MockInterface&\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface
+     */
+    private $da;
+    /**
+     * @var DataAccessResult&\Mockery\LegacyMockInterface&\Mockery\MockInterface
+     */
+    private $dar;
+
     protected function setUp(): void
     {
         parent::setUp();

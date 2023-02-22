@@ -24,16 +24,19 @@ use EventManager;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Mirror_Mirror;
 use Mockery;
-
-require_once __DIR__ . '/../../bootstrap.php';
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 
 class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private $mirror_mapper;
     private $mirror_1;
     private $mirror_2;
+    private string $cache_dir;
 
     public function setUp(): void
     {
@@ -48,16 +51,8 @@ class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\T
         $user_mirror2->shouldReceive('getUserName')->andReturn('forge__gitmirror_2');
         $this->mirror_2 = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'JPN');
 
-        $this->cache_dir = trim(`mktemp -d -p /var/tmp cache_dir_XXXXXX`);
-        \ForgeConfig::store();
+        $this->cache_dir = $this->getTmpDir();
         \ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
-    }
-
-    protected function tearDown(): void
-    {
-        exec('rm -rf ' . escapeshellarg($this->cache_dir));
-        \ForgeConfig::restore();
-        parent::tearDown();
     }
 
     public function testItDumpsTheConf()

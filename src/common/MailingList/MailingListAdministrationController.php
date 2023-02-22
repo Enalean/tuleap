@@ -72,7 +72,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         if (! $project->usesMail()) {
             throw new NotFoundException();
         }

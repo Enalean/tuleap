@@ -20,12 +20,20 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var Project_SOAPServer */
-    private $server;
+    private Project_SOAPServer $server;
+    private int $group_id;
+    private string $session_key;
+    private \Tuleap\Cryptography\ConcealedString $password;
+    private $user;
+    private $admin;
+    /**
+     * @var GenericUserFactory&\Mockery\MockInterface
+     */
+    private $generic_user_factory;
 
     protected function setUp(): void
     {
@@ -75,7 +83,7 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
     }
 
-    public function testItCreatesANewGenericUser()
+    public function testItCreatesANewGenericUser(): void
     {
         $this->generic_user_factory->shouldReceive('fetch')->with($this->group_id)->andReturns(null);
 
@@ -89,7 +97,7 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
     }
 
-    public function testItDoesNotRecreateAGenericUserIfItAlreadyExists()
+    public function testItDoesNotRecreateAGenericUserIfItAlreadyExists(): void
     {
         $this->generic_user_factory->shouldReceive('fetch')->with($this->group_id)->andReturns($this->user);
 
@@ -99,7 +107,7 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
     }
 
-    public function testItUnsetsGenericUser()
+    public function testItUnsetsGenericUser(): void
     {
         $this->generic_user_factory->shouldReceive('fetch')->with($this->group_id)->andReturns($this->user);
 
@@ -108,7 +116,7 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->server->unsetGenericUser($this->session_key, $this->group_id);
     }
 
-    public function testItThrowsASoapFaultWhileUnsetingGenericUserIfItIsNotActivated()
+    public function testItThrowsASoapFaultWhileUnsetingGenericUserIfItIsNotActivated(): void
     {
         $this->generic_user_factory->shouldReceive('fetch')->with($this->group_id)->andReturns(null);
 

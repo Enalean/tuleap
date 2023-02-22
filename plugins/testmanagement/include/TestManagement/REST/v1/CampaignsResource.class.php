@@ -102,6 +102,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -119,7 +120,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormate
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -348,7 +351,8 @@ class CampaignsResource
                 new ArtifactLinkValidator(
                     $this->artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao
+                    $usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker($this->getFrozenFieldDetector())
             ),
@@ -371,10 +375,15 @@ class CampaignsResource
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 
-        $this->artifact_updater = new ArtifactUpdater($fields_data_builder, $changeset_creator);
+        $this->artifact_updater = new ArtifactUpdater(
+            $fields_data_builder,
+            $changeset_creator,
+            new ArtifactRestUpdateConditionsChecker(),
+        );
 
         $this->campaign_updater = new CampaignUpdater(
             $this->artifact_updater,
@@ -778,6 +787,8 @@ class CampaignsResource
         } catch (Tracker_ChangesetNotCreatedException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_CommentNotStoredException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (CommentContentNotValidException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_AfterSaveException $exception) {
             throw new RestException(400, $exception->getMessage());

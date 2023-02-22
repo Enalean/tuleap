@@ -496,18 +496,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $old_value->getValue() != $this->sanitize($new_value);
     }
 
-    /**
-     * Display the field as a Changeset value.
-     * Used in report table
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string
-     */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
-    {
+    public function fetchChangesetValue(
+        int $artifact_id,
+        int $changeset_id,
+        mixed $value,
+        ?Tracker_Report $report = null,
+        ?int $from_aid = null,
+    ): string {
         $arr       = [];
         $bindtable = $this->getBind()->getBindtableSqlFragment();
         $values    = $this->getDao()->searchChangesetValues(

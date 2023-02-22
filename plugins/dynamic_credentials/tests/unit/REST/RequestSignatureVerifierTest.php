@@ -59,11 +59,11 @@ class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_result, $request_signature_verifier->isSignatureValid($signature, $parameter));
     }
 
-    public function signedParameterProvider()
+    public static function signedParameterProvider()
     {
         return [
-            [$this->getSignature('param'), 'param', true],
-            [$this->getSignature('invalid_signature_for_message'), 'param', false],
+            [self::getSignature('param'), 'param', true],
+            [self::getSignature('invalid_signature_for_message'), 'param', false],
             ['not_even_base64_encoded_signature', 'param', false],
             ['QWxwYWNhcw==', 'param', false],
             ['WxwYWNhcyBhcmUgYW1hemluZw==', 'signature_with_invalid_base64', false],
@@ -73,7 +73,7 @@ class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @return string
      */
-    private function getSignature($parameter)
+    private static function getSignature($parameter)
     {
         $secret_key_decoded = base64_decode(self::SECRET_KEY);
         return base64_encode(sodium_crypto_sign_detached(self::USED_DOMAIN . $parameter, $secret_key_decoded));

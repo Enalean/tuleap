@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ListPicker, ListPickerOptions } from "./type";
+import type { ListPicker, ListPickerOptions, SelectionManager } from "./type";
 import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
 import { EventManager } from "./events/EventManager";
 import { DropdownManager } from "./dropdown/DropdownManager";
@@ -34,17 +34,17 @@ import type { GettextProvider } from "@tuleap/gettext";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 
-export async function createListPicker(
+export function createListPicker(
     source_select_box: HTMLSelectElement,
     gettext_provider: GettextProvider,
     options?: ListPickerOptions
-): Promise<ListPicker> {
+): ListPicker {
     hideSourceSelectBox(source_select_box);
 
     const items_map_manager = new ItemsMapManager(
         new ListItemMapBuilder(source_select_box, options)
     );
-    await items_map_manager.refreshItemsMap();
+    items_map_manager.refreshItemsMap();
     const base_renderer = new BaseComponentRenderer(document, source_select_box, options);
     const {
         wrapper_element,
@@ -77,7 +77,7 @@ export async function createListPicker(
         field_focus_manager
     );
 
-    let selection_manager;
+    let selection_manager: SelectionManager;
 
     let none_item;
     if (options?.none_value) {
@@ -102,8 +102,7 @@ export async function createListPicker(
             selection_element,
             placeholder_element,
             dropdown_manager,
-            items_map_manager,
-            options?.keep_none_value ?? false
+            items_map_manager
         );
     }
 

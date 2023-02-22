@@ -32,24 +32,20 @@
     </button>
 </template>
 
-<script lang="ts">
-import { namespace } from "vuex-class";
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { useState } from "vuex-composition-helpers";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Item }>();
 
-@Component
-export default class DeleteItem extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { is_deletion_allowed } = useState<Pick<ConfigurationState, "is_deletion_allowed">>(
+    "configuration",
+    ["is_deletion_allowed"]
+);
 
-    @configuration.State
-    readonly is_deletion_allowed!: boolean;
-
-    processDeletion(): void {
-        emitter.emit("deleteItem", { item: this.item });
-    }
+function processDeletion(): void {
+    emitter.emit("deleteItem", { item: props.item });
 }
 </script>

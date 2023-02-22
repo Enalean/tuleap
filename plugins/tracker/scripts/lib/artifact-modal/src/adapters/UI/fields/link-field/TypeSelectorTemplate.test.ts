@@ -37,12 +37,10 @@ import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/Ver
 import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
-import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
@@ -55,6 +53,7 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -91,11 +90,10 @@ describe("TypeSelectorTemplate", () => {
             allowed_types: [],
         };
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
-        const fault_notifier = NotifyFaultStub.withCount();
-        const notification_clearer = ClearFaultNotificationStub.withCount();
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(30);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
         const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
+        const event_dispatcher = DispatchEventsStub.buildNoOp();
 
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -103,17 +101,15 @@ describe("TypeSelectorTemplate", () => {
             AddLinkMarkedForRemovalStub.withCount(),
             DeleteLinkMarkedForRemovalStub.withCount(),
             VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-            fault_notifier,
-            notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     okAsync(LinkableArtifactStub.withDefaults())
                 ),
-                fault_notifier,
                 parents_retriever,
                 link_verifier,
                 RetrieveUserHistoryStub.withoutUserHistory(),
                 SearchArtifactsStub.withoutResults(),
+                event_dispatcher,
                 current_artifact_identifier,
                 current_tracker_identifier,
                 UserIdentifierStub.fromUserId(101)
@@ -124,13 +120,14 @@ describe("TypeSelectorTemplate", () => {
             VerifyHasParentLinkStub.withNoParentLink(),
             parents_retriever,
             link_verifier,
+            VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+            event_dispatcher,
+            ControlLinkedArtifactsPopoversStub.build(),
             field,
             current_artifact_identifier,
             current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("bug #22"),
-            ControlLinkedArtifactsPopoversStub.build(),
-            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-            VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
         );
         host = {
             controller,

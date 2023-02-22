@@ -1,9 +1,0 @@
-{
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "module": "esNext",
-        "types": ["jest", "node"]
-    },
-    "include": ["scripts/**/*"],
-    "exclude": ["scripts/lib/**"]
-}

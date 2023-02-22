@@ -21,6 +21,7 @@
 namespace Tuleap\User\Admin;
 
 use ForgeConfig;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenter;
 use User_UserStatusManager;
 
 class PendingUserPresenter
@@ -34,8 +35,18 @@ class PendingUserPresenter
     public $expiry_date;
     public $can_resend_email;
 
-    public function __construct($id, $login, $realname, $email, $registration_date, $purpose, $expiry_date, $status)
-    {
+    public function __construct(
+        $id,
+        $login,
+        $realname,
+        $email,
+        $registration_date,
+        $purpose,
+        $expiry_date,
+        $status,
+        public ?InvitedByPresenter $invited_by,
+        public bool $is_email_already_validated,
+    ) {
         $this->id                = $id;
         $this->login             = $login;
         $this->realname          = $realname;

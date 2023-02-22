@@ -55,60 +55,6 @@ function project_admin_footer($params)
 }
 
 /**
- * Builds the group history filter
- *
- * @param String  $event        Events category used to filter results
- * @param String  $subEventsBox Event used to filter results
- * @param String  $value        Value used to filter results
- * @param int $startDate Start date used to filter results
- * @param int $endDate End date used to filter results
- * @param String  $by           User name used to filter results
- *
- * @return String
- */
-function build_grouphistory_filter($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null)
-{
-    $data_access = CodendiDataAccess::instance();
-    $filter      = '';
-    if (! empty($by)) {
-        $user_helper = UserHelper::instance();
-        $filter     .= $user_helper->getUserFilter($by);
-    }
-    if (! empty($startDate)) {
-        [$timestamp,] = util_date_to_unixtime($startDate);
-        $filter      .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
-    }
-    if (! empty($endDate)) {
-        [$timestamp,] = util_date_to_unixtime($endDate);
-        // Add 23:59:59 to timestamp
-        $timestamp = $timestamp + 86399;
-        $filter   .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
-    }
-    if (! empty($value)) {
-        //all_users need specific treatement
-        if (stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
-            $value =  'ugroup_anonymous_users_name_key';
-        }
-        $filter .= " AND group_history.old_value LIKE " . $data_access->quoteLikeValueSurround($value);
-    }
-    if (! empty($event) && strcmp($event, 'any')) {
-        $filter .= " AND ( 0 ";
-        if (! empty($subEventsBox)) {
-            foreach ($subEventsBox as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($key);
-            }
-        } else {
-            $subEventsList = get_history_entries();
-            foreach ($subEventsList[$event] as $key => $value) {
-                $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($value);
-            }
-        }
-        $filter .= " ) ";
-    }
-    return $filter;
-}
-
-/**
  * Returns the events used in project history grouped by category
  *
  * @return Array
@@ -164,6 +110,7 @@ function get_history_entries()
         'event_user' =>       ['changed_personal_email_notif',
             'added_user',
             'removed_user',
+            ...array_column(\Tuleap\InviteBuddy\InvitationHistoryEntry::cases(), 'value'),
         ],
         'event_others' =>     ['changed_bts_form_message',
             'changed_bts_allow_anon',
@@ -198,7 +145,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
 
     $hp = Codendi_HTMLPurifier::instance();
 
-    while ($row = $res['history']->getRow()) {
+    foreach ($res['history'] as $row) {
         $field = $row['field_name'];
 
         // see if there are any arguments after the message key
@@ -286,9 +233,34 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
      */
     global $Language;
 
-    $dao            = new ProjectHistoryDao(CodendiDataAccess::instance());
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $history_rows   = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
+    $old_value = $value;
+    if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+        $old_value = 'ugroup_anonymous_users_name_key';
+    }
+    $start_date = null;
+    if ($startDate) {
+        [$timestamp,] = util_date_to_unixtime($startDate);
+        $start_date   = new DateTimeImmutable('@' . $timestamp);
+    }
+    $end_date = null;
+    if ($endDate) {
+        [$timestamp,] = util_date_to_unixtime($endDate);
+        $end_date     = new DateTimeImmutable('@' . $timestamp);
+    }
+
+    $dao          = new ProjectHistoryDao();
+    $history_rows = $dao->getHistory(
+        ProjectManager::instance()->getProjectById($group_id),
+        $offset,
+        $limit,
+        $event,
+        $subEventsBox,
+        get_history_entries(),
+        $old_value,
+        $start_date,
+        $end_date,
+        $by ? UserManager::instance()->findUser($by) : null,
+    );
 
     if (isset($subEventsBox)) {
         $subEventsString  = implode(",", array_keys($subEventsBox));
@@ -412,9 +384,34 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
     ];
     echo build_csv_header($col_list, $documents_title) . $eol;
 
-    $dao            = new ProjectHistoryDao(CodendiDataAccess::instance());
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $res            = $dao->groupGetHistory(0, 0, $group_id, $history_filter);
+    $old_value = $value;
+    if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+        $old_value = 'ugroup_anonymous_users_name_key';
+    }
+    $start_date = null;
+    if ($startDate) {
+        [$timestamp,] = util_date_to_unixtime($startDate);
+        $start_date   = new DateTimeImmutable('@' . $timestamp);
+    }
+    $end_date = null;
+    if ($endDate) {
+        [$timestamp,] = util_date_to_unixtime($endDate);
+        $end_date     = new DateTimeImmutable('@' . $timestamp);
+    }
+
+    $dao = new ProjectHistoryDao();
+    $res = $dao->getHistory(
+        ProjectManager::instance()->getProjectById($group_id),
+        0,
+        0,
+        $event,
+        $subEventsBox,
+        get_history_entries(),
+        $old_value,
+        $start_date,
+        $end_date,
+        $by ? UserManager::instance()->findUser($by) : null,
+    );
 
     if ($res['numrows'] > 0) {
         echo displayProjectHistoryResults($group_id, $res, true);

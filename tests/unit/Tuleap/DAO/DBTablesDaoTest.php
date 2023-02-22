@@ -59,10 +59,12 @@ final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_path = vfsStream::setup()->url() . '/install.sql';
         file_put_contents($file_path, $queries);
 
-        $this->easy_db->method('run')->withConsecutive(
-            ['CREATE TABLE A (id INT);'],
-            ['CREATE TABLE B (id INT);'],
-            ['INSERT INTO B SET id = 1;'],
+        $this->easy_db->method('run')->willReturnCallback(
+            fn (string $sql): array => match ($sql) {
+                'CREATE TABLE A (id INT);',
+                'CREATE TABLE B (id INT);',
+                'INSERT INTO B SET id = 1;' => []
+            }
         );
 
         $this->expectNotToPerformAssertions();

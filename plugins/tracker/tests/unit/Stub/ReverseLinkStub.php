@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
 
 /**
@@ -51,5 +53,10 @@ final class ReverseLinkStub implements ReverseLink
     public function getType(): ?string
     {
         return $this->type;
+    }
+
+    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks
+    {
+        return new CollectionOfForwardLinks([]);
     }
 }

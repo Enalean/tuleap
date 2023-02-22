@@ -105,6 +105,7 @@ class HeaderPresenterBuilder
         ThemeVariation $theme_variation,
         array $javascript_assets,
         ?InProjectWithoutSidebar $in_project_without_sidebar,
+        InviteBuddiesPresenter $invite_buddies_presenter,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->imgroot                  = $imgroot;
@@ -148,7 +149,7 @@ class HeaderPresenterBuilder
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user->user),
+            $invite_buddies_presenter,
             $platform_banner,
             $detected_browser->isACompletelyBrokenBrowser()
         );

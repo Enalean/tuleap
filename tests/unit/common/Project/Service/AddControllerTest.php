@@ -82,6 +82,6 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $response->shouldReceive('addFeedback')->once();
         $response->shouldReceive('redirect')->once();
-        $this->controller->process($request, $response, ['id' => '102']);
+        $this->controller->process($request, $response, ['project_id' => '102']);
     }
 }

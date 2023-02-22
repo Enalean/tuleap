@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\DocumentServer;
 
 use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DataAccessObject;
 
-final class DocumentServerDao extends DataAccessObject implements IRetrieveDocumentServers, IDeleteDocumentServer, ICreateDocumentServer, IUpdateDocumentServer
+final class DocumentServerDao extends DataAccessObject implements IRetrieveDocumentServers, IDeleteDocumentServer, ICreateDocumentServer, IUpdateDocumentServer, IRestrictDocumentServer
 {
     public function __construct(private DocumentServerKeyEncryption $encryption)
     {
@@ -38,11 +39,21 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
      */
     public function retrieveAll(): array
     {
+        return $this->getDB()->tryFlatTransaction(
+            fn(): array => $this->retrieveAllWithoutTransaction()
+        );
+    }
+
+    /**
+     * @return list<DocumentServer>
+     */
+    private function retrieveAllWithoutTransaction(): array
+    {
         $document_servers = [];
 
         $server_restrictions = array_reduce(
             $this->getDB()->run(
-                'SELECT R.server_id, R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                'SELECT R.server_id, R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label, `groups`.icon_codepoint
                 FROM plugin_onlyoffice_document_server_project_restriction AS R
                 INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status = "A")',
             ),
@@ -51,11 +62,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
                     $server_restrictions[$row['server_id']] = [];
                 }
 
-                $server_restrictions[$row['server_id']][] = new RestrictedProject(
-                    $row['project_id'],
-                    $row['name'],
-                    $row['label']
-                );
+                $server_restrictions[$row['server_id']][$row['project_id']] = RestrictedProject::fromRow($row);
 
                 return $server_restrictions;
             },
@@ -108,17 +115,13 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
 
         if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
             $project_restrictions = array_map(
-                static fn(array $row) => new RestrictedProject(
-                    $row['project_id'],
-                    $row['name'],
-                    $row['group_name']
-                ),
-                $this->getDB()->column(
-                    'SELECT R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                static fn(array $row) => RestrictedProject::fromRow($row),
+                $this->getDB()->run(
+                    'SELECT R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label, `groups`.icon_codepoint
                         FROM plugin_onlyoffice_document_server_project_restriction AS R
                         INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status <> "D")
                         WHERE server_id=?',
-                    [$id],
+                    $id,
                 )
             );
 
@@ -173,6 +176,47 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
             'plugin_onlyoffice_document_server',
             ['url' => $url, 'secret_key' => $this->encryption->encryptValue($secret_key)],
             ['id' => $id],
+        );
+    }
+
+    public function restrict(int $id, array $project_ids): void
+    {
+        $data_to_insert = [];
+        foreach ($project_ids as $project_id) {
+            $data_to_insert[] = ['server_id' => $id, 'project_id' => $project_id];
+        }
+
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id, $data_to_insert): void {
+                $db->update('plugin_onlyoffice_document_server', ['is_project_restricted' => true], ['id' => $id]);
+                $db->delete('plugin_onlyoffice_document_server_project_restriction', ['server_id' => $id]);
+                if (count($data_to_insert) > 0) {
+                    $project_ids_statement = EasyStatement::open()->in(
+                        'project_id IN (?*)',
+                        array_column($data_to_insert, 'project_id')
+                    );
+                    $db->safeQuery(
+                        "DELETE FROM plugin_onlyoffice_document_server_project_restriction WHERE $project_ids_statement",
+                        $project_ids_statement->values()
+                    );
+                    $db->insertMany('plugin_onlyoffice_document_server_project_restriction', $data_to_insert);
+                }
+            }
+        );
+    }
+
+    public function unrestrict(int $id): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id): void {
+                $nb_servers = $db->single('SELECT COUNT(*) FROM plugin_onlyoffice_document_server');
+                if ($nb_servers > 1) {
+                    throw new TooManyServersException();
+                }
+
+                $db->delete('plugin_onlyoffice_document_server_project_restriction', ['server_id' => $id]);
+                $db->update('plugin_onlyoffice_document_server', ['is_project_restricted' => false], ['id' => $id]);
+            }
         );
     }
 }

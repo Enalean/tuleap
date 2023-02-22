@@ -29,14 +29,21 @@
                         <p>{{ registration_date }}</p>
                     </div>
                 </div>
-                <div class="tlp-property">
-                    <label class="tlp-label">{{ purpose_label }}</label>
-                    {{^ purpose }}
-                        <p class="tlp-property-empty">{{ empty_label }}</p>
-                    {{/ purpose }}
-                    {{# purpose }}
-                        <p>{{ purpose }}</p>
-                    {{/ purpose }}
+                {{# invited_by }}
+                    <div class="siteadmin-pending-user-info">
+                        {{> invited-by }}
+                    </div>
+                {{/ invited_by }}
+                <div class="siteadmin-pending-user-info">
+                    <div class="tlp-property siteadmin-pending-user-info-property">
+                        <label class="tlp-label">{{ purpose_label }}</label>
+                        {{^ purpose }}
+                            <p class="tlp-property-empty">{{ empty_label }}</p>
+                        {{/ purpose }}
+                        {{# purpose }}
+                            <p>{{ purpose }}</p>
+                        {{/ purpose }}
+                    </div>
                 </div>
             </section>
         </div>
@@ -74,7 +81,13 @@
                                     name="action_select"
                                     value="validate"
                                     class="tlp-button-primary siteadmin-pending-user-actions-button"
-                                    title="{{ validate_notice }}"
+                                    {{# is_email_already_validated }}
+                                        title="{{# gettext }}Email is already validated{{/ gettext }}"
+                                        disabled
+                                    {{/ is_email_already_validated }}
+                                    {{^ is_email_already_validated }}
+                                        title="{{ validate_notice }}"
+                                    {{/ is_email_already_validated }}
                             >
                                 <i class="far fa-envelope tlp-button-icon"></i>
                                 {{ validate_label }}
@@ -86,6 +99,13 @@
                                         name="action_select"
                                         value="resend_email"
                                         class="tlp-button-primary tlp-button-outline siteadmin-pending-user-actions-button"
+                                        {{# is_email_already_validated }}
+                                            title="{{# gettext }}Email is already validated{{/ gettext }}"
+                                            disabled
+                                        {{/ is_email_already_validated }}
+                                        {{^ is_email_already_validated }}
+                                            title="{{ validate_notice }}"
+                                        {{/ is_email_already_validated }}
                                 >
                                     <i class="fa fa-envelope tlp-button-icon"></i>
                                     {{ resend_label }}
@@ -138,7 +158,13 @@
                         value="validate"
                         class="tlp-button-primary tlp-button-large"
                         id="siteadmin-pending-users-actions-buttons-validateall"
-                        title="{{ validate_notice }}"
+                        {{# are_all_emails_already_validated }}
+                            title="{{# gettext }}All emails are already validated{{/ gettext }}"
+                            disabled
+                        {{/ are_all_emails_already_validated }}
+                        {{^ are_all_emails_already_validated }}
+                            title="{{ validate_notice }}"
+                        {{/ are_all_emails_already_validated }}
                 >
                     <i class="far fa-envelope tlp-button-icon"></i>
                     {{ validate_all_label }}

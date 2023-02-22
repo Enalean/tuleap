@@ -18,7 +18,11 @@
  */
 
 import * as rest_querier from "../api/rest-querier";
-import { addNewUploadFile, createNewItem } from "./actions-create";
+import {
+    addNewUploadFile,
+    createNewItem,
+    adjustItemToContentAfterItemCreationInAFolder,
+} from "./actions-create";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FILE } from "../constants";
 import * as upload_file from "./actions-helpers/upload-file";
@@ -27,6 +31,8 @@ import type { CreatedItem, FakeItem, Folder, Item, ItemFile, RootState } from ".
 import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
+import type { State } from "../type";
+import * as flag_item_as_created from "./actions-helpers/flag-item-as-created";
 
 jest.mock("../helpers/emitter");
 
@@ -487,6 +493,150 @@ describe("actions-create", () => {
                 created_item
             );
             expect(uploadFile).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("adjustItemToContentAfterItemCreationInAFolder", () => {
+        let context: ActionContext<State, State>,
+            flagItemAsCreated: jest.SpyInstance,
+            getItem: jest.SpyInstance;
+
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+                state: {} as State,
+            } as unknown as ActionContext<State, State>;
+
+            flagItemAsCreated = jest.spyOn(flag_item_as_created, "flagItemAsCreated");
+
+            getItem = jest.spyOn(rest_querier, "getItem");
+        });
+
+        it("Item is added to folded content when we are adding content into tree view collapsed folder", async () => {
+            const created_item = {
+                id: 10,
+                title: "folder",
+                owner: {
+                    id: 101,
+                },
+                last_update_date: "2018-10-03T11:16:11+02:00",
+            } as Folder;
+
+            const parent = {
+                id: 10,
+                is_expanded: false,
+            } as Folder;
+
+            const current_folder = {
+                id: 1,
+            } as Folder;
+
+            const item_id = 10;
+
+            getItem.mockReturnValue(created_item);
+
+            await adjustItemToContentAfterItemCreationInAFolder(context, {
+                parent,
+                current_folder,
+                item_id,
+            });
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                created_item
+            );
+            expect(flagItemAsCreated).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
+                parent,
+                created_item,
+                false,
+            ]);
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                created_item
+            );
+        });
+
+        it("Item must not be added to folded content when parent is expanded", async () => {
+            const created_item = {
+                id: 10,
+                title: "folder",
+                owner: {
+                    id: 101,
+                },
+                last_update_date: "2018-10-03T11:16:11+02:00",
+            } as Folder;
+
+            const parent = {
+                id: 10,
+                is_expanded: true,
+            } as Folder;
+
+            const current_folder = {
+                id: 1,
+            } as Folder;
+
+            const item_id = 10;
+
+            getItem.mockReturnValue(created_item);
+
+            await adjustItemToContentAfterItemCreationInAFolder(context, {
+                parent,
+                current_folder,
+                item_id,
+            });
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                created_item
+            );
+            expect(flagItemAsCreated).toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                created_item
+            );
+        });
+
+        it("Item is not added to folded content when we are adding item in current folder", async () => {
+            const created_item = {
+                id: 10,
+                title: "folder",
+                owner: {
+                    id: 101,
+                },
+                last_update_date: "2018-10-03T11:16:11+02:00",
+            } as Folder;
+
+            const parent = {
+                id: 10,
+                is_expanded: true,
+            } as Folder;
+
+            const current_folder = {
+                id: 1,
+            } as Folder;
+
+            const item_id = 10;
+
+            getItem.mockReturnValue(created_item);
+
+            await adjustItemToContentAfterItemCreationInAFolder(context, {
+                parent,
+                current_folder,
+                item_id,
+            });
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                created_item
+            );
+            expect(flagItemAsCreated).toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                created_item
+            );
         });
     });
 });

@@ -52,13 +52,32 @@ class MembershipManagerCreateGroupTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\Mock|Git_Driver_Gerrit_MembershipManager
      */
     private $membership_manager;
+    /**
+     * @var Project&\Mockery\MockInterface
+     */
+    private $project;
+    /**
+     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
+     */
+    private $remote_server_factory;
+    /**
+     * @var GitRepositoryFactory&\Mockery\MockInterface
+     */
+    private $git_repository_factory;
+    /**
+     * @var PFUser&\Mockery\MockInterface
+     */
+    private $user1;
+    /**
+     * @var PFUser&\Mockery\MockInterface
+     */
+    private $user2;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->driver              = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->driver_factory      = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
         $this->remote_server       = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $this->gerrit_user_manager = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
         $this->project_manager     = \Mockery::spy(\ProjectManager::class);
@@ -98,7 +117,7 @@ class MembershipManagerCreateGroupTest extends \Tuleap\Test\PHPUnit\TestCase
             \Git_Driver_Gerrit_MembershipManager::class,
             [
                 $this->dao,
-                $this->driver_factory,
+                \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
                 $this->gerrit_user_manager,
                 $this->remote_server_factory,
                 $this->logger,

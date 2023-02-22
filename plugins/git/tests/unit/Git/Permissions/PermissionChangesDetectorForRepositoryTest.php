@@ -25,14 +25,16 @@ use Git;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class PermissionChangesDetectorForRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionChangesDetectorForRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var PermissionChangesDetector
-     */
-    private $detector;
+    private PermissionChangesDetector $detector;
+    private $git_permission_manager;
+    private $retriever;
+    private FineGrainedPermission $branch_fine_grained_permission;
+    private FineGrainedPermission $tag_fine_grained_permission;
+    private $repository;
 
     protected function setUp(): void
     {

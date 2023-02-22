@@ -23,6 +23,7 @@ import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import { LINK_HEADER, createGitlabApiQuerier } from "./gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
+import { rawUri, uri } from "@tuleap/fetch-result";
 
 function buildResponse<TypeOfJSONPayload>(
     payload: TypeOfJSONPayload,
@@ -95,12 +96,16 @@ describe("gitlab-api-querier", () => {
 
             expect(getSpy.mock.calls).toHaveLength(2);
             const [first_call, second_call] = getSpy.mock.calls;
-            expect(first_call[0]).toBe(
-                "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
+            expect(first_call[0]).toStrictEqual(
+                uri`${rawUri(
+                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
+                )}`
             );
             expect(first_call[1]).toBe(credentials);
-            expect(second_call[0]).toBe(
-                "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
+            expect(second_call[0]).toStrictEqual(
+                uri`${rawUri(
+                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
+                )}`
             );
             expect(second_call[1]).toBe(credentials);
 

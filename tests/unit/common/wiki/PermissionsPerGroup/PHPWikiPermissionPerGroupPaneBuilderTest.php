@@ -24,14 +24,15 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
-class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var PHPWikiPermissionPerGroupPaneBuilder
-     */
-    private $builder;
+    private PHPWikiPermissionPerGroupPaneBuilder $builder;
+    private $wiki_permissions_manager;
+    private $ugroup_manager;
+    private PermissionPerGroupUGroupFormatter $formatter;
+    private $project;
 
     protected function setUp(): void
     {

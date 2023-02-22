@@ -68,7 +68,7 @@ final class MediawikiStandaloneProjectResourceTest extends \RestBase
         );
     }
 
-    public function getPermissionsData(): iterable
+    public static function getPermissionsData(): iterable
     {
         return [
             'project admin has full access' => [

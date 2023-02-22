@@ -72,6 +72,10 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var M\LegacyMockInterface|M\MockInterface|PFUser */
     private $current_user;
     private Tracker_FormElement_Field_Selectbox|M\LegacyMockInterface|M\MockInterface $mapped_field;
+    /**
+     * @var FirstPossibleValueInListRetriever&M\MockInterface
+     */
+    private $first_possible_value_retriever;
 
     protected function setUp(): void
     {

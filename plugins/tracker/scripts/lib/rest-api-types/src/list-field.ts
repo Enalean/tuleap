@@ -23,6 +23,7 @@ import type { UserGroupRepresentation } from "./artifacts";
 import type {
     ColorName,
     SelectBoxFieldIdentifier,
+    MultiSelectBoxFieldIdentifier,
     StaticBindIdentifier,
     UserGroupsBindIdentifier,
     UsersBindIdentifier,
@@ -51,7 +52,7 @@ export type UserGroupBoundListItem = {
 };
 
 type CommonListFieldStructure = BaseFieldStructure & {
-    readonly type: SelectBoxFieldIdentifier;
+    readonly type: SelectBoxFieldIdentifier | MultiSelectBoxFieldIdentifier;
     readonly label: string;
     readonly required: boolean;
 };

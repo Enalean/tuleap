@@ -30,6 +30,7 @@ use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\Project\RestrictedUserCanAccessUrlOrProjectVerifier;
@@ -453,11 +454,14 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function userCanManageProjectMembership(PFUser $user, Project $project): void
     {
         if ($this->userCanAccessProject($user, $project)) {
-            $dao = new MembershipDelegationDao();
-            if (! $user->isAdmin($project->getId()) && ! $dao->doesUserHasMembershipDelegation($user->getId(), $project->getID())) {
+            $members_manager_checker = new UserCanManageProjectMembersChecker(
+                new MembershipDelegationDao()
+            );
+            try {
+                $members_manager_checker->checkUserCanManageProjectMembers($user, $project);
+            } catch (\Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException $e) {
                 throw new Project_AccessNotAdminException();
             }
-            return;
         }
     }
 

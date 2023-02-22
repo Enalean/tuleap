@@ -63,7 +63,7 @@ _checkMandatoryOptions() {
 _checkOsVersion() {
     if [ -e "${rh_release}" ]; then
 
-        if ${grep} -i --silent "Rocky Linux release 9.*" ${rh_release}; then
+        if ${grep} -i --silent '\(AlmaLinux\|Rocky Linux\|Red Hat Enterprise Linux\) release 9.*' ${rh_release}; then
             _infoMessage "$(${cat} ${rh_release})"
             return;
         fi

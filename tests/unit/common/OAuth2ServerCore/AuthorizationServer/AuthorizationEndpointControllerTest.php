@@ -219,7 +219,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->controller->handle($request);
     }
 
-    public function dataProviderInvalidEssentialQueryParameters(): array
+    public static function dataProviderInvalidEssentialQueryParameters(): array
     {
         return [
             'No client ID'                                     => [[]],
@@ -262,7 +262,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function dataProviderInvalidQueryParameters(): array
+    public static function dataProviderInvalidQueryParameters(): array
     {
         return [
             'No response type'                         => [
@@ -444,7 +444,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function dataProviderSupportedRequestHTTPMethod(): array
+    public static function dataProviderSupportedRequestHTTPMethod(): array
     {
         return [
             ['GET'],

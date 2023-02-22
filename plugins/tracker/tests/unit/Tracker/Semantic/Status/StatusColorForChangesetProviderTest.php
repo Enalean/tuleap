@@ -38,6 +38,12 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     private StatusColorForChangesetProvider $color_provider;
     private \PFUser $user;
     private \Tracker_FormElement_Field_List_BindValue $bind_value;
+    /**
+     * @var \Tracker&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $tracker;
+    private Artifact $artifact;
+    private \Tracker_Artifact_Changeset $changeset;
 
     protected function setUp(): void
     {

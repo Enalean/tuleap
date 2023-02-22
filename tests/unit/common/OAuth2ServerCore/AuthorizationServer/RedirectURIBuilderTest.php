@@ -46,7 +46,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame((string) $result, $expected_result_uri);
     }
 
-    public function dataProviderValidErrorURIs(): array
+    public static function dataProviderValidErrorURIs(): array
     {
         return [
             'Base redirect URI has no query'     => [
@@ -81,7 +81,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame((string) $result, $expected_result_uri);
     }
 
-    public function dataProviderValidSuccessURIs(): array
+    public static function dataProviderValidSuccessURIs(): array
     {
         return [
             'Base redirect URI has no query' => [

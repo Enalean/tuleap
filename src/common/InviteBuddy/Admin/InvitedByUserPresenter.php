@@ -23,35 +23,58 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\Admin;
 
 use PFUser;
+use Tuleap\Project\ProjectPresenter;
 
-class InvitedByUserPresenter
+final class InvitedByUserPresenter
 {
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $display_name;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $url;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
-    public $has_avatar;
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    public $avatar_url;
+    public readonly bool $invited_in_projects;
+    public readonly bool $invited_in_more_than_one_project;
 
-    public function __construct(PFUser $user)
+    /**
+     * @param ProjectPresenter[] $projects
+     */
+    private function __construct(
+        public readonly string $display_name,
+        public readonly string $url,
+        public readonly bool $has_avatar,
+        public readonly string $avatar_url,
+        public readonly array $projects,
+    ) {
+        $this->invited_in_projects              = count($this->projects) > 0;
+        $this->invited_in_more_than_one_project = count($this->projects) > 1;
+    }
+
+    public static function fromUser(PFUser $user): self
     {
-        $this->display_name = (string) \UserHelper::instance()->getDisplayNameFromUser($user);
-        $this->url          = '/admin/usergroup.php?' . http_build_query(['user_id' => $user->getId()]);
-        $this->has_avatar   = $user->hasAvatar();
-        $this->avatar_url   = $user->getAvatarUrl();
+        return new self(
+            (string) \UserHelper::instance()->getDisplayNameFromUser($user),
+            '/admin/usergroup.php?' . http_build_query(['user_id' => $user->getId()]),
+            $user->hasAvatar(),
+            $user->getAvatarUrl(),
+            [],
+        );
+    }
+
+    public function withProject(\Project $project, PFUser $current_user): self
+    {
+        $already_existing = false;
+        foreach ($this->projects as $presenter) {
+            if ($presenter->id === (int) $project->getID()) {
+                $already_existing = true;
+            }
+        }
+
+        $projects = $this->projects;
+        if (! $already_existing) {
+            $projects[] = ProjectPresenter::fromProject($project, $current_user);
+        }
+
+        return new self(
+            $this->display_name,
+            $this->url,
+            $this->has_avatar,
+            $this->avatar_url,
+            $projects,
+        );
     }
 }

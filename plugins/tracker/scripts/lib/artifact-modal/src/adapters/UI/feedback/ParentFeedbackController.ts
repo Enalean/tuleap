@@ -20,15 +20,16 @@
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
 import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
-import type { NotifyFault } from "../../../domain/NotifyFault";
+import type { DispatchEvents } from "../../../domain/DispatchEvents";
+import { WillNotifyFault } from "../../../domain/WillNotifyFault";
 
 export type ParentFeedbackControllerType = {
-    displayParentFeedback(): Promise<ParentFeedbackPresenter>;
+    displayParentFeedback(): PromiseLike<ParentFeedbackPresenter>;
 };
 
 export const ParentFeedbackController = (
     retriever: RetrieveParent,
-    fault_notifier: NotifyFault,
+    event_dispatcher: DispatchEvents,
     parent_identifier: ParentArtifactIdentifier | null
 ): ParentFeedbackControllerType => ({
     displayParentFeedback: (): Promise<ParentFeedbackPresenter> => {
@@ -38,7 +39,7 @@ export const ParentFeedbackController = (
         return retriever.getParent(parent_identifier).match(
             (artifact) => ParentFeedbackPresenter.fromArtifact(artifact),
             (fault) => {
-                fault_notifier.onFault(fault);
+                event_dispatcher.dispatch(WillNotifyFault(fault));
                 return ParentFeedbackPresenter.buildEmpty();
             }
         );

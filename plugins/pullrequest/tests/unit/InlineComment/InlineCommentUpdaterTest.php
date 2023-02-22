@@ -28,7 +28,7 @@ use Tuleap\PullRequest\UniDiffLine;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class WhenSourceChangesTest extends \Tuleap\Test\PHPUnit\TestCase
+class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var InlineCommentUpdater

@@ -210,6 +210,17 @@ class Dao extends DataAccessObject
         $this->getDB()->run($sql, PullRequest::STATUS_MERGED, $pull_request_id);
     }
 
+    public function reopen(int $pull_request_id): void
+    {
+        $this->getDB()->update(
+            'plugin_pullrequest_review',
+            [
+                "status" => PullRequest::STATUS_REVIEW,
+            ],
+            ["id" => $pull_request_id],
+        );
+    }
+
     public function updateTitleAndDescription($pull_request_id, $new_title, $new_description)
     {
         $sql = 'UPDATE plugin_pullrequest_review

@@ -118,9 +118,13 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
-use Tuleap\Tracker\Artifact\Link\ArtifactLinkFilter;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
@@ -136,6 +140,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
@@ -1713,14 +1718,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     }
 
     /**
-     * User want to link an artifact to the current one
-     *
      * @deprecated use ArtifactLinker::linkArtifact() instead
-     * @param int    $linked_artifact_id The id of the artifact to link
-     * @param PFUser $current_user       The user who made the link
      */
     public function linkArtifact(
-        $linked_artifact_id,
+        int $linked_artifact_id,
         PFUser $current_user,
         string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
     ): bool {
@@ -1728,36 +1729,36 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
-            TrackerFactory::instance(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactLinkFilter()
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance()),
         );
-        return $artifact_linker->linkArtifact($this, $linked_artifact_id, $current_user, $artifact_link_type);
+
+        $links         = [ForwardLinkProxy::buildFromData($linked_artifact_id, $artifact_link_type)];
+        $forward_links = new CollectionOfForwardLinks($links);
+
+        return $artifact_linker->linkArtifact($this, $forward_links, $current_user);
     }
 
     /**
-     * User want to link an artifact to the current one
-     *
      * @deprecated use ArtifactLinker::linkArtifact() instead
-     * @param array  $linked_artifact_ids The ids of the artifacts to link
-     * @param PFUser $current_user        The user who made the link
-     *
-     * @return bool true if success false otherwise
      */
-    public function linkArtifacts($linked_artifact_ids, PFUser $current_user)
+    public function linkArtifacts(array $linked_artifact_ids, PFUser $current_user): bool
     {
         $validator = $this->getFieldValidator();
 
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
-            TrackerFactory::instance(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactLinkFilter()
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance()),
         );
 
-        $linked_artifact_ids = implode(',', $linked_artifact_ids);
+        $links = [];
+        foreach ($linked_artifact_ids as $linked_artifact_id) {
+            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
+        }
+        $forward_links = new CollectionOfForwardLinks($links);
 
-        return $artifact_linker->linkArtifact($this, $linked_artifact_ids, $current_user);
+        return $artifact_linker->linkArtifact($this, $forward_links, $current_user);
     }
 
     /**
@@ -1883,7 +1884,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class . " #$this->id";
     }
@@ -2169,6 +2170,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
     }
@@ -2300,7 +2302,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
                 $usage_dao
             ),
-            $usage_dao
+            $usage_dao,
+            $this->getEventManager(),
         );
     }
 

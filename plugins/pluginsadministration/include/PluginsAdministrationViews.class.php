@@ -24,6 +24,8 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
@@ -85,6 +87,14 @@ class PluginsAdministrationViews extends Views
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'This project cannot be restricted');
                     $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
                 }
+
+                $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
+                    new IncludeViteAssets(
+                        __DIR__ . '/../../../src/scripts/manage-project-restrictions-resources/frontend-assets',
+                        '/assets/core/manage-project-restrictions-resources'
+                    ),
+                    'src/index.ts'
+                ));
 
                 $presenter = $this->getPluginResourceRestrictorPresenter($plugin, $plugin_resource_restrictor);
 

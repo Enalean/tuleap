@@ -375,6 +375,11 @@ msgstr ""
 msgid "Manager"
 msgstr ""
 
+msgid ""
+"Managers are also Writers. Redundant permissions are automatically de-"
+"duplicated."
+msgstr ""
+
 msgid "Maximum archive size allowed: %{ max_archive_size } MB"
 msgstr ""
 
@@ -800,7 +805,14 @@ msgstr ""
 msgid "Writer"
 msgstr ""
 
-msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgid ""
+"Writers and Managers are also Readers. Redundant permissions are "
+"automatically de-duplicated."
+msgstr ""
+
+msgid ""
+"You are about to delete \"%{ title }\" permanently. Please confirm your "
+"action."
 msgstr ""
 
 msgid ""

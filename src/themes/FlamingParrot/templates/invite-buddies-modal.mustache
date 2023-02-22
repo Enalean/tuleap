@@ -21,11 +21,7 @@
                 {{# gettext }}Invite someone to join %s | {{ instance_name }}{{/ gettext }}
             </h3>
         </div>
-        <div
-            id="invite-buddies-modal-feedback"
-            data-success-feedback-message="{{# gettext }}Invitation has been successfully sent to:{{/ gettext }}"
-            data-failure-feedback-message="{{# gettext }}Invitation could not be sent to:{{/ gettext }}"
-        ></div>
+        <div id="invite-buddies-modal-feedback"></div>
         <div class="modal-body invite-buddies-modal-body" id="invite-buddies-modal-body">
             <p>
                 {{# gettext }}
@@ -48,6 +44,27 @@
                 >
                 <span class="text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</span>
             </p>
+
+            {{# has_projects }}
+                <p>
+                    <label class="tlp-label" for="invite-buddies-projects">
+                        {{# gettext }}Specific project{{/ gettext }}
+                    </label>
+                    <select id="invite-buddies-projects" class="tlp-select" name="invite_buddies_project">
+                        <option value=""></option>
+                        {{# projects }}
+                            <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>
+                                {{ icon }} {{ name }}
+                            </option>
+                        {{/ projects }}
+                    </select>
+                    <span class="text-info">
+                        {{# gettext }}People will be member of the project when they will accept your invitation.{{/ gettext }}
+                        {{# gettext }}Leave it blank to invite people to the platform without making them project member.{{/ gettext }}
+                    </span>
+                </p>
+            {{/ has_projects }}
+
             <p>
                 <label class="tlp-label" for="invite-buddies-message">
                     {{# gettext }}Message{{/ gettext }}
@@ -56,6 +73,7 @@
                     id="invite-buddies-message"
                     name="invite_buddies_message"
                     placeholder="{{# gettext }}Optional message…{{/ gettext }}"
+                    rows="5"
                 ></textarea>
             </p>
         </div>

@@ -166,7 +166,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAdder()->addChangeset($this->changeset);
     }
 
-    public function dataProviderExceptions(): array
+    public static function dataProviderExceptions(): array
     {
         return [
             'with field validation error' => [new FieldValidationException([])],

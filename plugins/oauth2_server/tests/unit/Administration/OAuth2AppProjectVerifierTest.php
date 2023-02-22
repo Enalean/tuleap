@@ -68,7 +68,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($this->project_verifier->isAppPartOfTheExpectedProject(ProjectTestBuilder::aProject()->build(), 1));
     }
 
-    public function dataProviderAppNotPartOfExpectedProject(): array
+    public static function dataProviderAppNotPartOfExpectedProject(): array
     {
         return [
             'App is a site level app'     => [null],

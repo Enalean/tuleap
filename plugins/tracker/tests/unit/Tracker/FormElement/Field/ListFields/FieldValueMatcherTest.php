@@ -124,7 +124,7 @@ final class FieldValueMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(100, $matching_value);
     }
 
-    public function dataProviderMatchingValue(): array
+    public static function dataProviderMatchingValue(): array
     {
         return [
             'It retrieves matching value by label'                          => [

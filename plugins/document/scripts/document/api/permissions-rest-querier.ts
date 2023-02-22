@@ -20,16 +20,10 @@
 import { put } from "@tuleap/tlp-fetch";
 import type { Permissions } from "../type";
 
-export {
-    putEmbeddedFilePermissions,
-    putFilePermissions,
-    putLinkPermissions,
-    putWikiPermissions,
-    putEmptyDocumentPermissions,
-    putFolderPermissions,
-};
-
-async function putEmbeddedFilePermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putEmbeddedFilePermissions(
+    id: number,
+    permissions: Permissions
+): Promise<void> {
     await put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
@@ -38,7 +32,7 @@ async function putEmbeddedFilePermissions(id: number, permissions: Permissions):
     });
 }
 
-async function putFilePermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putFilePermissions(id: number, permissions: Permissions): Promise<void> {
     await put(`/api/docman_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
@@ -47,7 +41,7 @@ async function putFilePermissions(id: number, permissions: Permissions): Promise
     });
 }
 
-async function putLinkPermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putLinkPermissions(id: number, permissions: Permissions): Promise<void> {
     await put(`/api/docman_links/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +50,7 @@ async function putLinkPermissions(id: number, permissions: Permissions): Promise
     });
 }
 
-async function putWikiPermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putWikiPermissions(id: number, permissions: Permissions): Promise<void> {
     await put(`/api/docman_wikis/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
@@ -65,7 +59,10 @@ async function putWikiPermissions(id: number, permissions: Permissions): Promise
     });
 }
 
-async function putEmptyDocumentPermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putEmptyDocumentPermissions(
+    id: number,
+    permissions: Permissions
+): Promise<void> {
     await put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
@@ -74,7 +71,7 @@ async function putEmptyDocumentPermissions(id: number, permissions: Permissions)
     });
 }
 
-async function putFolderPermissions(id: number, permissions: Permissions): Promise<void> {
+export async function putFolderPermissions(id: number, permissions: Permissions): Promise<void> {
     await put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",

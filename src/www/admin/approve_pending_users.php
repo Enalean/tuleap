@@ -21,6 +21,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
+use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/proj_email.php';
@@ -102,6 +112,43 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                usleep(250000);
         }
 
+        $logger                     = \BackendLogger::getDefaultLogger();
+        $user_manager               = \UserManager::instance();
+        $project_manager            = ProjectManager::instance();
+        $invitation_instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao             = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            $invitation_instrumentation
+        );
+
+        $project_member_adder = new ProjectMemberAccordingToInvitationAdder(
+            $user_manager,
+            $project_manager,
+            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+            $invitation_instrumentation,
+            $logger,
+            new \Tuleap\InviteBuddy\InvitationEmailNotifier(new LocaleSwitcher()),
+            new ProjectHistoryDao(),
+        );
+
+        foreach ($users_array as $user_id) {
+            foreach ($invitation_dao->searchByCreatedUserId($user_id) as $invitation) {
+                if ($invitation->to_user_id) {
+                    continue;
+                }
+
+                $just_created_user = $user_manager->getUserById($user_id);
+                if (! $just_created_user) {
+                    continue;
+                }
+
+                $project_member_adder->addUserToProjectAccordingToInvitation(
+                    $just_created_user,
+                    $invitation,
+                );
+            }
+        }
+
         if (count($users_array) > 1) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -113,6 +160,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_activated_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select == 'validate') {
         $csrf_token->check();
         if ($status == 'restricted') {
@@ -121,6 +169,31 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             $newstatus = 'V';
         }
 
+        $invitation_dao           = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance())
+        );
+        $nb_asked_to_be_validated = count($users_array);
+
+        $users_array = array_reduce(
+            $users_array,
+            static function (array $to_be_validated_user_ids, int $user_id) use ($invitation_dao): array {
+                if (! $invitation_dao->hasUsedAnInvitationToRegister($user_id)) {
+                    $to_be_validated_user_ids[] = $user_id;
+                }
+
+                return $to_be_validated_user_ids;
+            },
+            []
+        );
+        if (empty($users_array)) {
+            if ($nb_asked_to_be_validated === 1) {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, _("The user doesn't need to be validated"));
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, _("All users don't need to be validated"));
+            }
+            $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
+        }
 
         // update the user status flag to active
         db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
@@ -131,8 +204,19 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
                  . " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
 
+        $confirmation_hash_email_sender = new \Tuleap\User\Account\Register\ConfirmationHashEmailSender(
+            new \TuleapRegisterMail(
+                new \MailPresenterFactory(),
+                TemplateRendererFactory::build()
+                    ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                $user_manager,
+                new LocaleSwitcher(),
+                "mail"
+            ),
+            \Tuleap\ServerHostname::HTTPSUrl(),
+        );
         while ($row_user = db_fetch_array($res_user)) {
-            if (! send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
+            if (! $confirmation_hash_email_sender->sendConfirmationHashEmail($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
@@ -152,6 +236,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_validated_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select == 'delete') {
         $csrf_token->check();
         db_query("UPDATE user SET status='D', approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
@@ -172,12 +257,20 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_deleted_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select === 'resend_email') {
         $csrf_token->check();
-        $user_manager = UserManager::instance();
+        $user_manager   = UserManager::instance();
+        $invitation_dao = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance())
+        );
         foreach ($users_array as $user_id) {
             $user = $user_manager->getUserById($user_id);
             if ($user === null) {
+                continue;
+            }
+            if ($invitation_dao->hasUsedAnInvitationToRegister((int) $user->getId())) {
                 continue;
             }
             if (
@@ -187,7 +280,23 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 continue;
             }
 
-            $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
+
+            $confirmation_hash_email_sender = new \Tuleap\User\Account\Register\ConfirmationHashEmailSender(
+                new \TuleapRegisterMail(
+                    new \MailPresenterFactory(),
+                    TemplateRendererFactory::build()
+                        ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                    $user_manager,
+                    new LocaleSwitcher(),
+                    "mail"
+                ),
+                \Tuleap\ServerHostname::HTTPSUrl(),
+            );
+            $is_mail_sent                   = $confirmation_hash_email_sender->sendConfirmationHashEmail(
+                $user->getEmail(),
+                $user->getUserName(),
+                $user->getConfirmHash()
+            );
 
             if ($is_mail_sent) {
                 $GLOBALS['Response']->addFeedback(
@@ -205,24 +314,55 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 );
             }
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     }
-}
-// No action - First time in this script
-// Show the list of pending user waiting for approval
-if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
-    $res = db_query("SELECT * FROM user WHERE status='P'");
-    $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
-    if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
-        $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
-        $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
-    }
-} elseif ($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
-    $res = db_query("SELECT * FROM user WHERE status='V' OR status='W'");
-    $msg = $Language->getText('admin_approve_pending_users', 'no_validated');
 }
 
+$users_rows = [];
+$dao        = new \Tuleap\User\Admin\PendingUsersDao();
+// No action - First time in this script
+// Show the list of pending user waiting for approval
+if ($page === ADMIN_APPROVE_PENDING_PAGE_PENDING) {
+    if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
+        $users_rows = $dao->searchPendingAndValidatedUsers();
+        $msg        = $Language->getText('admin_approve_pending_users', 'no_pending');
+    } else {
+        $users_rows = $dao->searchPendingUsers();
+        $msg        = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
+    }
+} elseif ($page === ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
+    $users_rows = $dao->searchValidatedUsers();
+    $msg        = $Language->getText('admin_approve_pending_users', 'no_validated');
+}
+
+$user_manager    = UserManager::instance();
+$project_manager = ProjectManager::instance();
+$current_user    = $user_manager->getCurrentUser();
+
+$invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
+$invited_by_builder         = new InvitedByPresenterBuilder(
+    new InvitationDao(
+        new SplitTokenVerificationStringHasher(),
+        new InvitationInstrumentation(Prometheus::instance())
+    ),
+    $user_manager,
+    $project_manager,
+);
+
+
 $users = [];
-while ($row = db_fetch_array($res)) {
+foreach ($users_rows as $row) {
+    $user = $user_manager->getUserById($row['user_id']);
+    if (! $user) {
+        continue;
+    }
+
+    $invited_by = $invite_buddy_configuration->isFeatureEnabled()
+        ? $invited_by_builder->getInvitedByPresenter($user, $request->getCurrentUser())
+        : null;
+
+    $is_email_already_validated = $invited_by && $invited_by->has_used_an_invitation_to_register;
+
     $users[] = new Tuleap\User\Admin\PendingUserPresenter(
         $row['user_id'],
         $row['user_name'],
@@ -231,7 +371,9 @@ while ($row = db_fetch_array($res)) {
         $row['add_date'],
         $row['register_purpose'],
         $row['expiry_date'],
-        $row['status']
+        $row['status'],
+        $invited_by,
+        $is_email_already_validated,
     );
 }
 

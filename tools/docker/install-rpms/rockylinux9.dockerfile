@@ -1,4 +1,8 @@
 FROM rockylinux@sha256:99376f245b2d13d273260654d3b769918aa8af29b04f771add8ea0c9bf40a66c AS tuleap-installrpms-base
+# To test RHEL9:
+#FROM registry.access.redhat.com/ubi9 AS tuleap-installrpms-base
+# To test AlmaLinux
+#FROM almalinux:9
 
 ENV container docker
 

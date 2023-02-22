@@ -119,6 +119,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $user_name;
     protected $email;
     protected $user_pw;
+
     protected $realname;
     protected $register_purpose;
     protected $status;
@@ -201,6 +202,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * @var string
      */
     private $avatar_url = '';
+    private bool $is_first_timer;
 
     /**
      * Constructor
@@ -220,7 +222,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->user_name         = isset($row['user_name'])          ? $row['user_name']          : null;
         $this->email             = isset($row['email'])              ? $row['email']              : null;
         $this->user_pw           = isset($row['password'])           ? $row['password']           : null;
-        $this->user_pw_legacy    = isset($row['user_pw'])            ? $row['user_pw']            : null;
         $this->realname          = isset($row['realname'])           ? $row['realname']           : null;
         $this->register_purpose  = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
         $this->status            = isset($row['status'])             ? $row['status']             : null;
@@ -242,6 +243,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->last_pwd_update   = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date       = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
         $this->has_custom_avatar = ($row['has_custom_avatar'] ?? 0) ? 1 : 0;
+        $this->is_first_timer    = (bool) ($row['is_first_timer'] ?? false);
 
         $this->id = $this->user_id;
 
@@ -803,11 +805,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUserPw(): ?string
     {
         return $this->user_pw;
-    }
-
-    public function getLegacyUserPw()
-    {
-        return $this->user_pw_legacy;
     }
 
     /**
@@ -1578,7 +1575,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->languageFactory = $languageFactory;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return "User #" . $this->getId();
     }
@@ -1597,5 +1594,15 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected function doesUserHaveSuperUserPermissionDelegation()
     {
         return $this->getPermissionManager()->doesUserHavePermission($this, new SiteAdministratorPermission());
+    }
+
+    public function isFirstTimer(): bool
+    {
+        return $this->is_first_timer;
+    }
+
+    public function setIsFirstTimer(bool $value): void
+    {
+        $this->is_first_timer = $value;
     }
 }

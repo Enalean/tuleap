@@ -103,8 +103,9 @@ class MemberAdditionController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
-        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
+        $project      = $this->project_retriever->getProjectFromId($variables['project_id']);
+        $current_user = $request->getCurrentUser();
+        $this->administrator_checker->checkUserIsProjectAdministrator($current_user, $project);
 
         $ugroup = $this->ugroup_manager->getUGroup($project, $variables['user-group-id']);
         if (! $ugroup) {
@@ -129,7 +130,7 @@ class MemberAdditionController implements DispatchableWithRequest
         }
 
         try {
-            $this->member_adder->addMember($user, $ugroup);
+            $this->member_adder->addMember($user, $ugroup, $current_user);
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $ex) {
             $layout->addFeedback(
                 Feedback::ERROR,

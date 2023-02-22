@@ -41,17 +41,22 @@ import {
     CLIPBOARD_OPERATION_CUT,
     CLIPBOARD_OPERATION_COPY,
 } from "../../constants";
-import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import type { Folder, Item, State } from "../../type";
 import type { ActionContext } from "vuex";
 import type { ClipboardState } from "./module";
 import emitter from "../../helpers/emitter";
+import type { ActionTree } from "vuex";
+import type { RootState } from "../../type";
+
+export interface ClipboardActions extends ActionTree<ClipboardState, RootState> {
+    readonly pasteItem: typeof pasteItem;
+}
 
 export interface PastePayload {
     destination_folder: Folder;
     current_folder: Folder;
-    global_context: ActionContext<State, State>;
 }
+
 export const pasteItem = async (
     context: ActionContext<ClipboardState, State>,
     payload: PastePayload
@@ -82,11 +87,15 @@ export const pasteItem = async (
             throw new Error("Paste item id is unknown");
         }
         emitter.emit("new-item-has-just-been-created", { id: pasted_item_id });
-        adjustItemToContentAfterItemCreationInAFolder(
-            payload.global_context,
-            payload.destination_folder,
-            payload.current_folder,
-            pasted_item_id
+
+        await context.dispatch(
+            "adjustItemToContentAfterItemCreationInAFolder",
+            {
+                parent: payload.destination_folder,
+                current_folder: payload.current_folder,
+                item_id: pasted_item_id,
+            },
+            { root: true }
         );
     } catch (exception) {
         context.commit("pastingHasFailed");

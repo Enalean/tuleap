@@ -44,20 +44,22 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '';
     }
 
-    /**
-     * @param null|Tracker_Report|int $report
-     */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
-    {
+    public function fetchChangesetValue(
+        int $artifact_id,
+        int $changeset_id,
+        mixed $value,
+        ?Tracker_Report $report = null,
+        ?int $from_aid = null,
+    ): string {
         $value = $this->getArtifactRank($artifact_id);
 
         if (! $report instanceof Tracker_Report) {
-            return $value;
+            return (string) $value;
         }
 
         $augmented_value = $this->getAugmentedFieldValue($artifact_id, $report);
         if ($augmented_value) {
-            return $augmented_value;
+            return (string) $augmented_value;
         }
 
         return '<span class="non-displayable" title="' . dgettext('tuleap-tracker', 'The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.') . '">' . dgettext('tuleap-tracker', 'N/A') . '</span>';
@@ -335,7 +337,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
 
         $artifact_id  = $artifact->getId();
-        $changeset_id = $artifact->getLastChangeset()->getId();
+        $changeset_id = (int) $artifact->getLastChangeset()->getId();
         $value        = $artifact->getLastChangeset()->getValue($this);
         $report       = Tracker_ReportFactory::instance()->getDefaultReportsByTrackerId($artifact->getTracker()->getId());
         $request      = HTTPRequest::instance();

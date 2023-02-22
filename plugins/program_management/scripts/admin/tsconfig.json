@@ -1,8 +1,7 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "../../../../tsconfig.json",
     "compilerOptions": {
-        "module": "ES2020",
-        "types": ["jest"]
+        "module": "es2020",
     },
     "include": ["src/**/*"]
 }

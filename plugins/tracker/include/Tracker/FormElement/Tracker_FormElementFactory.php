@@ -60,12 +60,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Cache formElements
      * @var array
      */
-    protected $formElements              = [];
-    protected $formElements_by_parent    = [];
-    protected $formElements_by_name      = [];
-    protected $used_formElements         = [];
-    protected $used_formElements_by_name = [];
-    protected $used                      = [];
+    protected $formElements                         = [];
+    protected $formElements_by_parent               = [];
+    protected $formElements_by_name                 = [];
+    protected $used_formElements                    = [];
+    private array $used_form_element_fields_by_name = [];
+    protected $used                                 = [];
 
     /**
      * @var array of Tracker_FormElement
@@ -182,12 +182,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     public function clearCaches()
     {
-        $this->formElements              = [];
-        $this->formElements_by_parent    = [];
-        $this->formElements_by_name      = [];
-        $this->used_formElements         = [];
-        $this->used_formElements_by_name = [];
-        $this->used                      = [];
+        $this->formElements                     = [];
+        $this->formElements_by_parent           = [];
+        $this->formElements_by_name             = [];
+        $this->used_formElements                = [];
+        $this->used_form_element_fields_by_name = [];
+        $this->used                             = [];
 
         self::clearInstance();
     }
@@ -257,15 +257,13 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
     }
 
-    /**
-     * @return Tracker_FormElement_Field|null
-     */
-    public function getUsedFormElementFieldById(int $id)
+    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
     {
         $field = $this->getUsedFormElementById($id);
         if ($field instanceof Tracker_FormElement_Field) {
             return $field;
         }
+        return null;
     }
 
     /**
@@ -322,19 +320,31 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      *
      * @param int    $tracker_id the id of the tracker
      * @param string $name       the name of the field (short name)
-     *
-     * @return null|Tracker_FormElement_Field or null if not found
      */
-    public function getUsedFieldByName($tracker_id, $name)
+    public function getUsedFieldByName($tracker_id, $name): ?Tracker_FormElement_Field
     {
-        if (! isset($this->used_formElements_by_name[$tracker_id]) || ! array_key_exists($name, $this->used_formElements_by_name[$tracker_id])) {
-            if ($tracker_id && $name && ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow())) {
-                $this->used_formElements_by_name[$tracker_id][$name] = $this->getCachedInstanceFromRow($row);
-            } else {
-                $this->used_formElements_by_name[$tracker_id][$name] = null;
+        if (! $name) {
+            return null;
+        }
+
+        if (! isset($this->used_form_element_fields_by_name[$tracker_id])) {
+            $this->used_form_element_fields_by_name[$tracker_id] = [];
+        }
+        if (array_key_exists($name, $this->used_form_element_fields_by_name[$tracker_id])) {
+            return $this->used_form_element_fields_by_name[$tracker_id][$name];
+        }
+
+        $row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow();
+        if ($row !== false) {
+            $form_element = $this->getCachedInstanceFromRow($row);
+            if ($form_element instanceof Tracker_FormElement_Field) {
+                $this->used_form_element_fields_by_name[$tracker_id][$name] = $form_element;
+                return $form_element;
             }
         }
-        return $this->used_formElements_by_name[$tracker_id][$name];
+
+        $this->used_form_element_fields_by_name[$tracker_id][$name] = null;
+        return null;
     }
 
     /**
@@ -347,7 +357,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedFieldByNameForUser($tracker_id, $field_name, PFUser $user): ?Tracker_FormElement_Field
     {
         $field = $this->getUsedFieldByName($tracker_id, $field_name);
-        if ($field && $field->userCanRead($user)) {
+        if ($field !== null && $field->userCanRead($user)) {
             return $field;
         }
         return null;
@@ -937,10 +947,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Duplicate a formElement
      * @param int $from_tracker_id
      * @param int $to_tracker_id
-     * @param array $ugroup_mapping
      * @return array the mapping between old formElements and new ones
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $ugroup_mapping)
+    public function duplicate($from_tracker_id, $to_tracker_id)
     {
         $mapping = [];
 

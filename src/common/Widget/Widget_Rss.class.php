@@ -32,8 +32,8 @@ use Laminas\Feed\Reader\Reader as FeedReader;
 */
 abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public $rss_title;
-    public $rss_url;
+    public ?string $rss_title = null;
+    public ?string $rss_url   = null;
 
     public function __construct($id, $owner_id, $owner_type)
     {
@@ -248,12 +248,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {
             throw new \RuntimeException(sprintf('RSS cache directory "%s" was not created', $cache_dir));
         }
-        $cache = Laminas\Cache\StorageFactory::factory([
-            'adapter' => [
-                'name'    => 'filesystem',
-                'options' => ['cache_dir' => $cache_dir],
-            ],
-        ]);
+        $cache = new Laminas\Cache\Storage\Adapter\Filesystem(['cache_dir' => $cache_dir]);
         FeedReader::setCache($cache);
         FeedReader::useHttpConditionalGet();
 

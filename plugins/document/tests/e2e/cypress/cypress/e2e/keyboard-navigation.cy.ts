@@ -21,23 +21,14 @@ describe("Keyboard navigation in Document", () => {
     let project_unixname: string, now: number;
 
     before(() => {
-        cy.clearSessionCookie();
         now = Date.now();
-
         project_unixname = "document-kbd-" + now;
-
-        cy.projectAdministratorLogin();
-    });
-
-    beforeEach(() => {
-        cy.preserveSessionCookies();
-    });
-
-    it("Creates a project with document service", () => {
-        cy.createNewPublicProject(project_unixname, "issues");
     });
 
     it("user can navigate and manipulate items using keyboard shortcuts", () => {
+        cy.projectAdministratorSession();
+        cy.log("Creates a project with document service");
+        cy.createNewPublicProject(project_unixname, "issues");
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=document-header-actions]").should("be.visible");
 

@@ -18,7 +18,7 @@
  */
 
 import { patch } from "@tuleap/tlp-fetch";
-import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { addFeedback, clearAllFeedbacks } from "@tuleap/fp-feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {
@@ -62,11 +62,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         const gettext_provider = await initGettext(
             language,
             "artifact-additional-action",
-            (locale) =>
-                import(
-                    /* webpackChunkName: "artifact-additional-action-po-" */ "../po/" +
-                        getPOFileFromLocale(locale)
-                )
+            (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
         );
 
         clearAllFeedbacks();

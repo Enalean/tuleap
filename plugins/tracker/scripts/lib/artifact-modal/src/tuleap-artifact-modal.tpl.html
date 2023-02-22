@@ -43,25 +43,17 @@
 </script>
 
 <script type="text/ng-template" id="field-sb.tpl.html">
-    <div
-        class="field"
-        tuleap-artifact-modal-list-picker-field="field"
-        is-disabled="modal.isDisabled(field)"
-        value-model="modal.values[field.field_id]"
-        options-value="field.filtered_values"
-    ></div>
+<tuleap-artifact-modal-select-box-field
+    controller="modal.getSelectBoxFieldController(field)"
+    ce-one-way
+></tuleap-artifact-modal-select-box-field>
 </script>
 
 <script type="text/ng-template" id="field-msb.tpl.html">
-<div class="tlp-form-element">
-    <div
-        class="field"
-        tuleap-artifact-modal-list-picker-multiple-field="field"
-        is-disabled="modal.isDisabled(field)"
-        value-model="modal.values[field.field_id]"
-        options-value="field.filtered_values"
-    ></div>
-</div>
+<tuleap-artifact-modal-select-box-field
+    controller="modal.getSelectBoxFieldController(field)"
+    ce-one-way
+></tuleap-artifact-modal-select-box-field>
 </script>
 
 <script type="text/ng-template" id="field-rb.tpl.html">
@@ -371,7 +363,8 @@
             ng-class="{'tlp-button-danger': modal.confirm_action_to_edit, 'tlp-button-primary': !modal.confirm_action_to_edit }"
             ng-value="modal.getButtonText()"
             ng-click="modal.reopenFieldsetsWithInvalidInput($event.target.form)"
-            ng-disabled="modal.isUploadingInCKEditor()"
+            ng-disabled="modal.isSubmitDisabled()"
+            title="{{ modal.submit_disabling_reason }}"
         >
     </div>
 </form>

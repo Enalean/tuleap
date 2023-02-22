@@ -50,10 +50,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const program_id = Number.parseInt(program_id_data, 10);
 
-    await displayTeamsToAggregate(gettext_provider, document);
+    displayTeamsToAggregate(gettext_provider, document);
     removeTeam(program_id);
     addTeamInProgram(program_id, document);
-    await initListPickersMilestoneSection(document, gettext_provider);
+    initListPickersMilestoneSection(document, gettext_provider);
     submitConfigurationHandler(document, gettext_provider, program_id);
     const adapter = new DocumentAdapter(document);
     initPreviewTrackerLabels(adapter, gettext_provider);

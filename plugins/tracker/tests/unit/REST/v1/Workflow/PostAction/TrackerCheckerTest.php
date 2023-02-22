@@ -30,6 +30,12 @@ class TrackerCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \EventManager&Mockery\MockInterface
+     */
+    private $event_manager;
+    private TrackerChecker $tracker_checker;
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -1,0 +1,205 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid "%{ nb } project can use the server"
+msgid_plural "%{ nb } projects can use the server"
+msgstr[0] "%{ nb } projet peut utiliser le serveur"
+msgstr[1] "%{ nb } projets peuvent utiliser le serveur"
+
+msgid ""
+"%{ nb } project will have their access removed and won't be able to use this "
+"server:"
+msgid_plural ""
+"%{ nb } projects will have their access removed and won't be able to use "
+"this server:"
+msgstr[0] ""
+"%{ nb } projet aura son accès supprimé et ne pourra plus utiliser ce "
+"serveur :"
+msgstr[1] ""
+"%{ nb } projets auront leur accès supprimé et ne pourront plus utiliser ce "
+"serveur :"
+
+msgid "%{ project } is already configured to use:"
+msgstr "%{ project } est actuellement autorisé à utiliser :"
+
+msgid "Add document server"
+msgstr "Ajouter un serveur de document"
+
+msgid "Adding a second server will restrict the existing one."
+msgstr "L'ajout d'un second serveur entraîne la restriction de celui existant."
+
+msgid "All projects can use the server"
+msgstr "Tous les projets peuvent utiliser le serveur"
+
+msgid "All unsaved document modifications will be lost."
+msgstr "Toutes les modifications en cours seront perdues."
+
+msgid "Allow all projects to use this server"
+msgstr "Autoriser tous les projets à utiliser ce serveur"
+
+msgid "Allow for all projects"
+msgstr "Autoriser pour tous les projets"
+
+msgid "Allow project"
+msgstr "Autoriser le projet"
+
+msgid "Allowing for all projects"
+msgstr "Autorisation pour tous les projets"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Change the server"
+msgstr "Changer de serveur"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Current secret not displayed"
+msgstr "Le secret actuel n'est pas affiché"
+
+msgid "Data may be lost"
+msgstr "Perte de données possible"
+
+msgid "Define which projects will be able to use the server:"
+msgstr "Définissez quels projets seront autorisés à utiliser le serveur :"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete document server"
+msgstr "Supprimer le serveur de document"
+
+msgid ""
+"Deleting a document server will induce loosing of modifications for users "
+"that are currently using it."
+msgstr ""
+"Supprimer un serveur de document provoquera la perte des modifications pour "
+"les utilisateurs en train de l'utiliser."
+
+msgid "Disallow for all projects"
+msgstr "Exclure tous les projets"
+
+msgid "Document server URL"
+msgstr "URL du serveur de document"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit document server settings"
+msgstr "Éditer les paramètres du serveur de document"
+
+msgid "However all unsaved document modifications will be lost."
+msgstr "Cependant toutes les modifications en cours seront perdues."
+
+msgid "Id"
+msgstr "Id"
+
+msgid "JWT secret"
+msgstr "Secret JWT"
+
+msgid "No project can use this server."
+msgstr "Aucun projet ne peut utiliser ce serveur."
+
+msgid "No project matchs your query."
+msgstr "Aucun projet ne correspond à votre recherche."
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE document servers"
+msgstr "Serveurs de document ONLYOFFICE"
+
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Project name or id"
+msgstr "Nom du projet ou id"
+
+msgid "Projects restriction"
+msgstr "Restriction de projets"
+
+msgid "Remove access"
+msgstr "Supprimer l'accès"
+
+msgid "Restrict"
+msgstr "Restreindre"
+
+msgid "Revoke access to selected"
+msgstr "Supprimer l'accès à la sélection"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Secret is missing"
+msgstr "Le secret est manquant"
+
+msgid ""
+"The list of projects that were previously whitelisted will be permanently "
+"lost."
+msgstr ""
+"La liste des projets qui étaient explicitement autorisés sera définitivement "
+"perdue."
+
+msgid "There isn't any document servers configured"
+msgstr "Aucun serveurs n'est actuellement configuré"
+
+msgid ""
+"This will induce loosing of modifications for users that are currently using "
+"it."
+msgstr ""
+"Ceci provoquera la perte des modifications pour les utilisateurs en train de "
+"l'utiliser."
+
+msgid "Unable to find project information"
+msgstr "Impossible de trouver les informations du projet"
+
+msgid ""
+"Users won't have access anymore and will lose unsaved modifications until "
+"their projects are explicitelly allowed."
+msgstr ""
+"Les utilisateurs n'y auront plus accès et perdront leur modifications en "
+"cours à moins que leur projets soient explicitement autorisés."
+
+msgid ""
+"You are about to allow access to the server for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point d'autoriser l'accès au serveur pour tous les projets "
+"de la plateforme."
+
+msgid ""
+"You are about to disallow access to the server for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point d'exclure l'accès au serveur pour tous les projets de "
+"la plateforme."
+
+msgid ""
+"You can allow all the projects when only one document server is configured"
+msgstr ""
+"Vous ne pouvez autorisez tous les projets que lorsqu'il n'y a qu'un serveur "
+"de document configuré"
+
+msgid "You can change this project to use:"
+msgstr "Vous pouvez changer ce projet pour qu'il utilise :"
+
+msgid "You're about to delete the following document server:"
+msgstr "Vous êtes sur le point de supprimer le serveur de document :"

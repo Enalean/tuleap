@@ -24,92 +24,96 @@ namespace Tuleap\InviteBuddy;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Project\Admin\ProjectMembers\EnsureUserCanManageProjectMembers;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\AlreadyProjectMemberException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\NoEmailForUserException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
+use Tuleap\User\RetrieveUserByEmail;
 
 class InvitationSender
 {
-    public const  STATUS_SENT  = 'sent';
-    private const STATUS_ERROR = 'error';
-
-    /**
-     * @var InvitationSenderGateKeeper
-     */
-    private $gate_keeper;
-    /**
-     * @var InvitationEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var InvitationDao
-     */
-    private $dao;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var InvitationInstrumentation
-     */
-    private $instrumentation;
-
     public function __construct(
-        InvitationSenderGateKeeper $gate_keeper,
-        InvitationEmailNotifier $email_notifier,
-        \UserManager $user_manager,
-        InvitationDao $dao,
-        LoggerInterface $logger,
-        InvitationInstrumentation $instrumentation,
+        private InvitationSenderGateKeeper $gate_keeper,
+        private RetrieveUserByEmail $user_manager,
+        private LoggerInterface $logger,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
+        private InvitationToOneRecipientSender $one_recipient_sender,
+        private ProjectMemberAdder $project_member_adder,
     ) {
-        $this->gate_keeper     = $gate_keeper;
-        $this->email_notifier  = $email_notifier;
-        $this->user_manager    = $user_manager;
-        $this->dao             = $dao;
-        $this->logger          = $logger;
-        $this->instrumentation = $instrumentation;
     }
 
     /**
      * @param string[] $emails
      *
-     * @return string[] emails in failure
-     *
      * @throws InvitationSenderGateKeeperException
      * @throws UnableToSendInvitationsException
+     * @throws UserIsNotAllowedToManageProjectMembersException
      */
-    public function send(PFUser $current_user, array $emails, ?string $custom_message): array
-    {
+    public function send(
+        PFUser $from_user,
+        array $emails,
+        ?\Project $project,
+        ?string $custom_message,
+        ?PFUser $resent_from_user,
+    ): SentInvitationResult {
+        $to_project_id = $project ? (int) $project->getID() : null;
+        $this->checkUserCanInviteIntoProject($project, $from_user);
+
         $emails = array_filter($emails);
-        $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
+        $this->gate_keeper->checkNotificationsCanBeSent($from_user, $emails);
 
         $now = (new \DateTimeImmutable())->getTimestamp();
 
-        $failures = [];
+        $failures                   = [];
+        $already_project_members    = [];
+        $known_users_added          = [];
+        $known_users_not_alive      = [];
+        $known_users_are_restricted = [];
         foreach ($emails as $email) {
-            $recipient = new InvitationRecipient(
-                $this->user_manager->getUserByEmail($email),
-                $email,
-            );
-
-            $status = self::STATUS_SENT;
-            if ($this->email_notifier->send($current_user, $recipient, $custom_message)) {
-                $this->instrumentation->increment();
-            } else {
-                $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
-                $status     = self::STATUS_ERROR;
-                $failures[] = $email;
+            $user = $this->user_manager->getUserByEmail($email);
+            if ($project && $user && $user->isMember((int) $project->getID())) {
+                $already_project_members[] = $user;
+                continue;
             }
 
-            $this->dao->save(
-                $now,
-                (int) $current_user->getId(),
-                $email,
-                $recipient->getUserId(),
-                $custom_message,
-                $status
-            );
+            if ($project && $user) {
+                try {
+                    $this->project_member_adder->addProjectMember($user, $project, $from_user);
+                    $known_users_added[] = $user;
+                } catch (UserIsNotActiveOrRestrictedException) {
+                    $known_users_not_alive[] = $user;
+                } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted) {
+                    $known_users_are_restricted[] = $user;
+                } catch (AlreadyProjectMemberException) {
+                    $already_project_members[] = $user;
+                } catch (NoEmailForUserException) {
+                    // We have retrieved a user thanks to the email and they don't have an email O_o
+                    // We can ignore, we could not send the email anyway
+                }
+                continue;
+            }
+
+            $this->one_recipient_sender
+                ->sendToRecipient(
+                    $from_user,
+                    new InvitationRecipient($user, $email),
+                    $project,
+                    $custom_message,
+                    $resent_from_user,
+                )->orElse(
+                    function (Fault $fault) use ($email, &$failures): Err {
+                        Fault::writeToLogger($fault, $this->logger);
+                        $failures[] = $email;
+
+                        return Result::err($fault);
+                    },
+                );
         }
 
         if (count($failures) === count($emails)) {
@@ -122,6 +126,24 @@ class InvitationSender
             );
         }
 
-        return $failures;
+        return new SentInvitationResult(
+            $failures,
+            $already_project_members,
+            $known_users_added,
+            $known_users_not_alive,
+            $known_users_are_restricted,
+        );
+    }
+
+    /**
+     * @throws UserIsNotAllowedToManageProjectMembersException
+     */
+    private function checkUserCanInviteIntoProject(?\Project $project, PFUser $from_user): void
+    {
+        if (! $project) {
+            return;
+        }
+
+        $this->members_manager_checker->checkUserCanManageProjectMembers($from_user, $project);
     }
 }

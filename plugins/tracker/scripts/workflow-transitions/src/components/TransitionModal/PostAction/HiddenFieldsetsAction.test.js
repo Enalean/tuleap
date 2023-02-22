@@ -23,6 +23,7 @@ import HiddenFieldsetsAction from "./HiddenFieldsetsAction.vue";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import * as list_picker from "@tuleap/list-picker";
 
 describe("HiddenFieldsetsAction", () => {
     let store;
@@ -37,6 +38,8 @@ describe("HiddenFieldsetsAction", () => {
     let wrapper;
 
     beforeEach(() => {
+        jest.spyOn(list_picker, "createListPicker").mockImplementation();
+
         const current_tracker = {
             fields: [fieldset_01, fieldset_02, float_field, status_field],
         };
@@ -62,7 +65,6 @@ describe("HiddenFieldsetsAction", () => {
         store = createStoreMock(store_options);
 
         wrapper = mount(HiddenFieldsetsAction, {
-            stubs: ["multi-select"],
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
             localVue,

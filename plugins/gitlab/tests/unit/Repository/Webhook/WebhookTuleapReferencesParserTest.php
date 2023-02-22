@@ -139,7 +139,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
-        self::assertCount(1, $references, "${char}TULEAP-123 should be parsed");
+        self::assertCount(1, $references, "{$char}TULEAP-123 should be parsed");
         self::assertSame(123, $references[0]->getId());
         self::assertNull($references[0]->getClosingKeyword());
     }
@@ -160,7 +160,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
-        self::assertEmpty($references, "${char}TULEAP-123 should not be parsed");
+        self::assertEmpty($references, "{$char}TULEAP-123 should not be parsed");
     }
 
     /**
@@ -181,7 +181,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         }
     }
 
-    public function resolveKeywordsProvider(): array
+    public static function resolveKeywordsProvider(): array
     {
         return [
             ['vroom resolve TULEAP-15', true],
@@ -249,7 +249,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         }
     }
 
-    public function closeKeywordsProvider(): array
+    public static function closeKeywordsProvider(): array
     {
         return [
             ['vroom close TULEAP-15', true],
@@ -317,7 +317,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         }
     }
 
-    public function fixKeywordsProvider(): array
+    public static function fixKeywordsProvider(): array
     {
         return [
             ['vroom fix TULEAP-15', true],
@@ -385,7 +385,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         }
     }
 
-    public function implementKeywordsProvider(): array
+    public static function implementKeywordsProvider(): array
     {
         return [
             ['vroom implement TULEAP-15', true],

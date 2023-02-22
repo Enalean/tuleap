@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
-class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends \Tuleap\Test\PHPUnit\TestCase
+class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

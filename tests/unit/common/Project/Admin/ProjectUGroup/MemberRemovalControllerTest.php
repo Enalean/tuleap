@@ -137,7 +137,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
-        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+        $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 
     public function testItRemovesFromUserGroupOnlyWithError()
@@ -165,7 +165,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
-        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+        $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 
     public function testItRemovesFromUserGroupAndProject()
@@ -191,7 +191,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
-        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+        $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 
     public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject(): void
@@ -221,6 +221,6 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->andThrow($exception_stop_exec_redirect);
 
         $this->expectExceptionObject($exception_stop_exec_redirect);
-        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+        $this->controller->process($this->http_request, $this->layout, ['project_id' => '101', 'user-group-id' => '202']);
     }
 }

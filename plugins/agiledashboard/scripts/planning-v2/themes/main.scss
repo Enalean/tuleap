@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "@tuleap/plugin-agiledashboard-scrum-header";
+@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+@use "@tuleap/plugin-tracker-artifact-modal";
+@use "dragular/dist/dragular";
+@use "animate.css/animate";
+@use "./backlog";
+@use "./milestones";
+@use "./backlog-item";
+@use "./backlog-items-selected-bar";
+@use "./errors";
+
+.planning {
+    display: flex;
+    flex-direction: column;
+}
+
+.planning-view {
+    display: grid;
+    grid: auto-flow / minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--tlp-large-spacing);
+}
+
+.planning-backlog,
+.planning-planned {
+    flex: 1;
+}
+
+.planning-divider {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    padding: 65px 0 0;
+}
+
+.planning-arrows {
+    opacity: 0.4;
+    fill: var(--tlp-background-color-darker-20);
+}
+
+.planning-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.planning-header-title {
+    margin: 0;
+    color: var(--tlp-typo-default-text-color);
+    font-weight: 600;
+}
+
+.planned-header-add-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
+.planning-header-spacer {
+    flex: 1 1 auto;
+    min-width: var(--tlp-medium-spacing);
+}
+
+.planning-header-view-toggler {
+    margin: 0 var(--tlp-small-spacing);
+}
+
+.planning-success.tlp-alert-success {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.source-project-info-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--tlp-medium-spacing);
+    padding: var(--tlp-small-spacing);
+    border-radius: var(--tlp-medium-radius);
+    background: var(--project-color, var(--tlp-dimmed-color));
+    color: var(--tlp-white-color);
+}

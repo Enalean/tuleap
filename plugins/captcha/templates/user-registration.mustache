@@ -1,1 +1,4 @@
 <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+{{# validation_error_message }}
+    <div class="tlp-form-element"><p class="tlp-text-danger">{{ validation_error_message }}</p></div>
+{{/validation_error_message}}

@@ -19,6 +19,16 @@
 
 $small-screen-size: 1200px;
 
+.project-admin-pending-invitation-pane {
+    margin: 0 0 var(--tlp-x-large-spacing);
+}
+
+.project-admin-pending-invitation-email {
+    display: flex;
+    align-items: center;
+    gap: var(--tlp-small-spacing);
+}
+
 #project-admin-members-controls {
     display: flex;
 }

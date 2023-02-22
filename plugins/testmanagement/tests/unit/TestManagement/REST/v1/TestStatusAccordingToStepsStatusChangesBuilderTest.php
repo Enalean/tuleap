@@ -30,6 +30,11 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const NOT_RUN_ID = 101;
+    private const PASSED_ID  = 102;
+    private const FAILED_ID  = 103;
+    private const BLOCKED_ID = 104;
+
     /**
      * @var TestStatusAccordingToStepsStatusChangesBuilder
      */
@@ -38,11 +43,6 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
      * @var Tracker_FormElement_Field_List
      */
     private $status_field;
-
-    private $notrun_id  = 101;
-    private $passed_id  = 102;
-    private $failed_id  = 103;
-    private $blocked_id = 104;
 
     public function setUp(): void
     {
@@ -54,10 +54,10 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
         $this->status_field->method('getBind')->willReturn($bind);
 
         $values = [
-            new StaticValue($this->notrun_id, 'notrun', '', 0, false),
-            new StaticValue($this->passed_id, 'passed', '', 0, false),
-            new StaticValue($this->failed_id, 'failed', '', 0, false),
-            new StaticValue($this->blocked_id, 'blocked', '', 0, false),
+            new StaticValue(self::NOT_RUN_ID, 'notrun', '', 0, false),
+            new StaticValue(self::PASSED_ID, 'passed', '', 0, false),
+            new StaticValue(self::FAILED_ID, 'failed', '', 0, false),
+            new StaticValue(self::BLOCKED_ID, 'blocked', '', 0, false),
         ];
         $bind->method('getAllValues')->willReturn($values);
     }
@@ -108,60 +108,57 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
         );
     }
 
-    public function stepsStatusProvider()
+    public static function stepsStatusProvider()
     {
-        $step_1 = $this->createMock(Step::class);
-        $step_1->method('getId')->willReturn(1001);
-        $step_2 = $this->createMock(Step::class);
-        $step_2->method('getId')->willReturn(1002);
-        $step_3 = $this->createMock(Step::class);
-        $step_3->method('getId')->willReturn(1003);
+        $step_1 = new Step(1001, 'description', 'text', null, 'text', 1);
+        $step_2 = new Step(1002, 'description', 'text', null, 'text', 2);
+        $step_3 = new Step(1003, 'description', 'text', null, 'text', 3);
 
         return [
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'passed'],
-                $this->passed_id,
+                self::PASSED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'notrun'],
-                $this->notrun_id,
+                self::NOT_RUN_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'failed'],
-                $this->failed_id,
+                self::FAILED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'passed', 1003 => 'blocked'],
-                $this->blocked_id,
+                self::BLOCKED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'notrun', 1003 => 'failed'],
-                $this->failed_id,
+                self::FAILED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'notrun', 1003 => 'blocked'],
-                $this->blocked_id,
+                self::BLOCKED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'blocked', 1003 => 'failed'],
-                $this->failed_id,
+                self::FAILED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed', 1002 => 'failed', 1003 => 'blocked'],
-                $this->failed_id,
+                self::FAILED_ID,
             ],
             [
                 [$step_1, $step_2, $step_3],
                 [1001 => 'passed'],
-                $this->notrun_id,
+                self::NOT_RUN_ID,
             ],
         ];
     }

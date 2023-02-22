@@ -22,12 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\PreReceive;
 
+use ForgeConfig;
 use GitRepository;
 use GitRepositoryFactory;
+use org\bovigo\vfs\vfsStream;
 use Tuleap\WebAssembly\WASMCaller;
+use Tuleap\ForgeConfigSandbox;
 
 final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     private \PHPUnit\Framework\MockObject\MockObject|GitRepositoryFactory $git_repository_factory;
 
     protected function setUp(): void
@@ -43,7 +48,7 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
             public bool $has_been_called = false;
             public string $output        = "testoutput";
 
-            public function call(string $json_input): string
+            public function call(string $wasm_path, string $json_input): string
             {
                 $this->has_been_called = true;
                 return $this->output;
@@ -58,23 +63,55 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $action->preReceiveAnalyse('666', ['aaaaaaa', 'aaaaaaa', 'refs/heads/master']);
     }
 
-    public function testNormalBehaviour(): void
+    public function testWasmModuleDoesNotExist(): void
     {
         $ffi = new class implements WASMCaller {
             public bool $has_been_called = false;
             public string $output        = "testoutput";
 
-            public function call(string $json_input): string
+            public function call(string $wasm_path, string $json_input): string
             {
                 $this->has_been_called = true;
                 return $this->output;
             }
         };
 
-        $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
-
+        $action         = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
         $git_repository = $this->createMock(GitRepository::class);
         $this->git_repository_factory->method('getRepositoryById')->with(42)->willReturn($git_repository);
+        $git_repository->method('getId')->willReturn(42);
+
+        $this->expectException(PreReceiveWasmNotFoundException::class);
+        $output = $action->preReceiveAnalyse('42', ["0000000000000000000000000000000000000000", "193e60ca836ae22a0545d55c5e06cfc48dccd23d", 'refs/heads/master']);
+    }
+
+    public function testNormalBehaviour(): void
+    {
+        $ffi = new class implements WASMCaller {
+            public bool $has_been_called = false;
+            public string $output        = "testoutput";
+
+            public function call(string $wasm_path, string $json_input): string
+            {
+                $this->has_been_called = true;
+                return $this->output;
+            }
+        };
+
+        $action         = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method('getId')->willReturn(42);
+        $this->git_repository_factory->method('getRepositoryById')->with(42)->willReturn($git_repository);
+
+        $structure = [
+            'untrusted-code' => [
+                'git' => [
+                    'pre-receive-hook' => [ '42.wasm' => 'definitely a wasm file'],
+                ],
+            ],
+        ];
+        $root      = vfsStream::setup('root', null, $structure);
+        ForgeConfig::set('sys_data_dir', $root->url());
 
         $output = $action->preReceiveAnalyse('42', ["0000000000000000000000000000000000000000", "193e60ca836ae22a0545d55c5e06cfc48dccd23d", 'refs/heads/master']);
 

@@ -29,9 +29,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 interface I18NWrapperError {
@@ -42,49 +41,48 @@ interface I18NWrapperError {
     };
 }
 
-@Component
-export default class SearchResultError extends Vue {
-    @Prop({ required: true })
-    readonly error!: Error;
+const props = defineProps<{ error: Error }>();
 
-    error_message = "";
+const error_message = ref("");
 
-    @Watch("error", { immediate: true })
-    async extractErrorMessage() {
-        if (this.isFetchWrapperError(this.error)) {
-            this.error_message = await this.getErrorMessageFromError(this.error);
-            if (this.error_message) {
+watch(
+    () => props.error,
+    async (): Promise<void> => {
+        if (isFetchWrapperError(props.error)) {
+            error_message.value = await getErrorMessageFromError(props.error);
+            if (error_message.value) {
                 return;
             }
         }
 
-        this.error_message = this.error.message;
-    }
+        error_message.value = props.error.message;
+    },
+    { immediate: true }
+);
 
-    private isFetchWrapperError(error: Error): error is FetchWrapperError {
-        return "response" in error;
-    }
+function isFetchWrapperError(error: Error): error is FetchWrapperError {
+    return "response" in error;
+}
 
-    private async getErrorMessageFromError(error: FetchWrapperError): Promise<string> {
-        try {
-            const error_body: I18NWrapperError = await error.response.json();
+async function getErrorMessageFromError(error: FetchWrapperError): Promise<string> {
+    try {
+        const error_body: I18NWrapperError = await error.response.json();
 
-            if (!error_body.error) {
-                return "";
-            }
-
-            if (error_body.error.i18n_error_message) {
-                return error_body.error.i18n_error_message;
-            }
-
-            if (error_body.error.code && error_body.error.message) {
-                return error_body.error.code + " " + error_body.error.message;
-            }
-
-            return "";
-        } catch (e) {
+        if (!error_body.error) {
             return "";
         }
+
+        if (error_body.error.i18n_error_message) {
+            return error_body.error.i18n_error_message;
+        }
+
+        if (error_body.error.code && error_body.error.message) {
+            return error_body.error.code + " " + error_body.error.message;
+        }
+
+        return "";
+    } catch (e) {
+        return "";
     }
 }
 </script>

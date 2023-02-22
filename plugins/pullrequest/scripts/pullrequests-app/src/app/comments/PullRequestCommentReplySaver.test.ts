@@ -21,6 +21,7 @@ import * as tuleap_api from "@tuleap/fetch-result";
 import { PullRequestCommentNewReplySaver } from "./PullRequestCommentReplySaver";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
+import { uri } from "@tuleap/fetch-result";
 
 describe("PullRequestCommentReplySaver", () => {
     it("Given a ReplyCommentFormPresenter and a global comment, then it should save it as a regular comment", () => {
@@ -39,7 +40,7 @@ describe("PullRequestCommentReplySaver", () => {
             form_presenter
         );
 
-        expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests/144/comments", {
+        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/144/comments`, {
             content: "Please rebase",
             parent_id: 12,
             user_id: 104,
@@ -62,7 +63,7 @@ describe("PullRequestCommentReplySaver", () => {
             form_presenter
         );
 
-        expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests/144/inline-comments", {
+        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/144/inline-comments`, {
             content: "Please rebase",
             parent_id: 12,
             user_id: 104,
@@ -88,7 +89,7 @@ describe("PullRequestCommentReplySaver", () => {
             form_presenter
         );
 
-        expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests/144/inline-comments", {
+        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/144/inline-comments`, {
             content: "Please rebase",
             parent_id: 12,
             user_id: 104,

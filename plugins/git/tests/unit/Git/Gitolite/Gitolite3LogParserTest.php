@@ -20,8 +20,6 @@
 
 namespace Tuleap\Git\Gitolite;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Psr\Log\LoggerInterface;
 use UserDao;
 use Tuleap\Git\History\Dao;
@@ -46,6 +44,18 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
     private $file_logs_dao;
     private $user_manager;
     private $factory;
+    /**
+     * @var \UserDao&\Mockery\MockInterface
+     */
+    private $user_dao;
+    /**
+     * @var \GitRepository&\Mockery\MockInterface
+     */
+    private $repository;
+    /**
+     * @var \Mockery\MockInterface&\PFUser
+     */
+    private $user;
 
     protected function setUp(): void
     {

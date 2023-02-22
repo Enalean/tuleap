@@ -87,7 +87,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
         };
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
-            $variables['id'],
+            $variables['project_id'],
             _('Project background'),
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback

@@ -58,7 +58,7 @@ setup_database() {
         --tuleap-fqdn="localhost" \
         --site-admin-password="welcome0"
 
-    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
     echo '$sys_use_unsecure_ssl_certificate = true;' >> /etc/tuleap/conf/local.inc
 
@@ -78,6 +78,7 @@ load_project() {
 }
 
 seed_data() {
+    sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap config-set feature_flag_enable_deprecated_soap_api 1
     sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap plugin:install docman
     load_project /usr/share/tuleap/tests/soap/_fixtures/01-project
 
@@ -91,9 +92,9 @@ seed_data() {
 setup_tuleap
 setup_database
 case "$PHP_FPM" in
-    '/opt/remi/php80/root/usr/sbin/php-fpm')
-    echo "Deploy PHP FPM 80"
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php80
+    '/opt/remi/php81/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 81"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php81
     ;;
 esac
 "$PHP_FPM" --daemonize

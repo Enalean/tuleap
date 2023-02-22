@@ -26,6 +26,7 @@ class TimelineGlobalEvent implements TimelineEvent
     public const REBASE  = 2;
     public const MERGE   = 3;
     public const ABANDON = 4;
+    public const REOPEN  = 5;
 
     private function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private int $type)
     {

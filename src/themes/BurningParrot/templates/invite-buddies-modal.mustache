@@ -19,12 +19,7 @@
                     <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
                 </button>
             </div>
-            <div
-                class="tlp-modal-feedback"
-                id="invite-buddies-modal-feedback"
-                data-success-feedback-message="{{# gettext }}Invitation has been successfully sent to:{{/ gettext }}"
-                data-failure-feedback-message="{{# gettext }}Invitation could not be sent to:{{/ gettext }}"
-            ></div>
+            <div class="tlp-modal-feedback" id="invite-buddies-modal-feedback"></div>
             <div class="tlp-modal-body invite-buddies-modal-body" id="invite-buddies-modal-body">
                 <p>
                     {{# gettext }}
@@ -42,12 +37,33 @@
                         multiple
                         class="tlp-input"
                         id="invite-buddies-email"
+                        data-test="invite-buddies-email"
                         name="invite_buddies_email"
                         placeholder="peter@example.com, wendy@example.com, …"
                         required
                     >
                     <p class="tlp-text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</p>
                 </div>
+
+                {{# has_projects }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="invite-buddies-projects">
+                            {{# gettext }}Specific project{{/ gettext }}
+                        </label>
+                        <select id="invite-buddies-projects" class="tlp-select" name="invite_buddies_project">
+                            <option value=""></option>
+                            {{# projects }}
+                                <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>
+                                    {{ icon }} {{ name }}
+                                </option>
+                            {{/ projects }}
+                        </select>
+                        <p class="tlp-text-info">
+                            {{# gettext }}People will be member of the project when they will accept your invitation.{{/ gettext }}
+                            {{# gettext }}Leave it blank to invite people to the platform without making them project member.{{/ gettext }}
+                        </p>
+                    </div>
+                {{/ has_projects }}
 
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="invite-buddies-message">
@@ -58,17 +74,18 @@
                         id="invite-buddies-message"
                         name="invite_buddies_message"
                         placeholder="{{# gettext }}Optional message…{{/ gettext }}"
+                        rows="5"
                     ></textarea>
                 </div>
             </div>
             <div class="tlp-modal-footer" id="invite-buddies-modal-footer">
-                <button type="reset" class="tlp-button-primary tlp-modal-action invite-buddies-modal-close" data-dismiss="modal">
+                <button type="reset" class="tlp-button-primary tlp-modal-action invite-buddies-modal-close" data-test="invite-buddies-close" data-dismiss="modal">
                     {{# gettext }}Close{{/ gettext }}
                 </button>
                 <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                     {{# gettext }}Cancel{{/ gettext }}
                 </button>
-                <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="invite-buddies-submit">
                     <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                     {{# gettext }}Send invitation{{/ gettext }}
                 </button>

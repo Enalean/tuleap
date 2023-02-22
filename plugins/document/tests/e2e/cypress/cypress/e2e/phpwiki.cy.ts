@@ -23,20 +23,17 @@ describe("Document PhpWiki integration", () => {
     let project_unixname: string, public_name: string, now: number;
 
     before(() => {
-        cy.clearSessionCookie();
         now = Date.now();
-
         project_unixname = "doc-phpwiki-" + now;
         public_name = "Doc PhpWiki " + now;
-        cy.projectAdministratorLogin();
     });
 
     beforeEach(() => {
-        cy.preserveSessionCookies();
         disableSpecificErrorThrownByCkeditor();
     });
 
     it("Creates a project with document service", () => {
+        cy.projectAdministratorSession();
         cy.visit("/project/new");
         cy.get("[data-test=project-registration-advanced-templates-tab]").click();
         cy.get(
@@ -56,11 +53,13 @@ describe("Document PhpWiki integration", () => {
     });
 
     it("Creates wiki service pages", () => {
+        cy.projectAdministratorSession();
         cy.visitProjectService(project_unixname, "Wiki");
         cy.get("[data-test=create-wiki]").click();
     });
 
     it("Multiple document can references the same wiki page", function () {
+        cy.projectAdministratorSession();
         cy.visitProjectService(project_unixname, "Documents");
 
         const now = Date.now();
@@ -78,12 +77,18 @@ describe("Document PhpWiki integration", () => {
     });
 
     it("Phpwiki permissions", function () {
-        cy.visitProjectService(project_unixname, "Documents");
+        cy.projectAdministratorSession();
 
         const now = Date.now();
 
+        cy.log("Create a wiki page that is not linked to document service");
+        cy.visitProjectService(project_unixname, "Wiki");
+        cy.get("[data-test=wiki-browse-pages]").click();
+        cy.get("[data-test=new-wiki-page]").type(`Wiki outside Document ${now}{enter}`);
+
         cy.log("wiki document have their permissions in document service");
 
+        cy.visitProjectService(project_unixname, "Documents");
         createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`);
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
@@ -107,7 +112,7 @@ describe("Document PhpWiki integration", () => {
             .contains("Permissions controlled by documents manager");
 
         cy.log("Wiki permissions");
-        cy.get("[data-test=table-test]").last().contains("[Define Permissions]");
+        cy.get("[data-test=table-test]").eq(1).contains("[Define Permissions]");
 
         cy.log("Document events");
         cy.visitProjectService(project_unixname, "Documents");
@@ -134,8 +139,7 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
 
         cy.url().then((url) => {
-            cy.userLogout();
-            cy.projectMemberLogin();
+            cy.projectMemberSession();
 
             cy.visit(url);
             cy.get("[data-test=document-user-can-not-read-document]").contains(
@@ -143,8 +147,7 @@ describe("Document PhpWiki integration", () => {
             );
         });
 
-        cy.userLogout();
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
 
         cy.log("Delete wiki page");
         cy.visitProjectService(project_unixname, "Documents");

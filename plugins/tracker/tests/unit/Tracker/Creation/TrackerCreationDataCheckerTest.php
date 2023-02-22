@@ -391,7 +391,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         assertEquals($expected, TrackerCreationDataChecker::getShortNameWithValidFormat($wished));
     }
 
-    public function getShortNamesAndCorrespondingConversions(): array
+    public static function getShortNamesAndCorrespondingConversions(): array
     {
         return [
             ['bug', 'bug'],

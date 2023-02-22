@@ -20,52 +20,37 @@
 import { patch, post } from "@tuleap/tlp-fetch";
 import type { Item } from "../type";
 
-export {
-    moveFile,
-    moveFolder,
-    moveEmpty,
-    moveWiki,
-    moveEmbedded,
-    moveLink,
-    copyFile,
-    copyFolder,
-    copyEmpty,
-    copyWiki,
-    copyEmbedded,
-    copyLink,
-};
-
-function moveFile(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveFile(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType("/api/docman_files/" + encodeURIComponent(moved_item_id), parent_id);
 }
 
-function moveEmpty(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveEmpty(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType(
         "/api/docman_empty_documents/" + encodeURIComponent(moved_item_id),
         parent_id
     );
 }
 
-function moveEmbedded(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveEmbedded(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType(
         "/api/docman_embedded_files/" + encodeURIComponent(moved_item_id),
         parent_id
     );
 }
 
-function moveWiki(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveWiki(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType("/api/docman_wikis/" + encodeURIComponent(moved_item_id), parent_id);
 }
 
-function moveLink(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveLink(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType("/api/docman_links/" + encodeURIComponent(moved_item_id), parent_id);
 }
 
-function moveFolder(moved_item_id: number, parent_id: number): Promise<void> {
+export function moveFolder(moved_item_id: number, parent_id: number): Promise<void> {
     return moveDocumentType("/api/docman_folders/" + encodeURIComponent(moved_item_id), parent_id);
 }
 
-async function moveDocumentType(url: string, destination_folder_id: number): Promise<void> {
+export async function moveDocumentType(url: string, destination_folder_id: number): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -79,7 +64,7 @@ async function moveDocumentType(url: string, destination_folder_id: number): Pro
     await patch(url, { headers, body });
 }
 
-async function copyDocumentType(url: string, copied_item_id: number): Promise<Item> {
+export async function copyDocumentType(url: string, copied_item_id: number): Promise<Item> {
     const headers = {
         "content-type": "application/json",
     };
@@ -95,42 +80,42 @@ async function copyDocumentType(url: string, copied_item_id: number): Promise<It
     return response.json();
 }
 
-function copyFile(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyFile(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         copied_item_id
     );
 }
 
-function copyEmpty(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyEmpty(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
         copied_item_id
     );
 }
 
-function copyEmbedded(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyEmbedded(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
         copied_item_id
     );
 }
 
-function copyWiki(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyWiki(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
         copied_item_id
     );
 }
 
-function copyLink(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyLink(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
         copied_item_id
     );
 }
 
-function copyFolder(copied_item_id: number, parent_id: number): Promise<Item> {
+export function copyFolder(copied_item_id: number, parent_id: number): Promise<Item> {
     return copyDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         copied_item_id

@@ -90,7 +90,7 @@ class MemberAdder
      * @throws UGroup_Invalid_Exception
      * @throws UserIsAnonymousException
      */
-    public function addMember(PFUser $user, ProjectUGroup $ugroup): void
+    public function addMember(PFUser $user, ProjectUGroup $ugroup, PFUser $project_admin): void
     {
         $this->membership_update_verifier->assertUGroupAndUserValidity($user, $ugroup);
         $project = $ugroup->getProject();
@@ -107,17 +107,17 @@ class MemberAdder
         }
 
         if (! $ugroup->isStatic()) {
-            $this->dynamic_member_updater->addUser($project, $ugroup, $user);
+            $this->dynamic_member_updater->addUser($project, $ugroup, $user, $project_admin);
             return;
         }
 
-        $this->addToStaticUGroup($user, $ugroup, $project);
+        $this->addToStaticUGroup($user, $ugroup, $project, $project_admin);
     }
 
     /**
      * @throws UGroup_Invalid_Exception
      */
-    private function addToStaticUGroup(PFUser $user, ProjectUGroup $ugroup, Project $project): void
+    private function addToStaticUGroup(PFUser $user, ProjectUGroup $ugroup, Project $project, PFUser $project_admin): void
     {
         $project_id = $project->getID();
         $ugroup_id  = $ugroup->getId();
@@ -130,7 +130,7 @@ class MemberAdder
             $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
             && ! $user->isMember($project_id)
         ) {
-            $this->project_member_adder->addProjectMember($user, $project);
+            $this->project_member_adder->addProjectMemberWithFeedback($user, $project, $project_admin);
         }
     }
 }

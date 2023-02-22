@@ -25,6 +25,7 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 use BaseLanguage;
 use Feedback;
 use Tuleap\Mail\MailFactory;
+use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 
 class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMemberAdder
@@ -58,23 +59,39 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         );
     }
 
-    public function addProjectMember(\PFUser $user, \Project $project): void
+    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
-        if (! $user->isActive() && ! $user->isRestricted()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
-            return;
-        }
         try {
-            $this->project_member_adder->addProjectMember($user, $project);
-            $this->sendNotification($user, $project);
+            $this->addProjectMember($user, $project, $project_admin);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
+        } catch (UserIsNotActiveOrRestrictedException) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (AlreadyProjectMemberException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (NoEmailForUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('No email for user account'));
+        } catch (UserIsNotAllowedToManageProjectMembersException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Must be project admin to add a project member'));
         }
+    }
+
+    /**
+     * @throws UserIsNotActiveOrRestrictedException
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
+     * @throws AlreadyProjectMemberException
+     * @throws NoEmailForUserException
+     * @throws UserIsNotAllowedToManageProjectMembersException
+     */
+    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
+    {
+        if (! $user->isActive() && ! $user->isRestricted()) {
+            throw new UserIsNotActiveOrRestrictedException();
+        }
+
+        $this->project_member_adder->addProjectMember($user, $project, $project_admin);
+        $this->sendNotification($user, $project);
     }
 
     private function sendNotification(\PFUser $user, \Project $project): void

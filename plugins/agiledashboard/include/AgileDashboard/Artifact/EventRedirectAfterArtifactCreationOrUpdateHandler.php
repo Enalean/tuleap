@@ -130,7 +130,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
     }
 
     /**
-     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
+     * @psalm-param array{planning_id: string, pane: string, aid: string} $requested_planning
      */
     private function addRedirectionToPlanning(
         PFUser $user,
@@ -213,7 +213,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
     }
 
     /**
-     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
+     * @psalm-param array{planning_id: string, pane: string, aid: string} $requested_planning
      */
     private function addRedirectionToTopPlanning(
         Artifact $artifact,

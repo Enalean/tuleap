@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -144,6 +145,8 @@ if ($request->isPost()) {
                 $user->setUnixStatus($request->get('form_unixstatus'));
             }
 
+            $has_user_just_been_changed_to_deleted_or_suspended = false;
+
             // New status must be valid AND user account must already be validated
             // There are specific actions done in approve_pending scripts
             $accountActivationEvent = null;
@@ -187,13 +190,15 @@ if ($request->isPost()) {
                     case PFUser::STATUS_DELETED:
                         $user->setStatus($request->get('form_status'));
                         $user->setUnixStatus($user->getStatus());
-                        $accountActivationEvent = 'project_admin_delete_user';
+                        $has_user_just_been_changed_to_deleted_or_suspended = true;
+                        $accountActivationEvent                             = 'project_admin_delete_user';
                         break;
 
                     case PFUser::STATUS_SUSPENDED:
                         $user->setStatus($request->get('form_status'));
                         $user->setUnixStatus($user->getStatus());
-                        $accountActivationEvent = 'project_admin_suspend_user';
+                        $has_user_just_been_changed_to_deleted_or_suspended = true;
+                        $accountActivationEvent                             = 'project_admin_suspend_user';
                         break;
                 }
             }
@@ -238,6 +243,13 @@ if ($request->isPost()) {
             // Run the update
             if ($um->updateDb($user)) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'success_upd_u'));
+                if ($has_user_just_been_changed_to_deleted_or_suspended) {
+                    $dao = new InvitationDao(
+                        new SplitTokenVerificationStringHasher(),
+                        new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                    );
+                    $dao->removePendingInvitationsMadeByUser((int) $user->getId());
+                }
                 if ($accountActivationEvent) {
                     $em->processEvent($accountActivationEvent, ['user_id' => $user->getId()]);
                 }
@@ -340,9 +352,16 @@ $user_has_rest_read_only_administration_delegation = $forge_user_group_permissio
 );
 
 $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
-$invited_by_builder         = new InvitedByPresenterBuilder(new InvitationDao(), $um);
+$invited_by_builder         = new InvitedByPresenterBuilder(
+    new InvitationDao(
+        new SplitTokenVerificationStringHasher(),
+        new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+    ),
+    $um,
+    ProjectManager::instance(),
+);
 $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
-    ? $invited_by_builder->getInvitedByPresenter($user)
+    ? $invited_by_builder->getInvitedByPresenter($user, $request->getCurrentUser())
     : null;
 
 $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());

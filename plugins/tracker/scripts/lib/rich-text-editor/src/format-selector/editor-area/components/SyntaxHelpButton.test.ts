@@ -21,15 +21,14 @@ import { createSyntaxHelpButton } from "./SyntaxHelpButton";
 import type { GettextProvider } from "@tuleap/gettext";
 import { render } from "lit/html.js";
 import { stripLitExpressionComments } from "../../../test-helper";
+import { initGettextSync } from "@tuleap/gettext";
 
 describe(`SyntaxHelpButton`, () => {
     let mount_point: HTMLDivElement, gettext_provider: GettextProvider;
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
-        gettext_provider = {
-            gettext: (msgid): string => msgid,
-        };
+        gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
     });
 
     it(`will create a custom element with the button and the popover content`, () => {

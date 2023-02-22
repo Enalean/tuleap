@@ -18,9 +18,8 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
+import { initGettextSync } from "@tuleap/gettext";
 
 export function createGettextProviderPassthrough(): GettextProvider {
-    return {
-        gettext: (str: string): string => str,
-    };
+    return initGettextSync("tuleap-testmanagement", {}, "en_US");
 }

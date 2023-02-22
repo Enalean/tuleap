@@ -32,8 +32,7 @@ export interface ListPickerOptions {
         html: typeof HTMLTemplateStringProcessor,
         value_id: string,
         item_label: string
-    ) => Promise<TemplateResult>;
-    keep_none_value?: boolean;
+    ) => TemplateResult;
 }
 
 export type ListPickerItemMap = Map<string, ListPickerItem>;
@@ -76,7 +75,6 @@ export interface ListPickerComponent {
 
 export interface ListPickerSelectionStateSingle {
     selected_item: ListPickerItem;
-    selected_value_element: DocumentFragment;
 }
 
 export interface ListPickerSelectionStateMultiple {
@@ -88,7 +86,7 @@ export interface SelectionManager {
     readonly processSelection: (element: Element) => void;
     readonly initSelection: () => void;
     readonly handleBackspaceKey: (event: KeyboardEvent) => void;
-    readonly resetAfterDependenciesUpdate: () => void;
+    readonly resetAfterChangeInOptions: () => void;
 }
 
 export interface ScrollCoordinates {

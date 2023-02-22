@@ -60,6 +60,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|BurnupDataDAO
      */
     private $burnup_dao;
+    private \Tracker $task_tracker;
+    private \Tracker $user_story_tracker;
 
     protected function setUp(): void
     {

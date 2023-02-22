@@ -1,0 +1,11 @@
+{
+  "name": "enalean/plugin-licensemanager",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Enalean\\LicenseManager\\": "include/LicenseManager"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

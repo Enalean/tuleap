@@ -24,27 +24,29 @@ namespace Tuleap\Tracker\Artifact\Link;
 
 use Feedback;
 use PFUser;
-use RuntimeException;
-use Tracker;
 use Tracker_Exception;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
+/**
+ * I'm responsible for link an artifact to another using artifact link field
+ */
 final class ArtifactLinker
 {
     public function __construct(
         private RetrieveUsedArtifactLinkFields $form_element_factory,
-        private RetrieveTracker $tracker_factory,
         private CreateNewChangeset $changeset_creator,
-        private FilterArtifactLink $artifact_link_filter,
+        private RetrieveForwardLinks $forward_links_retriever,
     ) {
     }
 
@@ -53,12 +55,10 @@ final class ArtifactLinker
      */
     public function linkArtifact(
         Artifact $current_artifact,
-        int|string $linked_artifact_id,
+        CollectionOfForwardLinks $forward_links,
         PFUser $current_user,
-        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
     ): bool {
-        $tracker        = $this->getTrackerFromArtifact($current_artifact);
-        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
+        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($current_artifact->getTracker());
 
         if (count($artlink_fields) === 0) {
             $GLOBALS['Response']->addFeedback(
@@ -71,28 +71,22 @@ final class ArtifactLinker
             return false;
         }
 
-        $comment       = '';
-        $artlink_field = $artlink_fields[0];
+        $comment             = '';
+        $artifact_link_field = $artlink_fields[0];
 
-        $linked_artifact_id = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($current_artifact, $artlink_field, (string) $linked_artifact_id);
-
-        $fields_data                                        = [];
-        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
-
-        if ($tracker->isProjectAllowedToUseType()) {
-            $fields_data[$artlink_field->getId()]['types'] = $this->getTypeForLink(
-                $linked_artifact_id,
-                $artifact_link_type
-            );
-        }
+        $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
+        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
+            $artifact_link_field->getId(),
+            $existing_links->differenceById($forward_links),
+        );
+        $container           = new ChangesetValuesContainer([], $new_changeset_value);
 
         try {
-            $comment_format_at_artifact_linking = CommentFormatIdentifier::buildCommonMark();
-            $new_changeset                      = NewChangeset::fromFieldsDataArray(
+            $new_changeset = NewChangeset::fromFieldsDataArray(
                 $current_artifact,
-                $fields_data,
+                $container->getFieldsData(),
                 $comment,
-                $comment_format_at_artifact_linking,
+                CommentFormatIdentifier::buildCommonMark(),
                 [],
                 $current_user,
                 (new \DateTimeImmutable())->getTimestamp(),
@@ -108,25 +102,5 @@ final class ArtifactLinker
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             return false;
         }
-    }
-
-    private function getTrackerFromArtifact(Artifact $artifact): Tracker
-    {
-        $tracker = $this->tracker_factory->getTrackerById($artifact->getTrackerId());
-        if ($tracker === null) {
-            throw new RuntimeException('Tracker does not exist');
-        }
-        return $tracker;
-    }
-
-    private function getTypeForLink(string $linked_artifact_id, string $artifact_link_type): array
-    {
-        $types                     = [];
-        $linked_artifact_ids_array = explode(',', $linked_artifact_id);
-        foreach ($linked_artifact_ids_array as $linked_artifact_id) {
-            $types[$linked_artifact_id] = $artifact_link_type;
-        }
-
-        return $types;
     }
 }

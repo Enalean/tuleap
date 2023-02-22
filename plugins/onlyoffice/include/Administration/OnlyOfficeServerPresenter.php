@@ -32,10 +32,11 @@ final class OnlyOfficeServerPresenter
 {
     public string $delete_url;
     public string $update_url;
+    public string $restrict_url;
     public int $nb_project_restrictions;
 
     /**
-     * @param array<int, RestrictedProjectPresenter> $project_restrictions
+     * @param list<RestrictedProjectPresenter> $project_restrictions
      */
     private function __construct(
         public int $id,
@@ -44,8 +45,9 @@ final class OnlyOfficeServerPresenter
         public bool $is_project_restricted,
         public array $project_restrictions,
     ) {
-        $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
-        $this->update_url = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+        $this->delete_url   = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
+        $this->update_url   = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+        $this->restrict_url = OnlyOfficeRestrictAdminSettingsController::getServerRestrictUrl($id);
 
         $this->nb_project_restrictions = count($this->project_restrictions);
     }
@@ -57,10 +59,10 @@ final class OnlyOfficeServerPresenter
             $server->url,
             $server->has_existing_secret,
             $server->is_project_restricted,
-            array_map(
+            array_values(array_map(
                 static fn(RestrictedProject $project) => RestrictedProjectPresenter::fromRestrictedProject($project),
                 $server->project_restrictions,
-            ),
+            )),
         );
     }
 }

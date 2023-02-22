@@ -26,6 +26,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
@@ -36,6 +37,12 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\HelpDropdown\VersionNumberExtractor;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -52,6 +59,9 @@ use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
+use Tuleap\Project\CachedProjectPresentersBuilder;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -224,12 +234,29 @@ class BurningParrotTheme extends BaseLayout
             )
         );
 
+        $project_presenters_builder  = new CachedProjectPresentersBuilder(new ProjectPresentersBuilder());
         $switch_to_presenter_builder = new SwitchToPresenterBuilder(
-            new ProjectPresentersBuilder(),
+            $project_presenters_builder,
             new SearchFormPresenterBuilder($this->event_manager, $this->request)
         );
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
+
+        $configuration                    = new InviteBuddyConfiguration($this->event_manager);
+        $invitation_dao                   = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance()),
+        );
+        $invite_buddies_presenter_builder = new InviteBuddiesPresenterBuilder(
+            new InvitationLimitChecker(
+                $invitation_dao,
+                $configuration
+            ),
+            $configuration,
+            $project_presenters_builder,
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
+        );
+        $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($this->current_user->user, $project);
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -260,6 +287,7 @@ class BurningParrotTheme extends BaseLayout
             $this->theme_variation,
             $this->javascript_assets,
             $in_project_without_sidebar,
+            $invite_buddies_presenter,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

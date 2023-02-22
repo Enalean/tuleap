@@ -55,6 +55,7 @@ class ProjectMembersPresenter
         string $user_locale,
         bool $can_see_ugroups,
         bool $is_synchronized_with_ugroups,
+        public ?ListOfPendingInvitationsPresenter $pending_invitations,
     ) {
         $this->project_members_list         = $project_members_list;
         $this->csrf_token                   = $csrf_token;

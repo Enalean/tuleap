@@ -1,3 +1,5 @@
+import { buildVueOverviewURL } from "../helpers/vue-overview-url-builder";
+
 export default PullRequestController;
 
 PullRequestController.$inject = ["$state", "PullRequestRestService", "SharedPropertiesService"];
@@ -8,6 +10,17 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
     Object.assign(self, {
         $state,
         $onInit: init,
+        isVueOverviewShown: () => {
+            return SharedPropertiesService.isVueOverviewShown();
+        },
+        getVueOverviewUrl: () => {
+            const pull_request = SharedPropertiesService.getPullRequest();
+            if (!pull_request) {
+                return "";
+            }
+
+            return buildVueOverviewURL(window.location, pull_request).toString();
+        },
     });
 
     function init() {

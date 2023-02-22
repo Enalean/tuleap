@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Settings } from "luxon";
-
 import {
     formatMinutes,
     formatDatetimeToISO,
@@ -41,10 +39,9 @@ describe("Time formatters", () => {
 
     describe("getISODatetime", () => {
         it("When I call this method with a string date, then it should return an ISO formatted date", () => {
-            Settings.defaultZoneName = "Europe/Paris";
             const formatted_date = formatDatetimeToISO("2018-01-01");
 
-            expect(formatted_date).toBe("2018-01-01T00:00:00+01:00");
+            expect(formatted_date).toBe("2018-01-01T00:00:00Z");
         });
     });
 

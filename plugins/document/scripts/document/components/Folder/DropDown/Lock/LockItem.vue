@@ -24,32 +24,32 @@
         type="button"
         role="menuitem"
         data-test="document-dropdown-menu-lock-item"
-        v-on:click.prevent="lockDocument"
+        v-on:click.prevent="lockDocumentItem"
         data-shortcut-lock-document
     >
         <i class="fa-solid fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Lock</translate>
     </button>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../../type";
+import { computed } from "vue";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import type { LockActions } from "../../../../store/lock/lock-actions";
 
-@Component
-export default class LockItem extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    get can_lock_document() {
-        if (this.item.lock_info !== null) {
-            return false;
-        }
+const { lockDocument } = useNamespacedActions<LockActions>("lock", ["lockDocument"]);
 
-        return this.item.user_can_write;
+const can_lock_document = computed((): boolean => {
+    if (props.item.lock_info !== null) {
+        return false;
     }
 
-    async lockDocument(): Promise<void> {
-        await this.$store.dispatch("lock/lockDocument", this.item);
-    }
+    return props.item.user_can_write;
+});
+
+async function lockDocumentItem(): Promise<void> {
+    await lockDocument(props.item);
 }
 </script>

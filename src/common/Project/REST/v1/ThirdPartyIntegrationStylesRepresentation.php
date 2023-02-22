@@ -32,7 +32,7 @@ use Tuleap\Layout\ThemeVariation;
  */
 final class ThirdPartyIntegrationStylesRepresentation
 {
-    private function __construct(public string $content)
+    private function __construct(public string $content, public string $variant_name)
     {
     }
 
@@ -49,6 +49,6 @@ final class ThirdPartyIntegrationStylesRepresentation
             throw new \RuntimeException("Could not read  TLP vars stylesheet at $path");
         }
 
-        return new self($css_file_content);
+        return new self($css_file_content, $theme_variant_color->getName());
     }
 }

@@ -69,7 +69,7 @@ class EditController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         try {
-            $project = $this->project_retriever->getValidProjectById((int) $variables['id']);
+            $project = $this->project_retriever->getValidProjectById((int) $variables['project_id']);
         } catch (\Project_NotFoundException $exception) {
             throw new NotFoundException(gettext('Project does not exist'));
         }
@@ -89,7 +89,7 @@ class EditController implements DispatchableWithRequest
                 $add_missing_service = $this->dispatcher->dispatch(new AddMissingService($project, []));
                 foreach ($add_missing_service->getAllowedServices() as $missing_service) {
                     if ($missing_service->getShortName() === $service_data->getShortName()) {
-                        $this->service_updator->addSystemService($project, $missing_service, $user);
+                        $this->service_updator->addSystemService($project, $missing_service);
                         break;
                     }
                 }

@@ -25,9 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tracker;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class ConfigConformanceAsserterTest extends \Tuleap\Test\PHPUnit\TestCase
+class ConfigConformanceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -56,6 +54,10 @@ class ConfigConformanceAsserterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $definition_tracker_id        = 666;
     private $another_project_id           = 102;
     private $another_execution_tracker_id = 666;
+    /**
+     * @var \PFUser&Mockery\MockInterface
+     */
+    private $user;
 
     public function setUp(): void
     {

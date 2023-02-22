@@ -20,8 +20,6 @@
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { applyLayout } from "./dashboard-layout";
 
-export { init as default, addLayoutDropdown };
-
 function init(): void {
     const cogs = document.querySelectorAll(
         ".dashboard-widget-actions, #dashboard-tabs-dropdown-trigger"
@@ -38,6 +36,8 @@ function init(): void {
     }
 }
 
+export { init as default };
+
 function initLayoutDropdowns(): void {
     const all_rows = document.querySelectorAll(".dashboard-widgets-row");
 
@@ -46,7 +46,7 @@ function initLayoutDropdowns(): void {
     });
 }
 
-function addLayoutDropdown(row: HTMLElement): void {
+export function addLayoutDropdown(row: HTMLElement): void {
     const template_dropdown = document.getElementById("dashboard-layout-dropdown-template");
 
     if (template_dropdown === null) {

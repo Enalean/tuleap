@@ -1,0 +1,99 @@
+<form id="admin-config-bot-add"
+    class="tlp-modal"
+    role="dialog"
+    aria-labelledby="configuration-add-bot-title"
+    action="/plugins/botmattermost_agiledashboard/?action=add_bot"
+    method="POST"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="configuration-add-bot-title">
+            {{ modal_add_title }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="group_id" value="{{ project_id }}" />
+
+        {{# has_bots }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="select_bot">{{ label_bot_name }} <i class="fa fa-asterisk"></i></label>
+                <select id="select_bot"
+                    class="tlp-select"
+                    name="bot_id"
+                    style="width: 100%"
+                    required
+                >
+                    {{# has_system_bots }}
+                        <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | System bots {{/ dgettext }}">
+                            {{# system_bots }}
+                                <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                    {{ getName }}
+                                </option>
+                            {{/ system_bots }}
+                        </optgroup>
+                    {{/ has_system_bots }}
+                    {{# has_project_bots }}
+                        <optgroup label="{{# dgettext }} tuleap-botmattermost_agiledashboard | Project bots {{/ dgettext }}">
+                            {{# project_bots }}
+                                <option value="{{ getId }}" {{# getAvatarUrl }}data-image="{{ getAvatarUrl }}"{{/ getAvatarUrl }}>
+                                    {{ getName }}
+                                </option>
+                            {{/ project_bots }}
+                        </optgroup>
+                    {{/ has_project_bots }}
+                </select>
+                <p class="tlp-text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
+                <p class="tlp-text-info">{{ description_create_bot }}</p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="channels">{{ label_channels_handles }} <i class="fa fa-asterisk"></i></label>
+                <select id="channels"
+                    class="tlp-select"
+                    name="channels[]"
+                    placeholder="{{ input_channels_handles }}"
+                    style="width: 100%"
+                    required
+                    multiple
+                ></select>
+                <p class="tlp-text-info">
+                    <i class="fa fa-info-circle"></i> {{{ purified_info_channels_handles }}}
+                </p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="bot-mattermost-agiledashboard-send-time">{{ label_send_time }} <i class="fa fa-asterisk"></i></label>
+                <div class="tlp-form-element tlp-form-element-prepend">
+                    <span class="tlp-prepend"><i class="fa fa-clock-o"></i></span>
+                    <input type="text"
+                        id="bot-mattermost-agiledashboard-send-time"
+                        name="send_time"
+                        class="tlp-input"
+                        size="6"
+                        pattern="{{ time_format_regexp }}"
+                        title="{{ time_input_title }}"
+                        placeholder="00:00"
+                        required
+                    >
+                </div>
+                <p class="tlp-text-warning">
+                    <i class="fa fa-exclamation-triangle"></i> {{ alert_time_warning }}
+                </p>
+            </div>
+        {{/ has_bots }}
+        {{^ has_bots }}
+            <p>{{ empty_bot_list }}</p>
+        {{/ has_bots }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ button_close }}</button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-plus tlp-button-icon"></i> {{ button_confirm }}
+        </button>
+    </div>
+</form>

@@ -58,6 +58,53 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     protected $link_dao;
     protected $frs_permission_creator;
+    private FRSPackageFactoryMock $package_factory;
+    /**
+     * @var \Mockery\MockInterface&FRSReleaseFactory
+     */
+    private $release_factory;
+    private FRSXMLImporterTest_FRSFileFactory $file_factory;
+    /**
+     * @var FRSPackageDao&\Mockery\MockInterface
+     */
+    private $package_dao;
+    /**
+     * @var PermissionsManager&\Mockery\MockInterface
+     */
+    private $permissions_manager;
+    /**
+     * @var FRSReleaseDao&\Mockery\MockInterface
+     */
+    private $release_dao;
+    /**
+     * @var FRSFileDao&\Mockery\MockInterface
+     */
+    private $file_dao;
+    /**
+     * @var FRSProcessorDao&\Mockery\MockInterface
+     */
+    private $processor_dao;
+    /**
+     * @var FRSFileTypeDao&\Mockery\MockInterface
+     */
+    private $filetype_dao;
+    /**
+     * @var \User\XML\Import\IFindUserFromXMLReference&\Mockery\MockInterface
+     */
+    private $user_finder;
+    /**
+     * @var UserManager&\Mockery\MockInterface
+     */
+    private $user_manager;
+    /**
+     * @var UGroupDao&\Mockery\MockInterface
+     */
+    private $ugroup_dao;
+    /**
+     * @var XMLImportHelper&\Mockery\MockInterface
+     */
+    private $xml_import_helper;
+    private FRSXMLImporter $frs_importer;
 
     protected function setUp(): void
     {
@@ -72,10 +119,8 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->release_dao                      = \Mockery::spy(\FRSReleaseDao::class);
-        $this->release_factory->dao             =  $this->release_dao;
-        $this->release_factory->package_factory = $this->package_factory;
-        $this->release_factory->file_factory    = $this->file_factory;
+        $this->release_dao          = \Mockery::spy(\FRSReleaseDao::class);
+        $this->release_factory->dao =  $this->release_dao;
         FRSReleaseFactory::setInstance($this->release_factory);
 
         $this->file_dao                      = \Mockery::spy(\FRSFileDao::class);
@@ -105,7 +150,6 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->file_factory,
             $this->user_finder,
             new UGroupManager($this->ugroup_dao),
-            $this->xml_import_helper,
             $this->frs_permission_creator,
             $links_updater,
             $this->processor_dao,

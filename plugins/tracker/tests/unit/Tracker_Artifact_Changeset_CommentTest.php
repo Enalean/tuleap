@@ -226,7 +226,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \Tuleap\Test\PHPUnit\
         $this->assertFalse(isset($changeset_node->comment->private_ugroups));
     }
 
-    public function dataProviderCommentFormat(): array
+    public static function dataProviderCommentFormat(): array
     {
         return [
             '"text" format is valid'                          => ['text', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT],

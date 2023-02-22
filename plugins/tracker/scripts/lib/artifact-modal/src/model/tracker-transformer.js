@@ -67,7 +67,6 @@ function transformField(field) {
             field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
             field.values = addNoneValueInSelectboxField(field);
-            field.filtered_values = { ...field.values };
             break;
         case "msb":
             field.values = filterHiddenValues(field.values);
@@ -118,12 +117,7 @@ function displayI18NLabelIfAvailable(field_values) {
 }
 
 function addNoneValueInSelectboxField(selectbox_field) {
-    if (
-        selectbox_field.default_value &&
-        selectbox_field.default_value instanceof Array &&
-        selectbox_field.default_value.length === 0 &&
-        !selectbox_field.has_transitions
-    ) {
+    if (!selectbox_field.has_transitions) {
         selectbox_field.values.unshift({
             id: 100,
             label: getNone(),

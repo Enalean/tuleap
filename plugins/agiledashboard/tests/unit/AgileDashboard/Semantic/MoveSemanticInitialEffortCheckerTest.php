@@ -28,8 +28,6 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class MoveSemanticInitialEffortCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -38,15 +36,43 @@ class MoveSemanticInitialEffortCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveSemanticInitialEffortChecker
      */
     private $checker;
+    /**
+     * @var Tracker_FormElementFactory&Mockery\MockInterface
+     */
+    private $form_element_factory;
+    /**
+     * @var Tracker&Mockery\MockInterface
+     */
+    private $source_tracker;
+    /**
+     * @var Tracker&Mockery\MockInterface
+     */
+    private $target_tracker;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $source_initial_effort_field;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $target_initial_effort_field;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $source_initial_effort_semantic;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $target_initial_effort_semantic;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->form_element_factory   = Mockery::spy(Tracker_FormElementFactory::class);
-        $this->initial_effort_factory = Mockery::spy(AgileDashboard_Semantic_InitialEffortFactory::class);
-        $this->checker                = new MoveSemanticInitialEffortChecker(
-            $this->initial_effort_factory,
+        $this->form_element_factory = Mockery::spy(Tracker_FormElementFactory::class);
+        $initial_effort_factory     = Mockery::spy(AgileDashboard_Semantic_InitialEffortFactory::class);
+        $this->checker              = new MoveSemanticInitialEffortChecker(
+            $initial_effort_factory,
             $this->form_element_factory
         );
 
@@ -59,12 +85,12 @@ class MoveSemanticInitialEffortCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->source_initial_effort_semantic = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
         $this->target_initial_effort_semantic = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
 
-        $this->initial_effort_factory
+        $initial_effort_factory
             ->shouldReceive('getByTracker')
             ->with($this->source_tracker)
             ->andReturn($this->source_initial_effort_semantic);
 
-        $this->initial_effort_factory
+        $initial_effort_factory
             ->shouldReceive('getByTracker')
             ->with($this->target_tracker)
             ->andReturn($this->target_initial_effort_semantic);

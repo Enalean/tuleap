@@ -2,34 +2,36 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
-  '@types/dompurify': ^2.3.3
+  '@tuleap/tlp-swatch-colors': workspace:*
+  '@types/dompurify': ^2.4.0
   angular: ^1.8.2
   angular-mocks: ^1.8.2
   angular-sanitize: ^1.8.2
-  dompurify: ^2.3.6
+  dompurify: ^3.0.0
   escape-string-regexp: ^2.0.0
 
 dependencies:
-  dompurify: 2.3.6
+  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
+  dompurify: 3.0.0
   escape-string-regexp: 2.0.0
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@types/dompurify': 2.3.3
+  '@types/dompurify': 2.4.0
   angular: 1.8.2
   angular-mocks: 1.8.2
   angular-sanitize: 1.8.2
 
 packages:
 
-  /@types/dompurify/2.3.3:
-    resolution: {integrity: sha512-nnVQSgRVuZ/843oAfhA25eRSNzUFcBPk/LOiw5gm8mD9/X7CNcbRkQu/OsjCewO8+VIYfPxUnXvPEVGenw14+w==}
+  /@types/dompurify/2.4.0:
+    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
-      '@types/trusted-types': 2.0.2
+      '@types/trusted-types': 2.0.3
     dev: true
 
-  /@types/trusted-types/2.0.2:
-    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
+  /@types/trusted-types/2.0.3:
+    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
   /angular-mocks/1.8.2:
@@ -44,8 +46,8 @@ packages:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
 
-  /dompurify/2.3.6:
-    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
+  /dompurify/3.0.0:
+    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
   /escape-string-regexp/2.0.0:

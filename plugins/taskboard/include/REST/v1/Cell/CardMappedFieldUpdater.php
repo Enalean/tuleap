@@ -62,6 +62,8 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -107,7 +109,8 @@ class CardMappedFieldUpdater
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao
+                    $usage_dao,
+                    $event_dispatcher,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -138,6 +141,7 @@ class CardMappedFieldUpdater
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 
@@ -146,17 +150,21 @@ class CardMappedFieldUpdater
             new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
-            new ArtifactUpdater(new FieldsDataBuilder(
-                $form_element_factory,
-                new NewArtifactLinkChangesetValueBuilder(
-                    new ArtifactForwardLinksRetriever(
-                        new ArtifactLinksByChangesetCache(),
-                        new ChangesetValueArtifactLinkDao(),
-                        $artifact_factory
-                    )
+            new ArtifactUpdater(
+                new FieldsDataBuilder(
+                    $form_element_factory,
+                    new NewArtifactLinkChangesetValueBuilder(
+                        new ArtifactForwardLinksRetriever(
+                            new ArtifactLinksByChangesetCache(),
+                            new ChangesetValueArtifactLinkDao(),
+                            $artifact_factory
+                        )
+                    ),
+                    new NewArtifactLinkInitialChangesetValueBuilder()
                 ),
-                new NewArtifactLinkInitialChangesetValueBuilder()
-            ), $changeset_creator),
+                $changeset_creator,
+                new ArtifactRestUpdateConditionsChecker(),
+            ),
             MappedFieldRetriever::build(),
             MappedValuesRetriever::build(),
             new FirstPossibleValueInListRetriever(

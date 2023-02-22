@@ -32,8 +32,6 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -42,16 +40,50 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveChangesetXMLUpdater
      */
     private $updater;
+    /**
+     * @var Tracker_FormElementFactory&Mockery\MockInterface
+     */
+    private $form_element_factory;
+    /**
+     * @var FieldValueMatcher&Mockery\MockInterface
+     */
+    private $field_value_matcher;
+    private NoFeedbackFieldCollector $collector;
+    private SimpleXMLElement $changeset_xml;
+    /**
+     * @var Tracker&Mockery\MockInterface
+     */
+    private $source_tracker;
+    /**
+     * @var Tracker&Mockery\MockInterface
+     */
+    private $target_tracker;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $source_initial_effort_field;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $target_initial_effort_field;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $source_initial_effort_semantic;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $target_initial_effort_semantic;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->initial_effort_factory = Mockery::mock(AgileDashboard_Semantic_InitialEffortFactory::class);
-        $this->form_element_factory   = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->field_value_matcher    = Mockery::mock(FieldValueMatcher::class);
-        $this->updater                = new MoveChangesetXMLUpdater(
-            $this->initial_effort_factory,
+        $initial_effort_factory     = Mockery::mock(AgileDashboard_Semantic_InitialEffortFactory::class);
+        $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->field_value_matcher  = Mockery::mock(FieldValueMatcher::class);
+        $this->updater              = new MoveChangesetXMLUpdater(
+            $initial_effort_factory,
             $this->form_element_factory,
             $this->field_value_matcher
         );
@@ -80,8 +112,8 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->source_initial_effort_semantic = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
         $this->target_initial_effort_semantic = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
 
-        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_initial_effort_semantic);
-        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_initial_effort_semantic);
+        $initial_effort_factory->shouldReceive('getByTracker')->with($this->source_tracker)->andReturn($this->source_initial_effort_semantic);
+        $initial_effort_factory->shouldReceive('getByTracker')->with($this->target_tracker)->andReturn($this->target_initial_effort_semantic);
         $this->source_initial_effort_field->shouldReceive('getName')->andReturn('effort');
         $this->target_initial_effort_field->shouldReceive('getName')->andReturn('effort_v2');
     }

@@ -126,6 +126,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withIsFirstTimer(bool $value): self
+    {
+        $this->params['is_first_timer'] = $value;
+        return $this;
+    }
+
     public function withEmail(string $email): self
     {
         $this->params['email'] = (string) $email;
@@ -253,6 +259,6 @@ class UserTestBuilder
 
     private static function aPreBuiltUser(int $id): self
     {
-        return self::aUser()->withId($id)->withUserName('John');
+        return self::aUser()->withId($id)->withUserName('John')->withEmail('john@example.com');
     }
 }

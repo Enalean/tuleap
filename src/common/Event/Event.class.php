@@ -567,31 +567,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_LOGIN_URL = 'get_login_url';
 
     /**
-     * Allow plugin to add fields in the user register form
-     *
-     * Parameters:
-     * 'request' => HTTPRequest (IN)
-     * 'field'   => string      (OUT)
-     */
-    public const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
-
-    /**
-     * Allow plugin to deal before user registration
-     *
-     * 'request'               => HTTPRequest (IN)
-     * 'is_registration_valid' => bool (OUT)
-     */
-    public const BEFORE_USER_REGISTRATION = 'before_user_registration';
-
-    /**
-     * Allow plugin to deal after user registration
-     *
-     * 'user_id' => int (IN)
-     * 'request' => HTTPRequest (IN)
-     */
-    public const AFTER_USER_REGISTRATION = 'after_user_registration';
-
-    /**
      * Event raised to get the list of resources associated with a project
      *
      * Parameters:

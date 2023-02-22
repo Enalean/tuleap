@@ -22,7 +22,7 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ConfigNotificationAssignedTo;
-use ConfigNotificationAssignedToDao;
+use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;

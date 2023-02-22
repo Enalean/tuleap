@@ -122,7 +122,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout->shouldReceive('addFeedback')->with(Feedback::INFO, M::any())->once();
         $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $this->layout, ['id' => '120']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }
 
     public function testItDeletesAllServicesWhenItsInDefaultTemplate(): void
@@ -137,7 +137,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout->shouldReceive('addFeedback')->with(Feedback::INFO, M::any())->twice();
         $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $this->layout, ['id' => (string) Project::ADMIN_PROJECT_ID]);
+        $this->controller->process($this->request, $this->layout, ['project_id' => (string) Project::ADMIN_PROJECT_ID]);
     }
 
     public function testItDoesNotAllowToDeleteSystemServices(): void
@@ -151,6 +151,6 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout->shouldReceive('addFeedback')->with(Feedback::ERROR, M::any())->once();
         $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $this->layout, ['id' => '120']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '120']);
     }
 }

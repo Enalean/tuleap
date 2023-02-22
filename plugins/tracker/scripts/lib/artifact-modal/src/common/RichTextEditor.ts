@@ -37,7 +37,7 @@ import {
 import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
-} from "../fields/file-field/is-uploading-in-ckeditor-state";
+} from "./is-uploading-in-ckeditor-state";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -251,6 +251,7 @@ export const RichTextEditor = define<RichTextEditor>({
             disabled="${host.disabled}"
             class="tlp-textarea"
             rows="${host.rows}"
+            maxlength="65535"
             oninput="${onTextareaInput}"
         >
 ${host.contentValue}</textarea

@@ -28,6 +28,5 @@ module.exports = {
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
-        "^.+\\.vue$": "@vue/vue3-jest",
     },
 };

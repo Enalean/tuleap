@@ -124,7 +124,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertEquals('Bearer realm="Tuleap OAuth2 Protected Resource"', $response->getHeaderLine('WWW-Authenticate'));
     }
 
-    public function dataProviderBadAuthorizationHeader(): array
+    public static function dataProviderBadAuthorizationHeader(): array
     {
         return [
             [''],

@@ -639,70 +639,6 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_involved_notification_subscribers (
    PRIMARY KEY (tracker_id, user_id)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS    tracker_watcher;
-CREATE TABLE tracker_watcher(
-    user_id int(11) NOT NULL default '0',
-    watchee_id int(11) NOT NULL default '0',
-    tracker_id int(11) NOT NULL default '0',
-    KEY watchee_id_idx(watchee_id, tracker_id) ,
-    KEY user_id_idx(user_id , tracker_id)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS tracker_notification_role;
-CREATE TABLE tracker_notification_role(
-    role_id int(11) NOT NULL,
-    tracker_id int(11) NOT NULL,
-    role_label VARCHAR(255) NULL,
-    `rank` int(11) NOT NULL,
-    short_description_msg VARCHAR(255) NULL,
-    description_msg VARCHAR(255) NULL,
-    INDEX role_id_idx(role_id),
-    INDEX tracker_id_idx(tracker_id)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS tracker_notification_event;
-CREATE TABLE  tracker_notification_event(
-    event_id int(11) NOT NULL,
-    tracker_id int(11) NOT NULL,
-    event_label VARCHAR(255) NULL,
-    `rank` int(11) NOT NULL,
-    short_description_msg VARCHAR(255) NULL,
-    description_msg VARCHAR(255) NULL,
-    INDEX event_id_idx(event_id),
-    INDEX tracker_id_idx(tracker_id)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS tracker_notification;
-CREATE TABLE  tracker_notification(
-    user_id int(11) NOT NULL,
-    tracker_id int(11) NOT NULL,
-    role_id int(11) NOT NULL,
-    event_id int(11) NOT NULL,
-    notify int(11) NOT NULL DEFAULT 1,
-    INDEX user_id_idx(user_id),
-    INDEX tracker_id_idx(tracker_id)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS tracker_notification_role_default;
-CREATE TABLE  tracker_notification_role_default(
-    role_id int(11) NOT NULL,
-    role_label VARCHAR(255) NULL,
-    `rank` int(11) NOT NULL,
-    short_description_msg VARCHAR(255) NULL,
-    description_msg VARCHAR(255) NULL,
-    INDEX role_id_idx(role_id)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS tracker_notification_event_default;
-CREATE TABLE  tracker_notification_event_default(
-    event_id int(11) NOT NULL,
-    event_label VARCHAR(255) NULL,
-    `rank` int(11) NOT NULL,
-    short_description_msg VARCHAR(255) NULL,
-    description_msg VARCHAR(255) NULL,
-    INDEX event_id_idx(event_id)
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS  tracker_canned_response;
 CREATE TABLE tracker_canned_response(
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -808,6 +744,7 @@ CREATE TABLE tracker_reminder (
     notification_type TINYINT(1) DEFAULT 0,
     distance INT( 11 ) DEFAULT 0,
     status TINYINT(1) DEFAULT 1,
+    notify_closed_artifacts BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (reminder_id)
 ) ENGINE=InnoDB;
 
@@ -1078,7 +1015,6 @@ INSERT INTO user SET
         user_id = 90,
         user_name = 'forge__tracker_workflow_manager',
         email = 'noreply@_DOMAIN_NAME_',
-        user_pw = '#~2mouahahaha',
         realname = 'Tracker Workflow Manager',
         register_purpose = NULL,
         status = 'S',
@@ -1107,7 +1043,6 @@ INSERT INTO user SET
      user_id = 91,
      user_name = 'forge__tracker_importer_user',
      email = 'noreply+tracker_importer@_DOMAIN_NAME_',
-     user_pw = '#~2mouahahaha',
      realname = 'Tracker Importer',
      register_purpose = NULL,
      status = 'S',
@@ -1141,5 +1076,4 @@ FROM `groups`
 WHERE `groups`.status != 'D'
       AND service.short_name = 'plugin_tracker';
 
-INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_use_list_pickers_in_trackers_and_modals', 1);
 INSERT INTO forgeconfig (name, value) VALUES ('tracker_jira_force_basic_auth', '1');

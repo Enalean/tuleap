@@ -270,9 +270,13 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->once();
 
-        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
-            ['warning', 'The tracker id 999 does not have step definition field'],
-            [\Feedback::ERROR]
+        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
+            function (string $level, string $message): void {
+                match (true) {
+                    $level === 'warning' && $message === 'The tracker id 999 does not have step definition field',
+                        $level === \Feedback::ERROR => true
+                };
+            }
         );
 
         $this->admin_controller->update();
@@ -315,9 +319,13 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->andThrow(TrackerExecutionNotValidException::class);
 
-        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
-            ['warning', 'The tracker id 537 does not have step execution field'],
-            [\Feedback::ERROR],
+        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
+            function (string $level, string $message): void {
+                match (true) {
+                    $level === 'warning' && $message === 'The tracker id 537 does not have step execution field',
+                        $level === \Feedback::ERROR => true
+                };
+            }
         );
 
         $this->admin_controller->update();
@@ -364,9 +372,13 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->project, self::NEW_EXECUTION_TRACKER_ID)
             ->once();
 
-        $GLOBALS['Response']->method('addFeedback')->withConsecutive(
-            ['warning', 'The tracker id 535 does not have artifact links field'],
-            [\Feedback::ERROR]
+        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
+            function (string $level, string $message): void {
+                match (true) {
+                    $level === 'warning' && $message === 'The tracker id 535 does not have artifact links field',
+                        $level === \Feedback::ERROR => true
+                };
+            }
         );
 
         $this->admin_controller->update();

@@ -21,6 +21,10 @@ import { transform, addFieldValuesToTracker } from "./tracker-transformer.js";
 import { setCatalog } from "../gettext-catalog";
 
 describe("TuleapArtifactModalTrackerTransformerService", () => {
+    beforeEach(() => {
+        setCatalog({ getString: (msg) => msg });
+    });
+
     describe("transform() -", () => {
         describe("Given a tracker object with no create permissions fields", () => {
             let tracker, creation_mode;
@@ -157,114 +161,146 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                 });
             });
 
-            describe("containing a selectbox field", () => {
-                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", () => {
-                    setCatalog({ getString: (msg) => msg });
-                    const tracker = {
+            describe(`containing a selectbox field`, () => {
+                const FIRST_SELECTBOX_VALUE_ID = 665;
+
+                beforeEach(() => {
+                    tracker = {
                         fields: [
                             {
                                 field_id: 41,
                                 permissions: ["read", "update", "create"],
                                 type: "sb",
-                                values: [
-                                    { id: 665, is_hidden: false },
-                                    { id: 180, is_hidden: false },
-                                ],
+                                required: false,
                                 default_value: [],
-                            },
-                        ],
-                    };
-
-                    const transformed_tracker = transform(tracker);
-
-                    expect(transformed_tracker.fields[0].values).toStrictEqual([
-                        { id: 100, label: "None" },
-                        { id: 665, is_hidden: false },
-                        { id: 180, is_hidden: false },
-                    ]);
-                });
-                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values even if field is mandatory", () => {
-                    setCatalog({ getString: (msg) => msg });
-                    const tracker = {
-                        fields: [
-                            {
-                                field_id: 41,
-                                permissions: ["read", "update", "create"],
-                                type: "sb",
                                 values: [
-                                    { id: 665, is_hidden: false },
+                                    { id: FIRST_SELECTBOX_VALUE_ID, is_hidden: false },
                                     { id: 180, is_hidden: false },
                                 ],
-                                required: true,
-                                default_value: [],
                             },
                         ],
                     };
-
-                    const transformed_tracker = transform(tracker);
-
-                    expect(transformed_tracker.fields[0].values).toStrictEqual([
-                        { id: 100, label: "None" },
-                        { id: 665, is_hidden: false },
-                        { id: 180, is_hidden: false },
-                    ]);
                 });
-                it("when I transform the tracker, then a 'None' value will not be prepended to its selectable values if there is a default value", () => {
-                    setCatalog({ getString: (msg) => msg });
-                    const tracker = {
-                        fields: [
-                            {
-                                field_id: 41,
-                                permissions: ["read", "update", "create"],
-                                type: "sb",
-                                values: [
-                                    { id: 665, is_hidden: false },
-                                    { id: 180, is_hidden: false },
-                                ],
-                                default_value: [{ id: 665 }],
-                            },
-                        ],
-                    };
 
+                it.each([
+                    [
+                        "the field has no default value",
+                        () => {
+                            // no modification
+                        },
+                    ],
+                    [
+                        "the field is required",
+                        (field) => {
+                            field.required = true;
+                        },
+                    ],
+                    [
+                        "the field has a default value",
+                        (field) => {
+                            field.default_value = [{ id: FIRST_SELECTBOX_VALUE_ID }];
+                        },
+                    ],
+                ])(
+                    `when %s, then a "None" value will be prepended to its available values`,
+                    (_field_description, modifier) => {
+                        modifier(tracker.fields[0]);
+                        const transformed_tracker = transform(tracker);
+                        expect(transformed_tracker.fields[0].values).toContainEqual({
+                            id: 100,
+                            label: "None",
+                        });
+                        expect(transformed_tracker.fields[0].values).toHaveLength(3);
+                    }
+                );
+
+                it(`when the field has a workflow, then the "None" value will not be added`, () => {
+                    tracker.fields[0].has_transitions = true;
                     const transformed_tracker = transform(tracker);
-
-                    expect(transformed_tracker.fields[0].values).toStrictEqual([
-                        { id: 665, is_hidden: false },
-                        { id: 180, is_hidden: false },
-                    ]);
+                    expect(transformed_tracker.fields[0].values).not.toContainEqual({
+                        id: 100,
+                        label: "None",
+                    });
+                    expect(transformed_tracker.fields[0].values).toHaveLength(2);
                 });
             });
 
-            describe("containing a multiselectbox field", () => {
-                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values", () => {
-                    setCatalog({ getString: (msg) => msg });
-                    const tracker = {
+            describe(`containing a multiselectbox field`, () => {
+                const FIRST_MULTI_VALUE_ID = 361;
+
+                beforeEach(() => {
+                    tracker = {
                         fields: [
                             {
                                 field_id: 22,
                                 permissions: ["read", "update", "create"],
                                 type: "msb",
+                                required: false,
+                                default_value: [],
                                 values: [
-                                    { id: 361, is_hidden: false },
+                                    { id: FIRST_MULTI_VALUE_ID, is_hidden: false },
                                     { id: 992, is_hidden: false },
                                 ],
                             },
                         ],
                     };
-
-                    const transformed_tracker = transform(tracker);
-
-                    expect(transformed_tracker.fields[0].values).toStrictEqual([
-                        { id: 100, label: "None" },
-                        { id: 361, is_hidden: false },
-                        { id: 992, is_hidden: false },
-                    ]);
                 });
+
+                it.each([
+                    [
+                        "the field has no default value",
+                        () => {
+                            // no modification
+                        },
+                    ],
+                    [
+                        "the field has a default value",
+                        (field) => {
+                            field.default_value = [{ id: FIRST_MULTI_VALUE_ID }];
+                        },
+                    ],
+                ])(
+                    `when %s, then a "None" value will be prepended to its available values`,
+                    (_field_description, modifier) => {
+                        modifier(tracker.fields[0]);
+                        const transformed_tracker = transform(tracker);
+                        expect(transformed_tracker.fields[0].values).toContainEqual({
+                            id: 100,
+                            label: "None",
+                        });
+                        expect(transformed_tracker.fields[0].values).toHaveLength(3);
+                    }
+                );
+
+                it.each([
+                    [
+                        "the field is required",
+                        (field) => {
+                            field.required = true;
+                        },
+                    ],
+                    [
+                        "the field has a workflow",
+                        (field) => {
+                            field.has_transitions = true;
+                        },
+                    ],
+                ])(
+                    `when %s, then the "None" value will not be added`,
+                    (_field_description, modifier) => {
+                        modifier(tracker.fields[0]);
+                        const transformed_tracker = transform(tracker);
+                        expect(transformed_tracker.fields[0].values).not.toContainEqual({
+                            id: 100,
+                            label: "None",
+                        });
+                        expect(transformed_tracker.fields[0].values).toHaveLength(2);
+                    }
+                );
             });
 
             describe("containing list fields", () => {
                 it(", when I transform the tracker, then the field's selectable values will NOT contain any hidden value", () => {
-                    setCatalog({ getString: (msg) => msg });
                     const tracker = {
                         fields: [
                             {
@@ -333,7 +369,6 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                 });
 
                 it("bound to user groups, when I transform the tracker, then the values labels will be internationalized", () => {
-                    setCatalog({ getString: (msg) => msg });
                     const tracker = {
                         fields: [
                             {
@@ -498,7 +533,6 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
             describe("with field dependencies", () => {
                 it("and given that a dependency existed between lists bound to user groups, when I transform the tracker, then the field dependency rules will have their source and target value ids replaced with the corresponding ugroup ids except when the value id is 100 ('none' value)", () => {
-                    setCatalog({ getString: (msg) => msg });
                     const tracker = {
                         fields: [
                             {
@@ -607,7 +641,6 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                 });
 
                 it("and given that a dependency existed between lists NOT bound to user groups, when I transform the tracker, then the field dependency rules won't be changed", () => {
-                    setCatalog({ getString: (msg) => msg });
                     const tracker = {
                         fields: [
                             {

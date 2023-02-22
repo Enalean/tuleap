@@ -18,7 +18,8 @@
  */
 
 import type { Mock } from "vitest";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import process from "node:process";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { SelectionManager } from "../type";
@@ -39,7 +40,8 @@ describe("ListOptionsChangesObserver", () => {
         list_options_changes_observer: ListOptionsChangesObserver;
 
     beforeEach(() => {
-        source_select_box = document.createElement("select");
+        const doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
         list_picker_element_attributes_updater = vi.fn();
         dropdown_content_renderer = {
             renderAfterDependenciesUpdate: vi.fn(),
@@ -50,7 +52,7 @@ describe("ListOptionsChangesObserver", () => {
         } as unknown as ItemsMapManager;
 
         selection_manager = {
-            resetAfterDependenciesUpdate: vi.fn(),
+            resetAfterChangeInOptions: vi.fn(),
         } as unknown as SelectionManager;
 
         event_manager = { attachItemListEvent: vi.fn() } as unknown as EventManager;
@@ -65,43 +67,54 @@ describe("ListOptionsChangesObserver", () => {
         );
     });
 
-    it("should refresh the list-picker when options are added in the source <select>", async () => {
+    it("should refresh the list-picker when options are added to the source select element", async () => {
         list_options_changes_observer.startWatchingChanges();
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
         await new Promise(process.nextTick);
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
-    it("should refresh the list-picker when options are removed in the source <select>", async () => {
+    it("should refresh the list-picker when options are removed from the source select element", async () => {
         appendSimpleOptionsToSourceSelectBox(source_select_box);
         list_options_changes_observer.startWatchingChanges();
 
         source_select_box.innerHTML = "";
-
         await new Promise(process.nextTick);
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
-    it("should refresh the list-picker when attribute disabled on children is added", async () => {
+    it(`should refresh the list-picker when the "disabled" attribute is added on an option`, async () => {
         appendSimpleOptionsToSourceSelectBox(source_select_box);
         list_options_changes_observer.startWatchingChanges();
 
         source_select_box.options[0].disabled = true;
-
         await new Promise(process.nextTick);
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
+        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+    });
+
+    it(`should refresh the list-picker when the "value" attribute changed on an option`, async () => {
+        appendSimpleOptionsToSourceSelectBox(source_select_box);
+        list_options_changes_observer.startWatchingChanges();
+
+        source_select_box.options[0].value = "new_value";
+        await new Promise(process.nextTick);
+
+        expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
@@ -125,9 +138,9 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        await expect(items_map_manager.refreshItemsMap).not.toHaveBeenCalled();
+        expect(items_map_manager.refreshItemsMap).not.toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).not.toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).not.toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).not.toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).not.toHaveBeenCalled();
     });
 });

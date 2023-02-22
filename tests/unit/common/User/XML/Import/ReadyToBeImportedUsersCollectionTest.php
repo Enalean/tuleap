@@ -26,8 +26,14 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /** @var UsersToBeImportedCollection */
-    private $collection;
+    private ReadyToBeImportedUsersCollection $collection;
+    /**
+     * @var \Mockery\LegacyMockInterface&\Mockery\MockInterface&ReadyToBeImportedUser
+     */
+    private $user;
+    private int $id;
+    private string $username;
+    private string $ldap_id;
 
     protected function setUp(): void
     {

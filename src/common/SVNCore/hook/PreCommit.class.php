@@ -50,14 +50,13 @@ class SVN_Hook_PreCommit extends SVN_Hook
         SVN_Svnlook $svn_look,
         SVN_Immutable_Tags_Handler $handler,
         SHA1CollisionDetector $sha1_collision_detector,
-        \Psr\Log\LoggerInterface $logger,
+        private \Psr\Log\LoggerInterface $logger,
     ) {
         parent::__construct($svn_hooks, $message_validator);
 
         $this->svn_look                = $svn_look;
         $this->handler                 = $handler;
         $this->sha1_collision_detector = $sha1_collision_detector;
-        $this->logger                  = $logger;
     }
 
     /**

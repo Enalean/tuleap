@@ -1,0 +1,33 @@
+<section class="account-registration">
+    <svg width="259" height="145" viewBox="0 0 259 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_809_18536)">
+            <path d="M234 105C234 162.99 186.99 210 129 210C71.0101 210 24 162.99 24 105C24 47.0101 71.0101 0 129 0C186.99 0 234 47.0101 234 105Z" fill="url(#paint0_linear_809_18536)"/>
+            <path d="M129 42C107.367 42 90 59.5195 90 81C90 102.633 107.367 120 129 120C150.48 120 168 102.633 168 81C168 59.5195 150.48 42 129 42ZM125.344 65.1562C125.344 63.1758 126.867 61.5 129 61.5C130.98 61.5 132.656 63.1758 132.656 65.1562V84.6562C132.656 86.7891 130.98 88.3125 129 88.3125C126.867 88.3125 125.344 86.7891 125.344 84.6562V65.1562ZM129 102.938C126.258 102.938 124.125 100.805 124.125 98.2148C124.125 95.625 126.258 93.4922 129 93.4922C131.59 93.4922 133.723 95.625 133.723 98.2148C133.723 100.805 131.59 102.938 129 102.938Z" fill="var(--tlp-illustration-red)"/>
+        </g>
+        <defs>
+            <linearGradient id="paint0_linear_809_18536" x1="129" y1="0" x2="129" y2="124.408" gradientUnits="userSpaceOnUse">
+                <stop offset="0.416" stop-color="var(--tlp-illustration-grey-on-background)"/>
+                <stop offset="1" stop-color="var(--tlp-illustration-grey-on-background)" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="clip0_809_18536">
+                <rect width="259" height="145" fill="white"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+
+    <div class="account-registration-content">
+        <h1 class="account-registration-content-title">{{# gettext }}Action required{{/ gettext }}</h1>
+
+        <p class="tlp-text-muted">
+            {{# gettext }}The confirmation email couldn't be sent.{{/ gettext }}
+            <br>
+            {{# gettext }}Please contact the administrators at:{{/ gettext }}
+            <a href="{{ email_admin }}">{{ email_admin }}</a>
+        </p>
+    </div>
+</section>
+
+<div class="account-registration-background">
+    {{> homepage-background }}
+</div>

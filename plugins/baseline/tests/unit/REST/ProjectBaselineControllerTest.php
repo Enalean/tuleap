@@ -59,6 +59,7 @@ class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Project|MockInterface */
     private $a_project;
+    private UserProxy $current_user;
 
     /**
      * @before

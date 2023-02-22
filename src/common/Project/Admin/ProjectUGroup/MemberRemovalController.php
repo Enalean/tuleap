@@ -140,7 +140,7 @@ class MemberRemovalController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 
         $ugroup = $this->ugroup_manager->getUGroup($project, $variables['user-group-id']);

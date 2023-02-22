@@ -71,10 +71,10 @@ export default class IterationsToBePlannedSection extends Vue {
     @configuration.State
     readonly program_increment!: ProgramIncrement;
 
-    private user_stories: UserStory[] = [];
-    private is_loading = false;
-    private has_error = false;
-    private error_message = "";
+    user_stories: UserStory[] = [];
+    is_loading = false;
+    has_error = false;
+    error_message = "";
 
     async mounted(): Promise<void> {
         try {

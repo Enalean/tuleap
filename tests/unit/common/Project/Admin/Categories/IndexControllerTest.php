@@ -94,6 +94,6 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([]);
 
-        $this->controller->process($request, $layout, ['id' => '102']);
+        $this->controller->process($request, $layout, ['project_id' => '102']);
     }
 }

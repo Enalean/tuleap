@@ -17,10 +17,14 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <span
         class="color-picker-preview"
-        v-bind:class="'colorpicker-preview-' + props.color"
-        v-bind:title="props.color"
+        v-bind:class="'colorpicker-preview-' + color"
+        v-bind:title="color"
     ></span>
 </template>
+
+<script setup lang="ts">
+defineProps<{ color: string }>();
+</script>

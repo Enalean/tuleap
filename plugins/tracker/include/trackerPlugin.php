@@ -131,8 +131,8 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
@@ -188,6 +188,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileDataStore;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadCanceler;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -2481,11 +2482,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
-        $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(ReverseLinksFeatureFlag::class);
         $event->addConfigClass(Tracker_ReportDao::class);
+        $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
@@ -2607,7 +2608,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -2643,6 +2645,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 

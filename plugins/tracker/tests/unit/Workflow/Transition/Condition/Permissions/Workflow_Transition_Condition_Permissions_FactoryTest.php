@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -87,11 +89,10 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \Tulea
     public function testItDelegatesDuplicateToPermissionsManager(): void
     {
         $new_transition_id = 2;
-        $field_mapping     = ['some fields mapping'];
-        $ugroup_mapping    = ['some ugroups mapping'];
-        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
-        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $ugroup_mapping, $duplicate_type)->once();
-        $this->permissions_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $mapping = TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
+
+        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $mapping)->once();
+        $this->permissions_factory->duplicate($this->transition, $new_transition_id, $mapping);
     }
 }

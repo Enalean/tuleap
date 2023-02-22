@@ -1,0 +1,54 @@
+<section class="tlp-modal first-timer-modal" role="dialog" id="first-timer-success-modal" aria-labelledby="first-timer-success-modal-title">
+    <div class="tlp-modal-body">
+        <h1 class="first-timer-modal-title" id="first-timer-success-modal-title">
+            {{# gettext }}Hello{{/ gettext }}
+            <br>
+            {{ real_name }}
+        </h1>
+        <h2 class="first-timer-modal-subtitle">
+            {{# project_name }}
+                {{# project_icon }}
+                    {{# gettext }}Welcome to %s | {{ project_icon }} {{ project_name }}{{/ gettext }}
+                {{/ project_icon }}
+                {{^ project_icon }}
+                    {{# gettext }}Welcome to %s | <i class="fa-solid fa-box-archive"></i> {{ project_name }}{{/ gettext }}
+                {{/ project_icon }}
+            {{/ project_name }}
+            {{^ project_name }}
+                {{# gettext }}Welcome to %s | {{ plateform_name }}{{/ gettext }}
+            {{/ project_name }}
+        </h2>
+
+        <hr class="first-timer-modal-separator" />
+
+        {{# invited_by_user }}
+            <div class="first-timer-modal-instructions">
+                <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+                <div class="first-timer-modal-instructions-content">
+                    {{# project_name }}
+                        <p>{{# gettext }}%s invited you, so you’re now a fresh member of this project. | {{ real_name }}{{/ gettext }}</p>
+                    {{/ project_name }}
+                    {{^ project_name }}
+                        <p>{{# gettext }}%s invited you, so you’re now a fresh member of this platform. | {{ real_name }}{{/ gettext }}</p>
+                    {{/ project_name }}
+                </div>
+            </div>
+        {{/ invited_by_user }}
+
+        <div class="first-timer-modal-instructions">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <div class="first-timer-modal-instructions-content">
+                <p>{{# gettext }}Before you start, you need to know a few things:{{/ gettext }}</p>
+                <ul>
+                    <li>{{# gettext }}The base unit of Tuleap is the project, you can join or create as many projects as you want.{{/ gettext }}</li>
+                    <li>{{# gettext }}In each project, you will find various tools such as Kanbans, Documents, Milestones…{{/ gettext }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Understood{{/ gettext }}
+        </button>
+    </div>
+</section>

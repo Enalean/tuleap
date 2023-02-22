@@ -16,9 +16,9 @@
         <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the field</li>
         <li><code class="code-inline">none_value: string (default: null)</code>: The none value given on the select. Selected when no values are selected.</li>
         <li>
-            <code class="code-inline">items_template_formatter (default: none)</code>: An asynchronous callback function returning a lit/html template result to customise items templates
+            <code class="code-inline">items_template_formatter (default: none)</code>: A callback function returning a lit/html template result to customise items templates
             <br>
-            It takes two parameters:
+            It takes three parameters:
             <ul>
                 <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer to build a secured TemplateResult</li>
                 <li><code class="code-inline">option_value: string</code> The value of the current select box option</li>

@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 
 class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -49,6 +50,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
     ): Tracker_Artifact_XMLImport {
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $formelement_factory     = Tracker_FormElementFactory::instance();
+        $event_manager           = EventManager::instance();
         $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
         $type_dao                = new TypeDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
@@ -57,7 +59,8 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                 $type_dao,
                 $artifact_link_usage_dao,
             ),
-            $artifact_link_usage_dao
+            $artifact_link_usage_dao,
+            $event_manager,
         );
 
         $fields_validator            = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
@@ -66,7 +69,6 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
         );
         $changeset_comment_dao       = new Tracker_Artifact_Changeset_CommentDao();
         $fields_retriever            = new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory);
-        $event_manager               = EventManager::instance();
         $after_new_changeset_handler = new AfterNewChangesetHandler(
             $artifact_factory,
             $fields_retriever
@@ -116,6 +118,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 

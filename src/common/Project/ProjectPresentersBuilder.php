@@ -24,7 +24,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 
-class ProjectPresentersBuilder
+class ProjectPresentersBuilder implements ListOfProjectPresentersBuilder
 {
     /** @var PFUser */
     private $current_user;
@@ -38,14 +38,14 @@ class ProjectPresentersBuilder
     /**
      * @return ProjectPresenter[]
      */
-    public function build(
+    public function getProjectPresenters(
         PFUser $current_user,
     ): array {
         $this->current_user    = $current_user;
         $this->project_manager = ProjectManager::instance();
         $this->projects        = $this->project_manager->getActiveProjectsForUser($this->current_user);
 
-        $presenters = $this->getProjectPresenters();
+        $presenters = $this->getPresenters();
         usort($presenters, static function (ProjectPresenter $a, ProjectPresenter $b) {
             return strnatcasecmp($a->project_name, $b->project_name);
         });
@@ -56,7 +56,7 @@ class ProjectPresentersBuilder
     /**
      * @return ProjectPresenter[]
      */
-    private function getProjectPresenters(): array
+    private function getPresenters(): array
     {
         $project_presenters = [];
 
@@ -75,6 +75,7 @@ class ProjectPresentersBuilder
         $is_current_user_admin = $this->current_user->isAdmin($project_id);
 
         return new ProjectPresenter(
+            (int) $project_id,
             $project_name,
             $project->getUrl(),
             $project_config_uri,

@@ -30,7 +30,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 class MatchingArtifactRepresentationCollection
 {
     /**
-     * @param ArtifactRepresentation[] $artifact_representations
+     * @psalm-param list<ArtifactRepresentation> $artifact_representations
      */
     public function __construct(
         private array $artifact_representations,
@@ -39,7 +39,7 @@ class MatchingArtifactRepresentationCollection
     }
 
     /**
-     * @return ArtifactRepresentation[]
+     * @psalm-return list<ArtifactRepresentation>
      */
     public function getArtifactRepresentations(): array
     {

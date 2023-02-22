@@ -56,7 +56,7 @@ final class LinkedProjectTest extends TestCase
         self::assertSame('/projects/red-team', $linked_project->uri);
     }
 
-    public function dataProviderAccessExceptions(): array
+    public static function dataProviderAccessExceptions(): array
     {
         return [
             'with invalid project'                           => [CheckProjectAccessStub::withNotValidProject()],

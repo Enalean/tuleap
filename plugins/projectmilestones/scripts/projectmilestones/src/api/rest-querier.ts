@@ -27,17 +27,6 @@ import type {
     TestManagementCampaign,
 } from "../type";
 
-export {
-    getCurrentMilestones,
-    getMilestonesContent,
-    getChartData,
-    getNbOfPastRelease,
-    getLastRelease,
-    getTestManagementCampaigns,
-    getMilestonesBacklog,
-    getAllSprints,
-};
-
 function recursiveGetProjectMilestonesWithQuery(
     project_id: number,
     query: string,
@@ -53,7 +42,7 @@ function recursiveGetProjectMilestonesWithQuery(
     });
 }
 
-function getCurrentMilestones({
+export function getCurrentMilestones({
     project_id,
     limit,
     offset,
@@ -65,7 +54,7 @@ function getCurrentMilestones({
     return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 }
 
-function getAllSprints(
+export function getAllSprints(
     milestone_id: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneData[]> {
@@ -77,7 +66,7 @@ function getAllSprints(
     });
 }
 
-function getMilestonesContent(
+export function getMilestonesContent(
     id_release: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
@@ -89,7 +78,7 @@ function getMilestonesContent(
     });
 }
 
-function getMilestonesBacklog(
+export function getMilestonesBacklog(
     id_release: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
@@ -113,12 +102,12 @@ function getPaginationSizeFromHeader(header: Headers): number {
     return Number.parseInt(pagination_size_header, 10);
 }
 
-async function getChartData(milestone_id: number): Promise<ArtifactMilestone> {
+export async function getChartData(milestone_id: number): Promise<ArtifactMilestone> {
     const chart_data = await get(`/api/v1/artifacts/${encodeURIComponent(milestone_id)}`);
     return chart_data.json();
 }
 
-async function getNbOfPastRelease({ project_id }: ParametersRequestWithId): Promise<number> {
+export async function getNbOfPastRelease({ project_id }: ParametersRequestWithId): Promise<number> {
     const query = JSON.stringify({
         status: "closed",
     });
@@ -133,7 +122,7 @@ async function getNbOfPastRelease({ project_id }: ParametersRequestWithId): Prom
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getLastRelease(
+export async function getLastRelease(
     project_id: number,
     nb_past_releases: number
 ): Promise<MilestoneData[] | null> {
@@ -155,7 +144,7 @@ async function getLastRelease(
     return milestones.json();
 }
 
-function getTestManagementCampaigns(
+export function getTestManagementCampaigns(
     release_id: number,
     { limit, offset, project_id }: ParametersRequestWithId
 ): Promise<TestManagementCampaign[]> {

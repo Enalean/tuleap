@@ -22,8 +22,8 @@ msgid "An error occurred loading unplanned elements"
 msgstr ""
 "Une erreur s'est produite lors du chargement des éléments non plannifiés"
 
-msgid "Create the first %s"
-msgstr "Créer un(e) %s"
+msgid "Create the first %{ iteration_label }"
+msgstr "Créer un(e) %{ iteration_label }"
 
 msgid "Create the first iteration"
 msgstr "Créer la première itération"
@@ -37,14 +37,14 @@ msgstr "Ajouter un(e) %{ iteration_sub_label }"
 msgid "Program"
 msgstr "Programme"
 
-msgid "The retrieval of %s has failed"
-msgstr "La récupération de %s a échoué"
+msgid "The retrieval of %{ iteration_label } has failed"
+msgstr "La récupération de %{ iteration_label } a échoué"
 
 msgid "The retrieval of iterations has failed"
 msgstr "La récupération des itérations a échoué"
 
-msgid "There is no %s yet."
-msgstr "Il n'y a pas encore de %s."
+msgid "There is no %{ iteration_label } yet."
+msgstr "Il n'y a pas encore de %{ iteration_label }."
 
 msgid "There is no iteration yet."
 msgstr "Il n'y a pas encore d'itérations."

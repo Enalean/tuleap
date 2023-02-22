@@ -6,20 +6,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%s project can use the server"
-msgid_plural "%s projects can use the server"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Add document server"
-msgstr ""
-
-msgid "All projects can use the server"
-msgstr ""
-
-msgid "Allow all projects to use this server"
-msgstr ""
-
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr ""
 
@@ -27,27 +13,7 @@ msgstr ""
 msgid "Back to %s documents"
 msgstr ""
 
-msgid "Current secret not displayed"
-msgstr ""
-
-msgid "Define which projects will be able to use %s."
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Delete document server"
-msgstr ""
-
-msgid ""
-"Deleting a document server will induce loosing of modifications for users "
-"that are currently using it."
-msgstr ""
-
 msgid "Document"
-msgstr ""
-
-msgid "Document server URL"
 msgstr ""
 
 msgid "Document server has been created"
@@ -56,28 +22,21 @@ msgstr ""
 msgid "Document server have been deleted"
 msgstr ""
 
+msgid ""
+"Document server restrictions cannot be removed since there are more than one "
+"server defined. Please remove other servers beforehand."
+msgstr ""
+
+msgid "Document server restrictions have been removed"
+msgstr ""
+
+msgid "Document server restrictions have been saved"
+msgstr ""
+
 msgid "Document server settings have been saved"
 msgstr ""
 
-msgid "Edit"
-msgstr ""
-
-msgid "Edit document server settings"
-msgstr ""
-
-msgid "Id"
-msgstr ""
-
-msgid "JWT secret"
-msgstr ""
-
-msgid "No project can use this server."
-msgstr ""
-
 msgid "ONLYOFFICE"
-msgstr ""
-
-msgid "ONLYOFFICE document servers"
 msgstr ""
 
 msgid "ONLYOFFICE integration"
@@ -89,35 +48,8 @@ msgstr ""
 msgid "Online office files"
 msgstr ""
 
-msgid "Please confirm your action."
-msgstr ""
-
 msgid "Presentation"
 msgstr ""
 
-msgid "Project"
-msgstr ""
-
-msgid "Projects restriction"
-msgstr ""
-
-msgid "Restrict"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid "Secret is missing"
-msgstr ""
-
 msgid "Spreadsheet"
-msgstr ""
-
-msgid "There isn't any document servers configured"
-msgstr ""
-
-msgid "Under construction, you cannot set restrictions yet."
-msgstr ""
-
-msgid "You're about to delete the document server."
 msgstr ""

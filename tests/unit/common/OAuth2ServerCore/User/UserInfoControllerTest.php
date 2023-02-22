@@ -70,7 +70,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertJsonStringEqualsJsonString($expected_json, $response->getBody()->getContents());
     }
 
-    public function dataProviderScopes(): array
+    public static function dataProviderScopes(): array
     {
         $user = UserTestBuilder::aUser()->withId(110)
             ->withEmail('user@example.com')

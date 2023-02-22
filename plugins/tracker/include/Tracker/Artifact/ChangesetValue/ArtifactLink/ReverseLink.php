@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * I hold a link from another Artifact to the current Artifact.
  * @psalm-immutable
@@ -31,4 +33,6 @@ interface ReverseLink
     public function getSourceArtifactId(): int;
 
     public function getType(): ?string;
+
+    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks;
 }

@@ -42,7 +42,7 @@ class CSVRepresentation
         $this->separator = (string) $user->getPreference('user_csv_separator');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return implode($this->getSeparator(), $this->values);
     }

@@ -18,14 +18,14 @@
  */
 
 import AwkwardCreationFields from "./awkward-creation-fields-constant.js";
-import { formatExistingValue as formatForLinkField } from "../fields/link-field/link-field-initializer.js";
-import { formatExistingValue as formatForDateField } from "../fields/date-field/date-field-initializer.js";
+import { formatExistingValue as formatForLinkField } from "../adapters/UI/fields/link-field/link-field-initializer.js";
+import { buildEditableDateFieldValue } from "../adapters/UI/fields/date-field/date-field-value-builder.ts";
 import {
     formatDefaultValue as defaultForOpenListField,
     formatExistingValue as formatForOpenListField,
 } from "../adapters/REST/fields/open-list-field/open-list-field-initializer";
-import { formatExistingValue as formatForTextFieldValue } from "../fields/text-field/text-field-value-formatter.js";
-import { cleanValue as defaultForIntField } from "../fields/int-field/int-field-value-formatter";
+import { formatExistingValue as formatForTextFieldValue } from "../adapters/UI/fields/text-field/text-field-value-formatter.ts";
+import { cleanValue as defaultForIntField } from "../adapters/UI/fields/int-field/int-field-value-formatter";
 import { NewFileToAttach } from "../domain/fields/file-field/NewFileToAttach";
 import { Fault, isFault } from "@tuleap/fault";
 
@@ -68,7 +68,7 @@ function formatExistingValue(field, artifact_value) {
 
     switch (field.type) {
         case "date":
-            value_obj = formatForDateField(field, artifact_value);
+            value_obj = buildEditableDateFieldValue(field, artifact_value.value);
             break;
         case "cb":
             value_obj.bind_value_ids = mapCheckboxValues(field, artifact_value.bind_value_ids);

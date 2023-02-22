@@ -11,7 +11,7 @@ specifiers:
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/tlp-modal': workspace:*
   '@types/sprintf-js': ^1.1.2
-  neverthrow: ^5.0.0
+  neverthrow: ^6.0.0
   sprintf-js: ^1.1.2
 
 dependencies:
@@ -28,7 +28,7 @@ devDependencies:
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   '@types/sprintf-js': 1.1.2
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
 
 packages:
 
@@ -36,8 +36,8 @@ packages:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /neverthrow/5.0.0:
-    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
+  /neverthrow/6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: true
 
   /sprintf-js/1.1.2:

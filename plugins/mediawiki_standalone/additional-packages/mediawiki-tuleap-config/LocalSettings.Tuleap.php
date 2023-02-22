@@ -58,10 +58,11 @@ wfLoadExtensions([
     'ParserFunctions',
     'SyntaxHighlight_GeSHi',
     'WikiEditor',
-    'PdfBook',
+    'Mpdf',
 ]);
 $GLOBALS['wgPFEnableStringFunctions'] = true;
-$GLOBALS['wgPdfBookTab']              = true;
+$GLOBALS['wgMpdfSimpleOutput']        = true;
+$GLOBALS['wgMpdfTab']                 = true;
 
 $GLOBALS['wgDefaultUserOptions']['usebetatoolbar']     = 1;
 $GLOBALS['wgDefaultUserOptions']['usebetatoolbar-cgd'] = 1;
@@ -132,5 +133,8 @@ $GLOBALS['wgDebugLogGroups'] = [
     'fatal' => '/var/log/tuleap/mediawiki_log',
     'TuleapFarm' => '/var/log/tuleap/mediawiki_log',
 ];
+
+// Make sure sessions are stored in DB
+$GLOBALS['wgSessionCacheType'] = CACHE_DB;
 
 // Tuleap Specific - END ###

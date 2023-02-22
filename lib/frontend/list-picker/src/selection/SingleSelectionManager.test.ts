@@ -18,11 +18,16 @@
  */
 
 import { describe, beforeEach, expect, it, vi } from "vitest";
+import { selectOrThrow } from "@tuleap/dom";
 import { SingleSelectionManager } from "./SingleSelectionManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
-import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
+import {
+    expectChangeEventToHaveBeenFiredOnSourceSelectBox,
+    expectItemNotToBeSelected,
+    expectItemToBeSelected,
+} from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import type { ListPickerItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
@@ -36,20 +41,18 @@ describe("SingleSelectionManager", () => {
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
         item_1: ListPickerItem,
-        item_2: ListPickerItem;
+        item_2: ListPickerItem,
+        doc: Document;
 
-    beforeEach(async () => {
-        source_select_box = document.createElement("select");
+    beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const { dropdown_element, selection_element, placeholder_element } =
-            new BaseComponentRenderer(
-                document.implementation.createHTMLDocument(),
-                source_select_box,
-                {
-                    placeholder: "Please select a value",
-                }
-            ).renderBaseComponent();
+            new BaseComponentRenderer(doc, source_select_box, {
+                placeholder: "Please select a value",
+            }).renderBaseComponent();
 
         selection_container = selection_element;
         placeholder = placeholder_element;
@@ -65,39 +68,39 @@ describe("SingleSelectionManager", () => {
             dropdown_manager,
             items_map_manager
         );
-        vi.spyOn(source_select_box, "dispatchEvent");
-        await items_map_manager.refreshItemsMap();
+        items_map_manager.refreshItemsMap();
         item_1 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
     });
 
     describe("initSelection", () => {
         it("When a value is already selected in the source <select>, then it selects it in the list-picker", () => {
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             item_1.target_option.setAttribute("selected", "selected");
             manager.initSelection();
 
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
+            expectItemToBeSelected(item_1);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
 
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             selection_container.appendChild(placeholder);
             source_select_box.value = "";
             manager.initSelection();
 
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
+            expectItemNotToBeSelected(item_1);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
     });
 
     describe("processSelection", () => {
         it("does nothing if item is already selected", () => {
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             item_1.target_option.setAttribute("selected", "selected");
             item_1.element.setAttribute("aria-selected", "true");
             item_1.is_selected = true;
@@ -105,7 +108,7 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
 
         it("reset current value with placeholder if item is disabled", () => {
@@ -117,6 +120,7 @@ describe("SingleSelectionManager", () => {
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             manager.processSelection(item_1.element);
 
             const selected_value = selection_container.querySelector(".list-picker-selected-value");
@@ -124,13 +128,12 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 1");
-            expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
+            expectItemToBeSelected(item_1);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
@@ -138,172 +141,152 @@ describe("SingleSelectionManager", () => {
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 2");
 
-            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.is_selected).toBe(false);
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
-
-            expect(item_2.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_2.is_selected).toBe(true);
-            expect(item_2.target_option.hasAttribute("selected")).toBe(true);
-
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expectItemNotToBeSelected(item_1);
+            expectItemToBeSelected(item_2);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 2);
         });
     });
 
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
-        it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
+        it(`should replace the currently selected value with the placeholder
+            and remove the selected attribute on the source <option>`, () => {
             selection_container.appendChild(placeholder);
 
             // First select the item
             manager.processSelection(item_1.element);
 
-            expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
+            expectItemToBeSelected(item_1);
             expect(selection_container.contains(placeholder)).toBe(false);
 
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
-            const remove_item_button = selection_container.querySelector(
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+            const remove_item_button = selectOrThrow(
+                selection_container,
                 ".list-picker-selected-value-remove-button"
             );
-            if (!(remove_item_button instanceof Element)) {
-                throw new Error("No remove button found, something has gone wrong");
-            }
 
             // Now unselect the item
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(item_1.is_selected).toBe(false);
-            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
+
+            expectItemNotToBeSelected(item_1);
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(dropdown_manager.openListPicker).toHaveBeenCalled();
-
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 1);
         });
 
         it("should not remove the current selection when the source <select> is disabled", () => {
             source_select_box.disabled = true;
 
             manager.processSelection(item_1.element);
-            const remove_item_button = selection_container.querySelector(
+            const remove_item_button = selectOrThrow(
+                selection_container,
                 ".list-picker-selected-value-remove-button"
             );
-            if (!(remove_item_button instanceof Element)) {
-                throw new Error("No remove button found, something has gone wrong");
-            }
+
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
+
+            expectItemToBeSelected(item_1);
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();
         });
     });
 
-    describe("resetAfterDependenciesUpdate", () => {
-        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", async () => {
-            manager.processSelection(item_1.element);
-            source_select_box.innerHTML = "";
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
+    describe("resetAfterChangeInOptions", () => {
+        it.each([
+            [
+                `no item has been selected, and there is no option in the select anymore`,
+                (): void => {
+                    source_select_box.innerHTML = "";
+                    item_1.target_option.selected = false;
+                },
+            ],
+            [
+                `an item has been selected, but there is no option in the select anymore`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    source_select_box.innerHTML = "";
+                },
+            ],
+            [
+                `no item has been selected, and there are new options but none of them is selected`,
+                (): void => {
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                    item_1.target_option.selected = false;
+                },
+            ],
+            [
+                `an item has been selected, but does not exist in the new options,
+                and no new option is selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                },
+            ],
+        ])(`when %s, then it should display the placeholder`, (_conditions_description, setup) => {
+            setup();
+            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+            items_map_manager.refreshItemsMap();
+            manager.resetAfterChangeInOptions();
 
-            expect(item_1.is_selected).toBe(false);
-            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.getAttribute("selected")).toBeNull();
+            expectItemNotToBeSelected(item_1);
             expect(selection_container.contains(placeholder)).toBe(true);
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
 
-        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", async () => {
-            source_select_box.innerHTML = "";
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-            expect(selection_container.contains(placeholder)).toBe(true);
-        });
+        it.each([
+            [
+                `no item has been selected`,
+                `it should mark the new option as selected`,
+                (): void => {
+                    // No setup
+                },
+            ],
+            [
+                `an item has been selected`,
+                `it should mark the new option as selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                },
+            ],
+            [
+                `an item has been selected and is still selected in the new options`,
+                `it should keep it selected`,
+                (): void => {
+                    manager.processSelection(item_2.element);
+                },
+            ],
+        ])(
+            `when %s, and there are new options including one that is selected,
+            then %s`,
+            (_conditions_description, _expectation_description, setup) => {
+                setup();
+                const new_option_1 = doc.createElement("option");
+                new_option_1.value = "new option 1";
+                const new_option_2 = doc.createElement("option");
+                new_option_2.value = item_2.value;
+                new_option_2.selected = true;
+                source_select_box.replaceChildren(new_option_1, new_option_2);
+                item_1.target_option.selected = false;
 
-        it("when no item has been selected, then it should select the first available option", async () => {
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
+                const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+                items_map_manager.refreshItemsMap();
+                manager.resetAfterChangeInOptions();
 
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            const first_item = items_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-new-option-0"
-            );
-            expect(first_item.is_selected).toBe(true);
-            expect(first_item.element.getAttribute("aria-selected")).toBe("true");
-            expect(first_item.target_option.getAttribute("selected")).toBe("selected");
-            expect(selection_container.contains(placeholder)).toBe(false);
-        });
-
-        it("when no item has been selected and keep_none_value option is true, then it should display the placeholder", async () => {
-            manager = new SingleSelectionManager(
-                source_select_box,
-                dropdown,
-                selection_container,
-                placeholder,
-                dropdown_manager,
-                items_map_manager,
-                true
-            );
-
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            source_select_box.appendChild(new_option_0);
-
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            expect(selection_container.contains(placeholder)).toBe(true);
-        });
-
-        it("when an item has been selected, and is still available in the new options, then it should keep it selected", async () => {
-            manager.processSelection(item_1.element);
-
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = item_1.value;
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
-
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            const new_item_1 = items_map_manager.findListPickerItemInItemMap(item_1.id);
-            expect(new_item_1.is_selected).toBe(true);
-            expect(new_item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(new_item_1.target_option.getAttribute("selected")).toBe("selected");
-            expect(selection_container.contains(placeholder)).toBe(false);
-        });
-
-        it("when an item has been selected, but is not available in the new options, then the first available item should be selected", async () => {
-            manager.processSelection(item_1.element);
-
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
-
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            const item_0 = items_map_manager.findListPickerItemInItemMap(
-                "list-picker-item-new-option-0"
-            );
-            expect(item_0.is_selected).toBe(true);
-            expect(item_0.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_0.target_option.getAttribute("selected")).toBe("selected");
-            expect(selection_container.contains(placeholder)).toBe(false);
-        });
+                expectItemNotToBeSelected(item_1);
+                const new_item_2 = items_map_manager.findListPickerItemInItemMap(item_2.id);
+                expectItemToBeSelected(new_item_2);
+                expect(selection_container.contains(placeholder)).toBe(false);
+                expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
+            }
+        );
     });
 });

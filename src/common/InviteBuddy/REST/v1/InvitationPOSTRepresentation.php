@@ -36,4 +36,9 @@ class InvitationPOSTRepresentation
      * @var string {@type string} {@required false}
      */
     public $custom_message;
+
+    /**
+     * @var int {@type int} {@required false}
+     */
+    public $project_id;
 }

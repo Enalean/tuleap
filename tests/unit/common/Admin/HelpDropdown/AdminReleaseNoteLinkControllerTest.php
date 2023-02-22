@@ -66,17 +66,17 @@ class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout               = Mockery::mock(BaseLayout::class);
         $this->admin_page_renderer  = Mockery::mock(AdminPageRenderer::class);
         $this->release_note_manager = Mockery::mock(ReleaseNoteManager::class);
-        $this->csrf_token           = Mockery::mock(CSRFSynchronizerToken::class);
+        $csrf_token                 = Mockery::mock(CSRFSynchronizerToken::class);
 
         $this->admin_release_note_controller = new AdminReleaseNoteLinkController(
             $this->admin_page_renderer,
             $this->release_note_manager,
-            $this->csrf_token,
+            $csrf_token,
             '11.18'
         );
 
-        $this->csrf_token->shouldReceive('getTokenName')->andReturn('challenge');
-        $this->csrf_token->shouldReceive('getToken')->andReturn('token');
+        $csrf_token->shouldReceive('getTokenName')->andReturn('challenge');
+        $csrf_token->shouldReceive('getToken')->andReturn('token');
     }
 
     public function testItDisplaysTheAdminPage()

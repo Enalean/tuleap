@@ -36,6 +36,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInit
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
@@ -84,25 +85,26 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-        unset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
-    }
-
-    private function update(?NewChangesetCommentRepresentation $comment): void
-    {
+    private function update(
+        ?NewChangesetCommentRepresentation $comment,
+        CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
+    ): void {
         $string_representation = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
             ->withValue(self::FIELD_VALUE)
             ->build();
         $values                = [$string_representation];
 
-        $updater = new ArtifactUpdater(new FieldsDataBuilder(
-            $this->fields_retriever,
-            new NewArtifactLinkChangesetValueBuilder(
-                RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
+        $updater = new ArtifactUpdater(
+            new FieldsDataBuilder(
+                $this->fields_retriever,
+                new NewArtifactLinkChangesetValueBuilder(
+                    RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
+                ),
+                new NewArtifactLinkInitialChangesetValueBuilder(),
             ),
-            new NewArtifactLinkInitialChangesetValueBuilder()
-        ), $this->changeset_creator);
+            $this->changeset_creator,
+            $check_artifact_rest_update_conditions,
+        );
         $updater->update($this->user, $this->artifact, $values, $comment);
     }
 
@@ -138,7 +140,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
         )->once();
-        $this->update(null);
+        $this->update(null, CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate());
     }
 
     public function testUpdatePassesComment(): void
@@ -174,27 +176,15 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
         )->once();
-        $this->update($comment);
+        $this->update($comment, CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate());
     }
 
     public function testUpdateThrowsWhenUserCannotUpdate(): void
     {
-        $this->user     = UserTestBuilder::anAnonymousUser()->build();
-        $this->artifact = new Artifact(1, 10, 101, 1234567890, true);
-
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
-        $this->update(null);
-    }
-
-    public function testUpdateThrowsWhenThereWasAConcurrentModification(): void
-    {
-        $this->artifact->shouldReceive('getLastUpdateDate')->andReturn(1500000000);
-
-        $_SERVER['HTTP_IF_UNMODIFIED_SINCE'] = '1234567890';
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(412);
-        $this->update(null);
+        $this->update(
+            null,
+            CheckArtifactRestUpdateConditionsStub::disallowArtifactUpdate()
+        );
     }
 }

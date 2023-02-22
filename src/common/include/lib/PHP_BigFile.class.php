@@ -132,7 +132,6 @@ class PHP_BigFile
     {
         $this->path   = preg_replace('`^' . preg_quote(self::PROTOCOL . '://') . '`', '', $path);
         $this->offset = 0;
-        $this->mode   = $mode;
         $fileExists   = self::isFile($this->path) && is_readable($this->path);
 
         // Modes

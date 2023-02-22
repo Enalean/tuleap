@@ -49,10 +49,13 @@ class InvitationLimitChecker
         $already_sent_invitations = $this->dao->getInvitationsSentByUserForToday((int) $user->getId());
 
         if ($already_sent_invitations + $nb_invitation_to_send > $invitation_limit) {
-            if ($already_sent_invitations === 0) {
+            $nb_left = max($invitation_limit - $already_sent_invitations, 0);
+            if ($already_sent_invitations === 0 || $nb_left === 0) {
                 $message = \sprintf(
-                    _(
+                    ngettext(
+                        "You are trying to send %s invitation, but the maximum is %s per day.",
                         "You are trying to send %s invitations, but the maximum is %s per day.",
+                        $nb_invitation_to_send,
                     ),
                     $nb_invitation_to_send,
                     $invitation_limit
@@ -60,7 +63,7 @@ class InvitationLimitChecker
             } else {
                 $message = \sprintf(
                     ngettext(
-                        "You are trying to send one invitation.",
+                        "You are trying to send %s invitation.",
                         "You are trying to send %s invitations.",
                         $nb_invitation_to_send
                     ),
@@ -73,11 +76,11 @@ class InvitationLimitChecker
                     . " " .
                     \sprintf(
                         ngettext(
-                            "You can only send one more invitation.",
+                            "You can only send %s more invitation.",
                             "You can only send %s more invitations.",
-                            $invitation_limit - $already_sent_invitations
+                            $nb_left
                         ),
-                        $invitation_limit - $already_sent_invitations
+                        $nb_left
                     );
             }
             throw new InvitationSenderGateKeeperException($message);

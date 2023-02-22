@@ -87,10 +87,6 @@ export default {
             type: Array,
             mandatory: true,
         },
-        is_list_picker_enabled: {
-            type: Boolean,
-            mandatory: true,
-        },
     },
 
     computed: {
@@ -120,7 +116,6 @@ export default {
     mounted() {
         this.$store.dispatch("loadTracker", this.trackerId);
         this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
-        this.$store.commit("transitionModal/setIsListPickerEnabled", this.is_list_picker_enabled);
     },
 };
 </script>

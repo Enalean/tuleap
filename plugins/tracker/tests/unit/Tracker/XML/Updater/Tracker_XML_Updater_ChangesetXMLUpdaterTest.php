@@ -57,6 +57,10 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
 
     /** @var Tracker_FormElement_Field */
     private $field_details;
+    /**
+     * @var \Mockery\MockInterface&Tracker
+     */
+    private $tracker;
 
     protected function setUp(): void
     {

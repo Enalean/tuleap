@@ -20,73 +20,62 @@
 
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
 use Tracker_DateReminder;
 use Tracker_DateReminderManager;
 use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const TRACKER_ID = 158;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_DateReminder
-     */
-    private $reminder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_Date
+     * @var Tracker_FormElement_Field_Date&\PHPUnit\Framework\MockObject\MockObject
      */
     private $field;
     /**
      * @var false|int
      */
     private $today_at_midnight;
+    private Tracker_DateReminderManager $reminder_manager;
     /**
-     * @var int
+     * @var Tracker_DateReminder&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $tracker_id;
-    /**
-     * @var Tracker_DateReminderManager
-     */
-    private $reminder_manager;
+    private $reminder;
 
     public function setUp(): void
     {
-        $this->field    = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $this->reminder = Mockery::mock(Tracker_DateReminder::class);
-        $this->reminder->shouldReceive('getField')->andReturn($this->field);
+        $this->field    = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $this->reminder = $this->createMock(Tracker_DateReminder::class);
+        $this->reminder->method('getField')->willReturn($this->field);
 
         $this->today_at_midnight = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $this->tracker_id        = 158;
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
+        $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
         $this->reminder_manager = new Tracker_DateReminderManager($tracker);
     }
 
-    public function testItFetchArtifactsTwoDaysAgo()
+    public function testItFetchArtifactsTwoDaysAgo(): void
     {
-        $this->reminder->shouldReceive('getDistance')->andReturn('2');
-        $this->reminder->shouldReceive('getNotificationType')->andReturn('1');
+        $this->reminder->method('getDistance')->willReturn('2');
+        $this->reminder->method('getNotificationType')->willReturn('1');
 
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
-        $this->field->shouldReceive('getArtifactsByCriterias')->with($expected_time, $this->tracker_id)->once();
+        $this->field->expects(self::once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
 
-        $this->reminder_manager->getArtifactsByreminder($this->reminder);
+        $this->reminder_manager->getArtifactsByReminder($this->reminder);
     }
 
-    public function testItFetchArtifactsFourDaysInTheFuture()
+    public function testItFetchArtifactsFourDaysInTheFuture(): void
     {
-        $this->reminder->shouldReceive('getDistance')->andReturn('4');
-        $this->reminder->shouldReceive('getNotificationType')->andReturn('0');
+        $this->reminder->method('getDistance')->willReturn('4');
+        $this->reminder->method('getNotificationType')->willReturn('0');
 
         $expected_time = strtotime('4 days', $this->today_at_midnight);
-        $this->field->shouldReceive('getArtifactsByCriterias')->with($expected_time, $this->tracker_id)->once();
+        $this->field->expects(self::once())->method('getArtifactsByCriterias')->with($expected_time, self::TRACKER_ID);
 
-        $this->reminder_manager->getArtifactsByreminder($this->reminder);
+        $this->reminder_manager->getArtifactsByReminder($this->reminder);
     }
 }

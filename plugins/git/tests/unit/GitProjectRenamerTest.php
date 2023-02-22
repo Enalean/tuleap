@@ -30,6 +30,7 @@ final class GitProjectRenamerTest extends TestCase
     private \PHPUnit\Framework\MockObject\Stub $git_dao;
     private GitProjectRenamer $git_project_renamer;
     private Git_Backend_Interface|\PHPUnit\Framework\MockObject\Stub $git_backend;
+    private \Project $project;
 
     protected function setUp(): void
     {

@@ -1,10 +1,27 @@
 {{# gettext }}Hello,{{/ gettext }}
 
+{{# project_name }}
 {{# gettext }}
-    %s invited you to register to %s. |
-    {{ current_user_real_name }} |
+    %1$s invited you to register to %2$s and join the project %3$s. |
+    {{ from_user_real_name }} |
+    {{ instance_name }} |
+    {{ project_name }}
+{{/ gettext }}
+{{/project_name}}
+{{^ project_name }}
+{{# gettext }}
+    %1$s invited you to register to %2$s. |
+    {{ from_user_real_name }} |
     {{ instance_name }}
 {{/ gettext }}
+{{/ project_name }}
+{{# resent_user_real_name }}
+
+{{# gettext }}
+    You may have seen the invitation before but %s just sent you a reminder to join. |
+    {{ resent_user_real_name }} |
+{{/ gettext }}
+{{/ resent_user_real_name }}
 
 
 To sign up:
@@ -13,7 +30,7 @@ To sign up:
 {{# has_custom_message }}
 {{# gettext }}
     Message from %s: |
-    {{ current_user_real_name }}
+    {{ from_user_real_name }}
 {{/ gettext }}
 
 > {{ custom_message }}

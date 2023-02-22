@@ -26,8 +26,8 @@ namespace Tuleap\ProgramManagement;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\TitleValueRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\IterationView\DisplayPlanIterationsPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -150,10 +150,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
             throw new ForbiddenException($e->getI18NExceptionMessage());
         }
 
-        $assets = $this->getAssets();
-
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'planned-iterations-style'));
-        $layout->includeFooterJavascriptFile($assets->getFileURL('planned-iterations.js'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->getAssets(), 'src/index.ts'));
         $this->includeHeaderAndNavigationBar($layout, $project, $increment_identifier);
 
         $this->template_renderer->renderToPage(
@@ -191,11 +188,11 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
         );
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/program_management'
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/planned-iterations/frontend-assets/',
+            '/assets/program_management/planned-iterations'
         );
     }
 }

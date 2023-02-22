@@ -30,8 +30,7 @@ final class StatusValuesCollectionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->values_ids               = [111, 112, 113, 114];
-        $this->status_values_collection = new StatusValuesCollection($this->values_ids);
+        $this->status_values_collection = new StatusValuesCollection([111, 112, 113, 114]);
     }
 
     public function testStatusValuesCollectionGetters(): void

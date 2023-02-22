@@ -35,8 +35,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     public function __construct()
     {
-        //More coherent to have only one delete date for a whole hierarchy.
-        $this->deleteDate = time();
     }
 
     /**

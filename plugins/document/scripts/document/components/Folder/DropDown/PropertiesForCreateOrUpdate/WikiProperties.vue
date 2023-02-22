@@ -43,21 +43,14 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { isWiki } from "../../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Item } from "../../../../type";
+import type { Item, WikiProperties } from "../../../../type";
+import { computed } from "vue";
 
-@Component
-export default class WikiProperties extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ value: WikiProperties; item: Item }>();
 
-    @Prop({ required: true })
-    readonly value!: Item;
-
-    get is_displayed(): boolean {
-        return isWiki(this.item);
-    }
-}
+const is_displayed = computed((): boolean => {
+    return isWiki(props.item);
+});
 </script>

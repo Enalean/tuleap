@@ -26,6 +26,10 @@
     margin: 0 var(--tlp-medium-spacing);
 }
 
+.accont-registration-creation-title {
+    margin: 0;
+}
+
 .account-registration-content {
     text-align: center;
 
@@ -43,6 +47,31 @@
 }
 
 .account-registration-content-cta {
+    margin: var(--tlp-large-spacing) 0 0;
+}
+
+.account-registration-form {
+    width: 360px;
+    padding: var(--tlp-large-spacing);
+    border-radius: var(--tlp-x-large-radius);
+
+    .robustness {
+        &.good {
+            > .password-strategy-bad {
+                display: none;
+            }
+        }
+
+        &.bad {
+            > .password-strategy-good {
+                display: none;
+            }
+        }
+    }
+}
+
+.account-registration-form-submit {
+    display: flex;
     margin: var(--tlp-large-spacing) 0 0;
 }
 

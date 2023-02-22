@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
 use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
@@ -38,7 +39,7 @@ use Tuleap\User\RequestFromAutocompleter;
 class Tracker_NotificationsManager
 {
     /** @var Tracker */
-    protected $tracker;
+    private $tracker;
 
     /**
      * @var UsersToNotifyDao
@@ -352,7 +353,7 @@ class Tracker_NotificationsManager
     public function getGlobalNotifications()
     {
         $notifs = [];
-        foreach ($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
+        foreach ($this->getGlobalDao()->searchByTrackerId((int) $this->tracker->id) as $row) {
             $notifs[$row['id']] = new Tracker_GlobalNotification(
                 $row['id'],
                 $this->tracker->id,
@@ -496,16 +497,6 @@ class Tracker_NotificationsManager
                 $dao->updateAddressById($notification_id, $updated_addresses);
             }
         }
-    }
-
-    protected function getWatcherDao()
-    {
-        return new Tracker_WatcherDao();
-    }
-
-    protected function getNotificationDao()
-    {
-        return new Tracker_NotificationDao();
     }
 
     protected function getGlobalNotificationsAddressesBuilder()

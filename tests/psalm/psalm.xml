@@ -7,6 +7,8 @@
     resolveFromConfigFile="false"
     errorBaseline="./tests/psalm/tuleap-baseline.xml"
     allowNamedArgumentCalls="false"
+    findUnusedBaselineEntry="false"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src/common/" />
@@ -15,6 +17,7 @@
         <directory name="src/tuleap-cfg/" />
         <directory name="plugins/*/include/" />
         <directory name="plugins/*/tests/unit/" />
+        <directory name="plugins/onlyoffice/tests/integration/" />
         <directory name="plugins/git/tests/unit/REST/" />
         <directory name="plugins/tracker/tests/unit/Builders" />
         <directory name="plugins/*/bin/" />
@@ -25,6 +28,7 @@
         <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/xml/" />
         <directory name="tests/integration/tests/SVNCore/" />
+        <directory name="tests/integration/tests/InviteBuddy/" />
         <ignoreFiles>
             <directory name="tests/unit/Tuleap/Tools"/>
             <directory name="src/common/wiki/phpwiki/"/>

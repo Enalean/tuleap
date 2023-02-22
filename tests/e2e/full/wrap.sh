@@ -5,7 +5,7 @@
 
 set -euxo pipefail
 
-MAX_TEST_EXECUTION_TIME='30m'
+MAX_TEST_EXECUTION_TIME='60m'
 TIMEOUT="$(command -v gtimeout || echo timeout)"
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
 
@@ -37,20 +37,30 @@ clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
 
+wait_until_tests_are_executed() {
+    local test_phpunit_container_id="$($DOCKERCOMPOSE ps -q test-phpunit)"
+    local test_cypress_container_id="$($DOCKERCOMPOSE ps -q test-cypress)"
+
+    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$test_cypress_container_id" || \
+        echo 'Tests take to much time to execute. End of execution will not be waited for!'
+}
+
 mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
 export TEST_RESULT_OUTPUT="$test_results_folder"
 export CYPRESS_VERSION="$cypress_version"
-$TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
+$DOCKERCOMPOSE up -d --build
 
-tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
+wait_until_tests_are_executed
+
 mkdir -p "$test_results_folder/logs"
-docker cp ${tuleap_container_id}:/var/log/nginx/ "$test_results_folder/logs"
-docker cp ${tuleap_container_id}:/var/opt/remi/php80/log/php-fpm/ "$test_results_folder/logs"
+$DOCKERCOMPOSE cp tuleap:/var/log/ "$test_results_folder/logs"
+$DOCKERCOMPOSE cp tuleap:/var/opt/remi/php81/log/php-fpm/ "$test_results_folder/logs"
 $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 
-$DOCKERCOMPOSE logs test > "$test_results_folder/logs/test.log"
+$DOCKERCOMPOSE logs test-phpunit > "$test_results_folder/logs/test-phpunit.log"
+$DOCKERCOMPOSE logs test-cypress > "$test_results_folder/logs/test-cypress.log"
 
 clean_env

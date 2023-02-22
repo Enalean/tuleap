@@ -84,10 +84,10 @@ const configuration = namespace("configuration");
     components: { BacklogElementSkeleton, ProgramIncrementCard, EmptyState },
 })
 export default class ProgramIncrementList extends Vue {
-    private error_message = "";
-    private has_error = false;
-    private program_increments: Array<ProgramIncrement> = [];
-    private is_loading = false;
+    error_message = "";
+    has_error = false;
+    program_increments: Array<ProgramIncrement> = [];
+    is_loading = false;
 
     @configuration.State
     readonly can_create_program_increment!: boolean;

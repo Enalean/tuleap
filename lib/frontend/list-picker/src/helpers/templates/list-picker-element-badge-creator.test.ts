@@ -28,10 +28,12 @@ import { render } from "lit/html.js";
 describe("list-picker-element-badge-creator", () => {
     let source_select_box: HTMLSelectElement,
         item_map_manager: ItemsMapManager,
-        event_listener: (event: Event) => void;
+        event_listener: (event: Event) => void,
+        doc: Document;
 
     beforeEach(async () => {
-        source_select_box = document.createElement("select");
+        doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
         source_select_box.setAttribute("multiple", "multiple");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
@@ -41,7 +43,7 @@ describe("list-picker-element-badge-creator", () => {
 
     describe("listPickerElementBadgeCreator", () => {
         it("should create a simple badge", () => {
-            const badge_document_fragment = document.createDocumentFragment();
+            const badge_document_fragment = doc.createDocumentFragment();
             const item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
             const badge = createItemBadgeTemplate(event_listener, item_1);
             render(badge, badge_document_fragment);
@@ -53,7 +55,7 @@ describe("list-picker-element-badge-creator", () => {
         });
 
         it("should create the custom colored badge if the source option has the color data set", () => {
-            const badge_document_fragment = document.createDocumentFragment();
+            const badge_document_fragment = doc.createDocumentFragment();
             const colored_badge = item_map_manager.findListPickerItemInItemMap(
                 "list-picker-item-value_colored"
             );
@@ -69,7 +71,7 @@ describe("list-picker-element-badge-creator", () => {
         });
 
         it("should create a custom badge and the user badge if the source option has the user data set", () => {
-            const badge_document_fragment = document.createDocumentFragment();
+            const badge_document_fragment = doc.createDocumentFragment();
             const user_badge = item_map_manager.findListPickerItemInItemMap(
                 "list-picker-item-peraltaj"
             );
@@ -85,7 +87,7 @@ describe("list-picker-element-badge-creator", () => {
         });
 
         it("should not create the custom colored badge if the source option has the legacy color data set", () => {
-            const badge_document_fragment = document.createDocumentFragment();
+            const badge_document_fragment = doc.createDocumentFragment();
             const colored_badge = item_map_manager.findListPickerItemInItemMap(
                 "list-picker-item-bad_colored"
             );

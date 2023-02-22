@@ -1,0 +1,283 @@
+/**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:map";
+@use "sass:color";
+@use "@tuleap/tlp-swatch-colors";
+@use "@tuleap/plugin-agiledashboard-card-fields";
+@use "./kanban-item-moves";
+@use "./kanban-item-transit";
+@use "./transition-variables" as transition;
+
+$expand-collapse-bar-height: 8px;
+$margin-between-kanban-item-on-hover: 1px;
+$margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 4px;
+
+.kanban-item {
+    margin: $margin-between-kanban-item var(--tlp-small-spacing);
+    list-style-type: none;
+    transition: margin transition.$duration transition.$delay;
+
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        &.kanban-item-#{$color-name} {
+            --item-type-color: #{map.get($colors, "primary")};
+            --text-color: #{map.get($colors, "text")};
+        }
+
+        > .tlp-swatch-#{$color-name} {
+            --box-shadow: inset 0 0 0 1px var(--border-color), 0 1px 2px rgb(0 0 0 / 10%);
+            --box-shadow-darker: inset
+                    0
+                    0
+                    0
+                    1px
+                    #{color.adjust(map.get($colors, "border"), $lightness: - 20%)},
+                0 1px 2px rgb(0 0 0 / 10%);
+            --secondary-color-darker: #{color.adjust(
+                    map.get($colors, "secondary"),
+                    $lightness: - 10%
+                )};
+            --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
+        }
+
+        .kanban-item-content.kanban-item-card-with-accessibility {
+            --extra-padding-right: calc(
+                #{$accessibility-pattern-width} +
+                    2 *
+                    #{$accessibility-pattern-right-margin} -
+                    var(--tlp-small-spacing)
+            );
+        }
+    }
+
+    &:first-child .kanban-item-content-move:first-child {
+        visibility: hidden;
+    }
+
+    &:last-child .kanban-item-content-move:last-child {
+        visibility: hidden;
+    }
+
+    &:only-child:hover .kanban-item-content-moves {
+        display: none;
+    }
+
+    &:hover {
+        margin: $margin-between-kanban-item var(--tlp-small-spacing) 0;
+
+        + .kanban-item {
+            margin: $margin-between-kanban-item-on-hover var(--tlp-small-spacing)
+                $expand-collapse-bar-height;
+        }
+
+        .kanban-item-content-expand-collapse {
+            height: $expand-collapse-bar-height;
+        }
+    }
+
+    &.compact-view .extra-card-fields {
+        display: none;
+    }
+
+    @keyframes blink-kanban-card {
+        0% {
+            background: var(--secondary-color, var(--tlp-white-color));
+            box-shadow: var(--box-shadow, (inset 0 0 0 1px transparent, var(--tlp-card-shadow)));
+        }
+
+        50% {
+            background: var(--secondary-color-darker, var(--tlp-main-color-lighter-90));
+            box-shadow: var(
+                --box-shadow-darker,
+                (inset 0 0 0 1px var(--tlp-main-color-transparent-50))
+            );
+        }
+
+        100% {
+            background: var(--secondary-color, var(--tlp-white-color));
+            box-shadow: var(--box-shadow, (inset 0 0 0 1px transparent, var(--tlp-card-shadow)));
+        }
+    }
+
+    @keyframes pulse-kanban-card {
+        0% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+            transform: scale3d(1.02, 1.02, 1.02);
+        }
+
+        100% {
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    &.updating kanban-item {
+        transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+        animation: blink-kanban-card 1200ms ease-in-out alternate infinite;
+    }
+
+    &.card-created {
+        animation: pulse-kanban-card 500ms ease-in-out;
+
+        kanban-item {
+            transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+            background: var(--tlp-success-color-lighter-90);
+            box-shadow: 0 0 0 1px var(--tlp-success-color-transparent-50);
+        }
+    }
+}
+
+kanban-item {
+    display: flex;
+    position: relative;
+    transition: box-shadow 150ms ease-in-out, background-color 150ms ease-in-out;
+    border-radius: var(--tlp-medium-radius);
+    background: var(--secondary-color, var(--tlp-white-color));
+    box-shadow: var(--box-shadow, var(--tlp-card-shadow));
+    cursor: move;
+}
+
+.kanban-item-content-type-border {
+    flex: 0 0 auto;
+    border-left: 4px solid var(--item-type-color, var(--tlp-white-color));
+    border-top-left-radius: var(--tlp-medium-radius);
+    border-bottom-left-radius: var(--tlp-medium-radius);
+}
+
+.kanban-item-content {
+    display: flex;
+    position: relative;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: calc(100% - var(--tlp-medium-spacing));
+    overflow-y: hidden;
+    transition: padding-bottom transition.$duration;
+
+    &.kanban-item-card-with-accessibility {
+        .kanban-item-content-info-label,
+        .extra-card-fields {
+            margin-right: var(--extra-padding-right, 0);
+        }
+    }
+}
+
+.kanban-item-content-info {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--tlp-small-spacing);
+}
+
+.kanban-item-content-header {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: space-between;
+}
+
+.kanban-item-content-header-link {
+    margin: 0 0 2px;
+    color: var(--text-color, var(--tlp-dimmed-color));
+    font-size: 0.625rem;
+    line-height: 0.8125rem;
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.kanban-item-content-info-link-icon {
+    position: relative;
+    top: -1px;
+    font-size: 0.8em;
+}
+
+.kanban-item-content-info-link-tracker-name {
+    display: none;
+}
+
+.kanban-item-content-info-label {
+    flex: 1 1 auto;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+}
+
+time-info {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.kanban-item-content-clock {
+    color: var(--text-color, var(--tlp-dimmed-color));
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    cursor: help;
+}
+
+.kanban-item-card-accessibility {
+    position: absolute;
+    z-index: 1;
+    top: 26px;
+    right: $accessibility-pattern-right-margin;
+    flex: 1 1 auto;
+    width: $accessibility-pattern-width;
+    height: 100%;
+
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        &.#{$color-name} {
+            opacity: 0.5;
+            background-color: map.get($colors, "text");
+            mask-image: url("#{map.get($colors, 'pattern')}");
+        }
+    }
+}
+
+.kanban-item-content-expand-collapse {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    height: 0;
+    overflow: hidden;
+    transition: height transition.$duration transition.$delay;
+    cursor: pointer;
+
+    &:hover .kanban-item-content-expand-collapse-icon {
+        color: var(--tlp-main-color);
+    }
+}
+
+.kanban-item-content-expand-collapse-icon {
+    position: relative;
+    top: -5px;
+    color: var(--text-color, var(--tlp-dimmed-color));
+    font-weight: 600;
+}
+
+card-fields {
+    position: relative;
+    z-index: 2;
+}

@@ -33,6 +33,27 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalResponseMock;
 
     private $tracker;
+    private PFUser $user;
+    /**
+     * @var Tracker_URL&\Mockery\MockInterface
+     */
+    private $url;
+    /**
+     * @var \Tuleap\Tracker\Artifact\Artifact&\Mockery\MockInterface
+     */
+    private $artifact;
+    /**
+     * @var Tracker_Report&\Mockery\MockInterface
+     */
+    private $report;
+    /**
+     * @var Tracker_FormElement_Interface&\Mockery\MockInterface
+     */
+    private $formElement;
+    /**
+     * @var \Mockery\MockInterface&TrackerManager
+     */
+    private $tm;
 
     protected function setUp(): void
     {
@@ -40,8 +61,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $GLOBALS['HTML'] = Mockery::spy(\Layout::class);
 
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturns(666);
+        $this->user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();
 
         $this->url = \Mockery::spy(\Tracker_URL::class);
 

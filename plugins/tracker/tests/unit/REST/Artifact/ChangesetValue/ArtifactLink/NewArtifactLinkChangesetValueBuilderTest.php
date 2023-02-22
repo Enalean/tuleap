@@ -78,8 +78,8 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->getParentArtifactId());
-        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getNewValues());
-        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getRemovedValues());
+        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
+        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
     }
 
     public function testItBuildsFromARESTPayloadWithOnlyParentKey(): void
@@ -92,7 +92,8 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertSame(self::PARENT_ARTIFACT_ID, $update_value->getParent()->getParentArtifactId());
-        self::assertNull($update_value->getArtifactLinksDiff());
+        self::assertEmpty($update_value->getAddedValues()->getArtifactLinks());
+        self::assertEmpty($update_value->getRemovedValues()->getArtifactLinks());
         self::assertNull($update_value->getSubmittedValues());
     }
 
@@ -109,8 +110,8 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
         self::assertSame(self::FIELD_ID, $update_value->getFieldId());
         self::assertNull($update_value->getParent());
-        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getNewValues());
-        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getArtifactLinksDiff()->getRemovedValues());
+        self::assertSame([self::ADDED_ARTIFACT_ID], $update_value->getAddedValues()->getTargetArtifactIds());
+        self::assertSame([self::REMOVED_ARTIFACT_ID], $update_value->getRemovedValues()->getTargetArtifactIds());
         self::assertNotNull($update_value->getSubmittedValues());
         $submitted_values = $update_value->getSubmittedValues()->getArtifactLinks();
         self::assertCount(3, $submitted_values);
@@ -121,42 +122,6 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_is_child', $second_link->getType());
         self::assertSame(self::ADDED_ARTIFACT_ID, $third_link->getTargetArtifactId());
         self::assertSame('_depends_on', $third_link->getType());
-    }
-
-    public function testItThrowsWhenAllLinkAndLinksAreUsedInTheSameTime(): void
-    {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
-            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
-            ->withLinks(['id' => 24])
-            ->build();
-
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $this->expectExceptionMessage('cannot be used at the same time');
-        $this->build($payload);
-    }
-
-    public function testItThrowsWhenNeitherLinksOrAllLinksAreUsed(): void
-    {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)->build();
-
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $this->expectExceptionMessage('"links" and/or "parent" or "all_links" key must be defined');
-        $this->build($payload);
-    }
-
-    public function testItThrowsWhenAllLinksIsUsedWithParent(): void
-    {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
-            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
-            ->withParent(self::PARENT_ARTIFACT_ID)
-            ->build();
-
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $this->expectExceptionMessage('cannot be used at the same time');
-        $this->build($payload);
     }
 
     public function testItThrowsWhenAllLinkIsUsedAndFeatureFlagIsDisabled(): void

@@ -255,7 +255,7 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function dataProviderProcessableDocumentClasses(): array
+    public static function dataProviderProcessableDocumentClasses(): array
     {
         return [
             [Docman_Wiki::class],
@@ -266,10 +266,10 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public function dataProviderProcessableItemClasses(): ?\Generator
+    public static function dataProviderProcessableItemClasses(): ?\Generator
     {
         yield [Docman_Folder::class];
-        foreach ($this->dataProviderProcessableDocumentClasses() as $document_class) {
+        foreach (self::dataProviderProcessableDocumentClasses() as $document_class) {
             yield $document_class;
         }
     }

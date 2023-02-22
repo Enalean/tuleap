@@ -84,6 +84,6 @@ final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\Test
             ->once()
             ->with('administration', Mockery::type('array'));
 
-        $this->controller->process($request, $layout, ['id' => '102']);
+        $this->controller->process($request, $layout, ['project_id' => '102']);
     }
 }

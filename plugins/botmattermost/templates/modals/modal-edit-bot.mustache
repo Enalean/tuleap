@@ -1,0 +1,54 @@
+<div id="modal-edit-bot-{{ bot_id }}" class="tlp-modal" role="dialog" aria-labelledby="modal-big-content-label-{{ bot_id }}">
+    <form method="POST" action="{{ edit_bot_url }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="modal-big-content-label-{{ bot_id }}">
+                {{# dgettext }} tuleap-botmattermost | Edit bot {{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="bot_id" value="{{ bot_id }}">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="bot-mattermost-name">
+                    {{# dgettext }} tuleap-botmattermost | Id {{/ dgettext }}
+                </label>
+                <p>#{{ bot_id }}</p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="bot-mattermost-name">
+                    {{# dgettext }} tuleap-botmattermost | Bot name {{/ dgettext }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input id="bot-mattermost-name" type="text" class="tlp-input" name="bot_name" value="{{ bot_name }}"
+                       placeholder="{{# dgettext }} tuleap-botmattermost | Bot name... {{/ dgettext }}" required>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="bot-mattermost-webhook-url">
+                    {{# dgettext }} tuleap-botmattermost | Webhook URL {{/ dgettext }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input id="bot-mattermost-webhook-url" type="url" class="tlp-input" name="webhook_url"
+                       value="{{ webhook_url }}" placeholder="{{# dgettext }} tuleap-botmattermost | https://... {{/ dgettext }}" required pattern="https?://.+">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="bot-mattermost-avatar-url">
+                    {{# dgettext }} tuleap-botmattermost | Avatar URL {{/ dgettext }}
+                </label>
+                <input id="bot-mattermost-avatar-url" type="url" class="tlp-input" name="avatar_url"
+                       value="{{ avatar_url }}" placeholder="{{# dgettext }} tuleap-botmattermost | https://... {{/ dgettext }}" pattern="https?://.+">
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <input type="hidden" name="bot_id" value="{{ bot_id }}">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }} tuleap-botmattermost | Cancel {{/ dgettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }} tuleap-botmattermost | Update {{/ dgettext }}
+            </button>
+        </div>
+    </form>
+</div>

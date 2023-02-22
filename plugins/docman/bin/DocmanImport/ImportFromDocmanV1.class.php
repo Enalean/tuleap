@@ -67,12 +67,14 @@ class Docman_ImportFromDocmanV1
 
         $root_folder_id = (int) $client->getRootFolder($session_hash, $project->getID());
 
+        $current_time = $_SERVER['REQUEST_TIME'] ?? ((new DateTimeImmutable())->getTimestamp());
+
         return (int) $client->createDocmanFolder(
             $session_hash,
             $project->getID(),
             $root_folder_id,
             'Docman v1 import',
-            'Documents imported from legacy documentation system on ' . date('c', $_SERVER['REQUEST_TIME']),
+            'Documents imported from legacy documentation system on ' . date('c', $current_time),
             'begin',
             'none',
             [
@@ -95,8 +97,8 @@ class Docman_ImportFromDocmanV1
             ],
             [],
             'admin',
-            $_SERVER['REQUEST_TIME'],
-            $_SERVER['REQUEST_TIME']
+            $current_time,
+            $current_time
         );
     }
 

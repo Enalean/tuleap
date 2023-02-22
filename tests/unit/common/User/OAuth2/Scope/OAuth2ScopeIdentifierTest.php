@@ -35,7 +35,7 @@ final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($identifier_key, $identifier->toString());
     }
 
-    public function dataProviderValidIdentifierKey(): array
+    public static function dataProviderValidIdentifierKey(): array
     {
         return [
             ['profile:foo'],
@@ -53,7 +53,7 @@ final class OAuth2ScopeIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         OAuth2ScopeIdentifier::fromIdentifierKey($invalid_identifier_key);
     }
 
-    public function dataProviderInvalidIdentifierKey(): array
+    public static function dataProviderInvalidIdentifierKey(): array
     {
         return [
             'Space (force encoding for RFC6750 section 3)' => ['identifier space'],

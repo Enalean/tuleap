@@ -51,7 +51,7 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
         self::assertFalse($this->parser->accept($json));
     }
 
-    public function dataProviderInvalidJSONPayload(): array
+    public static function dataProviderInvalidJSONPayload(): array
     {
         return [
             'Incorrectly formatted' => [[]],

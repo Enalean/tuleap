@@ -20,8 +20,6 @@
  *
  */
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\AccountCreationFeedback;
 use Tuleap\User\Account\RedirectAfterLogin;
 
 // adduser.php - All the forms and functions to manage unix users
@@ -36,50 +34,12 @@ function account_add_user_to_group($group_id, &$user_unix_name)
             return false;
         }
         $project_member_adder = \Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications::build();
-        $project_member_adder->addProjectMember($user, $project);
+        $project_member_adder->addProjectMemberWithFeedback($user, $project, $um->getCurrentUser());
         return true;
     } else {
         //user doesn't exist
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_not_exist'));
         return false;
-    }
-}
-
-// Set user password (Unix, Web)
-function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
-{
-    $um   = UserManager::instance();
-    $user = new PFUser();
-    $user->setUserName($loginname);
-    $user->setRealName($realname);
-    if ($pw !== null) {
-        $user->setPassword($pw);
-    }
-    $user->setLdapId($ldap_id);
-    $user->setRegisterPurpose($register_purpose);
-    $user->setEmail($email);
-    $user->setStatus($status);
-    $user->setConfirmHash($confirm_hash);
-    $user->setMailSiteUpdates($mail_site);
-    $user->setMailVA($mail_va);
-    $user->setTimezone($timezone);
-    $user->setLanguageID($lang_id);
-    $user->setUnixStatus($unix_status);
-    $user->setExpiryDate($expiry_date);
-
-    $u = $um->createAccount($user);
-    if ($u) {
-        $account_creation_feedback = new AccountCreationFeedback(
-            new \Tuleap\InviteBuddy\InvitationDao(),
-            $um,
-            new \Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier(),
-            BackendLogger::getDefaultLogger(),
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($u);
-
-        return $u->getId();
-    } else {
-        return $u;
     }
 }
 
@@ -94,7 +54,15 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
     if ($return_to) {
         $returnToToken = parse_url($return_to);
         if (preg_match('{/my(/|/index.php|)}i', $returnToToken['path'] ?? '')) {
-            $url = '/my/index.php';
+            if (strpos($return_to, '/my/') === 0) {
+                $url       = $return_to;
+                $return_to = '';
+            } else {
+                $url = '/my/index.php';
+            }
+        } elseif (preg_match('%^/projects/' . Rule_ProjectName::PATTERN_PROJECT_NAME . '$%', $returnToToken['path'] ?? '')) {
+            $url       = $return_to;
+            $return_to = '';
         } else {
             $url = '/my/redirect.php';
         }
@@ -103,6 +71,22 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
             $url = '/my/index.php?pv=2';
         } else {
             $url = '/my/index.php';
+        }
+    }
+
+    if ($user->isFirstTimer() && ($url === '/my/' || $url === '/my/index.php')) {
+        $invitation_dao = new \Tuleap\InviteBuddy\InvitationDao(
+            new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance()),
+        );
+        $invitation     = $invitation_dao->searchInvitationUsedToRegister((int) $user->getId());
+        if ($invitation && $invitation->to_project_id) {
+            try {
+                $project = ProjectManager::instance()->getValidProjectById($invitation->to_project_id);
+                $url     = '/projects/' . urlencode($project->getUnixNameMixedCase());
+            } catch (Project_NotFoundException) {
+                // Not anymore valid project, redirect to /my/
+            }
         }
     }
 

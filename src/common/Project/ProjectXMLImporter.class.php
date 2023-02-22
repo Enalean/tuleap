@@ -380,7 +380,6 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             new FRSFileFactory($this->logger),
             $this->user_finder,
             $this->ugroup_manager,
-            new XMLImportHelper($this->user_manager),
             $this->frs_permissions_creator,
             $this->uploaded_links_updater
         );
@@ -445,7 +444,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             [$ugroups_in_xml, $project_members] = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 
             foreach ($project_members as $user) {
-                $this->addProjectMember($project, $user);
+                $this->addProjectMember($project, $user, $user_creator);
             }
 
             foreach ($ugroups_in_xml as $ugroup_def) {
@@ -474,7 +473,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
                 foreach ($ugroup_def['users'] as $user) {
                     $this->logger->debug("Adding user " . $user->getUserName() . " to " . $ugroup_def['name']);
-                    $ugroup->addUser($user);
+                    $ugroup->addUser($user, $user_creator);
                 }
 
                 if ($ugroup->getId() === ProjectUGroup::PROJECT_ADMIN) {
@@ -487,11 +486,11 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         }
     }
 
-    private function addProjectMember(Project $project, PFUser $user)
+    private function addProjectMember(Project $project, PFUser $user, PFUser $user_creator)
     {
         $this->logger->info("Add user {$user->getUserName()} to project.");
 
-        $this->project_member_adder->addProjectMember($user, $project);
+        $this->project_member_adder->addProjectMemberWithFeedback($user, $project, $user_creator);
     }
 
     private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)

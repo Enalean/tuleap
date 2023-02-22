@@ -44,24 +44,19 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Property } from "../../../../../type";
 import DateFlatPicker from "../DateFlatPicker.vue";
 import emitter from "../../../../../helpers/emitter";
 
-@Component({ components: { DateFlatPicker } })
-export default class CustomPropertyDate extends Vue {
-    @Prop({ required: true })
-    readonly currentlyUpdatedItemProperty!: Property;
+const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
-    private value = String(this.currentlyUpdatedItemProperty.value);
+const value = String(props.currentlyUpdatedItemProperty.value);
 
-    oninput(value: string): void {
-        emitter.emit("update-custom-property", {
-            property_short_name: this.currentlyUpdatedItemProperty.short_name,
-            value,
-        });
-    }
+function oninput(value: string): void {
+    emitter.emit("update-custom-property", {
+        property_short_name: props.currentlyUpdatedItemProperty.short_name,
+        value,
+    });
 }
 </script>

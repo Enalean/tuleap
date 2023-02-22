@@ -59,6 +59,11 @@ final class ParentLinkActionTest extends \Tuleap\Test\PHPUnit\TestCase
     private $parent_artifact;
 
     /**
+     * @var Artifact&Mockery\MockInterface
+     */
+    private $another_parent_artifact;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|null
      */
     private $artifact_link_field;

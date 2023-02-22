@@ -25,19 +25,18 @@ class Account_RegisterByAdminPresenter extends Account_RegisterPresenter
     public $restricted_user;
     public $send_email;
     public $expiry_date;
-    public $expiry_date_directions;
-    public $form_url               = '/admin/register_admin.php?page=admin_creation';
     public $should_display_purpose = true;
+
+    public string $form_url = '/admin/register';
 
     public function __construct(Account_RegisterAdminPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {
         parent::__construct($prefill_values, $extra_plugin_field);
-        $this->title                  = _('Create a new user');
-        $this->submit                 = _('Activate');
-        $this->purpose_directions     = _('You can add a comment on this user registration<br>');
-        $this->restricted_user        = _('Restricted user');
-        $this->send_email             = _('Send a welcome email to the user');
-        $this->expiry_date            = _('Expiration date');
-        $this->expiry_date_directions = _('<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don\'t want an expiration date.</em>');
+        $this->title              = _('Create a new user');
+        $this->submit             = _('Activate');
+        $this->purpose_directions = _('You can add a comment on this user registration');
+        $this->restricted_user    = _('Restricted user');
+        $this->send_email         = _('Send a welcome email to the user');
+        $this->expiry_date        = _('Expiration date');
     }
 }

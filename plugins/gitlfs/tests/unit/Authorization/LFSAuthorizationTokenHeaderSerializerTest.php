@@ -56,7 +56,7 @@ class LFSAuthorizationTokenHeaderSerializerTest extends \Tuleap\Test\PHPUnit\Tes
         $serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
     }
 
-    public function incorrectlyFormattedIdentifierProvider(): array
+    public static function incorrectlyFormattedIdentifierProvider(): array
     {
         return [
             ['incorrect_identifier'],

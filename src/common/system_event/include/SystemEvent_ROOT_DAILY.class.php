@@ -23,8 +23,6 @@ use Tuleap\SystemEvent\RootDailyStartEvent;
 
 class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 {
-    private const DAY_OF_WEEKLY_STATS = 'Monday';
-
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications
@@ -63,12 +61,9 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
-        $project_metric_dao = new \Tuleap\Project\ProjectMetricsDAO();
-        $this->runComputeAllDailyStats($project_metric_dao);
+        $this->runComputeAllDailyStats();
         $current_time = new DateTimeImmutable();
         $this->cleanupDB($current_time);
-
-        $this->runWeeklyStats($logger, $project_metric_dao);
 
         try {
             $frs_directory_cleaner = new \Tuleap\FRS\FRSIncomingDirectoryCleaner();
@@ -115,27 +110,14 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 
-    private function runComputeAllDailyStats(\Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
+    private function runComputeAllDailyStats(): void
     {
         (new \Tuleap\FRS\FRSMetricsDAO())->executeDailyRun(new DateTimeImmutable());
-        $project_metrics_dao->executeDailyRun();
     }
 
     private function cleanupDB(DateTimeImmutable $current_time): void
     {
         (new SessionDao())->deleteExpiredSession($current_time->getTimestamp(), \ForgeConfig::getInt('sys_session_lifetime'));
         (new UserDao())->updatePendingExpiredUsersToDeleted($current_time->getTimestamp(), 3600 * 24 * \ForgeConfig::getInt('sys_pending_account_lifetime'));
-    }
-
-    /**
-     * run the weekly stats for projects. Run it on Monday morning so that
-     * it computes the stats for the week before
-     */
-    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, \Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
-    {
-        $now = new DateTimeImmutable();
-        if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
-            $project_metrics_dao->executeWeeklyRun($now);
-        }
     }
 }

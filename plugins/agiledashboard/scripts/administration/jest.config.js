@@ -18,10 +18,11 @@
  *
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "node:process";
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-module.exports = {
+env.DISABLE_TS_TYPECHECK = "true";
+export default {
     ...defineJestConfiguration(),
-    displayName: "agiledshboard-administration",
+    displayName: "agiledashboard-administration",
 };

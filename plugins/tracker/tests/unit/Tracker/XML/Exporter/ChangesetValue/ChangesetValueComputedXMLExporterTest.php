@@ -50,6 +50,11 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
      * @var SimpleXMLElement
      */
     private $changeset_value_xml;
+    /**
+     * @var Tracker_Artifact_Changeset&\Mockery\MockInterface
+     */
+    private $changeset;
+    private PFUser $user;
 
     protected function setUp(): void
     {

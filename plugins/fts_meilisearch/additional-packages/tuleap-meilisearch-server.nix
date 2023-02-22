@@ -14,16 +14,16 @@ let
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";
-    version = "0.30.5";
+    version = "1.0.0";
     src = pkgs.fetchFromGitHub {
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      sha256 = "sha256-DvMMBF5Z2VdV3ObuD/gquZeimglyzFFVzgUq+/ra+Hc=";
+      sha256 = "sha256-XWPJldWxe8iply7XtmDem1gfbNuuaWuFdMfuCbcU6tc=";
     };
     cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
       inherit src;
-      sha256 = "sha256-zRKjx94Ad+ZTj3xs9av0AVINJX82KJkunvuFHtt03dk=";
+      sha256 = "sha256-t0TsDn9ZC6/1QmHRnzqhmYfUT7a0qltZEzuQTnwNvlY=";
     };
 
     nativeBuildInputs = [ pkgs.rustPlatform.cargoSetupHook rustBinWithMuslTarget zigCC ];

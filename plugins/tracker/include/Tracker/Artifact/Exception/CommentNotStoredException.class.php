@@ -20,10 +20,8 @@
  */
 class Tracker_CommentNotStoredException extends Tracker_Exception
 {
-    public function __construct()
+    public function __construct(string $message)
     {
-        parent::__construct(
-            dgettext('tuleap-tracker', 'The comment cannot be stored.')
-        );
+        parent::__construct($message);
     }
 }

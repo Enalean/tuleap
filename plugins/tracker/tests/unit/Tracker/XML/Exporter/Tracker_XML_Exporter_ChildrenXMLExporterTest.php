@@ -52,6 +52,8 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
 
     /** @var int */
     private $artifact_id_2 = 456;
+    private Tracker_Artifact_Changeset $last_changeset_1;
+    private Tracker_Artifact_Changeset $last_changeset_2;
 
     protected function setUp(): void
     {

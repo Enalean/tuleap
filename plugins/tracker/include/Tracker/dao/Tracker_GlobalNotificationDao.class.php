@@ -159,17 +159,6 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function duplicate($from_tracker_id, $to_tracker_id)
-    {
-        $from_tracker_id = $this->da->escapeInt($from_tracker_id);
-        $to_tracker_id   = $this->da->escapeInt($to_tracker_id);
-        $sql             = "INSERT INTO $this->table_name (tracker_id, addresses, all_updates, check_permissions)
-                SELECT $to_tracker_id, addresses, all_updates, check_permissions
-                FROM $this->table_name
-                WHERE tracker_id = $from_tracker_id";
-        return $this->update($sql);
-    }
-
     public function updateAddressById($id, $addresses)
     {
         $id        = $this->da->escapeInt($id);

@@ -54,7 +54,7 @@ setup_database() {
         --tuleap-fqdn="localhost.localdomain" \
         --site-admin-password="$MYSQL_PASSWORD"
 
-    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server_jwt_private_key = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';" >> /etc/tuleap/conf/local.inc
 
@@ -161,9 +161,9 @@ setup_tuleap
 setup_redis
 setup_database
 case "$PHP_FPM" in
-    '/opt/remi/php80/root/usr/sbin/php-fpm')
-    echo "Deploy PHP FPM 80"
-    /usr/bin/tuleap-cfg site-deploy --php-version=php80
+    '/opt/remi/php81/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 81"
+    /usr/bin/tuleap-cfg site-deploy --php-version=php81
     ;;
 esac
 tuleap_db_config

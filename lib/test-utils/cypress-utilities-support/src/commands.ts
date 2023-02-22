@@ -63,10 +63,6 @@ Cypress.Commands.add("regularUserLogin", () => {
     loginThroughWebUI("RegularUser", "Correct Horse Battery Staple");
 });
 
-Cypress.Commands.add("heisenbergLogin", () => {
-    loginThroughWebUI("heisenberg", "Correct Horse Battery Staple");
-});
-
 Cypress.Commands.add("secondProjectAdministratorLogin", () => {
     loginThroughWebUI("SecondProjectAdministrator", "Correct Horse Battery Staple");
 });
@@ -200,7 +196,7 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
 
 Cypress.Commands.add(
     "createNewPublicProject",
-    (project_name: string, xml_template: string): void => {
+    (project_name: string, xml_template: string): Cypress.Chainable<number> => {
         const payload = {
             shortname: project_name,
             description: "",
@@ -212,7 +208,9 @@ Cypress.Commands.add(
             allow_restricted: false,
         };
 
-        cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
+        return cy.postFromTuleapApi("https://tuleap/api/projects/", payload).then((response) => {
+            return Number.parseInt(response.body.id, 10);
+        });
     }
 );
 
@@ -231,15 +229,81 @@ Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => 
     cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
 });
 
-Cypress.Commands.add("addUser", (user_name: string): void => {
+Cypress.Commands.add("addProjectMember", (user_name: string): void => {
     cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
-    // ignore rule for select2
 
     cy.get(".select2-search__field").type(`${user_name}{enter}`);
 
     cy.get(".select2-result-user").click();
     cy.get('[data-test="project-admin-submit-add-member"]').click();
+});
+
+interface Tracker {
+    id: number;
+    item_name: string;
+}
+
+Cypress.Commands.add(
+    "getTrackerIdFromREST",
+    (project_id: number, tracker_name: string): Cypress.Chainable<number> => {
+        return cy.getFromTuleapAPI(`/api/projects/${project_id}/trackers`).then((response) => {
+            return response.body.find((tracker: Tracker) => tracker.item_name === tracker_name).id;
+        });
+    }
+);
+
+interface BindValue {
+    id: number;
+    label: string;
+}
+
+interface Field {
+    field_id: number;
+    name: string;
+    type: string;
+    value: string | Array<BindValue>;
+}
+
+export interface ArtifactCreationPayload {
+    tracker_id: number;
+    artifact_title: string;
+    artifact_status: string;
+    title_field_name: string;
+}
+
+Cypress.Commands.add("createArtifact", (payload: ArtifactCreationPayload): void => {
+    cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
+        const result = response.body;
+
+        const title_id = result.fields.find(
+            (field: Field) => field.name === payload.title_field_name
+        ).field_id;
+        const status = result.fields.find((field: Field) => field.name === "status");
+        const status_id = status.field_id;
+        if (!Array.isArray(status.values)) {
+            throw new Error("status is not a select box");
+        }
+        const status_value_id = status.values.find(
+            (value: BindValue) => value.label === payload.artifact_status
+        ).id;
+
+        const artifact_payload = {
+            tracker: { id: payload.tracker_id },
+            values: [
+                {
+                    field_id: title_id,
+                    value: payload.artifact_title,
+                },
+                {
+                    bind_value_ids: [status_value_id],
+                    field_id: status_id,
+                },
+            ],
+        };
+
+        cy.postFromTuleapApi("/api/artifacts/", artifact_payload);
+    });
 });
 
 const MAX_ATTEMPTS = 10;

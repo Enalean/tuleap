@@ -28,31 +28,7 @@
                 <translate>Fields that will be frozen</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
-            <multi-select
-                v-if="!is_list_picker_enabled"
-                id="workflow-transition-modal-frozen-fields"
-                class="tlp-select"
-                required
-                v-bind:configuration="{
-                    width: '100%',
-                    placeholder: $gettext('Choose a field'),
-                }"
-                v-model="frozen_field_ids"
-                v-bind:disabled="is_modal_save_running"
-                data-test="frozen-fields-selector"
-                v-on:input="updateFrozenFieldsPostActionFieldIds"
-            >
-                <option
-                    v-for="field in writable_fields"
-                    v-bind:key="field.field_id"
-                    v-bind:value="field.field_id"
-                    v-bind:data-test="`field_${field.field_id}`"
-                >
-                    {{ field.label }}
-                </option>
-            </multi-select>
             <select
-                v-else
                 id="workflow-transition-modal-frozen-fields"
                 multiple
                 required
@@ -77,7 +53,6 @@
 <script>
 import PostAction from "./PostAction.vue";
 import { mapGetters, mapState } from "vuex";
-import MultiSelect from "../MultiSelect.vue";
 import { READ_ONLY_FIELDS, STRUCTURAL_FIELDS } from "@tuleap/plugin-tracker-constants";
 import { compare } from "../../../support/string.js";
 import { createListPicker } from "@tuleap/list-picker";
@@ -86,7 +61,7 @@ const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
 
 export default {
     name: "FrozenFieldsAction",
-    components: { PostAction, MultiSelect },
+    components: { PostAction },
     props: {
         post_action: {
             type: Object,
@@ -101,11 +76,7 @@ export default {
     },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", [
-            "current_transition",
-            "is_modal_save_running",
-            "is_list_picker_enabled",
-        ]),
+        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
         ...mapGetters(["current_workflow_field"]),
         ...mapState({
             writable_fields(state) {
@@ -119,23 +90,16 @@ export default {
             },
         }),
     },
-    async mounted() {
+    mounted() {
         this.frozen_field_ids = this.post_action.field_ids;
-        if (this.is_list_picker_enabled) {
-            this.list_picker = await createListPicker(
-                this.$refs.workflow_transition_modal_frozen_fields,
-                {
-                    locale: document.body.dataset.userLocale,
-                    is_filterable: true,
-                    placeholder: this.$gettext("Choose a field"),
-                }
-            );
-        }
+        this.list_picker = createListPicker(this.$refs.workflow_transition_modal_frozen_fields, {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: this.$gettext("Choose a field"),
+        });
     },
     beforeDestroy() {
-        if (this.list_picker) {
-            this.list_picker.destroy();
-        }
+        this.list_picker.destroy();
     },
     methods: {
         updateFrozenFieldsPostActionFieldIds() {

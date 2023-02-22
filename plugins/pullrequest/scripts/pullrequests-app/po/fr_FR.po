@@ -109,6 +109,9 @@ msgstr "A intégré la pull request."
 msgid "Has rebased the pull request."
 msgstr "A rebasé la pull request."
 
+msgid "Has reopened the pull request."
+msgstr "A rouvert la pull request."
+
 msgid "Has updated the pull request."
 msgstr "A mis à jour la pull request."
 
@@ -181,12 +184,19 @@ msgstr ""
 "fast-forward. Vous pouvez continuer l’intégration, ou annuler et mettre à "
 "jour la pull request."
 
+msgid "Pull request is currently abandoned. You can reopen it."
+msgstr ""
+"Cette pull request est actuellement abandonnée. Vous pouvez la rouvrir."
+
 msgid ""
 "Pull request mergeability with destination is not determined. You can merge "
 "on the command line and push to destination."
 msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
+
+msgid "Reopen"
+msgstr "Rouvrir"
 
 msgid "Reply"
 msgstr "Répondre"

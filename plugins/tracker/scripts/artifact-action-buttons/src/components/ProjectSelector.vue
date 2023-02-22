@@ -43,7 +43,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { getProjectId, isListPickerEnabled } from "../from-tracker-presenter.js";
+import { getProjectId } from "../from-tracker-presenter.js";
 import { createListPicker } from "@tuleap/list-picker";
 
 export default {
@@ -66,20 +66,17 @@ export default {
     },
     created() {
         this.$store.commit("saveSelectedProjectId", getProjectId());
+        this.$store.dispatch("loadTrackerList", this.selected_project_id);
     },
-    async mounted() {
-        if (isListPickerEnabled()) {
-            this.list_picker = await createListPicker(this.$refs.move_artifact_project_selector, {
-                locale: document.body.dataset.userLocale,
-                is_filterable: true,
-                placeholder: this.$gettext("Choose project..."),
-            });
-        }
+    mounted() {
+        this.list_picker = createListPicker(this.$refs.move_artifact_project_selector, {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: this.$gettext("Choose project..."),
+        });
     },
     beforeDestroy() {
-        if (this.list_picker) {
-            this.list_picker.destroy();
-        }
+        this.list_picker.destroy();
     },
 };
 </script>

@@ -50,7 +50,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         return new StatusValueMapper($this->form_element_factory);
     }
 
-    public function dataProviderMatchingValue(): array
+    public static function dataProviderMatchingValue(): array
     {
         return [
             'It matches value by label'                                           => [
@@ -98,31 +98,31 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
             'It matches dynamic user group name'                                  => [
                 'project_members',
                 self::SECOND_BIND_VALUE_ID,
-                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
-                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, \ProjectUGroup::PROJECT_MEMBERS, \ProjectUGroup::NORMALIZED_NAMES[\ProjectUGroup::PROJECT_MEMBERS], false),
+                self::buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                self::buildUserGroupValue(self::SECOND_BIND_VALUE_ID, \ProjectUGroup::PROJECT_MEMBERS, \ProjectUGroup::NORMALIZED_NAMES[\ProjectUGroup::PROJECT_MEMBERS], false),
             ],
             'It matches static user group name'                                   => [
                 'palaeoclimatic',
                 self::FIRST_BIND_VALUE_ID,
-                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
-                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 921, 'tolidine', false),
+                self::buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                self::buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 921, 'tolidine', false),
             ],
             'It matches static user group name with different case'               => [
                 'PALAEOCLIMATIC',
                 self::FIRST_BIND_VALUE_ID,
-                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                self::buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
             ],
             'It matches user group even it if is hidden'                          => [
                 'palaeoclimatic',
                 self::SECOND_BIND_VALUE_ID,
-                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 921, 'tolidine', false),
-                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 905, 'palaeoclimatic', true),
+                self::buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 921, 'tolidine', false),
+                self::buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 905, 'palaeoclimatic', true),
             ],
             'It matches first value if multiple user groups have the same name'   => [
                 'palaeoclimatic',
                 self::FIRST_BIND_VALUE_ID,
-                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
-                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 303, 'palaeoclimatic', false),
+                self::buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                self::buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 303, 'palaeoclimatic', false),
             ],
         ];
     }
@@ -236,7 +236,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         return $status_field;
     }
 
-    private function buildUserGroupValue(
+    private static function buildUserGroupValue(
         int $bind_value_id,
         int $user_group_id,
         string $user_group_name,

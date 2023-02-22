@@ -19,7 +19,7 @@
  */
 
 import type { ChartPropsWithoutTooltip, XYScale } from "@tuleap/chart-builder";
-import type { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
+import type { GenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 import {
     getDaysToDisplay,
     buildGraphScales,
@@ -37,11 +37,9 @@ import { getCoordinatesScaleLines } from "../chart-scale-helper";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 import { getDisplayableDataForBurnup } from "../chart-data-service";
 
-export { createBurnupChart, getTotal };
-
 const DEFAULT_TOTAL_EFFORT = 5;
 
-function createBurnupChart(
+export function createBurnupChart(
     chart_container: HTMLElement,
     chart_props: ChartPropsWithoutTooltip,
     generic_burnup_data: GenericBurnupData
@@ -119,7 +117,7 @@ function createBurnupChart(
     }
 }
 
-function getTotal({ points_with_date, capacity }: GenericBurnupData): number {
+export function getTotal({ points_with_date, capacity }: GenericBurnupData): number {
     const max_total = max(points_with_date, ({ total }) => total);
 
     if (max_total) {

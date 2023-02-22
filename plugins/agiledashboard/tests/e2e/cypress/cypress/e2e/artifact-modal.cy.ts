@@ -27,7 +27,9 @@ describe(`Artifact Modal`, function () {
         cy.projectMemberSession();
         cy.getProjectId("kanban-artifact-modal")
             .as("project_id")
-            .then((project_id) => getTrackerIdFromREST(project_id).as("tracker_id"))
+            .then((project_id) =>
+                cy.getTrackerIdFromREST(project_id, "all_fields").as("tracker_id")
+            )
             .then((tracker_id) => {
                 getArtifactLinkIdFromREST(tracker_id).as("artifact_link_id");
             });
@@ -401,12 +403,6 @@ describe(`Artifact Modal`, function () {
         cy.get("[data-test=artifact-modal-cancel-button]").click();
     });
 });
-
-function getTrackerIdFromREST(project_id: number): Cypress.Chainable<number> {
-    return cy
-        .getFromTuleapAPI(`/api/projects/${project_id}/trackers`)
-        .then((response) => Number.parseInt(response.body[0].id, 10));
-}
 
 function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
     return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`).then((response) => {

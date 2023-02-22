@@ -62,10 +62,10 @@ export default class ToBePlannedBacklogItems extends Vue {
     @Prop({ required: true })
     readonly to_be_planned_element!: Feature;
 
-    private user_stories: UserStory[] = [];
-    private is_loading_user_story = false;
-    private message_error_rest = "";
-    private is_opened = false;
+    user_stories: UserStory[] = [];
+    is_loading_user_story = false;
+    message_error_rest = "";
+    is_opened = false;
 
     mounted(): void {
         const button_close_stories = this.$refs.openCloseButton;

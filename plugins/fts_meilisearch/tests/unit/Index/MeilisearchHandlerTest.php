@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Index;
 
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Search\SearchResult;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Search\SearchResult;
 use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;

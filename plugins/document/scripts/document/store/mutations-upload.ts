@@ -17,47 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    FakeItem,
-    Folder,
-    State,
-    ApprovableDocument,
-    ItemFile,
-    Link,
-    Wiki,
-    Embedded,
-    Item,
-} from "../type";
+import type { FakeItem, Folder, State, ApprovableDocument, ItemFile, Item } from "../type";
 import { isFolder } from "../helpers/type-check-helper";
 import Vue from "vue";
 
-export {
-    addFileInUploadsList,
-    removeFileFromUploadsList,
-    emptyFilesUploadsList,
-    initializeFolderProperties,
-    resetFolderIsUploading,
-    toggleCollapsedFolderHasUploadingContent,
-    updateFolderProgressbar,
-    removeVersionUploadProgress,
-    replaceFileWithNewVersion,
-    replaceLinkWithNewVersion,
-    replaceWikiWithNewVersion,
-    replaceEmbeddedFilesWithNewVersion,
-};
-
-function addFileInUploadsList(state: State, file: FakeItem): void {
+export function addFileInUploadsList(state: State, file: FakeItem): void {
     removeFileFromUploadsList(state, file);
     state.files_uploads_list.unshift(file);
 }
 
-function removeVersionUploadProgress(state: State, uploaded_item: FakeItem): void {
+export function removeVersionUploadProgress(state: State, uploaded_item: FakeItem): void {
     uploaded_item.progress = null;
     uploaded_item.is_uploading_new_version = false;
     removeFileFromUploadsList(state, uploaded_item);
 }
 
-function removeFileFromUploadsList(state: State, uploaded_file: FakeItem | Item): void {
+export function removeFileFromUploadsList(state: State, uploaded_file: FakeItem | Item): void {
     const file_index = state.files_uploads_list.findIndex((file) => file.id === uploaded_file.id);
     if (file_index === -1) {
         return;
@@ -81,11 +56,11 @@ function removeFileFromUploadsList(state: State, uploaded_file: FakeItem | Item)
     }
 }
 
-function emptyFilesUploadsList(state: State): void {
+export function emptyFilesUploadsList(state: State): void {
     state.files_uploads_list = [];
 }
 
-function initializeFolderProperties(state: State, folder: Folder): void {
+export function initializeFolderProperties(state: State, folder: Folder): void {
     const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
     if (folder_index === -1) {
         return;
@@ -100,7 +75,7 @@ export interface CollapseFolderPayload {
     toggle: boolean;
 }
 
-function toggleCollapsedFolderHasUploadingContent(
+export function toggleCollapsedFolderHasUploadingContent(
     state: State,
     payload: CollapseFolderPayload
 ): void {
@@ -117,7 +92,7 @@ function toggleCollapsedFolderHasUploadingContent(
     state.folder_content.splice(folder_index, 1, payload.collapsed_folder);
 }
 
-function updateFolderProgressbar(state: State, collapsed_folder: Folder): void {
+export function updateFolderProgressbar(state: State, collapsed_folder: Folder): void {
     const folder_index = state.folder_content.findIndex((item) => item.id === collapsed_folder.id);
     if (folder_index === -1) {
         return;
@@ -140,7 +115,7 @@ function updateFolderProgressbar(state: State, collapsed_folder: Folder): void {
     state.folder_content.splice(folder_index, 1, collapsed_folder);
 }
 
-function resetFolderIsUploading(state: State, folder: Folder): void {
+export function resetFolderIsUploading(state: State, folder: Folder): void {
     const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
     if (folder_index === -1) {
         return;
@@ -157,42 +132,10 @@ export interface ReplaceFilePayload {
     new_version: ItemFile;
 }
 
-function replaceFileWithNewVersion(state: State, payload: ReplaceFilePayload): void {
+export function replaceFileWithNewVersion(state: State, payload: ReplaceFilePayload): void {
     payload.existing_item.file_properties = payload.new_version.file_properties;
     payload.existing_item.lock_info = payload.new_version.lock_info;
 
-    replaceApprovalTables(payload.existing_item, payload.new_version);
-}
-
-export interface ReplaceLinkPayload {
-    existing_item: Link;
-    new_version: Link;
-}
-
-function replaceLinkWithNewVersion(state: State, payload: ReplaceLinkPayload): void {
-    payload.existing_item.link_properties = payload.new_version.link_properties;
-    payload.existing_item.lock_info = payload.new_version.lock_info;
-
-    replaceApprovalTables(payload.existing_item, payload.new_version);
-}
-
-export interface ReplaceWikiPayload {
-    existing_item: Wiki;
-    new_version: Wiki;
-}
-
-function replaceWikiWithNewVersion(state: State, payload: ReplaceWikiPayload): void {
-    payload.existing_item.lock_info = payload.new_version.lock_info;
-    payload.existing_item.wiki_properties = payload.new_version.wiki_properties;
-}
-
-export interface ReplaceEmbeddedPayload {
-    existing_item: Embedded;
-    new_version: Embedded;
-}
-
-function replaceEmbeddedFilesWithNewVersion(state: State, payload: ReplaceEmbeddedPayload): void {
-    payload.existing_item.lock_info = payload.new_version.lock_info;
     replaceApprovalTables(payload.existing_item, payload.new_version);
 }
 

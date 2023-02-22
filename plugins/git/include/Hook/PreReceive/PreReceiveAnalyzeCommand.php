@@ -77,6 +77,9 @@ final class PreReceiveAnalyzeCommand extends Command
         } catch (PreReceiveCannotRetrieveReferenceException $e) {
             $output->writeln('<error>Git command execution failure, check your git reference.</error>');
             return self::FAILURE;
+        } catch (PreReceiveWasmNotFoundException $e) {
+            $output->writeln(sprintf('<error>There is no WASM module associated to this Git repository (ID "%s")</error>', OutputFormatter::escape($input->getArgument('repository_id'))));
+            return self::FAILURE;
         }
     }
 }

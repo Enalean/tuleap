@@ -53,7 +53,7 @@
     </drop-down-menu>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
@@ -61,45 +61,33 @@ import LockItem from "./Lock/LockItem.vue";
 import UnlockItem from "./Lock/UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { Component, Vue } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
-import type { Embedded } from "../../../type";
+import type { State } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "vue";
 
-const configuration = namespace("configuration");
+const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
+    "currently_previewed_item",
+]);
+const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
+    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
+>("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 
-@Component({
-    components: {
-        UpdateProperties,
-        UpdatePermissions,
-        UnlockItem,
-        LockItem,
-        DeleteItem,
-        DropDownSeparator,
-        DropDownMenu,
-    },
-})
-export default class DropDownDisplayedEmbedded extends Vue {
-    @State
-    readonly currently_previewed_item!: Embedded;
+const can_user_delete_item = computed((): boolean => {
+    return (
+        currently_previewed_item.value !== null &&
+        currently_previewed_item.value.user_can_write &&
+        canDelete(forbid_writers_to_delete.value, currently_previewed_item.value) &&
+        Boolean(currently_previewed_item.value.parent_id)
+    );
+});
 
-    @configuration.State
-    readonly forbid_writers_to_update!: boolean;
-
-    @configuration.State
-    readonly forbid_writers_to_delete!: boolean;
-
-    get can_user_delete_item(): boolean {
-        return (
-            this.currently_previewed_item.user_can_write &&
-            canDelete(this.forbid_writers_to_delete, this.currently_previewed_item) &&
-            Boolean(this.currently_previewed_item.parent_id)
-        );
+const should_display_update_properties = computed((): boolean => {
+    if (!currently_previewed_item.value) {
+        return false;
     }
-
-    get should_display_update_properties(): boolean {
-        return canUpdateProperties(this.forbid_writers_to_update, this.currently_previewed_item);
-    }
-}
+    return canUpdateProperties(forbid_writers_to_update.value, currently_previewed_item.value);
+});
 </script>

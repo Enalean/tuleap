@@ -60,7 +60,7 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('needsSyntaxHighlight');
 
-        $result = $this->converter->convertToHtml(
+        $result = $this->converter->convert(
             <<<MARKDOWN
             See code below:
 
@@ -103,7 +103,7 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('needsSyntaxHighlight');
 
-        $result = $this->converter->convertToHtml(
+        $result = $this->converter->convert(
             <<<MARKDOWN
             See code below:
 
@@ -146,7 +146,7 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('needsSyntaxHighlight');
 
-        $result = $this->converter->convertToHtml(
+        $result = $this->converter->convert(
             <<<MARKDOWN
             See code below:
 

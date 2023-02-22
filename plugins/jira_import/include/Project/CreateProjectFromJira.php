@@ -35,8 +35,9 @@ use Tuleap\JiraImport\JiraAgile\IssuesLinkedToEpicsRetriever;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
+use Tuleap\JiraImport\JiraAgile\JiraEpicFromIssueTypeRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraEpicIssuesRetrieverFromAPI;
-use Tuleap\JiraImport\JiraAgile\JiraEpicRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\JiraEpicFromBoardRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
@@ -183,6 +184,22 @@ final class CreateProjectFromJira
         } else {
             $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
         }
+
+        $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
+            new JiraEpicFromBoardRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+            new JiraEpicFromIssueTypeRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+            new JiraEpicIssuesRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+        );
+
         $board_configuration = null;
         if ($board) {
             $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
@@ -198,17 +215,19 @@ final class CreateProjectFromJira
                 $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
             }
 
-            $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
-                new JiraEpicRetrieverFromAPI(
-                    $jira_client,
-                    $logger,
-                ),
-                new JiraEpicIssuesRetrieverFromAPI(
-                    $jira_client,
-                    $logger,
-                ),
-            );
-            $linked_issues_collection         = $issues_linked_to_epics_retriever->getLinkedIssues($board);
+            $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board);
+        } else {
+            $logger->info("No scrum board found. We will try to get linked Epic issues with provided Epic issueType name");
+            $logger->debug("Provided Epic issueType name: " . $jira_epic_issue_type);
+            foreach ($jira_issue_types as $jira_issue_type) {
+                if ($jira_issue_type->getName() === $jira_epic_issue_type) {
+                    $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromIssueTypeInProject(
+                        $jira_issue_type,
+                        $jira_project,
+                    );
+                    break;
+                }
+            }
         }
 
         $jira_agile_importer = new JiraAgileImporter(

@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
+use Tuleap\InviteBuddy\InvitationCleaner;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\UserSuspensionManager;
 
@@ -36,42 +37,15 @@ class DailyJobCommand extends Command
 {
     public const NAME = 'daily-job';
 
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var DBConnection
-     */
-    private $db_connection;
-    /**
-     * @var ExecutionDelayedLauncher
-     */
-    private $execution_delayed_launcher;
-
-    /**
-     * @var AccessKeyRevoker
-     */
-    private $access_key_revoker;
-
-    /**
-     * @var UserSuspensionManager
-     */
-    private $user_suspension_manager;
-
     public function __construct(
-        EventManager $event_manager,
-        AccessKeyRevoker $access_key_revoker,
-        DBConnection $db_connection,
-        ExecutionDelayedLauncher $execution_delayed_launcher,
-        UserSuspensionManager $user_suspension_manager,
+        private EventManager $event_manager,
+        private AccessKeyRevoker $access_key_revoker,
+        private DBConnection $db_connection,
+        private ExecutionDelayedLauncher $execution_delayed_launcher,
+        private UserSuspensionManager $user_suspension_manager,
+        private InvitationCleaner $invitation_cleaner,
     ) {
         parent::__construct(self::NAME);
-        $this->event_manager              = $event_manager;
-        $this->db_connection              = $db_connection;
-        $this->execution_delayed_launcher = $execution_delayed_launcher;
-        $this->access_key_revoker         = $access_key_revoker;
-        $this->user_suspension_manager    = $user_suspension_manager;
     }
 
     protected function configure(): void
@@ -90,6 +64,7 @@ class DailyJobCommand extends Command
 
             $now = new \DateTimeImmutable();
             $this->access_key_revoker->revokeUnusableUserAccessKeys($now);
+            $this->invitation_cleaner->cleanObsoleteInvitations($now);
         });
         return 0;
     }

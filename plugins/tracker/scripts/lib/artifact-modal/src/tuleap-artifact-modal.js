@@ -34,16 +34,13 @@ import StaticOpenListFieldDirective from "./fields/open-list-field/static-open-l
 import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open-list-field-directive.js";
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
-import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
-import ListPickerDirective from "./fields/list-picker-field/list-picker-field-directive.js";
-import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 
-import "./fields/computed-field/ComputedField";
-import "./fields/float-field/FloatField";
-import "./fields/int-field/IntField";
-import "./fields/radio-buttons-field/RadioButtonsField";
-import "./fields/string-field/StringField";
-import "./fields/text-field/TextField";
+import "./adapters/UI/fields/computed-field/ComputedField";
+import "./adapters/UI/fields/float-field/FloatField";
+import "./adapters/UI/fields/int-field/IntField";
+import "./adapters/UI/fields/radio-buttons-field/RadioButtonsField";
+import "./adapters/UI/fields/string-field/StringField";
+import "./adapters/UI/fields/text-field/TextField";
 import "./adapters/UI/fields/link-field/LinkField";
 import "./adapters/UI/fields/date-field/DateField";
 import "./adapters/UI/fields/burndown-field/BurndownField";
@@ -55,6 +52,7 @@ import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./adapters/UI/fields/file-field/FileField";
 import "./adapters/UI/fields/permission-field/PermissionField";
 import "./adapters/UI/fields/checkbox-field/CheckboxField";
+import "./adapters/UI/fields/select-box-field/SelectBoxField";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
 import "./adapters/UI/comments/ModalCommentsSection";
@@ -79,9 +77,6 @@ export default angular
     .directive("tuleapArtifactModalStaticOpenListField", StaticOpenListFieldDirective)
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
-    .directive("tuleapHighlightDirective", HighlightDirective)
-    .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
-    .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
         loading: false,

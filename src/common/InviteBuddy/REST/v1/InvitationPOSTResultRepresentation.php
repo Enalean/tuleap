@@ -22,21 +22,50 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\REST\v1;
 
+use Tuleap\InviteBuddy\SentInvitationResult;
+use Tuleap\User\REST\UserRepresentation;
+
 /**
  * @psalm-immutable
  */
 final class InvitationPOSTResultRepresentation
 {
     /**
-     * @var string[]
-     */
-    public $failures;
-
-    /**
      * @param string[] $failures
+     * @param UserRepresentation[] $already_project_members
+     * @param UserRepresentation[] $known_users_added_to_project_members
+     * @param UserRepresentation[] $known_users_not_alive
+     * @param UserRepresentation[] $known_users_are_restricted
      */
-    public function __construct(array $failures)
+    private function __construct(
+        public array $failures,
+        public array $already_project_members,
+        public array $known_users_added_to_project_members,
+        public array $known_users_not_alive,
+        public array $known_users_are_restricted,
+    ) {
+    }
+
+    public static function fromResult(SentInvitationResult $result): self
     {
-        $this->failures = $failures;
+        return new self(
+            $result->failures,
+            array_map(
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                $result->already_project_members,
+            ),
+            array_map(
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                $result->known_users_added_to_project_members,
+            ),
+            array_map(
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                $result->known_users_not_alive,
+            ),
+            array_map(
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                $result->known_users_are_restricted,
+            ),
+        );
     }
 }

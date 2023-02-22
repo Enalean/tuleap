@@ -45,19 +45,14 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import emitter from "../../../../helpers/emitter";
 
-@Component
-export default class StatusProperty extends Vue {
-    @Prop({ required: true })
-    readonly value!: string;
+defineProps<{ value: string }>();
 
-    onchange($event: Event): void {
-        if ($event.target instanceof HTMLSelectElement) {
-            emitter.emit("update-status-property", $event.target.value);
-        }
+function onchange($event: Event): void {
+    if ($event.target instanceof HTMLSelectElement) {
+        emitter.emit("update-status-property", $event.target.value);
     }
 }
 </script>

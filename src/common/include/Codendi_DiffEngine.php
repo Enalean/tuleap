@@ -64,6 +64,9 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @var int
      */
     private $lcs;
+    private array $xind;
+    private array $yind;
+
     public function diff($from_lines, $to_lines)
     {
         $n_from         = \sizeof($from_lines);

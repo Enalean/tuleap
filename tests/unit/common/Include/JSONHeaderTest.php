@@ -39,7 +39,7 @@ final class JSONHeaderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function contentProvider(): array
+    public static function contentProvider(): array
     {
         return [
             ['toto', '"toto"'],

@@ -58,12 +58,13 @@ use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTDisableController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTEnableController;
 use Tuleap\admin\SiteContentCustomisationController;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Config\ConfigDao;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\date\Admin\RelativeDatesDisplayController;
 use Tuleap\date\Admin\RelativeDatesDisplaySaveController;
@@ -83,11 +84,28 @@ use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\AccountCreationFeedback;
+use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationEmailNotifier;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InvitationSender;
+use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
+use Tuleap\InviteBuddy\InvitationToOneRecipientWithoutVerificationSender;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\PrefixTokenInvitation;
+use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\Layout\IncludeCoreAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
@@ -118,14 +136,19 @@ use Tuleap\Platform\RobotsTxtController;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\Admin\Export\ProjectXmlExportController;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
+use Tuleap\Project\Admin\Invitations\ManageProjectInvitationsController;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
+use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\Admin\Routing\RejectNonProjectMembersAdministratorMiddleware;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -144,6 +167,7 @@ use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -165,6 +189,19 @@ use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
+use Tuleap\User\Account\Register\AccountRegister;
+use Tuleap\User\Account\Register\AfterSuccessfulUserRegistration;
+use Tuleap\User\Account\Register\ConfirmationHashEmailSender;
+use Tuleap\User\Account\Register\ConfirmationPageDisplayer;
+use Tuleap\User\Account\Register\DisplayAdminRegisterFormController;
+use Tuleap\User\Account\Register\DisplayRegisterFormController;
+use Tuleap\User\Account\Register\InvitationToEmailRequestExtractor;
+use Tuleap\User\Account\Register\NewUserByAdminEmailSender;
+use Tuleap\User\Account\Register\ProcessAdminRegisterFormController;
+use Tuleap\User\Account\Register\ProcessRegisterFormController;
+use Tuleap\User\Account\Register\RegisterFormDisplayer;
+use Tuleap\User\Account\Register\RegisterFormPresenterBuilder;
+use Tuleap\User\Account\Register\RegisterFormProcessor;
 use Tuleap\User\Account\RemoveFromProjectController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAccountInformationController;
@@ -182,7 +219,6 @@ use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
-use Tuleap\User\SVNToken\SVNTokenCreateController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
@@ -439,11 +475,6 @@ class RouteCollector
         return new AccessKeyRevocationController(DisplayKeysTokensController::getCSRFToken());
     }
 
-    public static function postAccountSVNTokenCreate(): DispatchableWithRequest
-    {
-        return new SVNTokenCreateController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build(), new KeyFactory());
-    }
-
     public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
     {
         return new SVNTokenRevokeController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
@@ -662,6 +693,53 @@ class RouteCollector
         return ProjectMembersController::buildSelf();
     }
 
+    public static function getManageProjectInvitationsController(): DispatchableWithRequest
+    {
+        $user_manager    = \UserManager::instance();
+        $instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao  = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            $instrumentation
+        );
+
+        $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
+
+        $delegation_dao = new MembershipDelegationDao();
+
+        $members_manager_checker = new UserCanManageProjectMembersChecker($delegation_dao);
+
+        return new ManageProjectInvitationsController(
+            $user_manager,
+            new CSRFSynchronizerTokenProvider(),
+            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new FeedbackSerializer(new \FeedbackDao())),
+            $invitation_dao,
+            $invitation_dao,
+            new InvitationSender(
+                new InvitationSenderGateKeeper(
+                    new \Valid_Email(),
+                    $invite_buddy_configuration,
+                    new InvitationLimitChecker($invitation_dao, $invite_buddy_configuration)
+                ),
+                $user_manager,
+                \BackendLogger::getDefaultLogger(),
+                $members_manager_checker,
+                new InvitationToOneRecipientWithoutVerificationSender(
+                    new InvitationEmailNotifier(new LocaleSwitcher()),
+                    $invitation_dao,
+                    $invitation_dao,
+                    $instrumentation,
+                    new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+                    new \ProjectHistoryDao(),
+                ),
+                ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+            ),
+            new ProjectHistoryDao(),
+            new SapiEmitter(),
+            new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new RejectNonProjectMembersAdministratorMiddleware($user_manager, $members_manager_checker),
+        );
+    }
+
     public static function getAdminHelpDropdownController(): AdminReleaseNoteLinkController
     {
         return AdminReleaseNoteLinkController::buildSelf();
@@ -731,7 +809,13 @@ class RouteCollector
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
-            $core_assets,
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/project-registration/frontend-assets',
+                    '/assets/core/project-registration'
+                ),
+                'src/index.ts'
+            ),
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()
             ),
@@ -956,6 +1040,144 @@ class RouteCollector
         );
     }
 
+    public static function getDisplayRegisterFormController(): DispatchableWithRequest
+    {
+        $event_manager = EventManager::instance();
+
+        return new DisplayRegisterFormController(
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    $event_manager,
+                    TemplateRendererFactory::build(),
+                    new \Account_TimezonesCollection(),
+                ),
+                new \Tuleap\Layout\IncludeCoreAssets(),
+            ),
+            $event_manager,
+            new InvitationToEmailRequestExtractor(
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new InvitationInstrumentation(Prometheus::instance())
+                ),
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            ),
+        );
+    }
+
+    public static function getDisplayAdminRegisterFormController(): DispatchableWithRequest
+    {
+        return new DisplayAdminRegisterFormController(
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    EventManager::instance(),
+                    TemplateRendererFactory::build(),
+                    new \Account_TimezonesCollection(),
+                ),
+                new \Tuleap\Layout\IncludeCoreAssets(),
+            ),
+        );
+    }
+
+    public static function postRegister(): DispatchableWithRequest
+    {
+        return new ProcessRegisterFormController(
+            self::getRegisterFormProcessor(),
+            \EventManager::instance(),
+            new InvitationToEmailRequestExtractor(
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new InvitationInstrumentation(Prometheus::instance())
+                ),
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            ),
+        );
+    }
+
+    public static function postAdminRegister(): DispatchableWithRequest
+    {
+        return new ProcessAdminRegisterFormController(
+            self::getRegisterFormProcessor(),
+        );
+    }
+
+    private static function getRegisterFormProcessor(): RegisterFormProcessor
+    {
+        $logger                     = \BackendLogger::getDefaultLogger();
+        $event_manager              = EventManager::instance();
+        $user_manager               = \UserManager::instance();
+        $project_manager            = ProjectManager::instance();
+        $locale_switcher            = new LocaleSwitcher();
+        $mail_presenter_factory     = new \MailPresenterFactory();
+        $renderer_factory           = TemplateRendererFactory::build();
+        $include_core_assets        = new IncludeCoreAssets();
+        $timezones_collection       = new \Account_TimezonesCollection();
+        $invitation_instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao             = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            $invitation_instrumentation
+        );
+        $mail_renderer              = $renderer_factory->getRenderer(
+            \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+        );
+
+
+
+        return new RegisterFormProcessor(
+            new \Tuleap\User\Account\Register\RegisterFormHandler(
+                new AccountRegister(
+                    $user_manager,
+                    new AccountCreationFeedback(
+                        $invitation_dao,
+                        $user_manager,
+                        new AccountCreationFeedbackEmailNotifier(),
+                        new ProjectMemberAccordingToInvitationAdder(
+                            $user_manager,
+                            $project_manager,
+                            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+                            $invitation_instrumentation,
+                            $logger,
+                            new InvitationEmailNotifier(new LocaleSwitcher()),
+                            new ProjectHistoryDao(),
+                        ),
+                        $invitation_instrumentation,
+                        $logger,
+                    )
+                ),
+                $timezones_collection,
+                $event_manager,
+            ),
+            new \Tuleap\User\MailConfirmationCodeGenerator(
+                $user_manager,
+                new \RandomNumberGenerator()
+            ),
+            new AfterSuccessfulUserRegistration(
+                new ConfirmationPageDisplayer(
+                    $renderer_factory,
+                    $include_core_assets,
+                ),
+                new ConfirmationHashEmailSender(
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
+                    \Tuleap\ServerHostname::HTTPSUrl(),
+                ),
+                new NewUserByAdminEmailSender(
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
+                    \Tuleap\ServerHostname::HTTPSUrl(),
+                ),
+                $event_manager,
+                $user_manager,
+                $project_manager,
+            ),
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    $event_manager,
+                    $renderer_factory,
+                    $timezones_collection,
+                ),
+                $include_core_assets,
+            ),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -969,11 +1191,13 @@ class RouteCollector
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
         $r->post('/help_menu_opened', [self::class, 'postHelpMenuOpened']);
 
-        $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
+        $r->addGroup('/project/{project_id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
             $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
 
             $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
+
+            $r->post('/invitations', [self::class, 'getManageProjectInvitationsController']);
 
             $r->post('/change-synchronized-project-membership', [self::class, 'getPostSynchronizedMembershipActivation']);
             $r->post('/user-group/{user-group-id:\d+}/add', [self::class, 'getPostUserGroupIdAdd']);
@@ -1039,6 +1263,9 @@ class RouteCollector
             $r->post('/dates-display', [self::class, 'postAdminDatesDisplay']);
 
             $r->get('/banner', [self::class, 'getGetPlatformBannerAdministration']);
+
+            $r->get('/register', [self::class, 'getDisplayAdminRegisterFormController']);
+            $r->post('/register', [self::class, 'postAdminRegister']);
         });
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
@@ -1055,7 +1282,6 @@ class RouteCollector
             $r->post('/ssh_key/delete', [self::class, 'postAccountSSHKeyDelete']);
             $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
-            $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
 
             $r->get('/edition', [self::class, 'getEditionController']);
@@ -1072,6 +1298,9 @@ class RouteCollector
             $r->post('/logout', [self::class, 'postLogoutAccount']);
 
             $r->post('/remove_from_project/{project_id:\d+}', [self::class, 'postAccountRemoveFromProject']);
+
+            $r->get('/register.php', [self::class, 'getDisplayRegisterFormController']);
+            $r->post('/register.php', [self::class, 'postRegister']);
         });
         $r->get('/.well-known/change-password', [self::class, 'getWellKnownUrlChangePassword']);
 

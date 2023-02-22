@@ -24,13 +24,35 @@
             v-bind:project_ugroups="project_ugroups"
             v-model="permissions_for_groups.can_read"
             v-bind:key="'permissions-selector-can_read'"
-        />
+        >
+            <template #permission-information>
+                <p class="tlp-text-info">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    {{
+                        $gettext(
+                            "Writers and Managers are also Readers. Redundant permissions are automatically de-duplicated."
+                        )
+                    }}
+                </p>
+            </template>
+        </permissions-selector>
         <permissions-selector
             v-bind:label="label_writer"
             v-bind:project_ugroups="project_ugroups"
             v-model="permissions_for_groups.can_write"
             v-bind:key="'permissions-selector-can_write'"
-        />
+        >
+            <template #permission-information>
+                <p class="tlp-text-info">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    {{
+                        $gettext(
+                            "Managers are also Writers. Redundant permissions are automatically de-duplicated."
+                        )
+                    }}
+                </p>
+            </template>
+        </permissions-selector>
         <permissions-selector
             v-bind:label="label_manager"
             v-bind:project_ugroups="project_ugroups"
@@ -39,6 +61,12 @@
         />
     </div>
 </template>
+
+<script setup>
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { $gettext } = useGettext();
+</script>
 
 <script>
 import PermissionsSelector from "./PermissionsSelector.vue";

@@ -19,13 +19,11 @@
 
 import type { DomainEvent } from "./DomainEvent";
 
-export const TYPE = "DidCheckFileFieldIsPresent";
-
 export type DidCheckFileFieldIsPresent = DomainEvent<"DidCheckFileFieldIsPresent"> & {
     is_there_at_least_one_file_field: boolean;
 };
 
 export const DidCheckFileFieldIsPresent = (): DidCheckFileFieldIsPresent => ({
-    type: TYPE,
+    type: "DidCheckFileFieldIsPresent",
     is_there_at_least_one_file_field: false,
 });

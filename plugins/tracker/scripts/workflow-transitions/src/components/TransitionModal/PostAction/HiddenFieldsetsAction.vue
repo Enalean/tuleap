@@ -25,30 +25,7 @@
                 <translate>Fieldsets that will be hidden by default</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
-            <multi-select
-                v-if="!is_list_picker_enabled"
-                id="workflow-transition-modal-hidden-fieldsets"
-                class="tlp-select"
-                required
-                v-bind:configuration="{
-                    width: '100%',
-                    placeholder: hidden_fieldsets_select_placeholder,
-                }"
-                v-model="hidden_fieldset_ids"
-                v-bind:disabled="is_modal_save_running"
-                v-on:input="updateHiddenFieldsetsPostActionFieldsetIds"
-            >
-                <option
-                    v-for="fieldset in writable_fieldsets"
-                    v-bind:key="fieldset.field_id"
-                    v-bind:value="fieldset.field_id"
-                    v-bind:data-test="`fieldset_${fieldset.field_id}`"
-                >
-                    {{ fieldset.label }}
-                </option>
-            </multi-select>
             <select
-                v-else
                 id="workflow-transition-modal-hidden-fieldsets"
                 multiple
                 required
@@ -76,14 +53,13 @@
 <script>
 import PostAction from "./PostAction.vue";
 import { mapState, mapGetters } from "vuex";
-import MultiSelect from "../MultiSelect.vue";
 import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 import { compare } from "../../../support/string.js";
 import { createListPicker } from "@tuleap/list-picker";
 
 export default {
     name: "HiddenFieldsetsAction",
-    components: { PostAction, MultiSelect },
+    components: { PostAction },
     props: {
         post_action: {
             type: Object,
@@ -98,11 +74,7 @@ export default {
     },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", [
-            "current_transition",
-            "is_modal_save_running",
-            "is_list_picker_enabled",
-        ]),
+        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
         ...mapGetters(["current_workflow_field"]),
         ...mapState({
             writable_fieldsets(state) {
@@ -114,27 +86,17 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
         }),
-        hidden_fieldsets_select_placeholder() {
-            return this.$gettext("Choose a fieldset");
-        },
     },
-    async mounted() {
+    mounted() {
         this.hidden_fieldset_ids = this.post_action.fieldset_ids;
-        if (this.is_list_picker_enabled) {
-            this.list_picker = await createListPicker(
-                this.$refs.workflow_transition_modal_hidden_fieldsets,
-                {
-                    locale: document.body.dataset.userLocale,
-                    is_filterable: true,
-                    placeholder: this.$gettext("Choose a fieldset"),
-                }
-            );
-        }
+        this.list_picker = createListPicker(this.$refs.workflow_transition_modal_hidden_fieldsets, {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: this.$gettext("Choose a fieldset"),
+        });
     },
     beforeDestroy() {
-        if (this.list_picker) {
-            this.list_picker.destroy();
-        }
+        this.list_picker.destroy();
     },
     methods: {
         updateHiddenFieldsetsPostActionFieldsetIds() {

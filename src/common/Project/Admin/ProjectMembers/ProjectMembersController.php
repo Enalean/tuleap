@@ -36,11 +36,21 @@ use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
 use TemplateRendererFactory;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -107,17 +117,9 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
      */
     private $synchronized_project_membership_detector;
     /**
-     * @var MembershipDelegationDao
-     */
-    private $membership_delegation_dao;
-    /**
      * @var ProjectRetriever
      */
     private $project_retriever;
-    /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
 
     public function __construct(
         ProjectMembersDAO $members_dao,
@@ -128,9 +130,9 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         UGroupManager $ugroup_manager,
         UserImport $user_importer,
         ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
-        MembershipDelegationDao $membership_delegation_dao,
+        private EnsureUserCanManageProjectMembers $members_manager_checker,
+        private ListOfPendingInvitationsPresenterBuilder $pending_invitations_presenter_builder,
     ) {
         $this->members_dao                              = $members_dao;
         $this->user_helper                              = $user_helper;
@@ -140,9 +142,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $this->ugroup_manager                           = $ugroup_manager;
         $this->user_importer                            = $user_importer;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
-        $this->membership_delegation_dao                = $membership_delegation_dao;
         $this->project_retriever                        = $project_retriever;
-        $this->administrator_checker                    = $administrator_checker;
     }
 
     public static function buildSelf(): self
@@ -151,10 +151,13 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $user_manager   = \UserManager::instance();
         $user_helper    = new UserHelper();
         $ugroup_manager = new UGroupManager();
-        $ugroup_binding = new UGroupBinding(
-            new UGroupUserDao(),
-            $ugroup_manager
+        $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+        $configuration  = new InviteBuddyConfiguration($event_manager);
+        $invitation_dao = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance()),
         );
+
         return new self(
             new ProjectMembersDAO(),
             $user_helper,
@@ -176,29 +179,36 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 ProjectMemberAdderWithStatusCheckAndNotifications::build()
             ),
             ProjectRetriever::buildSelf(),
-            new ProjectAdministratorChecker(),
             new SynchronizedProjectMembershipDetector(
                 new SynchronizedProjectMembershipDao()
             ),
-            new MembershipDelegationDao()
+            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
+            new ListOfPendingInvitationsPresenterBuilder(
+                $configuration,
+                $invitation_dao,
+                new TlpRelativeDatePresenterBuilder(),
+                new CSRFSynchronizerTokenProvider(),
+                new InviteBuddiesPresenterBuilder(
+                    new InvitationLimitChecker(
+                        $invitation_dao,
+                        $configuration
+                    ),
+                    $configuration,
+                    new ProjectPresentersBuilder(),
+                    new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
+                ),
+            ),
         );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $user    = $request->getCurrentUser();
         try {
-            $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
-        } catch (ForbiddenException $e) {
-            if (
-                ! $this->membership_delegation_dao->doesUserHasMembershipDelegation(
-                    $user->getId(),
-                    $project->getID()
-                )
-            ) {
-                throw $e;
-            }
+            $this->members_manager_checker->checkUserCanManageProjectMembers($user, $project);
+        } catch (UserIsNotAllowedToManageProjectMembersException $e) {
+            throw new ForbiddenException(_("You don't have permission to access administration of this project."), $e);
         }
 
         if ($project->getStatus() !== Project::STATUS_ACTIVE && ! $user->isSuperUser()) {
@@ -220,7 +230,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
             case 'import':
                 $this->csrf_token->check();
-                $this->importMembers($project);
+                $this->importMembers($project, $user);
                 $this->redirect($project, $layout);
                 break;
 
@@ -260,9 +270,18 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $user_locale
         );
 
+        $pending_invitations = $this->pending_invitations_presenter_builder->getPendingInvitationsPresenter(
+            $project,
+            $request->getCurrentUser()
+        );
+        if ($pending_invitations) {
+            $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
+        }
+
         $this->event_manager->processEvent($additional_modals);
 
         $this->displayHeader($title, $project, $layout, $additional_modals);
+
 
         $renderer->renderToPage(
             'project-members',
@@ -273,7 +292,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 $additional_modals,
                 $user_locale,
                 $this->canUserSeeUGroups($request->getCurrentUser(), $project),
-                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
+                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project),
+                $pending_invitations,
             )
         );
 
@@ -295,8 +315,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         require_once __DIR__ . '/../../../../www/include/account.php';
         \account_add_user_to_group($project->getID(), $form_unix_name);
-
-        $this->user_group_bindings->reloadUgroupBindingInProject($project);
     }
 
     private function removeUserFromProject(HTTPRequest $request, Project $project)
@@ -421,7 +439,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         return $this->ugroup_presenters[$ugroup_id];
     }
 
-    private function importMembers(Project $project)
+    private function importMembers(Project $project, PFUser $project_admin)
     {
         $import_file = $_FILES['user_filename']['tmp_name'];
 
@@ -432,7 +450,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         $user_collection = $this->user_importer->parse($project->getID(), $import_file);
         if ($user_collection) {
-            $this->user_importer->updateDB($project, $user_collection);
+            $this->user_importer->updateDB($project, $user_collection, $project_admin);
             $this->user_group_bindings->reloadUgroupBindingInProject($project);
         }
     }

@@ -422,7 +422,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_description, $service->getDescription());
     }
 
-    public function provideLabelAndDescription(): array
+    public static function provideLabelAndDescription(): array
     {
         return [
             'unmodified label and description' => [

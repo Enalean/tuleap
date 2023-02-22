@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,28 +24,32 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
+use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 
 final class IssuesLinkedToEpicsRetriever
 {
-    /**
-     * @var JiraEpicRetriever
-     */
-    private $epic_retriever;
-    /**
-     * @var JiraEpicIssuesRetriever
-     */
-    private $epic_issues_retriever;
-
-    public function __construct(JiraEpicRetriever $epic_retriever, JiraEpicIssuesRetriever $epic_issues_retriever)
-    {
-        $this->epic_retriever        = $epic_retriever;
-        $this->epic_issues_retriever = $epic_issues_retriever;
+    public function __construct(
+        private JiraEpicFromBoardRetriever $epic_from_board_retriever,
+        private JiraEpicFromIssueTypeRetriever $epic_from_issue_type_retriever,
+        private JiraEpicIssuesRetriever $epic_issues_retriever,
+    ) {
     }
 
-    public function getLinkedIssues(JiraBoard $board): LinkedIssuesCollection
+    public function getLinkedIssuesFromBoard(JiraBoard $board): LinkedIssuesCollection
     {
         $linked_issues_collection = new LinkedIssuesCollection();
-        foreach ($this->epic_retriever->getEpics($board) as $epic) {
+        foreach ($this->epic_from_board_retriever->getEpics($board) as $epic) {
+            foreach ($this->epic_issues_retriever->getIssueIds($epic) as $issue_id) {
+                $linked_issues_collection = $linked_issues_collection->withChild($epic->key, $issue_id);
+            }
+        }
+        return $linked_issues_collection;
+    }
+
+    public function getLinkedIssuesFromIssueTypeInProject(IssueType $issue_type, string $jira_project): LinkedIssuesCollection
+    {
+        $linked_issues_collection = new LinkedIssuesCollection();
+        foreach ($this->epic_from_issue_type_retriever->getEpics($issue_type, $jira_project) as $epic) {
             foreach ($this->epic_issues_retriever->getIssueIds($epic) as $issue_id) {
                 $linked_issues_collection = $linked_issues_collection->withChild($epic->key, $issue_id);
             }

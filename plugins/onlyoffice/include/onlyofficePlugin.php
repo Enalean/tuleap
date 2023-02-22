@@ -53,6 +53,7 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeCreateAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDeleteAdminSettingsController;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeRestrictAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeUpdateAdminSettingsController;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerDao;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
@@ -90,7 +91,7 @@ final class onlyofficePlugin extends Plugin
     public function __construct(?int $id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_PROJECT);
+        $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-onlyoffice', __DIR__ . '/../site-content');
     }
 
@@ -129,8 +130,6 @@ final class onlyofficePlugin extends Plugin
     public function newItemAlternativeCollector(NewItemAlternativeCollector $collector): void
     {
         $only_office_availability_checker = new OnlyOfficeAvailabilityChecker(
-            PluginManager::instance(),
-            $this,
             self::getLogger(),
             new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
         );
@@ -182,10 +181,11 @@ final class onlyofficePlugin extends Plugin
             }
         );
         $route_collector->post(OnlyOfficeSaveCallbackURLGenerator::CALLBACK_SAVE_URL, $this->getRouteHandler('routePostDocumentSave'));
-        $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
+        $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '[/{vue-routing:.*}]', $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeCreateAdminSettingsController::URL, $this->getRouteHandler('routeCreateAdminSettings'));
         $route_collector->post(OnlyOfficeUpdateAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeUpdateAdminSettings'));
         $route_collector->post(OnlyOfficeDeleteAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeDeleteAdminSettings'));
+        $route_collector->post(OnlyOfficeRestrictAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeRestrictAdminSettings'));
     }
 
     public function routePostDocumentSave(): OnlyOfficeSaveController
@@ -302,7 +302,7 @@ final class onlyofficePlugin extends Plugin
     {
         $servers_retriever = new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory()));
         $transformer       = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, self::getLogger(), $servers_retriever),
+            new OnlyOfficeAvailabilityChecker(self::getLogger(), $servers_retriever),
             ProjectManager::instance(),
             $servers_retriever,
         );
@@ -328,14 +328,14 @@ final class onlyofficePlugin extends Plugin
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                 self::getDocmanFileLastVersionProvider(),
                 new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                    new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger, $servers_retriever),
+                    new OnlyOfficeAvailabilityChecker($logger, $servers_retriever),
                     ProjectManager::instance(),
                     $servers_retriever,
                 ),
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             $logger,
-            new \Tuleap\Layout\JavascriptViteAsset(self::getAssets(), 'scripts/open-in-onlyoffice.ts'),
+            new \Tuleap\Layout\JavascriptViteAsset(self::getOpenAssets(), 'src/open-in-onlyoffice.ts'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
         );
@@ -356,7 +356,7 @@ final class onlyofficePlugin extends Plugin
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                         self::getDocmanFileLastVersionProvider(),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger, $servers_retriever),
+                            new OnlyOfficeAvailabilityChecker($logger, $servers_retriever),
                             ProjectManager::instance(),
                             $servers_retriever,
                         ),
@@ -383,7 +383,7 @@ final class onlyofficePlugin extends Plugin
             UserManager::instance(),
             $servers_retriever,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-            self::getAssets(),
+            self::getOpenAssets(),
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter()
@@ -402,11 +402,11 @@ final class onlyofficePlugin extends Plugin
         );
     }
 
-    private static function getAssets(): IncludeViteAssets
+    private static function getOpenAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../frontend-assets/',
-            '/assets/onlyoffice'
+            __DIR__ . '/../scripts/open-in-onlyoffice/frontend-assets',
+            '/assets/onlyoffice/open-in-onlyoffice'
         );
     }
 
@@ -420,7 +420,10 @@ final class onlyofficePlugin extends Plugin
             new AdminPageRenderer(),
             UserManager::instance(),
             $builder->getPresenter(self::buildCSRFTokenAdmin()),
-            self::getAssets(),
+            new IncludeViteAssets(
+                __DIR__ . '/../scripts/siteadmin/frontend-assets/',
+                '/assets/onlyoffice/siteadmin'
+            ),
         );
     }
 
@@ -455,6 +458,20 @@ final class onlyofficePlugin extends Plugin
         return new OnlyOfficeDeleteAdminSettingsController(
             self::buildCSRFTokenAdmin(),
             new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
+    }
+
+    public function routeRestrictAdminSettings(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $document_server_dao = new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory()));
+
+        return new OnlyOfficeRestrictAdminSettingsController(
+            self::buildCSRFTokenAdmin(),
+            $document_server_dao,
+            $document_server_dao,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),

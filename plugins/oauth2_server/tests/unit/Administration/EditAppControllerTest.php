@@ -91,7 +91,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function dataProviderInvalidBody(): array
+    public static function dataProviderInvalidBody(): array
     {
         return [
             'No body'              => [null],
@@ -131,7 +131,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('/plugins/oauth2_server/admin', $response->getHeaderLine('Location'));
     }
 
-    public function dataProviderValidBody(): array
+    public static function dataProviderValidBody(): array
     {
         return [
             'Missing PKCE is assumed to be false' => [

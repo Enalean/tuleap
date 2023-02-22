@@ -34,7 +34,8 @@ final class CoreAccessKeyScopeBuilderFactory
     public static function buildCoreAccessKeyScopeBuilder(): AuthenticationScopeBuilder
     {
         return new AuthenticationScopeBuilderFromClassNames(
-            RESTAccessKeyScope::class
+            RESTAccessKeyScope::class,
+            SVNAccessKeyScope::class,
         );
     }
 }

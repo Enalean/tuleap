@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ProjectAnnouncement from "./ProjectAnnouncement.vue";
 import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "../injection-symbols";
@@ -28,7 +29,7 @@ import { ref } from "vue";
 
 describe("ProjectAnnouncement", () => {
     it("displays show project announcement button", () => {
-        const trigger_announcement = jest.fn();
+        const trigger_announcement = vi.fn();
 
         const wrapper = shallowMount(ProjectAnnouncement, {
             global: {
@@ -52,7 +53,7 @@ describe("ProjectAnnouncement", () => {
             global: {
                 provide: {
                     [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
-                    [TRIGGER_SHOW_PROJECT_ANNOUNCEMENT.valueOf()]: jest.fn(),
+                    [TRIGGER_SHOW_PROJECT_ANNOUNCEMENT.valueOf()]: vi.fn(),
                 },
             },
         });

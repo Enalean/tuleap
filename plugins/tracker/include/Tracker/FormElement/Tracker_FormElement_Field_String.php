@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\StringField\StringFieldDao;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 {
     public $default_properties = [
@@ -288,6 +289,11 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         }
 
         return true;
+    }
+
+    protected function getRuleString(): Rule_String
+    {
+        return new Rule_String();
     }
 
     /**

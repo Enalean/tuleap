@@ -63,9 +63,6 @@ class FileUniDiffBuilder
             } else {
                 $type = $line[0];
                 $line = substr($line, 1);
-                if ($line == false) {
-                    $line = '';
-                }
             }
 
             $unidiff_offset += 1;

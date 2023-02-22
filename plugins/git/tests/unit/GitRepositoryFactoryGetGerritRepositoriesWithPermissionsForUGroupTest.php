@@ -20,12 +20,41 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-require_once 'bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var GitDao&\Mockery\MockInterface
+     */
+    private $dao;
+    /**
+     * @var ProjectManager&\Mockery\MockInterface
+     */
+    private $project_manager;
+    /**
+     * @var \Mockery\MockInterface&GitRepositoryFactory
+     */
+    private $factory;
+    private int $project_id;
+    private int $ugroup_id;
+    /**
+     * @var array|int[]
+     */
+    private array $user_ugroups;
+    /**
+     * @var \Mockery\MockInterface&PFUser
+     */
+    private $user;
+    /**
+     * @var \Mockery\MockInterface&Project
+     */
+    private $project;
+    /**
+     * @var \Mockery\MockInterface&ProjectUGroup
+     */
+    private $ugroup;
 
     protected function setUp(): void
     {
