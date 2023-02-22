@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Notifications\Settings;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
@@ -40,6 +42,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
             new GlobalNotificationDuplicationDao(),
             new UsersToNotifyDuplicationDao(),
             new UgroupsToNotifyDuplicationDao(),
+            new ConfigNotificationAssignedToDao(),
+            new ConfigNotificationEmailCustomSenderDao(),
         );
     }
 
@@ -49,6 +53,9 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $db->query('TRUNCATE TABLE tracker_global_notification_ugroups');
         $db->query('TRUNCATE TABLE tracker_global_notification_users');
         $db->query('TRUNCATE TABLE tracker_global_notification');
+        $db->query('TRUNCATE TABLE plugin_tracker_notification_assigned_to');
+        $db->query('TRUNCATE TABLE plugin_tracker_notification_email_custom_sender_format');
+        $db->query('SET FOREIGN_KEY_CHECKS=1'); // because plugin_tracker_notification_email_custom_sender_format has a constraint we don't want to resolve in tests
     }
 
     public function testDuplicationOfNotificationsWithRawEmails(): void
@@ -199,5 +206,74 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $users = $db->run('SELECT * FROM tracker_global_notification_users WHERE notification_id = ?', $notifications[0]['id']);
         self::assertCount(1, $users);
         self::assertEquals(777, $users[0]['user_id']);
+    }
+
+    public function testDuplicationOfAssignedToWhenTemplateUsesIt(): void
+    {
+        $template_tracker_id = 1;
+        $new_tracker_id      = 2;
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insert('plugin_tracker_notification_assigned_to', ['tracker_id' => $template_tracker_id]);
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+        );
+
+        self::assertTrue($db->exists('SELECT 1 FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?', $new_tracker_id));
+    }
+
+    public function testDuplicationOfAssignedToWhenTemplateDoesNotUseIt(): void
+    {
+        $template_tracker_id = 1;
+        $new_tracker_id      = 2;
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+        );
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::assertFalse($db->exists('SELECT 1 FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?', $new_tracker_id));
+    }
+
+    public function testDuplicationOfExistingCustomSender(): void
+    {
+        $template_tracker_id = 1;
+        $new_tracker_id      = 2;
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run('SET FOREIGN_KEY_CHECKS=0'); // because plugin_tracker_notification_email_custom_sender_format has a constraint we don't want to resolve in tests
+        $db->insert('plugin_tracker_notification_email_custom_sender_format', ['tracker_id' => $template_tracker_id, 'format' => '%realname', 'enabled' => 1]);
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+        );
+
+        $rows = $db->run('SELECT * FROM plugin_tracker_notification_email_custom_sender_format WHERE tracker_id = ?', $new_tracker_id);
+        self::assertCount(1, $rows);
+        self::assertEquals('%realname', $rows[0]['format']);
+        self::assertEquals(1, $rows[0]['enabled']);
+    }
+
+    public function testDuplicationOfNoCustomSender(): void
+    {
+        $template_tracker_id = 1;
+        $new_tracker_id      = 2;
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+        );
+
+        $db   = DBFactory::getMainTuleapDBConnection()->getDB();
+        $rows = $db->run('SELECT * FROM plugin_tracker_notification_email_custom_sender_format WHERE tracker_id = ?', $new_tracker_id);
+        self::assertCount(0, $rows);
     }
 }

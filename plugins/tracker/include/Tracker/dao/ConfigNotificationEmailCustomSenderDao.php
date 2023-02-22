@@ -46,4 +46,16 @@ class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
                 ON DUPLICATE KEY UPDATE tracker_id = tracker_id, format = ?, enabled = ?";
         $this->getDB()->run($sql, $tracker_id, $format, $enabled, $format, $enabled);
     }
+
+    public function duplicate(int $template_tracker_id, int $new_tracker_id): void
+    {
+        $sql = <<<SQL
+        INSERT INTO plugin_tracker_notification_email_custom_sender_format(tracker_id, format, enabled)
+        SELECT ?, format, enabled
+        FROM plugin_tracker_notification_email_custom_sender_format
+        WHERE tracker_id = ?
+        SQL;
+
+        $this->getDB()->run($sql, $new_tracker_id, $template_tracker_id);
+    }
 }

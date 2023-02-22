@@ -47,4 +47,16 @@ final class ConfigNotificationAssignedToDao extends \Tuleap\DB\DataAccessObject
 
         $this->getDB()->run($sql, $tracker_id);
     }
+
+    public function duplicate(int $template_tracker_id, int $new_tracker_id): void
+    {
+        $sql = <<<SQL
+        INSERT INTO plugin_tracker_notification_assigned_to(tracker_id)
+        SELECT ?
+        FROM plugin_tracker_notification_assigned_to
+        WHERE tracker_id = ?
+        SQL;
+
+        $this->getDB()->run($sql, $new_tracker_id, $template_tracker_id);
+    }
 }
