@@ -18,9 +18,11 @@
  */
 
 import type { PlaceholderCreationParams } from "../types-codemirror-overriden";
-import type { IRelativeDateHelper } from "../../helpers/date-helpers";
-import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
-import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
+import type { ControlPullRequestComment } from "@tuleap/plugin-pullrequest-comments";
+import type {
+    StorePullRequestCommentReplies,
+    HelpRelativeDatesDisplay,
+} from "@tuleap/plugin-pullrequest-comments";
 import type { MapCommentWidgets } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import type {
     InlineCommentWidgetCreationParams,
@@ -35,8 +37,8 @@ import {
 } from "./side-by-side-line-widgets-helper";
 import { NewInlineCommentSaver } from "../../comments/new-comment-form/NewInlineCommentSaver";
 
-import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
-import { TAG_NAME as COMMENT_TAG_NAME } from "../../comments/PullRequestComment";
+import { NEW_INLINE_COMMENT_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
+import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 
 export interface CreatePlaceholderWidget {
@@ -59,13 +61,13 @@ export type CreateFileDiffWidget = CreatePlaceholderWidget &
 
 export const SideBySideCodeMirrorWidgetCreator = (
     doc: Document,
-    relative_dates_helper: IRelativeDateHelper,
+    relative_dates_helper: HelpRelativeDatesDisplay,
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
     comments_widgets_map: MapCommentWidgets
 ): CreateFileDiffWidget => {
     const displayInlineCommentWidget = (widget_params: InlineCommentWidgetCreationParams): void => {
-        const inline_comment_element = doc.createElement(COMMENT_TAG_NAME);
+        const inline_comment_element = doc.createElement(PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME);
         if (!isPullRequestCommentWidget(inline_comment_element)) {
             return;
         }

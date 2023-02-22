@@ -33,8 +33,9 @@ export function setCatalog(catalog: GettextCatalog): void {
     gettextCatalog = catalog;
 }
 
-export const getUIIsUnderConstructionText = (): string =>
-    gettextCatalog.getString("Under construction, please come back later.");
+export const getCancelButtonText = (): string => gettextCatalog.getString("Cancel");
+export const getNewInlineCommentSubmitButtonText = (): string =>
+    gettextCatalog.getString("Comment");
 export const getUserUpdatePullRequest = (): string =>
     gettextCatalog.getString("Has updated the pull request.");
 export const getUserRebasePullRequest = (): string =>
@@ -45,13 +46,6 @@ export const getUserAbandonedPullRequest = (): string =>
     gettextCatalog.getString("Has abandoned the pull request.");
 export const getUserReopenedPullRequest = (): string =>
     gettextCatalog.getString("Has reopened the pull request.");
-export const getReplyToCommentButtonText = (): string => gettextCatalog.getString("Reply");
-export const getCancelButtonText = (): string => gettextCatalog.getString("Cancel");
-export const getCommentTextAreaPlaceholderText = (): string =>
-    gettextCatalog.getString("Say something…");
-export const getOutdatedCommentBadgeText = (): string => gettextCatalog.getString("Outdated");
-export const getNewInlineCommentSubmitButtonText = (): string =>
-    gettextCatalog.getString("Comment");
 export const getCollapsibleSectionLabel = (nb_lines: number): string =>
     gettextCatalog.getPlural(
         nb_lines,

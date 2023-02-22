@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    PullRequestCommentPresenter,
-    PullRequestInlineCommentPresenter,
-    PullRequestGlobalCommentPresenter,
-} from "../../src/app/comments/PullRequestCommentPresenter";
 import {
     TYPE_EVENT_COMMENT,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
-} from "../../src/app/comments/PullRequestCommentPresenter";
+    INLINE_COMMENT_POSITION_RIGHT,
+} from "@tuleap/plugin-pullrequest-comments";
 
-import { INLINE_COMMENT_POSITION_RIGHT } from "../../src/app/comments/types";
+import type {
+    PullRequestCommentPresenter,
+    PullRequestInlineCommentPresenter,
+    PullRequestGlobalCommentPresenter,
+} from "@tuleap/plugin-pullrequest-comments";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,

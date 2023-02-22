@@ -25,8 +25,16 @@ import { SideBySideCodePlaceholderCreationManager } from "../widgets/placeholder
 import { synchronize } from "../editors/side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../code-collapse/collaspible-code-sections-builder.ts";
 import { SideBySideLinesHeightEqualizer } from "../widgets/placeholders/SideBySideLinesHeightEqualizer.ts";
+import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
+import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
 
-import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+    PullRequestCommentController,
+    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentNewReplySaver,
+} from "@tuleap/plugin-pullrequest-comments";
 
 import "../editors/modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
@@ -36,11 +44,6 @@ import { SideBySideCodeMirrorsContentManager } from "../editors/SideBySideCodeMi
 import { SideBySidePlaceholderPositioner } from "../widgets/placeholders/SideBySidePlaceholderPositioner";
 import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
-import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
-import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
-import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
-import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
-import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import { SideBySideCodeMirrorWidgetsCreationManager } from "../widgets/SideBySideCodeMirrorWidgetsCreationManager";
 import { FileDiffCommentScroller } from "../scroll-to-comment/FileDiffCommentScroller";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
@@ -124,11 +127,13 @@ function controller($element, $scope, SharedPropertiesService) {
                 PullRequestCommentReplyFormFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
-                PullRequestCurrentUserPresenter.fromUserInfo(
+                PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
                     SharedPropertiesService.getUserAvatarUrl()
                 ),
-                PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest())
+                PullRequestPresenterBuilder.fromPullRequest(
+                    SharedPropertiesService.getPullRequest()
+                )
             ),
             getStore(),
             comment_widgets_map

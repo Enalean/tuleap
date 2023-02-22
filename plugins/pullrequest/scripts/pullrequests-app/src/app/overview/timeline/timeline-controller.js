@@ -1,10 +1,12 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
-import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
-import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
-import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
-import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
-import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
-import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
+import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
+import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
+import {
+    PullRequestCommentController,
+    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentRepliesStore,
+    PullRequestCommentNewReplySaver,
+} from "@tuleap/plugin-pullrequest-comments";
 
 export default TimelineController;
 
@@ -27,7 +29,7 @@ function TimelineController(SharedPropertiesService, TimelineService) {
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
         ),
-        current_user: PullRequestCurrentUserPresenter.fromUserInfo(
+        current_user: PullRequestCurrentUserPresenterBuilder.fromUserInfo(
             SharedPropertiesService.getUserId(),
             SharedPropertiesService.getUserAvatarUrl()
         ),
@@ -40,7 +42,9 @@ function TimelineController(SharedPropertiesService, TimelineService) {
     function init() {
         SharedPropertiesService.whenReady().then(function () {
             self.pull_request = SharedPropertiesService.getPullRequest();
-            self.pull_request_presenter = PullRequestPresenter.fromPullRequest(self.pull_request);
+            self.pull_request_presenter = PullRequestPresenterBuilder.fromPullRequest(
+                self.pull_request
+            );
             TimelineService.getTimeline(
                 self.pull_request,
                 TimelineService.timeline_pagination.limit,
@@ -54,7 +58,7 @@ function TimelineController(SharedPropertiesService, TimelineService) {
                         self.comment_replies_store,
                         PullRequestCommentNewReplySaver(),
                         self.current_user,
-                        PullRequestPresenter.fromPullRequest(self.pull_request)
+                        PullRequestPresenterBuilder.fromPullRequest(self.pull_request)
                     );
                 })
                 .finally(function () {

@@ -19,8 +19,6 @@
 
 import type { Editor } from "codemirror";
 import type { CreateFileDiffWidget } from "./SideBySideCodeMirrorWidgetCreator";
-import type { IRelativeDateHelper } from "../../helpers/date-helpers";
-import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { FileLineHandle } from "../types-codemirror-overriden";
 import type {
     InlineCommentWidget,
@@ -30,15 +28,18 @@ import type {
 
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "../../../../tests/stubs/RelativeDateHelperStub";
-import { PullRequestCommentControllerStub } from "../../../../tests/stubs/PullRequestCommentControllerStub";
 import { SideBySideCodeMirrorWidgetCreator } from "./SideBySideCodeMirrorWidgetCreator";
 import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentContextStub";
 
-import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
-import { TAG_NAME as COMMENT_TAG_NAME } from "../../comments/PullRequestComment";
+import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
+import { NEW_INLINE_COMMENT_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
-import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
-import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
+import type {
+    ControlPullRequestComment,
+    StorePullRequestCommentReplies,
+} from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
+import type { HelpRelativeDatesDisplay } from "@tuleap/plugin-pullrequest-comments";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 
 type EditorThatCanHaveWidgets = Editor & {
@@ -50,7 +51,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
     let doc: Document,
         createElement: jest.SpyInstance,
         code_mirror: EditorThatCanHaveWidgets,
-        relative_date_helper: IRelativeDateHelper,
+        relative_date_helper: HelpRelativeDatesDisplay,
         controller: ControlPullRequestComment,
         comments_store: StorePullRequestCommentReplies;
 
@@ -73,7 +74,11 @@ describe("side-by-side-code-mirror-widget-creator", () => {
         } as unknown as EditorThatCanHaveWidgets;
 
         relative_date_helper = RelativeDateHelperStub;
-        controller = PullRequestCommentControllerStub();
+        controller = {
+            displayReplies: (): void => {
+                // do nothing
+            },
+        } as unknown as ControlPullRequestComment;
         comments_store = PullRequestCommentRepliesStore([]);
     });
 
@@ -128,7 +133,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             const post_rendering_callback = jest.fn();
 
             const inline_comment_widget = document.createElement(
-                COMMENT_TAG_NAME
+                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME
             ) as InlineCommentWidget;
             createElement.mockReturnValue(inline_comment_widget);
 
@@ -172,7 +177,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 NEW_COMMENT_FORM_TAG_NAME
             ) as NewInlineCommentFormWidget;
             const inline_comment_widget = document.createElement(
-                COMMENT_TAG_NAME
+                PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME
             ) as InlineCommentWidget;
             createElement.mockReturnValueOnce(new_comment_form);
             createElement.mockReturnValueOnce(inline_comment_widget);

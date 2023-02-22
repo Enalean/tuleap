@@ -21,7 +21,7 @@ import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "../types";
 import type { FileLine, GroupOfLines } from "../types";
 import type { GroupSideBySideLines } from "./SideBySideLineGrouper";
 import type { MapSideBySideLines, SynchronizedLineHandles } from "./SideBySideLineMapper";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { FileLineHandle } from "../types-codemirror-overriden";
 
 let first_line_to_group_map: Map<number, GroupOfLines>;

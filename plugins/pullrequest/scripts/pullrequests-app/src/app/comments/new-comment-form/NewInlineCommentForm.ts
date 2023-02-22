@@ -19,14 +19,13 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { FileDiffWidgetType } from "../../file-diff/types";
-import type { PullRequestInlineCommentPresenter } from "../PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { SaveNewInlineComment } from "./NewInlineCommentSaver";
-import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../../gettext-catalog";
-import { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 import type { FileDiffCommentPayload } from "../types";
+import { PullRequestCommentPresenterBuilder } from "../PullRequestCommentPresenterBuilder";
+import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../../gettext-catalog";
 
-export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-new-comment-form";
+export const NEW_INLINE_COMMENT_NAME = "tuleap-pullrequest-new-comment-form";
 export type HostElement = NewInlineCommentForm & HTMLElement;
 
 export interface NewInlineCommentForm {
@@ -47,7 +46,9 @@ const onClickSaveComment = (host: NewInlineCommentForm): void => {
         .postComment(host.comment)
         .match(
             (payload: FileDiffCommentPayload) => {
-                host.post_submit_callback(PullRequestCommentPresenter.fromFileDiffComment(payload));
+                host.post_submit_callback(
+                    PullRequestCommentPresenterBuilder.fromFileDiffComment(payload)
+                );
             },
             (fault) => {
                 // Do nothing for the moment, we have no way to display a Fault yet
@@ -83,6 +84,7 @@ export const getSubmitButton = (
         "fa-circle-notch": host.is_saving_comment,
     };
     const is_disabled = host.is_saving_comment || host.comment.length === 0;
+
     return html`
         <button
             class="tlp-button-primary"
@@ -127,8 +129,8 @@ const form_first_render_descriptor = {
     },
 };
 
-define<NewInlineCommentForm>({
-    tag: TAG_NAME,
+export const NewInlineCommentForm = define<NewInlineCommentForm>({
+    tag: NEW_INLINE_COMMENT_NAME,
     post_submit_callback: undefined,
     on_cancel_callback: undefined,
     post_rendering_callback: undefined,

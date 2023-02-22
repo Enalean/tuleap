@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestPresenter } from "../../src/app/comments/PullRequestPresenter";
+import type { PullRequestPresenter } from "@tuleap/plugin-pullrequest-comments";
 
 export const CurrentPullRequestPresenterStub = {
     withDefault: (): PullRequestPresenter => ({

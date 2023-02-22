@@ -20,18 +20,21 @@
 import CodeMirror from "codemirror";
 import { getStore } from "../editors/comments-store.ts";
 import { getCollapsibleCodeSections } from "../code-collapse/collaspible-code-sections-builder.ts";
+import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
+import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
+import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 import "../editors/modes.ts";
-import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+    PullRequestCommentController,
+    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentNewReplySaver,
+} from "@tuleap/plugin-pullrequest-comments";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
 import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
-import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
-import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
-import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
-import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
-import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
-import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 import { FileDiffCommentScroller } from "../scroll-to-comment/FileDiffCommentScroller";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import { collapseCommonSectionsUnidiff } from "../code-collapse/code-mirror-common-sections-collapse";
@@ -70,11 +73,13 @@ function controller($element, $scope, SharedPropertiesService) {
                 PullRequestCommentReplyFormFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
-                PullRequestCurrentUserPresenter.fromUserInfo(
+                PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
                     SharedPropertiesService.getUserAvatarUrl()
                 ),
-                PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest())
+                PullRequestPresenterBuilder.fromPullRequest(
+                    SharedPropertiesService.getPullRequest()
+                )
             ),
             getStore(),
             comment_widgets_map

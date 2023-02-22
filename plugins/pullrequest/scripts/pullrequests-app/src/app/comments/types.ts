@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type InlineCommentPosition = "left" | "right";
-export const INLINE_COMMENT_POSITION_LEFT: InlineCommentPosition = "left";
-export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
-
-export interface PullRequestUser {
-    readonly avatar_url: string;
-    readonly display_name: string;
-    readonly user_url: string;
-}
+import type { InlineCommentPosition, PullRequestUser } from "@tuleap/plugin-pullrequest-comments";
 
 export interface FileDiffCommentPayload {
     readonly id: number;

@@ -17,5 +17,11 @@
             "src": "scripts/pullrequest-overview/src",
             "po": "scripts/pullrequest-overview/po"
         }
+    },
+    "gettext-ts": {
+        "pullrequest-comments": {
+            "src": "scripts/lib/pullrequest-comments/src",
+            "po": "scripts/lib/pullrequest-comments/po"
+        }
     }
 }

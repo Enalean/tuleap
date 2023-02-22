@@ -18,9 +18,8 @@
  */
 
 import { define, html } from "hybrids";
-import type { FileDiffWidgetType } from "../../types";
 
-export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-placeholder";
+export const TAG_NAME = "tuleap-pullrequest-placeholder";
 
 export type HostElement = FileDiffPlaceholder & HTMLElement;
 

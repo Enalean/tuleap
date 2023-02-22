@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentPullRequestUserPresenter } from "../../src/app/comments/PullRequestCurrentUserPresenter";
+import type { CurrentPullRequestUserPresenter } from "@tuleap/plugin-pullrequest-comments";
 
 export const CurrentPullRequestUserPresenterStub = {
     withDefault: (): CurrentPullRequestUserPresenter => ({

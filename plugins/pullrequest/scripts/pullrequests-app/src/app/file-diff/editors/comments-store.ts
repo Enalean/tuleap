@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
-import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
-import type { PullRequestCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type {
+    StorePullRequestCommentReplies,
+    PullRequestCommentPresenter,
+} from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
 
 let state_comments: StorePullRequestCommentReplies;
 

@@ -18,11 +18,13 @@
  */
 
 import type { Editor } from "codemirror";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
-import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
+import type {
+    PullRequestInlineCommentPresenter,
+    StorePullRequestCommentReplies,
+} from "@tuleap/plugin-pullrequest-comments";
 import type { FileLine } from "../types";
 import type { MapCommentWidgets } from "./FileDiffCommentWidgetsMap";
-import { INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-comments";
 import { isAnAddedLine, isAnUnmovedLine } from "../file-lines/file-line-helper";
 
 export interface ScrollToFileDiffComment {

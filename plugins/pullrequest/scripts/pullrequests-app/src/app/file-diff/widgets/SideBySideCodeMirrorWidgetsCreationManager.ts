@@ -22,15 +22,15 @@ import type {
     CreatePlaceholderWidget,
     CreateNewInlineCommentFormWidget,
 } from "./SideBySideCodeMirrorWidgetCreator";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { FileLine } from "../types";
 import type { FileLinesState } from "../file-lines/SideBySideLineState";
 import type { EqualizeLinesHeights } from "./placeholders/SideBySideLinesHeightEqualizer";
 import type { ManageCodeMirrorsContent } from "../editors/SideBySideCodeMirrorsContentManager";
-import type { InlineCommentPosition } from "../../comments/types";
+import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-comments";
 
 import { isAnAddedLine, isARemovedLine } from "../file-lines/file-line-helper";
-import { INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-comments";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 export interface ManageCodeMirrorWidgetsCreation {

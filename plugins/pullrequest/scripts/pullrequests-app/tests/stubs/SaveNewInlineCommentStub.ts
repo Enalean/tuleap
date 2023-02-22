@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { FileDiffCommentPayload } from "../../src/app/comments/types";
+import type { FileDiffCommentPayload } from "../../src/app/comments/PullRequestCommentPresenterBuilder";
 import type { SaveNewInlineComment } from "../../src/app/comments/new-comment-form/NewInlineCommentSaver";
 
 export type SaveNewInlineCommentStub = SaveNewInlineComment & {
