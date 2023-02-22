@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import type { GitRepository } from "../src/types";
 import {
     getProjectRepositories,
@@ -27,11 +28,13 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 
+vi.mock("@tuleap/fetch-result");
+
 describe("API querier", () => {
     describe("getProjectRepositories", () => {
         it("Given a project id then it will recursively get all project repositories", async () => {
             const repositories = [{ id: 37 } as GitRepository, { id: 91 } as GitRepository];
-            const getAllJSON = jest
+            const getAllJSON = vi
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync(repositories));
 
@@ -53,7 +56,7 @@ describe("API querier", () => {
     });
     describe("postGitBranch", () => {
         it("asks to create the Git branch", async () => {
-            const postSpy = jest.spyOn(fetch_result, "postJSON");
+            const postSpy = vi.spyOn(fetch_result, "postJSON");
             postSpy.mockReturnValue(okAsync({ html_url: "URL" }));
 
             const repository_id = 27;
@@ -74,7 +77,7 @@ describe("API querier", () => {
     });
     describe("postPullRequestOnDefaultBranch", () => {
         it("asks to create the Git branch", async () => {
-            const postSpy = jest.spyOn(fetch_result, "postJSON");
+            const postSpy = vi.spyOn(fetch_result, "postJSON");
             postSpy.mockReturnValue(okAsync({ id: 123 }));
 
             const repository: GitRepository = {

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import ModalContent from "./ModalContent.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { flushPromises, shallowMount } from "@vue/test-utils";
@@ -60,13 +61,13 @@ describe("ModalContent", () => {
     }
 
     it("asks to create a Git branch and a PR", async () => {
-        const create_git_branch = jest.spyOn(rest_queries, "postGitBranch").mockReturnValue(
+        const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
             } as GitCreateBranchResponse)
         );
 
-        const create_pull_request = jest
+        const create_pull_request = vi
             .spyOn(rest_queries, "postPullRequestOnDefaultBranch")
             .mockReturnValue(
                 okAsync({
@@ -93,7 +94,7 @@ describe("ModalContent", () => {
         expect(create_pull_request).toHaveBeenCalled();
     });
     it("asks to create only a Git branch", () => {
-        const create_git_branch = jest.spyOn(rest_queries, "postGitBranch").mockReturnValue(
+        const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
             } as GitCreateBranchResponse)
@@ -114,7 +115,7 @@ describe("ModalContent", () => {
         expect(create_git_branch).toHaveBeenCalled();
     });
     it("asks to create only a Git branch when pull requests are not available", () => {
-        const create_git_branch = jest.spyOn(rest_queries, "postGitBranch").mockReturnValue(
+        const create_git_branch = vi.spyOn(rest_queries, "postGitBranch").mockReturnValue(
             okAsync({
                 html_url: "branch_url",
             } as GitCreateBranchResponse)
