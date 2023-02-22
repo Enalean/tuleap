@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account\Register;
+namespace Tuleap\InviteBuddy;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\Invitation;
+use Tuleap\User\Account\Register\InvitationShouldBeToEmailException;
 
 /**
  * @psalm-immutable

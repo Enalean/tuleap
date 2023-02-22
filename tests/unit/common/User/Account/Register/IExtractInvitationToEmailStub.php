@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\InviteBuddy\InvitationToEmail;
 
 /**
  * @psalm-immutable

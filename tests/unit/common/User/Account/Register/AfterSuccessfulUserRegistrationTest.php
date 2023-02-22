@@ -25,6 +25,7 @@ namespace Tuleap\User\Account\Register;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
+use Tuleap\InviteBuddy\InvitationToEmail;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;

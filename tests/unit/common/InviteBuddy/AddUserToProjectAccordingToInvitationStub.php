@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Tuleap\User\Account\Register\InvitationToEmail;
-
 final class AddUserToProjectAccordingToInvitationStub implements AddUserToProjectAccordingToInvitation
 {
     private int $nb_calls = 0;

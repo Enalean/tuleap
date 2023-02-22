@@ -28,7 +28,6 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
-use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\Account\Register\RegisterFormContext;
 
 final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase

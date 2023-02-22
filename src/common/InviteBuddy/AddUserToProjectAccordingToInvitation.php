@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Tuleap\User\Account\Register\InvitationToEmail;
-
 interface AddUserToProjectAccordingToInvitation
 {
     public function addUserToProjectAccordingToInvitation(

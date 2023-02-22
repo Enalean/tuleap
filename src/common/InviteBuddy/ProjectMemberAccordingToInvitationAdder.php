@@ -30,7 +30,6 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\AlreadyProjectMemberExcepti
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\NoEmailForUserException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
-use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\RetrieveUserById;
 
 final class ProjectMemberAccordingToInvitationAdder implements AddUserToProjectAccordingToInvitation
