@@ -50,6 +50,11 @@ class InvitationInstrumentation
         $this->prometheus->increment(self::INVITATION_COMPLETED_METRIC_NAME, self::INVITATION_COMPLETED_METRIC_HELP, ['type' => 'used']);
     }
 
+    public function incrementCompletedInvitation(): void
+    {
+        $this->prometheus->increment(self::INVITATION_COMPLETED_METRIC_NAME, self::INVITATION_COMPLETED_METRIC_HELP, ['type' => 'completed']);
+    }
+
     /**
      * @psalm-param positive-int $nb
      */

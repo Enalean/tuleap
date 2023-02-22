@@ -49,6 +49,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $project_member_adder       = $this->createMock(ProjectMemberAdder::class);
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -57,6 +58,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             new NullLogger(),
             $email_notifier,
+            $project_history_dao,
         );
 
         $project_member_adder
@@ -90,6 +92,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new TestLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -98,6 +101,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $project_member_adder
@@ -147,6 +151,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new TestLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -155,6 +160,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $project_member_adder
@@ -198,6 +204,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new TestLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -206,6 +213,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $project_member_adder
@@ -253,6 +261,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new TestLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -261,6 +270,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $delegation_dao
@@ -312,6 +322,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new NullLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -320,6 +331,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $delegation_dao
@@ -334,6 +346,9 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::once())
             ->method('incrementProjectInvitation');
+        $project_history_dao
+            ->expects(self::once())
+            ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
             $just_created_user,
@@ -370,6 +385,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new NullLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -378,6 +394,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $delegation_dao
@@ -391,6 +408,9 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::once())
             ->method('incrementProjectInvitation');
+        $project_history_dao
+            ->expects(self::once())
+            ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
             $just_created_user,
@@ -426,6 +446,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new NullLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -434,6 +455,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $delegation_dao
@@ -448,6 +470,9 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation
             ->expects(self::once())
             ->method('incrementProjectInvitation');
+        $project_history_dao
+            ->expects(self::once())
+            ->method('addHistory');
 
         $adder->addUserToProjectAccordingToInvitation(
             $just_created_user,
@@ -483,6 +508,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
         $invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
         $logger                     = new TestLogger();
         $email_notifier             = $this->createMock(InvitationEmailNotifier::class);
+        $project_history_dao        = $this->createMock(\ProjectHistoryDao::class);
 
         $adder = new ProjectMemberAccordingToInvitationAdder(
             $user_manager,
@@ -491,6 +517,7 @@ final class ProjectMemberAccordingToInvitationAdderTest extends TestCase
             $invitation_instrumentation,
             $logger,
             $email_notifier,
+            $project_history_dao,
         );
 
         $project_member_adder

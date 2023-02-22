@@ -91,7 +91,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
             $user,
             new \DateTimeImmutable('now'),
             InvitationHistoryEntry::InvitationWithdrawn->value,
-            '',
+            (string) $invitation_id,
             [],
         );
 

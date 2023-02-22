@@ -32,7 +32,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
         private InvitationDao $dao,
         private RetrieveUserById $user_manager,
         private AccountCreationFeedbackEmailNotifier $email_notifier,
-        private ProjectMemberAccordingToInvitationAdder $project_member_adder,
+        private AddUserToProjectAccordingToInvitation $project_member_adder,
         private InvitationInstrumentation $invitation_instrumentation,
         private LoggerInterface $logger,
     ) {
@@ -50,17 +50,11 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
             $this->invitation_instrumentation->incrementUsedInvitation();
         }
 
-        $already_warned_users_id     = [];
-        $same_project_from_same_user = [];
+        $already_warned_users_id = [];
         foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $invitation) {
-            if (! isset($same_project_from_same_user[$invitation->from_user_id])) {
-                $same_project_from_same_user[$invitation->from_user_id] = [];
-            }
+            $this->invitation_instrumentation->incrementCompletedInvitation();
+
             if ($invitation->to_project_id) {
-                if (isset($same_project_from_same_user[$invitation->from_user_id][$invitation->to_project_id])) {
-                    continue;
-                }
-                $same_project_from_same_user[$invitation->from_user_id][$invitation->to_project_id] = true;
                 $this->project_member_adder->addUserToProjectAccordingToInvitation($just_created_user, $invitation);
             }
 
