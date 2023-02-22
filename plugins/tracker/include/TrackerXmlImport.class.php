@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -274,9 +275,8 @@ class TrackerXmlImport
             return;
         }
 
-        $partial_element = new SimpleXMLElement((string) $xml_input->asXML());
+        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_input->asXml());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
-
         $this->rng_validator->validate(
             $partial_element->trackers,
             __DIR__ . '/../resources/trackers.rng'
@@ -428,9 +428,8 @@ class TrackerXmlImport
         if (! $xml_input->trackers) {
             return '';
         }
-        $partial_element = new SimpleXMLElement((string) $xml_input->asXML());
+        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_input->asXml());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
-
         $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
@@ -737,12 +736,10 @@ class TrackerXmlImport
         ?string $color,
         array $created_trackers_mapping,
     ): Tracker {
-        $tracker         = null;
-        $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getId(), $name, $itemname);
 
+        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_element->asXml());
         $this->external_fields_extractor->extractExternalFieldsFromTracker($partial_element);
-
         $this->rng_validator->validate(
             $partial_element,
             realpath(__DIR__ . '/../resources/tracker.rng')
