@@ -44,8 +44,8 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
 
     public function testItDoesNothingIfParentIdIsZero(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->validator->checkParentValidity(0, self::PULL_REQUEST_ID);
-        $this->addToAssertionCount(1);
     }
 
     public function testItThrowAnExceptionIfParentIdDoesNotBelongToAComment(): void
@@ -85,12 +85,13 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 
         $this->expectExceptionCode(400);
-        $this->expectDeprecationMessage("must be the same than provided comment");
+        $this->expectExceptionMessage("must be the same than provided comment");
         $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
     }
 
     public function testItDoesNotThrowIfParentIdIsValidForInlineComment(): void
     {
+        $this->expectNotToPerformAssertions();
         $parent_id = 1;
         $comment   = new InlineComment(
             1,
@@ -108,6 +109,5 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 
         $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
-        $this->addToAssertionCount(1);
     }
 }

@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\Test\TestLogger;
 
 final class EventDispatcherWithFallbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDoNotDispatchOnSecondaryDispatcherIfTheFirstDispatcherSucceeds(): void
     {
         $dispatcher_with_fallback = new EventDispatcherWithFallback(
@@ -57,7 +54,7 @@ final class EventDispatcherWithFallbackTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testEventGetsDispatchedToSecondaryDispatcherWhenTheFirstFails(): void
     {
-        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger = new TestLogger();
 
         $dispatcher_with_fallback = new EventDispatcherWithFallback(
             $logger,
@@ -67,20 +64,9 @@ final class EventDispatcherWithFallbackTest extends \Tuleap\Test\PHPUnit\TestCas
                     throw new \RuntimeException('Failure');
                 }
             },
-            new class ($this) implements EventDispatcherInterface {
-                /**
-                 * @var TestCase
-                 */
-                private $test;
-
-                public function __construct(TestCase $test)
-                {
-                    $this->test = $test;
-                }
-
+            new class implements EventDispatcherInterface {
                 public function dispatch(object $event): object
                 {
-                    $this->test->addToAssertionCount(1);
                     return $event;
                 }
             }
@@ -90,8 +76,7 @@ final class EventDispatcherWithFallbackTest extends \Tuleap\Test\PHPUnit\TestCas
         {
         };
 
-        $logger->shouldReceive('debug')->once();
-        $this->assertSame($event, $dispatcher_with_fallback->dispatch($event));
-        $this->assertEquals(1, $this->getNumAssertions());
+        self::assertSame($event, $dispatcher_with_fallback->dispatch($event));
+        self::assertTrue($logger->hasDebugRecords());
     }
 }

@@ -33,7 +33,7 @@ class RoleAssignmentsHistoryEntryAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id  = 666;
         $history_key = "some_history_entry_key";
 
-        $dao         = $this->createStub(\ProjectHistoryDao::class);
+        $dao         = $this->createMock(\ProjectHistoryDao::class);
         $project     = ProjectProxy::buildFromProject(ProjectTestBuilder::aProject()->withId($project_id)->build());
         $assignments = RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
             ProjectUGroupTestBuilder::buildProjectMembers(),

@@ -152,13 +152,14 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
     public function testItRaisesAnErrorIfUnkownType(): void
     {
-        $factory = new Tracker_FormElement_Field_List_BindFactory(Mockery::mock(UGroupManager::class));
-        $this->expectError();
+        $logger  = new \Psr\Log\Test\TestLogger();
+        $factory = new Tracker_FormElement_Field_List_BindFactory($this->createStub(UGroupManager::class), $logger);
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Tracker_FormElement_Field_List_Bind_Null::class,
             $factory->getInstanceFromRow(['type' => 'unknown', 'field' => 'a_field_object'])
         );
+        self::assertTrue($logger->hasWarningRecords());
     }
 
     public function testItImportsStaticUgroups(): void

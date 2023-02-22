@@ -64,7 +64,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->dependencies_retriever = $this->createMock(IRetrieveDependencies::class);
         $this->timeframe_calculator   = $this->getMockBuilder(TimeframeImpliedFromAnotherTracker::class)
             ->disableOriginalConstructor()
-            ->setMethodsExcept(['getName'])
+            ->onlyMethods(['buildTimePeriodWithoutWeekendForArtifactForREST'])
             ->getMock();
 
         $this->user = UserTestBuilder::aUser()->build();
