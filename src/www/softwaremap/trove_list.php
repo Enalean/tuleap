@@ -151,14 +151,17 @@ if ($special_cat === 'none') {
         . "`groups`.unix_group_name, "
         . "`groups`.status, "
         . "`groups`.register_time, "
-        . "`groups`.short_description "
+        . "`groups`.short_description, "
+        . "project_metric.percentile, "
+        . "project_metric.ranking "
         . "FROM `groups` "
+        . "LEFT JOIN project_metric USING (group_id) "
         . "WHERE "
         . "(" . trove_get_visibility_for_user('`groups`.access', $current_user) . ") AND "
     . "(`groups`.type=1) AND "
         . "(`groups`.status='A') "
         . $sql_list_categorized
-        . "ORDER BY `groups`.group_name ";
+        . "GROUP BY `groups`.group_id ORDER BY `groups`.group_name ";
 } else {
 // now do limiting query
 
@@ -167,15 +170,18 @@ if ($special_cat === 'none') {
     . "`groups`.unix_group_name, "
     . "`groups`.status, "
     . "`groups`.register_time, "
-    . "`groups`.short_description "
+    . "`groups`.short_description, "
+    . "project_metric.percentile, "
+    . "project_metric.ranking "
     . "FROM `groups` "
+    . "LEFT JOIN project_metric USING (group_id) "
     . ", trove_group_link "
     . "WHERE trove_group_link.group_id=`groups`.group_id AND "
     . "(" . trove_get_visibility_for_user('`groups`.access', $current_user) . ") AND "
         . "(`groups`.type=1) AND "
     . "(`groups`.status='A') AND "
     . "trove_group_link.trove_cat_id=" . db_ei($form_cat) . " "
-    . "ORDER BY `groups`.group_name ";
+    . "GROUP BY `groups`.group_id ORDER BY `groups`.group_name ";
 }
 
 $limit           = TroveCatFactory::BROWSELIMIT;

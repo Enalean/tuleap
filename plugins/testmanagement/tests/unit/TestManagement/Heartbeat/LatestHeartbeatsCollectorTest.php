@@ -40,10 +40,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager $user_manager;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $factory;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao $dao;
-    /**
-     * @var GlyphFinder&\Mockery\MockInterface
-     */
-    private $glyph_finder;
 
     protected function setUp(): void
     {

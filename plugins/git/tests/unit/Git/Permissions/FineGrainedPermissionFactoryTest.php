@@ -24,6 +24,8 @@ use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class FineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -37,22 +39,6 @@ class FineGrainedPermissionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var FineGrainedPermissionFactory
      */
     private $factory;
-    /**
-     * @var FineGrainedDao&Mockery\MockInterface
-     */
-    private Mockery\LegacyMockInterface|FineGrainedDao|Mockery\MockInterface $dao;
-    /**
-     * @var \UGroupManager&Mockery\MockInterface
-     */
-    private $ugroup_manager;
-    /**
-     * @var \PermissionsNormalizer&Mockery\MockInterface
-     */
-    private $normalizer;
-    /**
-     * @var Mockery\MockInterface&\GitRepository
-     */
-    private $repository;
 
     protected function setUp(): void
     {

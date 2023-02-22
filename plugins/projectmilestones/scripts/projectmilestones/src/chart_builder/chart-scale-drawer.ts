@@ -22,7 +22,9 @@ import type { XYMinMaxCoordinates } from "../type";
 
 const OVERSIZE_LINE_SCALE = 10;
 
-export function addScaleLines(
+export { addScaleLines };
+
+function addScaleLines(
     svg_burndown: Selection<SVGSVGElement, unknown, null, undefined>,
     coordinates: XYMinMaxCoordinates
 ): void {

@@ -82,7 +82,7 @@ node:
 	     pnpm run build
 
 composer:
-	$(MAKE) -C $(BASE_DIR) composer MODE=Prod
+	$(MAKE) -C $(BASE_DIR) composer preload MODE=Prod
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo generate-templates
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)

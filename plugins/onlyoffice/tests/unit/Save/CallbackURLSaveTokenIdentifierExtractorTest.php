@@ -51,7 +51,7 @@ final class CallbackURLSaveTokenIdentifierExtractorTest extends TestCase
         self::assertTrue(Result::isErr($res));
     }
 
-    public static function dataProviderInvalidURLs(): array
+    public function dataProviderInvalidURLs(): array
     {
         return [
             'Broken URLs' => ['https://?'],

@@ -317,14 +317,12 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
         $artifact = $this->createMock(Artifact::class);
         $field    = $this->aRequiredOpenListField();
 
-        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'error' &&
-                    ($message === 'Invalid value dummytext for field My Open List (openlist).' || $message === 'The field My Open List (openlist) is required.') => true,
-                };
-            }
-        );
+        $GLOBALS['Response']
+            ->method('addFeedback')
+            ->withConsecutive(
+                ['error', 'Invalid value dummytext for field My Open List (openlist).'],
+                ['error', 'The field My Open List (openlist) is required.']
+            );
 
         $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, 'dummytext'));
     }

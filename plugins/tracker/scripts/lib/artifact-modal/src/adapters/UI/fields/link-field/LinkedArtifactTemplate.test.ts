@@ -34,12 +34,14 @@ import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/Curren
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
@@ -53,7 +55,6 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { selectOrThrow } from "@tuleap/dom";
-import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -169,10 +170,11 @@ describe(`LinkedArtifactTemplate`, () => {
 
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
+            const fault_notifier = NotifyFaultStub.withCount();
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
+            const notification_clearer = ClearFaultNotificationStub.withCount();
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-            const event_dispatcher = DispatchEventsStub.buildNoOp();
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -180,15 +182,17 @@ describe(`LinkedArtifactTemplate`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
+                fault_notifier,
+                notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         okAsync(LinkableArtifactStub.withDefaults())
                     ),
+                    fault_notifier,
                     parents_retriever,
                     link_verifier,
                     RetrieveUserHistoryStub.withoutUserHistory(),
                     SearchArtifactsStub.withoutResults(),
-                    event_dispatcher,
                     current_artifact_identifier,
                     current_tracker_identifier,
                     UserIdentifierStub.fromUserId(101)
@@ -199,9 +203,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                event_dispatcher,
-                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 457,
                     label: "Artifact link",
@@ -211,7 +212,9 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72"),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations([])
+                ControlLinkedArtifactsPopoversStub.build(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations([]),
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

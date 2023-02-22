@@ -57,12 +57,25 @@
     </p>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
-import { useState } from "vuex-composition-helpers";
-import type { ClipboardState } from "../../../store/clipboard/module";
+import { Vue } from "vue-property-decorator";
+import Component from "vue-class-component";
+import { namespace } from "vuex-class";
 
-const { pasting_in_progress, item_title, operation_type } = useState<
-    Pick<ClipboardState, "pasting_in_progress" | "item_title" | "operation_type">
->("clipboard", ["pasting_in_progress", "item_title", "operation_type"]);
+const clipboard = namespace("clipboard");
+
+@Component
+export default class ClipboardContentInformation extends Vue {
+    private CLIPBOARD_OPERATION_CUT = CLIPBOARD_OPERATION_CUT;
+    private CLIPBOARD_OPERATION_COPY = CLIPBOARD_OPERATION_COPY;
+    @clipboard.State
+    readonly item_title!: string | null;
+
+    @clipboard.State
+    readonly operation_type!: string | null;
+
+    @clipboard.State
+    readonly pasting_in_progress!: string | null;
+}
 </script>

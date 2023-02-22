@@ -19,7 +19,6 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -144,10 +143,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $rng_path = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
 
-        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml->asXml());
+        $partial_element = new SimpleXMLElement((string) $xml->asXml());
         $this->external_field_extractor->extractExternalFieldFromProjectElement($partial_element);
-        $this->xml_rng_validator->validate($partial_element, $rng_path);
 
+        $this->xml_rng_validator->validate($partial_element, $rng_path);
         $xml_agiledashboard = $xml->agiledashboard;
 
         $this->importPlannings($xml_agiledashboard);

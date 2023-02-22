@@ -103,7 +103,7 @@ final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->key_fetcher->fetchKey($provider);
     }
 
-    public static function dataProviderInvalidJWKSDocument(): array
+    public function dataProviderInvalidJWKSDocument(): array
     {
         return [
             'No keys attribute'           => ['{}'],

@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
 final class RetrieveUsedFieldsStub implements RetrieveUsedFields
 {
-    /**
-     * @param \Tracker_FormElement_Field[] $fields
-     */
-    private function __construct(private readonly array $fields)
+    private function __construct(private array $fields)
     {
     }
 
@@ -52,16 +48,5 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
     public function getUsedFields(\Tracker $tracker): array
     {
         return $this->fields;
-    }
-
-    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
-    {
-        foreach ($this->fields as $field) {
-            if ($field->getId() === $id) {
-                return $field;
-            }
-        }
-
-        return null;
     }
 }

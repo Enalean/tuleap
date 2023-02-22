@@ -38,12 +38,11 @@ describe("KeyboardNavigationManager", () => {
     }
 
     beforeEach(async () => {
-        const doc = document.implementation.createHTMLDocument();
-        const source_select_box = doc.createElement("select");
+        const source_select_box = document.createElement("select");
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
         const { dropdown_list_element } = new BaseComponentRenderer(
-            doc,
+            document.implementation.createHTMLDocument(),
             source_select_box
         ).renderBaseComponent();
 

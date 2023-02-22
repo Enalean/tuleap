@@ -75,7 +75,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getProcessor()->add($feature_addition);
     }
 
-    public static function dataProviderExceptions(): array
+    public function dataProviderExceptions(): array
     {
         return [
             'it wraps Tracker_Exception'                    => [new \Tracker_Exception()],

@@ -43,7 +43,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderInvalidData(): array
+    public function dataProviderInvalidData(): array
     {
         return [
             'Throws when App name is empty'               => ['', 'https://example.com/redirect'],
@@ -97,7 +97,7 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($new_app->getProject());
     }
 
-    public static function dataProviderValidData(): array
+    public function dataProviderValidData(): array
     {
         return [
             'Valid data'                       => ['https://example.com/redirect', false],

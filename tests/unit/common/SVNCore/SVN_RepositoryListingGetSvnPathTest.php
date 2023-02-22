@@ -21,14 +21,9 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class SVN_RepositoryListingGetSvnPathTest extends \Tuleap\Test\PHPUnit\TestCase
+class SVN_RepositoryListingGetSvnPathTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    private SVN_RepositoryListing $svn_repo_listing;
-    private $svnlook;
-    private $svn_perms_mgr;
-    private $user_manager;
 
     protected function setUp(): void
     {

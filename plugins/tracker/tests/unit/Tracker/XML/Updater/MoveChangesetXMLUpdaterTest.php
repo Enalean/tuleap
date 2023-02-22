@@ -39,6 +39,8 @@ use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -47,43 +49,6 @@ class MoveChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveChangesetXMLUpdater
      */
     private $updater;
-    /**
-     * @var PFUser&Mockery\MockInterface
-     */
-    private $user;
-    /**
-     * @var PFUser&Mockery\MockInterface
-     */
-    private $submitter;
-    /**
-     * @var Tracker&Mockery\MockInterface
-     */
-    private $tracker;
-    /**
-     * @var EventManager&Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var FieldValueMatcher&Mockery\MockInterface
-     */
-    private $value_matcher;
-    /**
-     * @var MoveTitleSemanticChecker&Mockery\MockInterface
-     */
-    private $title_semantic_checker;
-    /**
-     * @var MoveDescriptionSemanticChecker&Mockery\MockInterface
-     */
-    private $description_semantic_checker;
-    /**
-     * @var MoveStatusSemanticChecker&Mockery\MockInterface
-     */
-    private $status_semantic_checker;
-    /**
-     * @var MoveContributorSemanticChecker&Mockery\MockInterface
-     */
-    private $contributor_semantic_checker;
-    private NoFeedbackFieldCollector $collector;
 
     public function setUp(): void
     {

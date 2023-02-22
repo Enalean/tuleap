@@ -52,9 +52,9 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanStructureRealTimeMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
+use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -184,8 +184,6 @@ class KanbanResource extends AuthenticatedResource
     private $tracker_report_updater;
     private Client $mercure_client;
 
-    private KanbanStructureRealTimeMercure $structure_realtime_kanban;
-
     private FirstPossibleValueInListRetriever $first_possible_value_retriever;
 
     public function __construct()
@@ -244,18 +242,18 @@ class KanbanResource extends AuthenticatedResource
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client            = new NodeJSClient(
+        $this->node_js_client         = new NodeJSClient(
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()
         );
-        $this->mercure_client            = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
-        $this->structure_realtime_kanban = new KanbanStructureRealTimeMercure($this->mercure_client);
-        $this->permissions_serializer    = new Tracker_Permission_PermissionsSerializer(
+        $this->mercure_client         = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
-        $this->query_parser              = new QueryParameterParser(
+
+        $this->query_parser = new QueryParameterParser(
             new JsonDecoder()
         );
 
@@ -442,9 +440,6 @@ class KanbanResource extends AuthenticatedResource
                 );
 
                 $this->node_js_client->sendMessage($message);
-                if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                    $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-                }
             }
         }
 
@@ -1219,9 +1214,13 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
+        }
+        if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            $mercure_message = new MercureMessageDataPresenter(
+                'kanban/' . $kanban->getId(),
+                '{"cmd":[{"kanban":"delete"}]}'
+            );
+            $this->mercure_client->sendMessage($mercure_message);
         }
     }
 
@@ -1325,9 +1324,6 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
         }
 
         return $column_representation;
@@ -1390,9 +1386,6 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                $this->structure_realtime_kanban->sendStructureUpdate($kanban);
-            }
         }
     }
 

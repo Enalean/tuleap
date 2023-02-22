@@ -4,18 +4,18 @@ specifiers:
   '@tuleap/build-system-configurator': workspace:*
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
-  neverthrow: ^6.0.0
+  neverthrow: ^5.0.0
 
 dependencies:
   '@tuleap/fault': link:../../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  neverthrow: 6.0.0
+  neverthrow: 5.0.0
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
 
 packages:
 
-  /neverthrow/6.0.0:
-    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
     dev: false

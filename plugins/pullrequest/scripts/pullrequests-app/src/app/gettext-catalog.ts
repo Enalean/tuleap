@@ -43,8 +43,6 @@ export const getUserMergePullRequest = (): string =>
     gettextCatalog.getString("Has merged the pull request.");
 export const getUserAbandonedPullRequest = (): string =>
     gettextCatalog.getString("Has abandoned the pull request.");
-export const getUserReopenedPullRequest = (): string =>
-    gettextCatalog.getString("Has reopened the pull request.");
 export const getReplyToCommentButtonText = (): string => gettextCatalog.getString("Reply");
 export const getCancelButtonText = (): string => gettextCatalog.getString("Cancel");
 export const getCommentTextAreaPlaceholderText = (): string =>

@@ -6,13 +6,13 @@ specifiers:
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.0.2
   vue: 3.2.37
-  vue-dompurify-html: ^4.0.0
+  vue-dompurify-html: ^3.1.1
   vue3-gettext: ^2.2.1
 
 dependencies:
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   vue: 3.2.37
-  vue-dompurify-html: 4.0.0_vue@3.2.37
+  vue-dompurify-html: 3.1.1_vue@3.2.37
   vue3-gettext: 2.3.4_vue@3.2.37
 
 devDependencies:
@@ -270,8 +270,8 @@ packages:
   /csstype/2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
 
-  /dompurify/3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify/2.4.1:
+    resolution: {integrity: sha512-ewwFzHzrrneRjxzmK6oVz/rZn9VWspGFRDb4/rRtIsM1n36t9AKma/ye8syCpcw+XJ25kOK/hOG7t1j2I2yBqA==}
     dev: false
 
   /error-ex/1.3.2:
@@ -514,12 +514,12 @@ packages:
       vue: 3.2.37
     dev: false
 
-  /vue-dompurify-html/4.0.0_vue@3.2.37:
-    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
+  /vue-dompurify-html/3.1.1_vue@3.2.37:
+    resolution: {integrity: sha512-6ozMTqVlLdfVKh/FIdKT6e7yrwo4NlOKNr/7rTrNsLbjzhNjY3YvRKn2o65LpnghcdUbIETWlkMlvzJbwP+SQw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
     dependencies:
-      dompurify: 3.0.0
+      dompurify: 2.4.1
       vue: 3.2.37
       vue-demi: 0.13.11_vue@3.2.37
     transitivePeerDependencies:

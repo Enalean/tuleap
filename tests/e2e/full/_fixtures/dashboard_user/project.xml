@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<project unix-name="dashboard" full-name="User dashboard" description="dashboard-project" access="public">
+    <long-description/>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="plugin_tracker" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">ProjectMember</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers use-natures="false">
+        <tracker id="T125" parent_id="0">
+            <name>
+                <![CDATA[ Bugs ]]>
+            </name>
+            <item_name>bugs</item_name>
+            <description>
+                <![CDATA[ Bugs Tracker ]]>
+            </description>
+            <color>inca-silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="fieldset" ID="F2789" rank="132" required="1">
+                    <name>fieldset_1</name>
+                    <label>
+                        <![CDATA[ Details ]]>
+                    </label>
+                    <description>
+                        <![CDATA[ fieldset_default_desc_key ]]>
+                    </description>
+                    <formElements>
+                        <formElement type="string" ID="F2790" rank="0" required="1">
+                            <name>summary</name>
+                            <label>
+                                <![CDATA[ Summary ]]>
+                            </label>
+                            <description>
+                                <![CDATA[ One line description of the artifact ]]>
+                            </description>
+                            <properties maxchars="150" size="61"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+            </formElements>
+            <semantics/>
+            <rules/>
+            <reports/>
+            <workflow />
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F2790" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F2790" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F2790" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+        <triggers/>
+    </trackers>
+</project>

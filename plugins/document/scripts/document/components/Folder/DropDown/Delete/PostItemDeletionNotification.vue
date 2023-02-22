@@ -29,38 +29,35 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { useMutations, useState } from "vuex-composition-helpers";
-import type { State } from "../../../../type";
-import { ref, watch } from "vue";
+<script lang="ts">
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { State } from "vuex-class";
 
-const { show_post_deletion_notification } = useState<
-    Pick<State, "show_post_deletion_notification">
->(["show_post_deletion_notification"]);
-const { hidePostDeletionNotification } = useMutations(["hidePostDeletionNotification"]);
+@Component
+export default class PostItemDeletionNotification extends Vue {
+    private is_displayed = false;
+    private is_fadeout = false;
 
-const is_displayed = ref(false);
-const is_fadeout = ref(false);
+    @State
+    private readonly show_post_deletion_notification!: boolean;
 
-watch(
-    () => show_post_deletion_notification.value,
-    (value: boolean): void => {
+    @Watch("show_post_deletion_notification")
+    public updateValue(value: string): void {
         if (value) {
-            show();
+            this.show();
         }
-    },
-    { immediate: true }
-);
+    }
 
-function show(): void {
-    is_displayed.value = true;
-    is_fadeout.value = false;
-    setTimeout(() => {
-        is_fadeout.value = true;
-    }, 2000);
-    setTimeout(() => {
-        is_displayed.value = false;
-        hidePostDeletionNotification();
-    }, 3000);
+    show(): void {
+        this.is_displayed = true;
+        this.is_fadeout = false;
+        setTimeout(() => {
+            this.is_fadeout = true;
+        }, 2000);
+        setTimeout(() => {
+            this.is_displayed = false;
+            this.$store.commit("hidePostDeletionNotification");
+        }, 3000);
+    }
 }
 </script>

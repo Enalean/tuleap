@@ -23,7 +23,6 @@ import { PAGINATION_SIZE_HEADER, AllGetter } from "./AllGetter";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
 import { ResponseRetriever } from "./ResponseRetriever";
 import { RestlerErrorHandler } from "./RestlerErrorHandler";
-import { uri as uriTag } from "./uri-string-template";
 
 function buildResponse<TypeOfJSONPayload>(payload: TypeOfJSONPayload, total: number): Response {
     return {
@@ -42,7 +41,7 @@ type ArrayItem = {
 
 describe(`AllGetter`, () => {
     let fetcher: FetchInterfaceStub, json_payload: ReadonlyArray<ArrayItem>;
-    const uri = uriTag`https://example.com/all-getter-test`;
+    const uri = "https://example.com/all-getter-test";
 
     const buildGetter = (): GetAll => AllGetter(ResponseRetriever(fetcher, RestlerErrorHandler()));
 

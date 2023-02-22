@@ -22,23 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use ForgeConfigSandbox;
-
     private const FIELD_ID                 = 405;
     private const FIRST_ADDED_ARTIFACT_ID  = 66;
     private const SECOND_ADDED_ARTIFACT_ID = 460;
     private const PARENT_ARTIFACT_ID       = 165;
 
-    private function build(ArtifactValuesRepresentation $payload): NewArtifactLinkInitialChangesetValue
+    private function build(array $payload): NewArtifactLinkInitialChangesetValue
     {
         $builder = new NewArtifactLinkInitialChangesetValueBuilder();
         return $builder->buildFromPayload(
@@ -47,14 +41,24 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         );
     }
 
+    public function dataProviderInvalidPayloads(): array
+    {
+        return [
+            'Payload is empty'                      => [[]],
+            'Payload has none of the required keys' => [['invalid_key' => []]],
+            'Links key does not contain an array'   => [['links' => null]],
+        ];
+    }
+
     public function testItBuildsFromARESTPayload(): void
     {
-        $payload         = new ArtifactValuesRepresentation();
-        $payload->links  = [
-            ['id' => self::FIRST_ADDED_ARTIFACT_ID],
-            ['id' => self::SECOND_ADDED_ARTIFACT_ID, 'type' => 'custom_type'],
+        $payload = [
+            'links' => [
+                ['id' => self::FIRST_ADDED_ARTIFACT_ID],
+                ['id' => self::SECOND_ADDED_ARTIFACT_ID, 'type' => 'custom_type'],
+            ],
+            'parent' => ['id' => self::PARENT_ARTIFACT_ID],
         ];
-        $payload->parent = ['id' => self::PARENT_ARTIFACT_ID];
 
         $value = $this->build($payload);
 
@@ -73,8 +77,9 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
     public function testItBuildsFromARESTPayloadWithOnlyParentKey(): void
     {
-        $payload         = new ArtifactValuesRepresentation();
-        $payload->parent = ['id' => self::PARENT_ARTIFACT_ID];
+        $payload = [
+            'parent' => ['id' => self::PARENT_ARTIFACT_ID],
+        ];
 
         $value = $this->build($payload);
 
@@ -86,10 +91,11 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
     public function testItBuildsFromARESTPayloadWithOnlyLinksKey(): void
     {
-        $payload        = new ArtifactValuesRepresentation();
-        $payload->links = [
-            ['id' => self::FIRST_ADDED_ARTIFACT_ID],
-            ['id' => self::SECOND_ADDED_ARTIFACT_ID, 'type' => 'custom_type'],
+        $payload = [
+            'links' => [
+                ['id' => self::FIRST_ADDED_ARTIFACT_ID],
+                ['id' => self::SECOND_ADDED_ARTIFACT_ID, 'type' => 'custom_type'],
+            ],
         ];
 
         $value = $this->build($payload);
@@ -106,27 +112,12 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         self::assertSame('custom_type', $second_link->getType());
     }
 
-    public function testItBuildsFromARESTPayloadWithOnlyAllLinksKey(): void
+    /**
+     * @dataProvider dataProviderInvalidPayloads
+     */
+    public function testItThrowsWhenPayloadHasNoneOfTheRequiredKeys(array $payload): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, true);
-
-        $link1_representation            = new LinkWithDirectionRepresentation();
-        $link1_representation->id        = self::FIRST_ADDED_ARTIFACT_ID;
-        $link1_representation->direction = "forward";
-        $link1_representation->type      = "";
-
-        $payload            = new ArtifactValuesRepresentation();
-        $payload->all_links = [$link1_representation];
-
-        $value = $this->build($payload);
-
-        self::assertSame(self::FIELD_ID, $value->getFieldId());
-        self::assertNull($value->getParent());
-
-        $new_links = $value->getNewLinks();
-        self::assertCount(1, $new_links->getArtifactLinks());
-        [$first_link] = $new_links->getArtifactLinks();
-        self::assertSame(self::FIRST_ADDED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertNull($first_link->getType());
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->build($payload);
     }
 }

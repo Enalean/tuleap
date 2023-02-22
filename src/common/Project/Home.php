@@ -27,11 +27,9 @@ use EventManager;
 use HTTPRequest;
 use Project;
 use ProjectManager;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
-use Tuleap\Dashboard\Project\FirstTimerPresenterBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -49,12 +47,9 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
-use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -97,7 +92,11 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                 EventManager::instance()
             );
 
-            $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
+            $core_assets                              = new \Tuleap\Layout\IncludeCoreAssets();
+            $project_registration_creation_css_assets = new CssAssetWithoutVariantDeclinaisons(
+                $core_assets,
+                'project-registration-creation-style'
+            );
 
             $csrf_token                 = new CSRFSynchronizerToken('/project/');
             $dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
@@ -125,21 +124,9 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     ),
                     EventManager::instance(),
                     $layout,
-                    new JavascriptViteAsset(
-                        new IncludeViteAssets(
-                            __DIR__ . '/../../scripts/project-registration/frontend-assets',
-                            '/assets/core/project-registration'
-                        ),
-                        'src/index-for-modal.ts'
-                    ),
-                    Codendi_HTMLPurifier::instance(),
-                    new FirstTimerPresenterBuilder(
-                        new InvitationDao(
-                            new SplitTokenVerificationStringHasher(),
-                            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
-                        ),
-                        UserManager::instance(),
-                    ),
+                    $core_assets,
+                    $project_registration_creation_css_assets,
+                    Codendi_HTMLPurifier::instance()
                 ),
                 new WidgetDashboardController(
                     $csrf_token,

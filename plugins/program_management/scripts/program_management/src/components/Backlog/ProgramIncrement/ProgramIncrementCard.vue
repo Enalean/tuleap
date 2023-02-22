@@ -34,10 +34,7 @@
                 {{ increment.title }}
             </span>
             <div>
-                <span
-                    class="program-increment-header-dates"
-                    v-if="increment.start_date !== null && increment.end_date !== null"
-                >
+                <span class="program-increment-header-dates" v-if="increment.start_date !== null">
                     {{ formatDate(increment.start_date) }}
                     <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
                     {{ formatDate(increment.end_date) }}
@@ -95,6 +92,7 @@ import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { namespace } from "vuex-class";
+import { sprintf } from "sprintf-js";
 
 const configuration = namespace("configuration");
 
@@ -117,7 +115,7 @@ export default class ProgramIncrementCard extends Vue {
     @configuration.State
     readonly is_iteration_tracker_defined!: boolean;
 
-    is_open = false;
+    private is_open = false;
 
     formatDate(date: string): string {
         return formatDateYearMonthDay(this.user_locale, date);
@@ -128,9 +126,7 @@ export default class ProgramIncrementCard extends Vue {
     }
 
     get planned_iteration_link(): string {
-        return this.$gettextInterpolate(this.$gettext("Plan %{ iteration_label }"), {
-            iteration_label: this.tracker_iteration_label,
-        });
+        return sprintf(this.$gettext("Plan %s"), this.tracker_iteration_label);
     }
 }
 </script>

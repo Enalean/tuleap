@@ -32,15 +32,20 @@
     </button>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 
-const props = defineProps<{ item: Item }>();
+@Component
+export default class UpdatePermissions extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
 
-function showUpdateModal(): void {
-    emitter.emit("show-update-permissions-modal", {
-        detail: { current_item: props.item },
-    });
+    showUpdateModal(): void {
+        emitter.emit("show-update-permissions-modal", {
+            detail: { current_item: this.item },
+        });
+    }
 }
 </script>

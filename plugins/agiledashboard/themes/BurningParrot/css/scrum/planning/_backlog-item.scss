@@ -1,0 +1,133 @@
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "backlog-item-details";
+@import "backlog-item-transit";
+@import "./item-progress";
+
+%hide-moves-icons {
+    > .backlog-item-content-collapsed > .backlog-item-details-effort-container {
+        left: 0;
+    }
+
+    > .backlog-item-details-moves {
+        display: none;
+    }
+}
+
+.backlog-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 var(--tlp-small-spacing);
+
+    &.compact-view .extra-card-fields {
+        display: none;
+    }
+
+    // We must use the child combinator because backlog-item can have children backlog-items
+    &:first-child {
+        > .backlog-item-details
+            > .backlog-item-details-moves
+            > .backlog-item-details-move:first-child {
+            visibility: hidden;
+        }
+    }
+
+    &:last-child {
+        margin: 0;
+
+        > .backlog-item-details:not(.moving-to)
+            > .backlog-item-details-moves
+            > .backlog-item-details-move:last-child {
+            visibility: hidden;
+        }
+    }
+
+    &:only-child:hover {
+        > .backlog-item-details {
+            @extend %hide-moves-icons;
+        }
+    }
+
+    &.child {
+        .backlog-item-details-effort-container,
+        .backlog-item-details-parent {
+            display: none;
+        }
+    }
+
+    &:not([data-nodrag="true"]) {
+        > .backlog-item-details:hover,
+        > .backlog-item-details.moving-to {
+            > .backlog-item-details-moves {
+                transition: opacity 100ms ease-in-out 500ms;
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.backlog-item-children-loading {
+    @extend %loader;
+}
+
+.backlog-item-show-children {
+    width: 95%;
+}
+
+.backlog-item-children {
+    padding: var(--tlp-small-spacing);
+    border-right: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
+    background: var(--tlp-fade-background-color);
+}
+
+.backlog-item-show-children-handle {
+    position: relative;
+    height: 20px;
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    background: var(--tlp-fade-background-color);
+    cursor: pointer;
+
+    &::before {
+        content: "\f078"; // fa-chevron-down
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--tlp-neutral-dark-color-darker-20);
+        font-family: "Font Awesome 6 Free";
+        font-size: 8px;
+        font-weight: 900;
+    }
+
+    &.closed {
+        border-top: 0;
+
+        &::before {
+            content: "\f077"; // fa-chevron-up
+        }
+    }
+
+    &:hover {
+        background: var(--tlp-background-color-darker-02);
+    }
+}

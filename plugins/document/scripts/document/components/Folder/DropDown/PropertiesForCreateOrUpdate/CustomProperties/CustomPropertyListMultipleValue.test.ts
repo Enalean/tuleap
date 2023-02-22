@@ -160,7 +160,7 @@ describe("CustomPropertyListMultipleValue", () => {
 
         expect(emitter.emit).toHaveBeenCalledWith("update-multiple-properties-list-value", {
             detail: {
-                value: expect.anything(),
+                value: wrapper.vm.$data.multiple_list_values,
                 id: "list",
             },
         });

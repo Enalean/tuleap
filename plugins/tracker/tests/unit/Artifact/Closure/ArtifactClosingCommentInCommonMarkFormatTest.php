@@ -43,7 +43,7 @@ final class ArtifactClosingCommentInCommonMarkFormatTest extends \Tuleap\Test\PH
         );
     }
 
-    public static function provideClosingKeywords(): array
+    public function provideClosingKeywords(): array
     {
         return [
             'empty comment when keyword is null' => [null, ''],

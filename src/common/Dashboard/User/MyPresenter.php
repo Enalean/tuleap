@@ -23,22 +23,28 @@ namespace Tuleap\Dashboard\User;
 use CSRFSynchronizerToken;
 use Tuleap\Dashboard\PagePresenter;
 
-final class MyPresenter extends PagePresenter
+class MyPresenter extends PagePresenter
 {
-    public bool $has_dashboard;
-
     /**
-     * @param UserDashboardPresenter[] $dashboards
+     * @var UserPresenter
      */
+    public $user_presenter;
+    /**
+     * @var UserDashboardPresenter[]
+     */
+    public $dashboards;
+    public $has_dashboard;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $url,
-        public UserPresenter $user_presenter,
-        public array $dashboards,
-        public ?FirstTimerPresenter $first_timer,
+        UserPresenter $user_presenter,
+        array $dashboards,
     ) {
         parent::__construct($csrf, $url);
 
-        $this->has_dashboard = count($this->dashboards) > 0;
+        $this->user_presenter = $user_presenter;
+        $this->dashboards     = $dashboards;
+        $this->has_dashboard  = count($dashboards) > 0;
     }
 }

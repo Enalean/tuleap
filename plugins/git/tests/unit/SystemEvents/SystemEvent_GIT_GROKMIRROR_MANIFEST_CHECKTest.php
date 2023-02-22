@@ -18,16 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../bootstrap.php';
+
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK */
     private $event;
-    /**
-     * @var Git_Mirror_ManifestManager&\Mockery\MockInterface
-     */
-    private \Mockery\LegacyMockInterface|Git_Mirror_ManifestManager|\Mockery\MockInterface $manifest_manager;
 
     protected function setUp(): void
     {

@@ -43,7 +43,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $epic_retriever = new JiraEpicFromBoardRetrieverFromAPI($client, new NullLogger());
+        $epic_retriever = new JiraEpicRetrieverFromAPI($client, new NullLogger());
         $epic_retriever->getEpics(JiraBoard::buildFakeBoard());
 
         self::assertTrue($client->called);
@@ -73,7 +73,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $epic_retriever = new JiraEpicFromBoardRetrieverFromAPI($client, new NullLogger());
+        $epic_retriever = new JiraEpicRetrieverFromAPI($client, new NullLogger());
         $epics          = $epic_retriever->getEpics(JiraBoard::buildFakeBoard());
 
         self::assertCount(1, $epics);

@@ -53,10 +53,6 @@ class DoneValueRetrieverTest extends TestCase
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
     private PFUser $user;
-    /**
-     * @var FirstPossibleValueInListRetriever&Mockery\MockInterface
-     */
-    private $first_possible_value_retriever;
 
     protected function setUp(): void
     {

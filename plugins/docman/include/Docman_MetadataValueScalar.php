@@ -37,6 +37,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
     {
         parent::__construct();
         $this->valueText   = \null;
+        $this->valueFloat  = \null;
         $this->valueDate   = \null;
         $this->valueString = \null;
     }

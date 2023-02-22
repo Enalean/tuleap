@@ -118,11 +118,12 @@ class CleanUnusedDao extends DataAccessObject
         if ($this->central_database && $project_id > 0) {
             $db = DBFactory::getMainTuleapDBConnection()->getDB();
             foreach ($this->getTablesToDrop($project_id) as $row) {
-                $sql = "DROP TABLE " . $db->escapeIdentifier($this->central_database) . '.' . $db->escapeIdentifier($row['name']);
+                $fullname = $this->central_database . '.' . $row['name'];
+                $sql      = "DROP TABLE " . $db->escapeIdentifier($fullname);
                 $this->logger->info("$sql");
                 if (! $dry_run) {
                     $this->update($sql);
-                    $this->logger->info(sprintf("%s.%s dropped successfully", $this->central_database, $row['name']));
+                    $this->logger->info("$fullname dropped successfully");
                 }
                 $this->tables_deleted++;
             }
@@ -227,14 +228,11 @@ class CleanUnusedDao extends DataAccessObject
     public function getAllMediawikiBasesNotReferenced()
     {
         $db_name = ForgeConfig::get('sys_dbname');
-        $sql     = <<<EOSQL
-            SELECT SCHEMA_NAME AS 'name'
-            FROM INFORMATION_SCHEMA.SCHEMATA
-                LEFT JOIN $db_name.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
-            WHERE SCHEMA_NAME LIKE 'plugin_mediawiki_%'
-                AND SCHEMA_NAME != 'plugin_mediawiki_standalone_farm'
-                AND db.project_id IS NULL
-            EOSQL;
+        $sql     = "SELECT SCHEMA_NAME AS 'name'
+                FROM INFORMATION_SCHEMA.SCHEMATA
+                  LEFT JOIN $db_name.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
+                WHERE SCHEMA_NAME LIKE 'plugin_mediawiki_%'
+                  AND db.project_id IS NULL";
         return $this->retrieve($sql);
     }
 

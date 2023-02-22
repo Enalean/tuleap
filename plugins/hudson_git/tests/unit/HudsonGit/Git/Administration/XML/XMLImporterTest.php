@@ -28,7 +28,6 @@ use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,7 +47,6 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
      */
     private $logger;
-    private Project $project;
 
     protected function setUp(): void
     {
@@ -62,7 +60,7 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->project = Mockery::mock(Project::class);
     }
 
     public function testItImportsProjectJenkinsServer(): void

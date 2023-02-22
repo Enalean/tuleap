@@ -18,25 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
-
 class ConfigNotificationAssignedTo
 {
-    public function __construct(private ConfigNotificationAssignedToDao $dao)
+    /**
+     * @var ConfigNotificationAssignedToDao
+     */
+    private $dao;
+
+    public function __construct(ConfigNotificationAssignedToDao $dao)
     {
+        $this->dao = $dao;
     }
 
-    public function isAssignedToSubjectEnabled(Tracker $tracker): bool
+    /**
+     * @return bool
+     */
+    public function isAssignedToSubjectEnabled(Tracker $tracker)
     {
-        return $this->dao->searchConfigurationAssignedTo($tracker->getId());
+        $row = $this->dao->searchConfigurationAssignedTo($tracker->getId())->getRow();
+        return $row !== false;
     }
 
-    public function enableAssignedToInSubject(Tracker $tracker): void
+    public function enableAssignedToInSubject(Tracker $tracker)
     {
         $this->dao->create($tracker->getId());
     }
 
-    public function disableAssignedToInSubject(Tracker $tracker): void
+    public function disableAssignedToInSubject(Tracker $tracker)
     {
         $this->dao->delete($tracker->getId());
     }

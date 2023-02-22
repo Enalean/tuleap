@@ -22,7 +22,6 @@ import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
 import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
-import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
 
 import "angular-moment";
 import "moment/locale/fr.js";

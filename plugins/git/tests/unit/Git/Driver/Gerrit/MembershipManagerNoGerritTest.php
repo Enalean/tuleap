@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerNoGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,24 +39,13 @@ class MembershipManagerNoGerritTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $gerrit_user_manager;
     protected $remote_server;
     protected $project_manager;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory_without_gerrit;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->user                = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
         $this->driver              = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $this->driver_factory      = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
         $this->user_finder         = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
         $this->remote_server       = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
         $this->gerrit_user         = \Mockery::spy(\Git_Driver_Gerrit_User::class);
@@ -79,7 +70,7 @@ class MembershipManagerNoGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             Mockery::mock(Git_Driver_Gerrit_MembershipDao::class),
-            \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
+            $this->driver_factory,
             $this->gerrit_user_manager,
             $this->remote_server_factory_without_gerrit,
             \Mockery::spy(\Psr\Log\LoggerInterface::class),

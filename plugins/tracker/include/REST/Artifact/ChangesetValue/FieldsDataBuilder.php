@@ -52,7 +52,7 @@ final class FieldsDataBuilder
 
             $field = $this->getField($indexed_fields, $array_representation);
             if ($field instanceof \Tracker_FormElement_Field_ArtifactLink) {
-                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $value);
+                $artifact_link = $this->artifact_link_initial_builder->buildFromPayload($field, $array_representation);
                 continue;
             }
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);

@@ -28,7 +28,6 @@ class Tracker_Permission_PermissionSetter
 
     /** @var PermissionsManager */
     private $permissions_manager;
-    private Tracker $tracker;
 
     public function __construct(Tracker $tracker, array $stored_ugroups_permissions, PermissionsManager $permissions_manager)
     {

@@ -25,8 +25,14 @@ use Tuleap\Cryptography\ConcealedString;
 
 class PasswordVerifier
 {
-    public function __construct(private \PasswordHandler $password_handler)
+    /**
+     * @var \PasswordHandler
+     */
+    private $password_handler;
+
+    public function __construct(\PasswordHandler $password_handler)
     {
+        $this->password_handler = $password_handler;
     }
 
     public function verifyPassword(PFUser $user, ConcealedString $password): bool
@@ -35,12 +41,19 @@ class PasswordVerifier
         if ($hashed_password === null) {
             return false;
         }
+        $legacy_hashed_password = $user->getLegacyUserPw();
 
-        return $this->isPasswordValid($password, $hashed_password);
+        return $this->isPasswordValid($password, $hashed_password) ||
+            $this->isLegacyPasswordValid($password, $legacy_hashed_password);
     }
 
     private function isPasswordValid(ConcealedString $password, string $hashed_password): bool
     {
         return $this->password_handler->verifyHashPassword($password, $hashed_password);
+    }
+
+    private function isLegacyPasswordValid(ConcealedString $password, string $legacy_hashed_password): bool
+    {
+        return hash_equals($legacy_hashed_password, md5($password->getString()));
     }
 }

@@ -18,10 +18,10 @@
  */
 
 import { Store } from "vuex-mock-store";
-import type { StoreConstructorOptions, Dict } from "vuex-mock-store";
+import type { StoreConstructorOptions } from "vuex-mock-store";
 export type { Store } from "vuex-mock-store";
 
-export function createStoreMock<S extends Dict, G extends Dict, Spy>(
+export function createStoreMock<S, G, Spy>(
     store_options: StoreConstructorOptions<S, G, Spy>,
     custom_state: S | Record<string, never> = {}
 ): Store<S, G, Spy> {

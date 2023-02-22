@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/SemanticValueAdapterTest.php';
+
 use Mockery;
 use Tracker_FormElement_Field_Text;
 
-class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTestCase
+class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTest
 {
     public function testFindTitle(): void
     {

@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\DateReminder\DateReminderDao;
-
 class Tracker_DateReminderRenderer
 {
     protected $tracker;
@@ -34,7 +32,7 @@ class Tracker_DateReminderRenderer
     public function __construct(Tracker $tracker)
     {
         $this->tracker             = $tracker;
-        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker, $this, new DateReminderDao());
+        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker, $this);
     }
 
     /**
@@ -66,31 +64,19 @@ class Tracker_DateReminderRenderer
     {
         $output  = '<form method="post" id="date_field_reminder_form" class="form-inline"> ';
         $output .= '<input type="hidden" name="action" value="new_reminder">';
-        if (! $this->getTracker()->hasSemanticsStatus()) {
-            $output .= '<input type="hidden" name="notif_closed_artifacts" value="1"/>';
-        }
         $output .= $csrf_token->fetchHTMLInput();
         $output .= '<table border="0" cellpadding="5"><tr>';
         $output .= '<td><label>' . dgettext('tuleap-tracker', 'Send an email to') . ':</label></td>';
         $output .= '<td colspan=3><label>' . dgettext('tuleap-tracker', 'When') . ':</label></td>';
-        $output .= '<td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td>';
-        if ($this->getTracker()->hasSemanticsStatus()) {
-            $output .= '<td><label>' . dgettext('tuleap-tracker', 'Notify closed artifacts') . ':</label></td></tr>';
-        }
+        $output .= '<td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td></tr>';
         $output .= '<tr valign="top"><td>' . $this->getAllowedNotifiedForTracker() . '</td>';
         $output .= '<td><input type="text" name="distance" size="3" width="40" /></td>';
         $output .= '<td style="padding-top: 7px;">' . dgettext('tuleap-tracker', 'day(s)') . '</td>';
         $output .= '<td><select name="notif_type">
-                        <option value="0"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '</option>
-                        <option value="1"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '</option>
+                        <option value="0"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '
+                        <option value="1"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '
                     </select></td>';
-        $output .= '<td>' . $this->getTrackerDateFields() . '</td>';
-        if ($this->getTracker()->hasSemanticsStatus()) {
-            $output .= '<td><select name="notif_closed_artifacts">
-                            <option value="0"> ' . dgettext('tuleap-tracker', 'No') . '</option>
-                            <option value="1" selected> ' . dgettext('tuleap-tracker', 'Yes') . '</option>
-                        </select></td></tr>';
-        }
+        $output .= '<td>' . $this->getTrackerDateFields() . '</td></tr>';
         $output .= '<tr><td colspan="6"><input type="submit" name="submit" value="' . $GLOBALS['Language']->getText('global', 'add') . '"></td></tr>';
         $output .= '</form>';
         return $output;
@@ -124,14 +110,6 @@ class Tracker_DateReminderRenderer
                 $enabled  = "";
                 $disabled = "selected";
             }
-
-            $notify_closed_artifacts    = "selected";
-            $notify_only_open_artifacts = "";
-            if (! $reminder->mustNotifyClosedArtifacts()) {
-                $notify_only_open_artifacts = "selected";
-                $notify_closed_artifacts    = "";
-            }
-
             $purifier = Codendi_HTMLPurifier::instance();
 
             $output .= "<h3>" . dgettext('tuleap-tracker', 'Update reminder') . "</h3>";
@@ -139,35 +117,22 @@ class Tracker_DateReminderRenderer
             $output .= '<input type="hidden" name="action" value="update_reminder">';
             $output .= '<input type="hidden" name="reminder_id" value="' . $purifier->purify($reminderId) . '">
                         <input type="hidden" name="reminder_field_date" value="' . $purifier->purify($reminder->getField()->getId()) . '">';
-            if (! $this->getTracker()->hasSemanticsStatus()) {
-                $output .= '<input type="hidden" name="notif_closed_artifacts" value="1">';
-            }
             $output .= '<table border="0" cellpadding="5"><tr>';
             $output .= $csrf_token->fetchHTMLInput();
             $output .= '<td><label>' . dgettext('tuleap-tracker', 'Send an email to') . ':</label></td>
                         <td colspan=3><label>' . dgettext('tuleap-tracker', 'When') . ':</label></td>
-                        <td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td>';
-            if ($this->getTracker()->hasSemanticsStatus()) {
-                $output .= '<td><label>' . dgettext('tuleap-tracker', 'Notify closed artifacts') . ':</label></td>';
-            }
-
-            $output .= '<td><label>' . dgettext('tuleap-tracker', 'Status') . ':</label></td></tr>';
+                        <td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td>
+                        <td><label>' . dgettext('tuleap-tracker', 'Status') . ':</label></td></tr>';
             $output .= '<tr valign="top"><td>' . $this->getAllowedNotifiedForTracker($reminderId) . '</td>';
             $output .= '<td><input type="text" name="distance" value="' . $reminder->getDistance() . '" size="3" style="width: auto"></td><td style="padding-top: 7px;">' . dgettext('tuleap-tracker', 'day(s)') . '</td>';
             $output .= '<td><select name="notif_type" class="input-small">
-                            <option value="0" ' . $before . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '</option>
-                            <option value="1" ' . $after . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '</option>
+                            <option value="0" ' . $before . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '
+                            <option value="1" ' . $after . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '
                             </select></td>';
             $output .= '<td style="white-space: nowrap; padding-top: 7px;">' . $purifier->purify($reminder->getField()->getLabel()) . '</td>';
-            if ($this->getTracker()->hasSemanticsStatus()) {
-                $output .= '<td><select name="notif_closed_artifacts">
-                            <option value="0" ' . $notify_only_open_artifacts . '> ' . dgettext('tuleap-tracker', 'No') . '</option>
-                            <option value="1" ' . $notify_closed_artifacts . '> ' . dgettext('tuleap-tracker', 'Yes') . '</option>
-                        </select></td>';
-            }
             $output .= '<td><select name="notif_status" class="input-small">
-                            <option value="0" ' . $disabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_disabled') . '</option>
-                            <option value="1" ' . $enabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_enabled') . '</option>
+                            <option value="0" ' . $disabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_disabled') . '
+                            <option value="1" ' . $enabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_enabled') . '
                             </select></td>';
             $output .= '</tr><tr height="35" valign="bottom"><td colspan=6><input type="submit" name="submit" value="' . dgettext('tuleap-tracker', 'Submit Changes') . '"></td></tr>';
             $output .= '</table></form>';
@@ -327,28 +292,6 @@ class Tracker_DateReminderRenderer
     }
 
     /**
-     * Validate date reminder status.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return int
-     */
-    public function validateNotifyClosedArtifacts(HTTPRequest $request)
-    {
-        $validStatus = new Valid_UInt('notif_closed_artifacts');
-        $validStatus->required();
-        if ($request->valid($validStatus)) {
-            return $request->get('notif_closed_artifacts');
-        } else {
-            $errorMessage = sprintf(
-                dgettext('tuleap-tracker', "'%s' is not a valid value for reminder notify closed artifacts"),
-                $request->get('notif_closed_artifacts'),
-            );
-            throw new Tracker_DateReminderException($errorMessage);
-        }
-    }
-
-    /**
      * Validate ugroup list param used for tracker reminder.
      * @TODO write less, write better
      *
@@ -443,25 +386,16 @@ class Tracker_DateReminderRenderer
 
     /**
      * Display all reminders of the tracker
+     *
+     * @return Void
      */
-    public function displayAllReminders(): string
+    public function displayAllReminders()
     {
-        $titles = [
-            dgettext('tuleap-tracker', 'Send an email to'),
+        $titles           = [dgettext('tuleap-tracker', 'Send an email to'),
             dgettext('tuleap-tracker', 'When'),
             dgettext('tuleap-tracker', 'Field'),
             dgettext('tuleap-tracker', 'Actions'),
         ];
-        if ($this->getTracker()->hasSemanticsStatus()) {
-            $titles = [
-                dgettext('tuleap-tracker', 'Send an email to'),
-                dgettext('tuleap-tracker', 'When'),
-                dgettext('tuleap-tracker', 'Field'),
-                dgettext('tuleap-tracker', 'Notify closed artifacts'),
-                dgettext('tuleap-tracker', 'Actions'),
-            ];
-        }
-
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
         if (! empty($trackerReminders)) {
@@ -477,12 +411,6 @@ class Tracker_DateReminderRenderer
                 $output .= $reminder->getRolesLabel() . '</td>';
                 $output .= '<td>' . sprintf(dgettext('tuleap-tracker', '%1$s day(s) %2$s'), $reminder->getDistance(), $reminder->getNotificationTypeLabel()) . '</td>';
                 $output .= '<td>' . $purifier->purify($reminder->getField()->getLabel()) . '</td>';
-
-                if ($this->getTracker()->hasSemanticsStatus()) {
-                    $display_closed_artifact_value = $reminder->mustNotifyClosedArtifacts() ? dgettext('tuleap-tracker', 'Yes') : dgettext('tuleap-tracker', 'No');
-                    $output                       .= '<td>' . $display_closed_artifact_value . '</td>';
-                }
-
                 $output .= '<td><span style="float:left;"><a href="?reminder_id=' . (int) $reminder->getId() . '&amp;action=update_reminder" id="update_reminder"> ' . dgettext('tuleap-tracker', 'Update') . ' ' . $GLOBALS['Response']->getimage('ic/edit.png') . '</a></span>';
                 $output .= '&nbsp;&nbsp;&nbsp;<span style="float:right;"><a href="?action=delete_reminder&amp;reminder_id=' . $reminder->getId() . '" id="delete_reminder"> ' . dgettext('tuleap-tracker', 'Delete') . ' ' . $GLOBALS['Response']->getimage('ic/bin.png') . '</a></span></td>';
                 $output .= '</tr>';
@@ -493,8 +421,6 @@ class Tracker_DateReminderRenderer
                     setBody($output)->
                     render();
         }
-
-        return '';
     }
 
     /**

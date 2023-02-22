@@ -22,10 +22,11 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ErrorModal from "./ErrorModal.vue";
-import * as tlp_modal from "@tuleap/tlp-modal";
+import * as tlp from "tlp";
+import type { Modal } from "tlp";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
 
-jest.mock("@tuleap/tlp-modal", () => {
+jest.mock("tlp", () => {
     return {
         __esModule: true,
         createModal: jest.fn(),
@@ -51,18 +52,18 @@ describe("ErrorModal", () => {
     }
 
     it("warns user that something is wrong with a button to show details", () => {
-        const actual_tlp = jest.requireActual("@tuleap/tlp-modal");
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(actual_tlp.createModal);
+        const actual_tlp = jest.requireActual("tlp");
+        jest.spyOn(tlp, "createModal").mockImplementation(actual_tlp.createModal);
         const wrapper = createWrapper("Full error message with details");
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
-        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return {
                 show: modal_show,
-            } as unknown as tlp_modal.Modal;
+            } as unknown as Modal;
         });
         createWrapper("Full error message with details");
         expect(modal_show).toHaveBeenCalledTimes(1);

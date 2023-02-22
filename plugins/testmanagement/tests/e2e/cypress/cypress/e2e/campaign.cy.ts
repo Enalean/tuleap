@@ -43,7 +43,7 @@ describe("TTM campaign", () => {
         it("Creates a project with TTM with users", () => {
             cy.createNewPublicProject(ttm_project_name, "agile_alm");
             cy.visitProjectService(ttm_project_name, "Test Management");
-            cy.addProjectMember("projectMember");
+            cy.addUser("projectMember");
         });
 
         it("Create a campaign", () => {

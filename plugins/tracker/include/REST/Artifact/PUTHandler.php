@@ -29,24 +29,16 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
-use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\FaultMapper;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class PUTHandler
 {
     public function __construct(
         private FieldsDataBuilder $fields_data_builder,
-        private RetrieveReverseLinks $reverse_links_retriever,
-        private HandleUpdateArtifact $artifact_update_handler,
-        private DBTransactionExecutor $transaction_executor,
-        private CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
+        private ArtifactUpdater $artifact_updater,
     ) {
     }
 
@@ -57,36 +49,18 @@ final class PUTHandler
     public function handle(array $values, Artifact $artifact, \PFUser $submitter, ?NewChangesetCommentRepresentation $comment): void
     {
         try {
-            $this->check_artifact_rest_update_conditions->checkIfArtifactUpdateCanBePerformedThroughREST($submitter, $artifact);
-            $this->transaction_executor->execute(
-                function () use ($artifact, $submitter, $comment, $values) {
-                    $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
-
-                    $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
-
-                    $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                    if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
-                        try {
-                            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $stored_reverse_links->differenceByType($reverse_link_collection), $comment)
-                                                          ->map(
-                                                              fn() => $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection), $comment)
-                                                          )
-                                                          ->mapErr(
-                                                              [FaultMapper::class, 'mapToRestException']
-                                                          );
-                        } catch (Tracker_NoChangeException $exception) {
-                            //Do nothing
-                        }
-                    }
-
-                    try {
-                        $this->artifact_update_handler->updateForwardLinks($artifact, $submitter, $changeset_values, $comment);
-                    } catch (Tracker_NoChangeException $exception) {
-                        //Do nothing
-                    }
-                }
-            );
-        } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException $exception) {
+            $changeset_values        = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
+            $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
+            if ($reverse_link_collection !== null && count($reverse_link_collection->links) > 0) {
+                $links_to_json = array_map(
+                    static fn($link) => sprintf('Link from %s with type `%s`', $link->getSourceArtifactId(), $link->getType() ?? ''),
+                    $reverse_link_collection->links
+                );
+                echo sprintf('{"Reverse links": "%s"}', implode(', ', $links_to_json));
+            } else {
+                $this->artifact_updater->update($submitter, $artifact, $values, $comment);
+            }
+        } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing
@@ -100,15 +74,5 @@ final class PUTHandler
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-    }
-
-    private function isLinkKeyUsed(array $values): bool
-    {
-        foreach ($values as $value) {
-            if (is_array($value->links)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

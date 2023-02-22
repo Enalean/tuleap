@@ -20,13 +20,15 @@
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
+export { init, getUserPreferredDateFormat };
+
 let date_format: string;
 
-export function init(localized_php_date_format: string, locale: string): void {
+function init(localized_php_date_format: string, locale: string): void {
     date_format = formatFromPhpToMoment(localized_php_date_format);
     moment.locale(locale);
 }
 
-export function getUserPreferredDateFormat(): string {
+function getUserPreferredDateFormat(): string {
     return date_format;
 }

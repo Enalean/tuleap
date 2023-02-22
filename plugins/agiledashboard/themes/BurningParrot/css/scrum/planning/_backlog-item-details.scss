@@ -1,0 +1,370 @@
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:color";
+@use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
+@import "../../card-fields";
+@import "backlog-item-moves";
+
+$accessibility-pattern-width: 20px;
+$accessibility-pattern-right-margin: 6px;
+
+.backlog-item-details {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        &.backlog-item-color-#{$color-name} {
+            --item-type-color: #{map.get($colors, "primary")};
+            --text-color: #{map.get($colors, "text")};
+        }
+
+        &.tlp-swatch-#{$color-name} {
+            --box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+            --accessibility-color: #{map.get($colors, "text")};
+            --accessibility-pattern: url("#{map.get($colors, 'pattern')}");
+            --background-color-darker: #{color.adjust(
+                    map.get($colors, "secondary"),
+                    $lightness: - 7%
+                )};
+            --text-color-darker: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
+            --border-color-darker: #{color.adjust(map.get($colors, "text"), $lightness: - 7%)};
+            --border-transparent-color: #{color.adjust(map.get($colors, "border"), $alpha: - 0.75)};
+
+            &.closed {
+                --accessibility-color: var(--tlp-dimmed-color-transparent-50);
+            }
+
+            &.accessibility-displayed {
+                --extra-padding-right: calc(
+                    #{$accessibility-pattern-width} +
+                        2 *
+                        #{$accessibility-pattern-right-margin} -
+                        var(--tlp-small-spacing)
+                );
+            }
+
+            + .backlog-item-show-children > .backlog-item-show-children-handle {
+                --children-handle-border-top: transparent;
+            }
+
+            .backlog-item-details-shortname-content,
+            .extra-card-field-title {
+                --text-color: #{map.get($colors, "text")};
+            }
+        }
+    }
+
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+    border: 1px solid var(--border-color, transparent);
+    border-radius: var(--tlp-medium-radius);
+    background: var(--secondary-color, var(--tlp-white-color));
+    box-shadow: var(--box-shadow, var(--tlp-card-shadow));
+    cursor: move;
+
+    &.closed {
+        --project-color: var(--tlp-dimmed-color);
+        --project-color-background: var(--tlp-background-color-darker-05);
+        --border-transparent-color: var(--tlp-neutral-normal-color-transparent-50);
+
+        border-color: transparent;
+        background: var(--tlp-background-color);
+        box-shadow: var(--tlp-card-shadow);
+
+        .backlog-item-details-shortname-content,
+        .backlog-item-details-title,
+        .backlog-item-details-parent,
+        .backlog-item-details-effort-container,
+        .extra-card-fields,
+        .extra-card-field-title,
+        .extra-card-field-content a {
+            color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .extra-card-field-content a:hover {
+            text-decoration-color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .backlog-item-details-effort-container-content-initial-effort {
+            background: var(--tlp-background-color-darker-05);
+            color: var(--tlp-dimmed-color-transparent-50);
+        }
+
+        .item-progress {
+            border-bottom-color: var(--tlp-background-color-darker-10);
+        }
+
+        .backlog-item-details-parent,
+        .backlog-item-details-parent-link,
+        .backlog-item-details-effort-container,
+        .extra-card-field-color,
+        .tlp-avatar-mini,
+        .item-progress {
+            opacity: 0.5;
+        }
+
+        + .backlog-item-show-children > .backlog-item-show-children-handle {
+            border-top-color: var(--tlp-neutral-normal-color);
+        }
+    }
+
+    @keyframes blink-backlog-item-card {
+        0% {
+            border-color: var(--border-color, transparent);
+            background: var(--secondary-color, var(--tlp-white-color));
+        }
+
+        50% {
+            border-color: var(--border-color-darker, var(--tlp-main-color-transparent-50));
+            background: var(--border-color, var(--tlp-main-color-lighter-90));
+        }
+
+        100% {
+            border-color: var(--border-color, transparent);
+            background: var(--secondary-color, var(--tlp-white-color));
+        }
+    }
+
+    @keyframes pulse-backlog-item-card {
+        0% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+            transform: scale3d(1.02, 1.02, 1.02);
+        }
+
+        100% {
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    &.updating {
+        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        animation: blink-backlog-item-card 1200ms ease-in-out alternate infinite;
+    }
+
+    &.updated {
+        transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: pulse 500ms ease-in-out;
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color-transparent-90);
+    }
+
+    &.created {
+        transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+        animation: pulse-backlog-item-card 500ms ease-in-out;
+        border-color: var(--tlp-success-color-transparent-50);
+        background: var(--tlp-success-color-lighter-90);
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: -1px;
+        left: -1px;
+        width: 4px;
+        height: calc(100% + 2px);
+        border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
+        background: var(--item-type-color, var(--tlp-white-color));
+    }
+
+    &.accessibility-displayed {
+        .backlog-item-details-title,
+        .extra-card-fields {
+            margin-right: var(--extra-padding-right, 0);
+        }
+    }
+
+    + .backlog-item-show-children > .backlog-item-show-children-handle {
+        border-top-color: var(--children-handle-border-top, var(--tlp-neutral-normal-color));
+    }
+}
+
+.backlog-item-details-metadata {
+    display: flex;
+    position: relative;
+    flex: 0 0 auto;
+    justify-content: space-between;
+    max-width: 100%;
+    padding: calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-small-spacing) / 2)
+        calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spacing);
+}
+
+.backlog-item-details-metadata-container {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    max-width: 50%;
+    gap: var(--tlp-small-spacing);
+
+    &:last-child {
+        justify-content: flex-end;
+    }
+}
+
+.backlog-item-details-shortname {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.backlog-item-details-shortname-content {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    color: var(--text-color, var(--tlp-dimmed-color));
+    font-size: 0.625rem;
+    line-height: 0.8125rem;
+    white-space: nowrap;
+    gap: 4px;
+    font-variant-numeric: tabular-nums;
+
+    &:hover,
+    &:focus,
+    &:active {
+        text-decoration: none;
+
+        > .backlog-item-details-shortname-content-text {
+            text-decoration: underline;
+        }
+    }
+}
+
+.backlog-item-details-shortname-icon {
+    font-size: 0.8em;
+}
+
+$backlog-item-details-parent-color: var(
+    --project-color,
+    var(--text-color-darker, var(--tlp-dimmed-color-darker-10))
+);
+$backlog-item-details-parent-background: var(
+    --project-color-background,
+    var(--background-color-darker, var(--tlp-neutral-dark-color-transparent-50))
+);
+
+card-parent-link {
+    flex: 0 1 auto;
+    overflow: hidden;
+}
+
+.backlog-item-details-parent.tlp-badge-secondary {
+    display: flex;
+    gap: 2px;
+    flex: 0 1 auto;
+    flex-direction: column;
+    width: 100%;
+    background: $backlog-item-details-parent-background;
+    fill: $backlog-item-details-parent-color;
+    color: $backlog-item-details-parent-color;
+    font-size: 0.625rem;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+
+        .backlog-item-details-parent-link {
+            text-decoration: underline;
+        }
+    }
+}
+
+.backlog-items-details-parent-project,
+.backlog-items-details-parent-name {
+    display: flex;
+    gap: 4px;
+}
+
+.backlog-items-details-parent-project-icon,
+.backlog-items-details-parent-name-icon {
+    flex: 0 0 auto;
+    width: 0.7rem;
+    text-align: right;
+}
+
+.backlog-item-details-parent-link {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    color: $backlog-item-details-parent-color;
+    text-overflow: ellipsis;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.backlog-item-details-parent-project {
+    margin-bottom: 2px;
+}
+
+.backlog-item-details-effort-container {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-width: 40px;
+    transition: transform 100ms ease-in-out 500ms;
+}
+
+.backlog-item-details-effort-container-content-no-initial-effort {
+    font-size: 0.65rem;
+
+    &.tlp-badge-outline {
+        background: $backlog-item-details-parent-background;
+        color: $backlog-item-details-parent-color;
+    }
+}
+
+.card-accessibility {
+    position: absolute;
+    z-index: 1;
+    top: 32px;
+    right: $accessibility-pattern-right-margin;
+    width: $accessibility-pattern-width;
+    height: calc(100% - 32px);
+    overflow: hidden;
+    opacity: 0.5;
+    background-color: var(--accessibility-color);
+    mask-image: var(--accessibility-pattern);
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+    }
+}
+
+.backlog-item-details-title {
+    display: block;
+    position: relative;
+    flex: 1 1 auto;
+    padding: 0 var(--tlp-small-spacing) var(--tlp-small-spacing);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+}

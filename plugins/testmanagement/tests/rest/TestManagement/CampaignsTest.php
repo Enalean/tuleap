@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
-final class CampaignsTest extends TestManagementRESTTestCase
+final class CampaignsTest extends BaseTest
 {
     public function testGetCampaign(): void
     {

@@ -22,7 +22,6 @@ namespace Tuleap\Dashboard\Project;
 
 use CSRFSynchronizerToken;
 use Tuleap\Dashboard\PagePresenter;
-use Tuleap\Dashboard\User\FirstTimerPresenter;
 
 class ProjectPagePresenter extends PagePresenter
 {
@@ -44,7 +43,6 @@ class ProjectPagePresenter extends PagePresenter
         array $dashboards,
         $can_update_dashboards,
         DisplayCreatedProjectModalPresenter $display_project_created_modal_presenter,
-        public ?FirstTimerPresenter $first_timer,
     ) {
         parent::__construct($csrf, $url);
 

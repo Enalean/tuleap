@@ -156,7 +156,7 @@ EOF;
         $this->assertSame($commit_signature, $commit->getSignature());
     }
 
-    public static function commitsProvider(): array
+    public function commitsProvider(): array
     {
         return [
             [self::COMMIT_CONTENT, 'Author 1', 'author@example.com', '1534259619', ['This is Tuleap 10.4'], null],

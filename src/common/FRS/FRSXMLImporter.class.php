@@ -69,6 +69,7 @@ class FRSXMLImporter
         FRSFileFactory $file_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
+        XMLImportHelper $xml_import_helper,
         FRSPermissionCreator $permission_creator,
         UploadedLinksUpdater $links_updater,
         ?FRSProcessorDao $processor_dao = null,
@@ -84,6 +85,7 @@ class FRSXMLImporter
         $this->processor_dao      = $processor_dao;
         $this->permission_manager = $permission_manager;
         $this->ugroup_manager     = $ugroup_manager;
+        $this->xml_import_helper  = $xml_import_helper;
         $this->permission_creator = $permission_creator;
         $this->links_updater      = $links_updater;
     }

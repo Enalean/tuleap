@@ -23,9 +23,7 @@ use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
-use Tuleap\Layout\JavascriptViteAsset;
 
 class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -122,12 +120,9 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                     $presenter     = $this->getManageAllowedProjectsPresenter($request);
                     $template_path = __DIR__ . '/../../../../src/templates/resource_restrictor';
                     $GLOBALS['HTML']->addJavascriptAsset(
-                        new JavascriptViteAsset(
-                            new IncludeViteAssets(
-                                __DIR__ . '/../../../../src/scripts/manage-project-restrictions-resources/frontend-assets',
-                                '/assets/core/manage-project-restrictions-resources'
-                            ),
-                            'src/index.ts'
+                        new \Tuleap\Layout\JavascriptAsset(
+                            new \Tuleap\Layout\IncludeCoreAssets(),
+                            'manage-allowed-projects-on-resource.js'
                         )
                     );
 

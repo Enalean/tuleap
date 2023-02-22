@@ -64,11 +64,11 @@ class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $file_path = "$this->fixture_dir/file";
 
-        file_put_contents($file_path, "# Title\n\n0.000\nBar");
+        file_put_contents($file_path, "Contenu\n\nContenu2\nContenu3");
         $this->git_exec->add($file_path);
         $this->git_exec->commit("add $file_path");
 
-        file_put_contents($file_path, "# Title\n\n0\nBar\nBaz");
+        file_put_contents($file_path, "Contenu3\nContenu\n\nContenu2\n\nContenu4");
         $this->git_exec->add($file_path);
         $this->git_exec->commit("change $file_path");
 
@@ -78,39 +78,32 @@ class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(7, count($lines));
 
         $line = $diff->getLineFromNewOffset(1);
-        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
-        $this->assertEquals(1, $line->getOldOffset());
-        $this->assertEquals('# Title', $line->getContent());
+        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
+        $this->assertEquals(null, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(2);
         $this->assertEquals(UniDiffLine::KEPT, $line->getType());
-        $this->assertEquals(2, $line->getOldOffset());
-        $this->assertEquals('', $line->getContent());
+        $this->assertEquals(1, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(3);
-        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
-        $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('0', $line->getContent());
+        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
+        $this->assertEquals(2, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(4);
-        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
-        $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('Bar', $line->getContent());
+        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
+        $this->assertEquals(3, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(5);
         $this->assertEquals(UniDiffLine::ADDED, $line->getType());
         $this->assertEquals(null, $line->getOldOffset());
-        $this->assertEquals('Baz', $line->getContent());
 
-        $line = $diff->getLineFromOldOffset(3);
-        $this->assertEquals(UniDiffLine::REMOVED, $line->getType());
-        $this->assertEquals(null, $line->getNewOffset());
-        $this->assertEquals('0.000', $line->getContent());
+        $line = $diff->getLineFromNewOffset(6);
+        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
+        $this->assertEquals(null, $line->getOldOffset());
 
         $line = $diff->getLineFromOldOffset(4);
         $this->assertEquals(UniDiffLine::REMOVED, $line->getType());
         $this->assertEquals(null, $line->getNewOffset());
-        $this->assertEquals('Bar', $line->getContent());
     }
 
     public function testItHandlesDeletedFile(): void

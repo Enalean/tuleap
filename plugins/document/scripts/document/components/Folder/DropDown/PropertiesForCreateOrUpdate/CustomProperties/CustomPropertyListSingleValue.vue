@@ -51,40 +51,42 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import type { ListValue, Property } from "../../../../../type";
+import { namespace } from "vuex-class";
 import emitter from "../../../../../helpers/emitter";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { PropertiesState } from "../../../../../store/properties/module";
-import { onMounted, ref } from "vue";
 
-const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
+const properties = namespace("properties");
 
-const { project_properties } = useNamespacedState<Pick<PropertiesState, "project_properties">>(
-    "properties",
-    ["project_properties"]
-);
+@Component
+export default class CustomPropertyListSingleValue extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemProperty!: Property;
 
-const value = ref("");
-const project_properties_list_possible_values = ref<Array<ListValue> | null>([]);
+    @properties.State
+    readonly project_properties!: Array<Property>;
 
-onMounted((): void => {
-    value.value = String(props.currentlyUpdatedItemProperty.value);
-    const values = project_properties.value.find(
-        ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name
-    )?.allowed_list_values;
-    if (!values) {
-        return;
+    private value = String(this.currentlyUpdatedItemProperty.value);
+    private project_properties_list_possible_values: Array<ListValue> | null = [];
+
+    mounted(): void {
+        const values = this.project_properties.find(
+            ({ short_name }) => short_name === this.currentlyUpdatedItemProperty.short_name
+        )?.allowed_list_values;
+        if (!values) {
+            return;
+        }
+        this.project_properties_list_possible_values = values;
     }
-    project_properties_list_possible_values.value = values;
-});
 
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLSelectElement) {
-        emitter.emit("update-custom-property", {
-            property_short_name: props.currentlyUpdatedItemProperty.short_name,
-            value: $event.target.value,
-        });
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLSelectElement) {
+            emitter.emit("update-custom-property", {
+                property_short_name: this.currentlyUpdatedItemProperty.short_name,
+                value: $event.target.value,
+            });
+        }
     }
 }
 </script>

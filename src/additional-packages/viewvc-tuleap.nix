@@ -13,8 +13,8 @@ in pkgs.stdenvNoCC.mkDerivation {
              name  = "viewvc-tuleap";
              owner = "viewvc";
              repo = "viewvc";
-             rev = "a239c4a93093d9f3e0e34ea4d254bde463ad38b1";
-             sha256 = "sha256-/cLTYBZJspmaUvPbeqhi751LqzUyrHA3wcjMOUuzxg8=";
+             rev = "3f923fd12893c1c53af96d79be0114d1fa554c34";
+             sha256 = "sha256-CWaoCQuS7rnHvE1y3PL9l4RTdDh+Zc+t6qSHzKYPn/8=";
            }
          )
          (./viewvc-tuleap/viewvc-tuleap.spec)

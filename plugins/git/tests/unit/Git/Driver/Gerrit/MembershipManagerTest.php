@@ -21,6 +21,8 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,22 +47,6 @@ class MembershipManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $gerrit_user_manager;
     protected $remote_server;
     protected $project_manager;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $driver_factory;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
 
     protected function setUp(): void
     {
@@ -168,9 +154,9 @@ class MembershipManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItContinuesToAddUserOnOtherServersIfOneOrMoreAreNotReachable(): void
     {
-        $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $this->remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server, $remote_server2]);
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server, $this->remote_server2]);
         $this->user->shouldReceive('getUgroups')->andReturns([$this->u_group_id]);
         $this->u_group->shouldReceive('getNormalizedName')->andReturns('project_members');
 
@@ -178,11 +164,11 @@ class MembershipManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->driver->shouldReceive('addUserToGroup')->with($this->remote_server, \Mockery::any(), \Mockery::any())
             ->ordered()
             ->andThrow(new Git_Driver_Gerrit_Exception('error'));
-        $this->driver->shouldReceive('addUserToGroup')->with($remote_server2, \Mockery::any(), \Mockery::any())
+        $this->driver->shouldReceive('addUserToGroup')->with($this->remote_server2, \Mockery::any(), \Mockery::any())
             ->ordered()
             ->andThrow(new Git_Driver_Gerrit_Exception('error'));
 
-        $this->driver->shouldReceive('flushGerritCacheAccounts')->with($remote_server2)->ordered()->once();
+        $this->driver->shouldReceive('flushGerritCacheAccounts')->with($this->remote_server2)->ordered()->once();
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }

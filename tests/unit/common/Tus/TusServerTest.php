@@ -156,7 +156,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($upload_offset + strlen($body_content), $response->getHeaderLine('Upload-Offset'));
     }
 
-    public static function validUploadRequestProvider(): array
+    public function validUploadRequestProvider(): array
     {
         return [
             [0, 'Content to upload', 'application/offset+octet-stream', false],

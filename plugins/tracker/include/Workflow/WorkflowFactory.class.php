@@ -21,7 +21,6 @@
 
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -309,14 +308,19 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
     }
 
     /**
+     * Duplicate the workflow
+     *
      * @param $from_tracker_id the template tracker id
      * @param $to_tracker_id the tracker id
      * @param $from_id the id of the field
      * @param $to_id the id of the duplicated field
      * @param Array $values array of old and new values of the field
      * @param Array $field_mapping the field mapping
+     * @param Array $ugroup_mapping the ugroup mapping
+     *
+     * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type)
     {
         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used     = $workflow->getIsUsed();
@@ -326,7 +330,7 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
             if ($id = $this->getDao()->duplicate($to_tracker_id, $to_id, $is_used, $is_advanced)) {
                 $transitions = $workflow->getTransitions();
                 //Duplicate transitions
-                $this->transition_factory->duplicate($values, $id, $transitions, $field_mapping, $duplication_user_group_mapping);
+                $this->transition_factory->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type);
             }
         }
     }

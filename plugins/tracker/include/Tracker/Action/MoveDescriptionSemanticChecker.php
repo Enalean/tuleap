@@ -27,8 +27,9 @@ class MoveDescriptionSemanticChecker extends MoveSemanticChecker
 {
     public const DESCRIPTION_SEMANTIC_LABEL = 'description';
 
-    public function __construct(private Tracker_FormElementFactory $form_element_factory)
+    public function __construct(Tracker_FormElementFactory $form_element_factory)
     {
+        $this->form_element_factory = $form_element_factory;
     }
 
     /**

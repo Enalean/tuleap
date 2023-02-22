@@ -33,7 +33,6 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\PullRequestReopener;
 use Tuleap\REST\ProjectAuthorization;
 use URLVerification;
 
@@ -73,7 +72,6 @@ class StatusPatcher
         AccessControlVerifier $access_control_verifier,
         PullRequestPermissionChecker $pull_request_permission_checker,
         PullRequestCloser $pull_request_closer,
-        private PullRequestReopener $pull_request_reopener,
         URLVerification $url_verification,
         LoggerInterface $logger,
     ) {
@@ -99,7 +97,7 @@ class StatusPatcher
         switch ($status) {
             case PullRequestRepresentation::STATUS_ABANDON:
                 try {
-                    $this->checkUserCanWriteInSourceAndDestination(
+                    $this->checkUserCanAbandon(
                         $user,
                         $git_repository_source,
                         $git_repository_destination,
@@ -124,37 +122,10 @@ class StatusPatcher
                     throw new RestException(403, 'User is not able to WRITE the git repository');
                 }
                 break;
-            case PullRequestRepresentation::STATUS_REVIEW:
-                if ($pull_request->getStatus() !== PullRequest::STATUS_ABANDONED) {
-                    throw new RestException(
-                        400,
-                        "Only an abandoned pull request can be reopened."
-                    );
-                }
-
-                $this->checkUserCanWriteInSourceAndDestination(
-                    $user,
-                    $git_repository_source,
-                    $git_repository_destination,
-                    $pull_request->getBranchSrc(),
-                    $pull_request->getBranchDest()
-                );
-
-                $this->pull_request_reopener->reopen(
-                    $pull_request,
-                    $user,
-                );
-
-                break;
             default:
                 throw new RestException(
                     400,
-                    sprintf(
-                        'Cannot deal with provided status. Supported statuses are: %s, %s and %s',
-                        PullRequestRepresentation::STATUS_MERGE,
-                        PullRequestRepresentation::STATUS_ABANDON,
-                        PullRequestRepresentation::STATUS_REVIEW
-                    ),
+                    'Cannot deal with provided status. Supported statuses are ' . PullRequestRepresentation::STATUS_MERGE . ', ' . PullRequestRepresentation::STATUS_ABANDON
                 );
         }
     }
@@ -176,13 +147,13 @@ class StatusPatcher
     /**
      * @throws RestException
      */
-    private function checkUserCanWriteInSourceAndDestination(
+    private function checkUserCanAbandon(
         PFUser $user,
         GitRepository $repository_source,
         GitRepository $repository_dest,
         $source_reference,
         $destination_reference,
-    ): void {
+    ) {
         ProjectAuthorization::userCanAccessProject($user, $repository_source->getProject(), $this->url_verification);
         ProjectAuthorization::userCanAccessProject($user, $repository_dest->getProject(), $this->url_verification);
 

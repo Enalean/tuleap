@@ -24,23 +24,21 @@ use org\bovigo\vfs\vfsStream;
 require_once 'bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class GitRepositoryManagerDeleteAllRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
+class GitRepositoryManagerDeleteAllRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private Project $project;
-    private GitRepositoryManager $git_repository_manager;
+    private $project;
+    private $git_repository_manager;
     private $git_system_event_manager;
     private $dao;
     private $backup_directory;
-    private $repository_factory;
-    private $mirror_updater;
-    private $mirror_data_mapper;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project                  = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(42)->build();
+        $this->project_id               = 42;
+        $this->project                  = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
         $this->repository_factory       = \Mockery::spy(\GitRepositoryFactory::class);
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->dao                      = Mockery::mock(GitDao::class);

@@ -18,22 +18,26 @@
  */
 
 import Vue from "vue";
-import {
-    initVueGettextFromPoGettextPlugin,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/vue2-gettext-init";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../po/fr_FR.po";
 import AgileDashboardPermissions from "./AgileDashboardPermissions.vue";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("agile-dashboard-permission-per-group");
 
     if (!vue_mount_point) {
         return;
     }
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
-    );
+    Vue.use(GettextPlugin, {
+        translations: {
+            fr: french_translations.messages,
+        },
+        silent: true,
+    });
+
+    const locale = document.body.dataset.userLocale;
+    Vue.config.language = locale;
 
     const RootComponent = Vue.extend(AgileDashboardPermissions);
     new RootComponent({

@@ -148,19 +148,10 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
 
-        $GLOBALS['Response']->expects(self::exactly(3))->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                if ($level !== \Feedback::WARN) {
-                    throw new \LogicException("Unexpected feedback level: " . $level);
-                }
-                if (
-                    $message !== "The entered value 'bla' is invalid." &&
-                    $message !== "The entered value 'Secret' is invalid." &&
-                    $message !== "The entered value 'Unknown (seraph)' is invalid."
-                ) {
-                    throw new \LogicException("Unexpected message");
-                }
-            }
+        $GLOBALS['Response']->expects(self::exactly(3))->method('addFeedback')->withConsecutive(
+            [\Feedback::WARN, "The entered value 'bla' is invalid."],
+            [\Feedback::WARN, "The entered value 'Secret' is invalid."],
+            [\Feedback::WARN, "The entered value 'Unknown (seraph)' is invalid."],
         );
 
         $this->invalid_entries->generateWarningMessageForInvalidEntries();

@@ -52,7 +52,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $this->ugroup->getId();
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return self::class . ' #' . $this->getId();
     }

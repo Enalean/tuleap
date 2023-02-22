@@ -83,7 +83,7 @@ describe("list-pickers-creator", () => {
         doc = document.implementation.createHTMLDocument();
 
         doc.body.dataset.userLocale = LOCALE;
-        createListPicker = jest.spyOn(list_picker, "createListPicker").mockReturnValue({
+        createListPicker = jest.spyOn(list_picker, "createListPicker").mockResolvedValue({
             destroy: () => {
                 // Do nothing
             },

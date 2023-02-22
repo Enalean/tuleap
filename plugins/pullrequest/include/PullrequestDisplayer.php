@@ -26,11 +26,8 @@ use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
-use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
-use Tuleap\Request\NotFoundException;
 
 class PullrequestDisplayer
 {
@@ -46,63 +43,49 @@ class PullrequestDisplayer
     public function display(\HTTPRequest $request, BaseLayout $layout): void
     {
         $repository = $this->repository_factory->getRepositoryById($request->getValidated('repo_id', 'uint', 0));
-        if (! $repository) {
-            throw new NotFoundException();
-        }
+        if ($repository) {
+            $nb_pull_requests = $this->factory->getPullRequestCount($repository);
+            $user             = $request->getCurrentUser();
 
-        $nb_pull_requests = $this->factory->getPullRequestCount($repository);
-        $user             = $request->getCurrentUser();
+            $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
-        $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
+            $assets = new IncludeAssets(
+                __DIR__ . '/../scripts/pullrequests-app/frontend-assets',
+                '/assets/pullrequest/pullrequests-app'
+            );
 
-        $assets = new IncludeAssets(
-            __DIR__ . '/../scripts/pullrequests-app/frontend-assets',
-            '/assets/pullrequest/pullrequests-app'
-        );
-
-        $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                $assets,
-                'pull-requests-style'
-            )
-        );
-
-        $is_vue_overview_shown = \ForgeConfig::getFeatureFlag(PullRequestPresenter::FEATURE_FLAG_KEY) && $request->get("tab") === "overview";
-        if ($is_vue_overview_shown) {
-            $layout->addJavascriptAsset(
-                new JavascriptViteAsset(
-                    new IncludeViteAssets(
-                        __DIR__ . '/../scripts/pullrequest-overview/frontend-assets',
-                        '/assets/pullrequest/pullrequest-overview'
-                    ),
-                    'src/index.ts'
+            $layout->addCssAsset(
+                new CssAssetWithoutVariantDeclinaisons(
+                    $assets,
+                    'pull-requests-style'
                 )
             );
-        } else {
-            $layout->includeFooterJavascriptFile(
-                (new JavascriptAsset($assets, 'tuleap-pullrequest.js'))->getFileURL()
+
+            $this->header_displayer->display(
+                $request,
+                $layout,
+                $user,
+                $repository
             );
+
+
+
+            $pull_requests_app = new JavascriptAsset($assets, 'tuleap-pullrequest.js');
+            $layout->includeFooterJavascriptFile($pull_requests_app->getFileURL());
+
+            $presenter = new PullRequestPresenter(
+                $repository->getId(),
+                $user,
+                $nb_pull_requests,
+                $this->merge_setting_retriever->getMergeSettingForRepository($repository)
+            );
+
+            $this->template_renderer->renderToPage($presenter->getTemplateName(), $presenter);
+
+            $layout->footer([]);
+            exit;
+        } else {
+            throw new \Tuleap\Request\NotFoundException();
         }
-
-        $this->header_displayer->display(
-            $request,
-            $layout,
-            $user,
-            $repository
-        );
-
-        $presenter = new PullRequestPresenter(
-            $repository,
-            $user,
-            $nb_pull_requests,
-            $this->merge_setting_retriever->getMergeSettingForRepository($repository),
-            $is_vue_overview_shown
-        );
-
-        $this->template_renderer->renderToPage($presenter->getTemplateName(), $presenter);
-
-        $layout->footer([]);
-
-        exit;
     }
 }

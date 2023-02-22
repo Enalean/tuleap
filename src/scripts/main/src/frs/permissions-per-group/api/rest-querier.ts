@@ -20,7 +20,9 @@
 import { get } from "@tuleap/tlp-fetch";
 import type { PackagePermission } from "../type";
 
-export async function getPackagesPermissions(
+export { getPackagesPermissions };
+
+async function getPackagesPermissions(
     group_id: string,
     selected_ugroup_id: string
 ): Promise<PackagePermission[]> {

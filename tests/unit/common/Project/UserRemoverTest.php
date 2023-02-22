@@ -26,29 +26,21 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
-final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
-    private UserRemover $remover;
+    /**
+     * @var UserRemover
+     */
+    private $remover;
     /**
      * @var \EventManager|\Mockery\MockInterface
      */
     private $event_manager;
-    private $project_manager;
-    private $tv3_tracker_factory;
-    private $dao;
-    private $user_manager;
-    private $project_history_dao;
-    private $ugroup_manager;
-    private \Project $project;
-    private PFUser $user;
-    private $tracker_v3;
-
 
     protected function setUp(): void
     {
@@ -72,7 +64,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->ugroup_manager
         );
 
-        $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName("")->withAccess(\Project::ACCESS_PRIVATE)->build();
+        $this->project    = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $this->user       = new PFUser([
             'language_id' => 'en',
             'user_id' => 102,
@@ -80,7 +72,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_v3 = \Mockery::spy(\ArtifactType::class);
     }
 
-    public function testItRemovesUserFromProjectMembersAndUgroups(): void
+    public function testItRemovesUserFromProjectMembersAndUgroups()
     {
         $project_id = 101;
         $user_id    = 102;
@@ -99,7 +91,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->remover->removeUserFromProject($project_id, $user_id);
     }
 
-    public function testItDoesNothingIfTheUserIsNotRemovedFromProjectMembers(): void
+    public function testItDoesNothingIfTheUserIsNotRemovedFromProjectMembers()
     {
         $project_id = 101;
         $user_id    = 102;

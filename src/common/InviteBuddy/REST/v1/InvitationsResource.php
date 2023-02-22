@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationEmailNotifier;
@@ -33,15 +31,8 @@ use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
-use Tuleap\InviteBuddy\InvitationToOneRecipientWithoutVerificationSender;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
-use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Project\Admin\MembershipDelegationDao;
-use Tuleap\Project\Admin\ProjectMembers\UserCanManageProjectMembersChecker;
-use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -90,7 +81,7 @@ class InvitationsResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
 
-        $dao                        = new InvitationDao(new SplitTokenVerificationStringHasher(), new InvitationInstrumentation(Prometheus::instance()));
+        $dao                        = new InvitationDao();
         $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
         $sender                     = new InvitationSender(
             new InvitationSenderGateKeeper(
@@ -98,37 +89,17 @@ class InvitationsResource extends AuthenticatedResource
                 $invite_buddy_configuration,
                 new InvitationLimitChecker($dao, $invite_buddy_configuration)
             ),
+            new InvitationEmailNotifier(),
             $user_manager,
+            $dao,
             \BackendLogger::getDefaultLogger(),
-            new UserCanManageProjectMembersChecker(new MembershipDelegationDao()),
-            new InvitationToOneRecipientWithoutVerificationSender(
-                new InvitationEmailNotifier(new LocaleSwitcher()),
-                $dao,
-                $dao,
-                new InvitationInstrumentation(Prometheus::instance()),
-                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
-                new \ProjectHistoryDao(),
-            ),
-            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+            new InvitationInstrumentation(Prometheus::instance())
         );
 
-
         try {
-            $project = $invitation->project_id
-                ? \ProjectManager::instance()->getValidProjectById($invitation->project_id)
-                : null;
+            $failures = $sender->send($current_user, array_filter($invitation->emails), $invitation->custom_message);
 
-            $result = $sender->send(
-                $current_user,
-                array_filter($invitation->emails),
-                $project,
-                $invitation->custom_message,
-                null,
-            );
-
-            return InvitationPOSTResultRepresentation::fromResult($result);
-        } catch (\Project_NotFoundException | UserIsNotAllowedToManageProjectMembersException) {
-            throw new RestException(404);
+            return new InvitationPOSTResultRepresentation($failures);
         } catch (InvitationSenderGateKeeperException $e) {
             throw new I18NRestException(400, $e->getMessage());
         } catch (UnableToSendInvitationsException $e) {

@@ -38,7 +38,6 @@ final class FrontendErrorCollectorControllerTest extends TestCase
     private \Psr\Http\Message\StreamFactoryInterface $stream_factory;
     private TestLogger $logger;
     private Prometheus $prometheus;
-    private FrontendErrorCollectorController $controller;
 
     protected function setUp(): void
     {

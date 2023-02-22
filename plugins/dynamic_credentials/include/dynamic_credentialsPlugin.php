@@ -25,7 +25,6 @@ use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
 use Tuleap\DynamicCredentials\Credential\CredentialRemover;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 use Tuleap\DynamicCredentials\REST\ResourcesInjector;
-use Tuleap\DynamicCredentials\Session\DynamicCredentialIdentifierStorage;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\User\DynamicUser;
 use Tuleap\DynamicCredentials\User\DynamicUserCreator;
@@ -73,22 +72,13 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         $injector->populate($params['restler']);
     }
 
-    private function getIdentifierStorage(): DynamicCredentialIdentifierStorage
-    {
-        if (($_SERVER[LoaderScheduler::FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION] ?? '') === 'true') {
-            return new \Tuleap\DynamicCredentials\Session\DynamicCredentialStaticStorage();
-        }
-        if (session_status() === PHP_SESSION_NONE) {
-            PHP_Session::start();
-        }
-        return new \Tuleap\DynamicCredentials\Session\DynamicCredentialSessionStorage();
-    }
-
     public function beforeLogin(BeforeStandardLogin|BeforeSVNLogin $event): void
     {
         $credential_retriever = $this->getCredentialRetriever();
-        $identifier_storage   = $this->getIdentifierStorage();
-        $support_session      = new DynamicCredentialSession($identifier_storage, $credential_retriever);
+        if (session_status() === PHP_SESSION_NONE) {
+            PHP_Session::start();
+        }
+        $support_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
         try {
             $support_session->initialize($event->getLoginName(), $event->getPassword());
         } catch (\Tuleap\DynamicCredentials\Credential\CredentialException $e) {
@@ -114,12 +104,15 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
 
         $credential_retriever = $this->getCredentialRetriever();
-        $identifier_storage   = $this->getIdentifierStorage();
-        if (defined('IS_SCRIPT') && IS_SCRIPT && session_status() !== PHP_SESSION_NONE) {
-            session_write_close();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            PHP_Session::start();
+            if (defined('IS_SCRIPT') && IS_SCRIPT) {
+                session_write_close();
+            }
         }
 
-        $dynamic_session = new DynamicCredentialSession($identifier_storage, $credential_retriever);
+        $dynamic_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
         $user_realname   = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
 
         $support_user_creator = new DynamicUserCreator(

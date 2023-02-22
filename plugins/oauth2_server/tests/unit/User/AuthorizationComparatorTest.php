@@ -61,7 +61,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderCoveringScopes(): array
+    public function dataProviderCoveringScopes(): array
     {
         $foobar_scope     = AuthenticationTestCoveringScope::fromIdentifier(
             AuthenticationTestScopeIdentifier::fromIdentifierKey('foo:bar')

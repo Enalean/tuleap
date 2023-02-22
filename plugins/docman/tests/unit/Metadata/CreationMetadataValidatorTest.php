@@ -27,12 +27,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class CreationMetadataValidatorTest extends TestCase
 {
-    /**
-     * @var \Docman_MetadataFactory&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $factory;
-    private CreationMetadataValidator $validator;
-
     protected function setUp(): void
     {
         $this->factory   = $this->createMock(\Docman_MetadataFactory::class);

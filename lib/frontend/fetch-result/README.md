@@ -13,7 +13,7 @@ It also handles better Tuleap error responses. See the [Faults](#faults) section
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri } from "@tuleap/fetch-result";
+import { getJSON } from "@tuleap/fetch-result";
 
 type User = {
     readonly id: number | null;
@@ -23,7 +23,8 @@ type User = {
 
 // searchUser("jdoe", 10, 0) will query /api/v1/users/?query%3D%7Busername%3A%22jdoe%22%7D&limit=10&offset=0
 function searchUser(username: string, limit: number, offset: number): ResultAsync<User, Fault> {
-    return getJSON<User>(uri`/api/v1/artifacts/${id}`, {
+    // URI is automatically encoded
+    return getJSON<User>(`/api/v1/artifacts/${id}`, {
         params: {
             // These parameters are URI-encoded and appended to the base URI
             query: JSON.stringify({ username }),
@@ -39,11 +40,12 @@ function searchUser(username: string, limit: number, offset: number): ResultAsyn
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { head, uri } from "@tuleap/fetch-result";
+import { head } from "@tuleap/fetch-result";
 
 // getBacklogSize(20) will query /api/v1/kanban/20/backlog?query%3D%7Bstatus%3A%22open%22%7D
 function getBacklogSize(kanban_id: number): ResultAsync<number, Fault> {
-    return head(uri`/api/v1/kanban/${kanban_id}`, {
+    // URI is automatically encoded
+    return head(`/api/v1/kanban/${kanban_id}`, {
         params: {
             // These parameters are URI-encoded and appended to the base URI
             query: JSON.stringify({ status: "open" })
@@ -59,7 +61,7 @@ function getBacklogSize(kanban_id: number): ResultAsync<number, Fault> {
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { options, uri } from "@tuleap/fetch-result";
+import { options } from "@tuleap/fetch-result";
 
 type Quota = {
    readonly disk_quota: number;
@@ -68,7 +70,8 @@ type Quota = {
 };
 
 function getFileUploadRules(): ResultAsync<Quota, Fault> {
-    return options(uri`/api/v1/artifact_temporary_files`)
+    // URI is automatically encoded
+    return options("/api/v1/artifact_temporary_files")
         .map((response) => {
             const disk_quota = Number.parseInt(response.headers.get('X-QUOTA'), 10);
             const disk_usage = Number.parseInt(response.headers.get('X-DISK-USAGE'), 10);
@@ -84,16 +87,17 @@ function getFileUploadRules(): ResultAsync<Quota, Fault> {
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { putJSON, uri } from "@tuleap/fetch-result";
+import { putJSON } from "@tuleap/fetch-result";
 
 type UpdatedReport = {
     readonly report_id: number;
 };
 
 function updateReport(report_id: number, trackers_id: number): ResultAsync<UpdatedReport, Fault> {
+    // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return putJSON<UpdatedReport>(uri`/api/v1/cross_tracker_reports/
+    return putJSON<UpdatedReport>(`/api/v1/cross_tracker_reports/
     ${report_id}`, { trackers_id });
 }
 ```
@@ -103,16 +107,17 @@ function updateReport(report_id: number, trackers_id: number): ResultAsync<Updat
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { patchJSON, uri } from "@tuleap/fetch-result";
+import { patchJSON } from "@tuleap/fetch-result";
 
 type UpdatedLabel = {
     readonly label_id: number;
 };
 
 function removeLabel(label_id: number): ResultAsync<UpdatedLabel, Fault> {
+    // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return patchJSON<UpdatedLabel>(uri`/api/v1/labels`, { remove: [{id: label_id }]});
+    return patchJSON<UpdatedLabel>("/api/v1/labels", { remove: [{id: label_id }]});
 }
 ```
 
@@ -121,16 +126,17 @@ function removeLabel(label_id: number): ResultAsync<UpdatedLabel, Fault> {
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { postJSON, uri } from "@tuleap/fetch-result";
+import { postJSON } from "@tuleap/fetch-result";
 
 type CreatedArtifact = {
     readonly artifact_id: number;
 };
 
 function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<CreatedArtifact, Fault> {
+    // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return postJSON<CreatedArtifact>(uri`/api/v1/artifacts`, { tracker: { id: tracker_id }, values: field_values });
+    return postJSON<CreatedArtifact>("/api/v1/artifacts", { tracker: { id: tracker_id }, values: field_values });
 }
 ```
 
@@ -139,12 +145,13 @@ function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { postJSON, uri } from "@tuleap/fetch-result";
+import { postJSON } from "@tuleap/fetch-result";
 
 function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<Response, Fault> {
+    // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return post(uri`/api/v1/artifacts`, { tracker: { id: tracker_id }, values: field_values });
+    return post("/api/v1/artifacts", { tracker: { id: tracker_id }, values: field_values });
 }
 ```
 
@@ -153,10 +160,11 @@ function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { del, uri } from "@tuleap/fetch-result";
+import { del } from "@tuleap/fetch-result";
 
 function removeUser(user_id: number): ResultAsync<Response, Fault> {
-    return del(uri`/api/v1/users/${user_id}`);
+    // URI is automatically encoded
+    return del(`/api/v1/users/${user_id}`);
 }
 ```
 
@@ -165,7 +173,7 @@ function removeUser(user_id: number): ResultAsync<Response, Fault> {
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getAllJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON } from "@tuleap/fetch-result";
 
 type Project = {
     readonly id: number;
@@ -187,7 +195,8 @@ function getCollectionCallback({ collection }: ProjectCollection): ReadonlyArray
 }
 
 function getTrackersOfProject(project_id: number): ResultAsync<ReadonlyArray<Project>, Fault> {
-    return getAllJSON<ProjectCollection, Project>(uri`/api/v1/projects/${project_id}/trackers`, {
+    // URI is automatically encoded
+    return getAllJSON<ProjectCollection, Project>(`/api/v1/projects/${project_id}/trackers`, {
         params: {
             // These parameters are URI-encoded and appended to the base URI
             limit: 50,

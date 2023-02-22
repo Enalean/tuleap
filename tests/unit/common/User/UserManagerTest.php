@@ -37,7 +37,6 @@ class UserManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1
             'isAnonymous'    => false,
             'isSuspended'    => false,
             'isDeleted'      => false,
-            'isFirstTimer'   => false,
         ]);
 
         $session_manager = \Mockery::mock(\Tuleap\User\SessionManager::class, ['getUser' => $user123]);

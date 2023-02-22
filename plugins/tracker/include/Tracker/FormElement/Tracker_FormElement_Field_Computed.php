@@ -502,13 +502,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return (string) ($computed_value ?? "-");
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
 

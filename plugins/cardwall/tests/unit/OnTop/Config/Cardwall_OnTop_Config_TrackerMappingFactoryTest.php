@@ -25,33 +25,6 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \Tuleap\Test
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private Tracker_FormElement_Field_Selectbox $field_122;
-    private Tracker_FormElement_Field_Selectbox $field_123;
-    private Tracker_FormElement_Field_Selectbox $field_124;
-    private Tracker_FormElement_Field_Selectbox $status_field;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker_10;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker_20;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var Cardwall_OnTop_Config_ValueMappingFactory&\Mockery\MockInterface
-     */
-    private $value_mapping_factory;
-    private Cardwall_OnTop_Config_ColumnFreestyleCollection $columns;
-    private Cardwall_OnTop_Config_TrackerMappingFactory $factory;
-
     protected function setUp(): void
     {
         parent::setUp();

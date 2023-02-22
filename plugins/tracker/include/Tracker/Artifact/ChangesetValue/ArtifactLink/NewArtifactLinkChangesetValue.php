@@ -30,8 +30,7 @@ final class NewArtifactLinkChangesetValue
 {
     private function __construct(
         private int $field_id,
-        private CollectionOfForwardLinks $added_values,
-        private CollectionOfForwardLinks $removed_values,
+        private ?ArtifactLinksDiff $artifact_links_diff,
         private ?CollectionOfForwardLinks $submitted_values,
         private ?NewParentLink $parent,
         private CollectionOfReverseLinks $submitted_reverse_links,
@@ -45,43 +44,13 @@ final class NewArtifactLinkChangesetValue
         ?NewParentLink $parent,
         CollectionOfReverseLinks $submitted_reverse_links,
     ): self {
-        $added_values   = $submitted_values
-            ? $existing_links->differenceById($submitted_values)
-            : new CollectionOfForwardLinks([]);
-        $removed_values = $submitted_values
-            ? $submitted_values->differenceById($existing_links)
-            : new CollectionOfForwardLinks([]);
+        $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
         return new self(
             $field_id,
-            $added_values,
-            $removed_values,
+            $diff,
             $submitted_values,
             $parent,
             $submitted_reverse_links
-        );
-    }
-
-    public static function fromAddedAndUpdatedTypeValues(int $field_id, CollectionOfForwardLinks $submitted_values): self
-    {
-        return new self(
-            $field_id,
-            $submitted_values,
-            new CollectionOfForwardLinks([]),
-            $submitted_values,
-            null,
-            new CollectionOfReverseLinks([])
-        );
-    }
-
-    public static function fromRemovedValues(int $field_id, CollectionOfForwardLinks $values_to_remove): self
-    {
-        return new self(
-            $field_id,
-            new CollectionOfForwardLinks([]),
-            $values_to_remove,
-            new CollectionOfForwardLinks([]),
-            null,
-            new CollectionOfReverseLinks([])
         );
     }
 
@@ -90,14 +59,9 @@ final class NewArtifactLinkChangesetValue
         return $this->field_id;
     }
 
-    public function getAddedValues(): CollectionOfForwardLinks
+    public function getArtifactLinksDiff(): ?ArtifactLinksDiff
     {
-        return $this->added_values;
-    }
-
-    public function getRemovedValues(): CollectionOfForwardLinks
-    {
-        return $this->removed_values;
+        return $this->artifact_links_diff;
     }
 
     public function getParent(): ?NewParentLink

@@ -11,7 +11,7 @@
         }
     },
     "require": {
-        "meilisearch/meilisearch-php": "^1.0"
+        "meilisearch/meilisearch-php": "^0.25.0"
     },
     "replace": {
         "php-http/httplug": "^2.1",

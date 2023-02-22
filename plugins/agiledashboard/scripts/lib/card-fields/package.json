@@ -4,20 +4,18 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "version": "0.0.0",
   "type": "module",
   "module": "dist/plugin-agiledashboard-card-fields.js",
   "main": "dist/plugin-agiledashboard-card-fields.umd.cjs",
-  "style": "dist/style.css",
   "exports": {
     ".": {
       "import": "./dist/plugin-agiledashboard-card-fields.js",
-      "require": "./dist/plugin-agiledashboard-card-fields.umd.cjs",
-      "style": "./dist/style.css"
+      "require": "./dist/plugin-agiledashboard-card-fields.umd.cjs"
     }
   },
   "dependencies": {
-    "@tuleap/tlp-swatch-colors": "workspace:*",
-    "dompurify": "^3.0.0",
+    "dompurify": "^2.3.6",
     "escape-string-regexp": "^2.0.0"
   },
   "peerDependencies": {
@@ -27,7 +25,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^2.3.3",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2",
     "angular-sanitize": "^1.8.2"

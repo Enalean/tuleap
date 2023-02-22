@@ -44,19 +44,19 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
  */
 class WikiAttachmentRevision
 {
-    public ?int $id           = null;
-    public ?int $attachmentId = null;
-    public ?int $owner_id     = null;
+    public $id;
+    public $attachmentId;
+    public $owner_id;
 
-    public ?int $date       = null;
-    public ?int $revision   = null;
-    public string $mimeType = '';
-    public ?int $size       = null;
+    public $date;
+    public $revision;
+    public $mimeType;
+    public $size;
 
 
-    public ?string $filename = null;
-    public ?int $gid         = null;
-    public ?string $basedir  = null;
+    public $file;
+    public $gid;
+    public $basedir;
     /**
      * @var string
      */
@@ -112,7 +112,7 @@ class WikiAttachmentRevision
 
         /** @todo: add lock */
 
-        $waIter         = self::getRevisionIterator($this->gid ?? 0, $this->attachmentId ?? 0);
+        $waIter         = self::getRevisionIterator($this->gid, $this->attachmentId);
         $this->revision = $waIter->count();
 
         if (! move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {

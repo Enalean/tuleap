@@ -49,7 +49,7 @@ final class SerializedPluginProxyTest extends TestCase
         }
     }
 
-    public static function getDataForCaptureDefaultConfigValues(): iterable
+    public function getDataForCaptureDefaultConfigValues(): iterable
     {
         return [
             'It ignores when variable has not default value' => [

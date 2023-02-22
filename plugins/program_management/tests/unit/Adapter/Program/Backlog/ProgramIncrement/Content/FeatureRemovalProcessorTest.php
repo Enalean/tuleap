@@ -91,7 +91,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);
     }
 
-    public static function dataProviderExceptions(): array
+    public function dataProviderExceptions(): array
     {
         return [
             'it wraps Tracker_Exception'                    => [new \Tracker_Exception()],

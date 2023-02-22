@@ -37,8 +37,8 @@ export class ItemsMapManager {
         return list_item;
     }
 
-    public refreshItemsMap(): void {
-        this.items_map = this.list_item_builder.buildListPickerItemsMap();
+    public async refreshItemsMap(): Promise<void> {
+        this.items_map = await this.list_item_builder.buildListPickerItemsMap();
     }
 
     public getItemWithValue(value: string): ListPickerItem | null {

@@ -17,7 +17,7 @@
         <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the field</li>
         <li><code class="code-inline">is_filterable (default: false)</code>: A boolean to add a search input in the list-picker dropdown</li>
         <li>
-            <code class="code-inline">items_template_formatter (default: none)</code>: A callback function returning a lit/html template result to customise items templates
+            <code class="code-inline">items_template_formatter (default: none)</code>: An asynchronous callback function returning a lit/html template result to customise items templates
             <br>
             It takes three parameters:
             <ul>
@@ -26,5 +26,6 @@
                 <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
             </ul>
         </li>
+        <li><code class="code-inline">keep_none_value (default: false)</code> Force the list picker to keep a none value when it is updated. The default behaviour selects the first value in the options list</li>
     </ul>
 </p>

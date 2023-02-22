@@ -25,14 +25,6 @@ class UGroupManagerGetUGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private int $non_existent_ugroup_id;
-    private int $integrators_ugroup_id;
-    /**
-     * @var \Mockery\MockInterface&Project
-     */
-    private $project;
-    private UGroupManager $ugroup_manager;
-
     protected function setUp(): void
     {
         parent::setUp();

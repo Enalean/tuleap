@@ -44,7 +44,9 @@ import { getCoordinatesScaleLines } from "../chart-scale-helper";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
-export function createBurndownChart(
+export { createBurndownChart, getMaxRemainingEffort };
+
+function createBurndownChart(
     chart_container: HTMLElement,
     chart_props: ChartPropsWithoutTooltip,
     burndown_data: BurndownData,
@@ -139,7 +141,7 @@ export function createBurndownChart(
     }
 }
 
-export function getMaxRemainingEffort({ points_with_date, capacity }: BurndownData): number {
+function getMaxRemainingEffort({ points_with_date, capacity }: BurndownData): number {
     const max_remaining_effort = max(
         points_with_date,
         ({ remaining_effort }: { remaining_effort: number | null }) => remaining_effort

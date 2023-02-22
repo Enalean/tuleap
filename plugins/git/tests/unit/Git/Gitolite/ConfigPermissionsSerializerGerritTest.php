@@ -28,6 +28,8 @@ use Mockery;
 use PermissionsManager;
 use ProjectUGroup;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class ConfigPermissionsSerializerGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -35,10 +37,6 @@ class ConfigPermissionsSerializerGerritTest extends \Tuleap\Test\PHPUnit\TestCas
     private $serializer;
     private $repository;
     private $gerrit_status;
-    /**
-     * @var PermissionsManager&Mockery\MockInterface
-     */
-    private $permissions_manager;
 
     public function setUp(): void
     {

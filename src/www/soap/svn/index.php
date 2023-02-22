@@ -25,8 +25,6 @@ use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 
 require_once __DIR__ . '/../../include/pre.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 $request = HTTPRequest::instance();
 
 $uri = \Tuleap\ServerHostname::HTTPSUrl() . '/soap/svn';

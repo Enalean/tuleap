@@ -30,20 +30,10 @@ class SemanticDoneValueCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private Tracker_FormElement_Field_List_Bind_StaticValue $to_do_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $on_going_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $hidden_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_to_do_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_on_going_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_done_value;
-    private Tracker_FormElement_Field_List_Bind_StaticValue $xml_hidden_value;
-    private SimpleXMLElement $xml_semantic_status;
-    private SemanticDoneValueChecker $value_checker;
     /**
-     * @var Tracker_Semantic_Status&Mockery\MockInterface
+     * @var SemanticDoneValueChecker
      */
-    private $semantic_status;
+    private $value_checker;
 
     public function setUp(): void
     {

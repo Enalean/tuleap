@@ -155,20 +155,20 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mysql80, mariadb103)
-	$(eval PHP_VERSION ?= 81)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mysql80, mariadb103)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mysql80, mariadb103)
-	$(eval PHP_VERSION ?= 81)
+tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mysql80, mariadb103)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql80)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mariadb103, mysql80)
-	$(eval PHP_VERSION ?= 81)
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mariadb103, mysql80)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
@@ -181,11 +181,19 @@ tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql57, mysq
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 
+.PHONY:tests-e2e-svn-distlp
+tests-e2e-svn-distlp: ## Run E2E Tuleap Distributed SVN tests. DB to select the database to use (mysql57, mysql80).
+	$(eval DB ?= mysql80)
+	@tests/e2e/distlp/wrap.sh "$(DB)"
+
 tests_cypress:
 	@$(MAKE) --no-print-directory tests-e2e
 
 tests_cypress_dev:
 	@$(MAKE) --no-print-directory tests-e2e-dev
+
+tests_cypress_distlp: ## Run Cypress distlp tests
+	@$(MAKE) --no-print-directory tests-e2e-svn-distlp
 
 ifeq ($(COVERAGE_ENABLED),1)
 COVERAGE_PARAMS_PHPUNIT=--coverage-html=/tmp/results/coverage/
@@ -208,13 +216,13 @@ run-as-owner:
 
 phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
-	$(eval PHP_VERSION ?= 81)
+	$(eval PHP_VERSION ?= 80)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
-tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (81). FILES to run specific tests.
-	$(eval PHP_VERSION ?= 81)
+tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (80). FILES to run specific tests.
+	$(eval PHP_VERSION ?= 80)
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
@@ -223,14 +231,12 @@ endif
 phpunit:
 	$(PHP) -dzend.assertions=1 src/vendor/bin/phpunit -c tests/unit/phpunit.xml --do-not-cache-result --random-order $(RANDOM_ORDER_SEED_ARGUMENT) $(FILES)
 
-.PHONY:psalm
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
-	$(PHP) ./src/vendor/bin/psalm --show-info=false -c=tests/psalm/psalm.xml $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
 
-.PHONY:psalm-with-info
 psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
 	$(eval THREADS ?= 2)
-	$(PHP) ./src/vendor/bin/psalm --show-info=true -c=tests/psalm/psalm.xml $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=true -c={config_path} $(FILES)
 
 .PHONY:psalm-taint-analysis
 psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Use FILES variables to execute on a given set of files or directories.
@@ -238,24 +244,37 @@ psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Us
 
 .PHONY:psalm-unused-code
 psalm-unused-code: ## Run Psalm (PHP static analysis tool) detection of unused code. Use FILES variables to execute on a given set of files or directories.
-	$(PHP) ./src/vendor/bin/psalm --find-unused-code -c=tests/psalm/psalm.xml $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --find-unused-code -c={config_path} $(FILES)
 
-.PHONY:psalm-baseline-update
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
-	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline
+	$(eval TMPPSALM := $(shell mktemp -d))
+	git worktree add --detach "$(TMPPSALM)/"
+	$(MAKE) -C "$(TMPPSALM)/" composer js-build
+	pushd "$(TMPPSALM)"; \
+	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
+	popd
+	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
+	git worktree remove -f "$(TMPPSALM)/"
 
-.PHONY:psalm-baseline-create-from-scratch
 psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch, should only be used when needed when upgrading Psalm.
+	$(eval TMPPSALM := $(shell mktemp -d))
+	git worktree add --detach "$(TMPPSALM)/"
+	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
+	$(MAKE) -C "$(TMPPSALM)/" composer js-build
+	pushd "$(TMPPSALM)"; \
 	$(PHP) -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
-	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml
+	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
+	popd
+	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
+	git worktree remove -f "$(TMPPSALM)/"
 
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcs --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -s -p $(FILES)
+	@$(PHP) -d memory_limit=512M ./src/vendor/bin/phpcs --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -s -p $(FILES)
 
 phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@$(PHP) -d memory_limit=1024M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
+	@$(PHP) -d memory_limit=512M ./src/vendor/bin/phpcbf --extensions=php,phpstub --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
 
 deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files under a specific path.
 	@PHP=$(PHP) ./tests/deptrac/run.sh
@@ -277,17 +296,17 @@ bash-web: ## Give a bash on web container
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php81 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php81 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
-	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php81-nginx
-	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
+	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
+	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
 
 .PHONY:docker-pull-verify
 docker-pull-verify:
 	$(DOCKER) pull $(IMAGE_NAME)
-	cosign verify --key $(KEY_PATH) $(IMAGE_NAME)
+	cosign verify -key $(KEY_PATH) $(IMAGE_NAME)
 
 #
 # Dev setup
@@ -332,25 +351,32 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start: ## Start Tuleap with PHP 8.1 on CentOS 7
-	@echo "Start Tuleap with PHP 8.1 on CentOS 7"
+start: ## Start Tuleap web with PHP 8.0 & nginx on CentOS7
+	@echo "Start Tuleap in PHP 8.0 on CentOS 7"
 	@$(MAKE) --no-print-directory start-rp
-
-start-el9: ## Start Tuleap with PHP 8.1 on Rocky Linux 9
-	@echo "Start Tuleap with PHP 8.1 on Rocky Linux 9"
-	@$(MAKE) --no-print-directory start-rp DOCKER_COMPOSE_FLAGS="-f compose-el9.yaml"
 
 start-rp:
 	$(eval DOCKER_COMPOSE_FLAGS ?= )
 	$(DOCKER_COMPOSE) $(DOCKER_COMPOSE_FLAGS) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
-	@echo "Database IP: $(call get_ip_addr,db)"
-	@echo "Mailhog (email catch all) available at browser at http://$(call get_ip_addr,mailhog):8025"
 
 start-ldap-admin: ## Start ldap administration ui
 	@echo "Start ldap administration ui"
 	@$(DOCKER_COMPOSE) up -d ldap-admin
 	@echo "Open your browser at https://localhost:6443"
+
+start-mailhog: ## Start mailhog to catch emails sent by your Tuleap dev platform
+	@echo "Start mailhog to catch emails sent by your Tuleap dev platform"
+	$(DOCKER_COMPOSE) up -d mailhog
+	$(DOCKER_COMPOSE) exec web make -C /usr/share/tuleap deploy-mailhog-conf
+	@echo "Open your browser at http://$(call get_ip_addr,mailhog):8025"
+
+deploy-mailhog-conf:
+	@if ! grep -q -F -e '^relayhost = mailhog:1025' /etc/postfix/main.cf; then \
+	    sed -i -e 's/^\(transport_maps.*\)$$/#\1/' /etc/postfix/main.cf && \
+	    echo 'relayhost = mailhog:1025' >> /etc/postfix/main.cf; \
+	    systemctl restart postfix; \
+	 fi
 
 start-gitlab:
 	@echo "Start gitlab instance for your Tuleap dev"

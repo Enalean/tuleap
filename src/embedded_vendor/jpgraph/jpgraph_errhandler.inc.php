@@ -178,13 +178,9 @@ class JpGraphException extends Exception
         $errobj->Raise($this->getMessage());
     }
 
-    public static function defaultHandler(Throwable $exception)
+    public static function defaultHandler(Exception $exception)
     {
         global $__jpg_OldHandler;
-        BackendLogger::getDefaultLogger()->error(
-            "Error while rendering JPGraph",
-            ['exception' => $exception]
-        );
         if ($exception instanceof JpGraphException) {
             $exception->Stroke();
         } else {

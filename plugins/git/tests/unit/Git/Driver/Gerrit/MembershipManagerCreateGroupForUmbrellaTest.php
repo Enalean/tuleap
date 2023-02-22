@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 /**
  * Fix for request #5031 - Fatal error when adding a group in an umbrella parent project
  * @see https://tuleap.net/plugins/tracker/?aid=5031
@@ -50,42 +52,6 @@ class MembershipManagerCreateGroupForUmbrellaTest extends \Tuleap\Test\PHPUnit\T
 
     /** @var ProjectManager */
     protected $project_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|(\Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory)|null
-     */
-    private \Mockery\MockInterface|Git_Driver_Gerrit_GerritDriverFactory|\Mockery\LegacyMockInterface|null $driver_factory;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_MembershipManager
-     */
-    private $membership_manager;
-    /**
-     * @var Project&\Mockery\MockInterface
-     */
-    private $project;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $git_repository_factory;
-    /**
-     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var Git_Driver_Gerrit_MembershipDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $user1;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $user2;
 
     protected function setUp(): void
     {

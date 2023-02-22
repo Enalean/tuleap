@@ -3,11 +3,11 @@ Description=The PHP FastCGI Process Manager for Tuleap
 Documentation=https://docs.tuleap.org
 After=tuleap.service
 PartOf=tuleap.service
-Conflicts=php81-php-fpm.service
+Conflicts=php80-php-fpm.service
 
 [Service]
 Type=notify
-ExecStart=/opt/remi/php81/root/usr/sbin/php-fpm --nodaemonize
+ExecStart=/opt/remi/php80/root/usr/sbin/php-fpm --nodaemonize
 ExecReload=/bin/kill -USR2 $MAINPID
 PrivateTmp=false
 

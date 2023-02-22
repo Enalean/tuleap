@@ -65,7 +65,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
         $value->shouldReceive('getDescription')->andReturn("description");
         $value->shouldReceive('isHidden')->andReturn(false);
 
-        $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
+        $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);
 
         $expected_result = new FormElementListValueAdminViewPresenter(
             $value,
@@ -98,7 +98,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 
         $value->shouldReceive('isHidden')->andReturn(false);
 
-        $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
+        $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);
 
         $expected_result = new FormElementListValueAdminViewPresenter(
             $value,
@@ -126,7 +126,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
         $value->shouldReceive('getLabel')->andReturn("label");
         $value->shouldReceive('isHidden')->andReturn(false);
 
-        $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
+        $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);
 
         $expected_result = new FormElementListValueAdminViewPresenter(
             $value,

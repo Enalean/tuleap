@@ -20,7 +20,17 @@
 import { put, recursiveGet } from "@tuleap/tlp-fetch";
 import type { FolderStatus, Property } from "../type";
 
-export function putFileProperties(
+export {
+    putFileProperties,
+    putEmbeddedFileProperties,
+    putLinkProperties,
+    putWikiProperties,
+    putEmptyDocumentProperties,
+    putFolderDocumentProperties,
+    getProjectProperties,
+};
+
+function putFileProperties(
     id: number,
     title: string,
     description: string,
@@ -44,7 +54,7 @@ export function putFileProperties(
     });
 }
 
-export function putEmbeddedFileProperties(
+function putEmbeddedFileProperties(
     id: number,
     title: string,
     description: string,
@@ -68,7 +78,7 @@ export function putEmbeddedFileProperties(
     });
 }
 
-export function putLinkProperties(
+function putLinkProperties(
     id: number,
     title: string,
     description: string,
@@ -92,7 +102,7 @@ export function putLinkProperties(
     });
 }
 
-export function putWikiProperties(
+function putWikiProperties(
     id: number,
     title: string,
     description: string,
@@ -116,7 +126,7 @@ export function putWikiProperties(
     });
 }
 
-export function putEmptyDocumentProperties(
+function putEmptyDocumentProperties(
     id: number,
     title: string,
     description: string,
@@ -140,7 +150,7 @@ export function putEmptyDocumentProperties(
     });
 }
 
-export function putFolderDocumentProperties(
+function putFolderDocumentProperties(
     id: number,
     title: string,
     description: string,
@@ -164,7 +174,7 @@ export function putFolderDocumentProperties(
     });
 }
 
-export function getProjectProperties(project_id: number): Promise<Array<Property>> {
+function getProjectProperties(project_id: number): Promise<Array<Property>> {
     const escaped_project_id = encodeURIComponent(project_id);
     return recursiveGet(`/api/projects/${escaped_project_id}/docman_metadata`, {
         params: {

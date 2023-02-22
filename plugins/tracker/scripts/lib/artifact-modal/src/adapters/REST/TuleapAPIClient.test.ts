@@ -40,7 +40,6 @@ import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload
 import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
-import { uri } from "@tuleap/fetch-result";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -96,7 +95,7 @@ describe(`TuleapAPIClient`, () => {
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
             }
-            expect(getSpy.mock.calls[0][0]).toStrictEqual(uri`/api/v1/artifacts/${ARTIFACT_ID}`);
+            expect(getSpy.mock.calls[0][0]).toBe(`/api/v1/artifacts/${ARTIFACT_ID}`);
             const linkable_artifact = result.value;
             expect(linkable_artifact.id).toBe(ARTIFACT_ID);
             expect(linkable_artifact.title).toBe(ARTIFACT_TITLE);
@@ -135,9 +134,7 @@ describe(`TuleapAPIClient`, () => {
             expect(types).toHaveLength(2);
             expect(types).toContain(parent_type);
             expect(types).toContain(child_type);
-            expect(getSpy.mock.calls[0][0]).toStrictEqual(
-                uri`/api/v1/artifacts/${ARTIFACT_ID}/links`
-            );
+            expect(getSpy.mock.calls[0][0]).toBe(`/api/v1/artifacts/${ARTIFACT_ID}/links`);
         });
     });
 
@@ -183,7 +180,7 @@ describe(`TuleapAPIClient`, () => {
             expect(second_returned_artifact.identifier.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(second_returned_artifact.link_type).toBe(link_type);
             expect(getAllSpy.mock.calls[0]).toEqual([
-                uri`/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`,
+                `/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`,
                 {
                     params: {
                         limit: 50,
@@ -225,7 +222,7 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_artifact.id).toBe(FIRST_LINKED_ARTIFACT_ID);
             expect(second_returned_artifact.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(getAllSpy).toHaveBeenCalledWith(
-                uri`/api/v1/trackers/${TRACKER_ID}/parent_artifacts`,
+                `/api/v1/trackers/${TRACKER_ID}/parent_artifacts`,
                 { params: { limit: 1000 } }
             );
         });
@@ -269,9 +266,7 @@ describe(`TuleapAPIClient`, () => {
             expect(result.value.file_id).toBe(FILE_ID);
             expect(result.value.upload_href).toBe(UPLOAD_HREF);
             const first_call_arguments = postJSON.mock.calls[0];
-            expect(first_call_arguments[0]).toStrictEqual(
-                uri`/api/v1/tracker_fields/${FILE_FIELD_ID}/files`
-            );
+            expect(first_call_arguments[0]).toBe(`/api/v1/tracker_fields/${FILE_FIELD_ID}/files`);
             expect(first_call_arguments[1]).toStrictEqual({
                 name: FILE_NAME,
                 file_size: FILE_SIZE,
@@ -304,7 +299,7 @@ describe(`TuleapAPIClient`, () => {
             const [first_returned_artifact, second_returned_artifact] = result.value;
             expect(first_returned_artifact.id).toBe(ARTIFACT_ID);
             expect(second_returned_artifact.id).toBe(ARTIFACT_2_ID);
-            expect(getSpy).toHaveBeenCalledWith(uri`/api/v1/users/${USER_ID}/history`);
+            expect(getSpy).toHaveBeenCalledWith(`/api/v1/users/${USER_ID}/history`);
         });
     });
 
@@ -334,7 +329,7 @@ describe(`TuleapAPIClient`, () => {
             const [first_artifact, second_artifact] = result.value;
             expect(first_artifact.id).toBe(ARTIFACT_ID);
             expect(second_artifact.id).toBe(ARTIFACT_2_ID);
-            expect(postSpy).toHaveBeenCalledWith(uri`/api/search?limit=50`, {
+            expect(postSpy).toHaveBeenCalledWith(`/api/search?limit=50`, {
                 keywords: SEARCH_QUERY,
             });
         });
@@ -379,16 +374,13 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_comment.body).toBe(FIRST_COMMENT_BODY);
             expect(second_returned_comment.body).toBe(SECOND_COMMENT_BODY);
 
-            expect(getAllSpy).toHaveBeenCalledWith(
-                uri`/api/v1/artifacts/${ARTIFACT_ID}/changesets`,
-                {
-                    params: {
-                        limit: 50,
-                        fields: "comments",
-                        order: "desc",
-                    },
-                }
-            );
+            expect(getAllSpy).toHaveBeenCalledWith(`/api/v1/artifacts/${ARTIFACT_ID}/changesets`, {
+                params: {
+                    limit: 50,
+                    fields: "comments",
+                    order: "desc",
+                },
+            });
         });
 
         it(`will pass "asc" order when the order of comments is inverted`, async () => {

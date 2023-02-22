@@ -34,10 +34,10 @@ import { setCatalog } from "../../../gettext-catalog";
 import type { FollowupEditor } from "./FollowupEditor";
 import { CommentsController } from "../../../domain/comments/CommentsController";
 import { RetrieveCommentsStub } from "../../../../tests/stubs/RetrieveCommentsStub";
+import { NotifyFaultStub } from "../../../../tests/stubs/NotifyFaultStub";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ProjectIdentifierStub } from "../../../../tests/stubs/ProjectIdentifierStub";
 import type { CommentUserPreferences } from "../../../domain/comments/CommentUserPreferences";
-import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
 describe(`ModalCommentsSection`, () => {
     describe(`events`, () => {
@@ -111,7 +111,7 @@ describe(`ModalCommentsSection`, () => {
                 presenter,
                 controller: CommentsController(
                     RetrieveCommentsStub.withoutComments(),
-                    DispatchEventsStub.buildNoOp(),
+                    NotifyFaultStub.withCount(),
                     CurrentArtifactIdentifierStub.withId(91),
                     ProjectIdentifierStub.withId(PROJECT_ID),
                     preferences

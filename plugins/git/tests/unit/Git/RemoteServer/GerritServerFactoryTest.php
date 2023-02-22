@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,11 +53,6 @@ class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $dar_1;
     private $dar_2;
-    /**
-     * @var Git_RemoteServer_Dao&\Mockery\MockInterface
-     */
-    private $dao;
-    private Git_RemoteServer_GerritServer $alternate_gerrit_server;
 
     protected function setUp(): void
     {

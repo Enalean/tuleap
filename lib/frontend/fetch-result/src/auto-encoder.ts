@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EncodedURI } from "./uri-string-template";
-import { uri, rawUri } from "./uri-string-template";
-
 export interface AutoEncodedParameters {
     readonly [key: string]: string | number | boolean;
 }
@@ -37,5 +34,5 @@ const getSearchParams = (params: AutoEncodedParameters): string => {
     return "?" + String(search_params);
 };
 
-export const getURI = (base_uri: EncodedURI, params: AutoEncodedParameters = {}): EncodedURI =>
-    uri`${base_uri}${rawUri(getSearchParams(params))}`;
+export const getURI = (uri: string, params: AutoEncodedParameters = {}): string =>
+    encodeURI(uri) + getSearchParams(params);

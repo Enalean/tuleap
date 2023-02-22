@@ -1,8 +1,0 @@
-{
-  "name": "tuleap/plugin-botmattermost_agiledashboard",
-  "autoload": {
-    "psr-4": {
-      "Tuleap\\BotMattermostAgileDashboard\\": ["include/", "include/BotMattermostAgileDashboard/"]
-    }
-  }
-}

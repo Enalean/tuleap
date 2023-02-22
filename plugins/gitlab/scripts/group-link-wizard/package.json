@@ -12,7 +12,7 @@
     "@tuleap/plugin-git-gitlab-api-querier": "workspace:*",
     "@tuleap/plugin-gitlab-administration-theme": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "neverthrow": "^6.0.0",
+    "neverthrow": "^5.0.0",
     "pinia": "^2.0.21",
     "vue": "^3.2.37",
     "vue-router": "^4.1.4",

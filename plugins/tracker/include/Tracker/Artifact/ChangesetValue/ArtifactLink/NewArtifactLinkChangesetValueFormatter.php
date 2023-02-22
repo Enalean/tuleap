@@ -26,13 +26,16 @@ final class NewArtifactLinkChangesetValueFormatter
 {
     public static function formatForWebUI(NewArtifactLinkChangesetValue $update_value): array
     {
-        $field_data       = [
-            'new_values'     => implode(',', $update_value->getAddedValues()->getTargetArtifactIds()),
-            'removed_values' => self::formatRemovedValues($update_value->getRemovedValues()),
-        ];
-        $submitted_values = $update_value->getSubmittedValues();
-        if ($submitted_values !== null) {
-            $field_data['types'] = $submitted_values->getArtifactTypesByIds();
+        $field_data          = [];
+        $artifact_links_diff = $update_value->getArtifactLinksDiff();
+        $submitted_values    = $update_value->getSubmittedValues();
+
+        if ($artifact_links_diff !== null && $submitted_values !== null) {
+            $field_data = [
+                'new_values'     => implode(',', $artifact_links_diff->getNewValues()),
+                'removed_values' => self::formatRemovedValues($artifact_links_diff->getRemovedValues()),
+                'types'          => $submitted_values->getArtifactTypesByIds(),
+            ];
         }
 
         $parent_link = $update_value->getParent();
@@ -46,11 +49,11 @@ final class NewArtifactLinkChangesetValueFormatter
     /**
      * @psalm-return array<int, array<int>>
      */
-    private static function formatRemovedValues(CollectionOfForwardLinks $removed_values): array
+    private static function formatRemovedValues(array $removed_values): array
     {
         $formatted_values = [];
-        foreach ($removed_values->getTargetArtifactIds() as $value_id) {
-            $formatted_values[$value_id] = [$value_id];
+        foreach ($removed_values as $value_id) {
+            $formatted_values[(int) $value_id] = [(int) $value_id];
         }
         return $formatted_values;
     }

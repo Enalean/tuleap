@@ -41,7 +41,7 @@ final class TableTLPExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRendersTableWithTheTLPClass(): void
     {
-        $result = $this->converter->convert(
+        $result = $this->converter->convertToHtml(
             <<<MARKDOWN_TABLE
             | Case ID | Case Acronym | Case Full Name |
             |---------|--------------|----------------|
@@ -68,7 +68,7 @@ final class TableTLPExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
             </tbody>
             </table>\n
             EXPECTED_HTML,
-            $result->getContent()
+            $result
         );
     }
 }

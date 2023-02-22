@@ -20,10 +20,10 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-class ProftpdDirectoryPathParserTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    private DirectoryPathParser $parser;
+require_once __DIR__ . '/../../bootstrap.php';
 
+class DirectoryPathParser_CleanPathTest extends \Tuleap\Test\PHPUnit\TestCase
+{
     public function setUp(): void
     {
         parent::setUp();

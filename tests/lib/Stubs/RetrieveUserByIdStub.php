@@ -24,41 +24,22 @@ namespace Tuleap\Test\Stubs;
 
 final class RetrieveUserByIdStub implements \Tuleap\User\RetrieveUserById
 {
-    /**
-     * @param array<int, \PFUser> $users
-     */
-    private function __construct(private array $users)
+    private function __construct(private ?\PFUser $user)
     {
     }
 
     public static function withUser(\PFUser $user): self
     {
-        return self::withUsers($user);
-    }
-
-    public static function withUsers(\PFUser ...$users): self
-    {
-        return new self(array_reduce(
-            $users,
-            /**
-             * @return array<int, \PFUser>
-             */
-            static function (array $accumulator, \PFUser $user): array {
-                $accumulator[(int) $user->getId()] = $user;
-
-                return $accumulator;
-            },
-            []
-        ));
+        return new self($user);
     }
 
     public static function withNoUser(): self
     {
-        return new self([]);
+        return new self(null);
     }
 
     public function getUserById($user_id)
     {
-        return $this->users[$user_id] ?? null;
+        return $this->user;
     }
 }

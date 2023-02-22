@@ -151,11 +151,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
     }
 
-    /**
-     * @see TRACKER_EVENT_TRACKERS_DUPLICATED
-     * @todo transform into a OnTop_Config_Command, and move code to ConfigFactory
-     */
-    public function tracker_event_trackers_duplicated($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
+    public function tracker_event_trackers_duplicated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
@@ -164,7 +161,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
             }
         }
-        (new \Tuleap\Cardwall\CardwallRendererDuplicatorDao())->duplicate($params['mapping_registry'], $params['field_mapping']);
     }
 
     /**

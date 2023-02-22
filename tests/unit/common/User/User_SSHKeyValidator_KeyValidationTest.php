@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class User_SSHKeyValidator_KeyValidationTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;

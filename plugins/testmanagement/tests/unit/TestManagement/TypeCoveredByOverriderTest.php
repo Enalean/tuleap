@@ -23,6 +23,8 @@ namespace Tuleap\TestManagement\Type;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../bootstrap.php';
+
 class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -42,10 +44,6 @@ class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $artifact_id = 123;
 
     private $test_definition_tracker_id = 444;
-    /**
-     * @var \Tuleap\Tracker\Admin\ArtifactLinksUsageDao&Mockery\MockInterface
-     */
-    private $dao;
 
     public function setUp(): void
     {

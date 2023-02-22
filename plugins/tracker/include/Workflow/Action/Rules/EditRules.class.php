@@ -38,10 +38,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private $url_query;
 
-    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, private CSRFSynchronizerToken $token)
+    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token)
     {
         parent::__construct($tracker);
         $this->rule_date_factory = $rule_date_factory;
+        $this->token             = $token;
         $this->url_query         = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => (int) $this->tracker->id,

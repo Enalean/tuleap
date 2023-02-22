@@ -74,7 +74,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $this->date_factory       = \Mockery::spy(\Tracker_Rule_Date_Factory::class);
         $this->tracker            = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
-        $token                    = \Mockery::spy(\CSRFSynchronizerToken::class);
+        $this->token              = \Mockery::spy(\CSRFSynchronizerToken::class);
         $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
         $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
@@ -107,7 +107,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
         $this->rule_42->shouldReceive('getComparator')->andReturns('>');
         $this->date_factory->shouldReceive('getRule')->with($this->tracker, $this->rule_66_id)->andReturns($this->rule_66);
 
-        $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $token);
+        $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
     }
 
     private function setUpField($id, string $label)

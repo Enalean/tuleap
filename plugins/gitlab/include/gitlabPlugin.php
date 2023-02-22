@@ -137,7 +137,6 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -333,8 +332,7 @@ class gitlabPlugin extends Plugin
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao,
-                    $event_manager,
+                    $artifact_links_usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -370,7 +368,6 @@ class gitlabPlugin extends Plugin
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
@@ -562,8 +559,7 @@ class gitlabPlugin extends Plugin
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao,
-                    $event_manager,
+                    $artifact_links_usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -599,7 +595,6 @@ class gitlabPlugin extends Plugin
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 

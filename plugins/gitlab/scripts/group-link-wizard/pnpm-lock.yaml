@@ -11,7 +11,7 @@ specifiers:
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.0.2
-  neverthrow: ^6.0.0
+  neverthrow: ^5.0.0
   pinia: ^2.0.21
   vue: ^3.2.37
   vue-router: ^4.1.4
@@ -24,7 +24,7 @@ dependencies:
   '@tuleap/plugin-git-gitlab-api-querier': link:../../../git/scripts/lib/gitlab-api-querier
   '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
-  neverthrow: 6.0.0
+  neverthrow: 5.0.0
   pinia: 2.0.21_vue@3.2.37
   vue: 3.2.37
   vue-router: 4.1.5_vue@3.2.37
@@ -415,8 +415,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /neverthrow/6.0.0:
-    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
     dev: false
 
   /once/1.4.0:

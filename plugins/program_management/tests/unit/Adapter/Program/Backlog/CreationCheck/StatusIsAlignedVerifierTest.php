@@ -143,13 +143,17 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['open', 'in progress', 'review']);
 
         $this->semantic_status_factory->method('getByTracker')
-            ->willReturnCallback(
-                fn (Tracker $tracker): Tracker_Semantic_Status => match ($tracker) {
-                    $this->program_increment => $top_planning_tracker_semantic_status,
-                    $this->timebox_tracker => $this->timebox_tracker_semantic_status,
-                    $this->tracker_team_01 => $tracker_01_semantic_status,
-                    $this->tracker_team_02 => $tracker_02_semantic_status,
-                }
+            ->withConsecutive(
+                [$this->program_increment],
+                [$this->timebox_tracker],
+                [$this->tracker_team_01],
+                [$this->tracker_team_02]
+            )
+            ->willReturnOnConsecutiveCalls(
+                $top_planning_tracker_semantic_status,
+                $this->timebox_tracker_semantic_status,
+                $tracker_01_semantic_status,
+                $tracker_02_semantic_status
             );
 
         $this->tracker_factory->method('getTrackerById')
@@ -243,12 +247,11 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->method('getByTracker')
-            ->willReturnCallback(
-                fn (Tracker $tracker): Tracker_Semantic_Status => match ($tracker) {
-                    $this->program_increment => $top_planning_tracker_semantic_status,
-                    $this->timebox_tracker => $this->timebox_tracker_semantic_status,
-                    $this->tracker_team_01 => $tracker_01_semantic_status,
-                }
+            ->withConsecutive([$this->program_increment], [$this->timebox_tracker], [$this->tracker_team_01])
+            ->willReturnOnConsecutiveCalls(
+                $top_planning_tracker_semantic_status,
+                $this->timebox_tracker_semantic_status,
+                $tracker_01_semantic_status
             );
 
         $tracker_01_semantic_status->expects(self::once())

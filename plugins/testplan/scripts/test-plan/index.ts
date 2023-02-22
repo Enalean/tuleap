@@ -18,7 +18,6 @@
  *
  */
 
-import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
 import App from "./src/components/App.vue";
 import type { RootState } from "./src/store/type";
 import { createApp } from "vue";

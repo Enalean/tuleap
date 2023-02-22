@@ -34,34 +34,6 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $group_id          = 101;
     protected $project_unix_name = 'gitproject';
     protected $repository;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $user;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $admin;
-    /**
-     * @var UserManager&\Mockery\MockInterface
-     */
-    private $user_manager;
-    /**
-     * @varProjectManager&\Mockery\MockInterface
-     */
-    private $project_manager;
-    /**
-     * @var Git_Driver_Gerrit_ProjectCreator&\Mockery\MockInterface
-     */
-    private $project_creator;
-    /**
-     * @var Git_Driver_Gerrit_Template_TemplateFactory&\Mockery\MockInterface
-     */
-    private $template_factory;
-    /**
-     * @var GitPermissionsManager&\Mockery\MockInterface
-     */
-    private $git_permissions_manager;
 
     protected function setUp(): void
     {
@@ -254,7 +226,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDispatchesTo_migrateToGerrit_withRepoManagementView()
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
 
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
         $request            = new HTTPRequest();
@@ -266,7 +238,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $gerrit_template_id);
 
-        $git = $this->getGitMigrate($request, $factory);
+        $git = $this->getGitMigrate($request, $this->factory);
 
         $this->repository->shouldReceive('getId')->andReturn($repo_id);
 
@@ -279,7 +251,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItNeedsAValidServerId()
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
 
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
         $request = new HTTPRequest();
@@ -290,7 +262,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->repository->shouldReceive('getId')->andReturn($repo_id);
 
-        $git = $this->getGitMigrate($request, $factory);
+        $git = $this->getGitMigrate($request, $this->factory);
 
         $git->shouldReceive('addError')->with(Mockery::any())->once();
         $git->shouldReceive('addAction')->never();
@@ -301,7 +273,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP()
     {
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
         ForgeConfig::set('sys_auth_type', 'not_ldap');
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
         $request   = new HTTPRequest();
@@ -309,7 +281,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $server_id = 111;
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
-        $git = $this->getGitMigrate($request, $factory);
+        $git = $this->getGitMigrate($request, $this->factory);
 
         $this->repository->shouldReceive('getId')->andReturn($repo_id);
 
@@ -322,7 +294,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAllowsGerritMigrationIfTuleapIsConnectedToLDAP()
     {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($this->repository)->getMock();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
 
         $template_id      = 3;
@@ -337,7 +309,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $template_id);
         $request->set('group_id', $this->group_id);
-        $git = $this->getGitMigrate($request, $factory, $template_factory);
+        $git = $this->getGitMigrate($request, $this->factory, $template_factory);
 
         $this->repository->shouldReceive('getId')->andReturn($repo_id);
 

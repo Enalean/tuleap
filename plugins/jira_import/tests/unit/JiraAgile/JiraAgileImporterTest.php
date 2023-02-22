@@ -67,7 +67,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSprintTrackerCanBeModifiedByPlugins(): void
     {
         $dispatcher = new class implements EventDispatcherInterface {
-            public function dispatch(object $event): ScrumTrackerStructureEvent
+            public function dispatch(object $event)
             {
                 assert($event instanceof ScrumTrackerStructureEvent);
                 $event->tracker = $event->tracker->appendFormElement('details2', (new XMLFloatField('F777', 'velocity'))->withoutPermissions());

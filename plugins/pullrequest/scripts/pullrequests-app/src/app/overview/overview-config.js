@@ -8,7 +8,7 @@ function OverviewConfig($stateProvider) {
         parent: "pull-request",
         views: {
             "overview@pull-request": {
-                template: '<div overview id="overview"></div>',
+                template: "<overview-wrapper></overview-wrapper>",
             },
             "timeline@overview": {
                 template: '<div timeline id="timeline"></div>',

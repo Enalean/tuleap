@@ -38,21 +38,22 @@ class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential->shouldReceive('getIdentifier')->andReturn('identifier');
         $credential_retriever->shouldReceive('authenticate')->once()->andReturn($credential);
         $credential_retriever->shouldReceive('getByIdentifier')->once()->andReturn($credential);
-        $storage = new DynamicCredentialNonPersistentStorage();
+        $session_storage = [];
 
-        $dynamic_session = new DynamicCredentialSession($storage, $credential_retriever);
+        $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
         $dynamic_session->initialize('username', new ConcealedString('password'));
 
-        $this->assertSame('identifier', $storage->getIdentifier());
+        $this->assertSame('identifier', current($session_storage));
         $this->assertSame($credential, $dynamic_session->getAssociatedCredential());
     }
 
     public function testCredentialIsNotRetrievedWhenSessionIsNotInitialized()
     {
+        $session_storage      = [];
         $credential_retriever = Mockery::mock(CredentialRetriever::class);
 
-        $dynamic_session = new DynamicCredentialSession(new DynamicCredentialNonPersistentStorage(), $credential_retriever);
+        $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
         $this->expectException(DynamicCredentialSessionNotInitializedException::class);
 
@@ -63,8 +64,9 @@ class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $credential_retriever = Mockery::mock(CredentialRetriever::class);
         $credential_retriever->shouldReceive('authenticate')->once()->andThrow(CredentialAuthenticationException::class);
+        $session_storage = [];
 
-        $dynamic_session = new DynamicCredentialSession(new DynamicCredentialNonPersistentStorage(), $credential_retriever);
+        $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
         try {
             $dynamic_session->initialize('username', new ConcealedString('password'));

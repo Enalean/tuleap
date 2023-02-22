@@ -77,7 +77,7 @@ final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pkce_code_verifier->verifyCode($auth_code, $code_verifier);
     }
 
-    public static function dataProviderMalformedCodeVerifier(): array
+    public function dataProviderMalformedCodeVerifier(): array
     {
         return [
             'Too short'         => ['a'],

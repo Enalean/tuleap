@@ -11,12 +11,12 @@ export BASEDIR
 pushd "$BASEDIR"
 
 case "${1:-}" in
-    "81")
-    export PHP_VERSION="php81"
+    "80")
+    export PHP_VERSION="php80"
     ;;
     *)
     echo "A PHP version must be provided as parameter. Allowed values are:"
-    echo "* 81"
+    echo "* 80"
     exit 1
 esac
 

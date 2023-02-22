@@ -85,6 +85,7 @@ import {
 import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
 import ConfigurationEmptyState from "./ConfigurationEmptyState.vue";
+import { sprintf } from "sprintf-js";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
 const configuration = namespace("configuration");
@@ -105,7 +106,7 @@ export default class App extends Vue {
     private readonly handleDrop!: (handle_drop: HandleDropContextWithProgramId) => Promise<void>;
 
     @State
-    readonly has_modal_error!: boolean;
+    private readonly has_modal_error!: boolean;
 
     @configuration.State
     readonly public_name!: string;
@@ -184,11 +185,12 @@ export default class App extends Vue {
     }
 
     getAdminEmptyState(): string {
-        return this.$gettextInterpolate(
+        const url = `/program_management/admin/${this.short_name}`;
+        return sprintf(
             this.$gettext(
-                `Configuration can be done in <a href="%{ url }" data-test="program-go-to-administration">administration</a> of service.`
+                "Configuration can be done in <a href='%s' data-test='program-go-to-administration'>administration</a> of service."
             ),
-            { url: `/program_management/admin/${this.short_name}` }
+            url
         );
     }
 }

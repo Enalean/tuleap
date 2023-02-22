@@ -29,7 +29,6 @@ import type { Project, QuickLink } from "../type";
 import { useRootStore } from "./root";
 import type { StoppableQuery } from "../helpers/delayed-querier";
 import { useKeyboardNavigationStore } from "./keyboard-navigation";
-import { uri } from "@tuleap/fetch-result";
 
 describe("FullText Store", () => {
     let cancelPendingQuery: jest.Mock;
@@ -58,7 +57,7 @@ describe("FullText Store", () => {
             (min) => {
                 const store = useFullTextStore();
                 store.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
@@ -79,7 +78,7 @@ describe("FullText Store", () => {
         it("should indicate that search results are loading", () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -104,7 +103,7 @@ describe("FullText Store", () => {
         it("should indicate that search is in error", async () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -130,7 +129,7 @@ describe("FullText Store", () => {
         it("should mark fulltext search as disabled when 404", async () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -160,7 +159,7 @@ describe("FullText Store", () => {
         it("should store the search results", async () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -197,7 +196,7 @@ describe("FullText Store", () => {
         it("should incrementally add items to search results so that user has better chance to see progress if results are spanned between multiple pages", async () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -235,7 +234,7 @@ describe("FullText Store", () => {
         it("should store the fact that there are more results", async () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
@@ -272,7 +271,7 @@ describe("FullText Store", () => {
         it("should not perform the search if fts is not available", () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: false,
                 fulltext_search_results: {},
             });
@@ -286,7 +285,7 @@ describe("FullText Store", () => {
         it("should not perform the search if fts is not available", () => {
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: false,
                 fulltext_search_results: {},
             });
@@ -303,7 +302,7 @@ describe("FullText Store", () => {
 
             const store = useFullTextStore();
             store.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {
                     "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
@@ -371,7 +370,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -403,7 +402,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -439,7 +438,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -494,7 +493,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -548,7 +547,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -593,7 +592,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -638,7 +637,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -675,7 +674,7 @@ describe("FullText Store", () => {
 
                 const fts = useFullTextStore();
                 fts.$patch({
-                    fulltext_search_url: uri`/search`,
+                    fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
                         "/first-search-result": first_search_result,
@@ -715,7 +714,7 @@ describe("FullText Store", () => {
 
             const fts = useFullTextStore();
             fts.$patch({
-                fulltext_search_url: uri`/search`,
+                fulltext_search_url: "/search",
                 fulltext_search_is_available: true,
                 fulltext_search_results: {
                     "/first-search-result": first_search_result,

@@ -614,6 +614,72 @@ CREATE TABLE news_bytes (
 );
 
 #
+# Table structure for table 'project_counts_tmp'
+#
+
+CREATE TABLE project_counts_tmp (
+  group_id int(11) default NULL,
+  type text,
+  count float(8,5) default NULL
+);
+
+#
+# Table structure for table 'project_counts_weekly_tmp'
+#
+
+CREATE TABLE project_counts_weekly_tmp (
+  group_id int(11) default NULL,
+  type text,
+  count float(8,5) default NULL
+);
+
+#
+# Table structure for table 'project_metric'
+#
+
+CREATE TABLE project_metric (
+  ranking int(11) NOT NULL auto_increment,
+  percentile float(8,2) default NULL,
+  group_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (ranking),
+  KEY idx_project_metric_group (group_id)
+);
+
+#
+# Table structure for table 'project_metric_tmp1'
+#
+
+CREATE TABLE project_metric_tmp1 (
+  ranking int(11) NOT NULL auto_increment,
+  group_id int(11) NOT NULL default '0',
+  value float(8,5) default NULL,
+  PRIMARY KEY  (ranking)
+);
+
+#
+# Table structure for table 'project_metric_weekly_tmp1'
+#
+
+CREATE TABLE project_metric_weekly_tmp1 (
+  ranking int(11) NOT NULL auto_increment,
+  group_id int(11) NOT NULL default '0',
+  value float(8,5) default NULL,
+  PRIMARY KEY  (ranking)
+);
+
+#
+# Table structure for table 'project_weekly_metric'
+#
+
+CREATE TABLE project_weekly_metric (
+  ranking int(11) NOT NULL auto_increment,
+  percentile float(8,2) default NULL,
+  group_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (ranking),
+  KEY idx_project_metric_weekly_group (group_id)
+);
+
+#
 # Table structure for table 'session'
 #
 
@@ -677,6 +743,7 @@ CREATE TABLE user (
   user_id int(11) NOT NULL auto_increment,
   user_name text NOT NULL,
   email text NOT NULL,
+  user_pw varchar(32) NOT NULL default '',
   password varchar(255) DEFAULT NULL,
   realname text NOT NULL,
   register_purpose text,
@@ -700,7 +767,6 @@ CREATE TABLE user (
   last_pwd_update int(11) NOT NULL default '0',
   expiry_date int(11),
   has_custom_avatar TINYINT(1) NOT NULL DEFAULT 0,
-  is_first_timer BOOL NOT NULL DEFAULT false,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   INDEX idx_user_mail(email(10)),
@@ -1524,11 +1590,9 @@ CREATE TABLE invitations(
     from_user_id INT(11) NOT NULL,
     to_email TEXT NOT NULL,
     to_user_id INT(11) NULL,
-    to_project_id INT NULL,
     custom_message TEXT NULL,
     status VARCHAR(10),
     created_user_id INT(11) NULL,
-    verifier TEXT NOT NULL DEFAULT '',
     INDEX idx(created_on, from_user_id),
     INDEX idx_email(to_email(20)),
     INDEX idx_created(created_user_id, status, to_email(20))

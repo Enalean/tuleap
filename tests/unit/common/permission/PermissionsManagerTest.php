@@ -19,15 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testDuplicatePermissionsPassParameters(): void
+    use MockeryPHPUnitIntegration;
+
+    public function testDuplicatePermissionsPassParamters(): void
     {
         $source           = 123;
         $target           = 234;
@@ -35,36 +33,30 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup_mapping   = [110 => 210,
             120 => 220,
         ];
+        $duplicate_type   = PermissionsDao::DUPLICATE_SAME_PROJECT;
 
-        $duplication_mapping = TrackerDuplicationUserGroupMapping::fromSameProjectWithMapping($ugroup_mapping);
-
-        $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, $duplication_mapping);
+        $dao = Mockery::mock(PermissionsDao::class);
+        $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, $duplicate_type, $ugroup_mapping)->once();
 
         $permissionsManager = new PermissionsManager($dao);
 
-        $permissionsManager->duplicatePermissions($source, $target, $permission_types, $duplication_mapping);
+        $permissionsManager->duplicatePermissions($source, $target, $permission_types, $ugroup_mapping, $duplicate_type);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testDuplicateSameProjectShouldNotHaveUgroupMapping(): void
     {
         $source           = 123;
         $target           = 234;
         $permission_types = ['STUFF_READ'];
 
-        $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping());
+        $dao = Mockery::mock(PermissionsDao::class);
+        $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false)->once();
 
         $permissionsManager = new PermissionsManager($dao);
+
         $permissionsManager->duplicateWithStatic($source, $target, $permission_types);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testDuplicateNewProjectShouldHaveUgroupMapping(): void
     {
         $source           = 123;
@@ -74,24 +66,22 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             120 => 220,
         ];
 
-        $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
+        $dao = Mockery::mock(PermissionsDao::class);
+        $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping)->once();
 
         $permissionsManager = new PermissionsManager($dao);
+
         $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_types, $ugroup_mapping);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testDuplicateOtherProjectShouldNotHaveUgroupMapping(): void
     {
         $source           = 123;
         $target           = 234;
         $permission_types = ['STUFF_READ'];
 
-        $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
+        $dao = Mockery::mock(PermissionsDao::class);
+        $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false)->once();
 
         $permissionsManager = new PermissionsManager($dao);
 

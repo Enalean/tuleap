@@ -38,11 +38,15 @@ interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_Fo
      */
     public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria);
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string;
+    /**
+     * Display the field as a Changeset value.
+     * Used in report table
+     * @param int $artifact_id the corresponding artifact id
+     * @param int $changeset_id the corresponding changeset
+     * @param mixed $value the value of the field
+     * @param int|null $report_id the id of the calling report
+     * @param int|null $from_aid the id of the base artifact (optional)
+     * @return string
+     */
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null);
 }

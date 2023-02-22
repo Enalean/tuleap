@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerFieldDao;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
 {
     public function getCriteriaFrom($criteria)
@@ -91,14 +90,9 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return true;
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
-        return (string) $value;
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
+        return $value;
     }
 
     protected function getValueDao()

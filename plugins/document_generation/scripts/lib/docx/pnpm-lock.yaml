@@ -6,10 +6,10 @@ specifiers:
   '@tuleap/plugin-tracker-constants': workspace:*
   '@tuleap/plugin-tracker-rest-api-types': workspace:*
   '@tuleap/tlp-fetch': workspace:*
-  '@types/dompurify': ^2.4.0
+  '@types/dompurify': ^2.3.2
   '@types/sprintf-js': ^1.1.2
   docx: ^7.3.0
-  dompurify: ^3.0.0
+  dompurify: ^2.3.6
   sprintf-js: ^1.1.2
 
 dependencies:
@@ -18,20 +18,20 @@ dependencies:
   '@tuleap/plugin-tracker-rest-api-types': link:../../../../tracker/scripts/lib/rest-api-types
   '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
   docx: 7.3.0
-  dompurify: 3.0.0
+  dompurify: 2.3.6
   sprintf-js: 1.1.2
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@types/dompurify': 2.4.0
+  '@types/dompurify': 2.3.2
   '@types/sprintf-js': 1.1.2
 
 packages:
 
-  /@types/dompurify/2.4.0:
-    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
+  /@types/dompurify/2.3.2:
+    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
     dependencies:
-      '@types/trusted-types': 2.0.3
+      '@types/trusted-types': 2.0.2
     dev: true
 
   /@types/node/17.0.5:
@@ -42,8 +42,8 @@ packages:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /@types/trusted-types/2.0.3:
-    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+  /@types/trusted-types/2.0.2:
+    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: true
 
   /core-util-is/1.0.3:
@@ -61,8 +61,8 @@ packages:
       xml-js: 1.6.11
     dev: false
 
-  /dompurify/3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /immediate/3.0.6:

@@ -260,13 +260,8 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return new StepExecutionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?\Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
+    {
         return '';
     }
 

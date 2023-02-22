@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout\Feedback;
 
-class FeedbackSerializer implements ISerializeFeedback
+class FeedbackSerializer
 {
     /**
      * @var \FeedbackDao
@@ -34,7 +34,7 @@ class FeedbackSerializer implements ISerializeFeedback
         $this->dao = $feedback_dao;
     }
 
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
+    public function serialize(\PFUser $user, NewFeedback $feedback)
     {
         $logs = [
             [

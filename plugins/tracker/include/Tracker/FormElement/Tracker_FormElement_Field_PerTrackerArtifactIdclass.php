@@ -48,14 +48,14 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return "a.per_tracker_artifact_id";
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
-        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => $artifact_id]) . '">' . $value . '</a>';
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
+        $from_aid_content = "";
+        if ($from_aid != null) {
+            $from_aid_content = "&from_aid=$from_aid";
+        }
+
+        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact_id]) . '" $from_aid_content>' . $value . '</a>';
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)

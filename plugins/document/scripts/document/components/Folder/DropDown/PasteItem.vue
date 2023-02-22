@@ -23,7 +23,7 @@
         type="button"
         role="menuitem"
         v-if="can_item_be_pasted"
-        v-on:click="doPasteItem"
+        v-on:click="pasteItem"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
         v-bind:disabled="pasting_in_progress"
         data-shortcut-paste
@@ -46,8 +46,10 @@
     </button>
 </template>
 
-<script setup lang="ts">
-import type { Folder, State } from "../../../type";
+<script lang="ts">
+import { namespace, State } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Folder, Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 import { isFolder } from "../../../helpers/type-check-helper";
 import { CLIPBOARD_OPERATION_COPY, TYPE_FOLDER } from "../../../constants";
@@ -56,63 +58,71 @@ import {
     doesFolderNameAlreadyExist,
 } from "../../../helpers/properties-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
-import { useNamespacedActions, useState } from "vuex-composition-helpers";
-import type { ClipboardState } from "../../../store/clipboard/module";
-import { computed } from "vue";
-import type { ClipboardActions } from "../../../store/clipboard/clipboard-actions";
 
-const props = defineProps<{ destination: Folder }>();
+const clipboard = namespace("clipboard");
 
-const { folder_content, current_folder } = useState<
-    Pick<State, "folder_content" | "current_folder">
->(["folder_content", "current_folder"]);
+@Component
+export default class PasteItem extends Vue {
+    @Prop({ required: true })
+    readonly destination!: Folder;
 
-const { item_title, pasting_in_progress, operation_type, item_type, item_id } = useState<
-    Pick<
-        ClipboardState,
-        "item_title" | "pasting_in_progress" | "operation_type" | "item_type" | "item_id"
-    >
->("clipboard", ["item_title", "pasting_in_progress", "operation_type", "item_type", "item_id"]);
+    @State
+    readonly folder_content!: Array<Item>;
 
-const { pasteItem } = useNamespacedActions<ClipboardActions>("clipboard", ["pasteItem"]);
+    @clipboard.State
+    readonly item_title!: string | null;
 
-const can_item_be_pasted = computed((): boolean => {
-    if (
-        item_title.value === null ||
-        operation_type.value === null ||
-        item_id.value === null ||
-        !isFolder(props.destination) ||
-        !props.destination.user_can_write
-    ) {
-        return false;
-    }
+    @clipboard.State
+    readonly pasting_in_progress!: boolean;
 
-    if (operation_type.value === CLIPBOARD_OPERATION_COPY) {
-        return true;
-    }
+    @clipboard.State
+    readonly operation_type!: string | null;
 
-    if (item_type.value !== TYPE_FOLDER) {
-        return !doesDocumentNameAlreadyExist(
-            item_title.value,
-            folder_content.value,
-            props.destination
+    @clipboard.State
+    readonly item_type!: string | null;
+
+    @clipboard.State
+    readonly item_id!: number | null;
+
+    get can_item_be_pasted(): boolean {
+        if (
+            this.item_title === null ||
+            this.operation_type === null ||
+            this.item_id === null ||
+            !isFolder(this.destination) ||
+            !this.destination.user_can_write
+        ) {
+            return false;
+        }
+
+        if (this.operation_type === CLIPBOARD_OPERATION_COPY) {
+            return true;
+        }
+
+        if (this.item_type !== TYPE_FOLDER) {
+            return !doesDocumentNameAlreadyExist(
+                this.item_title,
+                this.folder_content,
+                this.destination
+            );
+        }
+
+        return (
+            !doesFolderNameAlreadyExist(this.item_title, this.folder_content, this.destination) &&
+            !isItemDestinationIntoItself(this.folder_content, this.item_id, this.destination.id)
         );
     }
 
-    return (
-        !doesFolderNameAlreadyExist(item_title.value, folder_content.value, props.destination) &&
-        !isItemDestinationIntoItself(folder_content.value, item_id.value, props.destination.id)
-    );
-});
+    async pasteItem(): Promise<void> {
+        if (!this.pasting_in_progress) {
+            emitter.emit("hide-action-menu");
+        }
 
-async function doPasteItem(): Promise<void> {
-    if (!pasting_in_progress.value) {
-        emitter.emit("hide-action-menu");
+        await this.$store.dispatch("clipboard/pasteItem", {
+            destination_folder: this.destination,
+            current_folder: this.$store.state.current_folder,
+            global_context: this.$store,
+        });
     }
-
-    await pasteItem({
-        destination_folder: props.destination,
-        current_folder: current_folder.value,
-    });
 }
 </script>

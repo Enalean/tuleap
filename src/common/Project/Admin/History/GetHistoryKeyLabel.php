@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\History;
 
 use Tuleap\Event\Dispatchable;
-use Tuleap\InviteBuddy\InvitationHistoryEntry;
 
 final class GetHistoryKeyLabel implements Dispatchable
 {
@@ -33,10 +32,6 @@ final class GetHistoryKeyLabel implements Dispatchable
 
     public function __construct(private string $key)
     {
-        $invitation_entry = InvitationHistoryEntry::tryFrom($key);
-        if ($invitation_entry) {
-            $this->label = $invitation_entry->getLabel();
-        }
     }
 
     public function getKey(): string

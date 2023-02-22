@@ -36,7 +36,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class FaultMapperTest extends TestCase
 {
-    public static function dataProviderFaults(): iterable
+    public function dataProviderFaults(): iterable
     {
         yield 'Project not found' => [ProjectNotFoundFault::fromProjectId(135), 404];
         yield 'GitLab Group link not found' => [GroupLinkNotFoundFault::fromId(86), 404];

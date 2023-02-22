@@ -50,6 +50,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends \Tuleap\Test\PHPUnit\
 
 
         $this->field = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
+        $this->user  = Mockery::mock(PFUser::class);
 
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
     }

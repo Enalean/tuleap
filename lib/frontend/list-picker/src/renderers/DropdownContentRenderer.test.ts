@@ -33,8 +33,7 @@ describe("DropDownContentRenderer", () => {
         dropdown: Element,
         dropdown_list: Element,
         gettext_provider: GettextProvider,
-        items_map_manager: ItemsMapManager,
-        doc: Document;
+        items_map_manager: ItemsMapManager;
 
     function getDropdownContentRenderer(): DropdownContentRenderer {
         return new DropdownContentRenderer(
@@ -46,8 +45,7 @@ describe("DropDownContentRenderer", () => {
     }
 
     beforeEach(() => {
-        doc = document.implementation.createHTMLDocument();
-        select = doc.createElement("select");
+        select = document.createElement("select");
         gettext_provider = {
             gettext: (english: string) => english,
         } as GettextProvider;
@@ -57,7 +55,7 @@ describe("DropDownContentRenderer", () => {
     describe("without search input", () => {
         beforeEach(() => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
-                doc,
+                document.implementation.createHTMLDocument(),
                 select
             ).renderBaseComponent();
 
@@ -84,7 +82,7 @@ describe("DropDownContentRenderer", () => {
         });
 
         it("when the source option is disabled, then the list item should be disabled", async () => {
-            const disabled_option = doc.createElement("option");
+            const disabled_option = document.createElement("option");
             disabled_option.setAttribute("disabled", "disabled");
             disabled_option.setAttribute("value", "You can't select me");
 
@@ -105,7 +103,7 @@ describe("DropDownContentRenderer", () => {
     describe("with search input", () => {
         beforeEach(() => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
-                doc,
+                document.implementation.createHTMLDocument(),
                 select,
                 {
                     is_filterable: true,
@@ -178,7 +176,7 @@ describe("DropDownContentRenderer", () => {
     describe("renderAfterDependenciesUpdate", () => {
         beforeEach(() => {
             const { dropdown_list_element } = new BaseComponentRenderer(
-                doc,
+                document.implementation.createHTMLDocument(),
                 select
             ).renderBaseComponent();
 
@@ -186,10 +184,10 @@ describe("DropDownContentRenderer", () => {
         });
 
         it("should re-render the list", async () => {
-            const option_1 = doc.createElement("option");
+            const option_1 = document.createElement("option");
             option_1.innerText = "Item 1";
             option_1.value = "item_1";
-            const option_2 = doc.createElement("option");
+            const option_2 = document.createElement("option");
             option_2.innerText = "Item 2";
             option_2.value = "item_2";
 
@@ -218,7 +216,7 @@ describe("DropDownContentRenderer", () => {
         });
 
         it("should render an empty state when the source <select> has no options", async () => {
-            const option_1 = doc.createElement("option");
+            const option_1 = document.createElement("option");
             option_1.innerText = "Item 1";
             option_1.value = "item_1";
             select.appendChild(option_1);

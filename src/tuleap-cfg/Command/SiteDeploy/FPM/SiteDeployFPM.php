@@ -28,8 +28,8 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    public const PHP81_DST_CONF_DIR = '/etc/opt/remi/php81';
-    public const PHP81_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm81';
+    public const PHP80_DST_CONF_DIR = '/etc/opt/remi/php80';
+    public const PHP80_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm80';
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
@@ -108,7 +108,7 @@ final class SiteDeployFPM
         return new FPMSessionFiles();
     }
 
-    public static function buildForPHP81(
+    public static function buildForPHP80(
         LoggerInterface $logger,
         string $application_user,
         bool $development,
@@ -118,8 +118,8 @@ final class SiteDeployFPM
             $application_user,
             $development,
             self::buildSessionFromEnv(),
-            self::PHP81_DST_CONF_DIR,
-            self::PHP81_SRC_CONF_DIR,
+            self::PHP80_DST_CONF_DIR,
+            self::PHP80_SRC_CONF_DIR,
             []
         );
     }

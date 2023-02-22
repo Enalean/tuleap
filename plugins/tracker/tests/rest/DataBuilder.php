@@ -21,9 +21,7 @@
 namespace Tuleap\Tracker\REST;
 
 use REST_TestDataBuilder;
-use Tuleap\Config\ConfigDao;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/TrackerBase.php';
@@ -49,9 +47,6 @@ class DataBuilder extends REST_TestDataBuilder
         $this->instanciateFactories();
 
         $this->config_dao = new ArtifactsDeletionConfigDAO();
-
-        $feature_flag_dao = new ConfigDao();
-        $feature_flag_dao->save("feature_flag_" . ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, true);
     }
 
     public function setUp()

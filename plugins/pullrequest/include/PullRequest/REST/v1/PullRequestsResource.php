@@ -78,7 +78,6 @@ use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\GitExec;
-use Tuleap\PullRequest\GitExecFactory;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
@@ -89,7 +88,6 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
-use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
@@ -100,8 +98,6 @@ use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
-use Tuleap\PullRequest\PullRequestReopener;
-use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
@@ -874,15 +870,6 @@ class PullRequestsResource extends AuthenticatedResource
      * </pre>
      * <br/>
      *
-     * A pull request that has been abandoned can be reopen.<br/>
-     * Here is an example of a valid PATCH content to reopen an abandoned pull request:
-     * <pre>
-     * {<br/>
-     * &nbsp;&nbsp;"status": "review"<br/>
-     * }<br/>
-     * </pre>
-     * <br/>
-     *
      * Here is an example of a valid PATCH content to update a pull request:
      * <pre>
      * {<br/>
@@ -959,29 +946,6 @@ class PullRequestsResource extends AuthenticatedResource
             $this->access_control_verifier,
             $this->permission_checker,
             $this->pull_request_closer,
-            new PullRequestReopener(
-                new PullRequestDao(),
-                $this->git_repository_factory,
-                new GitExecFactory(),
-                new PullRequestUpdater(
-                    $this->pull_request_factory,
-                    new PullRequestMerger(
-                        new MergeSettingRetriever(new MergeSettingDAO())
-                    ),
-                    new InlineCommentDao(),
-                    new InlineCommentUpdater(),
-                    new FileUniDiffBuilder(),
-                    new TimelineEventCreator(new TimelineDao()),
-                    $this->git_repository_factory,
-                    new \Tuleap\PullRequest\GitExecFactory(),
-                    new GitPullRequestReferenceUpdater(
-                        new GitPullRequestReferenceDAO(),
-                        new GitPullRequestReferenceNamespaceAvailabilityChecker()
-                    ),
-                    PullRequestNotificationSupport::buildDispatcher(\pullrequestPlugin::getLogger())
-                ),
-                new TimelineEventCreator(new TimelineDao()),
-            ),
             new URLVerification(),
             $this->logger
         );

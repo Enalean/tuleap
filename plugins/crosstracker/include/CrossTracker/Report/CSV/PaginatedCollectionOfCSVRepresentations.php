@@ -58,11 +58,11 @@ class PaginatedCollectionOfCSVRepresentations
         return $this->total_size;
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return array_reduce(
             $this->representations,
-            static function ($accumulator, CSVRepresentation $representation): string {
+            function ($accumulator, CSVRepresentation $representation) {
                 return $accumulator . $representation . "\r\n";
             },
             ''

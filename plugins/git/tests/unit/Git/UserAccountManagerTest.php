@@ -39,14 +39,6 @@ class UserAccountManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Git_Driver_Gerrit_UserAccountManager
      */
     private $gerrit_user_account_manager;
-    /**
-     * @var string[]
-     */
-    private array $original_keys;
-    /**
-     * @var string[]
-     */
-    private array $new_keys;
 
     protected function setUp(): void
     {

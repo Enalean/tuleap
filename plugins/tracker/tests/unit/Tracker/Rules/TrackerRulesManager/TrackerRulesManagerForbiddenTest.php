@@ -119,7 +119,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenSource(1, $field_id, $source_id), $message);
     }
 
-    public static function forbiddenSourceProvider()
+    public function forbiddenSourceProvider()
     {
         return [
             [1, 1, true, "Field 1 cannot be the source of field 1"],
@@ -149,7 +149,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $this->tracker_rules_manager->fieldIsAForbiddenTarget(1, $field_id, $source_id), $message);
     }
 
-    public static function forbiddenTargetProvider()
+    public function forbiddenTargetProvider()
     {
         return [
             [1, 1, true, "Field 1 cannot be the target of field 1"],
@@ -179,7 +179,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $this->tracker_rules_manager->fieldHasSource(1, $field_id));
     }
 
-    public static function fieldHasSourceProvider(): array
+    public function fieldHasSourceProvider(): array
     {
         return [
             [1, false],
@@ -199,7 +199,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $this->tracker_rules_manager->fieldHasTarget(1, $field_id));
     }
 
-    public static function fieldHasTargetProvider(): array
+    public function fieldHasTargetProvider(): array
     {
         return [
             [1, true],
@@ -219,7 +219,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertsame($expected, $this->tracker_rules_manager->checkIfRuleIsCyclic(1, $source_id, $target_id));
     }
 
-    public static function isCyclicProvider(): array
+    public function isCyclicProvider(): array
     {
         return [
             [1, 1, true],
@@ -258,7 +258,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertsame($expected, $this->tracker_rules_manager->ruleExists(1, $source_id, $target_id));
     }
 
-    public static function ruleExistProvider(): array
+    public function ruleExistProvider(): array
     {
         return [
             [1, 1, false],

@@ -1,19 +1,10 @@
 #!/usr/bin/env bash
 
-set -ex
+set -x
 
 systemctl start systemd-user-sessions.service
 
-if [ -f /opt/rh/rh-mysql80/root/bin/mysql ]; then
-    MYSQL=/opt/rh/rh-mysql80/root/bin/mysql
-elif [ -f /usr/bin/mysql ]; then
-    MYSQL=/usr/bin/mysql
-else
-    echo "No MySQL client. Abort"
-    exit 1
-fi
-
-while ! $MYSQL -hdb -uroot -p$MYSQL_ROOT_PASSWORD -e "show databases" >/dev/null; do
+while ! /opt/rh/rh-mysql80/root/bin/mysql -hdb -uroot -p$MYSQL_ROOT_PASSWORD -e "show databases" >/dev/null; do
     echo "Wait for the db";
     sleep 1
 done
@@ -53,8 +44,9 @@ perl -pi -e "s%^alias_database = hash:/etc/aliases%alias_database = hash:/etc/al
 perl -pi -e "s%^#recipient_delimiter = %recipient_delimiter = %" /etc/postfix/main.cf
 perl -pi -e "s%^inet_protocols = .*%inet_protocols = ipv4%" /etc/postfix/main.cf
 
-# Email are relayed to mailhog catch all
-echo "relayhost = mailhog:1025" >> /etc/postfix/main.cf
+# Email whitelist
+/usr/share/tuleap/tools/docker/tuleap-aio-dev/whitelist_emails.sh
+echo "transport_maps = hash:/etc/postfix/transport" >> /etc/postfix/main.cf
 
 # Update nscd config
 perl -pi -e "s%enable-cache[\t ]+group[\t ]+yes%enable-cache group no%" /etc/nscd.conf
@@ -92,7 +84,8 @@ else
     update-ca-trust enable
     update-ca-trust extract
 
-    echo "\$nodejs_server_jwt_private_key = '$REALTIME_KEY';" >> /etc/tuleap/conf/local.inc
+    replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
+    echo "\$nodejs_server_jwt_private_key = '$replacement';" >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';" >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server_int = 'realtime';" >> /etc/tuleap/conf/local.inc
 

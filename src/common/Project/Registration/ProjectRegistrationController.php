@@ -25,8 +25,9 @@ namespace Tuleap\Project\Registration;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
-use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -45,16 +46,21 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
      * @var ProjectRegistrationUserPermissionChecker
      */
     private $permission_checker;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets;
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
-        private JavascriptAssetGeneric $assets,
+        IncludeAssets $assets,
         ProjectRegistrationUserPermissionChecker $permission_checker,
         ProjectRegistrationPresenterBuilder $presenter_builder,
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->presenter_builder         = $presenter_builder;
         $this->permission_checker        = $permission_checker;
+        $this->assets                    = $assets;
     }
 
     /**
@@ -68,7 +74,8 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
             throw new ForbiddenException();
         }
 
-        $layout->addJavascriptAsset($this->assets);
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project/project-registration.js'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'project-registration-style'));
 
         $layout->header(["title" => _("Project Registration")]);
 

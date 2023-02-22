@@ -13,12 +13,6 @@ services:
       - .:/usr/share/tuleap:ro
     networks:
       - tuleap
-    depends_on:
-      - mailhog
-  mailhog:
-    image: ${DOCKER_REGISTRY:-docker.io}/mailhog/mailhog:v1.0.1
-    networks:
-      - tuleap
   redis:
     image: ${DOCKER_REGISTRY:-docker.io}/redis:7.0.2-alpine
     networks:

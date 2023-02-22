@@ -29,7 +29,16 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
  */
 final class CSRFSynchronizerTokenPresenter
 {
-    private function __construct(public string $name, public string $token)
+    /**
+     * @var string
+     */
+    private $name;
+    /**
+     * @var string
+     */
+    private $token;
+
+    private function __construct(string $name, string $token)
     {
         $this->name  = $name;
         $this->token = $token;

@@ -351,7 +351,7 @@ final class GitlabBranchCreatorTest extends TestCase
         );
     }
 
-    public static function provideGitLabAPIExceptions(): array
+    public function provideGitLabAPIExceptions(): array
     {
         return [
             [

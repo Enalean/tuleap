@@ -70,7 +70,7 @@ class DefaultRelativeDatesDisplayPreferenceRetrieverTest extends \Tuleap\Test\PH
         $this->assertEquals($expected_placement, $position_and_placement->getPlacement());
     }
 
-    public static function dataProviderPreferenceAndPlacement(): array
+    public function dataProviderPreferenceAndPlacement(): array
     {
         return [
             'absolute right' => [

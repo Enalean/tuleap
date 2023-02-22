@@ -32,9 +32,6 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\TemporaryTestDirectory;
 
-    private string $supportedLanguages;
-    private string|false $oldLocale;
-
     protected function setUp(): void
     {
         parent::setUp();

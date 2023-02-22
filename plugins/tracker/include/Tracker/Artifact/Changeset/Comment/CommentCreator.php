@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
-use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 
 final class CommentCreator
 {
@@ -34,52 +32,42 @@ final class CommentCreator
         private \ReferenceManager $reference_manager,
         private TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
         private ChangesetCommentIndexer $changeset_comment_indexer,
-        private TextValueValidator $text_value_validator,
     ) {
     }
 
     /**
      * @throws \Tracker_CommentNotStoredException
-     * @throws CommentContentNotValidException
      */
     public function createComment(Artifact $artifact, CommentCreation $comment): void
     {
-        //check size here.
-        $this->text_value_validator->isCommentContentValid($comment)
-            ->match(function () use ($comment, $artifact) {
-                $comment_added = $this->changeset_comment_dao->createNewVersion(
-                    $comment->getChangesetId(),
-                    $comment->getBody(),
-                    $comment->getSubmitter()->getId(),
-                    $comment->getSubmissionTimestamp(),
-                    0,
-                    (string) $comment->getFormat()
-                );
-                if (! $comment_added) {
-                    throw new \Tracker_CommentNotStoredException(
-                        dgettext('tuleap-tracker', 'The comment cannot be stored.')
-                    );
-                }
+        $comment_added = $this->changeset_comment_dao->createNewVersion(
+            $comment->getChangesetId(),
+            $comment->getBody(),
+            $comment->getSubmitter()->getId(),
+            $comment->getSubmissionTimestamp(),
+            0,
+            (string) $comment->getFormat()
+        );
+        if (! $comment_added) {
+            throw new \Tracker_CommentNotStoredException();
+        }
 
-                if (is_int($comment_added)) {
-                    $this->comment_ugroup_permission_inserter->insertUGroupsOnPrivateComment(
-                        $comment_added,
-                        $comment->getUserGroupsThatAreAllowedToSee()
-                    );
-                }
+        if (is_int($comment_added)) {
+            $this->comment_ugroup_permission_inserter->insertUGroupsOnPrivateComment(
+                $comment_added,
+                $comment->getUserGroupsThatAreAllowedToSee()
+            );
+        }
 
-                $this->reference_manager->extractCrossRef(
-                    $comment->getBody(),
-                    $artifact->getId(),
-                    Artifact::REFERENCE_NATURE,
-                    (int) $artifact->getTracker()->getGroupID(),
-                    (int) $comment->getSubmitter()->getId(),
-                    $artifact->getTracker()->getItemName()
-                );
+        $this->reference_manager->extractCrossRef(
+            $comment->getBody(),
+            $artifact->getId(),
+            Artifact::REFERENCE_NATURE,
+            (int) $artifact->getTracker()->getGroupID(),
+            (int) $comment->getSubmitter()->getId(),
+            $artifact->getTracker()->getItemName()
+        );
 
-                $this->changeset_comment_indexer->indexNewChangesetComment($comment, $artifact);
-            }, function (Fault $fault) {
-                throw new CommentContentNotValidException((string) $fault);
-            });
+        $this->changeset_comment_indexer->indexNewChangesetComment($comment, $artifact);
     }
 }

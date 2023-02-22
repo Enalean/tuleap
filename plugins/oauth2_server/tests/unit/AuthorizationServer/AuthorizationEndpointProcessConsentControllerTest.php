@@ -169,7 +169,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
         $this->controller->handle($request);
     }
 
-    public static function dataProviderInvalidBodyParams(): array
+    public function dataProviderInvalidBodyParams(): array
     {
         return [
             'No redirect URI'                 => [['state' => 'xyz']],

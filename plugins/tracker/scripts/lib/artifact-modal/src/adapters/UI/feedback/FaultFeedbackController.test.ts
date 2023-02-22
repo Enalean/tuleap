@@ -19,37 +19,29 @@
 
 import { Fault } from "@tuleap/fault";
 import { FaultFeedbackController } from "./FaultFeedbackController";
-import { EventDispatcher } from "../../../domain/EventDispatcher";
-import { WillNotifyFault } from "../../../domain/WillNotifyFault";
-import { WillClearFaultNotification } from "../../../domain/WillClearFaultNotification";
 
 describe(`FaultFeedbackController`, () => {
-    let event_dispatcher: EventDispatcher;
-    beforeEach(() => {
-        event_dispatcher = EventDispatcher();
-    });
-
-    describe(`when a WillNotifyFault event is observed`, () => {
+    describe(`onFault`, () => {
         it(`will notify its pre-registered handler with a FaultFeedbackPresenter`, () => {
-            const controller = FaultFeedbackController(event_dispatcher);
+            const controller = FaultFeedbackController();
             const handler = jest.fn();
             controller.registerFaultListener(handler);
 
             const fault = Fault.fromMessage("Ooops");
-            event_dispatcher.dispatch(WillNotifyFault(fault));
+            controller.onFault(fault);
 
             const presenter = handler.mock.calls[0][0];
             expect(presenter.message).toBe(String(fault));
         });
     });
 
-    describe(`when a WillClearFaultNotification event is observed`, () => {
+    describe(`clearFaultNotification`, () => {
         it(`will notify its pre-registered handler with an empty presenter to clear the notification`, () => {
-            const controller = FaultFeedbackController(event_dispatcher);
+            const controller = FaultFeedbackController();
             const handler = jest.fn();
             controller.registerFaultListener(handler);
 
-            event_dispatcher.dispatch(WillClearFaultNotification());
+            controller.clearFaultNotification();
 
             const presenter = handler.mock.calls[0][0];
             expect(presenter.message).toBe("");

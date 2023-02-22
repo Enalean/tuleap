@@ -21,16 +21,14 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class GitActionsForkTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitActionsForkTests extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     private $actions;
-    /**
-     * @var GitRepositoryManager&\Mockery\MockInterface
-     */
-    private $manager;
 
     protected function setUp(): void
     {

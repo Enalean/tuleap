@@ -81,7 +81,6 @@ use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
-use Tuleap\SVN\Setup\SetupSVNCommand;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
 use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SVN\Commit\FileSizeValidator;
@@ -306,10 +305,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     $this->getAccessFileHistoryCreator()
                 );
             }
-        );
-        $commands_collector->addCommand(
-            SetupSVNCommand::NAME,
-            static fn (): SetupSVNCommand => new SetupSVNCommand(),
         );
     }
 

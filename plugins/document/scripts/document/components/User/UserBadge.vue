@@ -31,9 +31,14 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import UserName from "./UserName.vue";
 import type { User } from "../../type";
 
-defineProps<{ user: User }>();
+@Component({ components: { UserName } })
+export default class UserBadge extends Vue {
+    @Prop({ required: true })
+    private readonly user!: User;
+}
 </script>

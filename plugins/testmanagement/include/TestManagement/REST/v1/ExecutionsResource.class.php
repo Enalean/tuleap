@@ -85,9 +85,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -228,8 +226,7 @@ class ExecutionsResource
                 new ArtifactLinkValidator(
                     $this->artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
+                    $usage_dao
                 ),
                 new WorkflowUpdateChecker($this->getFrozenFieldDetector())
             ),
@@ -252,7 +249,6 @@ class ExecutionsResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
@@ -268,8 +264,7 @@ class ExecutionsResource
                 ),
                 new NewArtifactLinkInitialChangesetValueBuilder()
             ),
-            $changeset_creator,
-            new ArtifactRestUpdateConditionsChecker(),
+            $changeset_creator
         );
 
         $this->steps_results_changes_builder = new StepsResultsChangesBuilder(

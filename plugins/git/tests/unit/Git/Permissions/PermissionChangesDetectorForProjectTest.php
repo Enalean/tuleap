@@ -23,25 +23,11 @@ namespace Tuleap\Git\Permissions;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Git;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class PermissionChangesDetectorForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \GitPermissionsManager&\Mockery\MockInterface
-     */
-    private $git_permission_manager;
-    /**
-     * @var FineGrainedRetriever&\Mockery\MockInterface
-     */
-    private $retriever;
-    private PermissionChangesDetector $detector;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|(\Mockery\MockInterface&\Project)|null
-     */
-    private \Mockery\LegacyMockInterface|null|\Mockery\MockInterface|\Project $project;
-    private DefaultFineGrainedPermission $default_branch_fine_grained_permission;
-    private DefaultFineGrainedPermission $default_tag_fine_grained_permission;
 
     public function setUp(): void
     {

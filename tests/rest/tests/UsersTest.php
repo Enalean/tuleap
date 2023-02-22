@@ -30,10 +30,15 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     private TuleapConfig $tuleap_config;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->tuleap_config = TuleapConfig::instance();
+    }
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->tuleap_config = TuleapConfig::instance();
         $this->setForgeToAnonymous();
     }
 

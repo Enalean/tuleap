@@ -27,14 +27,9 @@ use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
-use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
-use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
-use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
-use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -374,7 +369,7 @@ class TrackerFactory implements RetrieveTracker
      * @return mixed array(Tracker object, field_mapping array)
      * @throws TrackerIsInvalidException
      */
-    public function create($project_id, MappingRegistry $mapping_registry, $id_template, $name, $description, $itemname, ?string $color, array|false $ugroup_mapping = false)
+    public function create($project_id, MappingRegistry $mapping_registry, $id_template, $name, $description, $itemname, ?string $color, $ugroup_mapping = false)
     {
         $this->getTrackerChecker()->checkAtProjectCreation((int) $project_id, $name, $itemname);
         $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int) $id_template);
@@ -386,9 +381,24 @@ class TrackerFactory implements RetrieveTracker
         }
 
         // Duplicate Form Elements
-        $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id);
+        $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id, $ugroup_mapping);
 
-        $duplication_user_group_mapping = TrackerDuplicationUserGroupMapping::fromMapping($ugroup_mapping, $template_tracker, $project_id);
+        if ($ugroup_mapping) {
+            $duplicate_type = PermissionsDao::DUPLICATE_NEW_PROJECT;
+        } elseif ($project_id == $template_tracker->getId()) {
+            $duplicate_type = PermissionsDao::DUPLICATE_SAME_PROJECT;
+        } else {
+            $ugroup_manager = new UGroupManager();
+            $builder        = new Tracker_UgroupMappingBuilder(
+                new Tracker_UgroupPermissionsGoldenRetriever(new Tracker_PermissionsDao(), $ugroup_manager),
+                $ugroup_manager
+            );
+            $ugroup_mapping = $builder->getMapping(
+                $template_tracker,
+                ProjectManager::instance()->getProject($project_id)
+            );
+            $duplicate_type = PermissionsDao::DUPLICATE_OTHER_PROJECT;
+        }
 
         // Duplicate workflow
         foreach ($field_mapping as $mapping) {
@@ -400,7 +410,8 @@ class TrackerFactory implements RetrieveTracker
                     $mapping['to'],
                     $mapping['values'],
                     $field_mapping,
-                    $duplication_user_group_mapping,
+                    $ugroup_mapping,
+                    $duplicate_type
                 );
             }
         }
@@ -423,15 +434,6 @@ class TrackerFactory implements RetrieveTracker
         Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);
         //Duplicate field dependencies
         $this->getRuleFactory()->duplicate($id_template, $id, $field_mapping);
-
-        $notification_settings_duplicator = new NotificationSettingsDuplicator(
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new GlobalNotificationDuplicationDao(),
-            new UsersToNotifyDuplicationDao(),
-            new UgroupsToNotifyDuplicationDao(),
-        );
-        $notification_settings_duplicator->duplicate((int) $id_template, $id, $duplication_user_group_mapping);
-
         $tracker = $this->getTrackerById($id);
 
         // Process event that tracker is created
@@ -442,7 +444,7 @@ class TrackerFactory implements RetrieveTracker
         ];
         $em->processEvent('Tracker_created', $pref_params);
         //Duplicate Permissions
-        $this->duplicatePermissions($id_template, $id, $field_mapping, $duplication_user_group_mapping);
+        $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type);
 
         $source_tracker = $this->getTrackerById($id_template);
         if ($tracker === null || $source_tracker === null) {
@@ -474,23 +476,29 @@ class TrackerFactory implements RetrieveTracker
     }
 
    /**
+    * Duplicat the permissions of a tracker
+    *
     * @param int $id_template the id of the duplicated tracker
     * @param int $id          the id of the new tracker
+    * @param array $ugroup_mapping
     * @param array $field_mapping
+    * @param int $duplicate_type
+    *
+    * @return bool
     */
-    public function duplicatePermissions($id_template, $id, $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type)
     {
         $pm                      = PermissionsManager::instance();
         $permission_type_tracker = [Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE];
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $duplication_user_group_mapping);
+        $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $ugroup_mapping, $duplicate_type);
 
         $permission_type_field = ['PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_NONE'];
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
             $to   = $f['to'];
-            $pm->duplicatePermissions($from, $to, $permission_type_field, $duplication_user_group_mapping);
+            $pm->duplicatePermissions($from, $to, $permission_type_field, $ugroup_mapping, $duplicate_type);
         }
     }
 
@@ -566,7 +574,6 @@ class TrackerFactory implements RetrieveTracker
             'group_id'          => $to_project_id,
             'ugroups_mapping'   => $mapping_registry->getUgroupMapping(),
             'source_project_id' => $from_project_id,
-            'mapping_registry'  => $mapping_registry,
         ]);
     }
 

@@ -1,6 +1,6 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
+exports[`LinkedProjects displays the linked projects with a popover 1`] = `
 <div
   data-v-app=""
 >

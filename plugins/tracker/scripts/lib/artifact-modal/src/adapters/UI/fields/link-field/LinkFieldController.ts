@@ -27,6 +27,7 @@ import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-fie
 import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field/DeleteLinkMarkedForRemoval";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
+import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRetrievalFault";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
@@ -45,6 +46,7 @@ import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/V
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
+import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type {
     ControlLinkedArtifactsPopovers,
@@ -53,12 +55,6 @@ import type {
 import type { LinkField } from "./LinkField";
 import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
-import type { DispatchEvents } from "../../../../domain/DispatchEvents";
-import { WillDisableSubmit } from "../../../../domain/submit/WillDisableSubmit";
-import { WillEnableSubmit } from "../../../../domain/submit/WillEnableSubmit";
-import { getSubmitDisabledForLinksReason } from "../../../../gettext-catalog";
-import { WillClearFaultNotification } from "../../../../domain/WillClearFaultNotification";
-import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -99,6 +95,8 @@ export const LinkFieldController = (
     deleted_link_adder: AddLinkMarkedForRemoval,
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
+    fault_notifier: NotifyFault,
+    notification_clearer: ClearFaultNotification,
     links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     new_link_adder: AddNewLink,
     new_link_remover: DeleteNewLink,
@@ -106,14 +104,13 @@ export const LinkFieldController = (
     parent_verifier: VerifyHasParentLink,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
-    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
-    event_dispatcher: DispatchEvents,
-    control_popovers: ControlLinkedArtifactsPopovers,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null,
-    allowed_links_types_collection: CollectAllowedLinksTypes
+    control_popovers: ControlLinkedArtifactsPopovers,
+    allowed_links_types_collection: CollectAllowedLinksTypes,
+    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy
 ): LinkFieldControllerType => ({
     displayField: () =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
@@ -133,26 +130,21 @@ export const LinkFieldController = (
             allowed_links_types_collection
         ),
 
-    displayLinkedArtifacts: (): PromiseLike<LinkedArtifactCollectionPresenter> => {
-        event_dispatcher.dispatch(WillDisableSubmit(getSubmitDisabledForLinksReason()));
-        return links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
+    displayLinkedArtifacts: () =>
+        links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
             (artifacts) => {
-                event_dispatcher.dispatch(WillEnableSubmit());
                 const presenters = artifacts.map((linked_artifact) =>
                     LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
                 );
                 return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
             },
             (fault) => {
-                if (isCreationModeFault(fault)) {
-                    event_dispatcher.dispatch(WillEnableSubmit());
-                } else {
-                    event_dispatcher.dispatch(WillNotifyFault(LinkRetrievalFault(fault)));
+                if (!isCreationModeFault(fault)) {
+                    fault_notifier.onFault(LinkRetrievalFault(fault));
                 }
                 return LinkedArtifactCollectionPresenter.forFault();
             }
-        );
-    },
+        ),
 
     markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
         deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
@@ -166,9 +158,7 @@ export const LinkFieldController = (
 
     autoComplete: links_autocompleter.autoComplete,
 
-    clearFaultNotification(): void {
-        event_dispatcher.dispatch(WillClearFaultNotification());
-    },
+    clearFaultNotification: notification_clearer.clearFaultNotification,
 
     addNewLink(artifact, type): NewLinkCollectionPresenter {
         new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
@@ -181,11 +171,12 @@ export const LinkFieldController = (
     },
 
     retrievePossibleParentsGroups(): PromiseLike<GroupOfItems> {
+        notification_clearer.clearFaultNotification();
         return parents_retriever.getPossibleParents(current_tracker_identifier).match(
             (possible_parents) =>
                 PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
             (fault) => {
-                event_dispatcher.dispatch(WillNotifyFault(fault));
+                fault_notifier.onFault(fault);
                 return PossibleParentsGroup.buildEmpty();
             }
         );

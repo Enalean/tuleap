@@ -30,7 +30,7 @@ use Tuleap\Test\Stubs\SearchLinkedProjectsStub;
 
 final class LinkedProjectsCollectionPresenterTest extends TestCase
 {
-    public static function dataProviderContext(): array
+    public function dataProviderContext(): array
     {
         return [
             'In children projects context' => [true],

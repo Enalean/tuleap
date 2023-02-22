@@ -36,16 +36,6 @@ class SVN_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SVN_RepositoryListing
      */
     private $svn_repository_listing;
-    private string $svn_path;
-    /**
-     * @var Project&\Mockery\MockInterface
-     */
-    private $project;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $user;
-    private string $order;
 
     protected function setUp(): void
     {

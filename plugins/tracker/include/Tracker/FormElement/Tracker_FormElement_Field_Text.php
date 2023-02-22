@@ -21,7 +21,6 @@
 
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
@@ -32,7 +31,6 @@ use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -142,13 +140,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return true;
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
         $tracker = $this->getTracker();
         if ($tracker === null) {
             return '';
@@ -260,7 +253,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         } else {
             $hp    = Codendi_HTMLPurifier::instance();
             $html .= '<textarea id = field_' . $this->id . ' class="user-mention"
-                                maxlength="' . TextValueValidator::MAX_TEXT_SIZE . '"
                                 name="artifact[' . $this->id . '][content]"
                                 rows="' . $this->getProperty('rows') . '"
                                 cols="' . $this->getProperty('cols') . '">';
@@ -501,19 +493,17 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      */
     protected function validate(Artifact $artifact, $value)
     {
-        return (new TextValueValidator())->isValueValid(
-            $this,
-            $value,
-        )->match(function () {
-            return true;
-        }, function (Fault $fault) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                (string) $fault,
-            );
+        $rule    = $this->getRuleString();
+        $content = $this->getRightContent($value);
+        if (! ($is_valid = $rule->isValid($content))) {
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel()));
+        }
+        return $is_valid;
+    }
 
-            return false;
-        });
+    protected function getRuleString()
+    {
+        return new Rule_String();
     }
 
     /**

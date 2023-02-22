@@ -8,7 +8,7 @@ specifiers:
   '@tuleap/tlp-swatch-colors': workspace:*
   mustache: ^4.2.0
   vue: ^2.7.8
-  vue-dompurify-html: ^4.0.0
+  vue-dompurify-html: ^2.5.1
   vue-gettext: ^2.1.12
 
 dependencies:
@@ -17,7 +17,7 @@ dependencies:
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   mustache: 4.2.0
   vue: 2.7.8
-  vue-dompurify-html: 4.0.0_vue@2.7.8
+  vue-dompurify-html: 2.5.1_vue@2.7.8
   vue-gettext: 2.1.12
 
 devDependencies:
@@ -59,8 +59,8 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: false
 
-  /dompurify/3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
     dev: false
 
   /mustache/4.2.0:
@@ -102,31 +102,13 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /vue-demi/0.13.11_vue@2.7.8:
-    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
+  /vue-dompurify-html/2.5.1_vue@2.7.8:
+    resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
     peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
+      vue: ^2.0.0
     dependencies:
+      dompurify: 2.3.4
       vue: 2.7.8
-    dev: false
-
-  /vue-dompurify-html/4.0.0_vue@2.7.8:
-    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
-    peerDependencies:
-      vue: ^2.7.0 || ^3.0.0
-    dependencies:
-      dompurify: 3.0.0
-      vue: 2.7.8
-      vue-demi: 0.13.11_vue@2.7.8
-    transitivePeerDependencies:
-      - '@vue/composition-api'
     dev: false
 
   /vue-gettext/2.1.12:

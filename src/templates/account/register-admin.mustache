@@ -1,135 +1,112 @@
 {{> register-form-start }}
 
     {{# prefill_values }}
-        {{# form_email }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_email">
-                    {{# gettext }}Email{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="email"
-                       class="tlp-input"
-                       id="form_email"
-                       name="form_email"
-                       placeholder="jdoe@example.com"
-                       value="{{ value }}"
-                       required
-                       autocomplete="email"
-                >
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
-        {{/ form_email }}
-
+    <div class="fields">
         {{# form_pw }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_pw">
-                    {{# gettext }}Password{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <div class="tlp-form-element tlp-form-element-append {{# has_error }}tlp-form-element-error{{/ has_error }}" id="form_pw_anchor">
-                    <input type="text"
-                           value=""
-                           class="tlp-input"
-                           id="form_pw"
-                           name="form_pw"
-                           required
-                           data-password-validators="{{ json_password_strategy_keys }}"
-                    >
-                    <button type="button" class="tlp-append tlp-button-primary tlp-button-outline" id="form_pw_generate">
-                        <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
-                        {{# gettext }}Generate{{/ gettext }}
-                    </button>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required data-password-validators="{{ json_password_strategy_keys }}" />
+                        <button class="btn" id="form_pw_generate" type="button">{{# gettext }}Generate{{/ gettext }}</button>
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
                 </div>
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
+            {{/has_error }}
         {{/ form_pw }}
         {{> register-choose-password }}
+    </div>
 
+    <div class="fields">
         {{# form_realname }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_realname">
-                    {{# gettext }}Full name{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="text"
-                       class="tlp-input"
-                       id="form_realname"
-                       name="form_realname"
-                       placeholder="Jane Doe"
-                       required
-                       value="{{ value }}"
-                >
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/ has_error }}
+                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_realname }}
 
-        <div class="tlp-form-element">
-            <label for="form_expiry" class="tlp-label">
-                {{# gettext }}Expiration date{{/ gettext }}
-            </label>
-            <div class="tlp-form-element tlp-form-element-prepend">
-                <span class="tlp-prepend"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
-                <input type="text" id="form_expiry" name="form_expiry" class="tlp-input tlp-input-date" size="11">
-            </div>
-            <p class="tlp-text-info">
-                {{# gettext }}The account will be suspended when the date is reached. Leave blank if you don't want an expiration date.{{/ gettext }}
-            </p>
+        <div class="datetimepicker input-prepend">
+            <span class="add-on">
+                <i data-date-icon="fas fa-calendar-alt"></i>
+            </span>
+            <input data-format="yyyy-MM-dd" type="text" id="form_expiry" name="form_expiry" placeholder="{{ expiry_date }}" />
+        </div>
+        <div id="form_expiry-tooltip" style="display: none">
+            {{{ expiry_date_directions }}}
         </div>
 
         {{# form_timezone }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="timezone">
-                    {{# gettext }}Timezone{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                {{# timezone_selector }}
-                    {{> timezone }}
-                {{/ timezone_selector }}
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        {{# timezone_selector }}
+                            {{> timezone }}
+                        {{/ timezone_selector }}
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_timezone }}
+    </div>
 
+    <div class="fields">
         {{# form_mail_site }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="form_mail_site" value="1" {{# value }}checked="checked"{{/ value }}>
-                    {{# gettext }}Receive Email about Site Updates{{/ gettext }}
-                </label>
-                <p class="tlp-text-info">
-                    {{# gettext }}Very low traffic, includes security notices. Highly Recommended.{{/ gettext }}
-                </p>
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <label class="checkbox">
+                            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
+                            {{{ siteupdate }}}
+                        </label>
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_mail_site }}
 
         {{# does_platform_allows_restricted }}
             {{# form_restricted }}
-                <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                    <label class="tlp-label tlp-checkbox">
-                        <input type="checkbox" name="form_restricted" value="1" {{# value }}checked="checked"{{/ value }}>
-                        {{# gettext }}Restricted user{{/ gettext }}
-                    </label>
-                </div>
+                {{# has_error }}
+                    <div class="control-group error">
+                        <div class="controls">
+                {{/has_error }}
+                            <label class="checkbox">
+                                <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
+                                {{ restricted_user }}
+                            </label>
+                {{# has_error }}
+                        </div>
+                    </div>
+                {{/has_error }}
             {{/ form_restricted }}
         {{/ does_platform_allows_restricted }}
 
-        {{# form_send_email }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="form_send_email" value="1" {{# value }}checked="checked"{{/ value }}>
-                    {{# gettext }}Send a welcome email to the user{{/ gettext }}
-                </label>
-            </div>
-        {{/ form_send_email }}
+        {{# form_restricted }}
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <label class="checkbox">
+                            <input type="checkbox" name="form_send_email" value="1" {{# form_send_email }}checked{{/ form_send_email }}>
+                            {{ send_email }}
+                        </label>
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
+        {{/ form_restricted }}
+    </div>
 
-        {{> register-purpose-directions }}
+    {{> register-purpose-directions }}
     {{/ prefill_values }}
 
     {{{ extra_plugin_field }}}

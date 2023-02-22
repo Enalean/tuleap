@@ -26,7 +26,6 @@ use PFUser;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
-use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
@@ -64,7 +63,6 @@ class CampaignUpdater
      * @throws \Tracker_ChangesetCommitException
      * @throws \Tracker_ChangesetNotCreatedException
      * @throws \Tracker_CommentNotStoredException
-     * @throws CommentContentNotValidException
      * @throws \Tracker_Exception
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException

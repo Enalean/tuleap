@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Index;
 
-use Meilisearch\Endpoints\Indexes;
+use MeiliSearch\Endpoints\Indexes;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
@@ -66,7 +66,7 @@ final class MeilisearchHandlerFactory
 
     private function getClientIndexForLocalMeilisearchInstance(ConcealedString $key): Indexes
     {
-        return (new \Meilisearch\Client(
+        return (new \MeiliSearch\Client(
             'http://127.0.0.1:7700',
             $key->getString(),
             $this->client_for_local_use,
@@ -76,7 +76,7 @@ final class MeilisearchHandlerFactory
 
     private function getClientIndexForRemoteMeilisearchInstance(): Indexes
     {
-        return (new \Meilisearch\Client(
+        return (new \MeiliSearch\Client(
             \ForgeConfig::get(RemoteMeilisearchServerSettings::URL),
             \ForgeConfig::getSecretAsClearText(RemoteMeilisearchServerSettings::API_KEY)->getString(),
             $this->client_for_remote_use,

@@ -20,7 +20,9 @@
 
 import type { Artifact } from "../type";
 
-export function compareArtifacts(
+export { compareArtifacts };
+
+function compareArtifacts(
     base_artifacts: ReadonlyArray<Artifact>,
     compared_to_artifacts: ReadonlyArray<Artifact>
 ): ArtifactsListComparison {

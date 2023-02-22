@@ -6,14 +6,14 @@
         {
           "name": "mediawiki/labeled-section-transclusion",
           "type": "mediawiki-extension",
-          "version": "1.35.9",
+          "version": "1.35.8",
           "require": {
             "composer/installers": "^1.0"
           },
           "source": {
             "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
             "type": "git",
-            "reference": "6667e70cbb19874fcfbf929df814802c415b1fe7"
+            "reference": "c86c3bbe4acf7053b1b51c474b4e6fa14d792281"
           }
         }
       ]
@@ -24,14 +24,14 @@
         {
           "name": "mediawiki/math",
           "type": "mediawiki-extension",
-          "version": "1.35.9",
+          "version": "1.35.8",
           "require": {
             "composer/installers": "^1.0"
           },
           "source": {
             "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
             "type": "git",
-            "reference": "fd3c11f0b6b7d329577bc5166cf59a2056e59c5c"
+            "reference": "93da70c5ed033ea44a3c0381e4edc22231b097cc"
           }
         }
       ]
@@ -40,16 +40,16 @@
       "type": "package",
       "package": [
         {
-          "name": "mediawiki/mpdf",
+          "name": "mediawiki/pdf-book",
           "type": "mediawiki-extension",
-          "version": "1.0.0",
+          "version": "2.0.5",
           "require": {
-            "mpdf/mpdf": "^8.1.4"
+            "composer/installers": "^1.0"
           },
           "source": {
-            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
+            "url": "https://gitlab.com/organicdesign/PdfBook",
             "type": "git",
-            "reference": "2a61ff84fbaa1e0e222389a1ffb05ce40cd4746c"
+            "reference": "a394656d977726ffdaa367eab0ee2bfce9a60fd9"
           }
         }
       ]
@@ -68,17 +68,15 @@
     }
   ],
   "require": {
-    "mediawiki/labeled-section-transclusion": "^1.35.9",
-    "mediawiki/math": "^1.35.9",
-    "mediawiki/mpdf": "^1.0",
-    "mediawiki/tuleap-integration": "1.0.3",
-    "mediawiki/tuleap-skin": "1.0.4",
-    "mediawiki/tuleap-wiki-farm": "1.1.2"
+    "mediawiki/labeled-section-transclusion": "^1.35.8",
+    "mediawiki/math": "^1.35.8",
+    "mediawiki/pdf-book": "^2.0.5",
+    "mediawiki/tuleap-integration": "1.0.2",
+    "mediawiki/tuleap-skin": "1.0.2",
+    "mediawiki/tuleap-wiki-farm": "1.1.1"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
-    "psr/log": "^1.0",
-    "psr/http-message": "^1.0",
     "symfony/polyfill-php80": "^1.25.5"
   },
   "config": {

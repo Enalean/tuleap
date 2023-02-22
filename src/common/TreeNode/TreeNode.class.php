@@ -262,7 +262,7 @@ class TreeNode /*implements Visitable*/
         return $visitor->visit($this, $params);
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         $children_as_string = '';
         foreach ($this->getChildren() as $child) {

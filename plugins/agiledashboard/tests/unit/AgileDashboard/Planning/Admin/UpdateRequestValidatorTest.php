@@ -53,7 +53,7 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderInvalidRequest(): array
+    public function dataProviderInvalidRequest(): array
     {
         return [
             'No planning parameter'                => [null],

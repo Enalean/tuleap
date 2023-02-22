@@ -70,7 +70,7 @@ describe("PermissionsSelector", () => {
         wrapper.get("select").setValue(ugroup_1.id);
         const emitted_input = wrapper.emitted("input");
         expect(emitted_input).toHaveLength(1);
-        expect(emitted_input[0]).toStrictEqual([[{ id: ugroup_1.id }]]);
+        expect(emitted_input[0]).toEqual([[{ id: ugroup_1.id }]]);
     });
 
     it("Refresh selected user groups on fresh information", async () => {

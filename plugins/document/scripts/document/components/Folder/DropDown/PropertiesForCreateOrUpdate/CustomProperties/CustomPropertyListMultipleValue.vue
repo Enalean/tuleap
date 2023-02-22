@@ -56,49 +56,48 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import type { ListValue, Property } from "../../../../../type";
+import { namespace } from "vuex-class";
 import emitter from "../../../../../helpers/emitter";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { PropertiesState } from "../../../../../store/properties/module";
-import { computed, onMounted, ref } from "vue";
 
-const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
+const properties = namespace("properties");
 
-const { project_properties } = useNamespacedState<Pick<PropertiesState, "project_properties">>(
-    "properties",
-    ["project_properties"]
-);
+@Component
+export default class CustomPropertyListMultipleValue extends Vue {
+    @Prop({ required: true })
+    readonly currentlyUpdatedItemProperty!: Property;
 
-const multiple_list_values = ref<Array<number> | Array<ListValue> | null>([]);
+    @properties.State
+    readonly project_properties!: Array<Property>;
 
-onMounted((): void => {
-    multiple_list_values.value = props.currentlyUpdatedItemProperty.list_value;
-});
+    private multiple_list_values = this.currentlyUpdatedItemProperty.list_value;
 
-const allowed_values = computed((): Array<ListValue> => {
-    if (
-        props.currentlyUpdatedItemProperty.is_multiple_value_allowed &&
-        props.currentlyUpdatedItemProperty.type === "list"
-    ) {
-        const property = project_properties.value.find(
-            ({ short_name }) => short_name === props.currentlyUpdatedItemProperty.short_name
-        );
+    get allowed_values(): Array<ListValue> {
+        if (
+            this.currentlyUpdatedItemProperty.is_multiple_value_allowed &&
+            this.currentlyUpdatedItemProperty.type === "list"
+        ) {
+            const property = this.project_properties.find(
+                ({ short_name }) => short_name === this.currentlyUpdatedItemProperty.short_name
+            );
 
-        if (property && property.allowed_list_values) {
-            return property.allowed_list_values;
+            if (property && property.allowed_list_values) {
+                return property.allowed_list_values;
+            }
         }
+
+        return [];
     }
 
-    return [];
-});
-
-function updatePropertiesListValue(): void {
-    emitter.emit("update-multiple-properties-list-value", {
-        detail: {
-            value: multiple_list_values.value,
-            id: props.currentlyUpdatedItemProperty.short_name,
-        },
-    });
+    updatePropertiesListValue(): void {
+        emitter.emit("update-multiple-properties-list-value", {
+            detail: {
+                value: this.multiple_list_values,
+                id: this.currentlyUpdatedItemProperty.short_name,
+            },
+        });
+    }
 }
 </script>

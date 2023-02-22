@@ -30,10 +30,11 @@ final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private CustomizableContentLoader $loader;
-    private PFUser $us_user;
-    private PFUser $fr_user;
-    private PFUser $br_user;
+    /**
+     * @var CustomizableContentLoader
+     */
+    private $loader;
+    private $us_user;
 
     protected function setUp(): void
     {

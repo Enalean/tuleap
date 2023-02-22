@@ -50,7 +50,6 @@ class Docman_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var BackendSystem|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $backend;
-    private string $root_dir_path;
 
     public function setUp(): void
     {

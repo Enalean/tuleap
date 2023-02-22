@@ -20,18 +20,17 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PrivacyBadge from "./PrivacyBadge.vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import tlp_popovers from "@tuleap/tlp-popovers";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 
 describe("PrivacyBadge", () => {
     it("displays the badge with its popover", () => {
-        const create_popover_spy = vi
+        const create_popover_spy = jest
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 

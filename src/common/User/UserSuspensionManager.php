@@ -237,22 +237,23 @@ class UserSuspensionManager
      * Change account status to suspended when the account expiry date is passed
      *
      */
-    private function suspendExpiredAccounts(DateTimeImmutable $time): void
+    private function suspendExpiredAccounts(DateTimeImmutable $time)
     {
-        $this->dao->suspendExpiredAccounts($time);
+        return $this->dao->suspendExpiredAccounts($time);
     }
 
     /**
      * Suspend accounts that without activity since date defined in configuration
      *
      */
-    private function suspendInactiveAccounts(DateTimeImmutable $time): void
+    private function suspendInactiveAccounts(DateTimeImmutable $time)
     {
         if (ForgeConfig::exists('sys_suspend_inactive_accounts_delay') && ForgeConfig::get('sys_suspend_inactive_accounts_delay') > 0) {
             $date_param      = '- ' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . ' day';
             $lastValidAccess = $time->modify($date_param);
-            $this->dao->suspendInactiveAccounts($lastValidAccess);
+            return $this->dao->suspendInactiveAccounts($lastValidAccess);
         }
+        return true;
     }
 
     /**

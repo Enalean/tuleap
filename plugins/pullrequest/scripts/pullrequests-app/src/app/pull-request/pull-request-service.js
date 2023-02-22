@@ -16,7 +16,6 @@ function PullRequestService(PullRequestRestService) {
         isPullRequestClosed,
         merge,
         updateTitleAndDescription,
-        reopen,
     });
 
     function merge(pull_request) {
@@ -34,15 +33,6 @@ function PullRequestService(PullRequestRestService) {
             self.valid_status_keys.abandon
         ).then(function () {
             pull_request.status = self.valid_status_keys.abandon;
-        });
-    }
-
-    function reopen(pull_request) {
-        return PullRequestRestService.updateStatus(
-            pull_request.id,
-            self.valid_status_keys.review
-        ).then(function () {
-            pull_request.status = self.valid_status_keys.review;
         });
     }
 

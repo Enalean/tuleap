@@ -20,19 +20,7 @@
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
-use Tuleap\Project\Admin\ProjectMembers\UserIsNotAllowedToManageProjectMembersException;
-use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-
 interface ProjectMemberAdder
 {
-    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void;
-
-    /**
-     * @throws UserIsNotActiveOrRestrictedException
-     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
-     * @throws AlreadyProjectMemberException
-     * @throws NoEmailForUserException
-     * @throws UserIsNotAllowedToManageProjectMembersException
-     */
-    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void;
+    public function addProjectMember(\PFUser $user, \Project $project): void;
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFirstFileField as detectFirstFileField } from "../adapters/UI/fields/file-field/file-field-detector";
+import { getFirstFileField as detectFirstFileField } from "../fields/file-field/file-field-detector";
 import type { FileFieldValueModel } from "../domain/fields/file-field/FileFieldValueModel";
 import type { Field } from "../domain/fields/Field";
 

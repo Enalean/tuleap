@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
@@ -256,7 +255,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->logger->debug("Start import from XML, validate RNG");
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/project/project.rng');
 
-        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml->asXml());
+        $partial_element = new SimpleXMLElement((string) $xml->asXML());
         $external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
         $xml_validator->validate($partial_element, $rng_path);
         $this->logger->debug("RNG validated, feed the data");

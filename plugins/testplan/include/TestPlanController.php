@@ -45,6 +45,10 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
      */
     private $bread_crumbs_builder;
     /**
+     * @var IncludeAssets
+     */
+    private $agiledashboard_assets;
+    /**
      * @var TestPlanPaneDisplayable
      */
     private $testplan_pane_displayable;
@@ -72,6 +76,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
     public function __construct(
         TemplateRenderer $renderer,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
+        IncludeAssets $agiledashboard_assets,
         IncludeAssets $testplan_assets,
         TestPlanPaneDisplayable $testplan_pane_displayable,
         VisitRecorder $visit_recorder,
@@ -81,6 +86,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
     ) {
         $this->renderer                  = $renderer;
         $this->bread_crumbs_builder      = $bread_crumbs_builder;
+        $this->agiledashboard_assets     = $agiledashboard_assets;
         $this->testplan_assets           = $testplan_assets;
         $this->testplan_pane_displayable = $testplan_pane_displayable;
         $this->visit_recorder            = $visit_recorder;
@@ -120,6 +126,8 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         }
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
+
+        $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
 

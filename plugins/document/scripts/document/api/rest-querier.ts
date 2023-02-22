@@ -46,7 +46,39 @@ import {
 } from "../helpers/properties-helpers/metadata-to-properties";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getJSON, uri } from "@tuleap/fetch-result";
+import { getJSON } from "@tuleap/fetch-result";
+
+export {
+    getDocumentManagerServiceInformation,
+    getFolderContent,
+    getItem,
+    getParents,
+    postEmbeddedFile,
+    postWiki,
+    postLinkVersion,
+    cancelUpload,
+    createNewVersion,
+    addNewFile,
+    addNewFolder,
+    addNewEmpty,
+    addNewWiki,
+    addNewEmbedded,
+    addNewLink,
+    deleteFile,
+    deleteLink,
+    deleteEmbeddedFile,
+    deleteWiki,
+    deleteEmptyDocument,
+    deleteFolder,
+    getItemsReferencingSameWikiPage,
+    getProjectUserGroups,
+    postNewLinkVersionFromEmpty,
+    postNewEmbeddedFileVersionFromEmpty,
+    postNewFileVersionFromEmpty,
+    getItemWithSize,
+    searchInFolder,
+    getUserByName,
+};
 
 export interface RestItem extends Omit<Item, "properties"> {
     readonly metadata: Array<Property> | Array<FolderProperty>;
@@ -101,8 +133,8 @@ export interface RestUser {
     readonly realname: string;
 }
 
-export function getUserByName(username: string): ResultAsync<RestUser[], Fault> {
-    return getJSON<RestUser[]>(uri`/api/v1/users`, {
+function getUserByName(username: string): ResultAsync<RestUser[], Fault> {
+    return getJSON<RestUser[]>(`/api/v1/users`, {
         params: {
             query: JSON.stringify({ username }),
             limit: 1,
@@ -110,9 +142,7 @@ export function getUserByName(username: string): ResultAsync<RestUser[], Fault> 
         },
     });
 }
-export async function getDocumentManagerServiceInformation(
-    project_id: number
-): Promise<ProjectService> {
+async function getDocumentManagerServiceInformation(project_id: number): Promise<ProjectService> {
     const response = await get(
         "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"
     );
@@ -120,14 +150,14 @@ export async function getDocumentManagerServiceInformation(
     return response.json();
 }
 
-export async function getItem(id: number): Promise<Item> {
+async function getItem(id: number): Promise<Item> {
     const response = await get("/api/docman_items/" + encodeURIComponent(id));
 
     const item: RestItem = await response.json();
     return convertRestItemToItem(item);
 }
 
-export async function addNewDocumentType(
+async function addNewDocumentType(
     url: string,
     item: RestItem | PostRestItemFile
 ): Promise<CreatedItem> {
@@ -145,7 +175,7 @@ export async function addNewDocumentType(
     return response.json();
 }
 
-export async function searchInFolder(
+async function searchInFolder(
     folder_id: number,
     search: AdvancedSearchParams,
     offset: number
@@ -178,49 +208,49 @@ export async function searchInFolder(
     };
 }
 
-export function addNewFile(item: PostRestItemFile, parent_id: number): Promise<CreatedItem> {
+function addNewFile(item: PostRestItemFile, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         item
     );
 }
 
-export function addNewEmpty(item: RestEmpty, parent_id: number): Promise<CreatedItem> {
+function addNewEmpty(item: RestEmpty, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
         item
     );
 }
 
-export function addNewEmbedded(item: RestEmbedded, parent_id: number): Promise<CreatedItem> {
+function addNewEmbedded(item: RestEmbedded, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
         item
     );
 }
 
-export function addNewWiki(item: RestWiki, parent_id: number): Promise<CreatedItem> {
+function addNewWiki(item: RestWiki, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
         item
     );
 }
 
-export function addNewLink(item: RestLink, parent_id: number): Promise<CreatedItem> {
+function addNewLink(item: RestLink, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
         item
     );
 }
 
-export function addNewFolder(item: RestFolder, parent_id: number): Promise<CreatedItem> {
+function addNewFolder(item: RestFolder, parent_id: number): Promise<CreatedItem> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item
     );
 }
 
-export async function createNewVersion(
+async function createNewVersion(
     item: ItemFile,
     version_title: string,
     change_log: string,
@@ -249,7 +279,7 @@ export async function createNewVersion(
     return response.json();
 }
 
-export async function getFolderContent(folder_id: number): Promise<ReadonlyArray<Item>> {
+async function getFolderContent(folder_id: number): Promise<ReadonlyArray<Item>> {
     const items: Array<RestItem> = await recursiveGet(
         "/api/docman_items/" + encodeURIComponent(folder_id) + "/docman_items",
         {
@@ -263,7 +293,7 @@ export async function getFolderContent(folder_id: number): Promise<ReadonlyArray
     return convertArrayOfItems(items);
 }
 
-export async function getParents(folder_id: number): Promise<Array<Item>> {
+async function getParents(folder_id: number): Promise<Array<Item>> {
     const parents = await recursiveGet(
         "/api/docman_items/" + encodeURIComponent(folder_id) + "/parents",
         {
@@ -278,7 +308,7 @@ export async function getParents(folder_id: number): Promise<Array<Item>> {
     return convertArrayOfItems(items);
 }
 
-export function postEmbeddedFile(
+function postEmbeddedFile(
     item: Embedded,
     content: string,
     version_title: string,
@@ -302,7 +332,7 @@ export function postEmbeddedFile(
     });
 }
 
-export function postWiki(
+function postWiki(
     item: Wiki,
     page_name: string,
     version_title: string,
@@ -322,7 +352,7 @@ export function postWiki(
     });
 }
 
-export function postLinkVersion(
+function postLinkVersion(
     item: Link,
     link_url: string,
     version_title: string,
@@ -346,7 +376,7 @@ export function postLinkVersion(
     });
 }
 
-export function cancelUpload(item: Uploadable): Promise<Response | void> {
+function cancelUpload(item: Uploadable): Promise<Response | void> {
     if (!item.uploader || !item.uploader.url) {
         return Promise.resolve();
     }
@@ -358,22 +388,22 @@ export function cancelUpload(item: Uploadable): Promise<Response | void> {
     });
 }
 
-export function deleteFile(item: ItemFile): Promise<Response> {
+function deleteFile(item: ItemFile): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_files/${escaped_item_id}`);
 }
 
-export function deleteLink(item: Link): Promise<Response> {
+function deleteLink(item: Link): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_links/${escaped_item_id}`);
 }
 
-export function deleteEmbeddedFile(item: Embedded): Promise<Response> {
+function deleteEmbeddedFile(item: Embedded): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_embedded_files/${escaped_item_id}`);
 }
 
-export function deleteWiki(
+function deleteWiki(
     item: Wiki,
     { delete_associated_wiki_page = false }: DeleteWikiPageOptions
 ): Promise<Response> {
@@ -385,17 +415,17 @@ export function deleteWiki(
     );
 }
 
-export function deleteFolder(item: Folder): Promise<Response> {
+function deleteFolder(item: Folder): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_folders/${escaped_item_id}`);
 }
 
-export function deleteEmptyDocument(item: Empty): Promise<Response> {
+function deleteEmptyDocument(item: Empty): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_empty_documents/${escaped_item_id}`);
 }
 
-export async function getItemsReferencingSameWikiPage(
+async function getItemsReferencingSameWikiPage(
     page_id: number
 ): Promise<ReadonlyArray<ItemReferencingWikiPageRepresentation>> {
     const escaped_page_id = encodeURIComponent(page_id);
@@ -404,7 +434,7 @@ export async function getItemsReferencingSameWikiPage(
     return response.json();
 }
 
-export async function getProjectUserGroups(project_id: number): Promise<ReadonlyArray<UserGroup>> {
+async function getProjectUserGroups(project_id: number): Promise<ReadonlyArray<UserGroup>> {
     const response = await get(
         "/api/projects/" +
             encodeURIComponent(project_id) +
@@ -415,7 +445,7 @@ export async function getProjectUserGroups(project_id: number): Promise<Readonly
     return response.json();
 }
 
-export function postNewLinkVersionFromEmpty(item_id: number, link_url: string): Promise<Response> {
+function postNewLinkVersionFromEmpty(item_id: number, link_url: string): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item_id);
     return post(`/api/docman_empty_documents/${escaped_item_id}/link`, {
         headers: {
@@ -427,10 +457,7 @@ export function postNewLinkVersionFromEmpty(item_id: number, link_url: string): 
     });
 }
 
-export function postNewEmbeddedFileVersionFromEmpty(
-    item_id: number,
-    content: string
-): Promise<Response> {
+function postNewEmbeddedFileVersionFromEmpty(item_id: number, content: string): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item_id);
     return post(`/api/docman_empty_documents/${escaped_item_id}/embedded_file`, {
         headers: {
@@ -442,7 +469,7 @@ export function postNewEmbeddedFileVersionFromEmpty(
     });
 }
 
-export async function postNewFileVersionFromEmpty(
+async function postNewFileVersionFromEmpty(
     item_id: number,
     dropped_file: File
 ): Promise<CreatedItemFileProperties> {
@@ -459,7 +486,7 @@ export async function postNewFileVersionFromEmpty(
     return response.json();
 }
 
-export async function getItemWithSize(folder_id: number): Promise<Folder> {
+async function getItemWithSize(folder_id: number): Promise<Folder> {
     const response = await get(`/api/docman_items/${encodeURIComponent(folder_id)}?with_size=true`);
 
     return response.json();

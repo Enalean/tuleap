@@ -39,22 +39,6 @@ class MembershipManagerListGroupsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $gerrit_user_manager;
     protected $remote_server;
     protected $project_manager;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $driver_factory;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
 
     protected function setUp(): void
     {

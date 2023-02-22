@@ -42,19 +42,14 @@ class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMem
         return new self(AddProjectMember::build());
     }
 
-    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
+    public function addProjectMember(\PFUser $user, \Project $project): void
     {
         try {
-            $this->addProjectMember($user, $project, $project_admin);
+            $this->add_project_member->addProjectMember($user, $project);
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (AlreadyProjectMemberException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
-    }
-
-    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
-    {
-        $this->add_project_member->addProjectMember($user, $project, $project_admin);
     }
 }

@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
-
 class PermissionsManager implements IPermissionsManagerNG
 {
     /**
@@ -319,14 +317,16 @@ class PermissionsManager implements IPermissionsManagerNG
     * @param int    $source
     * @param int    $target
     * @param array  $permission_types
+    * @param array  $ugroup_mapping, an array of ugroups
+    * @param int    $duplicate_type What kind of duplication is going on
     *
     * @deprecated Use one of duplicateWithStatic, duplicateWithStaticMapping, duplicateWithoutStatic below
     *
     * @return bool
     */
-    public function duplicatePermissions($source, $target, array $permission_types, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping)
+    public function duplicatePermissions($source, $target, array $permission_types, $ugroup_mapping, $duplicate_type)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplication_user_group_mapping);
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplicate_type, $ugroup_mapping);
     }
 
     /**
@@ -340,7 +340,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public function duplicateWithStatic($source, $target, array $permission_types)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping());
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false);
     }
 
     /**
@@ -353,9 +353,9 @@ class PermissionsManager implements IPermissionsManagerNG
      *
      * @return bool
      */
-    public function duplicateWithStaticMapping($source, $target, array $permission_types, array $ugroup_mapping)
+    public function duplicateWithStaticMapping($source, $target, array $permission_types, $ugroup_mapping)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
     }
 
     /**
@@ -369,7 +369,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public function duplicateWithoutStatic($source, $target, array $permission_types)
     {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, TrackerDuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
     }
 
     public function isPermissionExist($object_id, $ptype)

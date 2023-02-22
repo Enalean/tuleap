@@ -47,12 +47,6 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_2;
     private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_3;
     private \Tracker_FormElement_Field_List_Bind_StaticValue $value_from_artifact;
-    private \PFUser $user;
-    /**
-     * @var Workflow_Transition_ConditionFactory&Stub
-     */
-    private $condition_factory;
-    private ValidValuesAccordingToTransitionsRetriever $first_valid_value_according_to_dependencies_retriever;
 
     protected function setUp(): void
     {
@@ -169,22 +163,20 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
         $condition_1->method('isUserAllowedToSeeTransition')->willReturn(true);
         $condition_2->method('isUserAllowedToSeeTransition')->willReturn(false);
 
-        $this->condition_factory->expects(self::exactly(2))->method("getPermissionsCondition")
-            ->willReturnCallback(
-                fn (Transition $transition): \Workflow_Transition_Condition_Permissions => match ($transition) {
-                    $transition_1 => $condition_1,
-                    $transition_2 => $condition_2,
-                }
-            );
+        $this->condition_factory->expects(self::exactly(2))->method("getPermissionsCondition")->withConsecutive(
+            [$transition_1],
+            [$transition_2]
+        )->willReturnOnConsecutiveCalls(
+            $condition_1,
+            $condition_2
+        );
 
         $this->workflow->method('isUsed')->willReturn(true);
-        $this->workflow->method('getTransition')->willReturnCallback(
-            fn (int $field_value_id_from, int $field_value_id_to): ?Transition => match (true) {
-                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_1->getId() => $transition_1,
-                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_2->getId() => null,
-                $field_value_id_from === $this->value_from_artifact->getId() && $field_value_id_to === $this->test_value_3->getId() => $transition_2,
-            }
-        );
+        $this->workflow->method('getTransition')->withConsecutive(
+            [$this->value_from_artifact->getId(), $this->test_value_1->getId()],
+            [$this->value_from_artifact->getId(), $this->test_value_2->getId()],
+            [$this->value_from_artifact->getId(), $this->test_value_3->getId()]
+        )->willReturnOnConsecutiveCalls($transition_1, null, $transition_2);
 
         $this->first_valid_value_according_to_dependencies_retriever->getValidValuesAccordingToTransitions(
             $this->artifact,

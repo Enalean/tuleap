@@ -73,9 +73,9 @@ const configuration = namespace("configuration");
     },
 })
 export default class ToBePlanned extends Vue {
-    error_message = "";
-    has_error = false;
-    is_loading = false;
+    private error_message = "";
+    private has_error = false;
+    private is_loading = false;
 
     @State
     readonly to_be_planned_elements!: Array<Feature>;

@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
-@use "./includes/header" as taskboard-header;
-@use "./includes/body";
-@use "./includes/card-read";
-@use "./includes/card-edit";
-@use "./includes/card-add";
-@use "./includes/error";
-@use "./includes/swimlane-sticky-header";
-@use "./includes/button-bar";
-@use "./includes/project-header-background";
-@use "@tuleap/drag-and-drop";
+@use "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "../../agiledashboard/themes/BurningParrot/css/header";
+@use "includes/header" as taskboard-header;
+@use "includes/body";
+@use "includes/card-read";
+@use "includes/card-edit";
+@use "includes/card-add";
+@use "includes/error";
+@use "includes/swimlane-sticky-header";
+@use "includes/button-bar";
+@use "includes/project-header-background";
+@use "~@tuleap/drag-and-drop";
 
 .header-taskboard-pinned {
     width: calc(100% - #{global-variables.$sidebar-expanded-width});

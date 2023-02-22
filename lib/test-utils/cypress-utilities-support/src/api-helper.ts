@@ -29,7 +29,7 @@ Cypress.Commands.add("getFromTuleapAPI", (url: string) => {
 });
 
 Cypress.Commands.add("postFromTuleapApi", (url: string, payload: Record<string, unknown>) => {
-    return cy.request({
+    cy.request({
         method: "POST",
         url: url,
         body: payload,

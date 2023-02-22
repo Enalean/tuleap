@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -27,32 +29,6 @@ class MembershipManagerBindedUGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var ProjectManager */
     protected $project_manager;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
-     */
-    private Git_RemoteServer_GerritServer|\Mockery\MockInterface|\Mockery\LegacyMockInterface $remote_server;
-    /**
-     * @var Git_Driver_Gerrit_UserAccountManager&\Mockery\MockInterface
-     */
-    private $gerrit_user_manager;
-    /**
-     * @var Git_Driver_Gerrit&\Mockery\MockInterface
-     */
-    private $driver;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
-     */
-    private $driver_factory;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_MembershipManager
-     */
-    private $membership_manager;
-    private ProjectUGroup $ugroup;
-    private ProjectUGroup $source;
 
     protected function setUp(): void
     {

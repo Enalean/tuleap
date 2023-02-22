@@ -76,7 +76,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference tracker_id for roadmap widget was not found");
+        $this->expectErrorMessage("Reference tracker_id for roadmap widget was not found");
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -107,7 +107,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference tracker_id for roadmap widget was not found");
+        $this->expectErrorMessage("Reference tracker_id for roadmap widget was not found");
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -179,7 +179,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference lvl1_iteration_tracker_id for roadmap widget was not found");
+        $this->expectErrorMessage("Reference lvl1_iteration_tracker_id for roadmap widget was not found");
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -252,7 +252,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Reference lvl2_iteration_tracker_id for roadmap widget was not found");
+        $this->expectErrorMessage("Reference lvl2_iteration_tracker_id for roadmap widget was not found");
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);

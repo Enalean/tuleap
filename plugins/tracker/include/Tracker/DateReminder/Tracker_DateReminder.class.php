@@ -55,7 +55,7 @@ class Tracker_DateReminder
     *
     * @return Void
     */
-    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance, $status, private bool $notify_closed_artifacts)
+    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance, $status)
     {
         $this->reminderId       = $reminderId;
         $this->trackerId        = $trackerId;
@@ -389,10 +389,5 @@ class Tracker_DateReminder
     protected function getUGroupManager()
     {
         return new UGroupManager();
-    }
-
-    public function mustNotifyClosedArtifacts(): bool
-    {
-        return $this->notify_closed_artifacts;
     }
 }

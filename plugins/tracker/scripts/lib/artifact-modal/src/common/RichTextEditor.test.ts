@@ -24,7 +24,7 @@ import type {
     TextEditorInterface,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import * as is_uploading_in_ckeditor_state from "./is-uploading-in-ckeditor-state";
+import * as is_uploading_in_ckeditor_state from "../fields/file-field/is-uploading-in-ckeditor-state";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,

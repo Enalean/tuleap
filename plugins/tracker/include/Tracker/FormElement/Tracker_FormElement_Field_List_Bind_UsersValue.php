@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return UserManager::instance();
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return 'Tracker_FormElement_Field_List_Bind_UsersValue #' . $this->getId();
     }

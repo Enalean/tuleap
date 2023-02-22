@@ -88,7 +88,7 @@ class ActivationController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
+        $project = $this->project_retriever->getProjectFromId($variables['id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
         $this->csrf->check($this->getRedirectUrl($project));
 

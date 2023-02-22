@@ -38,7 +38,6 @@ import {
     FEEDBACK_SUCCESS_CLASSNAME,
     SPIN_CLASSNAME,
 } from "./classnames";
-import { uri } from "@tuleap/fetch-result";
 
 const GROUP_LINK_ID = 33;
 
@@ -108,7 +107,7 @@ describe(`SynchronizeButton`, () => {
             expect(badge_icon).not.toBeNull();
 
             expect(postSpy).toHaveBeenCalledWith(
-                uri`/api/gitlab_groups/${GROUP_LINK_ID}/synchronize`,
+                `/api/gitlab_groups/${GROUP_LINK_ID}/synchronize`,
                 undefined
             );
         });

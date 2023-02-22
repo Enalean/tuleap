@@ -199,13 +199,7 @@ body.has-sidebar {
         width: $dropdown-width;
 
         > .tlp-popover-arrow {
-            &::before {
-                background: none;
-            }
-
-            &::after {
-                background: var(--tlp-dark-color);
-            }
+            background: var(--tlp-dark-color);
         }
 
         > .tlp-popover-header {

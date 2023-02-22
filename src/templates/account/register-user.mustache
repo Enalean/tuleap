@@ -1,125 +1,76 @@
 {{> register-form-start }}
 
     {{# prefill_values }}
-        {{# invitation_token }}
-            <input type="hidden" name="invitation-token" value="{{ value }}" />
-        {{/ invitation_token }}
-
-        {{# form_email }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}{{# is_disabled }}tlp-form-element-disabled{{/is_disabled}}">
-                <label class="tlp-label" for="form_email">
-                    {{# gettext }}Email{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="email"
-                       class="tlp-input"
-                       id="form_email"
-                       name="form_email"
-                       placeholder="jdoe@example.com"
-                       value="{{ value }}"
-                       required
-                       autocomplete="email"
-                       {{# is_disabled }}disabled{{/is_disabled}}
-                       data-test="user-email"
-                >
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
-        {{/ form_email }}
-
+    <div class="fields">
         {{# form_pw }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_pw">
-                    {{# gettext }}Password{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="password"
-                       value=""
-                       class="tlp-input"
-                       id="form_pw"
-                       name="form_pw"
-                       required
-                       autocomplete="new-password"
-                       data-password-validators="{{ json_password_strategy_keys }}"
-                       data-test="user-pw"
-                >
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
-
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_pw2">
-                    {{# gettext }}Repeat password{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="password"
-                       value=""
-                       class="tlp-input"
-                       id="form_pw2"
-                       name="form_pw2"
-                       required
-                       autocomplete="new-password"
-                       data-password-validators="{{ json_password_strategy_keys }}"
-                       data-test="user-pw2"
-                >
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required autocomplete="new-password" data-password-validators="{{ json_password_strategy_keys }}" />
+                        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required autocomplete="new-password" />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_pw }}
         {{> register-choose-password }}
+    </div>
 
+    <div class="fields">
         {{# form_realname }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="form_realname">
-                    {{# gettext }}Full name{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input type="text"
-                       class="tlp-input"
-                       id="form_realname"
-                       name="form_realname"
-                       placeholder="Jane Doe"
-                       required
-                       value="{{ value }}"
-                       autocomplete="name"
-                       data-test="user-name"
-                >
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" autocomplete="name" />
+            {{# has_error }}
+                        <span class="help-inline">{{ error }}</span>
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_realname }}
 
         {{# form_timezone }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label" for="timezone">
-                    {{# gettext }}Timezone{{/ gettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                {{# timezone_selector }}
-                    {{> timezone }}
-                {{/ timezone_selector }}
-                {{# has_error }}
-                    <p class="tlp-text-danger">{{ error }}</p>
-                {{/ has_error }}
-            </div>
+            {{# has_error }}
+                <div class="control-group error">
+                    <div class="controls">
+            {{/has_error }}
+                        {{# timezone_selector }}
+                            {{> timezone }}
+                        {{/ timezone_selector }}
+            {{# has_error }}
+                    </div>
+                </div>
+            {{/has_error }}
         {{/ form_timezone }}
+    </div>
 
-        {{# form_mail_site }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
-                <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="form_mail_site" value="1" {{# value }}checked="checked"{{/ value }} data-test="user-prefs-site-updates">
-                    {{# gettext }}Receive Email about Site Updates{{/ gettext }}
-                </label>
-                <p class="tlp-text-info">
-                    {{# gettext }}Very low traffic, includes security notices. Highly Recommended.{{/ gettext }}
-                </p>
-            </div>
-        {{/ form_mail_site }}
+    <div class="fields">
+        <label class="checkbox">
+            {{# form_mail_site }}
+                {{# has_error }}
+                    <div class="control-group error">
+                        <div class="controls">
+                {{/has_error }}
+                            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }} checked="checked"{{/ form_mail_site }} />
+                {{# has_error }}
+                            <span class="help-inline">{{ error }}</span>
+                        </div>
+                    </div>
+                {{/has_error }}
+            {{/ form_mail_site }}
 
-        {{> register-purpose-directions }}
+            {{{ siteupdate }}}
+        </label>
+    </div>
+
+    {{> register-purpose-directions }}
     {{/ prefill_values }}
 
     {{{ extra_plugin_field }}}
+
+    <p class="mandatory">{{ mandatory }}</p>
 
 {{> register-form-end }}

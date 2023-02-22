@@ -146,7 +146,7 @@ class TaskboardCardTest extends RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public static function getUserName(): array
+    public function getUserName(): array
     {
         return [
             [REST_TestDataBuilder::TEST_USER_1_NAME],

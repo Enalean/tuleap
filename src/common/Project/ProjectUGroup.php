@@ -444,9 +444,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * @throws \Tuleap\Project\UGroups\Membership\InvalidProjectException
      * @throws \Tuleap\Project\UGroups\Membership\UserIsAnonymousException
      */
-    public function addUser(PFUser $user, PFUser $project_admin)
+    public function addUser(PFUser $user)
     {
-        $this->getMemberAdder()->addMember($user, $this, $project_admin);
+        $this->getMemberAdder()->addMember($user, $this);
     }
 
     /**

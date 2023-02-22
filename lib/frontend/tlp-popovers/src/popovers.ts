@@ -36,7 +36,7 @@ type Configuration = {
     };
 };
 
-type Trigger = "click" | "hover" | "focus";
+type Trigger = "click" | "hover";
 
 export type PopoverOptions = Partial<Configuration>;
 
@@ -150,7 +150,7 @@ const isPlacement = (string_to_check: string): string_to_check is Placement =>
     allowed_placements.includes(string_to_check);
 
 const isTrigger = (string_to_check: string | undefined): string_to_check is Trigger =>
-    ["hover", "click", "focus"].includes(string_to_check ?? "");
+    ["hover", "click"].includes(string_to_check ?? "");
 
 function getTrigger(popover_trigger: HTMLElement, options: PopoverOptions): Trigger {
     if (options.trigger) {
@@ -189,7 +189,7 @@ function getConfiguration(popover_trigger: HTMLElement, options: PopoverOptions)
     };
 }
 
-type EventType = "click" | "mouseout" | "mouseover" | "keyup" | "focus" | "blur";
+type EventType = "click" | "mouseout" | "mouseover" | "keyup";
 
 interface EventListener {
     element: EventTarget;
@@ -205,12 +205,6 @@ function buildListeners(
     configuration: Configuration,
     updatePositionOfContent: () => void
 ): EventListener[] {
-    if (configuration.trigger === "focus") {
-        return [
-            buildFocusListener(doc, popover_trigger, popover_content, updatePositionOfContent),
-            buildBlurListener(doc, popover_trigger, popover_content),
-        ];
-    }
     if (configuration.trigger === "hover") {
         return [
             buildMouseOverListener(doc, popover_trigger, popover_content, updatePositionOfContent),
@@ -247,37 +241,6 @@ function destroyListeners(listeners: EventListener[]): void {
     for (const { element, type, handler } of listeners) {
         element.removeEventListener(type, handler);
     }
-}
-
-function buildFocusListener(
-    doc: Document,
-    popover_trigger: HTMLElement,
-    popover_content: HTMLElement,
-    updatePositionOfContent: () => void
-): EventListener {
-    return {
-        element: popover_trigger,
-        type: "focus",
-        handler(): void {
-            hideAllShownPopovers(doc);
-            showPopover(popover_content, updatePositionOfContent);
-        },
-    };
-}
-
-function buildBlurListener(
-    doc: Document,
-    popover_trigger: HTMLElement,
-    popover_content: HTMLElement
-): EventListener {
-    return {
-        element: popover_trigger,
-        type: "blur",
-        handler(): void {
-            hideAllShownPopovers(doc);
-            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
-        },
-    };
 }
 
 function buildMouseOverListener(

@@ -34,7 +34,6 @@ import {
     PUT_METHOD,
 } from "./constants";
 import { RestlerErrorHandler } from "./RestlerErrorHandler";
-import { uri as uriTag } from "./uri-string-template";
 
 type JSONResponsePayload = {
     readonly id: number;
@@ -59,7 +58,7 @@ describe(`ResultFetcher`, () => {
         json_response_payload: JSONResponsePayload,
         json_request_payload: JSONRequestPayload,
         params: Parameters;
-    const uri = uriTag`https://example.com/result-fetcher-test/${"démo"}`;
+    const uri = "https://example.com/result-fetcher-test/démo";
 
     beforeEach(() => {
         success_response = { ok: true } as unknown as Response;

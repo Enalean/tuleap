@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Admin;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateSingleton;
 use UserManager;
 use UserHelper;
@@ -30,7 +29,7 @@ class ProjectHistoryResultsPresenter
     public $history;
     public $total_rows;
 
-    public function __construct($results, private EventDispatcherInterface $event_dispatcher)
+    public function __construct($results)
     {
         $this->history    = $this->getHistoryResultPresenter($results['history']);
         $this->total_rows = $results['numrows'];
@@ -50,7 +49,7 @@ class ProjectHistoryResultsPresenter
             // likely a legacy message (pre-localization version)
             $arr_args = '';
             if (strpos($field, " %% ") !== false) {
-                [$msg_key, $args] = explode(" %% ", $field);
+                list($msg_key, $args) = explode(" %% ", $field);
                 if ($args) {
                     $arr_args = explode('||', $args);
                 }
@@ -58,8 +57,7 @@ class ProjectHistoryResultsPresenter
                 $msg_key  = $field;
                 $arr_args = "";
             }
-            $event = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
-            $msg   = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText('project_admin_utils', $msg_key, $arr_args);
+            $msg = $GLOBALS['Language']->getOverridableText('project_admin_utils', $msg_key, $arr_args);
             if (strpos($msg, "*** Unkown msg") !== false) {
                 $msg = $field;
             }

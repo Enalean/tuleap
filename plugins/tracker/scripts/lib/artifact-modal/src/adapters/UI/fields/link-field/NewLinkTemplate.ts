@@ -65,7 +65,7 @@ export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => 
     };
 
     return html`
-        <tr class="link-field-table-row tlp-table-row-success" data-test="link-row">
+        <tr class="link-field-table-row link-field-table-row-new" data-test="link-row">
             <td class="link-field-table-cell-type" data-test="link-type">
                 ${getArtifactLinkTypeLabel(link)}
             </td>

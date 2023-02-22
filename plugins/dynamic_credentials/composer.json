@@ -4,10 +4,5 @@
     "psr-4": {
       "Tuleap\\DynamicCredentials\\": "include/"
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tuleap\\DynamicCredentials\\": "tests/unit/"
-    }
   }
 }

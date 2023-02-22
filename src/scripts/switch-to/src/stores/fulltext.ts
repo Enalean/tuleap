@@ -29,11 +29,9 @@ import { querier } from "../helpers/search-querier";
 import type { ItemDefinition } from "../type";
 import type { ResultAsync } from "neverthrow";
 import { useKeyboardNavigationStore } from "./keyboard-navigation";
-import type { EncodedURI } from "@tuleap/fetch-result";
-import { uri } from "@tuleap/fetch-result";
 
 export const useFullTextStore = defineStore("fulltext", () => {
-    const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>(uri`/api/v1/search`);
+    const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
     const fulltext_search_results = ref<FullTextState["fulltext_search_results"]>({});
     const fulltext_search_is_error = ref<FullTextState["fulltext_search_is_error"]>(false);
     const fulltext_search_is_loading = ref<FullTextState["fulltext_search_is_loading"]>(false);
@@ -69,7 +67,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        const url: EncodedURI = fulltext_search_url.value;
+        const url: string = fulltext_search_url.value;
 
         fulltext_search_is_loading.value = true;
         fulltext_search_is_error.value = false;

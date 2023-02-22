@@ -35,10 +35,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    private UserXMLExportedCollection $collection;
-    private PFUser $a_user;
-    private PFUser $another_user;
-    private PFUser $none;
+    private $collection;
 
     protected function setUp(): void
     {

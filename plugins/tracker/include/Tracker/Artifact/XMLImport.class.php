@@ -19,7 +19,6 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
-use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -172,7 +171,7 @@ class Tracker_Artifact_XMLImport
     ): ?bool {
         $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         try {
-            $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_element->asXml());
+            $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
             $this->external_fields_extractor->extractExternalFieldsFromArtifact($partial_element);
 
             $this->rng_validator->validate($xml_element, realpath(__DIR__ . '/../../../resources/artifacts.rng'));

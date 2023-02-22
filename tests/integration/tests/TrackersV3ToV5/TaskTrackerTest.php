@@ -46,7 +46,6 @@ use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Tracker\DateReminder\DateReminderDao;
 
 class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -379,11 +378,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory          = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[0]->getDistance(), 2);
@@ -397,11 +392,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSendsASecondEmailOnStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory          = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[1]->getDistance(), 0);
@@ -415,11 +406,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSendsTheLastEmailTwoDaysAfterStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory          = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[2]->getDistance(), 2);
@@ -435,11 +422,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
-        $factory        = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory        = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders      = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[3]->getDistance(), 1);
@@ -455,11 +438,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
-        $factory        = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory        = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders      = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[4]->getDistance(), 3);
@@ -476,11 +455,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
 
-        $factory   = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[5]->getDistance(), 1);
@@ -497,11 +472,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
 
-        $factory   = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[6]->getDistance(), 3);
@@ -514,11 +485,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles()
     {
-        $factory   = new Tracker_DateReminderFactory(
-            $this->task_tracker,
-            new Tracker_DateReminderRenderer($this->task_tracker),
-            new DateReminderDao(),
-        );
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertCount(7, $reminders);

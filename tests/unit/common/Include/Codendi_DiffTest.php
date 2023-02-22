@@ -21,35 +21,6 @@
 
 class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    /**
-     * @var string[]
-     */
-    private array $a;
-    /**
-     * @var string[]
-     */
-    private array $b;
-    /**
-     * @var string[]
-     */
-    private array $c;
-    /**
-     * @var string[]
-     */
-    private array $d;
-    /**
-     * @var string[]
-     */
-    private array $e;
-    /**
-     * @var string[]
-     */
-    private array $f;
-    /**
-     * @var string[]
-     */
-    private array $g;
-
     public function setUp(): void
     {
         $this->a = ['Line 1', 'Line 2'];

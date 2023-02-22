@@ -186,14 +186,11 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabRequestException(404, "not found"));
 
         $this->logger
+            ->expects(self::exactly(2))
             ->method('error')
-            ->willReturnCallback(
-                function (string $message): void {
-                    match ($message) {
-                        "An error occurred during automatically comment commit #azer12563",
-                        "|  |_Error returned by the GitLab server: not found" => true,
-                    };
-                }
+            ->withConsecutive(
+                ["An error occurred during automatically comment commit #azer12563"],
+                ["|  |_Error returned by the GitLab server: not found"],
             );
 
         $this->commenter->addCommentOnCommit(

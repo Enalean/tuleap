@@ -18,33 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
-namespace Tuleap\Tracker\Notifications;
-
-final class ConfigNotificationAssignedToDao extends \Tuleap\DB\DataAccessObject
+class ConfigNotificationAssignedToDao extends DataAccessObject
 {
-    public function searchConfigurationAssignedTo(int $tracker_id): bool
+    public function __construct(?LegacyDataAccessInterface $da = null)
     {
-        $sql = 'SELECT 1 FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?';
-
-        return $this->getDB()->exists($sql, $tracker_id);
+        parent::__construct($da);
+        $this->enableExceptionsOnError();
     }
 
-    public function create(int $tracker_id): void
+    public function searchConfigurationAssignedTo($tracker_id)
     {
-        $sql = <<<SQL
-        INSERT INTO plugin_tracker_notification_assigned_to(tracker_id) VALUES (?)
-        ON DUPLICATE KEY UPDATE tracker_id = tracker_id
-        SQL;
+        $tracker_id = $this->getDa()->escapeInt($tracker_id);
 
-        $this->getDB()->run($sql, $tracker_id);
+        $sql = 'SELECT * FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ' . $tracker_id;
+
+        return $this->retrieve($sql);
     }
 
-    public function delete($tracker_id): void
+    public function create($tracker_id)
     {
-        $sql = 'DELETE FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?';
+        $tracker_id = $this->getDa()->escapeInt($tracker_id);
 
-        $this->getDB()->run($sql, $tracker_id);
+        $sql = "INSERT INTO plugin_tracker_notification_assigned_to(tracker_id) VALUES ($tracker_id)
+                ON DUPLICATE KEY UPDATE tracker_id = tracker_id";
+
+        $this->update($sql);
+    }
+
+    public function delete($tracker_id)
+    {
+        $tracker_id = $this->getDa()->escapeInt($tracker_id);
+
+        $sql = 'DELETE FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ' . $tracker_id;
+
+        $this->update($sql);
     }
 }

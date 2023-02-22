@@ -75,7 +75,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { createModal } from "@tuleap/tlp-modal";
+import { createModal } from "tlp";
 import { State } from "vuex-class";
 
 @Component

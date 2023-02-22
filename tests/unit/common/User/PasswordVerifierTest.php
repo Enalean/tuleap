@@ -22,56 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
-final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testPasswordVerificationSuccess(): void
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @dataProvider passwordProvider
+     */
+    public function testPasswordVerification(bool $is_password_valid, string $legacy_hashed_password, string $given_password, bool $expected_result): void
     {
-        $user = $this->createStub(\PFUser::class);
-        $user->method('getUserPw')->willReturn('something');
+        $password_handler = \Mockery::mock(\PasswordHandler::class);
+        $password_handler->shouldReceive('verifyHashPassword')->andReturns($is_password_valid);
 
-        $password_verifier = new PasswordVerifier($this->buildPasswordHandler());
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getUserPw')->andReturn('something');
+        $user->shouldReceive('getLegacyUserPw')->andReturns($legacy_hashed_password);
 
-        self::assertTrue($password_verifier->verifyPassword($user, new ConcealedString('something')));
+        $password_verifier = new PasswordVerifier($password_handler);
+        $is_valid          = $password_verifier->verifyPassword($user, new ConcealedString($given_password));
+
+        $this->assertEquals($expected_result, $is_valid);
+    }
+
+    public function passwordProvider(): array
+    {
+        return [
+            [false, md5('not valid'), 'Tuleap', false],
+            [true, md5('not valid'), 'Tuleap', true],
+            [false, md5('Tuleap'), 'Tuleap', true],
+            [true, md5('Tuleap'), 'Tuleap', true],
+        ];
     }
 
     public function testCannotVerifyAPasswordWhenTheUserDoesNotHaveOne(): void
     {
-        $user = $this->createStub(\PFUser::class);
-        $user->method('getUserPw')->willReturn(null);
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getUserPw')->andReturn(null);
 
-        $password_verifier = new PasswordVerifier($this->buildPasswordHandler());
+        $password_verifier = new PasswordVerifier(\Mockery::mock(\PasswordHandler::class));
 
         $this->assertFalse($password_verifier->verifyPassword($user, new ConcealedString('password')));
-    }
-
-    private function buildPasswordHandler(): \PasswordHandler
-    {
-        return new class () implements \PasswordHandler {
-            public function __construct()
-            {
-            }
-
-            public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
-            {
-                return true;
-            }
-
-            public function computeHashPassword(ConcealedString $plain_password): string
-            {
-                throw new \RuntimeException('Not expected to be called');
-            }
-
-            public function isPasswordNeedRehash(string $hash_password): bool
-            {
-                throw new \RuntimeException('Not expected to be called');
-            }
-
-            public function computeUnixPassword(ConcealedString $plain_password): string
-            {
-                throw new \RuntimeException('Not expected to be called');
-            }
-        };
     }
 }

@@ -2,11 +2,11 @@
     "name": "program_management",
     "gettext-vue": {
         "program_management": {
-            "src": "scripts/program_management/src",
+            "src": "scripts/program_management",
             "po": "scripts/program_management/po"
         },
         "planned_iterations": {
-            "src": "scripts/planned-iterations/src",
+            "src": "scripts/planned-iterations",
             "po": "scripts/planned-iterations/po"
         }
     },

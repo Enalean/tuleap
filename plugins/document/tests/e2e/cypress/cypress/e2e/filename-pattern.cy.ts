@@ -22,12 +22,18 @@ describe("Document filename pattern", () => {
     let project_unixname: string, now: number;
 
     before(() => {
+        cy.clearSessionCookie();
         now = Date.now();
+
         project_unixname = "doc-pattern-" + now;
+        cy.projectAdministratorLogin();
+    });
+
+    beforeEach(() => {
+        cy.preserveSessionCookies();
     });
 
     it("administrator can define a specific pattern", () => {
-        cy.projectAdministratorSession();
         cy.createNewPublicProject(project_unixname, "issues");
 
         cy.log("Pattern can be set");

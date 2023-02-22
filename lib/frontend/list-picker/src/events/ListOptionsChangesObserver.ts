@@ -49,25 +49,27 @@ export class ListOptionsChangesObserver {
     }
 
     private refreshListPickerOnOptionsChanges(): (mutations: Array<MutationRecord>) => void {
-        return (mutations: Array<MutationRecord>): void => {
+        return async (mutations: Array<MutationRecord>): Promise<void> => {
             this.list_picker_element_attributes_updater();
             if (!this.isChildrenMutation(mutations)) {
                 return;
             }
 
-            this.items_map_manager.refreshItemsMap();
+            await this.items_map_manager.refreshItemsMap();
             this.dropdown_content_renderer.renderAfterDependenciesUpdate();
-            this.selection_manager.resetAfterChangeInOptions();
+            this.selection_manager.resetAfterDependenciesUpdate();
             this.event_manager.attachItemListEvent();
         };
     }
 
     private isChildrenMutation(mutations: Array<MutationRecord>): boolean {
-        return mutations.some(
-            (mutation) =>
-                mutation.type === "childList" ||
-                (mutation.type === "attributes" &&
-                    ["disabled", "value"].includes(mutation.attributeName ?? ""))
+        return (
+            mutations.find((mutation) => {
+                return (
+                    mutation.type === "childList" ||
+                    (mutation.type === "attributes" && mutation.attributeName === "disabled")
+                );
+            }) !== undefined
         );
     }
 }

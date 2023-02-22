@@ -52,56 +52,56 @@
     </section>
 </template>
 
-<script setup lang="ts">
-import type { AdvancedSearchParams } from "../../type";
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
+import type { AdvancedSearchParams, SearchCriteria } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import { useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
-import type { Ref } from "vue";
-import { computed, onMounted, ref } from "vue";
-
-const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
-
-const { root_id, criteria } = useState<Pick<ConfigurationState, "root_id" | "criteria">>(
-    "configuration",
-    ["root_id", "criteria"]
-);
-
-const new_query: Ref<AdvancedSearchParams | null> = ref(null);
-
-onMounted((): void => {
-    new_query.value = props.query;
-});
-
-const emit = defineEmits<{
-    (e: "advanced-search", value: AdvancedSearchParams | null): void;
-}>();
-
-function advancedSearch(): void {
-    emit("advanced-search", new_query.value);
-}
-
-const is_in_root_folder = computed((): boolean => {
-    return props.folder_id === root_id.value;
-});
-</script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
 import CriterionText from "./Criteria/CriterionText.vue";
 import CriterionOwner from "./Criteria/CriterionOwner.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
 import CriterionList from "./Criteria/CriterionList.vue";
 import CriterionNumber from "./Criteria/CriterionNumber.vue";
 
-export default defineComponent({
+const configuration = namespace("configuration");
+
+@Component({
     components: {
+        CriterionDate,
         CriterionText,
         CriterionOwner,
-        CriterionDate,
         CriterionList,
         CriterionNumber,
+        CriterionGlobalText,
+        SearchCriteriaBreadcrumb,
     },
-});
+})
+export default class SearchCriteriaPanel extends Vue {
+    @Prop({ required: true })
+    readonly query!: AdvancedSearchParams;
+
+    @Prop({ required: true })
+    readonly folder_id!: number;
+
+    @configuration.State
+    readonly root_id!: number;
+
+    @configuration.State
+    readonly criteria!: SearchCriteria;
+
+    private new_query: AdvancedSearchParams | null = null;
+
+    mounted() {
+        this.new_query = this.query;
+    }
+
+    advancedSearch(): void {
+        this.$emit("advanced-search", this.new_query);
+    }
+
+    get is_in_root_folder(): boolean {
+        return this.folder_id === this.root_id;
+    }
+}
 </script>

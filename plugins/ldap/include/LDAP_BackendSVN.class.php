@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\User\PasswordVerifier;
 use Tuleap\User\UserNameNormalizer;
 
 class LDAP_BackendSVN extends BackendSVN
@@ -195,12 +194,7 @@ class LDAP_BackendSVN extends BackendSVN
     protected function getLDAPUserManager()
     {
         if ($this->ldapUserManager === null) {
-            $this->ldapUserManager = new LDAP_UserManager(
-                $this->ldap,
-                LDAP_UserSync::instance(),
-                new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()),
-                new PasswordVerifier(new StandardPasswordHandler()),
-            );
+            $this->ldapUserManager = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance(), new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         }
         return $this->ldapUserManager;
     }

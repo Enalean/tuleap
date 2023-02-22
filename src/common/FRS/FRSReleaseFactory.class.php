@@ -35,7 +35,6 @@ class FRSReleaseFactory
     public $STATUS_DELETED = FRSRelease::STATUS_DELETED;
     public $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
     private static $instance;
-    private ?FRSPackageFactory $package_factory = null;
 
     public function __construct()
     {

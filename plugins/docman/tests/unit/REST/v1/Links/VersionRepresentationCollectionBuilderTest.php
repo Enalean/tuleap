@@ -58,7 +58,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
         $item = new \Docman_Link([
             'item_id'     => 4,
             'title'       => 'item',
-            'user_id'     => (int) $user->getId(),
+            'user_id'     => 101,
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
             'parent_id'   => 100,
@@ -74,7 +74,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
                 'number'    => 1,
                 'label'     => "my version label",
                 'changelog' => '',
-                'user_id'   => (int) $user->getId(),
+                'user_id'   => 101,
                 'date'      => 1542099693,
                 'link_url'  => 'https://example.com',
             ],

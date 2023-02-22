@@ -60,7 +60,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tests($creator);
     }
 
-    public static function getData(): iterable
+    public function getData(): iterable
     {
         return [
             'it throws an exception when data returned by Jira is not well formed' => [
@@ -68,16 +68,16 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'issueLinkTypes' => 'YOU MUST PAY!',
                 ],
                 'missing_type' => null,
-                'creator' => self::getDefaultCreator(),
+                'creator' => $this->getDefaultCreator(),
                 'expectations' => function (ArtifactLinkTypeImporterTest $test_case) {
                     $test_case->expectException(\RuntimeException::class);
                 },
                 'tests' => fn () => null,
             ],
             'it returns an artifact link type with accurate labels' => [
-                'urls' => self::getDefaultIssueTypeResponse(),
+                'urls' => $this->getDefaultIssueTypeResponse(),
                 'missing_type' => TypePresenter::buildVisibleType('Blocks', 'blocks', 'is blocked by'),
-                'creator' => self::getDefaultCreator(),
+                'creator' => $this->getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
                     self::assertCount(1, $creator->natures);
@@ -87,16 +87,16 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 },
             ],
             'it does not return anything when type already exists' => [
-                'urls' => self::getDefaultIssueTypeResponse(),
+                'urls' => $this->getDefaultIssueTypeResponse(),
                 'missing_type' => null,
-                'creator' => self::getDefaultCreator(),
+                'creator' => $this->getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
                     self::assertEmpty($creator->natures);
                 },
             ],
             'it skips links that cannot be created' => [
-                'urls' => self::getDefaultIssueTypeResponse(),
+                'urls' => $this->getDefaultIssueTypeResponse(),
                 'missing_type' => null,
                 'creator' => new class implements TypeCreatorInterface
                 {
@@ -114,7 +114,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    private static function getDefaultIssueTypeResponse(): array
+    private function getDefaultIssueTypeResponse(): array
     {
         return [
             '/rest/api/2/issueLinkType' => [
@@ -131,7 +131,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    private static function getDefaultCreator(): TypeCreatorInterface
+    private function getDefaultCreator(): TypeCreatorInterface
     {
         return new class implements TypeCreatorInterface
         {

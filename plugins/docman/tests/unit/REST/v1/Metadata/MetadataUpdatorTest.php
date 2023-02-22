@@ -84,10 +84,6 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\MockInterface|\UserManager
      */
     private $user_manager;
-    /**
-     * @var Docman_SettingsBo&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $docman_settings_bo;
 
     protected function setUp(): void
     {

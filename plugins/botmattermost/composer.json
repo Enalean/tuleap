@@ -1,8 +1,0 @@
-{
-  "name": "tuleap/plugin-botmattermost",
-  "autoload": {
-    "psr-4": {
-      "Tuleap\\BotMattermost\\": ["include/", "include/BotMattermost/"]
-    }
-  }
-}

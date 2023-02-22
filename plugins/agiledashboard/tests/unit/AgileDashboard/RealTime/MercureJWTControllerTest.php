@@ -48,7 +48,6 @@ final class MercureJWTControllerTest extends TestCase
     private TestLogger $test_logger;
     private MercureJWTController $mercure_jwt_controller;
     private AgileDashboard_KanbanFactory $agile_dashboard_kanban_factory;
-    private ProvideCurrentUserStub $user_manager;
 
     protected function setup(): void
     {

@@ -50,7 +50,7 @@ class Planning_ArtifactLinker
     }
 
     /**
-     * @psalm-param array{planning_id: string, pane: string, aid: string}|null $requested_planning
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string}|null $requested_planning
      */
     public function linkBacklogWithPlanningItems(
         Codendi_Request $request,
@@ -64,7 +64,7 @@ class Planning_ArtifactLinker
     }
 
     /**
-     * @psalm-param array{planning_id: string, pane: string, aid: string}|null $requested_planning
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string}|null $requested_planning
      */
     private function getMilestoneArtifact(
         PFUser $user,
@@ -122,7 +122,7 @@ class Planning_ArtifactLinker
     }
 
     /**
-     * @psalm-param array{planning_id: string, pane: string, aid: string} $requested_planning
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
      */
     private function linkArtifactToTheMilestoneThatIsPartOfRedirectionParameter(
         array $requested_planning,

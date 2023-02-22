@@ -19,7 +19,7 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { postJSON, uri } from "@tuleap/fetch-result";
+import { postJSON } from "@tuleap/fetch-result";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type {
     CommentReplyPayload,
@@ -37,14 +37,11 @@ const saveReplyToComment = (
     root_comment: PullRequestCommentPresenter,
     new_reply: ReplyCommentFormPresenter
 ): ResultAsync<CommentReplyPayload, Fault> =>
-    postJSON<CommentReplyPayload>(
-        uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`,
-        {
-            user_id: new_reply.comment_author.user_id,
-            parent_id: root_comment.id,
-            content: new_reply.comment_content,
-        }
-    );
+    postJSON<CommentReplyPayload>(`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
+        user_id: new_reply.comment_author.user_id,
+        parent_id: root_comment.id,
+        content: new_reply.comment_content,
+    });
 
 const saveReplyToInlineComment = (
     root_comment: PullRequestCommentPresenter,
@@ -71,7 +68,7 @@ const saveReplyToInlineComment = (
     }
 
     return postJSON<CommentReplyPayload>(
-        uri`/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
+        `/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
         {
             user_id: new_reply.comment_author.user_id,
             parent_id: root_comment.id,

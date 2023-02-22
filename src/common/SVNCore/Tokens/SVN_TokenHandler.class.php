@@ -23,16 +23,31 @@ use Tuleap\Cryptography\ConcealedString;
 
 class SVN_TokenHandler
 {
+    /** @var SVN_TokenDao */
+    private $token_dao;
+
+    /** @var RandomNumberGenerator */
+    private $random_number_generator;
+
+    /** @var PasswordHandler */
+    private $password_handler;
+
+
     public function __construct(
-        private SVN_TokenDao $token_dao,
-        private PasswordHandler $password_handler,
+        SVN_TokenDao $token_dao,
+        RandomNumberGenerator $random_number_generator,
+        PasswordHandler $password_handler,
     ) {
+        $this->token_dao               = $token_dao;
+        $this->random_number_generator = $random_number_generator;
+        $this->password_handler        = $password_handler;
     }
 
     public static function build(): self
     {
         return new self(
             new SVN_TokenDao(),
+            new RandomNumberGenerator(),
             PasswordHandlerFactory::getPasswordHandler()
         );
     }
@@ -52,6 +67,16 @@ class SVN_TokenHandler
         return $svn_tokens;
     }
 
+    public function generateSVNTokenForUser(PFUser $user, $comment): ConcealedString
+    {
+        $token          = $this->generateRandomToken();
+        $token_computed = $this->password_handler->computeUnixPassword($token);
+
+        $this->token_dao->generateSVNTokenForUser((int) $user->getId(), $token_computed, $comment);
+
+        return $token;
+    }
+
     public function deleteSVNTokensForUser(PFUser $user, array $svn_token_ids): void
     {
         $this->token_dao->deleteSVNTokensForUser((int) $user->getId(), $svn_token_ids);
@@ -69,6 +94,11 @@ class SVN_TokenHandler
         }
 
         return false;
+    }
+
+    private function generateRandomToken(): ConcealedString
+    {
+        return new ConcealedString($this->random_number_generator->getNumber());
     }
 
     private function instantiateFromRow(PFUser $user, $svn_token_data)

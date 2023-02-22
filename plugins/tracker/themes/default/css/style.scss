@@ -862,9 +862,7 @@ select.tracker-report-expert-allowed-fields {
     }
 
     &:not(.tracker_artifact_followup_comments-display_changes) {
-        .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(
-                .tracker_artifact_followup-with_comment
-            ),
+        .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment),
         .tracker_artifact_followup.tracker_artifact_followup-priority,
         .tracker_artifact_followup.tracker_artifact_followup-by_system_user,
         .tracker_artifact_followup_changes,

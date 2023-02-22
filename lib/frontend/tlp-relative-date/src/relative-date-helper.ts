@@ -25,10 +25,10 @@ export type RelativeDatesDisplayPreference =
     | "relative_first-absolute_tooltip"
     | "absolute_first-relative_tooltip";
 
-export const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN = "relative_first-absolute_shown";
-export const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN = "absolute_first-relative_shown";
-export const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
-export const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
+const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN = "relative_first-absolute_shown";
+const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN = "absolute_first-relative_shown";
+const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
+const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
 
 export const PREFERENCE_CHOICES = [
     PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,

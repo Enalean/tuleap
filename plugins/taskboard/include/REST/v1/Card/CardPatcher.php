@@ -53,8 +53,6 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
-use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -99,8 +97,7 @@ class CardPatcher
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
+                    $usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -131,7 +128,6 @@ class CardPatcher
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
@@ -147,8 +143,7 @@ class CardPatcher
                 ),
                 new NewArtifactLinkInitialChangesetValueBuilder()
             ),
-            $changeset_creator,
-            new ArtifactRestUpdateConditionsChecker(),
+            $changeset_creator
         );
 
         return new self($form_element_factory, $updater);

@@ -288,7 +288,7 @@ class Rule_UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($r->isSystemName("usertest"));
     }
 
-    public static function dataForUnixTestProvider(): array
+    public function dataForUnixTestProvider(): array
     {
         return [
             'valid username'                         => [true, "coincoin", "/home/user/"],

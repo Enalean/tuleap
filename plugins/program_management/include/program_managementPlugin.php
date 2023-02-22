@@ -31,9 +31,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
-use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
-use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
-use Tuleap\ProgramManagement\Adapter\ArtifactLinks\ProvidedArtifactLinksTypesProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
@@ -152,8 +149,6 @@ use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
-use Tuleap\ProgramManagement\Domain\ArtifactLinks\ArtifactLinksNewTypesChecker;
-use Tuleap\ProgramManagement\Domain\ArtifactLinks\DeletedArtifactLinksChecker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProjectUGroupCanPrioritizeItemsBuilder;
@@ -238,13 +233,10 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -333,8 +325,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $this->addHook(ImportXMLProjectTrackerDone::NAME);
         $this->addHook(PossibleParentSelector::NAME);
         $this->addHook('codendi_daily_start');
-        $this->addHook(ValidateArtifactLinkValueEvent::NAME);
-        $this->addHook(DisplayArtifactLinkEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -967,8 +957,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         new TypeDao(),
                         $artifact_links_usage_dao
                     ),
-                    $artifact_links_usage_dao,
-                    $event_dispatcher,
+                    $artifact_links_usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -1002,7 +991,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
@@ -1687,31 +1675,5 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $dao     = new PendingSynchronizationDao();
         $cleaner = new SynchronizationCleaner($dao);
         $cleaner->clean();
-    }
-
-    public function validateArtifactLinkValueEvent(ValidateArtifactLinkValueEvent $event): void
-    {
-        $deleted_artifact_links_checker = new DeletedArtifactLinksChecker(
-            new LinkedArtifactDAO(),
-        );
-
-        $deleted_artifact_links_checker->checkArtifactHaveMirroredMilestonesInProvidedDeletedLinks(
-            DeletedArtifactLinksProxy::fromEvent($event),
-        );
-
-        $artifact_links_new_types_checker = new ArtifactLinksNewTypesChecker(
-            new LinkedArtifactDAO(),
-        );
-
-        $artifact_links_new_types_checker->checkArtifactHaveMirroredMilestonesInProvidedLinks(
-            ProvidedArtifactLinksTypesProxy::fromEvent($event),
-        );
-    }
-
-    public function displayArtifactLinkEvent(DisplayArtifactLinkEvent $event): void
-    {
-        if ($event->getTypePresenter()->shortname === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
-            $event->setLinkCannotBeModified();
-        }
     }
 }

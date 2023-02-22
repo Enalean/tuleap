@@ -1,4 +1,4 @@
-#!/usr/share/tuleap/src/utils/php-launcher.sh
+#!/opt/remi/php80/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.

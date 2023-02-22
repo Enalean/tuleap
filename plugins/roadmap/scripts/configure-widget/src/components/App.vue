@@ -113,13 +113,13 @@
             class="tlp-form-element"
             v-bind:class="{ 'tlp-form-element-disabled': is_lvl2_disabled }"
         >
-            <label class="tlp-label" v-bind:for="lvl2_id">
+            <label class="tlp-label" v-bind:for="lvl1_id">
                 <translate>Timeframe ribbon, level 2 (eg. Sprint)</translate>
             </label>
 
             <select
                 class="tlp-select tlp-select-adjusted"
-                v-bind:id="lvl2_id"
+                v-bind:id="lvl1_id"
                 name="roadmap[lvl2_iteration_tracker_id]"
                 v-model="user_selected_lvl2_iteration_tracker_id"
                 v-bind:disabled="is_lvl2_disabled"
@@ -185,16 +185,18 @@ export default class App extends Vue {
     @Ref("trackers-picker")
     private readonly trackers_picker!: HTMLSelectElement;
 
-    private user_selected_tracker_ids: number[] = this.selected_tracker_ids;
-    private user_selected_lvl1_iteration_tracker_id: number | "" =
-        this.selected_lvl1_iteration_tracker_id;
-    private user_selected_lvl2_iteration_tracker_id: number | "" =
-        this.selected_lvl2_iteration_tracker_id;
-    private user_selected_default_timescale: TimeScale = this.selected_default_timescale;
+    private user_selected_tracker_ids: number[] = [];
+    private user_selected_lvl1_iteration_tracker_id: number | "" = "";
+    private user_selected_lvl2_iteration_tracker_id: number | "" = "";
+    private user_selected_default_timescale: TimeScale = "month";
     private list_picker: ListPicker | undefined = undefined;
 
-    mounted(): void {
-        this.list_picker = createListPicker(this.$refs.trackers_picker, {
+    async mounted(): Promise<void> {
+        this.user_selected_tracker_ids = this.selected_tracker_ids;
+        this.user_selected_default_timescale = this.selected_default_timescale;
+        this.user_selected_lvl1_iteration_tracker_id = this.selected_lvl1_iteration_tracker_id;
+        this.user_selected_lvl2_iteration_tracker_id = this.selected_lvl2_iteration_tracker_id;
+        this.list_picker = await createListPicker(this.$refs.trackers_picker, {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
             placeholder: this.$gettext("Please choose a tracker"),

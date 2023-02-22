@@ -104,13 +104,14 @@ final class CrossReferenceValidatorTest extends TestCase
         $artifact_valid_2->method("getId")->willReturn(2);
         $artifact_4_user_cant_view->method("getId")->willReturn(4);
 
-        $this->artifact_factory->method("getArtifactById")->willReturnCallback(
-            fn (int $artifact_id): ?Artifact => match ($artifact_id) {
-                1 => $artifact_valid_1,
-                2 => $artifact_valid_2,
-                3, 13 => null,
-                4 => $artifact_4_user_cant_view,
-            }
+
+        $this->artifact_factory->method("getArtifactById")->withConsecutive([1], [2], [3], [4], [1], [13])->willReturnOnConsecutiveCalls(
+            $artifact_valid_1,
+            $artifact_valid_2,
+            null,
+            $artifact_4_user_cant_view,
+            $artifact_valid_1,
+            null
         );
 
         $artifact_valid_1->method('userCanView')->willReturn(true);

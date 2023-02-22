@@ -20,13 +20,16 @@
 import { createListPicker } from "@tuleap/list-picker";
 import type { GetText } from "@tuleap/vue2-gettext-init";
 
-export function displayTeamsToAggregate(gettext_provider: GetText, doc: Document): void {
+export async function displayTeamsToAggregate(
+    gettext_provider: GetText,
+    doc: Document
+): Promise<void> {
     const list_teams = doc.getElementById("program-management-choose-teams");
     if (!list_teams || !(list_teams instanceof HTMLSelectElement)) {
         throw new Error("No list to pick teams");
     }
 
-    createListPicker(list_teams, {
+    await createListPicker(list_teams, {
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose a project to aggregate"),
         is_filterable: true,

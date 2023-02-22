@@ -22,7 +22,7 @@ import {
     FORM_ELEMENT_DISABLED_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
-import { patchJSON, uri } from "@tuleap/fetch-result";
+import { patchJSON } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
 import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
@@ -116,7 +116,7 @@ export const EditConfigurationModal = (
         modal_feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);
 
         toggleLoadingState(true);
-        await patchJSON<UpdatedGroup>(uri`/api/gitlab_groups/${group_id}`, {
+        await patchJSON<UpdatedGroup>(`/api/gitlab_groups/${group_id}`, {
             create_branch_prefix,
             allow_artifact_closure: allow_closure_checkbox.checked,
         }).match(

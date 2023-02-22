@@ -65,8 +65,7 @@ function initModals(): void {
 
         if (
             button.id === "project-admin-members-modal-import-users-button" ||
-            button.classList.contains("project-members-delete-button") ||
-            button.classList.contains("withdraw-invitation-button")
+            button.classList.contains("project-members-delete-button")
         ) {
             const target_modal_id = button.dataset.targetModalId;
             if (!target_modal_id) {

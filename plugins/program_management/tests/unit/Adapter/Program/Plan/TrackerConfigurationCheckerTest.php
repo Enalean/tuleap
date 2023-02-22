@@ -33,7 +33,7 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private const PROGRAM_ID = 197;
 
-    private static function checkProgramIncrementIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
+    private function checkProgramIncrementIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
     {
         $checker = new TrackerConfigurationChecker($tracker_retriever);
         $checker->checkProgramIncrementTrackerIsValid(
@@ -46,7 +46,7 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
      * @throws PlanTrackerDoesNotBelongToProjectException
      * @throws PlanTrackerNotFoundException
      */
-    private static function checkIterationIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
+    private function checkIterationIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
     {
         $checker = new TrackerConfigurationChecker($tracker_retriever);
         $checker->checkIterationTrackerIsValid(
@@ -55,7 +55,7 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    private static function checkPlannableTrackerIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
+    private function checkPlannableTrackerIsValid(RetrieveFullTrackerFromIdStub $tracker_retriever): void
     {
         $checker = new TrackerConfigurationChecker($tracker_retriever);
         $checker->checkPlannableTrackerIsValid(
@@ -64,12 +64,12 @@ final class TrackerConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    public static function dataProviderMethodUnderTest(): array
+    public function dataProviderMethodUnderTest(): array
     {
         return [
-            'Iteration'         => [[self::class, 'checkIterationIsValid']],
-            'Program Increment' => [[self::class, 'checkProgramIncrementIsValid']],
-            'Plannable tracker' => [[self::class, 'checkPlannableTrackerIsValid']],
+            'Iteration'         => [[$this, 'checkIterationIsValid']],
+            'Program Increment' => [[$this, 'checkProgramIncrementIsValid']],
+            'Plannable tracker' => [[$this, 'checkPlannableTrackerIsValid']],
         ];
     }
 

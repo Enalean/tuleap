@@ -40,8 +40,6 @@ type _Unused = ResultAsync<never, Fault>;
 export { decodeJSON } from "./json-decoder";
 export { JSONParseFault } from "./JSONParseFault";
 export { ResponseRetriever } from "./ResponseRetriever";
-export type { EncodedURI } from "./uri-string-template";
-export { uri, rawUri } from "./uri-string-template";
 
 /**
  * `getJSON` returns a `ResultAsync<TypeOfJSONPayload, Fault>` with `TypeOfJSONPayload` supplied as a generic type.

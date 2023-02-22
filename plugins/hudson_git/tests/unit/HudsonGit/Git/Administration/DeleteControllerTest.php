@@ -78,10 +78,6 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $csrf_token;
-    /**
-     * @var GitPermissionsManager&Mockery\MockInterface
-     */
-    private $git_permissions_manager;
 
     protected function setUp(): void
     {

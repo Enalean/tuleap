@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, postJSON, uri } from "@tuleap/fetch-result";
+import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type {
@@ -72,19 +72,17 @@ type AllLinkTypesResponse = {
 
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
-        getJSON<ParentArtifact>(uri`/api/v1/artifacts/${artifact_id.id}`).mapErr(
-            ParentRetrievalFault
-        ),
+        getJSON<ParentArtifact>(`/api/v1/artifacts/${artifact_id.id}`).mapErr(ParentRetrievalFault),
 
     getMatchingArtifact: (linkable_number: LinkableNumber): ResultAsync<LinkableArtifact, Fault> =>
-        getJSON<ArtifactWithStatus>(uri`/api/v1/artifacts/${linkable_number.id}`).map(
+        getJSON<ArtifactWithStatus>(`/api/v1/artifacts/${linkable_number.id}`).map(
             LinkableArtifactProxy.fromAPIArtifact
         ),
 
     getAllLinkTypes: (
         artifact_id: CurrentArtifactIdentifier
     ): ResultAsync<readonly LinkType[], Fault> =>
-        getJSON<AllLinkTypesResponse>(uri`/api/v1/artifacts/${artifact_id.id}/links`).map(
+        getJSON<AllLinkTypesResponse>(`/api/v1/artifacts/${artifact_id.id}/links`).map(
             ({ natures }) => natures
         ),
 
@@ -94,7 +92,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     ): ResultAsync<readonly LinkedArtifact[], Fault> {
         const id = artifact_id.id;
         return getAllJSON<LinkedArtifactCollection, LinkedArtifact>(
-            uri`/api/v1/artifacts/${id}/linked_artifacts`,
+            `/api/v1/artifacts/${id}/linked_artifacts`,
             {
                 params: {
                     limit: 50,
@@ -115,7 +113,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getPossibleParents(tracker_id): ResultAsync<readonly LinkableArtifact[], Fault> {
         const id = tracker_id.id;
         return getAllJSON<readonly ArtifactWithStatus[], ArtifactWithStatus>(
-            uri`/api/v1/trackers/${id}/parent_artifacts`,
+            `/api/v1/trackers/${id}/parent_artifacts`,
             { params: { limit: 1000 } }
         )
             .map((artifacts) => artifacts.map(LinkableArtifactProxy.fromAPIArtifact))
@@ -123,7 +121,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     },
 
     createFileUpload(file): ResultAsync<FileUploadCreated, Fault> {
-        return postJSON<PostFileResponse>(uri`/api/v1/tracker_fields/${file.file_field_id}/files`, {
+        return postJSON<PostFileResponse>(`/api/v1/tracker_fields/${file.file_field_id}/files`, {
             name: file.file_handle.name,
             file_size: file.file_handle.size,
             file_type: file.file_type,
@@ -139,7 +137,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getUserArtifactHistory(
         user_identifier: UserIdentifier
     ): ResultAsync<readonly LinkableArtifact[], Fault> {
-        return getJSON<UserHistoryResponse>(uri`/api/v1/users/${user_identifier.id}/history`).map(
+        return getJSON<UserHistoryResponse>(`/api/v1/users/${user_identifier.id}/history`).map(
             (history) => {
                 return history.entries
                     .filter((entry) => entry.type === ARTIFACT_TYPE)
@@ -149,7 +147,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
     },
 
     searchArtifacts(query): ResultAsync<readonly LinkableArtifact[], Fault> {
-        return postJSON<readonly SearchResultEntry[]>(uri`/api/search?limit=50`, {
+        return postJSON<readonly SearchResultEntry[]>(`/api/search?limit=50`, {
             keywords: query,
         }).map((results) => {
             return results
@@ -162,7 +160,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
         return getAllJSON<
             readonly ChangesetWithCommentRepresentation[],
             ChangesetWithCommentRepresentation
-        >(uri`/api/v1/artifacts/${artifact_id.id}/changesets`, {
+        >(`/api/v1/artifacts/${artifact_id.id}/changesets`, {
             params: {
                 limit: 50,
                 fields: "comments",

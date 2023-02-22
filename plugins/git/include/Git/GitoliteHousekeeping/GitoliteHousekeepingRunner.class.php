@@ -33,17 +33,21 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
     private $backend_service;
 
     public function __construct(
-        private SystemEventProcessManager $process_manager,
-        private SystemEventProcess $process,
+        SystemEventProcessManager $process_manager,
+        SystemEventProcess $process,
         Git_GitoliteHousekeeping_GitoliteHousekeepingDao $housekeeping_dao,
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         BackendService $backend_service,
-        private $gitolite_var_path,
-        private $remote_admin_repository,
+        $gitolite_var_path,
+        $remote_admin_repository,
     ) {
-        $this->housekeeping_dao = $housekeeping_dao;
-        $this->response         = $response;
-        $this->backend_service  = $backend_service;
+        $this->process_manager         = $process_manager;
+        $this->process                 = $process;
+        $this->housekeeping_dao        = $housekeeping_dao;
+        $this->response                = $response;
+        $this->backend_service         = $backend_service;
+        $this->gitolite_var_path       = $gitolite_var_path;
+        $this->remote_admin_repository = $remote_admin_repository;
     }
 
     public function run()

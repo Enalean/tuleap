@@ -17,52 +17,12 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-const now = Date.now();
-
 describe("Kanban for the Agile Dashboard service", () => {
-    before(function () {
-        cy.projectAdministratorSession();
-        cy.createNewPublicProject(`kanban-${now}`, "kanban").then((project_id) => {
-            cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "first title",
-                    artifact_status: "To be done",
-                    title_field_name: "title",
-                });
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "second title",
-                    artifact_status: "To be done",
-                    title_field_name: "title",
-                });
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "third title",
-                    artifact_status: "To be done",
-                    title_field_name: "title",
-                });
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "in progress",
-                    artifact_status: "In progress",
-                    title_field_name: "title",
-                });
-                cy.createArtifact({
-                    tracker_id: tracker_id,
-                    artifact_title: "also progress",
-                    artifact_status: "In progress",
-                    title_field_name: "title",
-                });
-            });
-        });
-    });
     context("As Project Admin", function () {
         it(`kanban administration modal still works`, function () {
             cy.projectAdministratorSession();
-
             cy.log("administrator can reorder column");
-            cy.visitProjectService(`kanban-${now}`, "Agile Dashboard");
+            cy.visitProjectService("kanban-project", "Agile Dashboard");
             cy.get('[data-test="go-to-kanban"]').click();
             cy.get("[data-test=kanban-header-edit-button]").click();
             cy.dragAndDrop(
@@ -101,13 +61,13 @@ describe("Kanban for the Agile Dashboard service", () => {
     });
     context("As Project member", function () {
         before(function () {
-            cy.getProjectId(`kanban-${now}`).as("project_id");
+            cy.projectMemberSession();
+            cy.getProjectId("kanban-project").as("project_id");
         });
 
         it(`I can use the kanban`, function () {
             cy.projectMemberSession();
-            cy.visitProjectService(`kanban-${now}`, "Agile Dashboard");
-
+            cy.visitProjectService("kanban-project", "Agile Dashboard");
             cy.get('[data-test="go-to-kanban"]').click();
 
             cy.log("I can move cards");
@@ -146,24 +106,24 @@ describe("Kanban for the Agile Dashboard service", () => {
 
             cy.log(`I can filter cards`);
             cy.get("[data-test=kanban-item]").its("length").should("be.gte", 4);
-            cy.get("[data-test=kanban-header-search]").type("in progress");
+            cy.get("[data-test=kanban-header-search]").type("speedin");
             cy.get("[data-test=kanban-item]").should("have.length", 1);
-            cy.contains("[data-test=tuleap-simple-field-name]", "in progress");
+            cy.contains("[data-test=tuleap-simple-field-name]", "Still speedin'");
 
             cy.get("[data-test=kanban-header-search]").clear();
             cy.get("[data-test=kanban-item]").its("length").should("be.gte", 4);
 
             cy.log(`I can check that WIP limit is reached`);
-            cy.get("[data-test=kanban-column-in_progress]").within(() => {
-                cy.get("[data-test=kanban-column-header-wip-count]").contains("2");
+            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
+                cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "have.class",
                     "tlp-badge-warning"
                 );
             });
 
-            cy.get("[data-test=kanban-column-to_be_done]").within(() => {
-                cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
+            cy.get("[data-test=kanban-column-in_progress]").within(() => {
+                cy.get("[data-test=kanban-column-header-wip-count]").contains("1");
                 cy.get("[data-test=kanban-column-header-wip-limit]").should(
                     "not.have.class",
                     "tlp-badge-warning"
@@ -172,6 +132,7 @@ describe("Kanban for the Agile Dashboard service", () => {
 
             cy.log(`I can drag and drop cards`);
 
+            const now = Date.now();
             const drag_label = `drag${now}`;
             const drop_label = `drop${now}`;
             cy.get("[data-test=kanban-column-backlog]").within(() => {

@@ -19,7 +19,7 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { postJSON, uri } from "@tuleap/fetch-result";
+import { postJSON } from "@tuleap/fetch-result";
 
 export const linkGitlabGroupWithTuleap = (
     current_project_id: number,
@@ -29,7 +29,7 @@ export const linkGitlabGroupWithTuleap = (
     create_branch_prefix: string,
     allow_artifact_closure: boolean
 ): ResultAsync<void, Fault> => {
-    return postJSON(uri`/api/v1/gitlab_groups`, {
+    return postJSON("/api/v1/gitlab_groups", {
         project_id: current_project_id,
         gitlab_group_id: group_id,
         gitlab_server_url: server_url,

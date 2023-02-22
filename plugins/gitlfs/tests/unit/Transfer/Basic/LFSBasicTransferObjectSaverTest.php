@@ -227,7 +227,7 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
     }
 
-    public static function objectSizeProvider()
+    public function objectSizeProvider()
     {
         return [
             [1024, 2048, LFSBasicTransferObjectSizeException::class],

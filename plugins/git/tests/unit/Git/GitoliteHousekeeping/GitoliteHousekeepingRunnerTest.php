@@ -20,34 +20,12 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var SystemEventProcessManager&\Mockery\MockInterface
-     */
-    private $process_manager;
-    /**
-     * @var SystemEventProcess&\Mockery\MockInterface
-     */
-    private $process;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao&\Mockery\MockInterface
-     */
-    private $housekeeping_dao;
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var BackendService&\Mockery\MockInterface
-     */
-    private $backend_service;
-    private string $gitolite_var_path;
-    private string $remote_admin_repository;
-    private Git_GitoliteHousekeeping_GitoliteHousekeepingRunner $runner;
 
     protected function setUp(): void
     {

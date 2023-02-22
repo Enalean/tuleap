@@ -66,10 +66,10 @@ class GitRepository
     private $is_mirrored;
 
     protected $backendType;
-    private ?Git_Backend_Interface $backend = null;
 
     public function __construct()
     {
+        $this->hash     = '';
         $this->rootPath = '';
         $this->path     = '';
 

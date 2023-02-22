@@ -22,7 +22,6 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { Querier } from "./Querier";
 import { RetrieveResponseStub } from "./RetrieveResponseStub";
-import { uri } from "@tuleap/fetch-result";
 
 const URI = "https://gitlab.example.com/api/v4/projects/91";
 const TOKEN = "4Twg0PGv61QYqy";
@@ -32,7 +31,7 @@ describe(`Querier`, () => {
     describe(`get()`, () => {
         const getResponse = (): ResultAsync<Response, Fault> => {
             const querier = Querier(response_retriever);
-            return querier.get(uri`${URI}`, { token: TOKEN });
+            return querier.get(URI, { token: TOKEN });
         };
 
         it(`makes a query to the given GitLab URI with the given credentials token

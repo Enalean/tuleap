@@ -387,7 +387,7 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($semantic);
     }
 
-    public static function getDataForNullReturnsTests(): array
+    public function getDataForNullReturnsTests(): array
     {
         $xml_with_end_date = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -411,22 +411,22 @@ class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F202' => new \Tracker_FormElement_Field_Date(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
                 ],
             ], [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F201' => new \Tracker_FormElement_Field_Date(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
                 ],
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F202' => new \Tracker_FormElement_Field_Integer(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class),
                 ],
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F201' => new \Tracker_FormElement_Field_Date(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
                 ],
             ],
         ];

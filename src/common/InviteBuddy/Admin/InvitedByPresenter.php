@@ -22,22 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
-/**
- * @psalm-immutable
- */
-final class InvitedByPresenter
+class InvitedByPresenter
 {
-    public readonly bool $has_been_invited;
-    public readonly bool $has_been_invited_by_only_one;
+    /**
+     * @var InvitedByUserPresenter[]
+     * @psalm-readonly
+     */
+    public $invited_by_users;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_been_invited;
 
     /**
      * @param InvitedByUserPresenter[] $invited_by_users
      */
-    public function __construct(
-        public readonly array $invited_by_users,
-        public readonly bool $has_used_an_invitation_to_register,
-    ) {
-        $this->has_been_invited             = count($invited_by_users) > 0;
-        $this->has_been_invited_by_only_one = count($invited_by_users) === 1;
+    public function __construct(array $invited_by_users)
+    {
+        $this->invited_by_users = $invited_by_users;
+        $this->has_been_invited = count($invited_by_users) > 0;
     }
 }

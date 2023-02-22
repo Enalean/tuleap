@@ -31,7 +31,6 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\RESTCollectionTransformer;
 use Tuleap\Session\SessionPopulator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
@@ -45,7 +44,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\FlatArtifactRepresentationTransformer;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
@@ -56,7 +54,6 @@ use UserManager;
 
 /**
  * Wrapper for Tracker Report related REST methods
- * @psalm-import-type FlatRepresentation from RESTCollectionTransformer
  */
 class ReportsResource extends AuthenticatedResource
 {
@@ -141,6 +138,7 @@ class ReportsResource extends AuthenticatedResource
      * You can ask to include some specific values with the <strong>values</strong> parameter.<br>
      * Eg:
      * <ul>
+     *  <li>…?id=123&values=summary,status //add summary and status values
      *  <li>…?id=123&values=all            //add all fields values
      *  <li>…?id=123&values=from_table_renderer //add all fields selected in the table renderer of the report
      *  <li>…?id=123&values=               //(empty string) do not add any field values
@@ -148,14 +146,13 @@ class ReportsResource extends AuthenticatedResource
      * </p>
      *
      * <p>
-     *   "from_table_renderer" values option only work if there is only one table renderer in the report.<br/>
-     *    An error will be thrown if there is no or multiple table renderers with no specific choice.<br/>
-     *    <strong>Warning:</strong> Please note that artifact link field values are not exported in this value format.
+     *   <strong>Warning:</strong> Please note that <strong>only "all", "from_table_renderer" and "" (empty string) are available</strong> for now.
      * </p>
      *
      * <p>
-     *   <strong>Warning:</strong> Please note the flat output_format contains a limited set of information and requires
-     *   either values=all or values=from_table_renderer
+     *   "from_table_renderer" values option only work if there is only one table renderer in the report.<br/>
+     *    An error will be thrown if there is no or multiple table renderers with no specific choice.<br/>
+     *    <strong>Warning:</strong> Please note that artifact link field values are not exported in this value format.
      * </p>
      *
      * @url GET {id}/artifacts
@@ -166,13 +163,10 @@ class ReportsResource extends AuthenticatedResource
      * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
      * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all,from_table_renderer}
      * @param int | null $table_renderer_id Which table renderer to use when values=from_table_renderer {@from query}{@required false}
-     * @param string $output_format Format of the response: nested (default) or a simplified and incomplete flat format {@from query}{@choice nested,flat}
-     * @psalm-param 'nested'|'flat' $output_format
      * @param int $limit Number of elements displayed per page {@from query}{@min 1} {@max 50}
      * @param int $offset Position of the first element to display {@from query}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
-     * @psalm-return list<ArtifactRepresentation>|list<FlatRepresentation>
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -181,7 +175,6 @@ class ReportsResource extends AuthenticatedResource
         bool $with_unsaved_changes = false,
         ?string $values = self::DEFAULT_VALUES,
         ?int $table_renderer_id = null,
-        string $output_format = 'nested',
         int $limit = self::DEFAULT_LIMIT,
         int $offset = self::DEFAULT_OFFSET,
     ): array {
@@ -213,10 +206,10 @@ class ReportsResource extends AuthenticatedResource
             );
 
             Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
-            return $this->getArtifactRepresentationsInExpectedFormat($output_format, $artifact_collection->getArtifactRepresentations());
+            return $artifact_collection->getArtifactRepresentations();
         }
 
-        $with_all_field_values = $values === self::ALL_VALUES;
+        $with_all_field_values = $values == self::ALL_VALUES;
 
         $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReport(
             $report,
@@ -226,34 +219,17 @@ class ReportsResource extends AuthenticatedResource
 
         Header::sendPaginationHeaders($limit, $offset, $artifact_collection->getTotalSize(), self::MAX_LIMIT);
 
-        $artifact_representations = $this->getListOfArtifactRepresentation(
+        return $this->getListOfArtifactRepresentation(
             $user,
             $artifact_collection->getArtifacts(),
             $with_all_field_values
         );
-
-        return $this->getArtifactRepresentationsInExpectedFormat($output_format, $artifact_representations);
     }
 
     /**
-     * @psalm-param list<ArtifactRepresentation> $artifact_representations
-     * @psalm-return list<ArtifactRepresentation>|list<FlatRepresentation>
+     * @return ArtifactRepresentation[]
      */
-    private function getArtifactRepresentationsInExpectedFormat(string $output_format, array $artifact_representations): array
-    {
-        return match ($output_format) {
-            'flat' => RESTCollectionTransformer::flattenRepresentations(
-                $artifact_representations,
-                new FlatArtifactRepresentationTransformer(Tracker_FormElementFactory::instance(), \Codendi_HTMLPurifier::instance())
-            ),
-            'nested' => $artifact_representations,
-        };
-    }
-
-    /**
-     * @psalm-return list<ArtifactRepresentation>
-     */
-    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values): array
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $builder              = new ArtifactRepresentationBuilder(

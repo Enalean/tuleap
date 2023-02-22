@@ -24,7 +24,6 @@ import {
     postGitlabBranch,
     postGitlabMergeRequest,
 } from "./rest-querier";
-import { uri } from "@tuleap/fetch-result";
 
 const GITLAB_INTEGRATION_ID = 12;
 const ARTIFACT_ID = 123;
@@ -37,7 +36,7 @@ describe(`rest-querier`, () => {
 
         const result = await postGitlabBranch(GITLAB_INTEGRATION_ID, ARTIFACT_ID, MAIN_BRANCH);
 
-        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/gitlab_branch`, {
+        expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_branch", {
             gitlab_integration_id: GITLAB_INTEGRATION_ID,
             artifact_id: ARTIFACT_ID,
             reference: MAIN_BRANCH,
@@ -59,7 +58,7 @@ describe(`rest-querier`, () => {
         );
 
         expect(postSpy).toHaveBeenCalledWith(
-            uri`/api/v1/gitlab_merge_request`,
+            "/api/v1/gitlab_merge_request",
             {},
             {
                 gitlab_integration_id: GITLAB_INTEGRATION_ID,
@@ -78,7 +77,7 @@ describe(`rest-querier`, () => {
             const result = await getGitLabRepositoryBranchInformation(GITLAB_INTEGRATION_ID);
 
             expect(getSpy).toHaveBeenCalledWith(
-                uri`/api/v1/gitlab_repositories/${GITLAB_INTEGRATION_ID}/branches`
+                `/api/v1/gitlab_repositories/${GITLAB_INTEGRATION_ID}/branches`
             );
             expect(result.isOk()).toBe(true);
         });

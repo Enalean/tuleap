@@ -25,7 +25,6 @@ import localVue from "../../support/local-vue.js";
 import module_options from "../../store/transition-modal/module.js";
 import { create } from "../../support/factories.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as list_picker from "@tuleap/list-picker";
 
 describe("FilledPreConditionsSection", () => {
     let store;
@@ -59,11 +58,6 @@ describe("FilledPreConditionsSection", () => {
             sync: false, // Without this, store.reset() causes errors
         });
     }
-
-    beforeEach(() => {
-        jest.spyOn(list_picker, "createListPicker").mockImplementation();
-    });
-
     afterEach(() => store.reset());
 
     describe("writable_fields", () => {
@@ -184,7 +178,6 @@ describe("FilledPreConditionsSection", () => {
                     current_transition: {
                         is_comment_required: true,
                         authorized_user_group_ids: [],
-                        not_empty_field_ids: [],
                     },
                 };
                 wrapper = filledPreConditionsMockFactory(state);

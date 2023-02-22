@@ -32,12 +32,12 @@
             class="tlp-input"
             id="document-title"
             name="title"
-            v-bind:placeholder="placeholder"
+            v-bind:placeholder="`${$gettext('My document')}`"
             required
             v-bind:value="value"
             v-bind:disabled="is_root_folder"
             v-on:input="oninput"
-            ref="title_input"
+            ref="input"
             data-test="document-new-item-title"
         />
         <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="title-error-message">
@@ -45,7 +45,7 @@
         </p>
     </div>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,
@@ -53,103 +53,110 @@ import {
     doesFolderAlreadyExistsAtUpdate,
 } from "../../../../../helpers/properties-helpers/check-item-title";
 import { isFolder } from "../../../../../helpers/type-check-helper";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type { Folder, Item } from "../../../../../type";
+import { State } from "vuex-class";
 import emitter from "../../../../../helpers/emitter";
-import { useState } from "vuex-composition-helpers";
-import { computed, onMounted, ref, watch } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import type { State } from "../../../../../type";
 
-const props = defineProps<{
-    value: string;
-    parent: Folder;
-    isInUpdateContext: boolean;
-    currentlyUpdatedItem: Item;
-}>();
+@Component
+export default class TitleProperty extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
 
-const { folder_content } = useState<Pick<State, "folder_content">>(["folder_content"]);
+    @Prop({ required: true })
+    readonly parent!: Folder;
 
-const { $gettext } = useGettext();
-const folder_already_exists_error = $gettext("A folder already exists with the same title.");
-const document_already_exists_error = $gettext("A document already exists with the same title.");
-const placeholder = ref($gettext("My document"));
-const error_message = ref("");
+    @Prop({ required: true })
+    readonly isInUpdateContext!: boolean;
 
-const is_root_folder = computed((): boolean => {
-    return props.currentlyUpdatedItem.parent_id === 0;
-});
+    @Prop({ required: true })
+    readonly currentlyUpdatedItem!: Item;
 
-const title_input = ref<HTMLElement | null>(null);
-watch(
-    () => props.value,
-    (value: string): void => {
-        const error = checkTitleValidity(value);
-        if (title_input.value instanceof HTMLInputElement) {
-            title_input.value.setCustomValidity(error);
+    @State
+    readonly folder_content!: Array<Item>;
+
+    private error_message = "";
+
+    get is_root_folder(): boolean {
+        return this.currentlyUpdatedItem.parent_id === 0;
+    }
+
+    @Watch("value")
+    public updateValue(text_value: string): void {
+        const error = this.checkTitleValidity(text_value);
+        if (this.$refs.input instanceof HTMLInputElement) {
+            this.$refs.input.setCustomValidity(error);
         }
-        error_message.value = error;
-    },
-    { immediate: true }
-);
-
-onMounted((): void => {
-    if (title_input.value instanceof HTMLInputElement) {
-        title_input.value.focus();
-    }
-});
-
-function checkTitleValidity(text_value: string): string {
-    if (props.isInUpdateContext) {
-        return getValidityErrorAtUpdate(text_value);
-    }
-    return getValidityErrorAtCreation(text_value);
-}
-
-function getValidityErrorAtCreation(text_value: string): string {
-    if (
-        isFolder(props.currentlyUpdatedItem) &&
-        doesFolderNameAlreadyExist(text_value, folder_content.value, props.parent)
-    ) {
-        return folder_already_exists_error;
-    } else if (
-        !isFolder(props.currentlyUpdatedItem) &&
-        doesDocumentNameAlreadyExist(text_value, folder_content.value, props.parent)
-    ) {
-        return document_already_exists_error;
+        this.error_message = error;
     }
 
-    return "";
-}
-
-function getValidityErrorAtUpdate(text_value: string): string {
-    if (
-        !isFolder(props.currentlyUpdatedItem) &&
-        doesDocumentAlreadyExistsAtUpdate(
-            text_value,
-            folder_content.value,
-            props.currentlyUpdatedItem,
-            props.parent
-        )
-    ) {
-        return document_already_exists_error;
-    } else if (
-        isFolder(props.currentlyUpdatedItem) &&
-        doesFolderAlreadyExistsAtUpdate(
-            text_value,
-            folder_content.value,
-            props.currentlyUpdatedItem,
-            props.parent
-        )
-    ) {
-        return folder_already_exists_error;
+    mounted(): void {
+        if (this.$refs.input instanceof HTMLInputElement) {
+            this.$refs.input.focus();
+        }
     }
 
-    return "";
-}
+    checkTitleValidity(text_value: string): string {
+        if (this.isInUpdateContext) {
+            return this.getValidityErrorAtUpdate(text_value);
+        }
+        return this.getValidityErrorAtCreation(text_value);
+    }
 
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLInputElement) {
-        emitter.emit("update-title-property", $event.target.value);
+    getValidityErrorAtCreation(text_value: string): string {
+        if (
+            isFolder(this.currentlyUpdatedItem) &&
+            doesFolderNameAlreadyExist(text_value, this.folder_content, this.parent)
+        ) {
+            return this.getErrorWhenFolderAlreadyExists();
+        } else if (
+            !isFolder(this.currentlyUpdatedItem) &&
+            doesDocumentNameAlreadyExist(text_value, this.folder_content, this.parent)
+        ) {
+            return this.getErrorWhenDocumentAlreadyExists();
+        }
+
+        return "";
+    }
+
+    getValidityErrorAtUpdate(text_value: string): string {
+        if (
+            !isFolder(this.currentlyUpdatedItem) &&
+            doesDocumentAlreadyExistsAtUpdate(
+                text_value,
+                this.folder_content,
+                this.currentlyUpdatedItem,
+                this.parent
+            )
+        ) {
+            return this.getErrorWhenDocumentAlreadyExists();
+        } else if (
+            isFolder(this.currentlyUpdatedItem) &&
+            doesFolderAlreadyExistsAtUpdate(
+                text_value,
+                this.folder_content,
+                this.currentlyUpdatedItem,
+                this.parent
+            )
+        ) {
+            return this.getErrorWhenFolderAlreadyExists();
+        }
+
+        return "";
+    }
+
+    getErrorWhenDocumentAlreadyExists(): string {
+        return this.$gettext("A document already exists with the same title.");
+    }
+
+    getErrorWhenFolderAlreadyExists(): string {
+        return this.$gettext("A folder already exists with the same title.");
+    }
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLInputElement) {
+            emitter.emit("update-title-property", $event.target.value);
+        }
     }
 }
 </script>

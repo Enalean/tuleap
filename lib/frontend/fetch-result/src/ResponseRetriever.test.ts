@@ -34,7 +34,6 @@ import {
     PUT_METHOD,
 } from "./constants";
 import { RestlerErrorHandler } from "./RestlerErrorHandler";
-import { getEncodedURIString, uri as uriTag } from "./uri-string-template";
 
 const isNetworkFault = (fault: Fault): boolean =>
     "isNetworkFault" in fault && fault.isNetworkFault() === true;
@@ -42,7 +41,7 @@ const isNetworkFault = (fault: Fault): boolean =>
 describe(`ResponseRetriever`, () => {
     let fetcher: FetchInterface;
     const success_response = { ok: true } as unknown as Response;
-    const uri = uriTag`https://example.com/response-retriever-test`;
+    const uri = "https://example.com/response-retriever-test";
 
     const retrieve = (): ResultAsync<Response, Fault> => {
         const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
@@ -68,7 +67,7 @@ describe(`ResponseRetriever`, () => {
                 throw new Error("Expected an OK");
             }
             expect(result.value).toBe(success_response);
-            expect(fetcher.getRequestInfo(0)).toBe(getEncodedURIString(uri));
+            expect(fetcher.getRequestInfo(0)).toBe(uri);
             const request_init = fetcher.getRequestInit(0);
             if (!request_init) {
                 throw new Error("Expected a request init");

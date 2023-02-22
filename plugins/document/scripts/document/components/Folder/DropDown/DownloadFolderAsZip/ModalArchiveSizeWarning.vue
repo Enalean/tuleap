@@ -22,7 +22,6 @@
         class="tlp-modal tlp-modal-warning"
         role="dialog"
         aria-labelledby="modal-archive-size-warning-label"
-        ref="warning_size_modal"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="modal-archive-size-warning-label">
@@ -102,55 +101,49 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import type { ConfigurationState } from "../../../../store/configuration";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { createModal } from "@tuleap/tlp-modal";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 
-const props = defineProps<{ size: number; folderHref: string; shouldWarnOsxUser: boolean }>();
+const configuration = namespace("configuration");
 
-const { warning_threshold } = useState<Pick<ConfigurationState, "warning_threshold">>(
-    "configuration",
-    ["warning_threshold"]
-);
+@Component
+export default class ModalArchiveSizeWarning extends Vue {
+    @Prop({ required: true })
+    readonly size!: number;
 
-const size_in_MB = computed((): string => {
-    const size_in_mb = props.size / Math.pow(10, 6);
-    return Number.parseFloat(size_in_mb.toString()).toFixed(2);
-});
+    @Prop({ required: true })
+    readonly folderHref!: string;
 
-const { interpolate, $ngettext } = useGettext();
+    @Prop({ required: true })
+    readonly shouldWarnOsxUser!: boolean;
 
-const modal_header_title = computed((): string => {
-    const nb_warnings = props.shouldWarnOsxUser ? 2 : 1;
-    const translated = $ngettext("1 warning", "%{ nb_warnings } warnings", nb_warnings);
+    @configuration.State
+    readonly warning_threshold!: number;
 
-    return interpolate(translated, { nb_warnings });
-});
+    private modal: Modal | null = null;
 
-const modal = ref<Modal | null>(null);
-
-const warning_size_modal = ref<InstanceType<typeof HTMLElement>>();
-
-onMounted((): void => {
-    if (warning_size_modal.value) {
-        modal.value = createModal(warning_size_modal.value, { destroy_on_hide: true });
-        modal.value.addEventListener("tlp-modal-hidden", close);
-        modal.value.show();
+    get size_in_MB(): string {
+        const size_in_mb = this.size / Math.pow(10, 6);
+        return Number.parseFloat(size_in_mb.toString()).toFixed(2);
     }
-});
+    get modal_header_title(): string {
+        const nb_warnings = this.shouldWarnOsxUser === true ? 2 : 1;
+        const translated = this.$ngettext("1 warning", "%{ nb_warnings } warnings", nb_warnings);
 
-onBeforeUnmount(() => {
-    modal.value?.removeEventListener(EVENT_TLP_MODAL_HIDDEN, close);
-});
-const emit = defineEmits<{
-    (e: "download-folder-as-zip-modal-closed"): void;
-}>();
+        return this.$gettextInterpolate(translated, { nb_warnings });
+    }
 
-function close(): void {
-    emit("download-folder-as-zip-modal-closed");
+    mounted(): void {
+        this.modal = createModal(this.$el);
+        this.modal.addEventListener("tlp-modal-hidden", this.close);
+        this.modal.show();
+    }
+
+    close(): void {
+        this.$emit("download-folder-as-zip-modal-closed");
+    }
 }
 </script>

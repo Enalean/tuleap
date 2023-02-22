@@ -1,23 +1,29 @@
-{{# has_svn_tokens }}
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">{{# gettext }}SVN tokens{{/ gettext }}</h1>
-            </div>
-            <section class="tlp-pane-section">
-                <p class="tlp-alert-info">
-                    {{# gettext }}Creating new SVN tokens is no more possible, personal access keys should be used instead.{{/ gettext }}
-                </p>
-                <p>
-                    {{# gettext }}You can use SVN tokens as a replacement for your password on projects selected by the administrator.{{/ gettext }}
-                </p>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# gettext }}SVN tokens{{/ gettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# gettext }}You can use SVN tokens as a replacement for your password on projects selected by the administrator.{{/ gettext }}
+            </p>
 
-                <form action="/account/svn_token/revoke" method="post">
-                    {{# csrf_token }}
-                        {{> csrf_token_input }}
-                    {{/ csrf_token }}
+            <form action="/account/svn_token/revoke" method="post">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
 
-                    <div class="tlp-table-actions">
+                <div class="tlp-table-actions">
+                    <button
+                            type="button"
+                            class="tlp-button-primary tlp-table-actions-element"
+                            id="generate-svn-token-button"
+                            data-test="generate-svn-token-button"
+                            data-target-modal-id="svn-tokens-generate-modal"
+                    >
+                        <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Generate an SVN token{{/ gettext }}
+                    </button>
+                    {{# has_svn_tokens }}
                         <button type="submit"
                                 id="button-revoke-svn-tokens"
                                 data-test="button-revoke-svn-tokens"
@@ -27,18 +33,20 @@
                         >
                             <i class="tlp-button-icon far fa-trash-alt"></i> {{# gettext }}Revoke selected SVN token{{/ gettext }}
                         </button>
-                    </div>
+                    {{/ has_svn_tokens }}
+                </div>
 
-                    <table class="tlp-table">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th class="svn-tokens-header">{{# gettext }}Generated on{{/ gettext }}</th>
-                            <th class="svn-tokens-header">{{# gettext }}Last used on{{/ gettext }}</th>
-                            <th class="svn-tokens-header">{{# gettext }}Last used by{{/ gettext }}</th>
-                            <th class="svn-tokens-header">{{# gettext }}Comment{{/ gettext }}</th>
-                        </tr>
-                        </thead>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="svn-tokens-header">{{# gettext }}Generated on{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Last used on{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Last used by{{/ gettext }}</th>
+                        <th class="svn-tokens-header">{{# gettext }}Comment{{/ gettext }}</th>
+                    </tr>
+                    </thead>
+                    {{# has_svn_tokens }}
                         <tbody>
                         {{# svn_tokens }}
                             <tr data-test="user-prefs-svn-token">
@@ -52,9 +60,63 @@
                             </tr>
                         {{/ svn_tokens }}
                         </tbody>
-                    </table>
-                </form>
-            </section>
+                    {{/ has_svn_tokens }}
+                    {{^ has_svn_tokens }}
+                        <tbody>
+                        <tr>
+                            <td class="tlp-table-cell-empty" colspan="5">
+                                {{# gettext }}You don't have any SVN tokens yet.{{/ gettext }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    {{/ has_svn_tokens }}
+                </table>
+            </form>
+        </section>
+    </div>
+</section>
+
+<div id="svn-tokens-generate-modal" class="tlp-modal" role="dialog" aria-labelledby="svn-tokens-generate-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="svn-tokens-generate-modal-title">
+            {{# gettext }}Generate an SVN token{{/ gettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <form action="/account/svn_token/create" method="post">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="tlp-modal-body">
+            <p>
+                {{# gettext }}A token will be automatically generated at the form submission. The comment is not required but it can help you to manage your tokens.{{/ gettext }}
+            </p>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="svn-token-description">{{# gettext }}Token comment{{/ gettext }}</label>
+                <textarea id="svn-token-description"
+                          name="svn-token-description"
+                          data-test="svn-token-description"
+                          rows="5"
+                          class="tlp-textarea"
+                          placeholder="{{# gettext }}My comment so I won't forget the purpose of this token...{{/ gettext }}"
+                ></textarea>
+            </div>
+
         </div>
-    </section>
-{{/ has_svn_tokens }}
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    id="generate-new-svn-token-button"
+                    data-test="generate-new-svn-token-button"
+            >
+                {{# gettext }}Generate new token{{/ gettext }}
+            </button>
+        </div>
+    </form>
+</div>

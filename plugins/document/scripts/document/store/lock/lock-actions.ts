@@ -33,13 +33,6 @@ import {
 import type { ActionContext } from "vuex";
 import type { Item, State } from "../../type";
 import { isEmbedded, isEmpty, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
-import type { ActionTree } from "vuex";
-import type { RootState } from "../../type";
-
-export interface LockActions extends ActionTree<State, RootState> {
-    readonly lockDocument: typeof lockDocument;
-    readonly unlockDocument: typeof unlockDocument;
-}
 
 export const lockDocument = async (
     context: ActionContext<State, State>,

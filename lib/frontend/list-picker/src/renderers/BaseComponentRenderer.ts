@@ -29,7 +29,6 @@ export class BaseComponentRenderer {
     public renderBaseComponent(): ListPickerComponent {
         const wrapper_element = document.createElement("span");
         wrapper_element.classList.add("list-picker-component-wrapper");
-        wrapper_element.setAttribute("data-list-picker", "wrapper");
 
         const list_picker_element = this.createListPickerElement();
         const dropdown_element = this.createDropdownElement();

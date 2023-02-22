@@ -361,7 +361,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         );
     }
 
-    public static function provideGitLabAPIToRetrieveGitlabProjectExceptions(): array
+    public function provideGitLabAPIToRetrieveGitlabProjectExceptions(): array
     {
         return [
             [
@@ -442,7 +442,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
         );
     }
 
-    public static function provideGitLabAPIExceptions(): array
+    public function provideGitLabAPIExceptions(): array
     {
         return [
             [

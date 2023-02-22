@@ -178,7 +178,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
-    public static function getEnvironmentIsNotOverrideByCLIDefaults(): iterable
+    public function getEnvironmentIsNotOverrideByCLIDefaults(): iterable
     {
         return [
             'host' => [

@@ -132,7 +132,11 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    ${tuleapcfg} site-deploy:gitolite3-hooks
+    if [ ! -L "${git_home}/.gitolite/hooks/common/post-receive" ]; then
+        ${ln} -s "${tuleap_src_plugins}/git/hooks/post-receive-gitolite" \
+            "${git_home}/.gitolite/hooks/common/post-receive"
+        plugin_git_configured="true"
+    fi
 
     if ! $(${tuleapcfg} systemctl is-enabled tuleap-process-system-events-git.timer); then
         ${tuleapcfg} systemctl enable "tuleap-process-system-events-git.timer"
@@ -163,8 +167,29 @@ _pluginGit() {
 }
 
 _pluginSVN() {
-    sudo -u codendiadm /usr/bin/tuleap plugin:install svn
-    /usr/bin/tuleap setup:svn
+    local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
+    local plugin_svn_configured="false"
+    local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
+
+    if [ ! -f ${httpd_vhost} ]; then
+        ${awk} '{ gsub("%sys_default_domain%", "'"${server_name}"'");
+                  gsub("*:80$", "127.0.0.1:8080");
+                  gsub("*:80>", "127.0.0.1:8080>");
+                  print }' \
+                    "${tuleap_src}/etc/tuleap-vhost.conf.dist" > ${httpd_vhost}
+        ${sed} --in-place '/Include.*configuration\|tuleap-aliases/d' \
+             ${httpd_vhost}
+        plugin_svn_configured="true"
+    fi
+
+    if [ ${plugin_svn_configured} = "true" ]; then
+        ${tuleapcfg} systemctl restart "httpd.service"
+        ${tuleapcfg} systemctl enable "httpd.service"
+        _infoMessage "Plugin SVN is configured"
+        plugins_configured+=('true')
+    else
+        _infoMessage "Plugin SVN is already configured"
+    fi
 }
 
 _pluginMediawiki() {

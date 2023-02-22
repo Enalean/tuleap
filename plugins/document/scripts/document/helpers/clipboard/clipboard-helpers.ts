@@ -18,10 +18,10 @@
  *
  */
 
-import type { FolderContentItem } from "../../type";
+import type { Item } from "../../type";
 
 export function isItemDestinationIntoItself(
-    folder_content: Array<FolderContentItem>,
+    folder_content: Array<Item>,
     item_id: number,
     destination_id: number | null
 ): boolean {

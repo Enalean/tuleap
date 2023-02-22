@@ -16,14 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-const a_week_ago = new Date();
-a_week_ago.setDate(a_week_ago.getDate() - 7);
+import { DateTime } from "luxon";
 
 const state = {
     user_id: null,
-    start_date: a_week_ago.toISOString().split("T")[0],
-    end_date: new Date().toISOString().split("T")[0],
+    start_date: DateTime.local().minus({ weeks: 1 }).toISODate(),
+    end_date: DateTime.local().toISODate(),
     reading_mode: true,
     total_times: 0,
     user_locale: null,

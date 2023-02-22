@@ -29,9 +29,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
+class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -50,12 +49,10 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
      * @var \Project
      */
     private $an_active_project;
-    private \PFUser $project_admin;
 
     protected function setUp(): void
     {
         $this->add_project_member = M::mock(AddProjectMember::class);
-        $this->project_admin      = UserTestBuilder::buildWithDefaults();
 
         $this->an_active_project = M::mock(\Project::class, ['getID' => 202, 'getPublicName' => 'A project name', 'getUnixName' => 'a-project-name']);
 
@@ -65,11 +62,11 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
     public function testItAddsActiveUsers(): void
     {
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
-        $this->add_project_member->shouldReceive('addProjectMember')->with($user, $this->an_active_project, $this->project_admin)->once();
+        $this->add_project_member->shouldReceive('addProjectMember')->with($user, $this->an_active_project)->once();
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
-        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
+        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
 
     public function testItDisplaysAnErrorWhenRestrictedUserIsAddedToWoRestrictedProject(): void
@@ -79,7 +76,7 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
-        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
+        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
 
     public function testItDisplaysAnErrorWhenUserIsAlreadyMember(): void
@@ -89,6 +86,6 @@ final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tu
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
-        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project, $this->project_admin);
+        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
 }

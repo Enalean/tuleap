@@ -52,6 +52,32 @@ body {
         margin: 0 0 0 variables-common.$sidebar-width;
     }
 
+    // stylelint-disable-next-line selector-class-pattern
+    &.admin_register {
+        #register-form form label .label-help {
+            display: none;
+        }
+
+        #register-background {
+            background-color: #ffffff;
+            background-image: none;
+        }
+    }
+
+    // stylelint-disable-next-line selector-class-pattern
+    &.register-page:not(.admin_register) {
+        > .wrapper {
+            background-color: #fbfbfb;
+        }
+    }
+
+    &.register-page {
+        .content {
+            padding: 0;
+            background-color: #fbfbfb;
+        }
+    }
+
     &.search-page .main .content {
         padding: 0;
     }

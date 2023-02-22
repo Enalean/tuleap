@@ -67,9 +67,10 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->notification_manager = Mockery::mock(Docman_NotificationsManager_Move::class)
+        $this->notification_manager       = Mockery::mock(Docman_NotificationsManager_Move::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        $this->notification_manager->_url = "http://www.example.com/plugins/docman/";
 
         $this->folder = Mockery::mock(Docman_Folder::class);
 

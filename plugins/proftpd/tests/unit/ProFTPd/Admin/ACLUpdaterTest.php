@@ -18,17 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $backend;
 
-    private Tuleap\ProFTPd\Admin\ACLUpdater $acl_updater;
+    private $acl_updater;
 
     private $path;
-    private string $http_user;
-    private string $writers;
-    private string $readers;
 
     protected function setUp(): void
     {
@@ -41,7 +37,7 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->readers     = 'gpig-ftp_readers';
     }
 
-    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL(): void
+    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL()
     {
         $root_path = $this->path;
 
@@ -80,7 +76,7 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testItSetsAclOn4Elements(): void
+    public function testItSetsAclOn4Elements()
     {
         $this->backend->expects($this->exactly(4))->method('resetacl');
         $this->backend->expects($this->exactly(4))->method('modifyacl');
@@ -90,50 +86,24 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSetsACLOnDirectoryWhenNoReaders(): void
     {
         $this->backend->method('resetacl');
-        $modify_acl_called_with_expected_values = false;
-        $this->backend->method('modifyacl')->willReturnCallback(
-            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
-                if ($acl === 'd:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx' && $path === $this->path) {
-                    $modify_acl_called_with_expected_values = true;
-                }
-            }
-        );
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
-
-        self::assertTrue($modify_acl_called_with_expected_values);
     }
 
     public function testItSetsACLOnDirectoryWhenNoWriters(): void
     {
         $this->backend->method('resetacl');
-        $modify_acl_called_with_expected_values = false;
-        $this->backend->method('modifyacl')->willReturnCallback(
-            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
-                if ($acl === 'd:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx' && $path === $this->path) {
-                    $modify_acl_called_with_expected_values = true;
-                }
-            }
-        );
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
-
-        self::assertTrue($modify_acl_called_with_expected_values);
     }
 
     public function testItSetsACLOnDirectoryWhenNoReadersNorWriters(): void
     {
         $this->backend->method('resetacl');
-        $modify_acl_called_with_expected_values = false;
-        $this->backend->method('modifyacl')->willReturnCallback(
-            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
-                if ($acl === 'd:u:httpuser:rwx,u:httpuser:rwx' && $path === $this->path) {
-                    $modify_acl_called_with_expected_values = true;
-                }
-            }
-        );
+        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,u:httpuser:rwx', $this->path]);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');
-        self::assertTrue($modify_acl_called_with_expected_values);
     }
 }

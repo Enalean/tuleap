@@ -23,7 +23,6 @@ use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_BindDecorator
 {
     /**
@@ -141,7 +140,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         $input_name = "bind[decorator][$value_id]";
         $input_id   = $decorator_id . '_field';
 
-        return \Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder::buildPresenter(
+        return new ColorpickerMountPointPresenter(
             $current_color,
             $input_name,
             $input_id,

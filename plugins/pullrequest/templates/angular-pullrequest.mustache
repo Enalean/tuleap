@@ -1,26 +1,17 @@
-{{^ is_vue_overview_shown }}
-    <div id="pullrequest-app"
-         ng-app="tuleap.pull-request"
-         ng-controller="MainController"
-    >
-        <div class="pullrequest-init-data" ng-non-bindable
-             data-repository-id="{{ repository_id }}"
-             data-user-id="{{ user_id }}"
-             data-user-avatar-url="{{ user_avatar_url }}"
-             data-language="{{ language }}"
-             data-nb-pull-request-badge="{{ nb_pull_request_badge }}"
-             data-is-there-at-least-one-pull-request="{{ is_there_at_least_one_pull_request }}"
-             data-is-merge-commit-allowed="{{ is_merge_commit_allowed }}"
-             data-allow-pullrequest-v2="{{ allow_pullrequest_v2 }}"
-             data-relative-date-display="{{ relative_date_display }}"
-        ></div>
-        <ui-view></ui-view>
-    </div>
-{{/ is_vue_overview_shown }}
-{{# is_vue_overview_shown }}
-    <div class="vue-overview-mount-point"
+<div id="pullrequest-app"
+    ng-app="tuleap.pull-request"
+    ng-controller="MainController"
+>
+    <div class="pullrequest-init-data" ng-non-bindable
          data-repository-id="{{ repository_id }}"
-         data-project-id="{{ project_id }}"
+         data-user-id="{{ user_id }}"
+         data-user-avatar-url="{{ user_avatar_url }}"
+         data-language="{{ language }}"
+         data-nb-pull-request-badge="{{ nb_pull_request_badge }}"
+         data-is-there-at-least-one-pull-request="{{ is_there_at_least_one_pull_request }}"
+         data-is-merge-commit-allowed="{{ is_merge_commit_allowed }}"
+         data-allow-pullrequest-v2="{{ allow_pullrequest_v2 }}"
          data-relative-date-display="{{ relative_date_display }}"
     ></div>
-{{/ is_vue_overview_shown }}
+    <ui-view></ui-view>
+</div>

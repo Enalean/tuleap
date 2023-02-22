@@ -18,12 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 use Tuleap\Tracker\Artifact\Artifact;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
@@ -99,10 +96,6 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
 
     /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory */
     private $tracker_factory;
-    /**
-     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $event_manager;
 
     protected function setUp(): void
     {
@@ -112,9 +105,6 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->tracker     = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(1);
         $this->tracker->shouldReceive('getItemName');
-        $this->tracker->shouldReceive('getProject')->andReturn(
-            \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build()
-        );
         $this->new_artifact = Mockery::mock(Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods(
         );
         $this->new_artifact->setId($this->new_artifact_id);
@@ -133,7 +123,6 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->from_artifact->setChangesets([$this->changeset_id => $this->from_changeset]);
         $this->from_artifact->shouldReceive('getChangesetFactory')->andReturn($changeset_factory);
         $this->from_changeset->shouldReceive('getArtifact')->andReturn($this->from_artifact);
-        $this->from_changeset->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->children_xml_exporter      = Mockery::spy(Tracker_XML_Exporter_ChildrenXMLExporter::class);
         $this->artifacts_imported_mapping = Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class);
 
@@ -153,7 +142,6 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->request->shouldReceive('get')->with('artifact')->andReturn($this->submitted_values);
 
         $this->tracker_factory = Mockery::spy(\TrackerFactory::class);
-        $this->event_manager   = $this->createMock(EventManager::class);
 
         $this->action = new Tracker_Action_CopyArtifact(
             $this->tracker,
@@ -165,8 +153,7 @@ final class Tracker_Action_CopyArtifactTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->children_xml_exporter,
             $this->artifacts_imported_mapping,
             $this->logger,
-            $this->tracker_factory,
-            $this->event_manager,
+            $this->tracker_factory
         );
 
         $this->default_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
@@ -216,8 +203,6 @@ XML;
         $this->xml_importer->shouldReceive('importBareArtifact')->andReturn($this->new_artifact);
 
         $this->new_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')->once();
-
-        $this->event_manager->expects(self::once())->method('dispatch');
 
         $GLOBALS['Response']->expects(self::once())->method('redirect')->with(TRACKER_BASE_URL . '/?aid=456');
 
@@ -374,8 +359,6 @@ XML;
         $this->a_mocked_artifact->shouldReceive('createNewChangesetWithoutRequiredValidation')
             ->withArgs([[], Mockery::any(), $this->user, true, Tracker_Artifact_Changeset_Comment::TEXT_COMMENT])
             ->once();
-
-        $this->event_manager->expects(self::once())->method('dispatch');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
@@ -545,8 +528,6 @@ XML;
                 Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
                 Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
             )->once();
-
-        $this->event_manager->expects(self::once())->method('dispatch');
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

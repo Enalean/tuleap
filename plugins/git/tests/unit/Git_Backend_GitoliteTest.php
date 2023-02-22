@@ -24,6 +24,8 @@ use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\TemporaryTestDirectory;
 
+require_once 'bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Backend_GitoliteTest extends \Tuleap\Test\PHPUnit\TestCase
 {

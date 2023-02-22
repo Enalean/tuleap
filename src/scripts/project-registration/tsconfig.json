@@ -1,9 +1,0 @@
-{
-    "extends": "../../../tsconfig.json",
-    "compilerOptions": {
-        "module": "ES2020",
-        "types": ["jest"],
-        "skipLibCheck": true
-    },
-    "include": ["src/**/*"]
-}

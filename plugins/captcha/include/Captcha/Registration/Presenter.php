@@ -22,9 +22,10 @@ namespace Tuleap\Captcha\Registration;
 
 class Presenter
 {
-    public function __construct(
-        public readonly string $site_key,
-        public readonly ?string $validation_error_message,
-    ) {
+    public $site_key;
+
+    public function __construct($site_key)
+    {
+        $this->site_key = $site_key;
     }
 }

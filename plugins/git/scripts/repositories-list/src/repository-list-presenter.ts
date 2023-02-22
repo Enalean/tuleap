@@ -19,6 +19,16 @@
 
 import type { ExternalPlugins, RepositoryOwner } from "./type";
 
+export {
+    build,
+    getUserId,
+    getProjectId,
+    getUserIsAdmin,
+    getDashCasedLocale,
+    getRepositoriesOwners,
+    getExternalPlugins,
+};
+
 let current_user_id: number;
 let current_project_id: number;
 let is_administrator = false;
@@ -26,7 +36,7 @@ let locale: string;
 let repositories_owners: Array<RepositoryOwner> = [];
 let external_plugins: Array<ExternalPlugins> = [];
 
-export function build(
+function build(
     user_id: number,
     project_id: number,
     is_user_administrator: boolean,
@@ -42,26 +52,26 @@ export function build(
     external_plugins = external_plugins_enabled;
 }
 
-export function getUserId(): number {
+function getUserId(): number {
     return current_user_id;
 }
 
-export function getProjectId(): number {
+function getProjectId(): number {
     return current_project_id;
 }
 
-export function getUserIsAdmin(): boolean {
+function getUserIsAdmin(): boolean {
     return is_administrator;
 }
 
-export function getDashCasedLocale(): string {
+function getDashCasedLocale(): string {
     return locale.replace(/_/g, "-");
 }
 
-export function getRepositoriesOwners(): Array<RepositoryOwner> {
+function getRepositoriesOwners(): Array<RepositoryOwner> {
     return repositories_owners;
 }
 
-export function getExternalPlugins(): Array<ExternalPlugins> {
+function getExternalPlugins(): Array<ExternalPlugins> {
     return external_plugins;
 }

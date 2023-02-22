@@ -403,13 +403,9 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger
             ->method('info')
-            ->willReturnCallback(
-                function (string $message): void {
-                    match ($message) {
-                        'Enable timetracking for tracker 789.',
-                        'Add timetracking writer permission.' => true
-                    };
-                }
+            ->withConsecutive(
+                ['Enable timetracking for tracker 789.'],
+                ['Add timetracking writer permission.'],
             );
 
         $this->xml_import->import(
@@ -536,14 +532,10 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger
             ->method('info')
-            ->willReturnCallback(
-                function (string $message): void {
-                    match ($message) {
-                        'Enable timetracking for tracker 789.',
-                        'Add timetracking reader permission.',
-                        'Add timetracking writer permission.' => true
-                    };
-                }
+            ->withConsecutive(
+                ['Enable timetracking for tracker 789.'],
+                ['Add timetracking reader permission.'],
+                ['Add timetracking writer permission.'],
             );
     }
 }

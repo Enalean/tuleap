@@ -86,7 +86,7 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function restAuthenticationExceptionProvider(): array
+    public function restAuthenticationExceptionProvider(): array
     {
         return [
             [new User_StatusInvalidException()],

@@ -23,7 +23,6 @@ import FrozenFieldsAction from "./FrozenFieldsAction.vue";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as list_picker from "@tuleap/list-picker";
 
 describe("FrozenFieldsAction", () => {
     let store;
@@ -38,8 +37,6 @@ describe("FrozenFieldsAction", () => {
     let wrapper;
 
     beforeEach(() => {
-        jest.spyOn(list_picker, "createListPicker").mockImplementation();
-
         const current_tracker = {
             fields: [date_field, int_field, float_field, status_field],
         };
@@ -65,6 +62,7 @@ describe("FrozenFieldsAction", () => {
         store = createStoreMock(store_options);
 
         wrapper = mount(FrozenFieldsAction, {
+            stubs: ["multi-select"],
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
             localVue,

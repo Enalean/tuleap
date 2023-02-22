@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+
 class Workflow_Transition_Condition_FieldNotEmpty_Factory
 {
     private $dao;
@@ -62,7 +62,10 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory
         return $condition;
     }
 
-    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping): void
+    /**
+     * Duplicate the conditions
+     */
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)
     {
         $this->dao->duplicate($from_transition->getId(), $new_transition_id, $field_mapping);
     }

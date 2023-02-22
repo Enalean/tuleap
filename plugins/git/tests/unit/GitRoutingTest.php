@@ -48,7 +48,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public static function smartHTTPRoutesProvider()
+    public function smartHTTPRoutesProvider()
     {
         return [
             ['GET', '/plugins/git/gpig/goldfish/HEAD'],
@@ -71,7 +71,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, HTTP\HTTPController::class);
     }
 
-    public static function legacyRepositoryBrowsingURLs()
+    public function legacyRepositoryBrowsingURLs()
     {
         return [
             ['GET', '/plugins/git/index.php/101/view/26/'],
@@ -89,7 +89,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitLegacyURLRedirectController::class);
     }
 
-    public static function friendlyURLsProvider()
+    public function friendlyURLsProvider()
     {
         return [
             ['GET', '/plugins/git/gpig/repo'],
@@ -107,7 +107,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryBrowserController::class);
     }
 
-    public static function friendlyProjectURLsProvider()
+    public function friendlyProjectURLsProvider()
     {
         return [
             ['GET', '/plugins/git/gpig/'],
@@ -123,7 +123,7 @@ class GitRoutingTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->runTestOnURL($method, $uri, FastRoute\Dispatcher::FOUND, GitRepositoryListController::class);
     }
 
-    public static function legacyGitGodControllerURLsProvider()
+    public function legacyGitGodControllerURLsProvider()
     {
         return [
             ['GET', '/plugins/git/?group_id=101'],

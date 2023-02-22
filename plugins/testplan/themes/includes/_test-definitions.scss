@@ -18,7 +18,7 @@
  */
 
 @use "media-query-definitions" as media-query;
-@use "@tuleap/tlp/src/scss/components/tooltips-mixins" as tooltip;
+@use "../../../../src/themes/tlp/src/scss/components/tooltips-mixins" as tooltip;
 
 .test-plan-list-of-test-definitions {
     display: flex;

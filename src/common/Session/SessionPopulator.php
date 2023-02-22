@@ -20,15 +20,10 @@
 
 namespace Tuleap\Session;
 
-use LoaderScheduler;
-
 final class SessionPopulator
 {
     public static function populateSessionIfNeeded(): void
     {
-        if (($_SERVER[LoaderScheduler::FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION] ?? '') === 'true') {
-            return;
-        }
         if (session_status() !== PHP_SESSION_NONE) {
             return;
         }

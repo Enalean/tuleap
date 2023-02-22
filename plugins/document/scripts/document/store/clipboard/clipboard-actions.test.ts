@@ -30,6 +30,7 @@ import {
     CLIPBOARD_OPERATION_COPY,
 } from "../../constants";
 import * as rest_querier from "../../api/move-rest-querier";
+import * as adjust_item_to_content_after_item_creation_in_folder from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import type { ClipboardState } from "./module";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, ItemFile, Link, State, Wiki } from "../../type";
@@ -40,10 +41,14 @@ describe("Clipboard actions", () => {
     let context = {
         commit: jest.fn(),
     } as unknown as ActionContext<ClipboardState, State>;
+    const global_context = {
+        commit: jest.fn(),
+    } as unknown as ActionContext<State, State>;
 
     const paste_payload: PastePayload = {
         destination_folder: {} as Folder,
         current_folder: {} as Folder,
+        global_context: global_context,
     };
 
     it(`When an item is already being pasted
@@ -64,12 +69,18 @@ describe("Clipboard actions", () => {
             commit: jest.fn(),
         } as unknown as ActionContext<ClipboardState, State>;
 
+        const adjustItemToContentAfterItemCreationInAFolder = jest.spyOn(
+            adjust_item_to_content_after_item_creation_in_folder,
+            "adjustItemToContentAfterItemCreationInAFolder"
+        );
+
         await expect(pasteItem(context, paste_payload)).rejects.toBeDefined();
         expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+        expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
     });
 
     describe("Cut item", () => {
-        let state;
+        let state, adjustItemToContentAfterItemCreationInAFolder: jest.SpyInstance;
         const moved_item_id = 852;
         let emit: jest.SpyInstance;
 
@@ -86,6 +97,12 @@ describe("Clipboard actions", () => {
                 state,
             } as unknown as ActionContext<ClipboardState, State>;
 
+            adjustItemToContentAfterItemCreationInAFolder = jest
+                .spyOn(
+                    adjust_item_to_content_after_item_creation_in_folder,
+                    "adjustItemToContentAfterItemCreationInAFolder"
+                )
+                .mockReturnValue(Promise.resolve());
             emit = jest.spyOn(emitter, "emit");
         });
 
@@ -94,7 +111,7 @@ describe("Clipboard actions", () => {
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
-            await pasteItem(context, { destination_folder, current_folder });
+            await pasteItem(context, { destination_folder, current_folder, global_context });
         };
 
         it("Paste a file", async () => {
@@ -181,6 +198,7 @@ describe("Clipboard actions", () => {
 
             await pasteItem(context, paste_payload);
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
                 expect.anything()
@@ -198,6 +216,7 @@ describe("Clipboard actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("emptyClipboard");
             expect(context.commit).toHaveBeenCalledWith("pastingHasFailed");
+            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
                 expect.anything()
@@ -207,6 +226,7 @@ describe("Clipboard actions", () => {
 
     describe("Paste item", () => {
         let state: ClipboardState;
+        let adjustItemToContentAfterItemCreationInAFolder: jest.SpyInstance;
         const copied_item_id = 852;
         let emit: jest.SpyInstance;
 
@@ -223,6 +243,12 @@ describe("Clipboard actions", () => {
                 state,
             } as unknown as ActionContext<ClipboardState, State>;
 
+            adjustItemToContentAfterItemCreationInAFolder = jest
+                .spyOn(
+                    adjust_item_to_content_after_item_creation_in_folder,
+                    "adjustItemToContentAfterItemCreationInAFolder"
+                )
+                .mockReturnValue(Promise.resolve());
             emit = jest.spyOn(emitter, "emit");
         });
 
@@ -231,7 +257,7 @@ describe("Clipboard actions", () => {
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
-            await pasteItem(context, { destination_folder, current_folder });
+            await pasteItem(context, { destination_folder, current_folder, global_context });
         };
 
         it("Paste a file", async () => {
@@ -306,6 +332,7 @@ describe("Clipboard actions", () => {
 
             await pasteItem(context, paste_payload);
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
                 expect.anything()
@@ -323,6 +350,7 @@ describe("Clipboard actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("emptyClipboard");
             expect(context.commit).toHaveBeenCalledWith("pastingHasFailed");
+            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
             expect(emit).not.toHaveBeenCalledWith(
                 "new-item-has-just-been-created",
                 expect.anything()

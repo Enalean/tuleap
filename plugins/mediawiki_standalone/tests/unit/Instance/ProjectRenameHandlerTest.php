@@ -45,7 +45,7 @@ final class ProjectRenameHandlerTest extends TestCase
         self::assertEquals($expected_task, $queue->queue_task);
     }
 
-    public static function getTestData(): iterable
+    public function getTestData(): iterable
     {
         $project_with_mediawiki_service = ProjectTestBuilder::aProject()->withUnixName('foo')->withId(120)->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)->build();
         $project_without_service        = ProjectTestBuilder::aProject()->withUnixName('bar')->withId(130)->withoutServices()->build();

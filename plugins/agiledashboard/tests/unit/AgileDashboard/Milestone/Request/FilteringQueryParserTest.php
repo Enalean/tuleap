@@ -83,7 +83,7 @@ final class FilteringQueryParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parser->parse($query);
     }
 
-    public static function invalidQueryDataProvider(): array
+    public function invalidQueryDataProvider(): array
     {
         return [
             'Null query'                          => ['null'],

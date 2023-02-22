@@ -27,8 +27,6 @@ use ForgeConfig;
 use PFUser;
 use TemplateRenderer;
 use TemplateRendererFactory;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\TemplateWithoutFooter;
 use Tuleap\ServerHostname;
 
@@ -39,77 +37,30 @@ class InvitationEmailNotifier
      */
     private $template_renderer;
 
-    public function __construct(private LocaleSwitcher $locale_switcher)
+    public function __construct()
     {
         $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
     }
 
-    public function send(
-        \PFUser $from_user,
-        InvitationRecipient $recipient,
-        ?string $custom_message,
-        ConcealedString $token,
-        ?\Project $project,
-        ?\PFUser $resent_from_user,
-    ): bool {
+    public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message): bool
+    {
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->addAdditionalHeader('Reply-To', $from_user->getEmail());
+        $mail->addAdditionalHeader('Reply-To', $current_user->getEmail());
 
         if ($recipient->user) {
-            $this->askToLogin($mail, $from_user, $recipient->user, $custom_message);
+            $this->askToLogin($mail, $current_user, $recipient->user, $custom_message);
         } else {
-            $this->askToRegister(
-                $mail,
-                $from_user,
-                $recipient->email,
-                $custom_message,
-                $token,
-                $project,
-                $resent_from_user,
-            );
+            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message);
         }
 
         return $mail->send();
     }
 
-    public function informThatCannotAddRestrictedUserToProjectNotAllowingRestricted(
-        \PFUser $user,
-        \PFUser $invited_user,
-        \Project $project,
-    ): void {
-        $this->locale_switcher->setLocaleForSpecificExecutionContext(
-            $user->getLocale(),
-            function () use ($user, $invited_user, $project): void {
-                $mail = new Codendi_Mail();
-                $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
-                $mail->setFrom(ForgeConfig::get('sys_noreply'));
-                $mail->setTo($user->getEmail());
-
-                $mail->setSubject(sprintf(_('Unable to add %s as project member'), $invited_user->getRealName()));
-
-                $presenter = new CannotAddRestrictedUserToProjectNotAllowingRestrictedPresenter(
-                    $user->getRealName(),
-                    \UserHelper::instance()->getDisplayNameFromUser($invited_user),
-                    $invited_user->getEmail(),
-                    $project->getPublicName(),
-                    (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-                );
-                $body      = $this->template_renderer->renderToString("cannot-add-restricted", $presenter);
-                $body_text = $this->template_renderer->renderToString("cannot-add-restricted-text", $presenter);
-
-                $mail->setBodyHtml($body);
-                $mail->setBodyText($body_text);
-
-                $mail->send();
-            }
-        );
-    }
-
-    private function askToLogin(
+    public function askToLogin(
         Codendi_Mail $mail,
-        \PFUser $from_user,
+        \PFUser $current_user,
         PFUser $recipient_user,
         ?string $custom_message,
     ): void {
@@ -118,7 +69,7 @@ class InvitationEmailNotifier
 
         $login_url = ServerHostname::HTTPSUrl() . '/account/login.php';
 
-        $presenter = new InvitationEmailLoginPresenter($from_user, $recipient_user, $login_url, $custom_message);
+        $presenter = new InvitationEmailLoginPresenter($current_user, $recipient_user, $login_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-login", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-login-text", $presenter);
 
@@ -126,27 +77,18 @@ class InvitationEmailNotifier
         $mail->setBodyText($body_text);
     }
 
-    private function askToRegister(
+    public function askToRegister(
         Codendi_Mail $mail,
-        \PFUser $from_user,
+        \PFUser $current_user,
         string $external_email,
         ?string $custom_message,
-        ConcealedString $token,
-        ?\Project $project,
-        ?\PFUser $resent_from_user,
     ): void {
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
-        $register_url = ServerHostname::HTTPSUrl() . '/account/register.php?invitation-token=' . $token->getString();
+        $register_url = ServerHostname::HTTPSUrl() . '/account/register.php';
 
-        $presenter = new InvitationEmailRegisterPresenter(
-            $from_user,
-            $register_url,
-            $custom_message,
-            $project,
-            $resent_from_user,
-        );
+        $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-register", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
 

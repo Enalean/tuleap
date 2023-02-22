@@ -21,15 +21,21 @@ import { define, dispatch, html } from "hybrids";
 import { getFieldDateRequiredAndEmptyMessage } from "../../../../gettext-catalog";
 
 import type { DatePickerInitializerType } from "./DatePickerInitializer";
-import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 
 const DATE_PICKER_SIZE = 11;
 const DATETIME_PICKER_SIZE = 19;
 
+export interface FieldDateType {
+    readonly field_id: number;
+    readonly is_time_displayed: boolean;
+    readonly label: string;
+    readonly required: boolean;
+}
+
 export interface DateField {
     readonly date_input_element: HTMLInputElement | null;
     readonly content: () => HTMLElement;
-    readonly field: EditableDateFieldStructure;
+    readonly field: FieldDateType;
     readonly isDisabled: boolean;
     readonly datePickerInitializer: DatePickerInitializerType;
     value: string;
@@ -41,7 +47,7 @@ type MapOfClasses = Record<string, boolean>;
 
 const isRequiredAndEmpty = (host: DateField): boolean => host.field.required && host.value === "";
 
-const getFieldSize = (field: EditableDateFieldStructure): number =>
+const getFieldSize = (field: FieldDateType): number =>
     field.is_time_displayed ? DATETIME_PICKER_SIZE : DATE_PICKER_SIZE;
 
 const getDateFormElementClasses = (host: DateField): MapOfClasses => ({

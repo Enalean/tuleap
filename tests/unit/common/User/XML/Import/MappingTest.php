@@ -37,12 +37,8 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var PFUser */
     private $none_user;
 
-    /** @var \UserManager&\Mockery\LegacyMockInterface&\Mockery\MockInterface */
+    /** @var PFUser */
     private $user_manager;
-    /**
-     * @var ReadyToBeImportedUsersCollection&\Mockery\LegacyMockInterface&\Mockery\MockInterface
-     */
-    private $collection;
 
     protected function setUp(): void
     {
@@ -50,7 +46,7 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->my_user      = new \PFUser(['user_id' => 101, 'language_id' => 'en']);
         $this->none_user    = new \PFUser(['user_id' => 100, 'language_id' => 'en']);
-        $this->collection   = \Mockery::spy(ReadyToBeImportedUsersCollection::class);
+        $this->collection   = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUsersCollection::class);
         $this->user_manager = \Mockery::spy(\UserManager::class);
 
         $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(new \PFUser(['user_id' => 0, 'language_id' => 'en']));

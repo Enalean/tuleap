@@ -18,20 +18,24 @@
  */
 
 import { loadTooltips } from "@tuleap/tooltip";
-import { isInCreationMode } from "./modal-creation-mode-state.ts";
+import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
-import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
+import { isDisabled } from "./fields/disabled-field-detector";
 import {
     createArtifact,
     editArtifact,
     editArtifactWithConcurrencyChecking,
 } from "./rest/rest-service";
-import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-detector";
+import { getAllFileFields } from "./fields/file-field/file-field-detector";
 import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
-} from "./common/is-uploading-in-ckeditor-state";
+} from "./fields/file-field/is-uploading-in-ckeditor-state";
 import { sprintf } from "sprintf-js";
+import {
+    getTargetFieldPossibleValues,
+    setUpFieldDependenciesActions,
+} from "./field-dependencies-helper.js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./adapters/UI/feedback/ParentFeedbackController";
@@ -46,7 +50,7 @@ import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-f
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
-import { FileFieldController } from "./domain/fields/file-field/FileFieldController";
+import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
@@ -70,8 +74,6 @@ import { CommentsController } from "./domain/comments/CommentsController";
 import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
 import { EventDispatcher } from "./domain/EventDispatcher";
 import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
-import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
-import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -102,8 +104,7 @@ function ArtifactModalController(
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
 
-    const event_dispatcher = EventDispatcher();
-    const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
+    const fault_feedback_controller = FaultFeedbackController();
     const api_client = TuleapAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
@@ -122,8 +123,7 @@ function ArtifactModalController(
     const project_identifier = ProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
-
-    const user_locale = document.body.dataset.userLocale ?? "en_US";
+    const event_dispatcher = EventDispatcher();
 
     Object.assign(self, {
         $onInit: init,
@@ -137,7 +137,6 @@ function ArtifactModalController(
         title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
-        submit_disabling_reason: null,
         new_followup_comment: {
             body: "",
             format: modal_model.text_fields_format,
@@ -148,17 +147,19 @@ function ArtifactModalController(
             new_links_store
         ),
         date_picker_initializer: DatePickerInitializer(),
-        readonly_date_field_formatter: ReadonlyDateFieldFormatter(user_locale),
+        readonly_date_field_formatter: ReadonlyDateFieldFormatter(
+            document.body.dataset.userLocale ?? "en_US"
+        ),
         parent_feedback_controller: ParentFeedbackController(
             api_client,
-            event_dispatcher,
+            fault_feedback_controller,
             parent_identifier
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
         comments_controller: CommentsController(
             api_client,
-            event_dispatcher,
+            fault_feedback_controller,
             current_artifact_identifier,
             project_identifier,
             {
@@ -177,13 +178,15 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
+                fault_feedback_controller,
+                fault_feedback_controller,
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
+                    fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
                     user_history_cache,
                     api_client,
-                    event_dispatcher,
                     current_artifact_identifier,
                     current_tracker_identifier,
                     UserIdentifierProxy.fromUserId(modal_model.user_id)
@@ -194,9 +197,6 @@ function ArtifactModalController(
                 ParentLinkVerifier(links_store, new_links_store, parent_identifier),
                 possible_parents_cache,
                 already_linked_verifier,
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
-                event_dispatcher,
-                LinkedArtifactsPopoversController(),
                 field,
                 current_artifact_identifier,
                 current_tracker_identifier,
@@ -205,7 +205,9 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
+                LinkedArtifactsPopoversController(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
             );
         },
         getFileFieldController: (field) => {
@@ -225,24 +227,13 @@ function ArtifactModalController(
                 self.isDisabled(field)
             );
         },
-        getSelectBoxFieldController: (field) => {
-            return SelectBoxFieldController(
-                event_dispatcher,
-                field,
-                self.values[field.field_id],
-                self.isDisabled(field),
-                user_locale
-            );
-        },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
-        isSubmitDisabled: () => {
-            return self.submit_disabling_reason !== null || isUploadingInCKEditor();
-        },
+        isUploadingInCKEditor,
         isThereAtLeastOneFileField: () => {
             const event = DidCheckFileFieldIsPresent();
             event_dispatcher.dispatch(event);
@@ -273,14 +264,7 @@ function ArtifactModalController(
     }
 
     function init() {
-        event_dispatcher.addObserver("WillDisableSubmit", (event) => {
-            self.submit_disabling_reason = event.reason;
-        });
-        event_dispatcher.addObserver("WillEnableSubmit", () => {
-            self.submit_disabling_reason = null;
-            $scope.$apply();
-        });
-        FieldDependenciesValuesHelper(event_dispatcher, self.tracker.workflow.rules.lists);
+        setFieldDependenciesWatchers();
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
         TuleapArtifactModalLoading.loading = false;
@@ -426,6 +410,61 @@ function ArtifactModalController(
 
     function formatColor(color) {
         return color.split("_").join("-");
+    }
+
+    function setFieldDependenciesWatchers() {
+        setUpFieldDependenciesActions(self.tracker, setFieldDependenciesWatcher);
+    }
+
+    function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
+        if (self.values[source_field_id] === undefined) {
+            return;
+        }
+
+        $scope.$watch(
+            function () {
+                return self.values[source_field_id].bind_value_ids;
+            },
+            function (new_value, old_value) {
+                if (new_value === old_value) {
+                    return;
+                }
+
+                var source_value_ids = [].concat(new_value);
+
+                changeTargetFieldPossibleValuesAndResetSelectedValue(
+                    source_field_id,
+                    source_value_ids,
+                    target_field,
+                    field_dependencies_rules
+                );
+            },
+            true
+        );
+    }
+
+    function changeTargetFieldPossibleValuesAndResetSelectedValue(
+        source_field_id,
+        source_value_ids,
+        target_field,
+        field_dependencies_rules
+    ) {
+        target_field.filtered_values = getTargetFieldPossibleValues(
+            source_value_ids,
+            target_field,
+            field_dependencies_rules
+        );
+
+        var target_field_selected_value = modal_model.values[target_field.field_id].bind_value_ids;
+        emptyArray(target_field_selected_value);
+
+        if (target_field.filtered_values.length === 1) {
+            target_field_selected_value.push(target_field.filtered_values[0].id);
+        }
+    }
+
+    function emptyArray(array) {
+        array.length = 0;
     }
 
     function setFieldValueForCustomElement(event) {

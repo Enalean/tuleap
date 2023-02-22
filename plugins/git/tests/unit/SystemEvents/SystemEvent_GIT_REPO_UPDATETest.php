@@ -32,22 +32,6 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
     private $repository_id = 115;
     private $system_event_manager;
     private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
-    /**
-     * @var Git_Backend_Gitolite&\Mockery\MockInterface
-     */
-    private \Mockery\LegacyMockInterface|Git_Backend_Gitolite|\Mockery\MockInterface $backend;
-    /**
-     * @var GitRepository&\Mockery\MockInterface
-     */
-    private $repository;
-    /**
-     * @var GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $repository_factory;
-    /**
-     * @var \Mockery\MockInterface&SystemEvent_GIT_REPO_UPDATE
-     */
-    private $event;
 
     protected function setUp(): void
     {

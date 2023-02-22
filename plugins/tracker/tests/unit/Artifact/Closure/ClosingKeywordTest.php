@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
 
 final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public static function provideKeywordVariants(): array
+    public function provideKeywordVariants(): array
     {
         return [
             ['resolve'],
@@ -46,7 +46,7 @@ final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public static function provideMixedCaseKeywordVariants(): array
+    public function provideMixedCaseKeywordVariants(): array
     {
         return [
             ['resOLving'],
@@ -84,7 +84,7 @@ final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(1, $matches);
     }
 
-    public static function provideMatch(): array
+    public function provideMatch(): array
     {
         return [
             'It matches resolves keyword to first argument'    => ['resolves', 'resolves match'],

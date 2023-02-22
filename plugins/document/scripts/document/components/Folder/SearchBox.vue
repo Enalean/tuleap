@@ -41,25 +41,28 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
-import type { RootState } from "../../type";
-import { ref } from "vue";
-import { useRouter } from "../../helpers/use-router";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type { Folder } from "../../type";
 
-const router = useRouter();
-const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
-const search_query = ref("");
+@Component
+export default class SearchBox extends Vue {
+    @State
+    readonly current_folder!: Folder;
 
-function advancedSearch(): void {
-    router.push({
-        name: "search",
-        query: {
-            q: search_query.value,
-        },
-        params: {
-            folder_id: String(current_folder.value.id),
-        },
-    });
+    private search_query = "";
+
+    advancedSearch(): void {
+        this.$router.push({
+            name: "search",
+            query: {
+                q: this.search_query,
+            },
+            params: {
+                folder_id: String(this.current_folder.id),
+            },
+        });
+    }
 }
 </script>

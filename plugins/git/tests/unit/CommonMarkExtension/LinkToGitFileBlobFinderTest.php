@@ -67,7 +67,7 @@ final class LinkToGitFileBlobFinderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('commit_ref', $found_blob->getCommitRef());
     }
 
-    public static function dataProviderToExistingFile(): array
+    public function dataProviderToExistingFile(): array
     {
         return [
             'Top folder implicit relative path'                => ['README.md', 'image.jpg','image.jpg'],

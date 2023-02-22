@@ -23,18 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Dao;
 
 use DateTimeImmutable;
-use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\InviteBuddy\InvitationDao;
 
 class UserSuspensionDao extends DataAccessObject
 {
-    public function __construct(private InvitationDao $invitation_dao)
-    {
-        parent::__construct();
-    }
-
     /**
      * Gets the user_id and last_access_date of idle users
      */
@@ -50,75 +42,38 @@ class UserSuspensionDao extends DataAccessObject
         return $this->getDB()->run($sql, $start_date_timestamp, $end_date_timestamp);
     }
 
-    public function suspendAccount(int $user_id): void
+    public function suspendAccount(int $user_id)
     {
-        $this->getDB()->tryFlatTransaction(function () use ($user_id) {
-            $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
-                ' WHERE status != "D" AND user.user_id =  ? ';
-            $this->getDB()->run($sql, $user_id);
-
-            $this->invitation_dao->removePendingInvitationsMadeByUser($user_id);
-        });
+        $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
+            ' WHERE status != "D" AND user.user_id =  ? ';
+        return $this->getDB()->run($sql, $user_id);
     }
 
     /**
      * Suspend user account according to given date
      */
-    public function suspendExpiredAccounts(DateTimeImmutable $date): void
+    public function suspendExpiredAccounts(DateTimeImmutable $date)
     {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($date) {
-            $timestamp = $date->getTimestamp();
-
-            $this->suspendUsers(
-                $db->column(
-                    'SELECT user_id
-                    FROM user
-                    WHERE status != "D" AND expiry_date != 0 AND expiry_date < ?',
-                    [$timestamp],
-                )
-            );
-        });
-    }
-
-    private function suspendUsers(array $to_be_suspended_user_ids): void
-    {
-        if (empty($to_be_suspended_user_ids)) {
-            return;
-        }
-
-        foreach ($to_be_suspended_user_ids as $user_id) {
-            $this->invitation_dao->removePendingInvitationsMadeByUser($user_id);
-        }
-
-        $ids = EasyStatement::open()->in('user_id IN (?*)', $to_be_suspended_user_ids);
-        $this->getDB()->safeQuery(
-            "UPDATE user SET status = 'S', unix_status = 'S' WHERE $ids",
-            $ids->values(),
-        );
+        $timestamp = $date->getTimestamp();
+        $sql       = 'UPDATE user SET status = "S", unix_status = "S"' .
+            ' WHERE ( status != "D" AND expiry_date != 0' .
+            ' AND expiry_date <  ? )';
+        return $this->getDB()->run($sql, $timestamp);
     }
 
     /**
      * Suspend account of users who didn't access the platform after given date
      */
-    public function suspendInactiveAccounts(DateTimeImmutable $date): void
+    public function suspendInactiveAccounts(DateTimeImmutable $date)
     {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($date) {
-            $timestamp = $date->getTimestamp();
-
-            $this->suspendUsers(
-                $db->column(
-                    'SELECT user.user_id
-                    FROM user INNER JOIN user_access AS access ON user.user_id = access.user_id
-                    WHERE user.status != "D"
-                      AND (
-                        (access.last_access_date = 0 AND user.add_date < ? )
-                        OR
-                        (access.last_access_date != 0 AND access.last_access_date < ? )
-                      )',
-                    [$timestamp, $timestamp],
-                )
-            );
-        });
+        $timestamp = $date->getTimestamp();
+        $sql       = 'UPDATE user AS user' .
+            ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
+            ' SET user.status = "S", user.unix_status = "S"' .
+            ' WHERE user.status != "D" AND (' .
+            '(access.last_access_date = 0 AND user.add_date < ? ) OR ' .
+            '(access.last_access_date != 0 AND access.last_access_date < ? ))';
+        return $this->getDB()->run($sql, $timestamp, $timestamp);
     }
 
     /**

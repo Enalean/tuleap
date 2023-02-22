@@ -29,7 +29,6 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
      */
     private $report;
     private Tracker_FormElementFactory|Stub $formelement_factory;
-    private Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -134,12 +133,10 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $this->formelement_factory->expects(self::exactly(2))->method('getFormElementById');
 
-        $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
-            fn (int $tracker_id, string $field_name): Tracker_FormElement_Field => match (true) {
-                $this->tracker->getId() === $tracker_id && "my_field" === $field_name => $field_1,
-                $this->tracker->getId() === $tracker_id && "my_other_field" === $field_name => $field_2,
-            }
-        );
+        $this->formelement_factory->method('getFormElementByName')->withConsecutive(
+            [$this->tracker->getId(), "my_field"],
+            [$this->tracker->getId(), "my_other_field"]
+        )->willReturnOnConsecutiveCalls($field_1, $field_2);
 
         $this->report->setRESTCriteria(json_encode($query));
         $this->report->getCriteria();
@@ -164,13 +161,11 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
         $this->formelement_factory->expects(self::exactly(3))->method('getFormElementById');
 
-        $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
-            fn (int $tracker_id, string $field_name): ?Tracker_FormElement_Field => match (true) {
-                $this->tracker->getId() === $tracker_id && "my_field" === $field_name => null,
-                $this->tracker->getId() === $tracker_id && "my_other_field" === $field_name => $field_1,
-                $this->tracker->getId() === $tracker_id && "another_field" === $field_name => null,
-            }
-        );
+        $this->formelement_factory->method('getFormElementByName')->withConsecutive(
+            [$this->tracker->getId(), "my_field"],
+            [$this->tracker->getId(), "my_other_field"],
+            [$this->tracker->getId(), "another_field"]
+        )->willReturnOnConsecutiveCalls(null, $field_1, null);
 
         $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
 

@@ -2105,7 +2105,7 @@ class GanttScale
         $this->day->SetLabelFormatString('l');
 
         $this->week = new HeaderProperty();
-        $this->week->SetLabelFormatString("w%d");
+        $this->week->SetLabelFormatString("\wd");
         $this->week->SetFont(FF_FONT1);
 
         $this->month = new HeaderProperty();

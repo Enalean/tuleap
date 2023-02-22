@@ -52,6 +52,10 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
     /**
      * @var IncludeAssets
      */
+    private $agiledashboard_assets;
+    /**
+     * @var IncludeAssets
+     */
     private $taskboard_assets;
     /**
      * @var BoardPresenterBuilder
@@ -71,6 +75,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         TemplateRenderer $renderer,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
         BoardPresenterBuilder $presenter_builder,
+        IncludeAssets $agiledashboard_assets,
         IncludeAssets $taskboard_assets,
         VisitRecorder $visit_recorder,
         HeaderOptionsProvider $header_options_provider,
@@ -79,6 +84,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $this->renderer                = $renderer;
         $this->bread_crumbs_builder    = $bread_crumbs_builder;
         $this->presenter_builder       = $presenter_builder;
+        $this->agiledashboard_assets   = $agiledashboard_assets;
         $this->taskboard_assets        = $taskboard_assets;
         $this->visit_recorder          = $visit_recorder;
         $this->header_options_provider = $header_options_provider;
@@ -105,6 +111,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
+        $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
         $layout->includeFooterJavascriptFile($this->taskboard_assets->getFileURL('taskboard.js'));
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->taskboard_assets, 'taskboard-style'));

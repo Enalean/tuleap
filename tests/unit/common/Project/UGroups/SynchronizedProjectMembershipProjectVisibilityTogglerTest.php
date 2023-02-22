@@ -64,7 +64,7 @@ final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \T
         $this->toggler->enableAccordingToVisibility($project, $old_visibility, $new_visibility);
     }
 
-    public static function toggleProvider()
+    public function toggleProvider()
     {
         return [
             [ Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC, true ],

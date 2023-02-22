@@ -5,29 +5,28 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "module": "dist/fp-feedback.js",
-  "main": "dist/fp-feedback.umd.cjs",
-  "style": "themes/main.scss",
+  "module": "dist/fp-feedback.mjs",
+  "main": "dist/fp-feedback.umd.js",
   "types": "dist/index.d.ts",
+  "style": "themes/main.scss",
   "exports": {
     ".": {
-      "import": "./dist/fp-feedback.js",
-      "require": "./dist/fp-feedback.umd.cjs",
+      "import": "./dist/fp-feedback.mjs",
+      "require": "./dist/fp-feedback.umd.js",
       "default": "./themes/main.scss"
     }
   },
   "dependencies": {
-    "dompurify": "^3.0.0"
+    "dompurify": "^2.3.6"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@types/dompurify": "^2.4.0"
+    "@types/dompurify": "^2.3.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest"
+    "test": "jest"
   }
 }

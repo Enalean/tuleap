@@ -25,6 +25,8 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\TemporaryTestDirectory;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,7 +48,6 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $manifest_file_for_singapour;
     /** @var Logger */
     protected $logger;
-    private int $time_in_the_past;
 
     protected function setUp(): void
     {

@@ -368,7 +368,6 @@ class LDAP
 
             if ($sr !== false) {
                 $this->logger->debug('LDAP search success ' . $baseDn . ' ' . $filter . ' *** SCOPE: ' . $scope . ' *** ATTRIBUTES: ' . implode(', ', $attributes));
-                /** @psalm-var \LDAP\Result $sr */
                 $entries = ldap_get_entries($this->ds, $sr);
                 if ($entries !== false) {
                     return new LDAPResultIterator($entries, $this->ldapParams);
@@ -567,7 +566,6 @@ class LDAP
                 $this->logger->debug('LDAP high-level search as you type ' . $filter . ' *** PEOPLEDN: ' . implode(',', $peopleDn) . ' *** errors:' .  ldap_error($this->ds));
             }
             if ($asr !== false) {
-                assert(is_iterable($asr));
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
                     if ($entries !== false) {

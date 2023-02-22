@@ -27,7 +27,7 @@ use Tracker_Chart_Burndown;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
+class GraphOnTrackersV5BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

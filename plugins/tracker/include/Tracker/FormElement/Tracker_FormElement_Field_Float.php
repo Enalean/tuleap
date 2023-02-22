@@ -24,7 +24,6 @@ use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatFieldDao;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 {
     public const FLOAT_DECIMALS = 4;
@@ -100,13 +99,17 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return new Tracker_Report_Criteria_Float_ValueDao();
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
+    /**
+     * Returns a string representing the float value of $value
+     *
+     * @param int   $artifact_id  the Id of the artifact
+     * @param int   $changeset_id the Id of the changeset
+     * @param float $value        the value of the float field (or null if none)
+     *
+     * @return string the string value of the float field (or '' if none)
+     */
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
         if ($value === null) {
             return '';
         } else {

@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\SearchFormPresenter;
 use Tuleap\Layout\SearchFormPresenterBuilder;
-use Tuleap\Project\ListOfProjectPresentersBuilder;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Test\User\AnonymousUserTestProvider;
 
 class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,7 +38,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNullIfUserIsNotLoggedIn(): void
     {
         $builder = new SwitchToPresenterBuilder(
-            Mockery::mock(ListOfProjectPresentersBuilder::class),
+            Mockery::mock(ProjectPresentersBuilder::class),
             Mockery::mock(SearchFormPresenterBuilder::class)
         );
 
@@ -54,9 +54,9 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => true]
         )->getMock();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->shouldReceive('build')
             ->with($user)
             ->once()
             ->andReturn([]);
@@ -87,9 +87,9 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => false]
         )->getMock();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->shouldReceive('build')
             ->with($user)
             ->once()
             ->andReturn([]);
@@ -116,9 +116,9 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ['isAnonymous' => false, 'isRestricted' => true, 'isAlive' => true]
         )->getMock();
 
-        $project_presenters_builder = Mockery::mock(ListOfProjectPresentersBuilder::class);
+        $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
         $project_presenters_builder
-            ->shouldReceive('getProjectPresenters')
+            ->shouldReceive('build')
             ->with($user)
             ->once()
             ->andReturn([]);

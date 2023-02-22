@@ -22,13 +22,7 @@
 #project-sidebar-nav-title-popover,
 #current-project-nav-title-popover {
     > .tlp-popover-arrow {
-        &::before {
-            background: none;
-        }
-
-        &::after {
-            background: var(--tlp-dark-color-darker-20);
-        }
+        background: var(--tlp-dark-color-darker-20);
 
         + .tlp-popover-body {
             border-radius: var(--tlp-large-radius);
@@ -36,11 +30,11 @@
     }
 
     > .tlp-popover-header {
-        border-bottom-color: var(--tlp-dark-color-lighter-10);
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         background: var(--tlp-dark-color-darker-20);
 
         > .tlp-popover-title {
-            color: var(--tlp-white-color);
+            color: var(--tlp-neutral-light-color);
             font-size: 1rem;
             line-height: 1.5rem;
         }

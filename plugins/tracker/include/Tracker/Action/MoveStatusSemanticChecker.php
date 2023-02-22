@@ -27,8 +27,9 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
 {
     public const STATUS_SEMANTIC_LABEL = 'status';
 
-    public function __construct(private Tracker_FormElementFactory $form_element_factory)
+    public function __construct(Tracker_FormElementFactory $form_element_factory)
     {
+        $this->form_element_factory = $form_element_factory;
     }
 
     /**
@@ -47,8 +48,8 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
         $source_tracker_status_field = $this->getSourceSemanticField($source_tracker);
         $target_tracker_status_field = $target_tracker->getStatusField();
 
-        return $source_tracker_status_field !== null && $target_tracker_status_field !== null &&
-               $this->form_element_factory->getType($source_tracker_status_field) === $this->form_element_factory->getType($target_tracker_status_field);
+        return $this->form_element_factory->getType($source_tracker_status_field) ===
+            $this->form_element_factory->getType($target_tracker_status_field);
     }
 
     /**

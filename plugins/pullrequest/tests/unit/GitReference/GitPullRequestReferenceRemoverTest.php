@@ -43,7 +43,7 @@ class GitPullRequestReferenceRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $reference_remover->removeAll($executor);
     }
 
-    public static function pullRequestReferencesProvider()
+    public function pullRequestReferencesProvider()
     {
         return [
             [[]],

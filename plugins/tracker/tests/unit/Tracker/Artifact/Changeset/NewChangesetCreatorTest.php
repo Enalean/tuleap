@@ -38,7 +38,6 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 
@@ -158,8 +157,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 \Mockery::spy(\ReferenceManager::class),
                 $this->ugroup_private_comment_inserter,
                 $changeset_comment_indexer,
-                new TextValueValidator(),
-            ),
+            )
         );
         $creator->create($new_changeset, PostCreationContext::withNoConfig(false));
     }

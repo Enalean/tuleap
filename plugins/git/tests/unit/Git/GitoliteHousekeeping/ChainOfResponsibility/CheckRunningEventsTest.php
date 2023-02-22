@@ -23,15 +23,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends \Tuleap\Test\PHPUnit\TestCase
+class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    private $process_manager;
-    private $process;
-    private $response;
-    private $next;
-    private Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents $command;
 
     protected function setUp(): void
     {

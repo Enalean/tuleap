@@ -21,22 +21,35 @@
 namespace Tuleap\Tracker\FormElement;
 
 use Feedback;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ArtifactLinkValidationContext;
 
 class ArtifactLinkValidator
 {
+    /**
+     * @var \Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var TypePresenterFactory
+     */
+    private $type_presenter_factory;
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $dao;
+
     public function __construct(
-        private \Tracker_ArtifactFactory $artifact_factory,
-        private TypePresenterFactory $type_presenter_factory,
-        private ArtifactLinksUsageDao $dao,
-        private EventDispatcherInterface $event_dispatcher,
+        \Tracker_ArtifactFactory $artifact_factory,
+        TypePresenterFactory $type_presenter_factory,
+        ArtifactLinksUsageDao $dao,
     ) {
+        $this->artifact_factory       = $artifact_factory;
+        $this->type_presenter_factory = $type_presenter_factory;
+        $this->dao                    = $dao;
     }
 
     /**
@@ -83,21 +96,6 @@ class ArtifactLinkValidator
             }
         }
 
-        if (is_array($value)) {
-            $event = $this->event_dispatcher->dispatch(
-                ValidateArtifactLinkValueEvent::buildFromSubmittedValues($artifact, $value),
-            );
-
-            if ($event->isValid() === false) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $event->getErrorMessage(),
-                );
-
-                $is_valid = false;
-            }
-        }
-
         if ($this->areTypesValid($artifact, $value, $field, $context) === false) {
             $is_valid = false;
         }
@@ -115,7 +113,12 @@ class ArtifactLinkValidator
         return isset($value['new_values']);
     }
 
-    private function isArtifactIdDefined(Tracker_FormElement_Field_ArtifactLink $field, string $artifact_id): bool
+    /**
+     * @param $artifact_id
+     *
+     * @return bool
+     */
+    private function isArtifactIdDefined(Tracker_FormElement_Field_ArtifactLink $field, $artifact_id)
     {
         $artifact_id = trim($artifact_id);
         if ($artifact_id === "") {

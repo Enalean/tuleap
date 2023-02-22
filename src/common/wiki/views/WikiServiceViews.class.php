@@ -190,7 +190,7 @@ class WikiServiceViews extends WikiViews
         print '
     <form name="newPage" method="post" action="' . $addr . '">
       <input type="hidden" name="action" value="add_temp_page" />
-      <input type="hidden" name="group_id" value="' . $this->gid . '" />' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'pagename') . ' <input type="text" name="name" value="" size="20" maxsize="255" data-test="new-wiki-page" />
+      <input type="hidden" name="group_id" value="' . $this->gid . '" />' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'pagename') . ' <input type="text" name="name" value="" size="20" maxsize="255" />
       <input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '">
     </form>';
     }
@@ -273,7 +273,7 @@ class WikiServiceViews extends WikiViews
         $help_menu        = $GLOBALS['Language']->getText('global', 'help');
         print '
     <ul class="ServiceMenu">
-      <li><a href="' . $this->wikiLink . '&view=browsePages" data-test="wiki-browse-pages">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>&nbsp;|&nbsp;</li>';
+      <li><a href="' . $this->wikiLink . '&view=browsePages">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages') . '</a>&nbsp;|&nbsp;</li>';
         if (UserManager::instance()->getCurrentUserWithLoggedInInformation()->is_logged_in) {
             print '<li><a data-help-window href="' . $this->wikiLink . '&pagename=' . $attatch_page . '&pv=1">' . $attatch_menu . '</a>&nbsp;|&nbsp;</li>';
             print '<li><a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '">' . $preferences_menu . '</a>&nbsp;|&nbsp;</li>';

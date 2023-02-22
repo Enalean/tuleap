@@ -54,18 +54,6 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectHistoryDao
      */
     private $project_history_dao;
-    /**
-     * @var GitRepositoryMirrorUpdater&\Mockery\MockInterface
-     */
-    private $mirror_updater;
-    /**
-     * @var \Mockery\MockInterface&Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-    /**
-     * @var EventManager&\Mockery\MockInterface
-     */
-    private $event_manager;
 
     protected function setUp(): void
     {
@@ -362,14 +350,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
 
-        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'warning' &&
-                        ($message === 'Repository my-repo-123 already exists on target, skipped.' || str_contains($message, 'my-repo-456')) => true,
-                };
-            }
-        );
+        $GLOBALS['Response']->expects(self::exactly(2))->method('addFeedback')->withConsecutive(['warning', 'Repository my-repo-123 already exists on target, skipped.'], ['warning']);
 
         $repo1 = $this->givenARepository(123);
         $repo2 = $this->givenARepository(456);
@@ -389,7 +370,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
         $repo2        = $this->givenARepository(456);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage);
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->withConsecutive(['warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage]);
 
         $this->backend->shouldReceive('fork')->andThrow(new Exception($errorMessage))->once();
 

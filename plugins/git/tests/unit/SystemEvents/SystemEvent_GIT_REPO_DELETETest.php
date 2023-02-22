@@ -25,7 +25,7 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCase
+class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -34,8 +34,6 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
     private $repository;
     private $repository_factory;
     private $system_event_manager;
-    private $ugroups_to_notify_dao;
-    private $users_to_notify_dao;
 
     /** @var SystemEvent_GIT_REPO_DELETE */
     private $event;

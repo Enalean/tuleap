@@ -73,7 +73,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -172,8 +171,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                         new TypeDao(),
                         $artifact_links_usage_dao
                     ),
-                    $artifact_links_usage_dao,
-                    $event_manager,
+                    $artifact_links_usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -207,7 +205,6 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 

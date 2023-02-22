@@ -36,12 +36,6 @@ final class FileImporter_PathTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Project
      */
     private $project;
-    private \Tuleap\ProFTPd\Xferlog\Parser $parser;
-    /**
-     * @var UserManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user_manager;
-    private \Tuleap\ProFTPd\Xferlog\FileImporter $file_importer;
 
     protected function setUp(): void
     {

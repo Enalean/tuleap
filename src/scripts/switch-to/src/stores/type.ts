@@ -18,7 +18,6 @@
  */
 
 import type { Project, UserHistory, ItemDefinition, QuickLink } from "../type";
-import type { EncodedURI } from "@tuleap/fetch-result";
 
 export interface State {
     readonly projects: Project[];
@@ -48,7 +47,7 @@ export interface FocusFromQuickLinkPayload {
 }
 
 export interface FullTextState {
-    fulltext_search_url: EncodedURI;
+    fulltext_search_url: string;
     fulltext_search_results: Record<string, ItemDefinition>;
     fulltext_search_is_loading: boolean;
     fulltext_search_is_error: boolean;

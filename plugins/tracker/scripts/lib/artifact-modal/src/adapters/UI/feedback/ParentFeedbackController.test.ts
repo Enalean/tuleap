@@ -24,28 +24,28 @@ import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArti
 import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
 import { RetrieveParentStub } from "../../../../tests/stubs/RetrieveParentStub";
 import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
+import { NotifyFaultStub } from "../../../../tests/stubs/NotifyFaultStub";
 import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
-import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
 const PARENT_ARTIFACT_ID = 78;
 const PARENT_TITLE = "nonhereditary";
 
 describe(`ParentFeedbackController`, () => {
-    let event_dispatcher: DispatchEventsStub,
+    let fault_notifier: NotifyFaultStub,
         artifact_retriever: RetrieveParent,
         parent_identifier: ParentArtifactIdentifier | null;
 
     beforeEach(() => {
-        event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+        fault_notifier = NotifyFaultStub.withCount();
         const parent_artifact: ParentArtifact = { title: PARENT_TITLE };
         artifact_retriever = RetrieveParentStub.withParent(parent_artifact);
         parent_identifier = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
     });
 
-    const displayParentFeedback = (): PromiseLike<ParentFeedbackPresenter> => {
+    const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
         const controller = ParentFeedbackController(
             artifact_retriever,
-            event_dispatcher,
+            fault_notifier,
             parent_identifier
         );
         return controller.displayParentFeedback();
@@ -68,7 +68,7 @@ describe(`ParentFeedbackController`, () => {
             const presenter = await displayParentFeedback();
 
             expect(presenter.parent_artifact).toBeNull();
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
         });
 
         it(`when there is no parent artifact,
@@ -77,7 +77,7 @@ describe(`ParentFeedbackController`, () => {
             parent_identifier = null;
             const presenter = await displayParentFeedback();
             expect(presenter.parent_artifact).toBeNull();
-            expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(0);
         });
     });
 });

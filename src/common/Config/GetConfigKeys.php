@@ -32,7 +32,6 @@ use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\InviteBuddy\InvitationPurger;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
@@ -43,7 +42,6 @@ use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\ServerHostname;
-use Tuleap\SOAP\DisableSOAPEndpoints;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\Massmail;
 use Tuleap\User\UserSuspensionManager;
@@ -81,8 +79,6 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         MercureClient::class,
         BaseLayout::class,
         Massmail::class,
-        InvitationPurger::class,
-        DisableSOAPEndpoints::class,
     ];
 
     /**

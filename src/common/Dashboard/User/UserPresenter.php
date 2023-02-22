@@ -28,7 +28,6 @@ class UserPresenter
     public $login;
     public $avatar_url;
     public $has_avatar;
-    public string $avatar_alt;
 
     public function __construct(PFUser $user)
     {

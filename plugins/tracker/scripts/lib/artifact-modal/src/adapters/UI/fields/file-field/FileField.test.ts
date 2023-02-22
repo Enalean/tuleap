@@ -30,7 +30,7 @@ import { AttachedFileDescriptionStub } from "../../../../../tests/stubs/Attached
 import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
 import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
-import { FileFieldController } from "../../../../domain/fields/file-field/FileFieldController";
+import { FileFieldController } from "./FileFieldController";
 import { EventDispatcher } from "../../../../domain/EventDispatcher";
 
 jest.mock("pretty-kibibytes", () => {

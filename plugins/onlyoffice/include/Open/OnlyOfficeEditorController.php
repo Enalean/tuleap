@@ -96,7 +96,7 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
                         $this->stream_factory->createStream($this->template_renderer->renderToString(
                             'editor',
                             new OnlyOfficeEditorPresenter(
-                                (new JavascriptViteAsset($this->assets, 'src/onlyoffice-editor.ts'))->getFileURL(),
+                                (new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-editor.ts'))->getFileURL(),
                                 $csp_nonce,
                                 $document_server_url,
                                 $config_token,

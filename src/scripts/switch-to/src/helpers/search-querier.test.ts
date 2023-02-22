@@ -24,11 +24,10 @@ import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
-import type { EncodedURI, OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
-import { uri } from "@tuleap/fetch-result";
+import type { OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
 
 describe("search-querier", () => {
-    const url = uri`/search`;
+    const url = "/search";
     const keywords = "keywords";
     const PAGINATION_SIZE_HEADER = "X-PAGINATION-SIZE";
     const PAGINATION_LIMIT_HEADER = "X-PAGINATION-LIMIT";
@@ -308,7 +307,7 @@ describe("search-querier", () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockImplementation(
                 (
-                    url: EncodedURI,
+                    url: string,
                     options: OptionsWithAutoEncodedParameters
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([
@@ -412,7 +411,7 @@ describe("search-querier", () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockImplementation(
                 (
-                    url: EncodedURI,
+                    url: string,
                     options: OptionsWithAutoEncodedParameters
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([
@@ -548,7 +547,7 @@ describe("search-querier", () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockImplementation(
                 (
-                    url: EncodedURI,
+                    url: string,
                     options: OptionsWithAutoEncodedParameters
                 ): ResultAsync<Response, Fault> => {
                     const results_by_offset = new Map<number, ItemDefinition[]>([

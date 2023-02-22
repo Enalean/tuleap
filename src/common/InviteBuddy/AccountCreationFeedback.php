@@ -23,54 +23,51 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\User\Account\Register\RegisterFormContext;
-use Tuleap\User\RetrieveUserById;
+use UserManager;
 
-class AccountCreationFeedback implements InvitationSuccessFeedback
+class AccountCreationFeedback
 {
+    /**
+     * @var InvitationDao
+     */
+    private $dao;
+    /**
+     * @var AccountCreationFeedbackEmailNotifier
+     */
+    private $email_notifier;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
     public function __construct(
-        private InvitationDao $dao,
-        private RetrieveUserById $user_manager,
-        private AccountCreationFeedbackEmailNotifier $email_notifier,
-        private AddUserToProjectAccordingToInvitation $project_member_adder,
-        private InvitationInstrumentation $invitation_instrumentation,
-        private LoggerInterface $logger,
+        InvitationDao $dao,
+        UserManager $user_manager,
+        AccountCreationFeedbackEmailNotifier $email_notifier,
+        LoggerInterface $logger,
     ) {
+        $this->dao            = $dao;
+        $this->user_manager   = $user_manager;
+        $this->email_notifier = $email_notifier;
+        $this->logger         = $logger;
     }
 
-    public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void
+    public function accountHasJustBeenCreated(\PFUser $just_created_user): void
     {
-        $this->dao->saveJustCreatedUserThanksToInvitation(
-            (string) $just_created_user->getEmail(),
-            (int) $just_created_user->getId(),
-            $context->invitation_to_email ? $context->invitation_to_email->id : null
-        );
+        $this->dao->saveJustCreatedUserThanksToInvitation((string) $just_created_user->getEmail(), (int) $just_created_user->getId());
 
-        if ($context->invitation_to_email) {
-            $this->invitation_instrumentation->incrementUsedInvitation();
-        }
-
-        $already_warned_users_id = [];
-        foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $invitation) {
-            $this->invitation_instrumentation->incrementCompletedInvitation();
-
-            if ($invitation->to_project_id) {
-                $this->project_member_adder->addUserToProjectAccordingToInvitation($just_created_user, $invitation);
-            }
-
-            if (isset($already_warned_users_id[$invitation->from_user_id])) {
-                continue;
-            }
-
-            $already_warned_users_id[$invitation->from_user_id] = true;
-
-            $from_user = $this->user_manager->getUserById($invitation->from_user_id);
+        foreach ($this->dao->searchByEmail((string) $just_created_user->getEmail()) as $row) {
+            $from_user = $this->user_manager->getUserById($row['from_user_id']);
             if (! $from_user) {
-                $this->logger->error("Invitation was referencing an unknown user #" . $invitation->from_user_id);
+                $this->logger->error("Invitation was referencing an unknown user #" . $row['from_user_id']);
                 continue;
             }
             if (! $from_user->isAlive()) {
-                $this->logger->warning("Cannot send invitation feedback to inactive user #" . $invitation->from_user_id);
+                $this->logger->warning("Cannot send invitation feedback to inactive user #" . $row['from_user_id']);
                 continue;
             }
 

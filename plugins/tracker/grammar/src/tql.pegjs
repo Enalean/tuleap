@@ -123,7 +123,7 @@ InComparisonValue
     = _ "," _ value_wrapper:ListValue { return $value_wrapper; }
 
 Field
-    = name:$[a-zA-Z0-9_\-]+ {
+    = name:$[a-zA-Z0-9_]+ {
         return new Field($name);
     }
 

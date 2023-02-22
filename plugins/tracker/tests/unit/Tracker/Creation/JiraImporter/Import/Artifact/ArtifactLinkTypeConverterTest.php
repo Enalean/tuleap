@@ -51,7 +51,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
         $tests($tuleap_type);
     }
 
-    public static function getGetMissingArtifactLinkTypeData(): iterable
+    public function getGetMissingArtifactLinkTypeData(): iterable
     {
         return [
             'it converts a Jira type to a Tuleap type ' => [
@@ -122,7 +122,7 @@ final class ArtifactLinkTypeConverterTest extends TestCase
         $tests($tuleap_type);
     }
 
-    public static function getExistingArtifactLinkTypeData(): iterable
+    public function getExistingArtifactLinkTypeData(): iterable
     {
         return [
             'it returns null when type does not exist on Tuleap yet' => [

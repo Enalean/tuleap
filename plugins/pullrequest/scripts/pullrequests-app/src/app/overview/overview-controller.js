@@ -39,13 +39,10 @@ function OverviewController(
                 ? self.pull_request.repository_dest["clone_" + method + "_url"]
                 : "",
         abandon,
-        reopen,
         buildStatusIs,
         checkMerge,
         hasAbandonRight,
         hasMergeRight,
-        hasReopenRight,
-        isAbandoned,
         initCheckoutDropdown,
         isConflictingMerge,
         isNonFastForwardMerge,
@@ -104,10 +101,6 @@ function OverviewController(
         return self.pull_request.status === self.valid_status_keys.review;
     }
 
-    function isAbandoned() {
-        return self.pull_request.status === self.valid_status_keys.abandon;
-    }
-
     function isConflictingMerge() {
         return self.pull_request.merge_status === "conflict" && isOpen();
     }
@@ -130,10 +123,6 @@ function OverviewController(
 
     function hasAbandonRight() {
         return self.pull_request.user_can_abandon && isOpen();
-    }
-
-    function hasReopenRight() {
-        return self.pull_request.user_can_reopen && isAbandoned();
     }
 
     async function checkMerge() {
@@ -160,13 +149,6 @@ function OverviewController(
     function abandon() {
         self.operationInProgress = true;
         PullRequestService.abandon(self.pull_request).then(function () {
-            self.operationInProgress = false;
-        });
-    }
-
-    function reopen() {
-        self.operationInProgress = true;
-        PullRequestService.reopen(self.pull_request).then(function () {
             self.operationInProgress = false;
         });
     }

@@ -30,6 +30,8 @@ use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class BeforeMoveArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -38,63 +40,6 @@ class BeforeMoveArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var BeforeMoveArtifact
      */
     private $before_move_artifact;
-    /**
-     * @var Tracker_FormElementFactory&Mockery\MockInterface
-     */
-    private Tracker_FormElementFactory|Mockery\LegacyMockInterface|Mockery\MockInterface $form_element_factory;
-    /**
-     * @var Tracker_Semantic_ContributorFactory&Mockery\MockInterface
-     */
-    private Tracker_Semantic_ContributorFactory|Mockery\MockInterface|Mockery\LegacyMockInterface $contributor_semantic_factory;
-    /**
-     * @var \EventManager&Mockery\MockInterface
-     */
-    private $event_manager;
-    private MoveStatusSemanticChecker $status_semantic_checker;
-    private MoveDescriptionSemanticChecker $description_semantic_checker;
-    private MoveContributorSemanticChecker $contributor_semantic_checker;
-    /**
-     * @var \Tracker&Mockery\MockInterface
-     */
-    private $source_tracker;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $source_title_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $source_description_field;
-    /**
-     * @var Tracker_FormElement_Field_List&Mockery\MockInterface
-     */
-    private $source_status_field;
-    /**
-     * @var Tracker_FormElement_Field_List&Mockery\MockInterface
-     */
-    private $source_contributor_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $source_external_field;
-    /**
-     * @var \Tracker&Mockery\MockInterface
-     */
-    private $target_tracker;
-    /**
-     * @var Tracker_FormElement_Field_List&Mockery\MockInterface
-     */
-    private $target_status_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $target_description_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $target_contributor_field;
-    private MoveTitleSemanticChecker $title_semantic_checker;
-    private NoFeedbackFieldCollector $feedback_field_collector;
 
     protected function setUp(): void
     {

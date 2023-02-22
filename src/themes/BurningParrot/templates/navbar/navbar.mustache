@@ -59,14 +59,12 @@
             {{# can_buddies_be_invited }}
                 <button
                     type="button"
-                    class="tlp-button-secondary tlp-button-outline invite-buddies-button"
-                    data-test="invite-buddies-button"
+                    class="tlp-button-secondary tlp-button-outline"
+                    id="invite-buddies-button"
+                    data-target-modal-id="invite-buddies-modal"
                     {{# is_limit_reached }}
                     disabled
                     title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"
-                    {{/ is_limit_reached }}
-                    {{^ is_limit_reached }}
-                    title="{{# gettext }}Invite a co-worker{{/ gettext }}"
                     {{/ is_limit_reached }}
                 >
                     <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>

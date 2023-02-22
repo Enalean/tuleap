@@ -36,7 +36,6 @@ final class SetupTuleapCommand extends Command
 {
     private const OPT_TULEAP_FQDN = 'tuleap-fqdn';
     private const OPT_FORCE       = 'force';
-    private const OPT_PHP_VERSION = 'php-version';
 
     private const SYSTEMD_UNITS = [
         'tuleap-process-system-events-default.timer',
@@ -65,15 +64,13 @@ final class SetupTuleapCommand extends Command
         $this
             ->setDescription('Initial configuration of Tuleap')
             ->addOption(self::OPT_TULEAP_FQDN, '', InputOption::VALUE_REQUIRED, 'Fully qualified domain name of the tuleap server (eg. tuleap.example.com)')
-            ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force redeploy')
-            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Set required php version');
+            ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force redeploy');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $fqdn        = $input->getOption(self::OPT_TULEAP_FQDN);
-        $force       = (bool) $input->getOption(self::OPT_FORCE);
-        $php_version = $input->getOption(self::OPT_PHP_VERSION);
+        $fqdn  = $input->getOption(self::OPT_TULEAP_FQDN);
+        $force = (bool) $input->getOption(self::OPT_FORCE);
 
         $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
@@ -116,16 +113,11 @@ final class SetupTuleapCommand extends Command
         ])->mustRun();
 
         $logger->info("Redeploy configuration");
-        $site_deploy = [
+        $this->process_factory->getProcessWithoutTimeout([
             __DIR__ . '/../tuleap-cfg.php',
             'site-deploy',
             '--force',
-        ];
-        if (is_string($php_version)) {
-            $site_deploy[] = '--php-version';
-            $site_deploy[] = $php_version;
-        }
-        $this->process_factory->getProcessWithoutTimeout($site_deploy)->mustRun();
+        ])->mustRun();
 
         $logger->info("Enable and start systemd timers and services");
         $this->process_factory->getProcessWithoutTimeout(

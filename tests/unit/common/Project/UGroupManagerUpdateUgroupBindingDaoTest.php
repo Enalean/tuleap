@@ -25,12 +25,6 @@ class UGroupManagerUpdateUgroupBindingDaoTest extends \Tuleap\Test\PHPUnit\TestC
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var UGroupDao&\Mockery\MockInterface
-     */
-    private $dao;
-    private UGroupManager $ugroup_manager;
-
     protected function setUp(): void
     {
         parent::setUp();

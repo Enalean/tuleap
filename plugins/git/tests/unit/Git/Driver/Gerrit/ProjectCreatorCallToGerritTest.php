@@ -25,7 +25,7 @@ use Tuleap\TemporaryTestDirectory;
 require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
+class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -93,17 +93,6 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
-    /**
-     * @var true
-     */
-    private bool $migrate_access_rights;
-    private $repository;
-    private $repository_in_a_private_project;
-    private $repository_without_registered;
-    private $repository_with_registered;
-    private $driver;
-    private $userfinder;
-    private Git_Driver_Gerrit_ProjectCreator $project_creator;
 
     protected function setUp(): void
     {
@@ -117,7 +106,7 @@ final class ProjectCreatorCallToGerritTest extends \Tuleap\Test\PHPUnit\TestCase
         $zip_archive = new ZipArchive();
         $zip_archive->open("$this->fixtures/firefox.zip");
         $zip_archive->extractTo($this->tmpdir);
-        shell_exec("tar --no-same-owner -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir");
+        `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
 
         $host         = $this->tmpdir;
         $login        = $this->gerrit_admin_instance;

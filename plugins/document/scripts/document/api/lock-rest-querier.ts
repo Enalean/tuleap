@@ -20,7 +20,20 @@
 import { del, post } from "@tuleap/tlp-fetch";
 import type { Embedded, Empty, ItemFile, Link, Wiki } from "../type";
 
-export async function postLockFile(item: ItemFile): Promise<void> {
+export {
+    postLockFile,
+    deleteLockFile,
+    postLockEmbedded,
+    deleteLockEmbedded,
+    postLockWiki,
+    deleteLockWiki,
+    postLockLink,
+    deleteLockLink,
+    postLockEmpty,
+    deleteLockEmpty,
+};
+
+async function postLockFile(item: ItemFile): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -30,13 +43,13 @@ export async function postLockFile(item: ItemFile): Promise<void> {
     await post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
 }
 
-export async function deleteLockFile(item: ItemFile): Promise<void> {
+async function deleteLockFile(item: ItemFile): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     await del(`/api/docman_files/${escaped_item_id}/lock`);
 }
 
-export async function postLockEmbedded(item: Embedded): Promise<void> {
+async function postLockEmbedded(item: Embedded): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -46,13 +59,13 @@ export async function postLockEmbedded(item: Embedded): Promise<void> {
     await post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
 }
 
-export async function deleteLockEmbedded(item: Embedded): Promise<void> {
+async function deleteLockEmbedded(item: Embedded): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     await del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
 }
 
-export async function postLockWiki(item: Wiki): Promise<void> {
+async function postLockWiki(item: Wiki): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -62,13 +75,13 @@ export async function postLockWiki(item: Wiki): Promise<void> {
     await post(`/api/docman_wikis/${escaped_item_id}/lock`, { headers });
 }
 
-export async function deleteLockWiki(item: Wiki): Promise<void> {
+async function deleteLockWiki(item: Wiki): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     await del(`/api/docman_wikis/${escaped_item_id}/lock`);
 }
 
-export async function postLockLink(item: Link): Promise<void> {
+async function postLockLink(item: Link): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -78,13 +91,13 @@ export async function postLockLink(item: Link): Promise<void> {
     await post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
 }
 
-export async function deleteLockLink(item: Link): Promise<void> {
+async function deleteLockLink(item: Link): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     await del(`/api/docman_links/${escaped_item_id}/lock`);
 }
 
-export async function postLockEmpty(item: Empty): Promise<void> {
+async function postLockEmpty(item: Empty): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
@@ -94,7 +107,7 @@ export async function postLockEmpty(item: Empty): Promise<void> {
     await post(`/api/docman_empty_documents/${escaped_item_id}/lock`, { headers });
 }
 
-export async function deleteLockEmpty(item: Empty): Promise<void> {
+async function deleteLockEmpty(item: Empty): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     await del(`/api/docman_empty_documents/${escaped_item_id}/lock`);

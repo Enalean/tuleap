@@ -1,0 +1,89 @@
+/**
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
+
+card-fields {
+    width: 100%;
+}
+
+.extra-card-fields {
+    margin: 0 var(--extra-padding-right, 0) 0 0;
+    padding: var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+    border-top: 1px solid var(--border-transparent-color, var(--tlp-neutral-light-color));
+    font-size: 0.6875rem;
+    line-height: 0.8125rem;
+}
+
+.extra-card-field {
+    display: inline-block;
+    flex: 0 0 auto;
+    list-style-type: none;
+
+    &.large {
+        width: 100%;
+    }
+}
+
+.extra-card-field-content {
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
+
+    a {
+        color: var(--tlp-dark-color);
+        text-decoration: underline;
+        text-decoration-color: rgb(0 0 0 / 20%);
+
+        &:hover {
+            text-decoration-color: var(--tlp-dark-color);
+        }
+    }
+}
+
+.extra-card-field-title {
+    color: var(--text-color, var(--tlp-dimmed-color));
+}
+
+.extra-card-field-color {
+    display: inline-block;
+    width: var(--tlp-small-spacing);
+    height: var(--tlp-small-spacing);
+    margin: 0 2px 0 0;
+    border-radius: 50%;
+
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        &.card-field-#{$color-name} {
+            background-color: map.get($colors, "primary");
+        }
+    }
+}
+
+.extra-card-field-file-icon {
+    margin: 0 2px 0 0;
+}
+
+.extra-card-field-list-item:not(:last-child)::after {
+    content: ", ";
+}
+
+.extra-card-field-user > .tlp-avatar-mini {
+    width: var(--tlp-medium-spacing);
+    height: var(--tlp-medium-spacing);
+    margin: 0 2px 0 0;
+}

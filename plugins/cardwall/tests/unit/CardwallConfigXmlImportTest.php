@@ -41,30 +41,6 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var CardwallConfigXmlImport
      */
     private $cardwall_config_xml_import;
-    private array $mapping;
-    private array $field_mapping;
-    /**
-     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
-     */
-    private $column_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $mapping_field_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $mapping_field_value_dao;
-    private int $group_id;
-    /**
-     * @var XML_RNGValidator&\Mockery\LegacyMockInterface
-     */
-    private $xml_validator;
-    /**
-     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
-     */
-    private $logger;
-    private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping;
 
     protected function setUp(): void
     {

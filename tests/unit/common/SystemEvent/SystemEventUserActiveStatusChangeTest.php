@@ -40,23 +40,6 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
     use ForgeConfigSandbox;
 
     private const USER_ID = 102;
-    private SystemEventUserActiveStatusChange $system_event;
-    /**
-     * @var UserManager&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $user_manager;
-    /**
-     * @var UserGroupDao&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $user_group_dao;
-    /**
-     * @var UserRemover&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $user_remover;
-    /**
-     * @var BackendSystem&\PHPUnit\Framework\MockObject\Stub
-     */
-    private $backend_system;
 
     protected function setUp(): void
     {

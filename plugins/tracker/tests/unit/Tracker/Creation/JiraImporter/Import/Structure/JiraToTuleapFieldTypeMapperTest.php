@@ -79,7 +79,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    public static function getJiraFieldsAreMappedToXMLObjects(): iterable
+    public function getJiraFieldsAreMappedToXMLObjects(): iterable
     {
         yield 'JiraSummaryFieldIsMappedToStringField' => [
             'jira_field' => new JiraFieldAPIRepresentation(

@@ -54,8 +54,10 @@ class PaginatedUserCollection implements Countable
 
     /**
      * @see Countable
+     *
+     * @return int
      */
-    public function count(): int
+    public function count()
     {
         return count($this->users);
     }

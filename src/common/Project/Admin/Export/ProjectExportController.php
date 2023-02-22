@@ -82,11 +82,11 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
      */
     public function getProject(array $variables): \Project
     {
-        if (! isset($variables['project_id'])) {
+        if (! isset($variables['id'])) {
             throw new NotFoundException();
         }
 
-        return $this->project_retriever->getProjectFromId($variables['project_id']);
+        return $this->project_retriever->getProjectFromId($variables['id']);
     }
 
     private function displayHeader(string $title, Project $project, BaseLayout $layout): void

@@ -20,7 +20,9 @@
 import { get } from "@tuleap/tlp-fetch";
 import type { RepositoryFineGrainedPermissions } from "./type";
 
-export async function getGitPermissions(
+export { getGitPermissions };
+
+async function getGitPermissions(
     project_id: number,
     selected_ugroup_id: string
 ): Promise<{ repositories: RepositoryFineGrainedPermissions[] }> {

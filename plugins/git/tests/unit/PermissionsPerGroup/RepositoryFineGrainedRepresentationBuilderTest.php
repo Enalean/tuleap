@@ -234,13 +234,12 @@ final class RepositoryFineGrainedRepresentationBuilderTest extends \Tuleap\Test\
         );
 
         $formatted_ugroup = [$this->project_member_id => $this->project_member_id];
-        $this->formatter->method('formatCollectionOfUgroups')
-            ->willReturnCallback(
-                fn (array $ugroups, Project $project): array => match (true) {
-                    $project === $this->project && $ugroups === [$this->project_member_id] => $formatted_ugroup,
-                    $project === $this->project && count($ugroups) === 0 => [],
-                }
-            );
+        $this->formatter->method('formatCollectionOfUgroups')->withConsecutive(
+            [$this->equalTo([$this->project_member_id]), $this->equalTo($this->project)],
+            [$this->equalTo([]), $this->equalTo($this->project)],
+            [$this->equalTo([]), $this->equalTo($this->project)],
+            [$this->equalTo([]), $this->equalTo($this->project)]
+        )->willReturnOnConsecutiveCalls($formatted_ugroup, [], [], []);
 
         $expected__branch_fine_grained_representation = new FineGrainedPermissionRepresentation(
             1,

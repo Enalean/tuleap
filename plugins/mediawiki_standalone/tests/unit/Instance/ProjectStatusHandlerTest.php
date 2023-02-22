@@ -46,7 +46,7 @@ final class ProjectStatusHandlerTest extends TestCase
         self::assertEquals($expected_task, $queue->queue_task);
     }
 
-    public static function getTestData(): iterable
+    public function getTestData(): iterable
     {
         $project_with_mediawiki_service           = ProjectTestBuilder::aProject()->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)->build();
         $suspended_project_with_mediawiki_service = ProjectTestBuilder::aProject()

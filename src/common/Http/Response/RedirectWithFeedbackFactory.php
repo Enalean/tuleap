@@ -24,15 +24,24 @@ namespace Tuleap\Http\Response;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Tuleap\Layout\Feedback\ISerializeFeedback;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\Feedback\NewFeedback;
 
 class RedirectWithFeedbackFactory
 {
-    public function __construct(
-        private ResponseFactoryInterface $response_factory,
-        private ISerializeFeedback $feedback_serializer,
-    ) {
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $response_factory;
+    /**
+     * @var FeedbackSerializer
+     */
+    private $feedback_serializer;
+
+    public function __construct(ResponseFactoryInterface $response_factory, FeedbackSerializer $feedback_serializer)
+    {
+        $this->response_factory    = $response_factory;
+        $this->feedback_serializer = $feedback_serializer;
     }
 
     public function createResponseForUser(

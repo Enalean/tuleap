@@ -40,7 +40,7 @@ final class SessionStateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($session_state->getPKCECodeVerifier()->isIdenticalTo($rebuilt_session_state->getPKCECodeVerifier()));
     }
 
-    public static function dataProviderSessionStates(): array
+    public function dataProviderSessionStates(): array
     {
         return [
             [new SessionState('secret_key', 'return_to', 'nonce', new ConcealedString('code_verifier'))],

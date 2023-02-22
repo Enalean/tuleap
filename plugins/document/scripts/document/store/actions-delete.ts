@@ -38,10 +38,6 @@ import {
 } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
 
-export interface RootActionsDelete {
-    readonly deleteItem: typeof deleteItem;
-}
-
 export const deleteItem = async (
     context: ActionContext<RootState, RootState>,
     [item, additional_wiki_options]: [

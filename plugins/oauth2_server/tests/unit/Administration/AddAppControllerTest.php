@@ -93,7 +93,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public static function dataProviderInvalidBody(): array
+    public function dataProviderInvalidBody(): array
     {
         return [
             'No body'         => [null],
@@ -136,7 +136,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('/plugins/oauth2_server/admin', $response->getHeaderLine('Location'));
     }
 
-    public static function dataProviderValidBody(): array
+    public function dataProviderValidBody(): array
     {
         return [
             'With "Use PKCE" checked'    => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com', 'use_pkce' => 'true']],

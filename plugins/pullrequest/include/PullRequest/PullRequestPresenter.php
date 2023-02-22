@@ -37,13 +37,9 @@ final class PullRequestPresenter
     public string $user_avatar_url;
     public string $relative_date_display;
     public string $language;
-    public int $repository_id;
-    public int $project_id;
 
-    public function __construct(\GitRepository $repository, \PFUser $user, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting, public bool $is_vue_overview_shown)
+    public function __construct(public int $repository_id, \PFUser $user, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
     {
-        $this->repository_id                      = $repository->getId();
-        $this->project_id                         = $repository->getProjectId();
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
         $this->allow_pullrequest_v2               = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);

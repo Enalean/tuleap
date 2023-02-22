@@ -86,13 +86,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return new Tracker_Report_Criteria_File_ValueDao();
     }
 
-    public function fetchChangesetValue(
-        int $artifact_id,
-        int $changeset_id,
-        mixed $value,
-        ?Tracker_Report $report = null,
-        ?int $from_aid = null,
-    ): string {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
+    {
         $html             = '';
         $submitter_needed = true;
         $html            .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, []);

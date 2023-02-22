@@ -1,0 +1,356 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:color";
+@import "@tuleap/tlp/src/scss/variables/colors/common-colors";
+@import "~@tuleap/list-picker";
+@import "~@tuleap/link-selector";
+
+$nav-width: 150px;
+$nav-margin: 30px;
+
+@mixin themable(
+    $main-color,
+    $tlp-background-color,
+    $tlp-dark-color,
+    $tlp-white-color,
+    $tlp-dimmed-color,
+    $tlp-info-color,
+    $tlp-success-color,
+    $tlp-warning-color,
+    $tlp-danger-color,
+    $tlp-neutral-normal-color,
+    $tlp-illustration-primary-color,
+    $tlp-illustration-secondary-light-color,
+    $tlp-illustration-secondary-dark-color,
+    $tlp-illustration-tertiary-color
+) {
+    background: $tlp-background-color;
+
+    &.doc-background-white {
+        background: $tlp-white-color;
+    }
+
+    &.doc-background-grey {
+        background: $tlp-background-color;
+    }
+
+    &.doc-background-dark {
+        background: $tlp-dark-color;
+
+        .tlp-button-ellipsis {
+            --tlp-button-ellipsis-color: var(--tlp-button-ellipsis-color-on-dark-value);
+            --tlp-button-ellipsis-hover-color: var(--tlp-button-ellipsis-hover-color-on-dark-value);
+            --tlp-button-ellipsis-focus-border-color: var(
+                --tlp-button-ellipsis-focus-border-color-on-dark-value
+            );
+            --tlp-button-ellipsis-disabled-color: var(
+                --tlp-button-ellipsis-disabled-color-on-dark-value
+            );
+            --tlp-button-ellipsis-disabled-opacity: var(
+                --tlp-button-ellipsis-disabled-opacity-on-dark-value
+            );
+            --tlp-button-ellipsis-text-shadow: var(--tlp-button-ellipsis-text-shadow-on-dark-value);
+        }
+    }
+
+    .doc-section {
+        p a:not([class^="tlp-button"]) {
+            color: $main-color;
+        }
+
+        .code-inline {
+            background: color.adjust($main-color, $alpha: - 0.95);
+            color: color.adjust($main-color, $lightness: - 20%);
+        }
+
+        // stylelint-disable-next-line selector-class-pattern
+        .CodeMirror-gutters {
+            border-left: 3px solid color.adjust($main-color, $alpha: - 0.8);
+        }
+    }
+
+    #doc-title {
+        color: $main-color;
+    }
+
+    .main-nav > ul > .nav-item.active > a,
+    .main-nav > ul > .nav-item:hover > a {
+        border-color: $main-color;
+        color: $main-color;
+    }
+
+    .sub-nav > ul > .nav-item.active > a,
+    .sub-nav > ul > .nav-item:hover > a {
+        color: $main-color;
+    }
+
+    .doc-color-info {
+        background-color: $tlp-info-color;
+    }
+
+    .doc-color-success {
+        background-color: $tlp-success-color;
+    }
+
+    .doc-color-warning {
+        background-color: $tlp-warning-color;
+    }
+
+    .doc-color-danger {
+        background-color: $tlp-danger-color;
+    }
+
+    .example {
+        .tlp-centered {
+            border: 1px solid $main-color;
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+        .tlp-framed {
+            box-shadow: inset 0 0 0 16px color.adjust($main-color, $alpha: - 0.8);
+        }
+
+        .tlp-framed-vertically::before {
+            background: color.adjust($main-color, $alpha: - 0.8);
+        }
+
+        .tlp-framed-vertically::after {
+            background: color.adjust($main-color, $alpha: - 0.8);
+        }
+
+        .tlp-framed-horizontally::before {
+            background: color.adjust($main-color, $alpha: - 0.9);
+        }
+
+        .tlp-framed-horizontally::after {
+            background: color.adjust($main-color, $alpha: - 0.9);
+        }
+    }
+
+    [id^="example-layout-"] {
+        > div {
+            border: 1px solid $tlp-neutral-normal-color;
+        }
+    }
+
+    #example-modals-structure .tlp-modal {
+        > .tlp-modal-body {
+            border-right-color: $tlp-neutral-normal-color;
+            border-left-color: $tlp-neutral-normal-color;
+        }
+
+        > .tlp-modal-feedback {
+            border-right-color: $tlp-neutral-normal-color;
+            border-bottom-color: $tlp-neutral-normal-color;
+            border-left-color: $tlp-neutral-normal-color;
+        }
+
+        > .tlp-modal-footer {
+            border-right-color: $tlp-neutral-normal-color;
+            border-bottom-color: $tlp-neutral-normal-color;
+            border-left-color: $tlp-neutral-normal-color;
+        }
+    }
+
+    .popover-examples-container {
+        &::before {
+            border-color: color.adjust($tlp-dimmed-color, $alpha: - 0.2);
+        }
+
+        > i {
+            text-shadow: -5px -5px 0 $tlp-background-color, 5px -5px 0 $tlp-background-color,
+                -5px 5px 0 $tlp-background-color, 5px 5px 0 $tlp-background-color;
+
+            &:not(:hover) {
+                color: color.adjust($tlp-dimmed-color, $alpha: - 0.2);
+            }
+        }
+    }
+
+    #illustration-helper-target {
+        background: $tlp-background-color;
+    }
+
+    #example-badges-dark-background {
+        background: $tlp-dark-color;
+    }
+
+    .doc-appearance {
+        border-top: 2px solid $main-color;
+    }
+
+    .switch-to-background-white {
+        background-color: $tlp-white-color;
+    }
+
+    .switch-to-background-grey {
+        background-color: $tlp-background-color;
+    }
+
+    .switch-to-background-dark {
+        background-color: $tlp-dark-color;
+    }
+
+    .switch-to-background-white,
+    .switch-to-background-grey,
+    .switch-to-background-dark {
+        &.active::before {
+            color: $main-color;
+        }
+    }
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+body {
+    min-height: 100vh;
+
+    &.orange {
+        @import "@tuleap/tlp/src/scss/variables/variables-orange";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+
+    &.blue {
+        @import "@tuleap/tlp/src/scss/variables/variables-blue";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+
+    &.green {
+        @import "@tuleap/tlp/src/scss/variables/variables-green";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+
+    &.grey {
+        @import "@tuleap/tlp/src/scss/variables/variables-grey";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+
+    &.purple {
+        @import "@tuleap/tlp/src/scss/variables/variables-purple";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+
+    &.red {
+        @import "@tuleap/tlp/src/scss/variables/variables-red";
+        @include themable(
+            $tlp-main-color,
+            $tlp-background-color,
+            $tlp-dark-color,
+            $tlp-white-color,
+            $tlp-dimmed-color,
+            $tlp-info-color,
+            $tlp-success-color,
+            $tlp-warning-color,
+            $tlp-danger-color,
+            $tlp-neutral-normal-color,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
+    }
+}
+/* stylelint-enable */
+
+.hljs {
+    background: none;
+}
+
+@import "./nav";
+@import "./sections";
+@import "./javascript-sections";
+@import "~codemirror/lib/codemirror";
+@import "~codemirror/theme/mdn-like";
+@import "~codemirror/addon/scroll/simplescrollbars";

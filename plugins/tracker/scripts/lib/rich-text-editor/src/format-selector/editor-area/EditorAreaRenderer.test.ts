@@ -26,7 +26,6 @@ import type { GettextProvider } from "@tuleap/gettext";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
-import { initGettextSync } from "@tuleap/gettext";
 
 const emptyFunction = (): void => {
     //Do nothing
@@ -73,7 +72,9 @@ describe(`EditorAreaRenderer`, () => {
         gettext_provider: GettextProvider,
         state: EditorAreaStateInterface;
     beforeEach(() => {
-        gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
+        gettext_provider = {
+            gettext: (msgid: string): string => msgid,
+        };
         state = createState("reduplicatory", "archdruid");
         renderer = new EditorAreaRenderer(gettext_provider);
     });

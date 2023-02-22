@@ -27,7 +27,7 @@
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
-            v-model="selected_tracker.tracker_id"
+            v-model="selected_tracker"
             ref="move_artifact_tracker_selector"
         >
             <option
@@ -45,6 +45,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { createListPicker } from "@tuleap/list-picker";
+import { isListPickerEnabled } from "../from-tracker-presenter.js";
 
 export default {
     name: "TrackerSelector",
@@ -55,6 +56,9 @@ export default {
     },
     computed: {
         ...mapGetters(["tracker_list_with_disabled_from"]),
+        is_tracker_list_empty() {
+            return this.tracker_list_with_disabled_from.length === 0;
+        },
         does_tracker_list_contain_from_tracker() {
             return this.tracker_list_with_disabled_from.some(({ disabled }) => disabled === true);
         },
@@ -72,15 +76,19 @@ export default {
                 : "";
         },
     },
-    mounted() {
-        this.list_picker = createListPicker(this.$refs.move_artifact_tracker_selector, {
-            locale: document.body.dataset.userLocale,
-            is_filterable: true,
-            placeholder: this.$gettext("Choose tracker..."),
-        });
+    async mounted() {
+        if (isListPickerEnabled()) {
+            this.list_picker = await createListPicker(this.$refs.move_artifact_tracker_selector, {
+                locale: document.body.dataset.userLocale,
+                is_filterable: true,
+                placeholder: this.$gettext("Choose tracker..."),
+            });
+        }
     },
     beforeDestroy() {
-        this.list_picker.destroy();
+        if (this.list_picker) {
+            this.list_picker.destroy();
+        }
     },
 };
 </script>

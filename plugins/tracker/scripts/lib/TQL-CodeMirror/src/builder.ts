@@ -24,13 +24,15 @@ import "codemirror/addon/display/placeholder";
 import { getHint } from "./autocompleter";
 import type { TQLDefinition } from "./configuration";
 
-export function initializeTQLMode(tql_mode_definition: TQLDefinition): void {
+export { initializeTQLMode, codeMirrorify };
+
+function initializeTQLMode(tql_mode_definition: TQLDefinition): void {
     CodeMirror.defineSimpleMode("tql", tql_mode_definition);
 }
 
 export type TQLCodeMirrorEditor = CodeMirror.Editor;
 
-export function codeMirrorify(
+function codeMirrorify(
     textarea_element: HTMLTextAreaElement,
     autocomplete_keywords: ReadonlyArray<string>,
     submitFormCallback: () => void

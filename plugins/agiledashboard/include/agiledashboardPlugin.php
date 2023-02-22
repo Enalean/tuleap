@@ -31,7 +31,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
-use Tuleap\AgileDashboard\ExplicitBacklog\CopiedArtifact\AddCopiedArtifactsToTopBacklog;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\DirectArtifactLinkCleaner;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -55,12 +54,11 @@ use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSenderMercure;
-use Tuleap\AgileDashboard\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
+use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
@@ -69,11 +67,10 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
-use Tuleap\AgileDashboard\RealTime\MercureJWTController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageControllerMercure;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
@@ -120,9 +117,6 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
-use Tuleap\RealTimeMercure\ClientBuilder;
-use Tuleap\RealTimeMercure\MercureClient;
-use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -146,7 +140,6 @@ use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
@@ -240,6 +233,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(HistoryEntryCollection::NAME);
             $this->addHook(Event::USER_HISTORY_CLEAR);
@@ -288,7 +283,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
             $this->addHook(TrackerHierarchyUpdateEvent::NAME);
-            $this->addHook(AfterArtifactCopiedEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -790,22 +784,79 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
+    /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
+    public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $request = HTTPRequest::instance();
+        if (AgileDashboardLegacyController::isInOverviewTab($request) || AgileDashboardLegacyController::isPlanningV2URL($request)) {
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
+        } elseif (AgileDashboardLegacyController::isScrumAdminURL($request)) {
+            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-style.css');
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        if (AgileDashboardLegacyController::isInOverviewTab(HTTPRequest::instance())) {
+            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('scrum-header.js');
+            return;
+        }
+
+        $provider = $this->getJavascriptDependenciesProvider();
+        if ($provider === null) {
+            return;
+        }
+
+        foreach ($provider->getDependencies() as $javascript) {
+            if (isset($javascript['snippet'])) {
+                $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
+            } else {
+                $params['javascript_files'][] = $javascript['file'];
+            }
+        }
+    }
+
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript(
-            new \Tuleap\Layout\JavascriptViteAsset(
-                new \Tuleap\Layout\IncludeViteAssets(
-                    __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
-                    '/assets/agiledashboard/permissions-per-group'
-                ),
-                'src/index.js'
-            )
-        );
+        $event->addJavascript($this->getScriptAssetByName('permission-per-group.js'));
+    }
+
+    /**
+     * @return \Tuleap\AgileDashboard\JavascriptDependenciesProvider
+     */
+    private function getJavascriptDependenciesProvider()
+    {
+        $request = HTTPRequest::instance();
+        if (KanbanURL::isKanbanURL($request)) {
+            return new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
+        } elseif (AgileDashboardLegacyController::isPlanningV2URL($request)) {
+            return new PlanningJavascriptDependenciesProvider($this->getIncludeAssets());
+        }
+
+        return null;
     }
 
     private function isAnAgiledashboardRequest()
     {
         return $this->currentRequestIsForPlugin();
+    }
+
+    private function isScrumAdminURL()
+    {
+        $request = HTTPRequest::instance();
+
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
+            $request->get('action') === 'admin' &&
+            $request->get('pane') !== 'kanban' &&
+            $request->get('pane') !== 'charts';
+    }
+
+    private function isPlanningV2URL()
+    {
+        $request              = HTTPRequest::instance();
+        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+
+        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
     private function isHomepageURL(HTTPRequest $request)
@@ -1258,22 +1309,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function getKanbanArtifactMessageSenderMercure(): KanbanArtifactMessageSenderMercure
-    {
-        $kanba_item_dao                           = new AgileDashboard_KanbanItemDao();
-        $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
-        $realtime_artifact_message_builder_kanban = new KanbanArtifactMessageBuilderMercure(
-            $kanba_item_dao,
-            Tracker_Artifact_ChangesetFactoryBuilder::build()
-        );
-
-        $realtime_artifact_message_sender_mercure = new RealTimeMercureArtifactMessageSender($mercure_client);
-        return new KanbanArtifactMessageSenderMercure(
-            $realtime_artifact_message_sender_mercure,
-            $realtime_artifact_message_builder_kanban
-        );
-    }
-
     /**
      * @return RealTimeArtifactMessageController
      */
@@ -1285,14 +1320,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function getRealtimeMessageControllerMercure(): RealTimeArtifactMessageControllerMercure
-    {
-        return new RealTimeArtifactMessageControllerMercure(
-            $this->getKanbanFactory(),
-            $this->getKanbanArtifactMessageSenderMercure()
-        );
-    }
-
     public function trackerArtifactCreated(ArtifactCreated $event)
     {
         $artifact = $event->getArtifact();
@@ -1301,12 +1328,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
         );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
-            $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                $artifact,
-                RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED
-            );
-        }
+
         $cleaner = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
@@ -1324,12 +1346,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
         );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
-                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                    $artifact,
-                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_UPDATED
-                );
-        }
+
         $cleaner = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
@@ -1349,14 +1366,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 $artifact,
                 RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
             );
-        }
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
-            foreach ($artifacts as $artifact) {
-                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
-                    $artifact,
-                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_REORDERED
-                );
-            }
         }
     }
 
@@ -1659,9 +1668,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         });
     }
 
-    public function routeGetJWT(): MercureJWTController
+    public function routeGetJWT(): \Tuleap\AgileDashboard\RealTime\MercureJWTController
     {
-        return new MercureJWTController(
+        return new \Tuleap\AgileDashboard\RealTime\MercureJWTController(
             $this->getKanbanFactory(),
             $this->getLogger(),
             HTTPFactoryBuilder::responseFactory(),
@@ -1801,7 +1810,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    private function getIncludeAssets(): IncludeAssets
+    public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets',
@@ -1853,13 +1862,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->getPlanningPermissionsManager(),
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
-            new \Tuleap\Layout\JavascriptViteAsset(
-                new \Tuleap\Layout\IncludeViteAssets(
-                    __DIR__ . '/../scripts/artifact-additional-action/frontend-assets',
-                    '/assets/agiledashboard/artifact-additional-action'
-                ),
-                'src/index.ts'
-            ),
+            $this->getScriptAssetByName('artifact-additional-action.js'),
             new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
             EventManager::instance()
         );
@@ -2057,6 +2060,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $event->addServiceNameUsed('agile_dashboard');
     }
 
+    private function getScriptAssetByName(string $name): JavascriptAsset
+    {
+        return new JavascriptAsset($this->getIncludeAssets(), $name);
+    }
+
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
         $planning_tracker_backlog_checker = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
@@ -2194,19 +2202,5 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $event->setHierarchyCannotBeUpdated();
             $event->setErrorMessage($exception->getMessage());
         }
-    }
-
-    public function afterArtifactCopiedEvent(AfterArtifactCopiedEvent $event): void
-    {
-        $adder = new AddCopiedArtifactsToTopBacklog(
-            new ExplicitBacklogDao(),
-            new ArtifactsInExplicitBacklogDao(),
-            new PlannedArtifactDao(),
-        );
-
-        $adder->addCopiedArtifactsToTopBacklog(
-            $event->getArtifactImportedMapping(),
-            $event->getProject(),
-        );
     }
 }

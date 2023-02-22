@@ -28,9 +28,6 @@ class GitExec extends Git_Exec
 {
     private const GIT_MERGE_CONFLICT_MARKER_REGEX = '^\+<<<<<<<';
 
-    /**
-     * @throws UnknownBranchNameException
-     */
     public function getBranchSha1($branch_name)
     {
         $output = [];
@@ -154,9 +151,6 @@ class GitExec extends Git_Exec
         );
     }
 
-    /**
-     * @throws Git_Command_Exception
-     */
     public function getCommonAncestor($ref1, $ref2)
     {
         $ref1   = escapeshellarg($ref1);

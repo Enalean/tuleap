@@ -32,7 +32,6 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\PullRequestReopener;
 use URLVerification;
 
 final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -92,10 +91,6 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|Project
      */
     private $project_destination;
-    /**
-     * @var PullRequestReopener&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $reopener;
 
     protected function setUp(): void
     {
@@ -106,7 +101,6 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pull_request_permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
         $this->pull_request_closer              = Mockery::mock(PullRequestCloser::class);
         $this->url_verification                 = Mockery::mock(URLVerification::class);
-        $this->reopener                         = $this->createMock(PullRequestReopener::class);
         $logger                                 = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         $this->patcher = new StatusPatcher(
@@ -114,7 +108,6 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->access_control_verifier,
             $this->pull_request_permissions_checker,
             $this->pull_request_closer,
-            $this->reopener,
             $this->url_verification,
             $logger
         );
@@ -293,7 +286,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserThatCannotMergeAPullRequestIsRejected(): void
+    public function testUserThatCannotAPullRequestIsRejected(): void
     {
         $pull_request = $this->buildAPullRequest();
 
@@ -318,25 +311,6 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReopensAPullrequest(): void
-    {
-        $pull_request = $this->buildAPullRequest('A');
-
-        $this->mockUserCanAccessProject($this->project_source);
-        $this->mockUserCanAccessProject($this->project_destination);
-
-        $this->mockUserCanWrite($this->repository_source, 'fork01');
-        $this->mockUserCanWrite($this->repository_destination, 'master');
-
-        $this->reopener->expects(self::once())->method("reopen");
-
-        $this->patcher->patchStatus(
-            $this->user,
-            $pull_request,
-            'review'
-        );
-    }
-
     public function testItThrowsAnExceptionIfStatusIsNotKnown()
     {
         $pull_request = $this->buildAPullRequest();
@@ -350,7 +324,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildAPullRequest(string $status = 'R'): PullRequest
+    private function buildAPullRequest(): PullRequest
     {
         $id                         = 1;
         $title                      = 'title01';
@@ -375,8 +349,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
             $source_reference_sha1,
             $destination_repository_id,
             $destination_reference,
-            $destination_reference_sha1,
-            $status
+            $destination_reference_sha1
         );
     }
 

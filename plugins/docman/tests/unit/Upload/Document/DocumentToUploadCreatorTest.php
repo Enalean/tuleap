@@ -47,7 +47,6 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|PermissionItemUpdater
      */
     private $permissions_item_updater;
-    private FilenameBuilder $filename_builder;
 
     public function setUp(): void
     {
@@ -121,7 +120,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(12, $document_to_upload->getItemId());
     }
 
-    public static function permissionsForGroupsDataProvider(): array
+    public function permissionsForGroupsDataProvider(): array
     {
         return [
             [new DocmanItemPermissionsForGroupsSet([])],

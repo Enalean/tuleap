@@ -21,8 +21,6 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../src/www/include/session.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 // define fault code constants
 define('INVALID_ITEM_FAULT', '3017');
 define('INVALID_DOCUMENT_FAULT', '3018');

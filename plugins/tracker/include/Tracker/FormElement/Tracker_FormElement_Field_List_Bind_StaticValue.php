@@ -48,7 +48,11 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $this->rank        = $rank;
     }
 
-    public function __toString(): string
+    /**
+     *
+     * @return string
+     */
+    public function __toString()
     {
         return $this->label ? $this->label : '';
     }
@@ -141,7 +145,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $id         = $this->getId();
 
         if (! empty($decorators) && isset($decorators[$id])) {
-            $purifier = Codendi_HTMLPurifier::instance();
+            $purifier = Codendi_HTTPPurifier::instance();
             return [
                 "data-color-value" => $purifier->purify($decorators[$id]->getCurrentColor()),
             ];

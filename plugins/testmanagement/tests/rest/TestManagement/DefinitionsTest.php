@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
-final class DefinitionsTest extends TestManagementRESTTestCase
+final class DefinitionsTest extends BaseTest
 {
     public function testGetDefinition(): void
     {

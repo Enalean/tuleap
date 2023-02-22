@@ -22,11 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use AgileDashboard_SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
-use Tuleap\AgileDashboard\Kanban\RealTime\KanbanStructureRealTimeMercure;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\RealTimeMercure\Client;
-use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanDao;
@@ -83,10 +80,6 @@ class KanbanColumnsResource
      */
     private $permissions_serializer;
 
-    private Client $mercure_client;
-
-    private KanbanStructureRealTimeMercure $kanban_structural_realtime;
-
     public function __construct()
     {
         $this->tracker_factory = TrackerFactory::instance();
@@ -123,9 +116,6 @@ class KanbanColumnsResource
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
-
-        $this->mercure_client             = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
-        $this->kanban_structural_realtime = new KanbanStructureRealTimeMercure($this->mercure_client);
     }
 
     /**
@@ -208,10 +198,8 @@ class KanbanColumnsResource
                 'kanban_column:edit',
                 $data
             );
+
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                $this->kanban_structural_realtime->sendStructureUpdate($kanban);
-            }
         }
     }
 
@@ -282,9 +270,6 @@ class KanbanColumnsResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
-                $this->kanban_structural_realtime->sendStructureUpdate($kanban);
-            }
         }
     }
 

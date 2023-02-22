@@ -64,7 +64,7 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public static function dataProviderClaims(): array
+    public function dataProviderClaims(): array
     {
         return [
             'With subject claim only' => [

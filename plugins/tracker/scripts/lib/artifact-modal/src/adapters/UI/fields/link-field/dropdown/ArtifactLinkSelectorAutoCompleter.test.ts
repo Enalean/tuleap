@@ -25,6 +25,7 @@ import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link
 import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
+import { NotifyFaultStub } from "../../../../../../tests/stubs/NotifyFaultStub";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
 import type { RetrievePossibleParents } from "../../../../../domain/fields/link-field/RetrievePossibleParents";
 import { RetrievePossibleParentsStub } from "../../../../../../tests/stubs/RetrievePossibleParentsStub";
@@ -40,7 +41,6 @@ import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../../tests/stubs/SearchArtifactsStub";
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
-import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
 
 const FIRST_ARTIFACT_ID = 1621;
 const SECOND_ARTIFACT_ID = 15;
@@ -66,11 +66,11 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         second_artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
         artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
+        fault_notifier: NotifyFaultStub,
         parents_retriever: RetrievePossibleParents,
         current_artifact_identifier: CurrentArtifactIdentifier | null,
         current_tracker_identifier: CurrentTrackerIdentifier,
         user_history_retriever: RetrieveUserHistory,
-        event_dispatcher: DispatchEventsStub,
         host: LinkField,
         artifacts_searcher: SearchArtifacts;
 
@@ -89,11 +89,11 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             "daphne-blue"
         );
 
+        fault_notifier = NotifyFaultStub.withCount();
         artifact_retriever = RetrieveMatchingArtifactStub.withFault(NotFoundFault());
         user_history_retriever = RetrieveUserHistoryStub.withoutUserHistory();
         artifacts_searcher = SearchArtifactsStub.withoutResults();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
-        event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
         current_artifact_identifier = null;
         current_tracker_identifier = CurrentTrackerIdentifierStub.withId(TRACKER_ID);
@@ -111,11 +111,11 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     const autocomplete = (query: string): void => {
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
             artifact_retriever,
+            fault_notifier,
             parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             user_history_retriever,
             artifacts_searcher,
-            event_dispatcher,
             current_artifact_identifier,
             current_tracker_identifier,
             UserIdentifierStub.fromUserId(USER_ID)
@@ -186,7 +186,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             await await autocomplete("abc");
 
-            expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(0);
             expect(host.search_results_section).toHaveLength(0);
         });
 
@@ -197,7 +197,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             await await autocomplete("abc");
 
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
             expect(host.search_results_section).toHaveLength(1);
             const group = host.search_results_section[0];
             expect(group.items).toHaveLength(0);
@@ -240,7 +240,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             await artifact_retriever_async;
             await artifact_retriever_async; //There are two level of promise
 
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
             const groups = host.matching_artifact_section;
             expect(groups).toHaveLength(1);
             expect(groups[0].items).toHaveLength(0);
@@ -260,7 +260,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             await user_history_async;
             await user_history_async; //There are two level of promise
 
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
             const groups = host.recently_viewed_section;
             expect(groups).toHaveLength(1);
             expect(groups[0].items).toHaveLength(0);
@@ -283,7 +283,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 await artifact_retriever_async;
                 await artifact_retriever_async; //There are two level of promise
 
-                expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
+                expect(fault_notifier.getCallCount()).toBe(0);
                 const groups = host.matching_artifact_section;
                 expect(groups).toHaveLength(1);
                 expect(groups[0].items).toHaveLength(0);
@@ -303,7 +303,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             parents_retriever = RetrievePossibleParentsStub.withParents(parent_retriever_async);
         });
 
-        it(`will retrieve the possible parents and set a group holding them`, async () => {
+        it(`will retrieve the possible parents and set a group holding them
+            and clear the fault notification`, async () => {
             autocomplete("");
             const loading_groups = host.possible_parents_section;
             expect(loading_groups).toHaveLength(1);
@@ -334,7 +335,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             await parent_retriever_async;
             await parent_retriever_async; //There are two level of promise
 
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);
             expect(groups[0].is_loading).toBe(false);

@@ -8,10 +8,10 @@ specifiers:
   '@tuleap/tlp-fetch': workspace:*
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10
-  '@types/dompurify': ^2.4.0
+  '@types/dompurify': ^2.3.2
   '@types/marked': ^3.0.2
   '@types/turndown': ^5.0.0
-  dompurify: ^3.0.0
+  dompurify: ^2.3.6
   lit: ^2.2.3
   marked: ^4.0.10
   turndown: ^7.0.0
@@ -20,7 +20,7 @@ dependencies:
   '@tuleap/gettext': link:../../../../../lib/frontend/gettext
   '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
-  dompurify: 3.0.0
+  dompurify: 2.3.6
   lit: 2.2.3
   marked: 4.0.10
   turndown: 7.1.1
@@ -30,7 +30,7 @@ devDependencies:
   '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
   '@types/bootstrap': 3.4.0
   '@types/ckeditor': 4.9.10
-  '@types/dompurify': 2.4.0
+  '@types/dompurify': 2.3.2
   '@types/marked': 3.0.2
   '@types/turndown': 5.0.1
 
@@ -50,10 +50,10 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/dompurify/2.4.0:
-    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
+  /@types/dompurify/2.3.2:
+    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
     dependencies:
-      '@types/trusted-types': 2.0.3
+      '@types/trusted-types': 2.0.1
     dev: true
 
   /@types/jquery/3.5.5:
@@ -70,8 +70,13 @@ packages:
     resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
     dev: true
 
-  /@types/trusted-types/2.0.3:
-    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+  /@types/trusted-types/2.0.1:
+    resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
+    dev: true
+
+  /@types/trusted-types/2.0.2:
+    resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
+    dev: false
 
   /@types/turndown/5.0.1:
     resolution: {integrity: sha512-N8Ad4e3oJxh9n9BiZx9cbe/0M3kqDpOTm2wzj13wdDUxDPjfjloWIJaquZzWE1cYTAHpjOH3rcTnXQdpEfS/SQ==}
@@ -81,8 +86,8 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify/3.0.0:
-    resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /lit-element/3.2.0:
@@ -95,7 +100,7 @@ packages:
   /lit-html/2.2.3:
     resolution: {integrity: sha512-vI4j3eWwtQaR8q/O63juZVliBIFMio716X719/lSsGH4UWPy2/7Qf377jsNs4cx3gCHgIbx8yxFgXFQ/igZyXQ==}
     dependencies:
-      '@types/trusted-types': 2.0.3
+      '@types/trusted-types': 2.0.2
     dev: false
 
   /lit/2.2.3:

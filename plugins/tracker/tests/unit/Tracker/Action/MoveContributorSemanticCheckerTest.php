@@ -26,6 +26,8 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class MoveContributorSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -34,26 +36,6 @@ class MoveContributorSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveContributorSemanticChecker
      */
     private $checker;
-    /**
-     * @var Tracker_FormElementFactory&Mockery\MockInterface
-     */
-    private $form_element_factory;
-    /**
-     * @var Tracker&Mockery\MockInterface
-     */
-    private $source_tracker;
-    /**
-     * @var Tracker&Mockery\MockInterface
-     */
-    private $target_tracker;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $source_contributor_field;
-    /**
-     * @var Tracker_FormElement_Field&Mockery\MockInterface
-     */
-    private $target_contributor_field;
 
     protected function setUp(): void
     {

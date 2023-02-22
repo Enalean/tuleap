@@ -41,9 +41,10 @@ class Docman_NotificationsManager_DeleteTest extends \Tuleap\Test\PHPUnit\TestCa
     protected function setUp(): void
     {
         parent::setUp();
-        $this->notification_manager = Mockery::mock(Docman_NotificationsManager_Delete::class)
+        $this->notification_manager       = Mockery::mock(Docman_NotificationsManager_Delete::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        $this->notification_manager->_url = "http://www.example.com/plugins/docman/";
 
         $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
         $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);

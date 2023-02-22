@@ -22,6 +22,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerListGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,18 +43,6 @@ class MembershipManagerListGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $gerrit_user_manager;
     protected $remote_server;
     protected $project_manager;
-    /**
-     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
-     */
-    private $remote_server_factory;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group2;
-    /**
-     * @var ProjectUGroup&\Mockery\MockInterface
-     */
-    private $u_group3;
 
     protected function setUp(): void
     {
@@ -60,6 +50,7 @@ class MembershipManagerListGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('codendi_log', vfsStream::setup()->url());
         $this->user                  = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
         $this->driver                = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $this->driver_factory        = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
         $this->user_finder           = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
         $this->remote_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->remote_server         = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
@@ -84,7 +75,7 @@ class MembershipManagerListGroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->membership_manager  = new Git_Driver_Gerrit_MembershipManager(
             \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
-            \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
+            $this->driver_factory,
             $this->gerrit_user_manager,
             \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class),
             \Mockery::spy(\Psr\Log\LoggerInterface::class),

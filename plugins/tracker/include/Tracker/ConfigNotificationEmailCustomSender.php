@@ -24,14 +24,20 @@ use Tracker;
 
 class ConfigNotificationEmailCustomSender
 {
-    public function __construct(private ConfigNotificationEmailCustomSenderDao $dao)
+    /**
+     * @var ConfigNotificationAssignedToDao
+     */
+    private $dao;
+
+    public function __construct($dao)
     {
+        $this->dao = $dao;
     }
 
     /**
-     * @return array{format: string, enabled: int}
+     * @return mixed array(format, enabled) if found, false otherwise
      */
-    public function getCustomSender(Tracker $tracker): array
+    public function getCustomSender(Tracker $tracker)
     {
         $rows = $this->dao->searchCustomSender($tracker->getId());
         if (count($rows) <= 0) {
@@ -41,7 +47,7 @@ class ConfigNotificationEmailCustomSender
         }
     }
 
-    public function setCustomSender(Tracker $tracker, $format, $enabled): void
+    public function setCustomSender(Tracker $tracker, $format, $enabled)
     {
         $enabled = $enabled ? 1 : 0;
         $this->dao->create($tracker->getId(), $format, $enabled);

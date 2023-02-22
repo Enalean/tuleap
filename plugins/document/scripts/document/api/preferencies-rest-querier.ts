@@ -20,7 +20,15 @@
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import { del, get, patch } from "@tuleap/tlp-fetch";
 
-export async function patchUserPreferenciesForFolderInProject(
+export {
+    patchUserPreferenciesForFolderInProject,
+    deleteUserPreferenciesForFolderInProject,
+    removeUserPreferenceForEmbeddedDisplay,
+    getPreferenceForEmbeddedDisplay,
+    setNarrowModeForEmbeddedDisplay,
+};
+
+async function patchUserPreferenciesForFolderInProject(
     user_id: number,
     project_id: number,
     folder_id: number
@@ -36,13 +44,13 @@ export async function patchUserPreferenciesForFolderInProject(
     });
 }
 
-export async function deleteUserPreference(user_id: number, key: string): Promise<void> {
+async function deleteUserPreference(user_id: number, key: string): Promise<void> {
     await del(
         `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
     );
 }
 
-export async function deleteUserPreferenciesForFolderInProject(
+async function deleteUserPreferenciesForFolderInProject(
     user_id: number,
     project_id: number,
     folder_id: number
@@ -52,7 +60,7 @@ export async function deleteUserPreferenciesForFolderInProject(
     await deleteUserPreference(user_id, key);
 }
 
-export async function setNarrowModeForEmbeddedDisplay(
+async function setNarrowModeForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number
@@ -68,7 +76,7 @@ export async function setNarrowModeForEmbeddedDisplay(
     });
 }
 
-export async function removeUserPreferenceForEmbeddedDisplay(
+async function removeUserPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number
@@ -80,7 +88,7 @@ export async function removeUserPreferenceForEmbeddedDisplay(
     );
 }
 
-export async function getPreferenceForEmbeddedDisplay(
+async function getPreferenceForEmbeddedDisplay(
     user_id: number,
     project_id: number,
     document_id: number

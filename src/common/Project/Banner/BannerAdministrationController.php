@@ -90,7 +90,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
         };
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
-            $variables['project_id'],
+            $variables['id'],
             _('Project banner'),
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback

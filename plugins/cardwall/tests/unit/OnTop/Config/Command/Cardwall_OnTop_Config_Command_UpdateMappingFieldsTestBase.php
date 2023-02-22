@@ -25,40 +25,6 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected int $tracker_id;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    protected $tracker;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    protected $task_tracker;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    protected $story_tracker;
-    /**
-     * @var TrackerFactory&\Mockery\MockInterface
-     */
-    protected $tracker_factory;
-    protected Tracker_FormElement_Field $status_field;
-    protected Tracker_FormElement_Field $assignto_field;
-    protected Tracker_FormElement_Field $stage_field;
-    /**
-     * @var Tracker_FormElementFactory&\Mockery\MockInterface
-     */
-    protected $element_factory;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    protected $value_dao;
-    protected Cardwall_OnTop_Config_Command_UpdateMappingFields $command;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    protected $dao;
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -20,7 +20,6 @@
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { linkGitlabGroupWithTuleap } from "./tuleap-api-querier";
-import { uri } from "@tuleap/fetch-result";
 
 describe("tuleap-api-querier", () => {
     it("should ask Tuleap to link the given group to the given project with given credentials", async () => {
@@ -47,7 +46,7 @@ describe("tuleap-api-querier", () => {
             throw new Error("Expected an OK");
         }
 
-        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/gitlab_groups`, {
+        expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_groups", {
             project_id,
             gitlab_group_id,
             gitlab_server_url,

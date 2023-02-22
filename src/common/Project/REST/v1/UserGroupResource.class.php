@@ -312,7 +312,7 @@ class UserGroupResource extends AuthenticatedResource
         $users_from_references = $this->getMembersFromReferences(...$user_references_representations);
 
         try {
-            $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references, $this->user_manager->getCurrentUser());
+            $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references);
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted | CannotRemoveUserMembershipToUserGroupException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (\Exception $ex) {

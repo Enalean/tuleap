@@ -20,8 +20,6 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
-
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -198,11 +196,11 @@ final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUni
     {
         $new_transition_id = 2;
         $field_mapping     = ['some fields mapping'];
+        $ugroup_mapping    = ['some ugroups mapping'];
+        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
-        $mapping = TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([103 => 122]);
-
-        $this->permissions_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $mapping)->once();
-        $this->fieldnotempty_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $field_mapping)->once();
-        $this->condition_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $mapping);
+        $this->permissions_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        $this->fieldnotempty_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        $this->condition_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isThereAtLeastOneFileField } from "../../adapters/UI/fields/file-field/file-field-detector";
+import { isThereAtLeastOneFileField } from "./file-field-detector";
 import { getFileUploadRules } from "../../rest/rest-service";
 
 const file_upload_rules = {

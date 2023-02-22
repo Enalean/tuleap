@@ -10,8 +10,8 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "swagger-ui": "^4.15.5"
+    "react": "^17.0.2",
+    "swagger-ui": "^4.11.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

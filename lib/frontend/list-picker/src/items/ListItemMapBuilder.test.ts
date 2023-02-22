@@ -28,24 +28,23 @@ import type { TemplateResult } from "lit/html.js";
 import { html } from "lit/html.js";
 
 describe("ListItemBuilder", () => {
-    let select: HTMLSelectElement, builder: ListItemMapBuilder, doc: Document;
+    let select: HTMLSelectElement, builder: ListItemMapBuilder;
 
     beforeEach(() => {
-        doc = document.implementation.createHTMLDocument();
-        select = doc.createElement("select");
+        select = document.createElement("select");
         builder = new ListItemMapBuilder(select);
     });
 
-    it("builds the map of the available options inside the source <select>", () => {
+    it("builds the map of the available options inside the source <select>", async () => {
         appendSimpleOptionsToSourceSelectBox(select);
 
-        const map = builder.buildListPickerItemsMap();
+        const map = await builder.buildListPickerItemsMap();
 
         expect(map.size).toBe(8);
 
         const iterator = map.entries();
 
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-100",
             {
                 id: "list-picker-item-100",
@@ -59,7 +58,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-value_0",
             {
                 id: "list-picker-item-value_0",
@@ -73,7 +72,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-value_1",
             {
                 id: "list-picker-item-value_1",
@@ -87,7 +86,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-value_2",
             {
                 id: "list-picker-item-value_2",
@@ -101,7 +100,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-value_3",
             {
                 id: "list-picker-item-value_3",
@@ -117,15 +116,15 @@ describe("ListItemBuilder", () => {
         ]);
     });
 
-    it("builds the map of the available grouped options inside the source <select>", () => {
+    it("builds the map of the available grouped options inside the source <select>", async () => {
         appendGroupedOptionsToSourceSelectBox(select);
 
-        const map = builder.buildListPickerItemsMap();
+        const map = await builder.buildListPickerItemsMap();
 
         expect(map.size).toBe(6);
 
         const iterator = map.entries();
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group1-value_0",
             {
                 id: "list-picker-item-group1-value_0",
@@ -139,7 +138,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group1-value_1",
             {
                 id: "list-picker-item-group1-value_1",
@@ -153,7 +152,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group1-value_2",
             {
                 id: "list-picker-item-group1-value_2",
@@ -167,7 +166,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group2-value_3",
             {
                 id: "list-picker-item-group2-value_3",
@@ -181,7 +180,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group2-value_4",
             {
                 id: "list-picker-item-group2-value_4",
@@ -195,7 +194,7 @@ describe("ListItemBuilder", () => {
                 target_option: expect.any(Element),
             },
         ]);
-        expect(iterator.next().value).toStrictEqual([
+        expect(iterator.next().value).toEqual([
             "list-picker-item-group2-value_5",
             {
                 id: "list-picker-item-group2-value_5",
@@ -211,14 +210,14 @@ describe("ListItemBuilder", () => {
         ]);
     });
 
-    it("should ignore options with empty value attribute and no content BUT does not remove them from the source <select> options", () => {
-        const empty_option = doc.createElement("option");
+    it("should ignore options with empty value attribute and no content BUT does not remove them from the source <select> options", async () => {
+        const empty_option = document.createElement("option");
         empty_option.setAttribute("id", "empty-option");
         empty_option.setAttribute("value", "");
         select.appendChild(empty_option);
 
         appendSimpleOptionsToSourceSelectBox(select);
-        const map = builder.buildListPickerItemsMap();
+        const map = await builder.buildListPickerItemsMap();
         const item_with_empty_value = Array.from(map.values()).find((item) => {
             return item.value === "";
         });
@@ -226,15 +225,15 @@ describe("ListItemBuilder", () => {
         expect(select.querySelector("option[value='']")).not.toBeNull();
     });
 
-    it("should NOT ignore options with empty value attribute with content", () => {
-        const empty_option = doc.createElement("option");
+    it("should NOT ignore options with empty value attribute with content", async () => {
+        const empty_option = document.createElement("option");
         empty_option.setAttribute("id", "empty-option");
         empty_option.setAttribute("value", "");
         empty_option.textContent = "Some label";
         select.appendChild(empty_option);
 
         appendSimpleOptionsToSourceSelectBox(select);
-        const map = builder.buildListPickerItemsMap();
+        const map = await builder.buildListPickerItemsMap();
         const item_with_empty_value = Array.from(map.values()).find((item) => {
             return item.value === "";
         });
@@ -242,11 +241,11 @@ describe("ListItemBuilder", () => {
         expect(select.querySelector("option[value='']")).not.toBeNull();
     });
 
-    it("should ignore empty options in the angular-modal remove it from the source <select> options", () => {
+    it("should ignore empty options in the angular-modal remove it from the source <select> options", async () => {
         appendSimpleOptionsToSourceSelectBox(select);
         select.options[0].value = "?";
 
-        const map = builder.buildListPickerItemsMap();
+        const map = await builder.buildListPickerItemsMap();
         const item_with_empty_value = Array.from(map.values()).find((item) => {
             return item.value === "?";
         });
@@ -265,35 +264,19 @@ describe("ListItemBuilder", () => {
             builder = new ListItemMapBuilder(select, options);
         });
 
-        it("should call it for each item once and cache the templates", () => {
+        it("should call it for each item once and cache the templates", async () => {
             const itemsTemplateFormatter = vi.spyOn(options, "items_template_formatter");
             appendSimpleOptionsToSourceSelectBox(select);
-            builder.buildListPickerItemsMap();
+            await builder.buildListPickerItemsMap();
 
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
-            expect(itemsTemplateFormatter.mock.calls[0]).toStrictEqual([html, "100", "None"]);
-            expect(itemsTemplateFormatter.mock.calls[1]).toStrictEqual([
-                html,
-                "value_0",
-                "Value 0",
-            ]);
-            expect(itemsTemplateFormatter.mock.calls[2]).toStrictEqual([
-                html,
-                "value_1",
-                "Value 1",
-            ]);
-            expect(itemsTemplateFormatter.mock.calls[3]).toStrictEqual([
-                html,
-                "value_2",
-                "Value 2",
-            ]);
-            expect(itemsTemplateFormatter.mock.calls[4]).toStrictEqual([
-                html,
-                "value_3",
-                "Value 3",
-            ]);
+            expect(itemsTemplateFormatter.mock.calls[0]).toEqual([html, "100", "None"]);
+            expect(itemsTemplateFormatter.mock.calls[1]).toEqual([html, "value_0", "Value 0"]);
+            expect(itemsTemplateFormatter.mock.calls[2]).toEqual([html, "value_1", "Value 1"]);
+            expect(itemsTemplateFormatter.mock.calls[3]).toEqual([html, "value_2", "Value 2"]);
+            expect(itemsTemplateFormatter.mock.calls[4]).toEqual([html, "value_3", "Value 3"]);
 
-            builder.buildListPickerItemsMap();
+            await builder.buildListPickerItemsMap();
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
         });
     });

@@ -4,18 +4,16 @@
   "homepage": "https://www.tuleap.org",
   "license": "MIT",
   "private": true,
+  "version": "0.0.0",
   "dependencies": {
     "@tuleap/angular-async": "workspace:*",
     "@tuleap/angular-tlp": "workspace:*",
-    "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/html-escaper": "workspace:*",
     "@tuleap/plugin-agiledashboard-card-fields": "workspace:*",
     "@tuleap/plugin-agiledashboard-shared": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
-    "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:*",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",
     "angular-jwt": "^0.1.11",
@@ -38,11 +36,5 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest"
   }
 }

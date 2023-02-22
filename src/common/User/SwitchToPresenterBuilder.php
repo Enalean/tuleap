@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\User;
 
 use Tuleap\Layout\SearchFormPresenterBuilder;
-use Tuleap\Project\ListOfProjectPresentersBuilder;
+use Tuleap\Project\ProjectPresentersBuilder;
 
 final class SwitchToPresenterBuilder
 {
     public function __construct(
-        private ListOfProjectPresentersBuilder $project_presenters_builder,
+        private ProjectPresentersBuilder $project_presenters_builder,
         private SearchFormPresenterBuilder $search_form_presenter_builder,
     ) {
     }
@@ -42,7 +42,7 @@ final class SwitchToPresenterBuilder
         $user = $current_user->user;
 
         return new SwitchToPresenter(
-            $this->project_presenters_builder->getProjectPresenters($user),
+            $this->project_presenters_builder->build($user),
             (bool) \ForgeConfig::areRestrictedUsersAllowed(),
             (bool) \ForgeConfig::get('sys_use_trove'),
             $user->isAlive() && ! $user->isRestricted(),

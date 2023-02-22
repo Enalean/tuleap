@@ -91,7 +91,7 @@ class JiraXmlExporterTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public static function debugTracesProvider(): iterable
+    public function debugTracesProvider(): iterable
     {
         yield 'SBX' => [
             'fixtures_path' => __DIR__ . '/_fixtures/SBX',

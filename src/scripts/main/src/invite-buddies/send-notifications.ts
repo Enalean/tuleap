@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GettextProvider } from "@tuleap/gettext";
 import { post } from "@tuleap/tlp-fetch";
 import { activateSpinner, deactivateSpinner } from "./spinner-activation";
 import { handleError } from "./handle-error";
 import { displaySuccess } from "./feedback-display";
 
-export function initNotificationsOnFormSubmit(gettext_provider: GettextProvider): void {
+export function initNotificationsOnFormSubmit(): void {
     const form = document.getElementById("invite-buddies-modal");
     if (!(form instanceof HTMLFormElement)) {
         return;
@@ -31,14 +30,11 @@ export function initNotificationsOnFormSubmit(gettext_provider: GettextProvider)
 
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-        sendNotifications(form, gettext_provider);
+        sendNotifications(form);
     });
 }
 
-export async function sendNotifications(
-    form: HTMLFormElement,
-    gettext_provider: GettextProvider
-): Promise<void> {
+export async function sendNotifications(form: HTMLFormElement): Promise<void> {
     const email_input = form.querySelector("input[name=invite_buddies_email]");
     if (!(email_input instanceof HTMLInputElement)) {
         throw Error("Unable to find email field");
@@ -54,10 +50,6 @@ export async function sendNotifications(
         throw Error("Unable to find submit button");
     }
 
-    const project_select = form.querySelector("select[name=invite_buddies_project]");
-    const project_id =
-        project_select instanceof HTMLSelectElement ? Number(project_select.value) : null;
-
     const icon = form.querySelector("button[type=submit] > .tlp-button-icon");
     try {
         activateSpinner(icon);
@@ -71,12 +63,11 @@ export async function sendNotifications(
             body: JSON.stringify({
                 emails,
                 custom_message,
-                ...(project_id ? { project_id } : {}),
             }),
         });
 
         const response_body = await response.json();
-        displaySuccess(emails, response_body, gettext_provider);
+        displaySuccess(emails, response_body);
     } catch (rest_error) {
         await handleError(rest_error);
     } finally {

@@ -26,7 +26,6 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -38,7 +37,6 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
-    use GlobalLanguageMock;
 
     /**
      * @var DisplayKeysTokensController
@@ -49,9 +47,9 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $access_keys_presenter_builder;
     /**
-     * @var \SVN_TokenHandler&\PHPUnit\Framework\MockObject\Stub
+     * @var M\LegacyMockInterface|M\MockInterface|\SVN_TokenHandler
      */
-    private $svn_token_handler;
+    private $svn_tokens_presenter_builder;
 
     public function setUp(): void
     {
@@ -63,9 +61,8 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         };
         $csrf_token                          = M::mock(CSRFSynchronizerToken::class);
         $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
-        $this->svn_token_handler             = $this->createStub(\SVN_TokenHandler::class);
-        $svn_tokens_presenter_builder        = new SVNTokensPresenterBuilder(
-            $this->svn_token_handler,
+        $this->svn_tokens_presenter_builder  = new SVNTokensPresenterBuilder(
+            M::mock(\SVN_TokenHandler::class, ['getSVNTokensForUser' => []]),
             M::mock(KeyFactory::class)
         );
 
@@ -74,7 +71,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $csrf_token,
             $this->access_keys_presenter_builder,
-            $svn_tokens_presenter_builder,
+            $this->svn_tokens_presenter_builder,
         );
 
         $_SESSION = [];
@@ -98,7 +95,6 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItRendersThePageWithPersonalAccessKey(): void
     {
-        $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
         $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
 
         ob_start();
@@ -113,7 +109,6 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItRendersThePageWithSSHKeys(): void
     {
-        $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
         $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
         $user = UserTestBuilder::aUser()->withId(110)->build();
         $user->setAuthorizedKeys('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rstzx/j9MEaWyeQy+2FjJwn6nBRlVqrvHZNP5vEoPdejGABJnnyJroCZ71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com');
@@ -130,27 +125,8 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->assertStringContainsString('ssh-rsa AAAAB3Nc/YihtrgL4fvVJHN8boDfZrZXBYZ8xW1Rst…71v2/g5QWjwQjaL4YMUZ3sx6eloxF3 someone@example.com', $output);
     }
 
-    public function testDoesNotSVNTokenSectionNothingIfNoSVNTokenExists(): void
-    {
-        $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([]);
-        $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
-
-        ob_start();
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->withId(110)->build())->build(),
-            LayoutBuilder::build(),
-            []
-        );
-        $output = ob_get_clean();
-        self::assertStringNotContainsString('SVN token', $output);
-    }
-
     public function testItRendersThePageWithSVNToken(): void
     {
-        $GLOBALS['Language']->method('getText')->willReturn('');
-        $this->svn_token_handler->method('getSVNTokensForUser')->willReturn([
-            new \SVN_Token(UserTestBuilder::aUser()->build(), 101, '', 1, 1, '', ''),
-        ]);
         $this->access_keys_presenter_builder->shouldReceive('getForUser')->andReturn(new AccessKeyPresenter([], [], null, ''));
 
         ob_start();

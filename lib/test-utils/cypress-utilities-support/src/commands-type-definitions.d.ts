@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCreationPayload } from "./commands";
-
 export type ReloadCallback = () => void;
 export type ConditionPredicate = (
     number_of_attempts: number,
@@ -56,6 +54,8 @@ declare global {
 
             regularUserLogin(): void;
 
+            heisenbergLogin(): void;
+
             userLogout(): void;
 
             switchProjectVisibility(visibility: string): void;
@@ -77,11 +77,7 @@ declare global {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;
 
-            postFromTuleapApi(
-                url: string,
-                payload: Record<string, unknown>
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ): Chainable<Response<any>>;
+            postFromTuleapApi(url: string, payload: Record<string, unknown>): void;
 
             putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
 
@@ -92,21 +88,11 @@ declare global {
                 number_of_attempts?: number
             ): PromiseLike<void>;
 
-            createNewPublicProject(
-                project_name: string,
-                xml_template: string
-            ): Cypress.Chainable<number>;
+            createNewPublicProject(project_name: string, xml_template: string): void;
 
             createNewPrivateProject(project_name: string): void;
 
-            addProjectMember(user_name: string): void;
-
-            getTrackerIdFromREST(
-                project_id: number,
-                tracker_name: string
-            ): Cypress.Chainable<number>;
-
-            createArtifact(payload: ArtifactCreationPayload): void;
+            addUser(user_name: string): void;
         }
     }
 }

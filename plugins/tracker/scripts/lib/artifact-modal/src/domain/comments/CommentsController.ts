@@ -20,11 +20,10 @@
 import type { FollowUpComment } from "./FollowUpComment";
 import type { RetrieveComments } from "./RetrieveComments";
 import type { CurrentArtifactIdentifier } from "../CurrentArtifactIdentifier";
+import type { NotifyFault } from "../NotifyFault";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import type { ProjectIdentifier } from "../ProjectIdentifier";
 import { CommentsRetrievalFault } from "./CommentsRetrievalFault";
-import type { DispatchEvents } from "../DispatchEvents";
-import { WillNotifyFault } from "../WillNotifyFault";
 
 export type CommentsControllerType = {
     getPreferences(): CommentUserPreferences;
@@ -34,7 +33,7 @@ export type CommentsControllerType = {
 
 export const CommentsController = (
     comments_retriever: RetrieveComments,
-    event_dispatcher: DispatchEvents,
+    fault_notifier: NotifyFault,
     current_artifact_identifier: CurrentArtifactIdentifier,
     project_id: ProjectIdentifier,
     user_preferences: CommentUserPreferences
@@ -48,7 +47,7 @@ export const CommentsController = (
             .match(
                 (comments) => comments,
                 (fault) => {
-                    event_dispatcher.dispatch(WillNotifyFault(CommentsRetrievalFault(fault)));
+                    fault_notifier.onFault(CommentsRetrievalFault(fault));
                     return [];
                 }
             );

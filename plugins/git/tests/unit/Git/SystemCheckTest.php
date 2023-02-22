@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,10 +32,6 @@ class Git_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
     private $driver;
     private $gitgc;
 
-    /**
-     * @var Git_SystemEventManager&\Mockery\MockInterface
-     */
-    private $system_event_manager;
     /** @var Git_SystemCheck */
     private $system_check;
 

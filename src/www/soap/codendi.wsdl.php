@@ -22,8 +22,6 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/nusoap.php';
 require_once __DIR__ . '/../include/utils_soap.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 define('PERMISSION_DENIED_FAULT', '3016');
 
 define('NUSOAP', 1);

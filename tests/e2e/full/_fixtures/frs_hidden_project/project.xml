@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project access="public" description="" full-name="FRS hidden" unix-name="frs-hidden-project">
+  <long-description/>
+  <ugroups>
+    <ugroup name="project_members" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_admins" description="">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+  </ugroups>
+
+  <services>
+    <service shortname="summary" enabled="true"/>
+    <service shortname="file" enabled="true"/>
+  </services>
+</project>

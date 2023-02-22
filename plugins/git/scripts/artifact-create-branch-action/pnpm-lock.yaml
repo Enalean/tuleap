@@ -10,7 +10,7 @@ specifiers:
   '@tuleap/tlp-modal': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.0.2
-  neverthrow: ^6.0.0
+  neverthrow: ^5.0.0
   vue: 3.2.37
   vue3-gettext: ^2.2.1
 
@@ -21,7 +21,7 @@ dependencies:
   '@tuleap/tlp': link:../../../../src/themes/tlp
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
-  neverthrow: 6.0.0
+  neverthrow: 5.0.0
   vue: 3.2.37
   vue3-gettext: 2.3.0_vue@3.2.37
 
@@ -399,8 +399,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /neverthrow/6.0.0:
-    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
     dev: false
 
   /once/1.4.0:

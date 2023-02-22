@@ -32,7 +32,6 @@ import {
     POST_METHOD,
     PUT_METHOD,
 } from "./constants";
-import type { EncodedURI } from "./uri-string-template";
 
 export interface OptionsWithAutoEncodedParameters {
     readonly params?: AutoEncodedParameters;
@@ -40,43 +39,43 @@ export interface OptionsWithAutoEncodedParameters {
 
 export type FetchResult = {
     getJSON<TypeOfJSONPayload>(
-        uri: EncodedURI,
+        uri: string,
         options?: OptionsWithAutoEncodedParameters
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
-    head(uri: EncodedURI, options?: OptionsWithAutoEncodedParameters): ResultAsync<Response, Fault>;
+    head(uri: string, options?: OptionsWithAutoEncodedParameters): ResultAsync<Response, Fault>;
 
-    options(uri: EncodedURI): ResultAsync<Response, Fault>;
+    options(uri: string): ResultAsync<Response, Fault>;
 
     putJSON<TypeOfJSONPayload>(
-        uri: EncodedURI,
+        uri: string,
         json_payload: unknown
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
     patchJSON<TypeOfJSONPayload>(
-        uri: EncodedURI,
+        uri: string,
         json_payload: unknown
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
     postJSON<TypeOfJSONPayload>(
-        uri: EncodedURI,
+        uri: string,
         json_payload: unknown
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
     post(
-        uri: EncodedURI,
+        uri: string,
         options: OptionsWithAutoEncodedParameters,
         json_payload: unknown
     ): ResultAsync<Response, Fault>;
 
-    del(uri: EncodedURI): ResultAsync<Response, Fault>;
+    del(uri: string): ResultAsync<Response, Fault>;
 };
 
 const json_headers = new Headers({ "Content-Type": "application/json" });
 const credentials: RequestCredentials = "same-origin";
 
 export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult => ({
-    getJSON: <TypeOfJSONPayload>(uri: EncodedURI, options?: OptionsWithAutoEncodedParameters) =>
+    getJSON: <TypeOfJSONPayload>(uri: string, options?: OptionsWithAutoEncodedParameters) =>
         response_retriever
             .retrieveResponse(getURI(uri, options?.params), { method: GET_METHOD, credentials })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
@@ -90,7 +89,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
     options: (uri) =>
         response_retriever.retrieveResponse(getURI(uri), { method: OPTIONS_METHOD, credentials }),
 
-    putJSON: <TypeOfJSONPayload>(uri: EncodedURI, json_payload: unknown) =>
+    putJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: PUT_METHOD,
@@ -100,7 +99,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
             })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
-    patchJSON: <TypeOfJSONPayload>(uri: EncodedURI, json_payload: unknown) =>
+    patchJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: PATCH_METHOD,
@@ -110,7 +109,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
             })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
-    postJSON: <TypeOfJSONPayload>(uri: EncodedURI, json_payload: unknown) =>
+    postJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: POST_METHOD,
@@ -120,7 +119,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
             })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
-    post: (uri: EncodedURI, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
+    post: (uri: string, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
         response_retriever.retrieveResponse(getURI(uri, options.params), {
             method: POST_METHOD,
             credentials,

@@ -51,15 +51,13 @@ final class OnlyOfficeAdminSettingsController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'src/onlyoffice-siteadmin.ts'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-siteadmin.ts'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-onlyoffice', 'ONLYOFFICE settings'),
             __DIR__ . '/../../templates/',
             'site-admin',
-            [
-                'config' => json_encode($this->admin_settings_presenter, JSON_THROW_ON_ERROR),
-            ]
+            $this->admin_settings_presenter
         );
     }
 }

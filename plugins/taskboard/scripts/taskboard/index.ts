@@ -18,7 +18,6 @@
  *
  */
 
-import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";

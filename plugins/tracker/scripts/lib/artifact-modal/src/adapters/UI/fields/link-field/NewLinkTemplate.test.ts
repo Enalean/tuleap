@@ -33,9 +33,11 @@ import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkM
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
@@ -51,7 +53,6 @@ import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStu
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
-import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -111,7 +112,7 @@ describe(`NewLinkTemplate`, () => {
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
         expect(type.textContent?.trim()).toBe(expected_type);
 
-        expect(row.classList.contains("tlp-table-row-success")).toBe(true);
+        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
         expect(status.classList.contains("tlp-badge-daphne-blue")).toBe(true);
     });
@@ -141,17 +142,18 @@ describe(`NewLinkTemplate`, () => {
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
         expect(type.textContent?.trim()).toBe(new_link.link_type.label);
 
-        expect(row.classList.contains("tlp-table-row-success")).toBe(true);
+        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
     describe(`action button`, () => {
         const getHost = (new_link: NewLink): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
+            const fault_notifier = NotifyFaultStub.withCount();
+            const notification_clearer = ClearFaultNotificationStub.withCount();
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-            const event_dispatcher = DispatchEventsStub.buildNoOp();
             const allowed_types = [
                 {
                     shortname: IS_CHILD_LINK_TYPE,
@@ -166,15 +168,17 @@ describe(`NewLinkTemplate`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                fault_notifier,
+                notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         okAsync(LinkableArtifactStub.withDefaults())
                     ),
+                    fault_notifier,
                     parents_retriever,
                     link_verifier,
                     RetrieveUserHistoryStub.withoutUserHistory(),
                     SearchArtifactsStub.withoutResults(),
-                    event_dispatcher,
                     current_artifact_identifier,
                     current_tracker_identifier,
                     UserIdentifierStub.fromUserId(101)
@@ -185,9 +189,6 @@ describe(`NewLinkTemplate`, () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                event_dispatcher,
-                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 525,
                     label: "Artifact link",
@@ -197,7 +198,9 @@ describe(`NewLinkTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22"),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types)
+                ControlLinkedArtifactsPopoversStub.build(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

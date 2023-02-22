@@ -28,6 +28,8 @@ use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 final class OnlyOfficeAvailabilityChecker implements CheckOnlyOfficeIsAvailable
 {
     public function __construct(
+        private \PluginManager $plugin_manager,
+        private \onlyofficePlugin $onlyoffice_plugin,
         private LoggerInterface $logger,
         private IRetrieveDocumentServers $servers_retriever,
     ) {
@@ -50,6 +52,10 @@ final class OnlyOfficeAvailabilityChecker implements CheckOnlyOfficeIsAvailable
         }
 
         if (! $project->usesService(\DocmanPlugin::SERVICE_SHORTNAME)) {
+            return false;
+        }
+
+        if (! $this->plugin_manager->isPluginAllowedForProject($this->onlyoffice_plugin, (int) $project->getID())) {
             return false;
         }
 

@@ -22,7 +22,9 @@ import { installProjectSidebarElement } from "@tuleap/project-sidebar-internal";
 const SIDEBAR_COLLAPSED_CLASS = "sidebar-collapsed";
 const SIDEBAR_EXPANDED_CLASS = "sidebar-expanded";
 
-export function init(): void {
+export { init };
+
+function init(): void {
     installProjectSidebarElement(window, () => {
         // Nothing to do here, we already load everything we need
     });

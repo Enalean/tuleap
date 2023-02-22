@@ -32,14 +32,19 @@
         ></textarea>
     </div>
 </template>
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import emitter from "../../../../../helpers/emitter";
 
-defineProps<{ value: string }>();
+@Component
+export default class DescriptionProperty extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
 
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLTextAreaElement) {
-        emitter.emit("update-description-property", $event.target.value);
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLTextAreaElement) {
+            emitter.emit("update-description-property", $event.target.value);
+        }
     }
 }
 </script>

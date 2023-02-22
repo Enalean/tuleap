@@ -68,12 +68,12 @@ class Docman_BuildItemMappingVisitor
      * @var array
      */
     private $itemMapping;
-    private ?Docman_ItemDao $dao = null;
 
     public function __construct($groupId)
     {
         $this->groupId     = $groupId;
         $this->itemMapping = [];
+        $this->dao         = null;
     }
 
     /**

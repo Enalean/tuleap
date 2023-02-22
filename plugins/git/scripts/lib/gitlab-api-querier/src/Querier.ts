@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveResponse, EncodedURI } from "@tuleap/fetch-result";
+import type { RetrieveResponse } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 
@@ -26,7 +26,7 @@ export type GitLabCredentials = {
 };
 
 type QueryGitlab = {
-    get: (uri: EncodedURI, credentials: GitLabCredentials) => ResultAsync<Response, Fault>;
+    get: (uri: string, credentials: GitLabCredentials) => ResultAsync<Response, Fault>;
 };
 
 export const Querier = (response_retriever: RetrieveResponse): QueryGitlab => ({

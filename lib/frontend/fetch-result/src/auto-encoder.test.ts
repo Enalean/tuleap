@@ -19,11 +19,10 @@
 
 import { describe, it, expect } from "vitest";
 import { getURI } from "./auto-encoder";
-import { uri as uriTag } from "./uri-string-template";
 
 describe(`auto-encoder`, () => {
     describe(`getURI`, () => {
-        const uri = uriTag`https://example.com/auto-encoder-test`;
+        const uri = "https://example.com/auto-encoder-test";
 
         it(`given a base URI and an object containing key/value pairs for URI parameters,
             it will URI-encode them and append them to the base URI`, () => {
@@ -34,22 +33,26 @@ describe(`auto-encoder`, () => {
             };
 
             const encoded_uri = getURI(uri, params);
-            expect(encoded_uri).toStrictEqual(
-                uriTag`https://example.com/auto-encoder-test?quinonyl=mem&R%26D=91&Jwahar=false`
+            expect(encoded_uri).toBe(
+                "https://example.com/auto-encoder-test?quinonyl=mem&R%26D=91&Jwahar=false"
             );
         });
 
+        it(`given a base URI containing special characters, it will encode it`, () => {
+            expect(getURI(uri + "/démo")).toBe("https://example.com/auto-encoder-test/d%C3%A9mo");
+        });
+
         it(`given an absolute URI with implicit protocol and domain-name, it will accept it`, () => {
-            const uri = uriTag`/api/v1/artifacts/123`;
-            expect(getURI(uri)).toStrictEqual(uri);
+            const uri = "/api/v1/artifacts/123";
+            expect(getURI(uri)).toBe(uri);
         });
 
         it(`given a base URI and empty params, it will return the base URI`, () => {
-            expect(getURI(uri, {})).toStrictEqual(uri);
+            expect(getURI(uri, {})).toBe(uri);
         });
 
         it(`defaults params to an empty object`, () => {
-            expect(getURI(uri)).toStrictEqual(uri);
+            expect(getURI(uri)).toBe(uri);
         });
     });
 });

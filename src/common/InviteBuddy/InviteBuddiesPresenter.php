@@ -22,25 +22,53 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use EventManager;
 
 /**
  * @psalm-immutable
  */
 class InviteBuddiesPresenter
 {
-    public readonly string $instance_name;
-    public readonly bool $has_projects;
-
     /**
-     * @param ProjectToBeInvitedIntoPresenter[] $projects
+     * @var bool
      */
+    public $can_buddies_be_invited;
+    /**
+     * @var bool
+     */
+    public $is_limit_reached;
+    /**
+     * @var string
+     */
+    public $instance_name;
+    /**
+     * @var int
+     */
+    public $max_limit_by_day;
+
     public function __construct(
-        public readonly bool $can_buddies_be_invited,
-        public readonly bool $is_limit_reached,
-        public readonly int $max_limit_by_day,
-        public readonly array $projects,
+        bool $can_buddies_be_invited,
+        bool $is_limit_reached,
+        int $max_limit_by_day,
     ) {
-        $this->instance_name = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
-        $this->has_projects  = count($this->projects) > 0;
+        $this->can_buddies_be_invited = $can_buddies_be_invited;
+        $this->is_limit_reached       = $is_limit_reached;
+        $this->instance_name          = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+        $this->max_limit_by_day       = $max_limit_by_day;
+    }
+
+    public static function build(\PFUser $user): self
+    {
+        $event_manager              = \EventManager::instance();
+        $limit_checker              = new InvitationLimitChecker(
+            new InvitationDao(),
+            new InviteBuddyConfiguration($event_manager)
+        );
+        $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
+        $can_buddies_be_invited     = $invite_buddy_configuration->canBuddiesBeInvited($user);
+        $is_limit_reached           = $limit_checker->isLimitReached($user);
+        $max_limit_by_day           = $invite_buddy_configuration->getNbMaxInvitationsByDay();
+
+        return new self($can_buddies_be_invited, $is_limit_reached, $max_limit_by_day);
     }
 }

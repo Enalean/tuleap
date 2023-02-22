@@ -41,19 +41,19 @@ describe("initListPickersMilestoneSection", () => {
         expect(create_list_picker).not.toHaveBeenCalled();
     });
 
-    it("When plannable trackers selector does not exist, Then error is thrown", () => {
+    it("When plannable trackers selector does not exist, Then error is thrown", async () => {
         const pi_selector = document.createElement("select");
         pi_selector.id = "admin-configuration-program-increment-tracker";
 
         const doc = createDocument();
         doc.body.appendChild(pi_selector);
 
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        await expect(() => initListPickersMilestoneSection(doc, gettext)).rejects.toThrowError(
             "admin-configuration-plannable-trackers element does not exist"
         );
     });
 
-    it("When permission prioritize selector does not exist, Then error is thrown", () => {
+    it("When permission prioritize selector does not exist, Then error is thrown", async () => {
         const pi_selector = document.createElement("select");
         pi_selector.id = "admin-configuration-program-increment-tracker";
 
@@ -64,12 +64,12 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(pi_selector);
         doc.body.appendChild(plannable_trackers_selector);
 
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        await expect(() => initListPickersMilestoneSection(doc, gettext)).rejects.toThrowError(
             "admin-configuration-permission-prioritize element does not exist"
         );
     });
 
-    it("When iteration tracker selector does not exist, Then error is thrown", () => {
+    it("When iteration tracker selector does not exist, Then error is thrown", async () => {
         createListPickerSpy();
         const pi_selector = document.createElement("select");
         pi_selector.id = "admin-configuration-program-increment-tracker";
@@ -85,12 +85,12 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(pi_selector);
         doc.body.appendChild(plannable_trackers_selector);
         doc.body.appendChild(permissions_selector);
-        expect(() => initListPickersMilestoneSection(doc, gettext)).toThrowError(
+        await expect(() => initListPickersMilestoneSection(doc, gettext)).rejects.toThrowError(
             "admin-configuration-iteration-tracker element does not exist"
         );
     });
 
-    it("When all sectors exist, Then listpicker is called 4 times", () => {
+    it("When all sectors exist, Then listpicker is called 4 times", async () => {
         const pi_selector = document.createElement("select");
         pi_selector.id = "admin-configuration-program-increment-tracker";
 
@@ -122,7 +122,7 @@ describe("initListPickersMilestoneSection", () => {
             "disabledIterationTrackersFromProgramIncrementAndPlannableTrackers"
         );
 
-        initListPickersMilestoneSection(doc, gettext);
+        await initListPickersMilestoneSection(doc, gettext);
 
         expect(create_list_picker).toHaveBeenNthCalledWith(1, pi_selector, {
             is_filterable: true,
@@ -143,14 +143,15 @@ describe("initListPickersMilestoneSection", () => {
             is_filterable: true,
             locale: "en-EN",
             placeholder: "Choose a source tracker for Iterations",
+            keep_none_value: true,
         });
         expect(disabled_plannable_trackers).toHaveBeenCalledWith(doc, pi_selector);
         expect(disabled_iteration_tracker).toHaveBeenCalledWith(doc, "", []);
     });
 });
 
-function createListPickerSpy(): jest.SpyInstance<listPicker.ListPicker> {
-    return jest.spyOn(listPicker, "createListPicker").mockReturnValue({
+function createListPickerSpy(): jest.SpyInstance<Promise<listPicker.ListPicker>> {
+    return jest.spyOn(listPicker, "createListPicker").mockResolvedValue({
         destroy: () => {
             // Nothing to do since we did not really create something
         },

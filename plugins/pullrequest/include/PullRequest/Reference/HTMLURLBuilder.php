@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\Reference;
 
 use GitRepository;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\ServerHostname;
 
 class HTMLURLBuilder
@@ -41,22 +40,9 @@ class HTMLURLBuilder
     {
         $repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
         $project_id = $repository->getProject()->getID();
-
-        $query_params = [
-            'action' => 'pull-requests',
-            'repo_id' => $pull_request->getRepositoryId(),
-            'group_id' => $project_id,
-        ];
-
-        if (\ForgeConfig::getFeatureFlag(PullRequestPresenter::FEATURE_FLAG_KEY)) {
-            $query_params['tab'] = 'overview';
-        }
-
-        return '/plugins/git/?'
-            . http_build_query($query_params)
-            . '#/pull-requests/'
-            . urlencode($pull_request->getId())
-            . '/overview';
+        return '/plugins/git/?action=pull-requests&repo_id=' .
+            urlencode($pull_request->getRepositoryId()) . '&group_id=' . urlencode($project_id) .
+            '#/pull-requests/' . urlencode($pull_request->getId()) . '/overview';
     }
 
     public function getAbsolutePullRequestOverviewUrl(PullRequest $pull_request): string

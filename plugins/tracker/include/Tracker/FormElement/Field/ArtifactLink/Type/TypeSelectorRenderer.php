@@ -71,8 +71,7 @@ final class TypeSelectorRenderer
             new TypeSelectorPresenter(
                 $types_presenter,
                 $name . '[type]',
-                'tracker-form-element-artifactlink-new type-selector',
-                false,
+                'tracker-form-element-artifactlink-new type-selector'
             )
         );
     }

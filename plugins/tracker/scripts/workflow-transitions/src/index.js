@@ -56,10 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
+    const is_list_picker_enabled = Boolean(JSON.parse(vue_mount_point.dataset.isListPickerEnabled));
     const store = new Vuex.Store(store_options);
 
     new RootComponent({
         store,
-        propsData: { trackerId, used_services_names },
+        propsData: { trackerId, used_services_names, is_list_picker_enabled },
     }).$mount(vue_mount_point);
 });

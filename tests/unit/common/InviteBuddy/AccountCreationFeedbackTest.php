@@ -22,583 +22,263 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\Stubs\RetrieveUserByIdStub;
-use Tuleap\User\Account\Register\InvitationToEmail;
-use Tuleap\User\Account\Register\RegisterFormContext;
+use UserManager;
 
-final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
+class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private LoggerInterface|MockObject $logger;
-    private InvitationDao|MockObject $dao;
-    private MockObject|AccountCreationFeedbackEmailNotifier $email_notifier;
-    /**
-     * @var InvitationInstrumentation&MockObject
-     */
-    private $invitation_instrumentation;
+    use MockeryPHPUnitIntegration;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
+     */
+    private $dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccountCreationFeedbackEmailNotifier
+     */
+    private $email_notifier;
+    /**
+     * @var AccountCreationFeedback
+     */
+    private $account_creation_feedback;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     */
+    private $user_manager;
 
     protected function setUp(): void
     {
-        $this->logger                     = $this->createMock(LoggerInterface::class);
-        $this->dao                        = $this->createMock(InvitationDao::class);
-        $this->email_notifier             = $this->createMock(AccountCreationFeedbackEmailNotifier::class);
-        $this->invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
+        $this->logger         = Mockery::mock(LoggerInterface::class);
+        $this->dao            = Mockery::mock(InvitationDao::class);
+        $this->email_notifier = Mockery::mock(AccountCreationFeedbackEmailNotifier::class);
+        $this->user_manager   = Mockery::mock(UserManager::class);
+
+        $this->account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            $this->user_manager,
+            $this->email_notifier,
+            $this->logger,
+        );
     }
 
     public function testItUpdatesInvitationsWithJustCreatedUser(): void
     {
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->expects(self::once())
-            ->method('saveJustCreatedUserThanksToInvitation')
-            ->with('doe@example.com', 104, null);
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation')
+            ->with('doe@example.com', 104)
+            ->once();
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([]);
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn([]);
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::never())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withNoUser();
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
-
-        self::assertEquals(0, $project_member_adder->getNbCalls());
-    }
-
-    public function testItUpdatesInvitationsWithJustCreatedUserByInvitation(): void
-    {
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $this->dao
-            ->expects(self::once())
-            ->method('saveJustCreatedUserThanksToInvitation')
-            ->with('doe@example.com', 104, 1);
-
-        $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([]);
-
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::never())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withNoUser();
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated(
-            $new_user,
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->from(102)
-                        ->to('doe@example.com')
-                        ->build(),
-                    new ConcealedString('secret')
-                )
-            )
-        );
-
-        self::assertEquals(0, $project_member_adder->getNbCalls());
-    }
-
-    public function testItAddUsersToAllProjectsTheyHaveBeenInvitedInto(): void
-    {
-        $project         = ProjectTestBuilder::aProject()->withId(111)->build();
-        $another_project = ProjectTestBuilder::aProject()->withId(112)->build();
-
-        $new_user = UserTestBuilder::anActiveUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $project_admin = UserTestBuilder::anActiveUser()
-            ->withId(102)
-            ->withAdministratorOf($project)
-            ->withAdministratorOf($another_project)
-            ->build();
-
-        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->toProjectId(111)
-            ->build();
-        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->toProjectId(112)
-            ->build();
-        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->build();
-
-        $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([
-            $not_in_project_invitation,
-            $used_invitation,
-            $another_invitation,
-        ]);
-
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::exactly(3))->method('incrementCompletedInvitation');
-
-        $this->email_notifier
-            ->expects(self::exactly(1))
-            ->method('send')
-            ->with($project_admin, $new_user)
-            ->willReturn(true);
-
-        $project_history_dao = $this->createMock(\ProjectHistoryDao::class);
-        $project_history_dao->method('addHistory');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin);
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated(
-            $new_user,
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    $used_invitation,
-                    new ConcealedString('secret')
-                )
-            )
-        );
-
-        self::assertEquals(2, $project_member_adder->getNbCalls());
-    }
-
-    public function testItAddsTwiceIfUSerIsInvitedTwiceInTheSameProjectFromTheSameUserSoThatWeCanRegisterInHistoryTheCompletedInvitations(): void
-    {
-        $project = ProjectTestBuilder::aProject()->withId(111)->build();
-
-        $new_user = UserTestBuilder::anActiveUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $project_admin = UserTestBuilder::anActiveUser()
-            ->withId(102)
-            ->withAdministratorOf($project)
-            ->build();
-
-        $used_invitation    = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->toProjectId(111)
-            ->build();
-        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->toProjectId(111)
-            ->build();
-
-        $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([
-            $used_invitation,
-            $another_invitation,
-        ]);
-
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::exactly(2))->method('incrementCompletedInvitation');
-
-        $this->email_notifier
-            ->expects(self::exactly(1))
-            ->method('send')
-            ->with($project_admin, $new_user)
-            ->willReturn(true);
-
-        $project_history_dao = $this->createMock(\ProjectHistoryDao::class);
-        $project_history_dao->method('addHistory');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin);
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated(
-            $new_user,
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    $used_invitation,
-                    new ConcealedString('secret')
-                )
-            )
-        );
-
-        self::assertEquals(2, $project_member_adder->getNbCalls());
-    }
-
-    public function testItAddUsersToAllProjectsTheyHaveBeenInvitedIntoFromDifferentUsers(): void
-    {
-        $project         = ProjectTestBuilder::aProject()->withId(111)->build();
-        $another_project = ProjectTestBuilder::aProject()->withId(112)->build();
-
-        $new_user = UserTestBuilder::anActiveUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $project_admin = UserTestBuilder::anActiveUser()
-            ->withId(102)
-            ->withAdministratorOf($project)
-            ->build();
-
-        $another_project_admin = UserTestBuilder::anActiveUser()
-            ->withId(103)
-            ->withAdministratorOf($another_project)
-            ->build();
-
-        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->toProjectId(111)
-            ->build();
-        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
-            ->from(103)
-            ->to('doe@example.com')
-            ->toProjectId(112)
-            ->build();
-        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(102)
-            ->to('doe@example.com')
-            ->build();
-
-        $this->dao->method('saveJustCreatedUserThanksToInvitation');
-        $this->dao->method('searchByCreatedUserId')->willReturn([
-            $not_in_project_invitation,
-            $used_invitation,
-            $another_invitation,
-        ]);
-
-        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::exactly(3))->method('incrementCompletedInvitation');
-
-        $this->email_notifier
-            ->expects(self::exactly(2))
-            ->method('send')
-            ->willReturnCallback(static fn (\PFUser $from_user, \PFUser $just_created_user) => match (true) {
-                $just_created_user === $new_user && ($from_user === $project_admin || $from_user === $another_project_admin) => true
-            });
-
-        $project_history_dao = $this->createMock(\ProjectHistoryDao::class);
-        $project_history_dao->method('addHistory');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin, $another_project_admin);
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated(
-            $new_user,
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    $used_invitation,
-                    new ConcealedString('secret')
-                )
-            )
-        );
-
-        self::assertEquals(2, $project_member_adder->getNbCalls());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 
     public function testItNotifiesNobodyIfUserWasNotInvited(): void
     {
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->method('saveJustCreatedUserThanksToInvitation');
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([]);
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn([]);
 
         $this->email_notifier
-            ->expects(self::never())
-            ->method('send');
+            ->shouldReceive('send')
+            ->never();
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::never())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withNoUser();
-        $project_member_adder      = AddUserToProjectAccordingToInvitationStub::buildSelf();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            $project_member_adder,
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
-
-        self::assertEquals(0, $project_member_adder->getNbCalls());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 
     public function testItNotifiesEveryPeopleWhoInvitedTheUser(): void
     {
-        $from_user = UserTestBuilder::aUser()
-            ->withId(103)
-            ->withStatus('A')
-            ->build();
+        $from_user = Mockery::mock(\PFUser::class);
+        $from_user->shouldReceive(['isAlive' => true]);
+        $from_another_user = Mockery::mock(\PFUser::class);
+        $from_another_user->shouldReceive(['isAlive' => true]);
 
-        $from_another_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withStatus('A')
-            ->build();
-
-        $an_invitation      = InvitationTestBuilder::aSentInvitation(1)
-            ->from(103)
-            ->to('doe@example.com')
-            ->build();
-        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(104)
-            ->to('doe@example.com')
-            ->build();
-
-        $new_user = UserTestBuilder::aUser()
-            ->withId(105)
-            ->withEmail('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->method('saveJustCreatedUserThanksToInvitation');
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(105)
-            ->willReturn(
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn(
                 [
-                    $an_invitation, $another_invitation,
+                    [
+                        'from_user_id' => 103,
+                    ],
+                    [
+                        'from_user_id' => 104,
+                    ],
                 ]
             );
 
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(103)
+            ->once()
+            ->andReturn($from_user);
+
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(104)
+            ->once()
+            ->andReturn($from_another_user);
+
         $this->email_notifier
-            ->expects(self::exactly(2))
-            ->method('send')
-            ->willReturnCallback(
-                fn (\PFUser $send_from_user, \PFUser $send_just_created_user): bool => match (true) {
-                    $from_user === $send_from_user && $send_just_created_user === $new_user,
-                    $from_another_user === $send_from_user && $send_just_created_user === $new_user => true
-                }
-            );
+            ->shouldReceive('send')
+            ->with($from_user, $new_user)
+            ->once()
+            ->andReturnTrue();
+        $this->email_notifier
+            ->shouldReceive('send')
+            ->with($from_another_user, $new_user)
+            ->once()
+            ->andReturnTrue();
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::exactly(2))->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user);
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            AddUserToProjectAccordingToInvitationStub::buildSelf(),
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 
     public function testItIgnoresUsersThatCannotBeFoundButLogsAnError(): void
     {
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(103)
-            ->to('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->method('saveJustCreatedUserThanksToInvitation');
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([$an_invitation]);
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'from_user_id' => 103,
+                    ],
+                ]
+            );
+
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(103)
+            ->once()
+            ->andReturnNull();
 
         $this->email_notifier
-            ->expects(self::never())
-            ->method('send');
+            ->shouldReceive('send')
+            ->never();
 
         $this->logger
-            ->expects(self::once())
-            ->method('error')
-            ->with("Invitation was referencing an unknown user #103");
+            ->shouldReceive('error')
+            ->with("Invitation was referencing an unknown user #103")
+            ->once();
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withNoUser();
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            AddUserToProjectAccordingToInvitationStub::buildSelf(),
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 
     public function testItIgnoresUsersThatAreNotAliveButLogsAWarning(): void
     {
-        $from_user = UserTestBuilder::aUser()
-            ->withId(103)
-            ->withStatus('D')
-            ->build();
+        $from_user = Mockery::mock(\PFUser::class);
+        $from_user->shouldReceive(['isAlive' => false]);
 
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(103)
-            ->to('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->method('saveJustCreatedUserThanksToInvitation');
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([$an_invitation]);
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'from_user_id' => 103,
+                    ],
+                ]
+            );
+
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(103)
+            ->once()
+            ->andReturn($from_user);
 
         $this->email_notifier
-            ->expects(self::never())
-            ->method('send');
+            ->shouldReceive('send')
+            ->never();
 
         $this->logger
-            ->expects(self::once())
-            ->method('warning')
-            ->with("Cannot send invitation feedback to inactive user #103");
+            ->shouldReceive('warning')
+            ->with("Cannot send invitation feedback to inactive user #103")
+            ->once();
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            AddUserToProjectAccordingToInvitationStub::buildSelf(),
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 
     public function testItLogsAnErrorIfEmailCannotBeSent(): void
     {
-        $from_user = UserTestBuilder::aUser()
-            ->withId(103)
-            ->withStatus('A')
-            ->build();
+        $from_user = Mockery::mock(\PFUser::class);
+        $from_user->shouldReceive(['isAlive' => true, 'getId' => 103]);
 
-        $new_user = UserTestBuilder::aUser()
-            ->withId(104)
-            ->withEmail('doe@example.com')
-            ->build();
-
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
-            ->from(103)
-            ->to('doe@example.com')
-            ->build();
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
 
         $this->dao
-            ->method('saveJustCreatedUserThanksToInvitation');
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->expects(self::once())
-            ->method('searchByCreatedUserId')
-            ->with(104)
-            ->willReturn([$an_invitation]);
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'from_user_id' => 103,
+                    ],
+                ]
+            );
+
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(103)
+            ->once()
+            ->andReturn($from_user);
 
         $this->email_notifier
-            ->expects(self::once())
-            ->method('send')
-            ->willReturn(false);
+            ->shouldReceive('send')
+            ->once()
+            ->andReturnFalse();
 
         $this->logger
-            ->expects(self::once())
-            ->method('error')
-            ->with("Unable to send invitation feedback to user #103 after registration of user #104");
+            ->shouldReceive('error')
+            ->with("Unable to send invitation feedback to user #103 after registration of user #104")
+            ->once();
 
-        $this->invitation_instrumentation->expects(self::never())->method('incrementUsedInvitation');
-        $this->invitation_instrumentation->expects(self::once())->method('incrementCompletedInvitation');
-
-        $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
-        $account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $user_manager,
-            $this->email_notifier,
-            AddUserToProjectAccordingToInvitationStub::buildSelf(),
-            $this->invitation_instrumentation,
-            $this->logger,
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
     }
 }

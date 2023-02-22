@@ -29,7 +29,7 @@
         }
     }
 
-    > .roadmap-gantt-task-popover-arrow::after {
+    > .roadmap-gantt-task-popover-arrow {
         background: var(--tlp-dark-color-darker-20);
     }
 
@@ -51,7 +51,7 @@
     &.tlp-popover[data-popover-placement="right"],
     &.tlp-popover[data-popover-placement="left-end"],
     &.tlp-popover[data-popover-placement="right-end"] {
-        > .roadmap-gantt-task-popover-arrow::after {
+        > .roadmap-gantt-task-popover-arrow {
             background: var(--tlp-dark-color);
         }
     }
@@ -61,7 +61,7 @@
             transform: translateY(0);
         }
 
-        > .roadmap-gantt-task-popover-arrow::after {
+        > .roadmap-gantt-task-popover-arrow {
             background: var(--tlp-dark-color);
         }
     }
@@ -69,7 +69,6 @@
 
 .roadmap-gantt-task-popover-header {
     border-top: 4px solid transparent;
-    border-bottom: 1px solid var(--tlp-dark-color-darker-20);
     background: var(--tlp-dark-color-darker-20);
 
     @each $color-name, $colors in tlp-swatch-colors.$color-map {
@@ -86,7 +85,6 @@
 .roadmap-gantt-task-popover-title {
     display: flex;
     flex-direction: column;
-    color: var(--tlp-white-color);
 }
 
 .roadmap-gantt-task-popover-xref {

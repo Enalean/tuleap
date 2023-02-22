@@ -27,9 +27,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorPresenter;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
@@ -1169,20 +1167,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         //row == id, f1, f2, f3, f4...
                     }
                     $html .= '<tr class="' . $additional_classname . '" data-test="tracker-report-table-results-artifact">';
-
-                    $artifact_id                   = $row['id'];
-                    $artifact_link_can_be_modified = true;
-                    if (isset($matching_ids['type'][$artifact_id])) {
-                        $type = $matching_ids['type'][$artifact_id];
-                        if ($type instanceof TypePresenter) {
-                            $event = EventManager::instance()->dispatch(
-                                new DisplayArtifactLinkEvent($type)
-                            );
-
-                            $artifact_link_can_be_modified = $event->canLinkBeModified();
-                        }
-                    }
-
                     if ($extracolumn) {
                         $display_extracolumn = true;
                         $checked             = '';
@@ -1206,9 +1190,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
                         if ($display_extracolumn) {
                             $html .= '<td class="' . $purifier->purify($classname) . '" width="1">';
-                            if ($artifact_link_can_be_modified) {
-                                $html .= '<span><input type="checkbox" name="' . $purifier->purify($name) . '[]" value="' . $purifier->purify($row['id']) . '" ' . $checked . ' /></span>';
-                            }
+                            $html .= '<span><input type="checkbox" name="' . $purifier->purify($name) . '[]" value="' . $purifier->purify($row['id']) . '" ' . $checked . ' /></span>';
                             $html .= '</td>';
                         }
                     }
@@ -1248,22 +1230,19 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 );
                             } else {
                                 $html .= $column['field']->fetchChangesetValue(
-                                    (int) $row['id'],
-                                    (int) $row['changeset_id'],
+                                    $row['id'],
+                                    $row['changeset_id'],
                                     $value,
                                     $this->report,
-                                    (int) $from_aid
+                                    $from_aid
                                 );
                             }
                             $html .= '</td>';
                         }
                     }
+                    $artifact_id = $row['id'];
                     if (isset($matching_ids['type'][$artifact_id])) {
-                        $type = $matching_ids['type'][$artifact_id];
-                        if (! $type instanceof TypePresenter) {
-                            continue;
-                        }
-
+                        $type          = $matching_ids['type'][$artifact_id];
                         $forward_label = $purifier->purify($type->forward_label);
                         $html         .= '<td class="tracker_formelement_read_and_edit_read_section">' . $forward_label . '</td>';
                         if (! $read_only) {
@@ -1314,12 +1293,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $html .= '<td class="tracker_formelement_read_and_edit_edition_section">';
                             $html .= $renderer->renderToString(
                                 'artifactlink-type-selector',
-                                new TypeSelectorPresenter(
-                                    $types_presenter,
-                                    $name,
-                                    '',
-                                    ! $artifact_link_can_be_modified,
-                                )
+                                new TypeSelectorPresenter($types_presenter, $name, '')
                             );
                             $html .= '</td>';
                         }

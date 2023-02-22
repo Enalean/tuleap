@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_REPO_FORKTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,18 +31,6 @@ class SystemEvent_GIT_REPO_FORKTest extends \Tuleap\Test\PHPUnit\TestCase
     private $new_repository;
     private $old_repository_id = 115;
     private $new_repository_id = 123;
-    /**
-     * @var Git_Backend_Gitolite&\Mockery\MockInterface
-     */
-    private $backend;
-    /**
-     * @var \Mockery\MockInterface&SystemEvent_GIT_REPO_FORK
-     */
-    private $event;
-    /**
-     * @var GitRepositoryFactory&\Mockery\MockInterface
-     */
-    private $repository_factory;
 
     protected function setUp(): void
     {

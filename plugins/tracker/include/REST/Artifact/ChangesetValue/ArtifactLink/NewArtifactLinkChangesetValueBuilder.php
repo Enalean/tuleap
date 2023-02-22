@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangeset
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class NewArtifactLinkChangesetValueBuilder
@@ -45,19 +46,41 @@ final class NewArtifactLinkChangesetValueBuilder
         \PFUser $submitter,
         ArtifactValuesRepresentation $payload,
     ): NewArtifactLinkChangesetValue {
-        $valid_payload = ValidArtifactLinkPayloadBuilder::buildPayloadAndCheckValidity($payload);
+        $payload_has_all_links_key = $this->doesPayloadHaveAllLinksKey($payload);
+        $payload_has_links_key     = $this->doesPayloadHaveALinksKey($payload);
+        $payload_has_parent_key    = $this->doesPayloadHaveAParentKey($payload);
 
-        if ($valid_payload->isAllLinksPayload()) {
+        $is_all_links_supported = (int) \ForgeConfig::getFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY) === 1;
+
+        if ($this->isUsingAllLinksWithLink($payload_has_all_links_key, $payload_has_links_key)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                '"all_links" key and "links" key cannot be used at the same time'
+            );
+        }
+
+        if ($this->isUsingAllLinksWithParent($payload_has_all_links_key, $payload_has_parent_key)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                '"all_links" key and "parent" key cannot be used at the same time'
+            );
+        }
+
+        if (! $payload_has_all_links_key && $this->hasNotDefinedLinksOrParent($payload_has_parent_key, $payload_has_links_key)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                '"links" and/or "parent" or "all_links" key must be defined'
+            );
+        }
+
+        if ($payload_has_all_links_key && $is_all_links_supported) {
             return NewArtifactLinkChangesetValue::fromParts(
                 $link_field->getId(),
                 $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-                $this->buildForward($payload),
+                null,
                 null,
                 $this->buildReverse($payload)
             );
         }
 
-        if ($valid_payload->hasNotDefinedLinksOrParent()) {
+        if ($this->hasNotDefinedLinksOrParent($payload_has_parent_key, $payload_has_links_key)) {
             throw new \Tracker_FormElement_InvalidFieldValueException(
                 'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
             );
@@ -66,18 +89,28 @@ final class NewArtifactLinkChangesetValueBuilder
         return NewArtifactLinkChangesetValue::fromParts(
             $link_field->getId(),
             $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-            $this->buildFromLinksKey($payload),
-            $this->buildParent($payload),
+            $this->buildFromLinksKey($payload_has_links_key, $payload),
+            $this->buildParent($payload_has_parent_key, $payload),
             new CollectionOfReverseLinks([])
         );
+    }
+
+    private function doesPayloadHaveAParentKey(ArtifactValuesRepresentation $payload): bool
+    {
+        return is_array($payload->parent);
+    }
+
+    private function doesPayloadHaveALinksKey(ArtifactValuesRepresentation $payload): bool
+    {
+        return is_array($payload->links);
     }
 
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private function buildParent(ArtifactValuesRepresentation $payload): ?NewParentLink
+    private function buildParent(bool $payload_has_parent_key, ArtifactValuesRepresentation $payload): ?NewParentLink
     {
-        if ($payload->parent === null) {
+        if (! $payload_has_parent_key) {
             return null;
         }
         return RESTNewParentLinkProxy::fromRESTPayload($payload->parent);
@@ -86,9 +119,9 @@ final class NewArtifactLinkChangesetValueBuilder
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private function buildFromLinksKey(ArtifactValuesRepresentation $payload): ?CollectionOfForwardLinks
+    private function buildFromLinksKey(bool $payload_has_links_key, ArtifactValuesRepresentation $payload): ?CollectionOfForwardLinks
     {
-        if ($payload->links === null) {
+        if (! $payload_has_links_key) {
             return null;
         }
 
@@ -109,17 +142,26 @@ final class NewArtifactLinkChangesetValueBuilder
             return new CollectionOfReverseLinks([]);
         }
 
-        return AllLinkPayloadParser::buildReverseLinks($payload->all_links);
+        return AllLinkPayloadParser::buildLinksToUpdate($payload->all_links);
     }
 
-    /**
-     * @throws \Tracker_FormElement_InvalidFieldValueException
-     */
-    private function buildForward(ArtifactValuesRepresentation $payload): CollectionOfForwardLinks
+    private function doesPayloadHaveAllLinksKey(ArtifactValuesRepresentation $payload): bool
     {
-        if ($payload->all_links === null) {
-            return new CollectionOfForwardLinks([]);
-        }
-        return AllLinkPayloadParser::buildForwardLinks($payload->all_links);
+        return is_array($payload->all_links);
+    }
+
+    private function isUsingAllLinksWithLink(bool $payload_has_all_links_key, bool $payload_has_links_key): bool
+    {
+        return $payload_has_all_links_key && $payload_has_links_key;
+    }
+
+    private function isUsingAllLinksWithParent(bool $payload_has_all_links_key, bool $payload_has_parent_key): bool
+    {
+        return $payload_has_all_links_key && $payload_has_parent_key;
+    }
+
+    private function hasNotDefinedLinksOrParent(bool $payload_has_parent_key, bool $payload_has_links_key): bool
+    {
+        return ! $payload_has_parent_key && ! $payload_has_links_key;
     }
 }

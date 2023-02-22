@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_RegisterAdminPrefillValuesPresenter extends \Tuleap\User\Account\Register\RegisterPrefillValuesPresenter
+class Account_RegisterAdminPrefillValuesPresenter extends Account_RegisterPrefillValuesPresenter
 {
     public $form_restricted;
     public $form_send_email;
@@ -35,7 +35,7 @@ class Account_RegisterAdminPrefillValuesPresenter extends \Tuleap\User\Account\R
         $send_email,
         $does_platform_allows_restricted,
     ) {
-        parent::__construct($login_name, $email, $password, $realname, $register_purpose, $mail_site, $timezone, null);
+        parent::__construct($login_name, $email, $password, $realname, $register_purpose, $mail_site, $timezone);
         $this->does_platform_allows_restricted = $does_platform_allows_restricted;
         $this->form_restricted                 = $restricted;
         $this->form_send_email                 = $send_email;

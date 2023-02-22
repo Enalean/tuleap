@@ -25,8 +25,6 @@ use Tuleap\Templating\TemplateCache;
 
 require_once __DIR__ . '/../include/pre.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 (new RequestInstrumentation(Prometheus::instance()))->incrementSoap(
     DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
 );

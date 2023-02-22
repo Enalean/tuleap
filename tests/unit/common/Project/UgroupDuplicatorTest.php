@@ -30,7 +30,6 @@ use ProjectUGroup;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use UGroupBinding;
 use UGroupDao;
 use UGroupManager;
@@ -83,7 +82,7 @@ class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns([]);
 
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping);
 
         $this->assertEmpty($ugroup_mapping);
     }
@@ -111,7 +110,7 @@ class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
 
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping, UserTestBuilder::buildWithDefaults());
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping);
         $this->assertEquals([201 => 301], $ugroup_mapping);
     }
 
@@ -140,12 +139,10 @@ class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
 
-        $project_admin = UserTestBuilder::buildWithDefaults();
+        $this->member_adder->shouldReceive('addMember')->with($user1, $new_ugroup)->once();
+        $this->member_adder->shouldReceive('addMember')->with($user2, $new_ugroup)->once();
 
-        $this->member_adder->shouldReceive('addMember')->with($user1, $new_ugroup, $project_admin)->once();
-        $this->member_adder->shouldReceive('addMember')->with($user2, $new_ugroup, $project_admin)->once();
-
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping, $project_admin);
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping);
     }
 
     public function testItAddUsersWithExceptionHandling()
@@ -175,6 +172,6 @@ class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->member_adder->shouldReceive('addMember')->andThrows(new CannotAddRestrictedUserToProjectNotAllowingRestricted($user1, M::mock(\Project::class, ['getID' => 505])));
 
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping, UserTestBuilder::buildWithDefaults());
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugoup_mapping);
     }
 }

@@ -7,7 +7,6 @@
   "dependencies": {
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/core": "workspace:*",
-    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
@@ -22,19 +21,21 @@
     "angular-gettext": "^2.4.2",
     "angular-sanitize": "^1.8.2",
     "codemirror": "^5.62.0",
-    "dompurify": "^3.0.0",
+    "dompurify": "^2.3.6",
     "hybrids": "^8.1.8",
     "moment": "^2.29.4",
-    "neverthrow": "6.0.0",
-    "sprintf-js": "^1.1.2"
+    "neverthrow": "5.0.0",
+    "sprintf-js": "^1.1.2",
+    "vue": "^3.2.41"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@types/codemirror": "^5.60.5",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^2.3.4",
     "angular-mocks": "^1.8.2",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "vue-loader": "^17.0.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

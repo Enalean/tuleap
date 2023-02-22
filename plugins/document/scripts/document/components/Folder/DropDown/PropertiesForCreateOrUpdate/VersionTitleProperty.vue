@@ -31,30 +31,30 @@
             v-bind:placeholder="`${$gettext('My new version name')}`"
             v-bind:value="value"
             v-on:input="oninput"
-            ref="root"
+            ref="input"
         />
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import emitter from "../../../../helpers/emitter";
-import { onMounted, ref } from "vue";
 
-defineProps<{
-    value: string;
-}>();
+@Component
+export default class VersionTitleProperty extends Vue {
+    @Prop({ required: true })
+    readonly value!: string;
 
-const root = ref<InstanceType<typeof HTMLElement>>();
+    @Ref() readonly input!: HTMLElement;
 
-onMounted((): void => {
-    if (root.value) {
-        root.value.focus();
+    mounted(): void {
+        this.input.focus();
     }
-});
 
-function oninput($event: Event): void {
-    if ($event.target instanceof HTMLInputElement) {
-        emitter.emit("update-version-title", $event.target.value);
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLInputElement) {
+            emitter.emit("update-version-title", $event.target.value);
+        }
     }
 }
 </script>

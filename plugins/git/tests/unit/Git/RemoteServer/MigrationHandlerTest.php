@@ -28,6 +28,8 @@ use Project;
 use Git_SystemEventManager;
 use Git_RemoteServer_NotFoundException;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -44,19 +46,6 @@ class MigrationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected $server_factory;
     protected $driver_factory;
-    /**
-     * @var \Git_Driver_Gerrit_ProjectCreatorStatus|(\Git_Driver_Gerrit_ProjectCreatorStatus&Mockery\LegacyMockInterface)|(\Git_Driver_Gerrit_ProjectCreatorStatus&Mockery\MockInterface)|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private \Git_Driver_Gerrit_ProjectCreatorStatus|Mockery\LegacyMockInterface|Mockery\MockInterface $project_creator_status;
-    /**
-     * @var \ProjectManager&Mockery\MockInterface
-     */
-    private $project_manager;
-    /**
-     * @var \PFUser&Mockery\MockInterface
-     */
-    private $user;
-    private GitRepository $server;
 
     public function setUp(): void
     {

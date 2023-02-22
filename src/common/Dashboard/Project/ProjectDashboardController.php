@@ -40,7 +40,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
@@ -94,6 +95,14 @@ class ProjectDashboardController
      * @var BaseLayout
      */
     private $layout;
+    /**
+     * @var IncludeAssets
+     */
+    private $javascript_assets;
+    /**
+     * @var CssAsset
+     */
+    private $css_asset;
 
     private Codendi_HTMLPurifier $purifier;
 
@@ -109,9 +118,9 @@ class ProjectDashboardController
         AssetsIncluder $assets_includer,
         EventManager $event_manager,
         BaseLayout $layout,
-        private JavascriptAssetGeneric $project_registration_assets,
+        IncludeAssets $core_assets,
+        CssAsset $css_asset,
         Codendi_HTMLPurifier $purifier,
-        private FirstTimerPresenterBuilder $first_timer_presenter_builder,
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -124,6 +133,8 @@ class ProjectDashboardController
         $this->assets_includer          = $assets_includer;
         $this->event_manager            = $event_manager;
         $this->layout                   = $layout;
+        $this->javascript_assets        = $core_assets;
+        $this->css_asset                = $css_asset;
         $this->purifier                 = $purifier;
     }
 
@@ -144,11 +155,14 @@ class ProjectDashboardController
         \assert($display_project_created_modal_presenter instanceof DisplayCreatedProjectModalPresenter);
 
         if ($display_project_created_modal_presenter->should_display_created_project_modal) {
-            $this->layout->addJavascriptAsset($this->project_registration_assets);
+            $this->layout->includeFooterJavascriptFile(
+                $this->javascript_assets->getFileURL('project/project-registration-creation.js')
+            );
+            $this->layout->addCssAsset($this->css_asset);
         }
 
         if ($dashboard_id && ! $this->doesDashboardIdExist($dashboard_id, $project_dashboards)) {
-            $this->layout->addFeedback(
+            $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 _('The requested dashboard does not exist.')
             );
@@ -171,11 +185,6 @@ class ProjectDashboardController
         }
 
         $this->assets_includer->includeAssets($project_dashboards_presenter);
-
-        $first_timer_presenter = $this->first_timer_presenter_builder->buildPresenter($user, $project);
-        if ($first_timer_presenter) {
-            $this->layout->addJavascriptAsset($first_timer_presenter->javascript_assets);
-        }
 
         $title = $this->purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
@@ -211,11 +220,10 @@ class ProjectDashboardController
                 ),
                 $project_dashboards_presenter,
                 $this->canUpdateDashboards($user, $project),
-                $display_project_created_modal_presenter,
-                $first_timer_presenter,
+                $display_project_created_modal_presenter
             )
         );
-        $this->layout->footer([]);
+        $GLOBALS['Response']->footer([]);
     }
 
     public function createDashboard(HTTPRequest $request)

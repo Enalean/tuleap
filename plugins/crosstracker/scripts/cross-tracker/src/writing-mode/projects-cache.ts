@@ -20,9 +20,11 @@
 import { getSortedProjectsIAmMemberOf as getProjects } from "../api/rest-querier";
 import type { Project } from "../type";
 
+export { getSortedProjectsIAmMemberOf };
+
 let cached_projects: Array<Project> = [];
 
-export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
+async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
     if (cached_projects.length > 0) {
         return cached_projects;
     }

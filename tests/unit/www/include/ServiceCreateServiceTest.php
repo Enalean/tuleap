@@ -21,23 +21,20 @@
 namespace Tuleap;
 
 use Project;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 require_once __DIR__ . '/../../../../src/www/include/service.php';
 
 class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private array $template;
-    private Project $project;
-
     protected function setUp(): void
     {
         $this->template = [
             'name' => 'template-name',
             'id'   => 120,
         ];
-
-        $this->project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('h1tst')->build();
+        $this->project  = $this->createMock(Project::class);
+        $this->project->method('getGroupId')->willReturn(101);
+        $this->project->method('getUnixName')->willReturn('h1tst');
     }
 
     private function assertLinkEquals($link, $expected): void

@@ -67,7 +67,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $dar_item = [
             'item_id' => 4,
             'title' => 'item',
-            'user_id' => (int) $user->getId(),
+            'user_id' => 101,
             'update_date' => 1542099693,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
             'parent_id' => 100,
@@ -82,7 +82,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'label' => "my version label",
             'filename' => "file",
             'changelog' => '',
-            'user_id' => (int) $user->getId(),
+            'user_id' => 101,
             'date' => 1542099693,
         ];
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);
@@ -108,7 +108,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $dar_item = [
             'item_id' => 4,
             'title' => 'item',
-            'user_id' => (int) $user->getId(),
+            'user_id' => 101,
             'update_date' => 1542099693,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
             'parent_id' => 100,
@@ -123,7 +123,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'label' => "my version label",
             'filename' => "file",
             'changelog' => '',
-            'user_id' => (int) $user->getId(),
+            'user_id' => 101,
             'date' => 1542099693,
         ];
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);

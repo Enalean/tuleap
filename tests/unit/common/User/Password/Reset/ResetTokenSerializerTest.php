@@ -53,7 +53,7 @@ class ResetTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
     }
 
-    public static function incorrectlyFormattedIdentifierProvider(): array
+    public function incorrectlyFormattedIdentifierProvider(): array
     {
         return [
             ['100' . ResetTokenSerializer::PARTS_SEPARATOR . 'random_string' . ResetTokenSerializer::PARTS_SEPARATOR . 'separated'],

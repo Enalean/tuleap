@@ -25,32 +25,6 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \Tuleap\Test\P
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $dao;
-    private Cardwall_OnTop_Config_ValueMappingFactory $factory;
-    /**
-     * @var Tracker_FormElement_Field&\Mockery\MockInterface
-     */
-    private $field_123;
-    /**
-     * @var Tracker_FormElement_Field&\Mockery\MockInterface
-     */
-    private $field_124;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker_10;
-    /**
-     * @var Tracker&\Mockery\MockInterface
-     */
-    private $tracker_20;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,16 +37,16 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \Tuleap\Test\P
         $this->field_123->shouldReceive('getId')->andReturn(123);
         $this->field_124 = Mockery::mock(Tracker_FormElement_Field::class);
         $this->field_124->shouldReceive('getId')->andReturn(124);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $status_field->shouldReceive('getId')->andReturn(125);
+        $this->status_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $this->status_field->shouldReceive('getId')->andReturn(125);
 
         $this->field_124->shouldReceive('getListValueById')->with(1001)->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(1001)->getMock());
         $this->field_124->shouldReceive('getListValueById')->with(1002)->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(1002)->getMock());
-        $status_field->shouldReceive('getListValueById')->with(1000)->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(1000)->getMock());
+        $this->status_field->shouldReceive('getListValueById')->with(1000)->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(1000)->getMock());
 
         $element_factory->shouldReceive('getFieldById')->with(123)->andReturns($this->field_123);
         $element_factory->shouldReceive('getFieldById')->with(124)->andReturns($this->field_124);
-        $element_factory->shouldReceive('getFieldById')->with(125)->andReturns($status_field);
+        $element_factory->shouldReceive('getFieldById')->with(125)->andReturns($this->status_field);
 
         $group_id      = 234;
         $this->tracker = Mockery::mock(Tracker::class);
@@ -80,7 +54,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \Tuleap\Test\P
         $this->tracker->shouldReceive('getGroupId')->andReturn($group_id);
         $this->tracker_10 = Mockery::mock(Tracker::class);
         $this->tracker_10->shouldReceive('getId')->andReturn(10);
-        $this->tracker_10->shouldReceive('getStatusField')->andReturn($status_field);
+        $this->tracker_10->shouldReceive('getStatusField')->andReturn($this->status_field);
         $this->tracker_20 = Mockery::mock(Tracker::class);
         $this->tracker_20->shouldReceive('getId')->andReturn(20);
 
@@ -105,7 +79,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \Tuleap\Test\P
             ]
         ));
 
-        $status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')->andReturns([
+        $this->status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')->andReturns([
             new Tracker_FormElement_Field_List_Bind_StaticValue(1001, 'Todo', '', 0, 0),
             new Tracker_FormElement_Field_List_Bind_StaticValue(1002, 'On Going', '', 0, 0),
             new Tracker_FormElement_Field_List_Bind_StaticValue(1003, 'Done', '', 0, 0),

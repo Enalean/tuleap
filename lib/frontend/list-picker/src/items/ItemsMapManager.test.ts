@@ -27,12 +27,11 @@ import { html } from "lit/html.js";
 describe("ItemsMapManager", () => {
     let items_manager: ItemsMapManager, source_select_box: HTMLSelectElement;
 
-    beforeEach(() => {
-        const doc = document.implementation.createHTMLDocument();
-        source_select_box = doc.createElement("select");
+    beforeEach(async () => {
+        source_select_box = document.createElement("select");
         appendGroupedOptionsToSourceSelectBox(source_select_box);
         items_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
-        items_manager.refreshItemsMap();
+        await items_manager.refreshItemsMap();
     });
 
     describe("findListPickerItemInItemMap", () => {

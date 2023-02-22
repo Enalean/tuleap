@@ -68,7 +68,7 @@ final class OnlyOfficeUpdateAdminSettingsControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public static function dataProviderInvalidSettings(): array
+    public function dataProviderInvalidSettings(): array
     {
         return [
             ['No parameters' => []],

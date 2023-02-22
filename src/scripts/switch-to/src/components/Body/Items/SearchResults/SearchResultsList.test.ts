@@ -25,11 +25,10 @@ import { createTestingPinia } from "@pinia/testing";
 import type { ItemDefinition } from "../../../../type";
 import type { FullTextState } from "../../../../stores/type";
 import { useFullTextStore } from "../../../../stores/fulltext";
-import { uri } from "@tuleap/fetch-result";
 
 describe("SearchResultsList", () => {
     const default_state: FullTextState = {
-        fulltext_search_url: uri`/api/search`,
+        fulltext_search_url: "/api/search",
         fulltext_search_is_available: true,
         fulltext_search_results: {},
         fulltext_search_is_loading: false,

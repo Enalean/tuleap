@@ -94,7 +94,6 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
         rows="8"
         cols="80"
         name="input-name"
-        maxlength="65535"
         required
             data-project-id="7"
         data-test="input-name"
@@ -137,7 +136,6 @@ EOL
         rows="8"
         cols="80"
         name="input-name"
-        maxlength="65535"
         \n            data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"

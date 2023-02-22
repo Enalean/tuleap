@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Settings } from "luxon";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
@@ -25,6 +26,7 @@ import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
+        Settings.defaultZoneName = "Europe/Paris";
         const limit = 1,
             offset = 0,
             user_id = 102;
@@ -59,8 +61,8 @@ describe("getTrackedTimes() -", () => {
                 limit,
                 offset,
                 query: JSON.stringify({
-                    start_date: "2018-03-08T00:00:00Z",
-                    end_date: "2018-03-15T00:00:00Z",
+                    start_date: "2018-03-08T00:00:00+01:00",
+                    end_date: "2018-03-15T00:00:00+01:00",
                 }),
             },
         });
@@ -70,6 +72,7 @@ describe("getTrackedTimes() -", () => {
     });
 
     it("the REST API will add date and the new time should be returned", async () => {
+        Settings.defaultZoneName = "Europe/Paris";
         const time = {
             artifact: {},
             project: {},
@@ -98,6 +101,8 @@ describe("getTrackedTimes() -", () => {
     });
 
     it("the REST API should delete the given time", async () => {
+        Settings.defaultZoneName = "Europe/Paris";
+
         const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel, {
             return_json: [],

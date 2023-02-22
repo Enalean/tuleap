@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
-final class ExecutionsTest extends TestManagementRESTTestCase
+final class ExecutionsTest extends BaseTest
 {
     public function testPutExecutionsWithRESTReadOnlyUser(): void
     {

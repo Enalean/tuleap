@@ -33,14 +33,6 @@ class MoveTitleSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveTitleSemanticChecker
      */
     private $checker;
-    /**
-     * @var \Tracker&Mockery\MockInterface
-     */
-    private $source_tracker;
-    /**
-     * @var \Tracker&Mockery\MockInterface
-     */
-    private $target_tracker;
 
     protected function setUp(): void
     {

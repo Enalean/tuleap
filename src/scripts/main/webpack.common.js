@@ -129,6 +129,39 @@ const webpack_config_for_tlp = {
     ],
 };
 
+const webpack_config_for_tlp_doc = {
+    entry: {
+        style: "./src/tlp-doc/css/main.scss",
+        script: "./src/tlp-doc/src/index.js",
+    },
+    context,
+    // This one does NOT go in ./frontend-assets because we do not deliver it in production, only in dev environment
+    output: webpack_configurator.configureOutput(
+        path.resolve(__dirname, "../../www/tlp-doc/dist/"),
+        "/tlp-doc/dist/"
+    ),
+    externals: {
+        tlp: "tlp",
+    },
+    resolve: {
+        extensions: [".js", ".ts"],
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.rule_scss_loader,
+            webpack_configurator.rule_po_files,
+        ],
+    },
+    plugins: [
+        // Since it has a different output, it gets its own CleanWebpackPlugin and ManifestPlugin
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false),
+        ...webpack_configurator.getCSSExtractionPlugins(),
+    ],
+};
+
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./src/FlamingParrot/index.ts",
@@ -180,6 +213,7 @@ const webpack_config_for_burning_parrot_code = {
         "account/appearance": "./src/account/appearance.ts",
         "account/avatar": "./src/account/avatar.ts",
         "account/check-pw": "./src/account/check-pw.ts",
+        "account/generate-pw": "./src/account/generate-pw.ts",
         "account/keys-tokens": "./src/account/keys-tokens.ts",
         "account/security": "./src/account/security.ts",
         "account/timezone": "./src/account/timezone.ts",
@@ -187,10 +221,13 @@ const webpack_config_for_burning_parrot_code = {
         "dashboards/dashboard": "./src/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./src/dashboards/widgets/contact-modal.ts",
         "frs-admin-license-agreement": "./src/frs/admin/license-agreement.ts",
+        "manage-allowed-projects-on-resource":
+            "./src/tuleap/manage-allowed-projects-on-resource.js",
         "project-admin": "./src/project/admin/src/index.ts",
         "project-admin-ugroups": "./src/project/admin/src/project-admin-ugroups.ts",
         "project/project-banner": "./src/project/banner/index.ts",
         "platform/platform-banner": "./src/platform/banner/index.ts",
+        "project/project-registration-creation": "./src/project/registration/index-for-modal.ts",
         "site-admin-generate-pie-charts": "./src/site-admin/generate-pie-charts.ts",
         "site-admin-mass-emailing": "./src/site-admin/massmail.ts",
         "site-admin-most-recent-logins": "./src/site-admin/most-recent-logins.ts",
@@ -251,6 +288,7 @@ const webpack_config_for_vue = {
         "project/project-admin-banner": "./src/project/admin/banner/index-banner-project-admin.ts",
         "site-admin/platform-banner": "./src/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
+        "project/project-registration": "./src/project/registration/index.ts",
         "site-admin-services": "./src/project/admin/services/src/index-site-admin.js",
     },
     context,
@@ -365,6 +403,10 @@ const theme_entry_points = {
     "dashboards-style": "./node_modules/@tuleap/burningparrot-theme/css/dashboards/dashboards.scss",
     "account-registration-style":
         "./node_modules/@tuleap/burningparrot-theme/css/account-registration/account-registration.scss",
+    "project-registration-style":
+        "./node_modules/@tuleap/burningparrot-theme/css/project-registration/project-registration.scss",
+    "project-registration-creation-style":
+        "./node_modules/@tuleap/burningparrot-theme/css/project-registration-creation/project-creation-modal.scss",
     "BurningParrot/burning-parrot":
         "./node_modules/@tuleap/burningparrot-theme/css/burning-parrot.scss",
 };
@@ -430,6 +472,7 @@ module.exports = [
     webpack_config_legacy_combined,
     webpack_config_for_rich_text_editor,
     webpack_config_for_tlp,
+    webpack_config_for_tlp_doc,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,

@@ -25,17 +25,6 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \Tulea
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $value_dao;
-    private Cardwall_OnTop_Config_Command_DeleteMappingFields $command;
-
     protected function setUp(): void
     {
         parent::setUp();

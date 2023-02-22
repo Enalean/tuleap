@@ -223,7 +223,7 @@ final class ClientWrapperTest extends TestCase
         $mock_http_client->addResponse($error_response);
 
         $this->expectException(GitlabRequestException::class);
-        $this->expectExceptionMessageMatches('/' . preg_quote($gitlab_error_message, '/') . '/');
+        $this->expectErrorMessageMatches('/' . preg_quote($gitlab_error_message, '/') . '/');
 
         $wrapper->postUrl($credentials, '/something', ['data' => 'data']);
     }

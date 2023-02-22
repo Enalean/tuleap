@@ -48,7 +48,7 @@ pipeline {
         }
 
         stage('Unit tests PHP with coverage') {
-            steps { script { actions.runPHPUnitTests('81', true) } }
+            steps { script { actions.runPHPUnitTests('80', true) } }
             post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
         }
 
@@ -73,34 +73,41 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
+                stage('Distributed SVN integration') {
+                    options { retry(1) }
+                    steps {
+                        script { actions.runEndToEndTests('distlp', 'mysql57') }
+                        junit 'results/e2e/distlp/*.xml'
+                    }
+                }
                 stage ('MariaDB 10.3') {
                     stages {
-                        stage('REST CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runRESTTests('mariadb103', '81') } }
+                        stage('REST CentOS 7 PHP 8.0 MariaDB 10.3') {
+                            steps { script { actions.runRESTTests('mariadb103', '80') } }
                             post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                         }
-                        stage('DB CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runDBTests('mariadb103', '81') } }
+                        stage('DB CentOS 7 PHP 8.0 MariaDB 10.3') {
+                            steps { script { actions.runDBTests('mariadb103', '80') } }
                             post { always { junit 'results/db/*/db_tests.xml' } }
                         }
-                        stage('SOAP CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runSOAPTests('mariadb103', '81') } }
+                        stage('SOAP CentOS 7 PHP 8.0 MariaDB 10.3') {
+                            steps { script { actions.runSOAPTests('mariadb103', '80') } }
                             post { always { junit 'results/soap/*/soap_tests.xml' } }
                         }
                     }
                 }
                 stage ('MySQL 5.7') {
                     stages {
-                        stage('REST CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('mysql57', '81') } }
+                        stage('REST CentOS 7 PHP 8.0 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('mysql57', '80') } }
                             post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                         }
-                        stage('DB CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runDBTests('mysql57', '81') } }
+                        stage('DB CentOS 7 PHP 8.0 MySQL 5.7') {
+                            steps { script { actions.runDBTests('mysql57', '80') } }
                             post { always { junit 'results/db/*/db_tests.xml' } }
                         }
-                        stage('SOAP CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runSOAPTests('mysql57', '81') } }
+                        stage('SOAP CentOS 7 PHP 8.0 MySQL 5.7') {
+                            steps { script { actions.runSOAPTests('mysql57', '80') } }
                             post { always { junit 'results/soap/*/soap_tests.xml' } }
                         }
                     }
@@ -128,7 +135,7 @@ pipeline {
         stage('Psalm static analysis (unused code)') {
             agent {
                 docker {
-                    image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php81'
+                    image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php80'
                     reuseNode true
                     args '--network none'
                 }
@@ -141,6 +148,20 @@ pipeline {
             post {
                 always {
                     recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                }
+            }
+        }
+
+        stage ('PHP 8.1') {
+            stages {
+                stage('Unit tests') {
+                    steps { script { actions.runPHPUnitTests('81', false) } }
+                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
+                }
+
+                stage('DB/Integration') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '81') }) } }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
                 }
             }
         }

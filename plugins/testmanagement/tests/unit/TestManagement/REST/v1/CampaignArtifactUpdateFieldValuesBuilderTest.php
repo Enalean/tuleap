@@ -53,10 +53,6 @@ class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PHPUnit\
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValueRetriever
      */
     private $status_value_retriever;
-    /**
-     * @var Campaign&Mockery\MockInterface
-     */
-    private $campaign;
 
     protected function setUp(): void
     {

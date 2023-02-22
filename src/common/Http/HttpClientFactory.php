@@ -51,18 +51,20 @@ class HttpClientFactory
         return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
 
-    public static function createClientWithCustomTimeout(int $timeout, Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    /**
+     * This client should only be used for Tuleap internal use to
+     * query internal resources. Queries requested by users (e.g. webhooks)
+     * MUST NOT use it.
+     */
+    public static function createAsyncClientForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient
     {
-        return self::createClientWithConfig(
-            [
-                'timeout' => $timeout,
-                'proxy'   => \ForgeConfig::get('sys_proxy'),
-            ],
-            ...$plugins
-        );
+        return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
 
-    private static function createClientWithStandardConfig(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    /**
+     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+     */
+    private static function createClientWithStandardConfig(Plugin ...$plugins)
     {
         return self::createClientWithConfig(
             [
@@ -73,12 +75,18 @@ class HttpClientFactory
         );
     }
 
-    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    /**
+     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+     */
+    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins)
     {
         return self::createClientWithConfig(['timeout' => self::TIMEOUT], ...$plugins);
     }
 
-    private static function createClientWithConfig(array $config, Plugin ...$plugins): \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
+    /**
+     * @return \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
+     */
+    private static function createClientWithConfig(array $config, Plugin ...$plugins)
     {
         $client = Client::createWithConfig($config);
 

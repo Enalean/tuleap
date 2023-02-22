@@ -42,9 +42,9 @@ class Tracker_UgroupMappingBuilder
     }
 
     /**
-     * @return array<int, int> array(102 => 324, 106 => 325, <template_ugroup_id> => <target_ugroup_id>, …)
+     * @return int[] array(102 => 324, 106 => 325, <template_ugroup_id> => <target_ugroup_id>, …)
      */
-    public function getMapping(Tracker $template_tracker, Project $target_project): array
+    public function getMapping(Tracker $template_tracker, Project $target_project)
     {
         $template_ugroups = $this->permissions_retriever->getListOfInvolvedStaticUgroups($template_tracker);
         $target_ugroups   = $this->ugroup_manager->getStaticUGroups($target_project);
@@ -52,7 +52,7 @@ class Tracker_UgroupMappingBuilder
         $ugroups = [];
         foreach ($template_ugroups as $template_ugroup) {
             foreach ($target_ugroups as $target_ugroup) {
-                if ($template_ugroup->getName() === $target_ugroup->getName()) {
+                if ($template_ugroup->getName() == $target_ugroup->getName()) {
                     $ugroups[$template_ugroup->getId()] = $target_ugroup->getId();
                 }
             }

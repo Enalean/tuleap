@@ -31,12 +31,11 @@ use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
-use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
 final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public static function getTestData(): iterable
+    public function getTestData(): iterable
     {
         yield 'it exports jira fields and build an array indexed by id' => [
             'payloads' => [
@@ -81,20 +80,20 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ],
             ],
             'tests' => function (array $result) {
-                assertCount(2, $result);
+                $this->assertCount(2, $result);
 
                 $system_field_representation = $result['summary'];
-                assertEquals("summary", $system_field_representation->getId());
-                assertEquals("Summary", $system_field_representation->getLabel());
-                assertNotNull($system_field_representation->getSchema());
-                assertTrue($system_field_representation->isRequired());
+                $this->assertEquals("summary", $system_field_representation->getId());
+                $this->assertEquals("Summary", $system_field_representation->getLabel());
+                $this->assertNotNull($system_field_representation->getSchema());
+                $this->assertTrue($system_field_representation->isRequired());
                 assertTrue($system_field_representation->isSubmit());
 
                 $custom_field_representation = $result['custom_01'];
-                assertEquals("custom_01", $custom_field_representation->getId());
-                assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
-                assertNotNull($custom_field_representation->getSchema());
-                assertFalse($custom_field_representation->isRequired());
+                $this->assertEquals("custom_01", $custom_field_representation->getId());
+                $this->assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
+                $this->assertNotNull($custom_field_representation->getSchema());
+                $this->assertFalse($custom_field_representation->isRequired());
                 assertTrue($custom_field_representation->isSubmit());
             },
         ];
@@ -235,7 +234,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         yield 'it returns an empty array when no fields are found' => [
             'payloads' => [],
             'tests' => function (array $results) {
-                assertEquals([], $results);
+                $this->assertEquals([], $results);
             },
         ];
 

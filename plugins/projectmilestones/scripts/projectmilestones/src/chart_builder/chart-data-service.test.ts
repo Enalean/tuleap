@@ -19,7 +19,7 @@
 
 import type { PointsWithDateForBurndown } from "../type";
 import { getDisplayableData, getDisplayableDataForBurnup } from "./chart-data-service";
-import type { PointsWithDateForGenericBurnup } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
+import type { PointsWithDateForGenericBurnup } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
 describe("chartDataService", () => {
     describe("getDisplayableData", () => {

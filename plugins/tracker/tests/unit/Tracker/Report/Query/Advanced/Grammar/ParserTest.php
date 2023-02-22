@@ -59,13 +59,4 @@ final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->addToAssertionCount(1);
     }
-
-    public function testItDoesNotFailIfFieldNameContainsHyphen(): void
-    {
-        $parser = new Parser();
-
-        $parser->parse('field-name = "value"');
-
-        $this->addToAssertionCount(1);
-    }
 }

@@ -292,7 +292,12 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \Tuleap\Test\PHPUnit\
         $field->shouldReceive('getLinkedArtifacts')->with($changeset, $this->user)->andReturns($children);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $tracker)->andReturns($field);
 
-        $artifact_id = $this->current_id + 100;
+        $artifact_id                                = $this->current_id + 100;
+        $this->artifact_collaborators[$artifact_id] = [
+            'field'     => $field,
+            'changeset' => $changeset,
+        ];
+
 
         $artifact = Mockery::mock(
             Artifact::class,

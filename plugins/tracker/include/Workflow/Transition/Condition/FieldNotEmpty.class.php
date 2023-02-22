@@ -36,7 +36,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, ?Artifact $artifact = null)
     {
         parent::__construct($transition);
-        $this->dao = $dao;
+        $this->dao                = $dao;
+        $this->formElementFactory = Tracker_FormElementFactory::instance();
     }
 
     /**

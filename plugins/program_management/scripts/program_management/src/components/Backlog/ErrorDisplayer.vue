@@ -17,17 +17,8 @@
   - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -->
 
-<template>
+<template functional>
     <div class="tlp-alert-danger" data-test="show-error-message">
-        {{ message_error_rest }}
+        {{ props.message_error_rest }}
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component
-export default class ErrorDisplayer extends Vue {
-    message_error_rest = "";
-}
-</script>

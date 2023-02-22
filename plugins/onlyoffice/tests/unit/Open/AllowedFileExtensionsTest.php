@@ -38,7 +38,7 @@ final class AllowedFileExtensionsTest extends TestCase
         );
     }
 
-    public static function getExtensionsToTest(): array
+    public function getExtensionsToTest(): array
     {
         return [
             ['csv', true],
@@ -95,7 +95,7 @@ final class AllowedFileExtensionsTest extends TestCase
         );
     }
 
-    public static function getEditableExtensionsToTest(): array
+    public function getEditableExtensionsToTest(): array
     {
         return [
             ['docx', true],

@@ -208,7 +208,7 @@ class Tracker_FileInfo
         return $this->field->getRootPath();
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return '#' . $this->getId() . ' ' . $this->getFilename();
     }

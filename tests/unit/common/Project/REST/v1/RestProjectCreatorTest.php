@@ -72,9 +72,9 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $service_manager;
 
     private $project_manager;
-    private RestProjectCreator $creator;
-    private \PFUser $user;
-    private ProjectPostRepresentation $project_post_representation;
+    private $creator;
+    private $user;
+    private $project_post_representation;
     private $project_creator;
     private $project_XML_importer;
     /**
@@ -82,8 +82,6 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $template_dao;
     private \PHPUnit\Framework\MockObject\MockObject|\PluginFactory $plugin_factory;
-    private $user_manager;
-    private $url_verification;
 
     protected function setUp(): void
     {

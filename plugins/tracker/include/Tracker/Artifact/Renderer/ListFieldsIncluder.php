@@ -26,13 +26,13 @@ final class ListFieldsIncluder
 {
     public static function includeListFieldsAssets(int $tracker_id): void
     {
+        // List picker must be included **before** field dependencies execution
+        ListPickerIncluder::includeListPickerAssets($tracker_id);
+
         $include_assets = new \Tuleap\Layout\IncludeAssets(
             __DIR__ . '/../../../../frontend-assets',
             '/assets/trackers'
         );
-
-        // List picker must be included **before** field dependencies execution
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('run-field-dependencies.js'));
     }
 }

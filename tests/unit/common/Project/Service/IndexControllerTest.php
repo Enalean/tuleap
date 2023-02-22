@@ -90,7 +90,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with('services', $presenter);
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->controller->process($request, $layout, ['id' => '102']);
     }
 
     public function testProcessIncludesNormalAssetForProjectAdmin(): void
@@ -114,6 +114,6 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with('services', $presenter);
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->controller->process($request, $layout, ['id' => '102']);
     }
 }

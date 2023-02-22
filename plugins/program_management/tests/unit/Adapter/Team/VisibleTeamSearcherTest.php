@@ -88,7 +88,7 @@ final class VisibleTeamSearcherTest extends TestCase
         $this->getSearcher()->searchTeamIdsOfProgram($this->program, $this->user);
     }
 
-    public static function dataProviderAccessExceptions(): array
+    public function dataProviderAccessExceptions(): array
     {
         return [
             'with invalid project'                           => [CheckProjectAccessStub::withNotValidProject()],

@@ -22,8 +22,6 @@ require_once('session.php');
 define('INVALID_SESSION_FAULT', '3001');
 define('LOGIN_FAULT', '3002');
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 if (defined('NUSOAP')) {
 // Type definition
     $server->wsdl->addComplexType(

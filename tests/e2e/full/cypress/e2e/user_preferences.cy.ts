@@ -22,30 +22,9 @@ function assertFeedbackContainsMessage(expected_feedback_message: string): void 
 }
 
 describe("User preferences", () => {
-    const now = Date.now();
-    const password = "pwd_" + now;
-
     before(() => {
         cy.clearSessionCookie();
-        cy.visit("/account/register.php");
-        const username = "test_prefs_" + now;
-        cy.get("[data-test=user-login]").type(username);
-        cy.get("[data-test=user-email]").type(username + "@localhost");
-        cy.get("[data-test=user-pw]").type(password);
-        cy.get("[data-test=user-pw2]").type(password);
-        cy.get("[data-test=user-prefs-site-updates]").click();
-        cy.get("[data-test=user-name]").type("Test Prefs " + now + "{enter}");
-
-        cy.platformAdminLogin();
-        cy.visit("/admin/approve_pending_users.php?page=pending");
-        cy.contains(".siteadmin-pending-user", username)
-            .find("[name=action_select][value=activate]")
-            .click();
-
-        cy.clearSessionCookie();
-        cy.visit("/");
-        cy.get("[data-test=form_loginname]").type(username);
-        cy.get("[data-test=form_pw]").type(`${password}{enter}`);
+        cy.heisenbergLogin();
     });
 
     beforeEach(function () {
@@ -58,22 +37,31 @@ describe("User preferences", () => {
         });
 
         describe("User is able to", () => {
-            it("Change his data", () => {
+            it("Change his name", () => {
                 cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
-                cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
-                cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
-                assertFeedbackContainsMessage(
-                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address)."
-                );
                 cy.visit("/account/");
-
                 cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
+            });
+
+            it("Change his email address", () => {
+                cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
+                cy.get("[data-test=user-prefs-submit-button]").click();
+
                 cy.get("[data-test=user-prefs-email-need-confirmation-warning]").contains(
                     "An email change was requested, please check your inbox to complete the change."
                 );
+                assertFeedbackContainsMessage(
+                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address)."
+                );
+            });
 
+            it("Change his timezone", () => {
+                cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
+                cy.get("[data-test=user-prefs-submit-button]").click();
+
+                cy.visit("/account/");
                 cy.get("[data-test=user-timezone]").should("have.value", "America/Denver");
             });
 
@@ -109,7 +97,7 @@ describe("User preferences", () => {
         });
 
         describe("change the password", () => {
-            const actual_password = password;
+            const actual_password = "Correct Horse Battery Staple";
             const temporary_password = "Blue-Meth-99-1%-pure";
 
             afterEach(() => {
@@ -231,6 +219,28 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 0);
             });
         });
+
+        describe("in the SVN Tokens section", () => {
+            it("the user is able to manipulate a SVN token", () => {
+                cy.get("[data-test=generate-svn-token-button]").click();
+                cy.get("[data-test=svn-token-description]").type("My handsome SVN token");
+                cy.get("[data-test=generate-new-svn-token-button]").click();
+
+                cy.get("[data-test=user-prefs-add-svn-token-feedback]").contains(
+                    "Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!"
+                );
+                cy.get("[data-test=user-prefs-new-svn-token]").should("exist");
+
+                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 1);
+
+                //revoke it
+                cy.get("[data-test=user-prefs-revoke-svn-token-checkbox]").click();
+                cy.get("[data-test=button-revoke-svn-tokens]").click();
+                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 0);
+
+                assertFeedbackContainsMessage("SVN tokens have been successfully deleted");
+            });
+        });
     });
 
     describe("in the [Appearance & Language] tab", () => {
@@ -306,9 +316,7 @@ describe("User preferences", () => {
                 cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-preferences-accessibility-selector]").should("be.checked");
-                cy.get("[data-user-has-accessibility-mode]")
-                    .invoke("attr", "data-user-has-accessibility-mode")
-                    .should("eq", "1");
+                cy.get("[data-user-has-accessibility-mode]").contains(1);
             });
         });
 

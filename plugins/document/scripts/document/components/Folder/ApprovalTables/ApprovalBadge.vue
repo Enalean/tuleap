@@ -23,54 +23,57 @@
         class="document-approval-badge"
         v-if="hasAnApprovalTable()"
     >
-        <i class="fa-solid tlp-badge-icon" v-bind:class="approval_data.icon_badge"></i
-        >{{ approval_data.badge_label }}
+        <i class="fa-solid tlp-badge-icon" v-bind:class="approval_data.icon_badge"></i>
+        {{ approval_data.badge_label }}
     </span>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type { ApprovableDocument } from "../../../type";
 import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
-import type { Ref } from "vue";
-import { watch, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const props = defineProps<{
-    item: ApprovableDocument;
-    isInFolderContentRow: boolean;
-}>();
+@Component
+export default class ApprovalBadge extends Vue {
+    @Prop({ required: true })
+    readonly item!: ApprovableDocument;
 
-const { $gettext } = useGettext();
-const approval_data: Ref<ApprovalTableBadge | null> = ref(null);
+    @Prop({ required: true })
+    readonly isInFolderContentRow!: boolean;
 
-function hasAnApprovalTable(): boolean {
-    return props.item.approval_table !== null && approval_data.value !== null;
-}
+    private approval_data: ApprovalTableBadge | null = null;
 
-function getTranslatedApprovalStatesMap(): Map<string, string> {
-    const approval_states_map = new Map();
+    hasAnApprovalTable(): boolean {
+        return this.item.approval_table !== null && this.approval_data !== null;
+    }
 
-    approval_states_map.set($gettext("Approved"), APPROVAL_APPROVED);
-    approval_states_map.set($gettext("Not yet"), APPROVAL_NOT_YET);
-    approval_states_map.set($gettext("Rejected"), APPROVAL_REJECTED);
+    getTranslatedApprovalStatesMap(): Map<string, string> {
+        const approval_states_map = new Map();
 
-    return approval_states_map;
-}
+        approval_states_map.set(this.$gettext("Approved"), APPROVAL_APPROVED);
+        approval_states_map.set(this.$gettext("Not yet"), APPROVAL_NOT_YET);
+        approval_states_map.set(this.$gettext("Rejected"), APPROVAL_REJECTED);
 
-watch(
-    () => props.item,
-    (): void => {
-        if (!props.item.approval_table) {
+        return approval_states_map;
+    }
+
+    mounted(): void {
+        this.setApprovalData();
+    }
+
+    @Watch("item", { deep: true })
+    setApprovalData(): void {
+        if (!this.item.approval_table) {
             return;
         }
-        approval_data.value = extractApprovalTableData(
-            getTranslatedApprovalStatesMap(),
-            props.item.approval_table.approval_state,
-            props.isInFolderContentRow
+
+        this.approval_data = extractApprovalTableData(
+            this.getTranslatedApprovalStatesMap(),
+            this.item.approval_table.approval_state,
+            this.isInFolderContentRow
         );
-    },
-    { immediate: true }
-);
+    }
+}
 </script>

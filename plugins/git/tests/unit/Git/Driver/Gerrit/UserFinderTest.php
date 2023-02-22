@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserFinderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,9 +45,10 @@ class UserFinderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
         $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager);
+        $this->project_id          = 666;
         $this->repository          = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getId')->andReturns(5);
-        $this->repository->shouldReceive('getProjectId')->andReturns(666);
+        $this->repository->shouldReceive('getProjectId')->andReturns($this->project_id);
     }
 
     public function testItReturnsFalseForSpecialAdminPerms(): void

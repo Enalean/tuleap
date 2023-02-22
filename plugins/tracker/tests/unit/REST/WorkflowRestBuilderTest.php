@@ -38,10 +38,6 @@ final class WorkflowRestBuilderTest extends TestCase
     private \PHPUnit\Framework\MockObject\MockObject|\Workflow $workflow;
     private \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_List $field;
     private Workflow_Transition_Condition_Permissions|\PHPUnit\Framework\MockObject\MockObject $condition_permissions;
-    /**
-     * @var Tracker_RulesManager&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $global_rules_manager;
 
     protected function setUp(): void
     {

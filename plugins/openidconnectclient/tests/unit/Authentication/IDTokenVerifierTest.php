@@ -239,7 +239,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('123', $verified_sub);
     }
 
-    public static function dataProviderValidIDToken(): array
+    public function dataProviderValidIDToken(): array
     {
         return [
             [false],

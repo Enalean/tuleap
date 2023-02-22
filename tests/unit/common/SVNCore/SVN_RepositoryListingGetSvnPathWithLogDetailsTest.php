@@ -25,29 +25,6 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends \Tuleap\Test\PHP
 {
     use MockeryPHPUnitIntegration;
 
-    private string $order;
-    /**
-     * @var SVN_Svnlook&\Mockery\MockInterface
-     */
-    private $svnlook;
-    /**
-     * @var SVN_PermissionsManager&\Mockery\MockInterface
-     */
-    private $svn_perms_mgr;
-    /**
-     * @var UserManager&\Mockery\MockInterface
-     */
-    private $user_manager;
-    private $svn_repo_listing;
-    /**
-     * @var PFUser&\Mockery\MockInterface
-     */
-    private $user;
-    /**
-     * @var \Mockery\MockInterface&Project
-     */
-    private $project;
-
     protected function setUp(): void
     {
         parent::setUp();

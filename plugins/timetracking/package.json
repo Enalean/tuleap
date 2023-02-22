@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/tlp-fetch": "workspace:*",
+    "luxon": "^1.26.0",
     "vue": "^2.7.4",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"

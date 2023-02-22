@@ -15,7 +15,7 @@ msgstr ""
 msgid "An error occurred loading unplanned elements"
 msgstr ""
 
-msgid "Create the first %{ iteration_label }"
+msgid "Create the first %s"
 msgstr ""
 
 msgid "Create the first iteration"
@@ -30,13 +30,13 @@ msgstr ""
 msgid "Program"
 msgstr ""
 
-msgid "The retrieval of %{ iteration_label } has failed"
+msgid "The retrieval of %s has failed"
 msgstr ""
 
 msgid "The retrieval of iterations has failed"
 msgstr ""
 
-msgid "There is no %{ iteration_label } yet."
+msgid "There is no %s yet."
 msgstr ""
 
 msgid "There is no iteration yet."

@@ -23,6 +23,7 @@ import ApprovalBadge from "./ApprovalBadge.vue";
 import { TYPE_EMBEDDED } from "../../../constants";
 import type { ApprovableDocument, Embedded } from "../../../type";
 import localVue from "../../../helpers/local-vue";
+import Vue from "vue";
 
 describe("ApprovalBadge", () => {
     function createWrapper(
@@ -64,20 +65,41 @@ describe("ApprovalBadge", () => {
         const wrapper = await createWrapper(item, false);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <span
-              class="document-approval-badge tlp-badge-success "
-            >
-              <i
-                class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
-              />
-              Approved
-
-            </span>
-        `);
+        expect(wrapper.vm.$data.approval_data.icon_badge).toBe("fa-tlp-gavel-approved");
+        expect(wrapper.vm.$data.approval_data.badge_label).toBe("Approved");
+        expect(wrapper.vm.$data.approval_data.badge_class).toBe("tlp-badge-success ");
     });
 
-    it(`Given document has approval status and given we are in folder content row
+    it(`Given document has approval status
+        When we display approval badge
+        Then we should display the corresponding badge
+        And if the status change
+        Then the badge should change as well`, async () => {
+        const item = {
+            id: 42,
+            title: "my locked document",
+            type: TYPE_EMBEDDED,
+            approval_table: {
+                approval_state: "Approved",
+            },
+        } as Embedded;
+
+        const wrapper = await createWrapper(item, false);
+
+        expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
+        expect(wrapper.vm.$data.approval_data.icon_badge).toBe("fa-tlp-gavel-approved");
+        expect(wrapper.vm.$data.approval_data.badge_label).toBe("Approved");
+        expect(wrapper.vm.$data.approval_data.badge_class).toBe("tlp-badge-success ");
+
+        Vue.set(item, "approval_table", { approval_state: "Not yet" });
+        await Vue.nextTick();
+
+        expect(wrapper.vm.$data.approval_data.icon_badge).toBe("fa-tlp-gavel-pending");
+        expect(wrapper.vm.$data.approval_data.badge_label).toBe("Not yet");
+        expect(wrapper.vm.$data.approval_data.badge_class).toBe("tlp-badge-secondary ");
+    });
+
+    it(`Given document has approval status and given we are in floder content row
         When we display approval badge
         Then we should display the corresponding badge with custom classes`, async () => {
         const item = {
@@ -92,16 +114,10 @@ describe("ApprovalBadge", () => {
         const wrapper = await createWrapper(item, true);
 
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <span
-              class="document-approval-badge tlp-badge-success document-tree-item-toggle-quicklook-approval-badge"
-            >
-              <i
-                class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
-              />
-              Approved
-
-            </span>
-        `);
+        expect(wrapper.vm.$data.approval_data.icon_badge).toBe("fa-tlp-gavel-approved");
+        expect(wrapper.vm.$data.approval_data.badge_label).toBe("Approved");
+        expect(wrapper.vm.$data.approval_data.badge_class).toBe(
+            "tlp-badge-success document-tree-item-toggle-quicklook-approval-badge"
+        );
     });
 });

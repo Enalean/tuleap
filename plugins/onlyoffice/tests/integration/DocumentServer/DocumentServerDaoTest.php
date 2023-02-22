@@ -32,9 +32,6 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     private DocumentServerDao $dao;
     private DocumentServerKeyEncryption $encryption;
     private mixed $old_sys_custom_dir;
-    private int $project_a_id;
-    private int $project_b_id;
-    private \ParagonIE\EasyDB\EasyDB $db;
 
     protected function setUp(): void
     {
@@ -45,24 +42,13 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->encryption = new DocumentServerKeyEncryption(new KeyFactory());
         $this->dao        = new DocumentServerDao($this->encryption);
-
-        $this->db           = DBFactory::getMainTuleapDBConnection()->getDB();
-        $this->project_a_id = (int) $this->db->insertReturnId(
-            'groups',
-            ['status' => 'A', 'unix_group_name' => 'project_a', 'group_name' => 'Project A']
-        );
-        $this->project_b_id = (int) $this->db->insertReturnId(
-            'groups',
-            ['status' => 'A', 'unix_group_name' => 'project_b', 'group_name' => 'Project B']
-        );
     }
 
     protected function tearDown(): void
     {
-        $this->db->run('DELETE FROM plugin_onlyoffice_document_server');
-        $this->db->run('DELETE FROM plugin_onlyoffice_document_server_project_restriction');
-        $this->db->delete('groups', ['group_id' => $this->project_a_id]);
-        $this->db->delete('groups', ['group_id' => $this->project_b_id]);
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
+        $db->run('DELETE FROM plugin_onlyoffice_document_server');
 
         \ForgeConfig::set('sys_custom_dir', $this->old_sys_custom_dir);
     }
@@ -81,106 +67,37 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
         // Retrieve
         self::assertEquals('https://example.com', $server->url);
-        self::assertTrue($this->decrypt($server->encrypted_secret_key)->isIdenticalTo(new ConcealedString('very_secret')));
+        self::assertEquals('very_secret', $this->decrypt($server->encrypted_secret_key));
 
         $servers = $this->dao->retrieveAll();
         self::assertCount(2, $servers);
         self::assertEquals('https://example.com', $servers[0]->url);
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('very_secret')));
+        self::assertEquals('very_secret', $this->decrypt($servers[0]->encrypted_secret_key));
         self::assertEquals('https://example.com/1', $servers[1]->url);
-        self::assertTrue($this->decrypt($servers[1]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertEquals('much_secret', $this->decrypt($servers[1]->encrypted_secret_key));
         self::assertEquals([1, 1], $this->getServerProjectRestrictions());
 
         // Update
         $this->dao->update($servers[0]->id, $servers[0]->url, new ConcealedString('new_secret'));
         $servers = $this->dao->retrieveAll();
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('new_secret')));
-        self::assertTrue($this->decrypt($servers[1]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertEquals('new_secret', $this->decrypt($servers[0]->encrypted_secret_key));
+        self::assertEquals('much_secret', $this->decrypt($servers[1]->encrypted_secret_key));
 
         // Delete
         $this->dao->delete($servers[0]->id);
         $servers = $this->dao->retrieveAll();
         self::assertCount(1, $servers);
         self::assertEquals('https://example.com/1', $servers[0]->url);
-        self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
+        self::assertEquals('much_secret', $this->decrypt($servers[0]->encrypted_secret_key));
     }
 
-    public function testServerRestriction(): void
+    private function decrypt(ConcealedString $secret): string
     {
-         $this->dao->create('https://example.com', new ConcealedString('very_secret'));
-
-         $servers = $this->dao->retrieveAll();
-         self::assertCount(1, $servers);
-         $server = $this->dao->retrieveById($servers[0]->id);
-         self::assertFalse($server->is_project_restricted);
-
-         $this->dao->restrict($server->id, [$this->project_a_id, $this->project_b_id]);
-         $server = $this->dao->retrieveById($server->id);
-         self::assertTrue($server->is_project_restricted);
-         $server_names = array_map(static fn (RestrictedProject $project): string => $project->name, $server->project_restrictions);
-         self::assertContains('project_a', $server_names);
-         self::assertContains('project_b', $server_names);
-
-        $this->dao->restrict($server->id, []);
-        $server = $this->dao->retrieveById($server->id);
-        self::assertTrue($server->is_project_restricted);
-        self::assertEmpty($server->project_restrictions);
-
-        $this->dao->create('https://example.com/another', new ConcealedString('another_secret'));
-        $servers = $this->dao->retrieveAll();
-        $this->dao->restrict($servers[0]->id, [$this->project_a_id]);
-        $this->dao->restrict($servers[1]->id, [$this->project_a_id]);
-        $server_a = $this->dao->retrieveById($servers[0]->id);
-        $server_b = $this->dao->retrieveById($servers[1]->id);
-        self::assertTrue($server_a->is_project_restricted);
-        self::assertTrue($server_b->is_project_restricted);
-        self::assertEmpty($server_a->project_restrictions);
-        self::assertCount(1, $server_b->project_restrictions);
-
-        $this->dao->delete($server_b->id);
-        $are_projects_restrictions_deleted_after_server_deletion =
-            $this->db->single(
-                'SELECT COUNT(*) FROM plugin_onlyoffice_document_server_project_restriction WHERE server_id = ?',
-                [$server_b->id]
-            ) === 0;
-
-        self::assertTrue($are_projects_restrictions_deleted_after_server_deletion);
-    }
-
-    public function testUnrestriction(): void
-    {
-        $this->dao->create('https://example.com', new ConcealedString('very_secret'));
-        $this->dao->create('https://example.com/another', new ConcealedString('another_secret'));
-
-        $servers = $this->dao->retrieveAll();
-        $this->dao->restrict($servers[0]->id, [$this->project_a_id, $this->project_b_id]);
-        $server_a = $this->dao->retrieveById($servers[0]->id);
-        $server_b = $this->dao->retrieveById($servers[1]->id);
-
-        self::assertTrue($server_a->is_project_restricted);
-        self::assertTrue($server_b->is_project_restricted);
-
-        try {
-            $this->dao->unrestrict($server_a->id);
-            self::fail("Cannot unrestrict when there are more than one server");
-        } catch (TooManyServersException) {
-        }
-
-        $this->dao->delete($server_b->id);
-        $this->dao->unrestrict($server_a->id);
-
-        $server_a = $this->dao->retrieveById($server_a->id);
-        self::assertFalse($server_a->is_project_restricted);
-        self::assertEmpty($server_a->project_restrictions);
-    }
-
-    private function decrypt(ConcealedString $secret): ConcealedString
-    {
-        return $this->encryption->decryptValue($secret->getString());
+        return $this->encryption->decryptValue($secret->getString())->getString();
     }
 
     private function getServerProjectRestrictions(): array
     {
-        return $this->db->col('SELECT is_project_restricted FROM plugin_onlyoffice_document_server');
+        return DBFactory::getMainTuleapDBConnection()->getDB()->col('SELECT is_project_restricted FROM plugin_onlyoffice_document_server');
     }
 }

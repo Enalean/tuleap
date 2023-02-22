@@ -1,15 +1,9 @@
 {{# should_display_purpose }}
+<div class="fields">
     {{# form_register_purpose }}
-        <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/has_error}}">
-            <label class="tlp-label" for="form_register_purpose">
-                {{# gettext }}Purpose{{/ gettext }}
-                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-            </label>
-            <textarea class="tlp-textarea" id="form_register_purpose" name="form_register_purpose" rows="3" required></textarea>
-            <p class="tlp-text-info">{{ purpose_directions }}</p>
-            {{# has_error }}
-                <p class="tlp-text-danger">{{ error }}</p>
-            {{/has_error}}
-        </div>
+        <textarea wrap="virtual" placeholder="{{ purpose }}" rows="5" id="form_register_purpose" name="form_register_purpose">{{ value }}</textarea>
     {{/ form_register_purpose }}
+
+    <div id="form_register_purpose-tooltip" style="display: none;">{{{ purpose_directions }}}</div>
+</div>
 {{/ should_display_purpose }}

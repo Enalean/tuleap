@@ -25,21 +25,47 @@ namespace Tuleap\Project\Admin\ProjectMembers;
 use HTTPRequest;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Date\TlpRelativeDatePresenterBuilder;
-use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
-use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
+use PFUser;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserRemover;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\ProjectRetriever;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /** @var ProjectMembersController */
+    private $controller;
+    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
+    private $project_retriever;
+    /** @var M\LegacyMockInterface|M\MockInterface */
+    private $administrator_checker;
+    /** @var M\LegacyMockInterface|M\MockInterface|MembershipDelegationDao */
+    private $membership_delegation_dao;
+
+    protected function setUp(): void
+    {
+        $this->project_retriever         = M::mock(ProjectRetriever::class);
+        $this->membership_delegation_dao = M::mock(MembershipDelegationDao::class);
+        $this->administrator_checker     = M::mock(ProjectAdministratorChecker::class);
+        $this->controller                = new ProjectMembersController(
+            M::mock(ProjectMembersDAO::class),
+            M::mock(\UserHelper::class),
+            M::mock(\UGroupBinding::class),
+            M::mock(UserRemover::class),
+            M::mock(\EventManager::class),
+            M::mock(\UGroupManager::class),
+            M::mock(\UserImport::class),
+            $this->project_retriever,
+            $this->administrator_checker,
+            M::mock(SynchronizedProjectMembershipDetector::class),
+            $this->membership_delegation_dao
+        );
+    }
 
     protected function tearDown(): void
     {
@@ -50,30 +76,31 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotProjectAdminWithoutDelegationCannotAccessThePage(): void
     {
-        $project           = M::mock(\Project::class)->shouldReceive('getID')
+        $project = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn('102')
             ->getMock();
-        $project_retriever = M::mock(ProjectRetriever::class);
-        $project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever->shouldReceive('getProjectFromId')
             ->once()
             ->with('102')
             ->andReturn($project);
-        $current_user = UserTestBuilder::aUser()
-            ->withId(110)
-            ->withoutSiteAdministrator()
-            ->build();
+        $current_user = M::mock(PFUser::class)->shouldReceive('getId')
+            ->andReturn(110)
+            ->getMock();
         $request      = M::mock(HTTPRequest::class)->shouldReceive('getCurrentUser')
             ->once()
             ->andReturn($current_user)
             ->getMock();
-
-        $controller = $this->buildController(
-            $project_retriever,
-            EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
-        );
+        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
+            ->once()
+            ->with($current_user, $project)
+            ->andThrow(new ForbiddenException());
+        $this->membership_delegation_dao->shouldReceive('doesUserHasMembershipDelegation')
+            ->once()
+            ->with(110, '102')
+            ->andReturnFalse();
 
         $this->expectException(ForbiddenException::class);
-        $controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
+        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
     }
 
     public function testItThrowsWhenProjectIsNotActiveAndCurrentUserIsNotSiteAdmin(): void
@@ -83,51 +110,24 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getStatus')
             ->once()
             ->andReturn(\Project::STATUS_SUSPENDED);
-        $project_retriever = M::mock(ProjectRetriever::class);
-        $project_retriever->shouldReceive('getProjectFromId')
+        $this->project_retriever->shouldReceive('getProjectFromId')
             ->once()
             ->with('102')
             ->andReturn($project);
-        $current_user = UserTestBuilder::aUser()
-            ->withId(110)
-            ->withoutSiteAdministrator()
-            ->build();
-        $request      = M::mock(HTTPRequest::class)->shouldReceive('getCurrentUser')
+        $current_user = M::mock(PFUser::class);
+        $current_user->shouldReceive('getId')->andReturn(110);
+        $current_user->shouldReceive('isSuperUser')
+            ->once()
+            ->andReturnFalse();
+        $request = M::mock(HTTPRequest::class)->shouldReceive('getCurrentUser')
             ->once()
             ->andReturn($current_user)
             ->getMock();
-
-        $controller = $this->buildController(
-            $project_retriever,
-            EnsureUserCanManageProjectMembersStub::canManageMembers(),
-        );
+        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
+            ->once()
+            ->with($current_user, $project);
 
         $this->expectException(ForbiddenException::class);
-        $controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
-    }
-
-    private function buildController(
-        M\LegacyMockInterface|M\MockInterface|ProjectRetriever $project_retriever,
-        EnsureUserCanManageProjectMembers $members_manager_checker,
-    ): ProjectMembersController {
-        return new ProjectMembersController(
-            M::mock(ProjectMembersDAO::class),
-            M::mock(\UserHelper::class),
-            M::mock(\UGroupBinding::class),
-            M::mock(UserRemover::class),
-            M::mock(\EventManager::class),
-            M::mock(\UGroupManager::class),
-            M::mock(\UserImport::class),
-            $project_retriever,
-            M::mock(SynchronizedProjectMembershipDetector::class),
-            $members_manager_checker,
-            new ListOfPendingInvitationsPresenterBuilder(
-                $this->createStub(InviteBuddyConfiguration::class),
-                PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
-                $this->createStub(TlpRelativeDatePresenterBuilder::class),
-                $this->createMock(CSRFSynchronizerTokenProvider::class),
-                $this->createMock(InviteBuddiesPresenterBuilder::class),
-            )
-        );
+        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
     }
 }

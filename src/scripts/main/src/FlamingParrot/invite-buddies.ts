@@ -17,32 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import $ from "jquery";
 import { initFeedbacks } from "../invite-buddies/feedback-display";
 import { initNotificationsOnFormSubmit } from "../invite-buddies/send-notifications";
 
-export async function init(): Promise<void> {
+export function init(): void {
     const form = document.getElementById("invite-buddies-modal");
     if (!form) {
         return;
     }
 
-    const language = document.body.dataset.userLocale;
-    if (language === undefined) {
-        throw new Error("Not able to find the user language.");
-    }
-    const gettext_provider = await initGettext(
-        language,
-        "invite-buddies",
-        (locale) =>
-            import(
-                /* webpackChunkName: "invitation-po-" */ "../invite-buddies/po/" +
-                    getPOFileFromLocale(locale)
-            )
-    );
-
     $("#invite-buddies-modal").on("shown", initFeedbacks).on("hidden", initFeedbacks);
 
-    initNotificationsOnFormSubmit(gettext_provider);
+    initNotificationsOnFormSubmit();
 }

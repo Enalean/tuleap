@@ -24,6 +24,8 @@ use GitRepository;
 use Mockery;
 use Git;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 class HistoryValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -37,43 +39,6 @@ class HistoryValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $migrated_repository;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_01;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_02;
-    /**
-     * @var Mockery\MockInterface&\ProjectUGroup
-     */
-    private $ugroup_03;
-    /**
-     * @var Mockery\MockInterface&\Project
-     */
-    private $project;
-    /**
-     * @var \PermissionsManager&Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var \UGroupManager&Mockery\MockInterface
-     */
-    private $ugroup_manager;
-    /**
-     * @var FineGrainedRetriever&Mockery\MockInterface
-     */
-    private $retriever;
-    /**
-     * @var DefaultFineGrainedPermissionFactory&Mockery\MockInterface
-     */
-    private $default_factory;
-    /**
-     * @var FineGrainedPermissionFactory&Mockery\MockInterface
-     */
-    private $factory;
-    private HistoryValueFormatter $formatter;
 
     protected function setUp(): void
     {

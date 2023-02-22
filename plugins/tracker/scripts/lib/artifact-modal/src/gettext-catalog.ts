@@ -128,5 +128,3 @@ export const getEmptyCommentsMessage = (): string => gettextCatalog.getString("N
 export const getFollowupEditedBy = (): string => gettextCatalog.getString("Edited by %(user)s");
 export const getCommentsRetrievalErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the comments: %s");
-export const getSubmitDisabledForLinksReason = (): string =>
-    gettextCatalog.getString("Linked artifacts are loading");

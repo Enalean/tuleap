@@ -78,7 +78,6 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $event_manager;
-    private VerifyArtifactClosureIsAllowed $closure_verifier;
 
     protected function setUp(): void
     {

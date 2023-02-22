@@ -41,7 +41,7 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_result, $create->generateProjectUnixName());
     }
 
-    public static function userNameProvider(): array
+    public function userNameProvider(): array
     {
         return [
             ['joperesr', 'test-for-joperesr' ],
@@ -64,7 +64,7 @@ final class CreateTestProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_result, $create->generateProjectFullName());
     }
 
-    public static function fullNameProvider(): array
+    public function fullNameProvider(): array
     {
         return [
             ['joperesr', 'Test project for joperesr' ],

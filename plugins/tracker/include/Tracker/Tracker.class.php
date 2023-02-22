@@ -68,7 +68,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -248,7 +247,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->color                        = $color;
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return "Tracker #" . $this->id;
     }
@@ -821,8 +820,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     ),
                     new Tracker_XML_Importer_ArtifactImportedMapping(),
                     $logger,
-                    TrackerFactory::instance(),
-                    EventManager::instance(),
+                    TrackerFactory::instance()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3227,7 +3225,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
@@ -3425,8 +3422,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new TypeDao(),
                 $artifact_links_usage_dao
             ),
-            $artifact_links_usage_dao,
-            EventManager::instance(),
+            $artifact_links_usage_dao
         );
     }
 

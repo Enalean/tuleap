@@ -20,13 +20,20 @@
 describe("Document search", () => {
     let project_unixname: string, now: number;
 
+    before(() => {
+        cy.clearSessionCookie();
+
+        cy.projectAdministratorLogin();
+    });
+
     beforeEach(() => {
         now = Date.now();
+
         project_unixname = "doc-search-" + now;
+        cy.preserveSessionCookies();
     });
 
     it("User can search", () => {
-        cy.projectAdministratorSession();
         cy.log("Create a new project");
         cy.createNewPublicProject(project_unixname, "issues");
 
@@ -60,8 +67,10 @@ describe("Document search", () => {
             cy.get("[data-test=document-modal-submit-button-create-item]").click();
         });
 
+        cy.userLogout();
+
         cy.log("Project member can find documents");
-        cy.projectMemberSession();
+        cy.projectMemberLogin();
         cy.visitProjectService(project_unixname, "Documents");
 
         cy.log(`Searching for "ipsum"`);

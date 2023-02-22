@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-const a_month_ago = new Date();
-a_month_ago.setMonth(a_month_ago.getMonth() - 1);
+import { DateTime } from "luxon";
 
 const state = {
     report_id: null,
     user_id: null,
     are_void_trackers_hidden: null,
-    start_date: a_month_ago.toISOString().split("T")[0],
-    end_date: new Date().toISOString().split("T")[0],
+    start_date: DateTime.local().minus({ months: 1 }).toISODate(),
+    end_date: DateTime.local().toISODate(),
     error_message: null,
     success_message: null,
     selected_trackers: [],

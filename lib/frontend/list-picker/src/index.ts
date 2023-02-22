@@ -28,7 +28,7 @@ export type { ListPicker, ListPickerOptions };
 export function createListPicker(
     source_select_box: HTMLSelectElement,
     options: ListPickerOptions
-): ListPicker {
+): Promise<ListPicker> {
     const gettext_provider = initGettextSync(
         "tuleap-list-picker",
         { fr_FR, pt_BR },

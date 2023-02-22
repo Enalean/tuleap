@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
 import type { Configuration } from "./configuration";
 import { unserializeConfiguration } from "./configuration";
 

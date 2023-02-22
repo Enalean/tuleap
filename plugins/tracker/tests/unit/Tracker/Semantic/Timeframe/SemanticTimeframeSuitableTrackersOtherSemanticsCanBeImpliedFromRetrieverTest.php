@@ -79,32 +79,33 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
 
         $this->form_element_factory->expects(self::exactly(5))
             ->method('getUsedArtifactLinkFields')
-            ->willReturnCallback(
-                fn (\Tracker $tracker): array => match ($tracker) {
-                    $tasks_tracker, $bugs_tracker, $activities_tracker, $sprints_tracker => [$this->createStub(\Tracker_FormElement_Field_ArtifactLink::class)],
-                    $requests_tracker => []
-                }
+            ->withConsecutive([$tasks_tracker], [$bugs_tracker], [$activities_tracker], [$sprints_tracker], [$requests_tracker])
+            ->willReturnOnConsecutiveCalls(
+                [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)],
+                [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)],
+                [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)],
+                [$this->createMock(\Tracker_FormElement_Field_ArtifactLink::class)],
+                [],
             );
 
         $this->dao->expects(self::exactly(4))
             ->method('searchByTrackerId')
-            ->willReturnCallback(
-                fn (int $tracker_id): ?array => match ($tracker_id) {
-                    11 => null,
-                    12 => [],
-                    13 => [
-                        'start_date_field_id' => null,
-                        'end_date_field_id' => null,
-                        'duration_field_id' => null,
-                        'implied_from_tracker_id' => 14,
-                    ],
-                    14 => [
-                        'start_date_field_id' => 1001,
-                        'end_date_field_id' => 1002,
-                        'duration_field_id' => null,
-                        'implied_from_tracker_id' => null,
-                    ]
-                }
+            ->withConsecutive([11], [12], [13], [14])
+            ->willReturnOnConsecutiveCalls(
+                null,
+                [],
+                [
+                    'start_date_field_id' => null,
+                    'end_date_field_id' => null,
+                    'duration_field_id' => null,
+                    'implied_from_tracker_id' => 14,
+                ],
+                [
+                    'start_date_field_id' => 1001,
+                    'end_date_field_id' => 1002,
+                    'duration_field_id' => null,
+                    'implied_from_tracker_id' => null,
+                ]
             );
 
         self::assertEquals(

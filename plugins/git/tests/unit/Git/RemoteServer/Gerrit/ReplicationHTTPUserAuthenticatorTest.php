@@ -38,10 +38,6 @@ class ReplicationHTTPUserAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Git_RemoteServer_GerritServerFactory
      */
     private $server_factory;
-    /**
-     * @var \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator&\Mockery\MockInterface
-     */
-    private $user_validator;
 
     protected function setUp(): void
     {

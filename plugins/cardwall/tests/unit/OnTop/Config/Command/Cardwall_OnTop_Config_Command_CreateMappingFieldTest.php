@@ -25,13 +25,6 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends \Tuleap
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $dao;
-    private Cardwall_OnTop_Config_Command_CreateMappingField $command;
-
     protected function setUp(): void
     {
         parent::setUp();

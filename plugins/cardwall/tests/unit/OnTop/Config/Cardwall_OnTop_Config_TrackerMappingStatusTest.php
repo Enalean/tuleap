@@ -25,11 +25,6 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \Tuleap\Test\
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var array<int,Cardwall_OnTop_Config_ValueMapping[]>
-     */
-    private array $value_mappings;
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -18,7 +18,7 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/fault": "workspace:*",
-    "neverthrow": "^6.0.0"
+    "neverthrow": "^5.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

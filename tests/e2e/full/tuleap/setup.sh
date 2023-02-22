@@ -67,9 +67,6 @@ setup_database() {
 
     enable_plugins
 
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php configure apache
-    /usr/bin/tuleap setup:svn
-
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
 }
 
@@ -126,9 +123,6 @@ seed_data() {
 setup_system_configuration() {
     sudo -u codendiadm /usr/bin/tuleap config-set sys_project_approval 0
     sudo -u codendiadm /usr/bin/tuleap config-set project_admin_can_choose_visibility 1
-
-    # Email are relayed to mailhog catch all
-    echo "relayhost = mailhog:1025" >> /etc/postfix/main.cf
 }
 
 setup_lhs
@@ -143,8 +137,7 @@ setup_system_configuration
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
 
-/opt/remi/php81/root/usr/sbin/php-fpm --daemonize
+/opt/remi/php80/root/usr/sbin/php-fpm --daemonize
 nginx
-/usr/sbin/httpd
 
 exec tail -f /var/log/nginx/error.log

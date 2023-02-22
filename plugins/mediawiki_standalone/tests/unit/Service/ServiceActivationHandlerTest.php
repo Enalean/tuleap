@@ -55,7 +55,7 @@ final class ServiceActivationHandlerTest extends TestCase
         self::assertEquals($expected_task, $enqueue_task->queue_task);
     }
 
-    public static function getActivationData(): iterable
+    public function getActivationData(): iterable
     {
         return [
             'It sends the activation is the service is mediawiki standalone' => [

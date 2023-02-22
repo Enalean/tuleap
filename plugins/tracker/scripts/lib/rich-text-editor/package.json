@@ -14,7 +14,7 @@
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "dompurify": "^3.0.0",
+    "dompurify": "^2.3.6",
     "lit": "^2.2.3",
     "marked": "^4.0.10",
     "turndown": "^7.0.0"
@@ -24,7 +24,7 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^2.3.2",
     "@types/marked": "^3.0.2",
     "@types/turndown": "^5.0.0"
   },

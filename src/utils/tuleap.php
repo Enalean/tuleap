@@ -20,7 +20,6 @@
 
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigDumpCommand;
@@ -35,6 +34,7 @@ use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\CLI\Command\WorkerSupervisorCommand;
+use Tuleap\CLI\Command\WorkerSVNRootUpdateCommand;
 use Tuleap\CLI\Command\WorkerSystemCtlCommand;
 use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
@@ -42,8 +42,6 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\Config\ConfigDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
-use Tuleap\InviteBuddy\InvitationCleaner;
-use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Plugin\PluginInstallCommand;
 use Tuleap\Queue\WorkerLogger;
@@ -167,10 +165,22 @@ $CLI_command_collector->addCommand(
 );
 
 $CLI_command_collector->addCommand(
+    WorkerSVNRootUpdateCommand::NAME,
+    static function (): WorkerSVNRootUpdateCommand {
+        return new WorkerSVNRootUpdateCommand();
+    }
+);
+
+$CLI_command_collector->addCommand(
+    \Tuleap\CLI\Command\RedisWaiterCommand::NAME,
+    static function (): \Tuleap\CLI\Command\RedisWaiterCommand {
+        return new \Tuleap\CLI\Command\RedisWaiterCommand();
+    }
+);
+
+$CLI_command_collector->addCommand(
     DailyJobCommand::NAME,
     static function () use ($event_manager, $user_manager): DailyJobCommand {
-        $locale_switcher = new LocaleSwitcher();
-
         return new DailyJobCommand(
             $event_manager,
             new AccessKeyRevoker(
@@ -186,31 +196,12 @@ $CLI_command_collector->addCommand(
                 new MailPresenterFactory(),
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/mail/'),
                 new Codendi_Mail(),
-                new UserSuspensionDao(
-                    new InvitationDao(
-                        new SplitTokenVerificationStringHasher(),
-                        new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
-                    ),
-                ),
+                new UserSuspensionDao(),
                 $user_manager,
                 new BaseLanguageFactory(),
                 BackendLogger::getDefaultLogger('usersuspension_syslog'),
-                $locale_switcher
-            ),
-            new InvitationCleaner(
-                new InvitationDao(
-                    new SplitTokenVerificationStringHasher(),
-                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
-                ),
-                $locale_switcher,
-                TemplateRendererFactory::build(),
-                static function (Codendi_Mail $mail) {
-                    $mail->send();
-                },
-                UserManager::instance(),
-                ProjectManager::instance(),
-                new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
-            ),
+                new LocaleSwitcher()
+            )
         );
     }
 );

@@ -47,8 +47,7 @@ describe("ModalConfirmDeletion", () => {
 
     function createWrapper(
         item: Item,
-        currently_previewed_item: Item | null,
-        wiki_referencing_same_page: Array<Wiki> | null
+        currently_previewed_item: Item | null
     ): Wrapper<ModalConfirmDeletion> {
         store = createStoreMock({
             state: {
@@ -57,20 +56,13 @@ describe("ModalConfirmDeletion", () => {
                 current_folder: { id: 42 },
             } as unknown as State,
         });
-
-        store.dispatch.mockImplementation((actionName) => {
-            if (actionName === "getWikisReferencingSameWikiPage") {
-                return wiki_referencing_same_page;
-            }
-            return [];
-        });
-
         return shallowMount(ModalConfirmDeletion, {
             mocks: {
                 $store: store,
             },
             localVue: localVue,
-            propsData: { item },
+            propsData: { item, shouldRedirectToParentAfterDeletion: false },
+            stubs: ["delete-associated-wiki-page-checkbox"],
             router: new VueRouter({
                 routes: [
                     {
@@ -98,18 +90,24 @@ describe("ModalConfirmDeletion", () => {
         });
 
         it(`When some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
-            const wikis = [
-                {
-                    id: 43,
-                    title: "my other wiki",
-                    wiki_properties: {
-                        page_name: "my wiki",
-                        page_id: 123,
-                    },
-                    type: "wiki",
-                } as Wiki,
-            ];
-            const deletion_modal = await createWrapper(item, null, wikis);
+            store.dispatch.mockImplementation((actionName) => {
+                if (actionName === "getWikisReferencingSameWikiPage") {
+                    return [
+                        {
+                            id: 43,
+                            title: "my other wiki",
+                            wiki_properties: {
+                                page_name: "my wiki",
+                                page_id: 123,
+                            },
+                            type: "wiki",
+                        },
+                    ];
+                }
+                return [];
+            });
+
+            const deletion_modal = await createWrapper(item, null);
             await deletion_modal.vm.$nextTick();
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
@@ -117,11 +115,14 @@ describe("ModalConfirmDeletion", () => {
         });
 
         it(`When there is a problem retrieving the wiki page referencers (either not found or either unreadable), then it should not add a checkbox`, async () => {
-            const deletion_modal = await createWrapper(
-                item,
-                null,
-                USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE
-            );
+            store.dispatch.mockImplementation((actionName) => {
+                if (actionName === "getWikisReferencingSameWikiPage") {
+                    return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
+                }
+                return undefined;
+            });
+
+            const deletion_modal = await createWrapper(item, null);
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
             expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
@@ -130,7 +131,7 @@ describe("ModalConfirmDeletion", () => {
         it(`when it does not reference an existing wiki page, then it should not add a checkbox`, () => {
             item.wiki_properties.page_id = null;
 
-            const deletion_modal = createWrapper(item, null, null);
+            const deletion_modal = createWrapper(item, null);
 
             expect(store.dispatch).not.toHaveBeenCalled();
             expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
@@ -144,7 +145,7 @@ describe("ModalConfirmDeletion", () => {
             type: "folder",
         } as Folder;
 
-        const deletion_modal = createWrapper(item, null, null);
+        const deletion_modal = createWrapper(item, null);
 
         expect(store.dispatch).not.toHaveBeenCalled();
         expect(deletion_modal.find("[data-test=delete-folder-warning]").exists()).toBeTruthy();
@@ -158,7 +159,7 @@ describe("ModalConfirmDeletion", () => {
             type: "folder",
         } as Folder;
 
-        const deletion_modal = createWrapper(item, null, null);
+        const deletion_modal = createWrapper(item, null);
         deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, {}]);
@@ -173,7 +174,7 @@ describe("ModalConfirmDeletion", () => {
                 parent_id: 42,
             } as ItemFile;
 
-            const deletion_modal = createWrapper(item, item, null);
+            const deletion_modal = createWrapper(item, item);
             jest.spyOn(deletion_modal.vm.$router, "replace");
 
             await deletion_modal.vm.$router.push("preview/50");
@@ -199,7 +200,7 @@ describe("ModalConfirmDeletion", () => {
                 parent_id: 41,
             } as Folder;
 
-            const deletion_modal = createWrapper(item, null, null);
+            const deletion_modal = createWrapper(item, null);
 
             jest.spyOn(deletion_modal.vm.$router, "replace");
 

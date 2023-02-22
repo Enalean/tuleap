@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 
 class RichTextareaProvider
 {
@@ -87,7 +86,6 @@ class RichTextareaProvider
                 'data_attributes'      => array_merge($data_attributes_for_dragndrop, $data_attributes),
                 'is_dragndrop_allowed' => $is_dragndrop_allowed,
                 'help_id'              => $help_id,
-                'maxlength'            => TextValueValidator::MAX_TEXT_SIZE,
             ]
         );
     }

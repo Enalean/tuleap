@@ -184,7 +184,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         );
     }
 
-    public static function dataProviderJWtWithUnexpectedClaims(): array
+    public function dataProviderJWtWithUnexpectedClaims(): array
     {
         return [
             'Missing status'                      => [self::buildJWT([])],

@@ -76,7 +76,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderMethodUnderTest(): array
+    public function dataProviderMethodUnderTest(): array
     {
         return [
             'when title value is not found'       => ['getTitleValue', 'title'],

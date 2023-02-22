@@ -156,13 +156,15 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->ugroup_representation_builder->method('build')
-            ->willReturnCallback(
-                fn (Project $project, int $user_group_id): PermissionPerGroupUGroupRepresentation => match (true) {
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_ADMIN => $this->project_admin_representation,
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_MEMBERS => $this->project_member_representation,
-                }
-            );
+        $this->ugroup_representation_builder->method('build')->withConsecutive(
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
+        )->willReturnOnConsecutiveCalls(
+            $this->project_admin_representation,
+            $this->project_admin_representation,
+            $this->project_member_representation
+        );
 
         $release1_id = 1;
         $release2_id = 2;
@@ -182,12 +184,14 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             ]
         );
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturnCallback(
-            fn (\Project $project, int $object_id, string $permission_type): array => match (true) {
-                $project === $this->project && $object_id === $this->package_id && $permission_type === FRSPackage::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-                $project === $this->project && $object_id === $release1_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-                $project === $this->project && $object_id === $release2_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_MEMBERS],
-            }
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
+            [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release1_id), FRSRelease::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release2_id), FRSRelease::PERM_READ]
+        )->willReturnOnConsecutiveCalls(
+            [ProjectUGroup::PROJECT_ADMIN],
+            [ProjectUGroup::PROJECT_ADMIN],
+            [ProjectUGroup::PROJECT_MEMBERS]
         );
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([$release1, $release2]);
@@ -219,10 +223,11 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->ugroup_representation_builder->method('build')->with(
-            $this->equalTo($this->project),
-            ProjectUGroup::PROJECT_ADMIN
-        )->willReturn(
+        $this->ugroup_representation_builder->method('build')->withConsecutive(
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
+        )->willReturnOnConsecutiveCalls(
+            $this->project_admin_representation,
             $this->project_admin_representation
         );
 
@@ -244,12 +249,14 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             ]
         );
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturnCallback(
-            fn (\Project $project, int $object_id, string $permission_type): array => match (true) {
-                $project === $this->project && $object_id === $this->package_id && $permission_type === FRSPackage::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-                $project === $this->project && $object_id === $release1_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-                $project === $this->project && $object_id === $release2_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_MEMBERS],
-            }
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
+            [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release1_id), FRSRelease::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release2_id), FRSRelease::PERM_READ]
+        )->willReturnOnConsecutiveCalls(
+            [ProjectUGroup::PROJECT_ADMIN],
+            [ProjectUGroup::PROJECT_ADMIN],
+            [ProjectUGroup::PROJECT_MEMBERS]
         );
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([$release1, $release2]);
@@ -277,13 +284,13 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->ugroup_representation_builder->method('build')
-            ->willReturnCallback(
-                fn (Project $project, int $user_group_id): PermissionPerGroupUGroupRepresentation => match (true) {
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_ADMIN => $this->project_admin_representation,
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_MEMBERS => $this->project_member_representation,
-                }
-            );
+        $this->ugroup_representation_builder->method('build')->withConsecutive(
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
+        )->willReturnOnConsecutiveCalls(
+            $this->project_member_representation,
+            $this->project_admin_representation
+        );
 
         $release_id = 1;
 
@@ -295,12 +302,10 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             ]
         );
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturnCallback(
-            fn (\Project $project, int $object_id, string $permission_type): array => match (true) {
-                $project === $this->project && $object_id === $this->package_id && $permission_type === FRSPackage::PERM_READ => [ProjectUGroup::PROJECT_MEMBERS],
-                $project === $this->project && $object_id === $release_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-            }
-        );
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
+            [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release_id), FRSRelease::PERM_READ]
+        )->willReturnOnConsecutiveCalls([ProjectUGroup::PROJECT_MEMBERS], [ProjectUGroup::PROJECT_ADMIN]);
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([$release]);
 
@@ -327,11 +332,9 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->with(
-            $this->equalTo($this->project),
-            $this->equalTo($this->package_id),
-            FRSPackage::PERM_READ
-        )->willReturn([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
+            [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ]
+        )->willReturnOnConsecutiveCalls([ProjectUGroup::PROJECT_MEMBERS]);
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([]);
 
@@ -347,13 +350,13 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-        $this->ugroup_representation_builder->method('build')
-            ->willReturnCallback(
-                fn (Project $project, int $user_group_id): PermissionPerGroupUGroupRepresentation => match (true) {
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_ADMIN => $this->project_admin_representation,
-                    $project === $this->project && $user_group_id === ProjectUGroup::PROJECT_MEMBERS => $this->project_member_representation,
-                }
-            );
+        $this->ugroup_representation_builder->method('build')->withConsecutive(
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS],
+            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN]
+        )->willReturnOnConsecutiveCalls(
+            $this->project_member_representation,
+            $this->project_admin_representation
+        );
 
         $release_id = 1;
 
@@ -365,12 +368,10 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
             ]
         );
 
-        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->willReturnCallback(
-            fn (\Project $project, int $object_id, string $permission_type): array => match (true) {
-                $project === $this->project && $object_id === $this->package_id && $permission_type === FRSPackage::PERM_READ => [ProjectUGroup::PROJECT_MEMBERS],
-                $project === $this->project && $object_id === $release_id && $permission_type === FRSRelease::PERM_READ => [ProjectUGroup::PROJECT_ADMIN],
-            }
-        );
+        $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
+            [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ],
+            [$this->equalTo($this->project), $this->equalTo($release_id), FRSRelease::PERM_READ]
+        )->willReturnOnConsecutiveCalls([ProjectUGroup::PROJECT_MEMBERS], [ProjectUGroup::PROJECT_ADMIN]);
 
         $this->release_factory->method('getFRSReleasesFromDb')->willReturn([$release]);
 

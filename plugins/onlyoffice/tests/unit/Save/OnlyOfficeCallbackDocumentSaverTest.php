@@ -85,10 +85,10 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
     public function testDoesNothingWhenNoOOResponseDataAvailable(): void
     {
         $saver  = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class),
         );
 
@@ -113,11 +113,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->co_author_dao->method('saveVersionCoAuthors');
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [105, 106])),
         );
 
@@ -140,11 +140,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->file_storage->method('delete');
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -165,11 +165,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->file_storage->method('store')->willReturn(false);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -187,11 +187,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -208,13 +208,13 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             false,
             500,
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -231,11 +231,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -252,12 +252,12 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             true
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -272,11 +272,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn($document);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -288,11 +288,11 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(null);
 
         $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 

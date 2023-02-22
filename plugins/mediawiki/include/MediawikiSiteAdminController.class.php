@@ -19,8 +19,6 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptViteAsset;
 
 class MediawikiSiteAdminController
 {
@@ -51,14 +49,6 @@ class MediawikiSiteAdminController
     public function site_index(HTTPRequest $request)
     {
         $this->assertSiteAdmin($request);
-
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptViteAsset(
-            new IncludeViteAssets(
-                __DIR__ . '/../../../src/scripts/manage-project-restrictions-resources/frontend-assets',
-                '/assets/core/manage-project-restrictions-resources'
-            ),
-            'src/index.ts'
-        ));
 
         $presenter = new MediawikiSiteAdminAllowedProjectsPresenter(
             $this->resource_restrictor->searchAllowedProjects(),

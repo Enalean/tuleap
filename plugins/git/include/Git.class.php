@@ -117,7 +117,6 @@ class Git extends PluginController
     private $template_factory;
     private VerifyArtifactClosureIsAllowed $closure_verifier;
     private ConfigureAllowArtifactClosure $configure_artifact_closure;
-    private string $action;
 
     /**
      * Lists all git-related permission types.

@@ -28,9 +28,9 @@ class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Fi
         parent::__construct($id);
     }
 
-    public function __toString(): string
+    public function __toString()
     {
-        return (string) $this->getLabel();
+        return $this->getLabel();
     }
 
     public function getLabel()

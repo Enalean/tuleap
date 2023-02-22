@@ -22,12 +22,12 @@ import type { CommentsControllerType } from "./CommentsController";
 import { CommentsController } from "./CommentsController";
 import type { RetrieveComments } from "./RetrieveComments";
 import { RetrieveCommentsStub } from "../../../tests/stubs/RetrieveCommentsStub";
+import { NotifyFaultStub } from "../../../tests/stubs/NotifyFaultStub";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStub";
 import { CommentUserPreferencesBuilder } from "../../../tests/builders/CommentUserPreferencesBuilder";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import { FollowUpCommentBuilder } from "../../../tests/builders/FollowUpCommentBuilder";
-import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 
 const PROJECT_ID = 196;
 const FIRST_COMMENT_BODY = "<p>An HTML comment</p>";
@@ -35,7 +35,7 @@ const SECOND_COMMENT_BODY = "Plain text comment";
 
 describe(`CommentsController`, () => {
     let comments_retriever: RetrieveComments,
-        event_dispatcher: DispatchEventsStub,
+        fault_notifier: NotifyFaultStub,
         user_preferences: CommentUserPreferences;
 
     beforeEach(() => {
@@ -43,14 +43,14 @@ describe(`CommentsController`, () => {
             FollowUpCommentBuilder.aComment().withBody(FIRST_COMMENT_BODY).build(),
             FollowUpCommentBuilder.aComment().withBody(SECOND_COMMENT_BODY).build()
         );
-        event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+        fault_notifier = NotifyFaultStub.withCount();
         user_preferences = CommentUserPreferencesBuilder.userPreferences().build();
     });
 
     const getController = (): CommentsControllerType =>
         CommentsController(
             comments_retriever,
-            event_dispatcher,
+            fault_notifier,
             CurrentArtifactIdentifierStub.withId(45),
             ProjectIdentifierStub.withId(PROJECT_ID),
             user_preferences
@@ -85,7 +85,7 @@ describe(`CommentsController`, () => {
             const comments = await getController().getComments();
 
             expect(comments).toHaveLength(0);
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
+            expect(fault_notifier.getCallCount()).toBe(1);
         });
     });
 });

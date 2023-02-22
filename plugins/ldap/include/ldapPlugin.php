@@ -62,7 +62,6 @@ use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\FindUserByEmailEvent;
-use Tuleap\User\PasswordVerifier;
 use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
@@ -274,15 +273,7 @@ class LdapPlugin extends Plugin
     public function getLdapUserManager()
     {
         if (! isset($this->_ldapUmInstance)) {
-            $this->_ldapUmInstance = new LDAP_UserManager(
-                $this->getLdap(),
-                LDAP_UserSync::instance(),
-                new UserNameNormalizer(
-                    new Rule_UserName(),
-                    new Cocur\Slugify\Slugify()
-                ),
-                new PasswordVerifier(new StandardPasswordHandler()),
-            );
+            $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance(), new UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
         }
         return $this->_ldapUmInstance;
     }

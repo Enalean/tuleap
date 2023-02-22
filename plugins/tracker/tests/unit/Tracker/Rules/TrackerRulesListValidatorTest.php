@@ -27,7 +27,7 @@ use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
 
-final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalResponseMock;
@@ -220,62 +220,10 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_rule_list->setSourceValue(456)
             ->setSourceFieldId(123)
             ->setTargetFieldId(789)
-            ->setTargetValue(102)
             ->setTrackerId(110)
             ->setId(5);
 
         $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
-    }
-
-    /**
-     * This tests a case where a source value does not have any target value in the dependencies.
-     * This leads to a rule object that does not exist for this source
-     *
-     * In this test, we are in the artifact update case, which means that field 789 is added in the submitted data with an empty value
-     */
-    public function testValidateListRulesReturnErrorIfTargetValueIsNotProvided(): void
-    {
-        $GLOBALS['Response']->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb()');
-
-        $value_field_list = [
-            123 => 457,
-            789 => [],
-        ];
-
-        $tracker_rule_list = new \Tracker_Rule_List();
-        $tracker_rule_list->setSourceValue(456)
-            ->setSourceFieldId(123)
-            ->setTargetFieldId(789)
-            ->setTargetValue(101)
-            ->setTrackerId(110)
-            ->setId(5);
-
-        self::assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
-    }
-
-    /**
-     * This tests a case where a source value does not have any target value in the dependencies.
-     * This leads to a rule object that does not exist for this source
-     *
-     * In this test, we are in the artifact creation case, which means that field 789 is not added at all in the submitted data
-     */
-    public function testValidateListRulesReturnErrorIfTargetValueIsNotProvidedAtArtifactCreation(): void
-    {
-        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb()');
-
-        $value_field_list = [
-            123 => 457,
-        ];
-
-        $tracker_rule_list = new \Tracker_Rule_List();
-        $tracker_rule_list->setSourceValue(456)
-            ->setSourceFieldId(123)
-            ->setTargetFieldId(789)
-            ->setTargetValue(101)
-            ->setTrackerId(110)
-            ->setId(5);
-
-        self::assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
     }
 
     public function testValidateListRulesReturnErrorIfSourceValuesAreDifferent(): void

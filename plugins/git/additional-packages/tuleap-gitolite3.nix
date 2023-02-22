@@ -6,28 +6,22 @@ in pkgs.stdenvNoCC.mkDerivation rec {
   pname = "tuleap-gitolite3";
   version = "3.6.12";
 
-  src = pkgs.stdenvNoCC.mkDerivation {
-    name = "gitolite-src.tar";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "sitaramc";
-      repo = "gitolite";
-      rev = "v3.6.12";
-      hash = "sha256-/iN1tYyJD0cKEQS5cXpZhnmcZh/03aLeX3nup+oNvBc=";
-    };
-
-    installPhase = ''
-      runHook preInstall
-      tar -cf "$out" .
-      runHook postInstall
-    '';
-  };
+  srcs = [
+    (pkgs.fetchurl {
+         url = "https://github.com/sitaramc/gitolite/archive/v${version}.tar.gz";
+         sha256 = "sha256-jFWXbtVhuOq/OQl7f8ucbodBws7qhe9FKaBrGt/4ULY=";
+       }
+     )
+     (./tuleap-gitolite3.spec)
+  ];
 
   nativeBuildInputs = [ pkgs.rpm pkgs.file pkgs.perl ];
 
   unpackPhase = ''
-    ln -s $src $(stripHash $src)
-  '';
+        for srcFile in $srcs; do
+          cp -a $srcFile $(stripHash $srcFile)
+        done
+      '';
 
   dontConfigure = true;
 
@@ -44,7 +38,7 @@ in pkgs.stdenvNoCC.mkDerivation rec {
         --define "_rpmdir $(pwd)/RPMS" \
         --define "%_datadir /usr/share" \
         --define "%_bindir /usr/bin" \
-        -bb ${./tuleap-gitolite3.spec}
+        -bb tuleap-gitolite3.spec
   '';
 
   installPhase = ''

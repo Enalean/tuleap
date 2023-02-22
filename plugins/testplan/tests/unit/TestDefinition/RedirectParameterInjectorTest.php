@@ -214,7 +214,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderInjectAndInformUserAboutBacklogItemBeingCovered(): array
+    public function dataProviderInjectAndInformUserAboutBacklogItemBeingCovered(): array
     {
         return [
             'Add test definition' => [

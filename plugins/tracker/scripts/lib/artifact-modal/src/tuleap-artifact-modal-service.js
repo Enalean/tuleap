@@ -21,7 +21,7 @@ import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
 import _ from "lodash";
-import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
+import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.js";
 import {
     getArtifactWithCompleteTrackerStructure,
     getTracker,
@@ -33,6 +33,10 @@ import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
+import {
+    getTargetFieldPossibleValues,
+    setUpFieldDependenciesActions,
+} from "./field-dependencies-helper.js";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
 import { setTrackerFields } from "./model/FirstFileFieldStore";
@@ -140,6 +144,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 );
                 applyWorkflowTransitions(transformed_tracker, {});
                 modal_model.values = getSelectedValues(initial_values, transformed_tracker);
+                applyFieldDependencies(transformed_tracker, modal_model.values);
                 modal_model.ordered_fields = buildFormTree(transformed_tracker);
 
                 const file_upload_rules_promise = $q.when(
@@ -193,6 +198,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 modal_model.title = artifact_values.title;
                 modal_model.etag = promises[0].Etag;
                 modal_model.last_modified = promises[0]["Last-Modified"];
+
+                applyFieldDependencies(tracker_with_field_values, modal_model.values);
 
                 modal_model.tracker = tracker_with_field_values;
                 modal_model.ordered_fields = buildFormTree(tracker_with_field_values);
@@ -268,6 +275,26 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
 
     function getWorkflow(tracker) {
         return tracker.workflow;
+    }
+
+    function applyFieldDependencies(tracker, field_values) {
+        var filterTargetFieldValues = function (
+            source_field_id,
+            target_field,
+            field_dependencies_rules
+        ) {
+            if (field_values[source_field_id] !== undefined) {
+                var source_value_ids = [].concat(field_values[source_field_id].bind_value_ids);
+
+                target_field.filtered_values = getTargetFieldPossibleValues(
+                    source_value_ids,
+                    target_field,
+                    field_dependencies_rules
+                );
+            }
+        };
+
+        setUpFieldDependenciesActions(tracker, filterTargetFieldValues);
     }
 
     function mapPrefillsToFieldValues(prefill_values, tracker_fields) {

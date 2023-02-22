@@ -51,36 +51,39 @@
     </p>
 </template>
 
-<script setup lang="ts">
-import type { Folder, State } from "../../type";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type { Folder } from "../../type";
 import type { Route } from "vue-router/types/router";
-import { useState } from "vuex-composition-helpers";
-import { useRoute } from "../../helpers/use-router";
 
-const route = useRoute();
+@Component
+export default class SearchCriteriaBreadcrumb extends Vue {
+    @State
+    readonly current_folder_ascendant_hierarchy!: Array<Folder>;
 
-const { current_folder_ascendant_hierarchy, is_loading_ascendant_hierarchy } = useState<
-    Pick<State, "current_folder_ascendant_hierarchy" | "is_loading_ascendant_hierarchy">
->(["current_folder_ascendant_hierarchy", "is_loading_ascendant_hierarchy"]);
+    @State
+    readonly is_loading_ascendant_hierarchy!: boolean;
 
-function getSearchInFolderRoute(folder: Folder): Route {
-    return {
-        ...route,
-        params: {
-            ...route.params,
-            folder_id: String(folder.id),
-        },
-        query: {
-            ...route.query,
-            offset: "0",
-        },
-    };
-}
+    getSearchInFolderRoute(folder: Folder): Route {
+        return {
+            ...this.$route,
+            params: {
+                ...this.$route.params,
+                folder_id: String(folder.id),
+            },
+            query: {
+                ...this.$route.query,
+                offset: "0",
+            },
+        };
+    }
 
-function getSearchInRootFolderRoute(): Route {
-    return {
-        ...route,
-        params: {},
-    };
+    getSearchInRootFolderRoute(): Route {
+        return {
+            ...this.$route,
+            params: {},
+        };
+    }
 }
 </script>

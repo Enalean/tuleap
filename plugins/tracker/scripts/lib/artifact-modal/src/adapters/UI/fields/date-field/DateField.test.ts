@@ -21,15 +21,14 @@ import { setCatalog } from "../../../../gettext-catalog";
 import { DateField } from "./DateField";
 import { onInput } from "./DateField";
 
-import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
-import type { HostElement } from "./DateField";
+import type { HostElement, FieldDateType } from "./DateField";
 
-function getField(data?: Partial<EditableDateFieldStructure>): EditableDateFieldStructure {
+function getField(data?: Partial<FieldDateType>): FieldDateType {
     return {
         field_id: 60,
         label: "Start date",
         ...data,
-    } as unknown as EditableDateFieldStructure;
+    } as unknown as FieldDateType;
 }
 
 describe("DateField", () => {

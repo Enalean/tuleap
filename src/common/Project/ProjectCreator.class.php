@@ -408,7 +408,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
         //Copy ugroups
         $ugroup_mapping = [];
-        $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping, $admin_user);
+        $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
         $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 

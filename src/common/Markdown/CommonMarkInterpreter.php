@@ -55,20 +55,20 @@ final class CommonMarkInterpreter implements ContentInterpretor
     public function getInterpretedContent(string $content): string
     {
         return $this->html_purifier->purify(
-            $this->converter->convert($content)->getContent(),
+            $this->converter->convertToHtml($content)->getContent(),
             CODENDI_PURIFIER_FULL
         );
     }
 
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
-        return $this->html_purifier->purifyHTMLWithReferences($this->converter->convert($content)->getContent(), $project_id);
+        return $this->html_purifier->purifyHTMLWithReferences($this->converter->convertToHtml($content)->getContent(), $project_id);
     }
 
     public function getContentStrippedOfTags(string $content): string
     {
         return $this->html_purifier->purify(
-            $this->converter->convert($content)->getContent(),
+            $this->converter->convertToHtml($content)->getContent(),
             Codendi_HTMLPurifier::CONFIG_STRIP_HTML
         );
     }

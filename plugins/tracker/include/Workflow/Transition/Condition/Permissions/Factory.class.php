@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
-
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_Condition_Permissions_Factory
 {
     /**
@@ -57,13 +54,17 @@ class Workflow_Transition_Condition_Permissions_Factory
         return $condition;
     }
 
-    public function duplicate(Transition $from_transition, $new_transition_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    /**
+     * Duplicate the conditions
+     */
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)
     {
         PermissionsManager::instance()->duplicatePermissions(
             $from_transition->getId(),
             $new_transition_id,
             [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION],
-            $duplication_user_group_mapping,
+            $ugroup_mapping,
+            $duplicate_type
         );
     }
 }

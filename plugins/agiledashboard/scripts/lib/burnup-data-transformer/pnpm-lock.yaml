@@ -1,7 +1,0 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-
-devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator

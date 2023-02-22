@@ -2,19 +2,16 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/concurrency-limit-pool': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/gettext': workspace:*
-  '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
   '@tuleap/plugin-docgen-docx': workspace:*
   '@tuleap/plugin-docgen-xlsx': workspace:*
   '@tuleap/plugin-testmanagement': workspace:*
   '@tuleap/plugin-tracker-rest-api-types': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/project-background': workspace:*
-  '@tuleap/tlp': workspace:*
   '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
@@ -29,14 +26,11 @@ specifiers:
   xlsx: ^0.18.5
 
 dependencies:
-  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:../agiledashboard/scripts/lib/scrum-milestone-header
   '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
   '@tuleap/plugin-docgen-xlsx': link:../document_generation/scripts/lib/xlsx
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/project-background': link:../../lib/frontend/project-background
-  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init

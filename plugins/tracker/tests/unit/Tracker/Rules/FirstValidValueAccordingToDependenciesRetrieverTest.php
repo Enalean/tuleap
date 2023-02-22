@@ -49,7 +49,6 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
     private Tracker_FormElement_Field_Selectbox|Stub $field_not_changed_2;
     private array $rules;
     private FirstValidValueAccordingToDependenciesRetriever $first_valid_value_according_to_dependencies_retriever;
-    private BindValueIdCollectionStub $value_collection;
 
     protected function setUp(): void
     {
@@ -63,21 +62,17 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
         $this->value_collection = BindValueIdCollectionStub::withValues(self::FIRST_VALUE_ID, self::SECOND_VALUE_ID, self::THIRD_VALUE_ID);
         $this->setUpRules($tracker);
 
-        $this->form_element_factory->method('getFieldById')->willReturnCallback(
-            fn (int $artifact_id): \Tracker_FormElement_Field => match ($artifact_id) {
-                202 => $this->field_not_changed_1,
-                203 => $this->field_not_changed_2,
-            }
-        );
+        $this->form_element_factory->method('getFieldById')->withConsecutive([202], [203])->willReturnOnConsecutiveCalls($this->field_not_changed_1, $this->field_not_changed_2);
 
         $changeset_value_field_not_changed_1 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
         $changeset_value_field_not_changed_2 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
-        $this->artifact->method('getValue')->willReturnCallback(
-            fn (\Tracker_FormElement_Field $field): Tracker_Artifact_ChangesetValue => match ($field) {
-                $this->field_not_changed_1 => $changeset_value_field_not_changed_1,
-                $this->field_not_changed_2 => $changeset_value_field_not_changed_2,
-            }
+        $this->artifact->method('getValue')->withConsecutive(
+            [$this->field_not_changed_2],
+            [$this->field_not_changed_2]
+        )->willReturnOnConsecutiveCalls(
+            $changeset_value_field_not_changed_1,
+            $changeset_value_field_not_changed_2
         );
 
         $changeset_value_field_not_changed_1->method('getValue')->willReturn([127]);

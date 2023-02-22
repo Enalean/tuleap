@@ -90,10 +90,10 @@ class ReferenceAdministrationBrowseController implements DispatchableWithRequest
      */
     public function getProject(array $variables): \Project
     {
-        if (! isset($variables['project_id'])) {
+        if (! isset($variables['id'])) {
             throw new NotFoundException();
         }
-        $project = $this->project_manager->getProject($variables['project_id']);
+        $project = $this->project_manager->getProject($variables['id']);
         if ($project->isError()) {
             throw new NotFoundException();
         }

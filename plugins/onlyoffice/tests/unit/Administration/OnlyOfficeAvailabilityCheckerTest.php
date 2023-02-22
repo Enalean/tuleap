@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
@@ -40,6 +39,8 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $checker = new OnlyOfficeAvailabilityChecker(
+            $this->createMock(\PluginManager::class),
+            new \onlyofficePlugin(null),
             $logger,
             IRetrieveDocumentServersStub::buildWithoutServer(),
         );
@@ -58,6 +59,8 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
 
         $checker = new OnlyOfficeAvailabilityChecker(
+            $this->createMock(\PluginManager::class),
+            new \onlyofficePlugin(null),
             $logger,
             IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString(''))),
         );
@@ -74,7 +77,9 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
     public function testItReturnFalseIfProjectDoesNotUseDocman(): void
     {
         $checker = new OnlyOfficeAvailabilityChecker(
-            new NullLogger(),
+            $this->createMock(\PluginManager::class),
+            new \onlyofficePlugin(null),
+            $this->createMock(LoggerInterface::class),
             IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
@@ -86,11 +91,40 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
         self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }
 
+    public function testItReturnFalseIfProjectIsNotAllowedToUseOnlyOffice(): void
+    {
+        $plugin_manager    = $this->createMock(\PluginManager::class);
+        $onlyoffice_plugin = new \onlyofficePlugin(null);
+        $checker           = new OnlyOfficeAvailabilityChecker(
+            $plugin_manager,
+            $onlyoffice_plugin,
+            $this->createMock(LoggerInterface::class),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
+        );
+
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withUsedService('cvs')
+            ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
+            ->build();
+
+        $plugin_manager
+            ->method('isPluginAllowedForProject')
+            ->with($onlyoffice_plugin, self::PROJECT_ID)
+            ->willReturn(false);
+
+        self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
+    }
+
     public function testHappyPathWithoutProjectRestrictions(): void
     {
-        $document_server = DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'));
-        $checker         = new OnlyOfficeAvailabilityChecker(
-            new NullLogger(),
+        $plugin_manager    = $this->createMock(\PluginManager::class);
+        $onlyoffice_plugin = new \onlyofficePlugin(null);
+        $document_server   = DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'));
+        $checker           = new OnlyOfficeAvailabilityChecker(
+            $plugin_manager,
+            $onlyoffice_plugin,
+            $this->createMock(LoggerInterface::class),
             IRetrieveDocumentServersStub::buildWith($document_server),
         );
 
@@ -100,12 +134,19 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
             ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
             ->build();
 
+        $plugin_manager
+            ->method('isPluginAllowedForProject')
+            ->with($onlyoffice_plugin, self::PROJECT_ID)
+            ->willReturn(true);
+
         self::assertTrue($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }
 
     public function testHappyPathWithProjectRestrictions(): void
     {
-        $document_server = DocumentServer::withProjectRestrictions(
+        $plugin_manager    = $this->createMock(\PluginManager::class);
+        $onlyoffice_plugin = new \onlyofficePlugin(null);
+        $document_server   = DocumentServer::withProjectRestrictions(
             1,
             'https://example.com',
             new ConcealedString('very_secret'),
@@ -113,8 +154,10 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
                 self::PROJECT_ID => new RestrictedProject(self::PROJECT_ID, 'blah', 'Blah'),
             ],
         );
-        $checker         = new OnlyOfficeAvailabilityChecker(
-            new NullLogger(),
+        $checker           = new OnlyOfficeAvailabilityChecker(
+            $plugin_manager,
+            $onlyoffice_plugin,
+            $this->createMock(LoggerInterface::class),
             IRetrieveDocumentServersStub::buildWith($document_server),
         );
 
@@ -123,6 +166,11 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
             ->withUsedService('cvs')
             ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
             ->build();
+
+        $plugin_manager
+            ->method('isPluginAllowedForProject')
+            ->with($onlyoffice_plugin, self::PROJECT_ID)
+            ->willReturn(true);
 
         self::assertTrue($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }

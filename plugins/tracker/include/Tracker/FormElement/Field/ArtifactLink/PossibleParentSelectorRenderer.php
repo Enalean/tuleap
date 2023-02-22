@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
+use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 class PossibleParentSelectorRenderer
 {
@@ -42,13 +43,7 @@ class PossibleParentSelectorRenderer
             return '';
         }
 
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../../frontend-assets',
-            '/assets/trackers'
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('artifact-links-field.js'));
-
+        ListPickerIncluder::includeArtifactLinksListPickerAssets($possible_parent_selector->tracker->getId());
         return $this->renderer->renderToString(
             'possible-parent-selector',
             new PossibleParentSelectorPresenter(

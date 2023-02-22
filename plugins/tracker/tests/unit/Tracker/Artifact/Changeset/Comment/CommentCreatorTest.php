@@ -27,7 +27,6 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -88,32 +87,11 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->reference_manager,
             $this->ugroup_inserter,
             $this->changeset_comment_indexer,
-            new TextValueValidator(),
         );
 
         $this->changeset_comment_indexer->method('indexNewChangesetComment');
 
         $creator->createComment($artifact, $comment);
-    }
-
-    public function createWithTooBigComment(): void
-    {
-        $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
-        $comment   = CommentCreation::fromNewComment(
-            NewComment::fromParts(
-                str_repeat('a', 70000),
-                CommentFormatIdentifier::buildText(),
-                $submitter,
-                self::SUBMISSION_TIMESTAMP,
-                $this->user_groups_that_are_allowed_to_see
-            ),
-            self::CHANGESET_ID,
-            new CreatedFileURLMapping()
-        );
-
-        $this->changeset_comment_indexer->method('indexNewChangesetComment');
-
-        $this->create($comment);
     }
 
     public function createWithComment(): void
@@ -136,7 +114,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->create($comment);
     }
 
-    public static function commentDataProvider(): array
+    public function commentDataProvider(): array
     {
         $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
         return [
@@ -206,13 +184,6 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('createNewVersion')->willReturn(false);
 
         $this->createWithComment();
-    }
-
-    public function testItThrowsIfTheCommentContentIsNotValid(): void
-    {
-        $this->expectException(CommentContentNotValidException::class);
-
-        $this->createWithTooBigComment();
     }
 
     public function testItSavesUserGroupsAllowedToSeePrivateComment(): void

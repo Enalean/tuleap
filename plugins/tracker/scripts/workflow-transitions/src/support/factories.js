@@ -101,8 +101,6 @@ const factories = {
         },
         presented: {
             unique_id: identityAsString,
-            field_ids: [],
-            fieldset_ids: [],
         },
     },
 };

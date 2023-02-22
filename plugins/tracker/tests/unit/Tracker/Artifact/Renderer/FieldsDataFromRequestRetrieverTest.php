@@ -41,7 +41,6 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
     private Stub|FirstPossibleValueInListRetriever $first_possible_value_retriever;
     private FieldsDataFromRequestRetriever $fields_data_from_request_retriever;
     private Stub|Tracker_FormElement_Field_List $field;
-    private \PFUser $user;
 
     protected function setUp(): void
     {

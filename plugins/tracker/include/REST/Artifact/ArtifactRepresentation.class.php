@@ -186,16 +186,14 @@ class ArtifactRepresentation
             $status_representation = null;
         }
 
-        $submitted_by_user = $artifact->getSubmittedByUser();
-
         return new self(
             JsonCast::toInt($artifact_id),
             self::ROUTE . '/' . $artifact_id,
             $artifact->getXRef(),
             $tracker_representation,
             new ProjectReference($artifact->getTracker()->getProject()),
-            JsonCast::toInt($submitted_by_user->getId()),
-            MinimalUserRepresentation::build($submitted_by_user),
+            JsonCast::toInt($artifact->getSubmittedBy()),
+            MinimalUserRepresentation::build($artifact->getSubmittedByUser()),
             JsonCast::toDate($artifact->getSubmittedOn()),
             $artifact->getUri(),
             self::ROUTE . '/' . $artifact_id . '/' . ChangesetRepresentation::ROUTE,

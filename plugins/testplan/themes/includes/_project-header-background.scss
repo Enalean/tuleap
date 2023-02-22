@@ -18,7 +18,7 @@
  */
 
 @use "@tuleap/project-background";
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@import "../../src/themes/BurningParrot/css/includes/global-variables";
 
 .project-with-background {
     .testplan-root-title,
@@ -34,7 +34,7 @@
 body {
     @include project-background.apply-background(
         ".testplan-root-title",
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
+        $sidebar-expanded-width,
+        $sidebar-collapsed-width
     );
 }

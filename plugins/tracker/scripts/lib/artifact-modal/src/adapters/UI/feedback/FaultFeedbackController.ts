@@ -17,27 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { NotifyFault } from "../../../domain/NotifyFault";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
-import type { EventDispatcher } from "../../../domain/EventDispatcher";
+import type { ClearFaultNotification } from "../../../domain/ClearFaultNotification";
 
 export type OnFaultHandler = (presenter: FaultFeedbackPresenter) => void;
 
-export type FaultFeedbackControllerType = {
-    registerFaultListener(handler: OnFaultHandler): void;
-};
+export type FaultFeedbackControllerType = NotifyFault &
+    ClearFaultNotification & {
+        registerFaultListener(handler: OnFaultHandler): void;
+    };
 
-export const FaultFeedbackController = (
-    event_dispatcher: EventDispatcher
-): FaultFeedbackControllerType => {
+export const FaultFeedbackController = (): FaultFeedbackControllerType => {
     let _handler: OnFaultHandler | undefined;
-    event_dispatcher.addObserver("WillNotifyFault", (event) => {
-        _handler?.(FaultFeedbackPresenter.fromFault(event.fault));
-    });
-    event_dispatcher.addObserver("WillClearFaultNotification", () => {
-        _handler?.(FaultFeedbackPresenter.buildEmpty());
-    });
 
     return {
         registerFaultListener: (handler: OnFaultHandler) => (_handler = handler),
+
+        onFault(fault): void {
+            _handler?.(FaultFeedbackPresenter.fromFault(fault));
+        },
+
+        clearFaultNotification(): void {
+            _handler?.(FaultFeedbackPresenter.buildEmpty());
+        },
     };
 };

@@ -30,15 +30,15 @@ describe("DisplayTeamsToAggregate", () => {
             },
         } as GetText;
 
-        it("Given document without list, Then error is thrown", () => {
+        it("Given document without list, Then error is thrown", async () => {
             const doc = createDocument();
 
-            expect(() => displayTeamsToAggregate(gettext, doc)).toThrowError(
+            await expect(() => displayTeamsToAggregate(gettext, doc)).rejects.toThrowError(
                 "No list to pick teams"
             );
         });
 
-        it("Given document with list, Then list picker is created", () => {
+        it("Given document with list, Then list picker is created", async () => {
             const doc = createDocument();
             doc.body.setAttribute("data-user-locale", "en-EN");
 
@@ -46,13 +46,15 @@ describe("DisplayTeamsToAggregate", () => {
             select.id = "program-management-choose-teams";
             doc.body.appendChild(select);
 
-            const create_list_picker = jest.spyOn(listPicker, "createListPicker").mockReturnValue({
-                destroy: () => {
-                    // Nothing to do since we did not really create something
-                },
-            });
+            const create_list_picker = jest
+                .spyOn(listPicker, "createListPicker")
+                .mockResolvedValue({
+                    destroy: () => {
+                        // Nothing to do since we did not really create something
+                    },
+                });
 
-            displayTeamsToAggregate(gettext, doc);
+            await displayTeamsToAggregate(gettext, doc);
             expect(create_list_picker).toHaveBeenCalledWith(select, {
                 is_filterable: true,
                 locale: "en-EN",

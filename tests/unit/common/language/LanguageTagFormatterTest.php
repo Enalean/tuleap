@@ -33,7 +33,7 @@ final class LanguageTagFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected_output, LanguageTagFormatter::formatAsRFC5646LanguageTag($input));
     }
 
-    public static function dataProviderLanguageTags(): array
+    public function dataProviderLanguageTags(): array
     {
         return [
             ['en_US', 'en-US'],

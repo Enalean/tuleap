@@ -24,15 +24,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_ChangesetValue_Integer;
 
+require_once __DIR__ . '/../../../../bootstrap.php';
+
 class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker_Artifact_ChangesetValue_Integer&Mockery\MockInterface
-     */
-    private $old_value;
-    private ChangesChecker $checker;
 
     protected function setUp(): void
     {

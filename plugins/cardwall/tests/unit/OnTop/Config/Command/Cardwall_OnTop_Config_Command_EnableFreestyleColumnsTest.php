@@ -25,13 +25,6 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tu
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_Dao&\Mockery\MockInterface
-     */
-    private $dao;
-    private Cardwall_OnTop_Config_Command_EnableFreestyleColumns $command;
-
     protected function setUp(): void
     {
         parent::setUp();

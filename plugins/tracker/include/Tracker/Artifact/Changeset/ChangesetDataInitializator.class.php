@@ -22,28 +22,28 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_Artifact_Changeset_ChangesetDataInitializator
 {
-    public function __construct(private Tracker_FormElementFactory $formelement_factory)
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
+
+    public function __construct(Tracker_FormElementFactory $formelement_factory)
     {
+        $this->formelement_factory = $formelement_factory;
     }
 
-    public function process(Artifact $artifact, array $fields_data): array
+    public function process(Artifact $artifact, array $fields_data)
     {
         $tracker_data = [];
 
         //only when a previous changeset exists
-        $previous_changeset = $artifact->getLastChangeset();
-        if ($previous_changeset && ! $previous_changeset instanceof Tracker_Artifact_Changeset_Null) {
-            foreach ($previous_changeset->getValues() as $key => $field) {
+        if ($artifact->getLastChangeset() && ! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
+            foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
                 if ($field instanceof Tracker_Artifact_ChangesetValue_Date) {
                     $tracker_data[$key] = $field->getTimestamp();
                 }
                 if ($field instanceof Tracker_Artifact_ChangesetValue_List) {
-                    $field_value = $field->getValue();
-                    if ($field_value) {
-                        $tracker_data[$key] = $field_value;
-                    } else {
-                        $tracker_data[$key] = [Tracker_FormElement_Field_List::NONE_VALUE];
-                    }
+                    $tracker_data[$key] = $field->getValue();
                 }
             }
         }
@@ -67,9 +67,6 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
             ) {
                 //user doesn't have access to field
                 $tracker_data[$field->getId()] = $field->getDefaultValue();
-            }
-            if ($field instanceof Tracker_FormElement_Field_List && ! isset($tracker_data[$field->getId()])) {
-                $tracker_data[$field->getId()] = [Tracker_FormElement_Field_List::NONE_VALUE];
             }
         }
 

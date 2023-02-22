@@ -97,7 +97,6 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerPrivateCommentUGroupExtractor
      */
     private $private_comment_extractor;
-    private int $summary_field_id;
 
     protected function setUp(): void
     {

@@ -1,6 +1,5 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-import "../themes/main.scss";
 
 import HighlightFilter from "./highlight-filter.js";
 import CardFieldsDirective from "./card-fields-directive.js";

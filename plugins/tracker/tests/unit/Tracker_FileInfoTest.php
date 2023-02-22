@@ -95,7 +95,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($is_image, $fi->isImage());
     }
 
-    public static function dataProviderIsImage(): array
+    public function dataProviderIsImage(): array
     {
         return [
             ['image/png', true],
@@ -117,7 +117,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_human_readable_filesize, $f->getHumanReadableFilesize());
     }
 
-    public static function dataProviderHumanReadableFilesize(): array
+    public function dataProviderHumanReadableFilesize(): array
     {
         return [
             [0, '0 B'],

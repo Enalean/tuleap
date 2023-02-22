@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`feedback-display displaySuccess Clear existing feedbacks, display the success one and inform that emails have been sent 1`] = `
+<body>
+  
+                
+  <div
+    id="invite-buddies-modal"
+  >
+    
+                    
+    <div
+      data-failure-feedback-message="Invitation could not be sent to:"
+      data-success-feedback-message="Invitation has been successfully sent to:"
+      id="invite-buddies-modal-feedback"
+    >
+      <div
+        class="tlp-alert-success alert-success alert"
+      >
+        Invitation has been successfully sent to: wendy@example.com, peter@example.com
+      </div>
+    </div>
+    
+                    
+    <div
+      class="invite-buddies-email-sent"
+      id="invite-buddies-modal-body"
+    />
+    
+                    
+    <div
+      class="invite-buddies-email-sent"
+      id="invite-buddies-modal-footer"
+    />
+    
+                
+  </div>
+  
+            
+</body>
+`;
+
+exports[`feedback-display displaySuccess Extracts emails that are in error to display a warning 1`] = `
+<body>
+  
+                
+  <div
+    id="invite-buddies-modal"
+  >
+    
+                    
+    <div
+      data-failure-feedback-message="Invitation could not be sent to:"
+      data-success-feedback-message="Invitation has been successfully sent to:"
+      id="invite-buddies-modal-feedback"
+    >
+      <div
+        class="tlp-alert-success alert-success alert"
+      >
+        Invitation has been successfully sent to: wendy@example.com
+      </div>
+      <div
+        class="tlp-alert-warning alert-warning alert"
+      >
+        Invitation could not be sent to: peter@example.com
+      </div>
+    </div>
+    
+                    
+    <div
+      class="invite-buddies-email-sent"
+      id="invite-buddies-modal-body"
+    />
+    
+                    
+    <div
+      class="invite-buddies-email-sent"
+      id="invite-buddies-modal-footer"
+    />
+    
+                
+  </div>
+  
+            
+</body>
+`;

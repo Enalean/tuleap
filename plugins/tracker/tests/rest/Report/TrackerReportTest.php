@@ -26,7 +26,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 final class TrackerReportTest extends TrackerBase
 {
-    public function testGETArtifactReportWithRendererTableValues(): void
+    public function testGETArtifactReportWithRendererTableValues()
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'trackers/' . urlencode($this->tracker_reports_tracker_id) . '/tracker_reports')
@@ -52,14 +52,5 @@ final class TrackerReportTest extends TrackerBase
         );
 
         self::assertEquals(200, $report_artifacts_response->getStatusCode());
-
-        $response_flat_representation = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'tracker_reports/' . urlencode($report_id) . '/artifacts?values=from_table_renderer&output_format=flat')
-        );
-        self::assertEquals(200, $response_flat_representation->getStatusCode());
-        self::assertJsonStringNotEqualsJsonString(
-            $report_artifacts_response->getBody()->getContents(),
-            $response_flat_representation->getBody()->getContents(),
-        );
     }
 }

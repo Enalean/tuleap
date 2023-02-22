@@ -36,7 +36,7 @@ class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $detector->isFileALFSFile($file));
     }
 
-    public static function fileProvider()
+    public function fileProvider()
     {
         $file01 = <<<EOS
 version https://git-lfs.github.com/spec/v1

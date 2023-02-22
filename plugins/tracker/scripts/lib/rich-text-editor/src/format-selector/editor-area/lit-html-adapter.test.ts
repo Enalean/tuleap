@@ -21,14 +21,15 @@ import type { GettextProvider } from "@tuleap/gettext";
 import { html } from "lit/html.js";
 import { renderHTMLOrTextEditor, renderMarkdownEditor } from "./lit-html-adapter";
 import { stripLitExpressionComments } from "../../test-helper";
-import { initGettextSync } from "@tuleap/gettext";
 
 describe(`lit-html-adapter`, () => {
     let gettext_provider: GettextProvider, doc: Document, mount_point: HTMLDivElement;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         mount_point = doc.createElement("div");
-        gettext_provider = initGettextSync("rich-text-editor", {}, "en_US");
+        gettext_provider = {
+            gettext: (msgid): string => msgid,
+        };
     });
 
     describe(`renderMarkdownEditor()`, () => {

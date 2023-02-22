@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\DocumentServer;
 
-use Tuleap\Project\Icons\EmojiCodepointConverter;
-
 /**
  * @psalm-immutable
  */
@@ -31,19 +29,5 @@ final class RestrictedProject
 {
     public function __construct(public int $id, public string $name, public string $label)
     {
-    }
-
-    /**
-     * @param array{project_id: int, name: string, label: string, icon_codepoint: string} $row
-     */
-    public static function fromRow(array $row): self
-    {
-        $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($row['icon_codepoint']);
-
-        return new self(
-            $row['project_id'],
-            $row['name'],
-            $project_icon ? $project_icon . ' ' . $row['label'] : $row['label']
-        );
     }
 }

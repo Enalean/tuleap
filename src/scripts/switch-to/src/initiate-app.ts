@@ -32,7 +32,6 @@ import {
     IS_TROVE_CAT_ENABLED,
     SEARCH_FORM,
 } from "./injection-keys";
-import { uri } from "@tuleap/fetch-result";
 
 export async function init(vue_mount_point: HTMLElement, component: Component): Promise<void> {
     const gettext = await initVueGettext(createGettext, (locale: string) => {
@@ -71,7 +70,7 @@ export async function init(vue_mount_point: HTMLElement, component: Component): 
     store.$patch(root_state);
 
     const fulltext_state: FullTextState = {
-        fulltext_search_url: uri`/api/v1/search`,
+        fulltext_search_url: "/api/v1/search",
         fulltext_search_results: {},
         fulltext_search_is_error: false,
         fulltext_search_is_loading: false,

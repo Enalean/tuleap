@@ -50,36 +50,9 @@ if ($request->exist('export')) {
     exit;
 }
 
-$old_value = $value;
-if (stristr($old_value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
-    $old_value = 'ugroup_anonymous_users_name_key';
-}
-$start_date = null;
-if ($startDate) {
-    [$timestamp,] = util_date_to_unixtime($startDate);
-    $start_date   = new DateTimeImmutable('@' . $timestamp);
-}
-$end_date = null;
-if ($endDate) {
-    [$timestamp,] = util_date_to_unixtime($endDate);
-    $end_date     = new DateTimeImmutable('@' . $timestamp);
-}
-
-$dao     = new ProjectHistoryDao();
-$results = $dao->getHistory(
-    $project,
-    $offset,
-    $limit,
-    $event,
-    $subEvents,
-    get_history_entries(),
-    $old_value,
-    $start_date,
-    $end_date,
-    $by ? UserManager::instance()->findUser($by) : null,
-);
-
-$event_manager = EventManager::instance();
+$dao            = new ProjectHistoryDao();
+$history_filter = build_grouphistory_filter($event, $subEvents, $value, $startDate, $endDate, $by);
+$results        = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
 
 $renderer = new AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
@@ -88,7 +61,7 @@ $renderer->renderANoFramedPresenter(
     'project-history',
     new ProjectHistoryPresenter(
         $project,
-        new ProjectHistoryResultsPresenter($results, $event_manager),
+        new ProjectHistoryResultsPresenter($results),
         $limit,
         $offset,
         new ProjectHistorySearchPresenter(
@@ -98,8 +71,7 @@ $renderer->renderANoFramedPresenter(
             $value,
             $startDate,
             $endDate,
-            $by,
-            $event_manager,
+            $by
         )
     )
 );

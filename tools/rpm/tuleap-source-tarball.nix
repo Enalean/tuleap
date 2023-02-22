@@ -45,6 +45,7 @@ let
           !plugins/*/scripts/*/frontend-assets
           !plugins/*/resources/templates/*
           plugins/*/themes
+          tools/distlp/
           tools/publish_js_library/
           tools/rpm/
           !tools/utils/setup_templates/*/*_template.xml

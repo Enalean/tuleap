@@ -196,11 +196,11 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
     }
 
-    public static function dataProviderScopeFailures(): array
+    public function dataProviderScopeFailures(): array
     {
         return [
             'No scopes associated with the access token' => [],
-            'None of the scopes covers the required scope' => [self::buildScopeCoveringNothing(), self::buildScopeCoveringNothing()],
+            'None of the scopes covers the required scope' => [$this->buildScopeCoveringNothing(), $this->buildScopeCoveringNothing()],
         ];
     }
 
@@ -259,7 +259,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         return $scope;
     }
 
-    public static function buildScopeCoveringNothing(): AuthenticationScope
+    public function buildScopeCoveringNothing(): AuthenticationScope
     {
         return new /** @psalm-immutable */ class implements AuthenticationScope
         {

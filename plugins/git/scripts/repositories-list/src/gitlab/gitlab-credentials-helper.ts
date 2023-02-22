@@ -18,7 +18,14 @@
  */
 import type { GitLabCredentials } from "../type";
 
-export function credentialsAreEmpty(credentials: GitLabCredentials): boolean {
+export {
+    credentialsAreEmpty,
+    serverUrlIsValid,
+    formatUrlToGetAllProject,
+    formatUrlToGetProjectFromId,
+};
+
+function credentialsAreEmpty(credentials: GitLabCredentials): boolean {
     return (
         credentials.token === undefined ||
         credentials.token === "" ||
@@ -27,13 +34,13 @@ export function credentialsAreEmpty(credentials: GitLabCredentials): boolean {
     );
 }
 
-export function serverUrlIsValid(server_url: string): boolean {
+function serverUrlIsValid(server_url: string): boolean {
     const reg_exp = new RegExp("^(http://|https://|\\?)");
 
     return reg_exp.test(server_url);
 }
 
-export function formatUrlToGetAllProject(server_url: string): string {
+function formatUrlToGetAllProject(server_url: string): string {
     let url = server_url;
     if (server_url.slice(-1) === "/") {
         url = server_url.slice(0, -1);
@@ -42,7 +49,7 @@ export function formatUrlToGetAllProject(server_url: string): string {
     return url + "/api/v4/projects?membership=true&per_page=20&min_access_level=40";
 }
 
-export function formatUrlToGetProjectFromId(server_url: string, repository_id: number): string {
+function formatUrlToGetProjectFromId(server_url: string, repository_id: number): string {
     let url = server_url;
     if (server_url.slice(-1) === "/") {
         url = server_url.slice(0, -1);

@@ -60,7 +60,7 @@ class CookieManager
     public static function getCookieName(string $name): string
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
-        $cookie_name   = "{$cookie_prefix}_{$name}";
+        $cookie_name   = "${cookie_prefix}_${name}";
 
         return self::PREFIX_HOST . $cookie_name;
     }

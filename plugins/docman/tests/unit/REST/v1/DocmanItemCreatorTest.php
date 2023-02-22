@@ -843,7 +843,9 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_time = new \DateTimeImmutable();
 
         $post_representation                    = new DocmanEmptyPOSTRepresentation();
+        $post_representation->type              = ItemRepresentation::TYPE_EMPTY;
         $post_representation->title             = 'Title';
+        $post_representation->parent_id         = 11;
         $post_representation->status            = 'approved';
         $post_representation->obsolescence_date = '2019-10-11';
 
@@ -1173,7 +1175,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($created_item_representation->file_properties);
     }
 
-    public static function permissionsForGroupsSetRepresentationDataProvider(): array
+    public function permissionsForGroupsSetRepresentationDataProvider(): array
     {
         return [
             [null],

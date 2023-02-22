@@ -94,7 +94,7 @@ final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertInstanceOf(UnhandledTopicFault::class, $result->error);
     }
 
-    public static function provideMalformedPayloads(): array
+    public function provideMalformedPayloads(): array
     {
         return [
             'missing git_repository_id'       => [[]],

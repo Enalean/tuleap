@@ -104,7 +104,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $this->rest_authentication_flow->isAllowed(\Mockery::mock(ApiMethodInfo::class));
     }
 
-    public static function dataProviderExceptionsAuthentication(): array
+    public function dataProviderExceptionsAuthentication(): array
     {
         return [
             [

@@ -23,8 +23,6 @@ import type { FetchInterface } from "./FetchInterface";
 import { NetworkFault } from "./NetworkFault";
 import type { SupportedHTTPMethod } from "./constants";
 import type { ErrorResponseHandler } from "./ErrorResponseHandler";
-import type { EncodedURI } from "./uri-string-template";
-import { getEncodedURIString } from "./uri-string-template";
 
 type GeneralOptions = {
     readonly method: SupportedHTTPMethod;
@@ -40,22 +38,16 @@ type PostPutPatchOptions = GeneralOptions & {
 export type ResponseRetrieverOptions = GeneralOptions | PostPutPatchOptions;
 
 export type RetrieveResponse = {
-    retrieveResponse(
-        uri: EncodedURI,
-        options: ResponseRetrieverOptions
-    ): ResultAsync<Response, Fault>;
+    retrieveResponse(uri: string, options: ResponseRetrieverOptions): ResultAsync<Response, Fault>;
 };
 
 export const ResponseRetriever = (
     fetcher: FetchInterface,
     error_handler: ErrorResponseHandler
 ): RetrieveResponse => ({
-    retrieveResponse(
-        uri: EncodedURI,
-        options: ResponseRetrieverOptions
-    ): ResultAsync<Response, Fault> {
+    retrieveResponse(uri: string, options: ResponseRetrieverOptions): ResultAsync<Response, Fault> {
         const init: RequestInit = { ...options };
-        const fetch_promise = fetcher.fetch(getEncodedURIString(uri), init);
+        const fetch_promise = fetcher.fetch(uri, init);
         return ResultAsync.fromPromise(fetch_promise, NetworkFault.fromError).andThen(
             error_handler.handleErrorResponse
         );

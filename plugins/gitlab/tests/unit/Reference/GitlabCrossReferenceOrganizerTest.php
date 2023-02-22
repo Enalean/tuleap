@@ -344,14 +344,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer
             ->expects(self::exactly(2))
             ->method('moveCrossReferenceToSection')
-            ->willReturnCallback(
-                function (CrossReferencePresenter $cross_reference_presenter, string $section_label) use ($a_ref, $another_ref): void {
-                    match (true) {
-                        $cross_reference_presenter === $a_ref && $section_label === 'thenightwatch/root/project01',
-                            $cross_reference_presenter === $another_ref && $section_label === 'foodstocks/root/project02' => true
-                    };
-                }
-            );
+            ->withConsecutive([$a_ref, 'thenightwatch/root/project01'], [$another_ref, 'foodstocks/root/project02']);
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }

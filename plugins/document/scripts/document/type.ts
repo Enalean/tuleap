@@ -32,19 +32,16 @@ import {
     TYPE_WIKI,
 } from "./constants";
 
-export type FolderContentItem = Item | FakeItem;
-
 export interface State {
     is_loading_folder: boolean;
     current_folder: Folder;
-    folder_content: Array<FolderContentItem>;
+    folder_content: Array<Item | FakeItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     is_loading_ascendant_hierarchy: boolean;
     is_loading_currently_previewed_item: boolean;
     root_title: string;
     currently_previewed_item: Item | null;
     files_uploads_list: Array<ItemFile | FakeItem>;
-    show_post_deletion_notification: boolean;
 }
 
 export interface RootState extends State {
@@ -130,7 +127,7 @@ export const ItemType = [
     TYPE_LINK,
     TYPE_EMPTY,
 ] as const;
-export type ItemType = (typeof ItemType)[number];
+export type ItemType = typeof ItemType[number];
 
 export interface Item extends MinimalItem {
     description: string;
@@ -378,10 +375,10 @@ export const AllowedSearchType = [
     "link",
     "empty",
 ] as const;
-export type AllowedSearchType = (typeof AllowedSearchType)[number];
+export type AllowedSearchType = typeof AllowedSearchType[number];
 
 export const AllowedSearchDateOperator = [">", "=", "<"];
-export type AllowedSearchDateOperator = (typeof AllowedSearchDateOperator)[number];
+export type AllowedSearchDateOperator = typeof AllowedSearchDateOperator[number];
 
 export interface SearchDate {
     readonly operator: AllowedSearchDateOperator;
@@ -457,7 +454,7 @@ export const HardcodedPropertyName = [
     "status",
 ] as const;
 export type AllowedSearchBodyPropertyName =
-    | (typeof HardcodedPropertyName)[number]
+    | typeof HardcodedPropertyName[number]
     | AdditionalFieldNumber;
 
 interface SearchBodyProperty {

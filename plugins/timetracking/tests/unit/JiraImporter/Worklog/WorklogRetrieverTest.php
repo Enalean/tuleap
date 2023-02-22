@@ -52,7 +52,7 @@ final class WorklogRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tests($worklogs);
     }
 
-    public static function getTestData(): iterable
+    public function getTestData(): iterable
     {
         return [
             'it builds worklogs from Jira Cloud API Response' => [

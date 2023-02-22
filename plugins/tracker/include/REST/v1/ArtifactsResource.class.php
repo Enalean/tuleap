@@ -92,10 +92,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -107,12 +104,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
@@ -499,7 +494,7 @@ class ArtifactsResource extends AuthenticatedResource
      * Get all artifacts linked by type
      *
      * Get all the artifacts linked by type.
-     * If no type is provided, it will search linked artifacts with no type.
+     * If no type is provided, it will search linked artifacts witn no type.
      *
      * @url GET {id}/linked_artifacts
      *
@@ -681,11 +676,8 @@ class ArtifactsResource extends AuthenticatedResource
      */
     protected function putId($id, array $values, ?NewChangesetCommentRepresentation $comment = null)
     {
-        $transaction_executor = new DBTransactionExecutorWithConnection(
-            DBFactory::getMainTuleapDBConnection()
-        );
-        $user                 = $this->user_manager->getCurrentUser();
-        $artifact             = $this->getArtifactById($user, $id);
+        $user     = $this->user_manager->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
@@ -701,8 +693,7 @@ class ArtifactsResource extends AuthenticatedResource
                 new ArtifactLinkValidator(
                     $this->artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao,
-                    $event_dispatcher,
+                    $usage_dao
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -717,7 +708,7 @@ class ArtifactsResource extends AuthenticatedResource
             $fields_retriever,
             $this->event_manager,
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
-            $transaction_executor,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
             new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
@@ -733,11 +724,10 @@ class ArtifactsResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new TextValueValidator(),
             )
         );
 
-        $fields_data_builder       = new FieldsDataBuilder(
+        $fields_data_builder = new FieldsDataBuilder(
             $this->formelement_factory,
             new NewArtifactLinkChangesetValueBuilder(
                 new ArtifactForwardLinksRetriever(
@@ -748,36 +738,14 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
-        $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
-        $updater                   = new ArtifactUpdater(
+        $updater             = new ArtifactUpdater(
             $fields_data_builder,
-            $changeset_creator,
-            $update_conditions_checker,
-        );
-
-        $artifact_factory =  Tracker_ArtifactFactory::instance();
-
-        $reverse_link_retriever = new ReverseLinksRetriever(
-            new ReverseLinksDao(),
-            $artifact_factory
-        );
-
-        $artifact_from_rest_updater = new ArtifactUpdateHandler(
-            $changeset_creator,
-            $this->formelement_factory,
-            $artifact_factory,
-            $event_dispatcher
+            $changeset_creator
         );
 
         $this->sendAllowHeadersForArtifact();
 
-        $put_handler = new PUTHandler(
-            $fields_data_builder,
-            $reverse_link_retriever,
-            $artifact_from_rest_updater,
-            $transaction_executor,
-            $update_conditions_checker,
-        );
+        $put_handler = new PUTHandler($fields_data_builder, $updater);
         $put_handler->handle($values, $artifact, $user, $comment);
 
         $this->sendLastModifiedHeader($artifact);

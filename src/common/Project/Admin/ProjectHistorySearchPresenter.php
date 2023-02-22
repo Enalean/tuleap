@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project\Admin;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-
 class ProjectHistorySearchPresenter
 {
     public $events;
@@ -48,7 +46,6 @@ class ProjectHistorySearchPresenter
         $selected_from,
         $selected_to,
         $selected_by,
-        private EventDispatcherInterface $event_dispatcher,
     ) {
         $this->buildDatesBox($selected_from, $selected_to);
         $this->buildEventsBox($possible_events, $selected_event, $selected_subevents);
@@ -114,10 +111,9 @@ class ProjectHistorySearchPresenter
 
             $translated_events = [];
             foreach ($events as $event) {
-                $history_label       = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($event));
                 $translated_events[] = [
                     'key'        => $event,
-                    'label'      => $history_label->getLabel() ?? $GLOBALS['Language']->getOverridableText('project_admin_utils', $event),
+                    'label'      => $GLOBALS['Language']->getOverridableText('project_admin_utils', $event),
                     'is_current' => isset($selected_subevents[$event]),
                 ];
             }

@@ -20,20 +20,12 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse&\Mockery\MockInterface
-     */
-    private $response;
-    /**
-     * @var BackendService&\Mockery\MockInterface
-     */
-    private $backend_service;
-    private Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper $command;
 
     protected function setUp(): void
     {

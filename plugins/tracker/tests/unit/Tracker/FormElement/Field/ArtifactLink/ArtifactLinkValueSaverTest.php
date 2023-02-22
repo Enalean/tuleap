@@ -27,6 +27,8 @@ use Tracker_ArtifactLinkInfo;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\GlobalResponseMock;
 
+require_once __DIR__ . '/../../../../bootstrap.php';
+
 class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -68,22 +70,6 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\ArtifactLinksUsageDao
      */
     private $artifact_link_usage_dao;
-    /**
-     * @var \Mockery\MockInterface&\Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\MockInterface&\Tracker
-     */
-    private $tracker_child;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact&\Mockery\MockInterface
-     */
-    private $another_artifact;
-    /**
-     * @var Tracker_Workflow_Trigger_RulesManager&\Mockery\MockInterface
-     */
-    private $rules_manager;
 
     protected function setUp(): void
     {

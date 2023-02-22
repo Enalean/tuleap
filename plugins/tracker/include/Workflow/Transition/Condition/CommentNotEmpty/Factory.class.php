@@ -61,9 +61,15 @@ class Workflow_Transition_Condition_CommentNotEmpty_Factory //phpcs:ignore
         return new Workflow_Transition_Condition_CommentNotEmpty($transition, $this->dao, $is_comment_required);
     }
 
+    /**
+     * Duplicate the conditions
+     */
     public function duplicate(
         Transition $from_transition,
         $new_transition_id,
+        $field_mapping,
+        $ugroup_mapping,
+        $duplicate_type,
     ) {
         $this->dao->duplicate($from_transition->getId(), $new_transition_id);
     }

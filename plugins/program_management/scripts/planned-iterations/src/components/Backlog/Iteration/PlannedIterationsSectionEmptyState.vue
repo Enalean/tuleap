@@ -46,6 +46,7 @@
 import Vue from "vue";
 import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
+import { sprintf } from "sprintf-js";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
 
 import SvgPlannedIterationsEmptyState from "./SVGPlannedIterationsEmptyState.vue";
@@ -74,9 +75,7 @@ export default class PlannedIterationsSectionEmptyState extends Vue {
             return this.$gettext("There is no iteration yet.");
         }
 
-        return this.$gettextInterpolate(this.$gettext("There is no %{ iteration_label } yet."), {
-            iteration_label: this.iterations_labels.sub_label,
-        });
+        return sprintf(this.$gettext("There is no %s yet."), this.iterations_labels.sub_label);
     }
 
     get create_the_first_iteration_text(): string {
@@ -84,9 +83,7 @@ export default class PlannedIterationsSectionEmptyState extends Vue {
             return this.$gettext("Create the first iteration");
         }
 
-        return this.$gettextInterpolate(this.$gettext("Create the first %{ iteration_label }"), {
-            iteration_label: this.iterations_labels.sub_label,
-        });
+        return sprintf(this.$gettext("Create the first %s"), this.iterations_labels.sub_label);
     }
 
     get create_iteration_url(): string {

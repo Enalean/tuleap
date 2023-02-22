@@ -268,7 +268,26 @@
                                 </span>
                             </p>
                         </div>
-                        {{> invited-by }}
+                        {{# invited_by }}
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# gettext }}Invited by{{/gettext}}</label>
+                                {{# has_been_invited }}
+                                    {{# invited_by_users }}
+                                        <div>
+                                            <div class="tlp-avatar-mini">
+                                                {{# has_avatar }}
+                                                    <img src="{{ avatar_url }}">
+                                                {{/ has_avatar }}
+                                            </div>
+                                            {{ display_name }}
+                                        </div>
+                                    {{/ invited_by_users }}
+                                {{/ has_been_invited }}
+                                {{^ has_been_invited }}
+                                    <span class="tlp-property-empty">{{# gettext }}Nobody{{/ gettext }}</span>
+                                {{/ has_been_invited }}
+                            </div>
+                        {{/ invited_by }}
                     {{/ access }}
                 </section>
             </div>

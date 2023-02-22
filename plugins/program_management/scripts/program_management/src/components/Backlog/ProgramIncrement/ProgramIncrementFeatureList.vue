@@ -77,10 +77,10 @@ export default class ProgramIncrementFeatureList extends Vue {
     @Prop({ required: true })
     readonly increment!: ProgramIncrement;
 
-    features: Array<Feature> = [];
-    error_message = "";
-    has_error = false;
-    is_loading = false;
+    private features: Array<Feature> = [];
+    private error_message = "";
+    private has_error = false;
+    private is_loading = false;
 
     @Getter
     readonly getFeaturesInProgramIncrement!: (increment_id: number) => Feature[];

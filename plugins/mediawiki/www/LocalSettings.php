@@ -29,9 +29,6 @@ use Tuleap\Mediawiki\MediawikiMathExtensionEnabler;
 
 /* C style inclusion guard. Yes, I know. Don’t comment on it. */
 
-// This is need since the switch to PHP 8.1
-mysqli_report(MYSQLI_REPORT_OFF);
-
 if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 

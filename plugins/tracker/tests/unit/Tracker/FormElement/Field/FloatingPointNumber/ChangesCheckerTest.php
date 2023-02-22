@@ -28,12 +28,6 @@ class ChangesCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Tracker_Artifact_ChangesetValue_Float&Mockery\MockInterface
-     */
-    private $old_value;
-    private ChangesChecker $checker;
-
     protected function setUp(): void
     {
         parent::setUp();

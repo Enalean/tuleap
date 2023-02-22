@@ -22,7 +22,6 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
@@ -415,11 +414,17 @@ class TransitionFactory
     }
 
     /**
+     * Duplicate the transitions
+     *
      * @param array $values array of old and new values of the field
      * @param int $workflow_id the workflow id
      * @param Transition[] $transitions the transitions to duplicate
+     * @param array $field_mapping the field mapping
+     * @param array $ugroup_mapping the ugroup mapping
+     * @param bool $duplicate_type true if duplicate static perms, false otherwise
+     *
      */
-    public function duplicate($values, $workflow_id, array $transitions, array $field_mapping, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): void
+    public function duplicate($values, $workflow_id, array $transitions, $field_mapping, $ugroup_mapping, $duplicate_type): void
     {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
@@ -447,7 +452,7 @@ class TransitionFactory
                 $new_transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
 
                 // Duplicate permissions
-                $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $duplication_user_group_mapping);
+                $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
                 $this->transition_post_action_factory->duplicate($transition, $new_transition_id, $field_mapping);

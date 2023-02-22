@@ -20,6 +20,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+require_once __DIR__ . '/../../../bootstrap.php';
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerProjectAdminOwnerOfEverythingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,22 +47,16 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends \Tuleap\Test\PH
 
     /** @var ProjectManager */
     protected $project_manager;
-    /**
-     * @var \Mockery\MockInterface&Git_Driver_Gerrit_MembershipManager
-     */
-    private $membership_manager;
-    /**
-     * @var Project&\Mockery\MockInterface
-     */
-    private $project;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->driver          = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->remote_server   = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $this->driver              = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $this->driver_factory      = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
+        $this->remote_server       = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $this->gerrit_user_manager = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
+        $this->project_manager     = \Mockery::spy(\ProjectManager::class);
 
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
@@ -68,8 +64,8 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends \Tuleap\Test\PH
             \Git_Driver_Gerrit_MembershipManager::class,
             [
                 \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
-                \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock(),
-                \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+                $this->driver_factory,
+                $this->gerrit_user_manager,
                 Mockery::mock('Git_RemoteServer_GerritServerFactory'),
                 Mockery::mock(\Psr\Log\LoggerInterface::class),
                 $this->ugroup_manager,

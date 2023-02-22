@@ -59,7 +59,7 @@ class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function userReferenceProvider()
+    public function userReferenceProvider()
     {
         $user = new class extends \PFUser {
             public function __construct()

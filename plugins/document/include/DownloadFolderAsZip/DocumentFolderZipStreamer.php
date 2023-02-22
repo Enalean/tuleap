@@ -106,7 +106,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
 
         return $this->binary_file_response_builder->fromCallback(
             $request,
-            $this->buildStreamFolderArchiveCallback($folder, $project, $user, new \DateTimeImmutable()),
+            $this->buildStreamFolderArchiveCallback($folder, $project, $user),
             $folder->getTitle() . '.zip',
             'application/zip'
         );
@@ -152,16 +152,13 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
     /**
      * @psalm-return callable():void
      */
-    private function buildStreamFolderArchiveCallback(\Docman_Folder $folder, Project $project, \PFUser $user, \DateTimeImmutable $current_date): callable
+    private function buildStreamFolderArchiveCallback(\Docman_Folder $folder, Project $project, \PFUser $user): callable
     {
-        return function () use ($folder, $project, $user, $current_date): void {
+        return function () use ($folder, $project, $user): void {
             $options = new Archive();
             $options->setStatFiles(true);
             $options->setLargeFileSize(0);
             $options->setZeroHeader(true);
-            $options->setComment(
-                sprintf('Tuleap does not generate stable archive, fingerprint the content if needed (%d)', $current_date->getTimestamp())
-            );
 
             $zip                    = new ZipStream(null, $options);
             $errors_listing_builder = new ErrorsListingBuilder();

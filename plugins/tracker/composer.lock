@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c49056558e3f1890b94e04a65b21676",
+    "content-hash": "a0d41e01a2128c9c279b300d2ddf77de",
     "packages": [
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "8.0.0",
+            "version": "7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "65c7e6110de0096c951f9efed585980de2c1ee35"
+                "reference": "81d84bbc6a73b913110e155e98059526825c7ee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/65c7e6110de0096c951f9efed585980de2c1ee35",
-                "reference": "65c7e6110de0096c951f9efed585980de2c1ee35",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/81d84bbc6a73b913110e155e98059526825c7ee3",
+                "reference": "81d84bbc6a73b913110e155e98059526825c7ee3",
                 "shasum": ""
             },
             "require": {
                 "ext-mailparse": "*",
-                "php": "^8.0"
+                "php": "^7.2|^8.0"
             },
             "replace": {
                 "exorus/php-mime-mail-parser": "*",
@@ -75,7 +75,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "A fully tested email parser for PHP 8.0+ (mailparse extension wrapper).",
+            "description": "A fully tested email parser for PHP 7.2+ (mailparse extension wrapper).",
             "homepage": "https://github.com/php-mime-mail-parser/php-mime-mail-parser",
             "keywords": [
                 "MimeMailParser",
@@ -87,9 +87,15 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/issues",
-                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/8.0.0"
+                "source": "https://github.com/php-mime-mail-parser/php-mime-mail-parser/tree/7.1.2"
             },
-            "time": "2022-11-06T16:06:22+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/eXorus",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-04-16T07:56:53+00:00"
         }
     ],
     "packages-dev": [],

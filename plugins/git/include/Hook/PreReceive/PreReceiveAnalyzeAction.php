@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\PreReceive;
 
-use ForgeConfig;
 use GitRepositoryFactory;
 use Tuleap\WebAssembly\WASMCaller;
 
@@ -33,29 +32,16 @@ final class PreReceiveAnalyzeAction
     }
 
     /**
-     * @psalm-taint-escape file
-     */
-    private function getPossibleCustomPreReceiveHookPath(\GitRepository $repository): string
-    {
-        return ForgeConfig::get('sys_data_dir') . '/untrusted-code/git/pre-receive-hook/' . (int) $repository->getId() . '.wasm';
-    }
-
-    /**
      * Analyze information related to a git object reference
      *
      * @throws PreReceiveRepositoryNotFoundException
-     * @throws PreReceiveWasmNotFoundException
+     * @throws PreReceiveCannotRetrieveReferenceException
      */
     public function preReceiveAnalyse(string $repository_id, array $pre_receive_args): string
     {
         $repository = $this->git_repository_factory->getRepositoryById((int) $repository_id);
         if ($repository === null) {
             throw new PreReceiveRepositoryNotFoundException();
-        }
-
-        $wasm_path = $this->getPossibleCustomPreReceiveHookPath($repository);
-        if (! is_file($wasm_path)) {
-            throw new PreReceiveWasmNotFoundException();
         }
 
         $hook_data = new PreReceiveHookData();
@@ -67,6 +53,6 @@ final class PreReceiveAnalyzeAction
 
         $json_in = json_encode($hook_data, JSON_THROW_ON_ERROR);
 
-        return $this->wasm_caller->call($wasm_path, $json_in);
+        return $this->wasm_caller->call($json_in);
     }
 }

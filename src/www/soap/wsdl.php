@@ -20,7 +20,5 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 $wsdl_renderer = new SOAP_WSDLRenderer();
 $wsdl_renderer->render(\Tuleap\ServerHostname::HTTPSUrl() . '/soap/index.php?wsdl');

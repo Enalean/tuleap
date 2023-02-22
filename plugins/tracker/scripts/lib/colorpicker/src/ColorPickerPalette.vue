@@ -19,32 +19,43 @@
 
 <template>
     <div class="colorpicker-palette">
-        <color-picker-palette-row
-            v-for="(colors, index) in tlp_colors"
-            v-bind:colors="colors"
-            v-bind:selected_color="current_color"
-            v-bind:key="index"
-            v-on:color-update="updateColor"
-        />
+        <template v-for="(colors, index) in tlp_colors">
+            <color-picker-palette-row
+                v-bind:colors="colors"
+                v-bind:selected-color="currentColor"
+                v-bind:key="index"
+                v-on:color-update="updateColor"
+            />
+        </template>
         <color-picker-no-color-option
-            v-bind:selected_color="current_color"
+            v-bind:selected-color="currentColor"
+            v-bind:no-color-label="noColorLabel"
             v-on:color-update="updateColor"
         />
     </div>
 </template>
 
-<script setup lang="ts">
+<script>
 import tlp_colors from "./new-color-palette.js";
 import ColorPickerPaletteRow from "./ColorPickerPaletteRow.vue";
 import ColorPickerNoColorOption from "./ColorPickerNoColorOption.vue";
 
-defineProps<{ current_color: string }>();
-
-const emit = defineEmits<{
-    (e: "color-update", value: string): void;
-}>();
-
-function updateColor(color: string): void {
-    emit("color-update", color);
-}
+export default {
+    name: "ColorPickerPalette",
+    components: { ColorPickerPaletteRow, ColorPickerNoColorOption },
+    props: {
+        currentColor: String,
+        noColorLabel: String,
+    },
+    data() {
+        return {
+            tlp_colors,
+        };
+    },
+    methods: {
+        updateColor(color) {
+            this.$emit("color-update", color);
+        },
+    },
+};
 </script>

@@ -65,8 +65,7 @@ use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Layout\IncludeAssets;
 use UserManager;
 use XMLImportHelper;
 
@@ -167,15 +166,12 @@ class AdminController extends BaseController
     public function adminScrum(): string
     {
         $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
-        $GLOBALS['HTML']->addJavascriptAsset(
-            new JavascriptViteAsset(
-                new IncludeViteAssets(
-                    __DIR__ . '/../../scripts/administration/frontend-assets',
-                    '/assets/agiledashboard/administration'
-                ),
-                'src/main.ts'
-            )
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../frontend-assets',
+            '/assets/agiledashboard'
         );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('administration.js'));
 
         return $this->renderToString(
             'admin-scrum',

@@ -18,6 +18,7 @@
  */
 
 const path = require("path");
+const { VueLoaderPlugin } = require("vue-loader");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 module.exports = [
@@ -35,6 +36,11 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
+                {
+                    test: /\.vue$/,
+                    exclude: /node_modules/,
+                    loader: "vue-loader",
+                },
                 webpack_configurator.rule_ng_cache_loader,
                 webpack_configurator.rule_angular_gettext_loader,
                 webpack_configurator.rule_scss_loader,
@@ -45,10 +51,11 @@ module.exports = [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
+            new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolve: {
-            extensions: [".ts", ".js"],
+            extensions: [".ts", ".js", ".vue"],
             alias: {
                 // deduplicate angular that is also used by angular-async
                 angular$: path.resolve(__dirname, "./node_modules/angular"),

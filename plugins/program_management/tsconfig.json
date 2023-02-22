@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "types": ["jest", "node"]
+    },
+    "include": [
+        "scripts/program_management/**/*",
+        "scripts/planned-iterations/**/*"
+    ]
+}

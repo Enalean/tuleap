@@ -20,8 +20,6 @@
 
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 
-\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
-
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p             = $pluginManager->getPluginByName('statistics');

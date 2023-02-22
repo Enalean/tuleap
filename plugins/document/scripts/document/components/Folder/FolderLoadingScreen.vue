@@ -39,6 +39,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import SkeletonTable from "./SkeletonTable.vue";
+import { Component, Vue } from "vue-property-decorator";
+
+@Component({ components: { SkeletonTable } })
+export default class FolderLoadingScreen extends Vue {}
 </script>

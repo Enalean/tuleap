@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 class Cardwall_OnTop_Config_View_ColumnDefinition
 {
@@ -245,7 +246,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
 
         return $renderer->renderToString(
             'colorpicker-mount-point',
-            \Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder::buildPresenter(
+            new ColorpickerMountPointPresenter(
                 $current_color,
                 $input_name,
                 $input_id,

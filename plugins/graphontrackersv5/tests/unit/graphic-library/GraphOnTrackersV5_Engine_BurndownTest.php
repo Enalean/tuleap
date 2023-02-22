@@ -21,11 +21,15 @@
 
 declare(strict_types=1);
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
+
+require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Engine_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     public function testDurationIsValidWhenItsLongerThanOneDay(): void

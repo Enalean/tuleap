@@ -137,7 +137,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected_number_of_days_since_start, $time_period->getNumberOfDaysSinceStart());
     }
 
-    public static function providerForNumberOfDaysSinceStart(): array
+    public function providerForNumberOfDaysSinceStart(): array
     {
         return [
             'It does not count the start date' => [
@@ -195,7 +195,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($should_today_be_within_time_period, $time_period->isTodayWithinTimePeriod());
     }
 
-    public static function providerForIsTodayWithinTimePeriod(): array
+    public function providerForIsTodayWithinTimePeriod(): array
     {
         return [
             'It accepts today' => [
@@ -253,7 +253,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected_number_of_days_until_end, $time_period->getNumberOfDaysUntilEnd());
     }
 
-    public static function providerForGetNumberOfDaysUntilEnd(): array
+    public function providerForGetNumberOfDaysUntilEnd(): array
     {
         return [
             'It lets the full duration at start' => [
@@ -417,7 +417,7 @@ class TimePeriodWithoutWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function provideEndDateData(): array
+    public function provideEndDateData(): array
     {
         return [
             'Monday to Monday' => [

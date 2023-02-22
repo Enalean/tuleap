@@ -36,9 +36,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration;
-use Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent;
-use Tuleap\User\Account\Register\RegisterFormValidationIssue;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -53,9 +50,11 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $this->setScope(self::SCOPE_SYSTEM);
 
+        $this->addHook('javascript_file', 'loadJavascriptFiles');
+        $this->addHook('cssfile', 'loadCSSFiles');
         $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
-        $this->addHook(AddAdditionalFieldUserRegistration::NAME);
-        $this->addHook(BeforeRegisterFormValidationEvent::NAME);
+        $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
+        $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
     }
@@ -72,6 +71,27 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
+    /**
+     * @psalm-param array{layout: \Layout} $params
+     */
+    public function loadJavascriptFiles(array $params): void
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
+            $params['layout']->includeFooterJavascriptFile('https://www.google.com/recaptcha/api.js');
+        }
+    }
+
+    public function loadCSSFiles()
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
+            $assets = new IncludeAssets(
+                __DIR__ . '/../frontend-assets',
+                '/assets/captcha'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style.css') . '" />';
+        }
+    }
+
     public function addExternalScriptToTheWhitelist(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
@@ -80,37 +100,26 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function addAdditionalFieldUserRegistration(AddAdditionalFieldUserRegistration $event): void
+    public function addAdditionalFieldUserRegistration(array $params)
     {
-        if (! $event->getRequest()->getCurrentUser()->isSuperUser()) {
+        $request = $params['request'];
+        if (! $request->getCurrentUser()->isSuperUser()) {
             try {
                 $configuration = $this->getConfiguration();
             } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
                 return;
             }
-            $site_key  = $configuration->getSiteKey();
-            $presenter = new Presenter(
-                $site_key,
-                $event->validation_issue?->getFieldError('captcha')
-            );
-            $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
-            $event->appendAdditionalFieldsInHtml($renderer->renderToString('user-registration', $presenter));
-            $event->getLayout()->includeFooterJavascriptFile('https://www.google.com/recaptcha/api.js');
-            $event->getLayout()->addCssAsset(
-                new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(
-                    new IncludeAssets(
-                        __DIR__ . '/../frontend-assets',
-                        '/assets/captcha'
-                    ),
-                    'style'
-                )
-            );
+            $site_key         = $configuration->getSiteKey();
+            $presenter        = new Presenter($site_key);
+            $renderer         = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
+            $params['field'] .= $renderer->renderToString('user-registration', $presenter);
         }
     }
 
-    public function beforeRegisterFormValidationEvent(BeforeRegisterFormValidationEvent $event): void
+    public function checkCaptchaBeforeSubmission(array $params)
     {
-        $request = $event->getRequest();
+        $request = $params['request'];
+        \assert($request instanceof HTTPRequest);
         if ($request->getCurrentUser()->isSuperUser()) {
             return;
         }
@@ -132,12 +141,11 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $is_captcha_valid = $recaptcha_client->verify($challenge, $request->getIPAddress());
 
         if (! $is_captcha_valid) {
-            $event->addValidationError(
-                RegisterFormValidationIssue::fromFieldName(
-                    'captcha',
-                    dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again'),
-                )
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again')
             );
+            $params['is_registration_valid'] = false;
         }
     }
 

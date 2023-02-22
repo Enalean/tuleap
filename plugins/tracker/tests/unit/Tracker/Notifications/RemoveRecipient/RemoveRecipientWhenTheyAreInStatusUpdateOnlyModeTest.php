@@ -83,7 +83,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
         );
     }
 
-    public static function getTestData(): iterable
+    public function getTestData(): iterable
     {
         return [
             'status has changed and user subscribed to get updates, user kept' => [

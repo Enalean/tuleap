@@ -192,16 +192,7 @@
                 </button>
             </div>
 
-            <div ng-if="overview.isAbandoned() && overview.hasReopenRight()" class="tlp-alert-info">
-                {{ 'Pull request is currently abandoned. You can reopen it.' | translate }}
-                <div>
-                    <button ng-if="overview.hasReopenRight()" class="tlp-button-success" ng-disabled="overview.operationInProgress" ng-click="overview.reopen()">
-                        <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Reopen' | translate }}
-                    </button>
-                </div>
-            </div>
-
-            <button ng-if="overview.isAbandoned() && ! overview.hasReopenRight()" class="tlp-button-danger" disabled translate>
+            <button ng-if="overview.pull_request.status === overview.valid_status_keys.abandon" class="tlp-button-danger" disabled translate>
                 Abandoned
             </button>
             <button ng-if="overview.pull_request.status === overview.valid_status_keys.merge" class="tlp-button-success" disabled translate>

@@ -91,7 +91,7 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertTrue(Result::isErr($result));
     }
 
-    public static function dataProviderExceptions(): iterable
+    public function dataProviderExceptions(): iterable
     {
         return [
             'with No change error'        => [new \Tracker_NoChangeException(

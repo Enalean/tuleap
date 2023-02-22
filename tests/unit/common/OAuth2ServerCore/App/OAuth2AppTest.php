@@ -33,7 +33,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         OAuth2App::fromProjectAdministrationData($app_id, $app_name, '', true, ProjectTestBuilder::aProject()->build());
     }
 
-    public static function dataProviderInvalidData(): array
+    public function dataProviderInvalidData(): array
     {
         return [
             'Throws when App ID is empty'                 => ['', 'Jenkins', 'https://example.com/redirect'],
@@ -80,7 +80,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($updated_app->getProject());
     }
 
-    public static function dataProviderValidData(): array
+    public function dataProviderValidData(): array
     {
         return [
             'Valid data'                       => ['https://example.com/redirect', false],

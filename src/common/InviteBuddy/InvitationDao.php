@@ -22,131 +22,59 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByIdRetriever, InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever, PendingInvitationsWithdrawer, InvitationCreator, InvitationStatusUpdater
+class InvitationDao extends DataAccessObject
 {
-    public function __construct(
-        private SplitTokenVerificationStringHasher $hasher,
-        private InvitationInstrumentation $instrumentation,
-    ) {
-        parent::__construct();
-    }
-
-    public function create(
+    public function save(
         int $created_on,
         int $from_user_id,
         string $to_email,
         ?int $to_user_id,
-        ?int $to_project_id,
         ?string $custom_message,
-        SplitTokenVerificationString $verifier,
-    ): int {
-        return (int) $this->getDB()->insertReturnId(
+        string $status,
+    ): void {
+        $this->getDB()->insert(
             'invitations',
             [
                 'created_on'     => $created_on,
                 'from_user_id'   => $from_user_id,
-                'to_email'       => $to_user_id ? '' : $to_email,
+                'to_email'       => $to_email,
                 'to_user_id'     => $to_user_id,
-                'to_project_id'  => $to_project_id,
                 'custom_message' => $custom_message,
-                'status'         => Invitation::STATUS_CREATING,
-                'verifier'       => $this->hasher->computeHash($verifier),
+                'status'         => $status,
             ]
         );
     }
 
-    public function searchById(int $id): Invitation
+    public function searchByEmail(string $to_email): array
     {
-        $row = $this->getDB()->row("SELECT * FROM invitations WHERE id = ?", $id);
-        if (! $row) {
-            throw new InvitationNotFoundException();
-        }
-
-        return $this->instantiateFromRow($row);
-    }
-
-    public function markAsSent(int $id): void
-    {
-        $this->getDB()->update('invitations', ['status' => Invitation::STATUS_SENT], ['id' => $id]);
-    }
-
-    public function markAsError(int $id): void
-    {
-        $this->getDB()->update(
-            'invitations',
-            [
-                'status'   => Invitation::STATUS_ERROR,
-                'to_email' => '',
-                'verifier' => '',
-            ],
-            ['id' => $id]
+        return $this->getDB()->run(
+            "SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ? AND status = ?",
+            $to_email,
+            InvitationSender::STATUS_SENT,
         );
     }
 
-    /**
-     * @throws InvalidInvitationTokenException|InvitationNotFoundException
-     */
-    public function searchBySplitToken(SplitToken $split_token): Invitation
+    public function saveJustCreatedUserThanksToInvitation(string $to_email, int $just_created_user_id): void
     {
-        $row = $this->getDB()->row(
-            'SELECT *
-            FROM invitations
-            WHERE id = ?',
-            $split_token->getID()
-        );
-        if (! $row) {
-            throw new InvitationNotFoundException();
-        }
-
-        if (! $this->hasher->verifyHash($split_token->getVerificationString(), $row['verifier'])) {
-            throw new InvalidInvitationTokenException(! empty($row['created_user_id']));
-        }
-
-        return $this->instantiateFromRow($row);
-    }
-
-    /**
-     * @return Invitation[]
-     */
-    public function searchByCreatedUserId(int $user_id): array
-    {
-        return array_map(
-            fn (array $row): Invitation => $this->instantiateFromRow($row),
-            $this->getDB()->run(
-                "SELECT * FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
-                $user_id,
-                Invitation::STATUS_SENT,
-                Invitation::STATUS_USED,
-            )
-        );
-    }
-
-    public function saveJustCreatedUserThanksToInvitation(
-        string $to_email,
-        int $just_created_user_id,
-        ?int $used_invitation_id,
-    ): void {
         $this->getDB()->run(
             "UPDATE invitations
-                SET created_user_id = ?,
-                    status = IF(id = ?, ?, status),
-                    to_email = '',
-                    verifier = ''
+                SET created_user_id = ?
                 WHERE to_email = ?
                   AND status = ?
                   AND created_user_id IS NULL",
             $just_created_user_id,
-            $used_invitation_id,
-            Invitation::STATUS_USED,
             $to_email,
-            Invitation::STATUS_SENT,
+            InvitationSender::STATUS_SENT,
+        );
+    }
+
+    public function searchUserIdThatInvitedUser(int $user_id): array
+    {
+        return $this->getDB()->run(
+            "SELECT DISTINCT from_user_id FROM invitations WHERE created_user_id = ?",
+            $user_id,
         );
     }
 
@@ -157,128 +85,5 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
                 WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()";
 
         return (int) $this->getDB()->single($sql, [$user_id]);
-    }
-
-    public function hasUsedAnInvitationToRegister(int $user_id): bool
-    {
-        return (bool) $this->getDB()->single(
-            "SELECT 1 FROM invitations WHERE created_user_id = ? AND status = ?",
-            [$user_id, Invitation::STATUS_USED]
-        );
-    }
-
-    public function searchInvitationUsedToRegister(int $user_id): ?Invitation
-    {
-        $row = $this->getDB()->row(
-            'SELECT *
-                FROM invitations
-                WHERE created_user_id = ?
-                  AND status = ?',
-            $user_id,
-            Invitation::STATUS_USED
-        );
-        if (! $row) {
-            return null;
-        }
-
-        return $this->instantiateFromRow($row);
-    }
-
-    /**
-     * @return Invitation[] Invitations that are removed
-     */
-    public function purgeObsoleteInvitations(\DateTimeImmutable $today, int $nb_days): array
-    {
-        return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($today, $nb_days): array {
-                $obsolete_invitations = $db->run(
-                    'SELECT *
-                    FROM invitations
-                    WHERE created_on < ?
-                      AND created_user_id IS NULL
-                      AND status <> ?',
-                    $today->getTimestamp() - $nb_days * 24 * 3600,
-                    Invitation::STATUS_USED
-                );
-
-                if ($obsolete_invitations) {
-                    $db->delete(
-                        'invitations',
-                        EasyStatement::open()->in('id IN (?*)', array_column($obsolete_invitations, 'id'))
-                    );
-                }
-
-                $purged_invitations = [];
-                foreach ($obsolete_invitations as $row) {
-                    $purged_invitations[] = $this->instantiateFromRow($row);
-                }
-
-                return $purged_invitations;
-            }
-        );
-    }
-
-    public function removePendingInvitationsMadeByUser(int $user_id): void
-    {
-        $nb_deleted = $this->getDB()->delete(
-            'invitations',
-            [
-                'from_user_id'    => $user_id,
-                'status'          => Invitation::STATUS_SENT,
-                'created_user_id' => null,
-            ]
-        );
-        if ($nb_deleted > 0) {
-            $this->instrumentation->incrementExpiredInvitations($nb_deleted);
-        }
-    }
-
-    public function searchPendingInvitationsForProject(int $project_id): array
-    {
-        return array_map(
-            fn (array $row): Invitation => $this->instantiateFromRow($row),
-            $this->getDB()->run(
-                'SELECT *
-                    FROM invitations
-                    WHERE to_project_id = ?
-                      AND status = ?
-                      AND to_email <> ""
-                      AND created_user_id IS NULL
-                    ORDER BY created_on',
-                $project_id,
-                Invitation::STATUS_SENT
-            )
-        );
-    }
-
-    public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
-    {
-        $nb_deleted = $this->getDB()->delete(
-            'invitations',
-            [
-                'to_project_id'   => $project_id,
-                'to_email'        => $to_email,
-                'created_user_id' => null,
-                'status'          => Invitation::STATUS_SENT,
-            ]
-        );
-        if ($nb_deleted > 0) {
-            $this->instrumentation->incrementExpiredInvitations($nb_deleted);
-        }
-    }
-
-    private function instantiateFromRow(array $row): Invitation
-    {
-        return new Invitation(
-            $row['id'],
-            $row['to_email'],
-            $row['to_user_id'],
-            $row['from_user_id'],
-            $row['created_user_id'],
-            $row['status'],
-            $row['created_on'],
-            $row['to_project_id'],
-            $row['custom_message'],
-        );
     }
 }

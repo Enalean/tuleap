@@ -35,7 +35,7 @@ final class AllLinkPayloadParserTest extends TestCase
             LinkWithDirectionRepresentationBuilder::aReverseLink(3)->withType('_is_child')->build(),
         ];
 
-        $collection = AllLinkPayloadParser::buildReverseLinks($all_links);
+        $collection = AllLinkPayloadParser::buildLinksToUpdate($all_links);
 
         $this->assertCount(2, $collection->links);
         $ids = array_map(static fn($link) => $link->getSourceArtifactId(), $collection->links);

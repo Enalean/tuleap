@@ -22,6 +22,8 @@ import type { UserStory } from "./user-stories-retriever";
 import { getLinkedUserStoriesToFeature } from "./user-stories-retriever";
 import type { TrackerMinimalRepresentation } from "../../type";
 
+jest.mock("tlp");
+
 describe("User stories retriever", () => {
     describe("getLinkedUserStoriesToFeature", () => {
         it("Get children of a feature", async () => {

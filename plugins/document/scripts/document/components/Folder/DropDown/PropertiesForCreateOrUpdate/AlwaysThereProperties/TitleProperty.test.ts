@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Folder, Item, ItemFile, State } from "../../../../../type";
-import TitleProperty from "./TitleProperty.vue";
+import TitlePropery from "./TitleProperty.vue";
 import emitter from "../../../../../helpers/emitter";
 
 jest.mock("../../../../../helpers/emitter");
@@ -41,7 +41,7 @@ describe("TitleProperty", () => {
         isInUpdateContext: boolean,
         parent: Folder,
         currentlyUpdatedItem: Item
-    ): Wrapper<TitleProperty> {
+    ): Wrapper<TitlePropery> {
         const state = {
             folder_content: [
                 {
@@ -66,7 +66,7 @@ describe("TitleProperty", () => {
         } as unknown as State;
 
         const store = createStoreMock({ state });
-        return shallowMount(TitleProperty, {
+        return shallowMount(TitlePropery, {
             mocks: {
                 $store: store,
             },

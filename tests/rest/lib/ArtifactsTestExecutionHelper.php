@@ -49,23 +49,6 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         );
     }
 
-    protected function buildPOSTBodyContentWithTooBigTextContent(): string
-    {
-        return json_encode(
-            [
-                'tracker' => [
-                    'id'  => $this->epic_tracker_id,
-                    'uri' => 'whatever',
-                ],
-                'values'  => [
-                    $this->getSubmitStringValue($this->epic_tracker_id, 'Summary', 'This is a new epic'),
-                    $this->getSubmitTextValue($this->epic_tracker_id, "Required Text", str_repeat('a', 70000)),
-                    $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103),
-                ],
-            ]
-        );
-    }
-
     private function getSubmitStringValue($tracker_id, $field_label, $field_value): array
     {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);

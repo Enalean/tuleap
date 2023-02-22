@@ -11,16 +11,14 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "workspace:*",
-    "@tuleap/vue3-gettext-init": "workspace:*",
-    "vue": "3.2.37",
-    "vue3-gettext": "^2.2.1"
+    "vue": "^2.7.8",
+    "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
-    "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
   }

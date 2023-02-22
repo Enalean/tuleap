@@ -35,18 +35,6 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_factory;
     private SemanticTimeframeDao $semantic_timeframe_dao;
     private SemanticTimeframeDuplicator $semantic_timeframe_duplicator;
-    /**
-     * @var Tracker_HierarchyFactory&\Mockery\MockInterface
-     */
-    private $hierarchy_factory;
-    /**
-     * @var Tracker_Workflow_Trigger_RulesManager&\Mockery\MockInterface
-     */
-    private $trigger_rules_manager;
-    /**
-     * @var Tracker_FormElementFactory&\Mockery\MockInterface
-     */
-    private $formelement_factory;
 
     protected function setUp(): void
     {

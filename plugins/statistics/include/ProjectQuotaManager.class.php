@@ -214,7 +214,7 @@ class ProjectQuotaManager
                     $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-statistics', 'Quota must be between 1 and %1$s Gb'), $maxQuota));
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
-                        $historyDao = new ProjectHistoryDao();
+                        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
                         $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota for project "%1$s" is now %2$s GB'), $project->getPublicName(), $quota));
                     } else {
@@ -258,7 +258,7 @@ class ProjectQuotaManager
     public function deleteCustomQuota(Project $project)
     {
         $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
-        $historyDao   = new ProjectHistoryDao();
+        $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
         if ($this->dao->deleteCustomQuota($project->getId())) {
             $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $project->getId());
             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota deleted for %1$s'), $project->getPublicName()));

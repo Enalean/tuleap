@@ -5,16 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/plugin-agiledashboard-card-fields": "workspace:*",
-    "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
-    "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
     "@tuleap/plugin-agiledashboard-shared": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
-    "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:*",
     "angular": "^1.8.2",
     "angular-animate": "^1.8.2",
     "angular-gettext": "^2.4.2",
@@ -30,11 +25,5 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest"
   }
 }

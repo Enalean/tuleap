@@ -27,7 +27,7 @@ class TypeSelectorPresenter
     public $select_classes;
     public $select_name;
 
-    public function __construct(array $types, $select_name, $select_classes, public bool $is_disabled)
+    public function __construct(array $types, $select_name, $select_classes)
     {
         $this->types          = $types;
         $this->select_name    = $select_name;

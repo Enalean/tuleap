@@ -42,7 +42,12 @@ export {
     updateFrozenFieldsPostActionFieldIds,
     updateHiddenFieldsetsPostActionFieldsetIds,
     setUsedServiceName,
+    setIsListPickerEnabled,
 };
+
+function setIsListPickerEnabled(state, is_list_picker_enabled) {
+    state.is_list_picker_enabled = is_list_picker_enabled;
+}
 
 function showModal(state) {
     state.is_modal_shown = true;

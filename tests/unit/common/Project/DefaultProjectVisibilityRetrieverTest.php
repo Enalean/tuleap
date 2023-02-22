@@ -43,7 +43,7 @@ final class DefaultProjectVisibilityRetrieverTest extends \Tuleap\Test\PHPUnit\T
         $this->assertEquals($expected_access, $default_visibility_retriever->getDefaultProjectVisibility());
     }
 
-    public static function providerLegacySetting(): array
+    public function providerLegacySetting(): array
     {
         return [
             [0, Project::ACCESS_PRIVATE],
@@ -69,7 +69,7 @@ final class DefaultProjectVisibilityRetrieverTest extends \Tuleap\Test\PHPUnit\T
         $this->assertEquals($expected_access, $default_visibility_retriever->getDefaultProjectVisibility());
     }
 
-    public static function providerSettingDefaultVisibility(): array
+    public function providerSettingDefaultVisibility(): array
     {
         return [
             [Project::ACCESS_PUBLIC, true, Project::ACCESS_PUBLIC],

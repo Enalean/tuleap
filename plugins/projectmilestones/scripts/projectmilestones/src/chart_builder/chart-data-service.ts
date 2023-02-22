@@ -23,9 +23,11 @@ import type { PointsNotNullWithDate } from "../type";
 import type {
     PointsNotNullWithDateForGenericBurnup,
     PointsWithDateForGenericBurnup,
-} from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
+} from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
-export function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] {
+export { getDisplayableData, getLastData, getLastGenericBurnupData, getDisplayableDataForBurnup };
+
+function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] {
     const formatted_data = getFormattedDates(dataset);
     const points_not_null: PointsNotNullWithDate[] = [];
 
@@ -39,7 +41,7 @@ export function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWith
     return points_not_null;
 }
 
-export function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWithDate | null {
+function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWithDate | null {
     if (!dataset.length) {
         return null;
     }
@@ -47,7 +49,7 @@ export function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWith
     return dataset[dataset.length - 1];
 }
 
-export function getLastGenericBurnupData(
+function getLastGenericBurnupData(
     dataset: PointsWithDateForGenericBurnup[]
 ): PointsWithDateForGenericBurnup | null {
     if (!dataset.length) {
@@ -57,7 +59,7 @@ export function getLastGenericBurnupData(
     return dataset[dataset.length - 1];
 }
 
-export function getDisplayableDataForBurnup(
+function getDisplayableDataForBurnup(
     generic_burnup_data: PointsWithDateForGenericBurnup[]
 ): PointsNotNullWithDateForGenericBurnup[] {
     const formatted_data = getFormattedDates(generic_burnup_data);

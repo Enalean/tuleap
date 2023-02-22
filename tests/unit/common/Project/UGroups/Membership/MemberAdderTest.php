@@ -35,7 +35,6 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -96,7 +95,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
 
-        $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberThrowsWhenUGroupHasNoProject(): void
@@ -107,7 +106,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(\UGroup_Invalid_Exception::class);
 
-        $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberToDynamicUGroupDelegates(): void
@@ -117,14 +116,12 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(Project::class, ['getAccess' => Project::ACCESS_PUBLIC]);
         $ugroup  = Mockery::mock(ProjectUGroup::class, ['getProject' => $project, 'isStatic' => false]);
 
-        $admin = UserTestBuilder::buildWithDefaults();
-
         $this->dynamic_member_updater
             ->shouldReceive('addUser')
-            ->with($project, $ugroup, $user, $admin)
+            ->with($project, $ugroup, $user)
             ->once();
 
-        $this->adder->addMember($user, $ugroup, $admin);
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberToStaticUGroupThrowsWhenUGroupDoesNotExist(): void
@@ -144,7 +141,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(\UGroup_Invalid_Exception::class);
 
-        $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberToStaticUGroupInNonSynchronizedProjectDoesNotAddToProjectMembers(): void
@@ -173,9 +170,9 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('addUserToStaticGroup')
             ->with(168, 24, 217)
             ->once();
-        $this->project_member_adder->shouldNotReceive('addProjectMemberWithFeedback');
+        $this->project_member_adder->shouldNotReceive('addProjectMember');
 
-        $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberToStaticUGroupDoesNotAddToProjectMembersWhenTheyAlreadyAre(): void
@@ -208,9 +205,9 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('addUserToStaticGroup')
             ->with(168, 24, 217)
             ->once();
-        $this->project_member_adder->shouldNotReceive('addProjectMemberWithFeedback');
+        $this->project_member_adder->shouldNotReceive('addProjectMember');
 
-        $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
+        $this->adder->addMember($user, $ugroup);
     }
 
     public function testAddMemberToStaticUGroupInSynchronizedProjectAlsoAddsToProjectMembers(): void
@@ -239,17 +236,15 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturnTrue();
 
-        $project_admin = UserTestBuilder::buildWithDefaults();
-
         $this->static_member_adder
             ->shouldReceive('addUserToStaticGroup')
             ->with(168, 24, 217)
             ->once();
         $this->project_member_adder
-            ->shouldReceive('addProjectMemberWithFeedback')
-            ->with($user, $project, $project_admin)
+            ->shouldReceive('addProjectMember')
+            ->with($user, $project)
             ->once();
 
-        $this->adder->addMember($user, $ugroup, $project_admin);
+        $this->adder->addMember($user, $ugroup);
     }
 }
