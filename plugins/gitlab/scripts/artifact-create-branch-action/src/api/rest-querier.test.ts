@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
 import {
@@ -30,9 +31,11 @@ const GITLAB_INTEGRATION_ID = 12;
 const ARTIFACT_ID = 123;
 const MAIN_BRANCH = "main";
 
+vi.mock("@tuleap/fetch-result");
+
 describe(`rest-querier`, () => {
     it("asks to create the GitLab branch", async () => {
-        const postSpy = jest.spyOn(fetch_result, "postJSON");
+        const postSpy = vi.spyOn(fetch_result, "postJSON");
         postSpy.mockReturnValue(okAsync({ branch_name: MAIN_BRANCH }));
 
         const result = await postGitlabBranch(GITLAB_INTEGRATION_ID, ARTIFACT_ID, MAIN_BRANCH);
@@ -49,7 +52,7 @@ describe(`rest-querier`, () => {
     });
 
     it("asks to create the GitLab merge request", async () => {
-        const postSpy = jest.spyOn(fetch_result, "post");
+        const postSpy = vi.spyOn(fetch_result, "post");
         postSpy.mockReturnValue(okAsync({} as Response));
 
         const result = await postGitlabMergeRequest(
@@ -72,7 +75,7 @@ describe(`rest-querier`, () => {
 
     describe(`getGitLabRepositoryBranchInformation()`, () => {
         it(`retrieves branch information of a GitLab integration`, async () => {
-            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            const getSpy = vi.spyOn(fetch_result, "getJSON");
             getSpy.mockReturnValue(okAsync({ default_branch: "main" }));
 
             const result = await getGitLabRepositoryBranchInformation(GITLAB_INTEGRATION_ID);
