@@ -26,7 +26,9 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\User\REST\UserRepresentation;
 
 /**
  * @psalm-import-type FlatRepresentation from \Tuleap\REST\RESTCollectionTransformer
@@ -70,6 +72,15 @@ final class FlatArtifactRepresentationTransformer
                 case 'computed':
                     $flat_representation[$this->getFieldName($field->field_id)] = $field->is_autocomputed ? $field->value : $field->manual_value;
                     break;
+                case "sb":
+                case "msb":
+                case "rb":
+                case "cb":
+                    $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->values);
+                    break;
+                case "tbl":
+                    $flat_representation[$this->getFieldName($field->field_id)] = $this->transformListValues($field->bind_value_objects);
+                    break;
                 default:
                     continue 2;
             }
@@ -88,5 +99,38 @@ final class FlatArtifactRepresentationTransformer
         }
 
         return $field->getName();
+    }
+
+    /**
+     * @psalm-param array<array|UserRepresentation|MinimalUserGroupRepresentation> $list_values
+     * @psalm-return list<string>
+     */
+    private function transformListValues(array $list_values): ?array
+    {
+        $value_labels = [];
+        foreach ($list_values as $list_value) {
+            $value_label = $this->getListValueLabel($list_value);
+            if ($value_label !== null) {
+                $value_labels[] = $value_label;
+            }
+        }
+        return $value_labels;
+    }
+
+    private function getListValueLabel(array|UserRepresentation|MinimalUserGroupRepresentation $list_value): ?string
+    {
+        if (is_array($list_value)) {
+            return $list_value['label'] ?? null;
+        }
+
+        if ($list_value instanceof MinimalUserGroupRepresentation) {
+            return $list_value->label;
+        }
+
+        if ($list_value->id !== null) {
+            return $list_value->display_name;
+        }
+
+        return null;
     }
 }
