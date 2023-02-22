@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
 import { createGettext } from "vue3-gettext";
-
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "assertSelectContainsValues"] }] */
 
 interface TestConfig {
     selected_start_date_field_id: number | "";
