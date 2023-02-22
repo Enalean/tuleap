@@ -25,9 +25,9 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin && \
     /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
     echo "$RELEASE_CYCLE" > /etc/yum/vars/tuleap_release_cycle && \
-    yum install -y epel-release centos-release-scl sudo https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
+    yum install --setopt=skip_missing_names_on_install=False -y epel-release centos-release-scl sudo https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
     yum update -y && \
-    yum install -y \
+    yum install -y --setopt=skip_missing_names_on_install=False \
     cronie \
     initscripts \
     openssh-server \
