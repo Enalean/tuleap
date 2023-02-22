@@ -129,6 +129,11 @@ msgstr[0] "%s jour ouvrable"
 msgstr[1] "%s jours ouvrables"
 
 #, php-format
+msgid "'%s' is not a valid value for reminder notify closed artifacts"
+msgstr ""
+"'%s' n'est pas une valeur valide pour la notification des artéfacts fermés"
+
+#, php-format
 msgid "'%s' is not supported for the operator %s."
 msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
@@ -2011,6 +2016,9 @@ msgstr "Ajouter un(e) %s"
 msgid "New tracker"
 msgstr "Nouvel outil de suivi"
 
+msgid "No"
+msgstr "Non"
+
 msgid "No Tracker pending for Deletion"
 msgstr "Aucun outil de suivi en attente de suppression"
 
@@ -2129,6 +2137,9 @@ msgstr "Notifications"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+msgid "Notify closed artifacts"
+msgstr "Notifier les artéfacts fermés"
 
 msgid ""
 "Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
@@ -4311,6 +4322,9 @@ msgstr "Le mode du Workflow est incompatible avec la PostAction de type %s"
 
 msgid "XML file doesn't have correct format"
 msgstr "Le fichier XML a un format incorrect"
+
+msgid "Yes"
+msgstr "Oui"
 
 msgid "Yes, I am sure!"
 msgstr "Oui, je suis sûr !"

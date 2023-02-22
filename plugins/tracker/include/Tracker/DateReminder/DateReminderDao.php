@@ -68,9 +68,10 @@ class DateReminderDao extends DataAccessObject
         array $roles,
         int $notification_type = 0,
         int $distance = 0,
+        bool $notify_closed_artifacts = true,
     ): int {
         return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($tracker_id, $field_id, $ugroups, $notification_type, $distance, $roles): int {
+            function (EasyDB $db) use ($tracker_id, $field_id, $ugroups, $notification_type, $distance, $roles, $notify_closed_artifacts): int {
                 $reminder_id = (int) $db->insertReturnId(
                     "tracker_reminder",
                     [
@@ -79,6 +80,7 @@ class DateReminderDao extends DataAccessObject
                         'ugroups' => $ugroups,
                         'notification_type' => $notification_type,
                         'distance' => $distance,
+                        'notify_closed_artifacts' => $notify_closed_artifacts,
                     ]
                 );
                 if ($reminder_id && ! empty($roles)) {
@@ -96,9 +98,10 @@ class DateReminderDao extends DataAccessObject
         int $notification_type = 0,
         int $distance = 0,
         int $status = 1,
+        bool $notify_closed_artifacts = true,
     ): bool {
         return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($reminder_id, $ugroups, $notification_type, $distance, $roles, $status): bool {
+            function (EasyDB $db) use ($reminder_id, $ugroups, $notification_type, $distance, $roles, $status, $notify_closed_artifacts): bool {
                 $db->update(
                     "tracker_reminder",
                     [
@@ -106,6 +109,7 @@ class DateReminderDao extends DataAccessObject
                         'notification_type' => $notification_type,
                         'distance' => $distance,
                         'status' => $status,
+                        'notify_closed_artifacts' => $notify_closed_artifacts,
                     ],
                     ['reminder_id' => $reminder_id],
                 );
