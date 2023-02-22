@@ -21,7 +21,7 @@
 namespace Tuleap\User\Admin;
 
 use ForgeConfig;
-use Tuleap\Project\ProjectPresenter;
+use Tuleap\InviteBuddy\Admin\InvitedByPresenter;
 use User_UserStatusManager;
 
 class PendingUserPresenter
@@ -44,8 +44,7 @@ class PendingUserPresenter
         $purpose,
         $expiry_date,
         $status,
-        public ?UserPresenter $invited_by_user,
-        public ?ProjectPresenter $invited_in_project,
+        public ?InvitedByPresenter $invited_by,
         public bool $is_email_already_validated,
     ) {
         $this->id                = $id;

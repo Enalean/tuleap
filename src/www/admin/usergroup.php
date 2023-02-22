@@ -357,10 +357,11 @@ $invited_by_builder         = new InvitedByPresenterBuilder(
         new SplitTokenVerificationStringHasher(),
         new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
     ),
-    $um
+    $um,
+    ProjectManager::instance(),
 );
 $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
-    ? $invited_by_builder->getInvitedByPresenter($user)
+    ? $invited_by_builder->getInvitedByPresenter($user, $request->getCurrentUser())
     : null;
 
 $GLOBALS['HTML']->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());

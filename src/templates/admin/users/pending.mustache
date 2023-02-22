@@ -29,6 +29,11 @@
                         <p>{{ registration_date }}</p>
                     </div>
                 </div>
+                {{# invited_by }}
+                    <div class="siteadmin-pending-user-info">
+                        {{> invited-by }}
+                    </div>
+                {{/ invited_by }}
                 <div class="siteadmin-pending-user-info">
                     <div class="tlp-property siteadmin-pending-user-info-property">
                         <label class="tlp-label">{{ purpose_label }}</label>
@@ -39,27 +44,6 @@
                             <p>{{ purpose }}</p>
                         {{/ purpose }}
                     </div>
-                    {{# invited_by_user }}
-                        <div class="tlp-property siteadmin-pending-user-info-property">
-                            <label class="tlp-label">{{# gettext }}Invited by{{/ gettext }}</label>
-                            <div class="siteadmin-pending-user-invited-by">
-                                <span class="tlp-avatar-mini">
-                                    {{# has_avatar }}
-                                        <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
-                                    {{/ has_avatar }}
-                                </span>
-                                <span>{{ display_name }}</span>
-                            </div>
-                        </div>
-                    {{/ invited_by_user }}
-                    {{# invited_in_project }}
-                        <div class="tlp-property siteadmin-pending-user-info-property">
-                            <label class="tlp-label">{{# gettext }}Invited in{{/ gettext }}</label>
-                            <div>
-                                <a href="{{ project_uri }}">{{ icon }} {{ project_name }}</a>
-                            </div>
-                        </div>
-                    {{/ invited_in_project }}
                 </div>
             </section>
         </div>

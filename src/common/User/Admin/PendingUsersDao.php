@@ -24,7 +24,6 @@ namespace Tuleap\User\Admin;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\InviteBuddy\Invitation;
 
 final class PendingUsersDao extends DataAccessObject
 {
@@ -46,17 +45,16 @@ final class PendingUsersDao extends DataAccessObject
     /**
      * @param \PFUser::STATUS_* ...$status
      *
-     * @psalm-return list<array{ user_id: int, user_name: string, realname: string, email: string, add_date: int, register_purpose: string, expiry_date: int, status: string, from_user_id: ?int, to_project_id: ?int }>
+     * @psalm-return list<array{ user_id: int, user_name: string, realname: string, email: string, add_date: int, register_purpose: string, expiry_date: int, status: string }>
      */
     private function searchUsersWithStatus(string ...$status): array
     {
-        $status_condition = EasyStatement::open()->in('user.status IN (?*)', $status);
+        $status_condition = EasyStatement::open()->in('status IN (?*)', $status);
 
-        $sql = "SELECT user.*, invitations.from_user_id, invitations.to_project_id
+        $sql = "SELECT *
             FROM user
-            LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = ?)
             WHERE $status_condition";
 
-        return $this->getDB()->run($sql, Invitation::STATUS_USED, ...$status_condition->values());
+        return $this->getDB()->run($sql, ...$status_condition->values());
     }
 }

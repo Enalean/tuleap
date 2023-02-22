@@ -66,6 +66,23 @@ class ProjectPresenter
         }
     }
 
+    public static function fromProject(Project $project, \PFUser $current_user): self
+    {
+        $project_id            = $project->getID();
+        $project_name          = $project->getPublicName();
+        $project_config_uri    = '/project/admin/?group_id=' . urlencode((string) $project_id);
+        $is_current_user_admin = $current_user->isAdmin((int) $project_id);
+
+        return new self(
+            (int) $project_id,
+            $project_name,
+            $project->getUrl(),
+            $project_config_uri,
+            $is_current_user_admin,
+            $project
+        );
+    }
+
     public function getProject(): Project
     {
         return $this->project;

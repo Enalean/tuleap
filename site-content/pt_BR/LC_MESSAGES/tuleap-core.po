@@ -1901,9 +1901,6 @@ msgstr "Convidar alguém para %s"
 msgid "Invited by"
 msgstr "Convidado por"
 
-msgid "Invited in"
-msgstr ""
-
 msgid "Is Public?"
 msgstr "É público?"
 
@@ -5151,6 +5148,12 @@ msgstr "campos obrigatórios"
 #, php-format
 msgid "in %s"
 msgstr "em %s"
+
+msgid "in project %s"
+msgstr ""
+
+msgid "in projects:"
+msgstr ""
 
 msgid "last<br>month"
 msgstr "ativo no mês passado"
