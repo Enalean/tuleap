@@ -51,20 +51,18 @@ class HttpClientFactory
         return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
 
-    /**
-     * This client should only be used for Tuleap internal use to
-     * query internal resources. Queries requested by users (e.g. webhooks)
-     * MUST NOT use it.
-     */
-    public static function createAsyncClientForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient
+    public static function createClientWithCustomTimeout(int $timeout, Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
     {
-        return self::createClientWithConfigForInternalTuleapUse(...$plugins);
+        return self::createClientWithConfig(
+            [
+                'timeout' => $timeout,
+                'proxy'   => \ForgeConfig::get('sys_proxy'),
+            ],
+            ...$plugins
+        );
     }
 
-    /**
-     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
-     */
-    private static function createClientWithStandardConfig(Plugin ...$plugins)
+    private static function createClientWithStandardConfig(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
     {
         return self::createClientWithConfig(
             [
@@ -75,18 +73,12 @@ class HttpClientFactory
         );
     }
 
-    /**
-     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
-     */
-    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins)
+    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
     {
         return self::createClientWithConfig(['timeout' => self::TIMEOUT], ...$plugins);
     }
 
-    /**
-     * @return \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
-     */
-    private static function createClientWithConfig(array $config, Plugin ...$plugins)
+    private static function createClientWithConfig(array $config, Plugin ...$plugins): \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
     {
         $client = Client::createWithConfig($config);
 

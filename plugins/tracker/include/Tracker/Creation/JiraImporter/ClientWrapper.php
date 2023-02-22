@@ -56,6 +56,7 @@ abstract class ClientWrapper implements JiraClient
     public const DEBUG_MARKER_BODY = 'Body content:';
 
     private const DEPLOYMENT_TYPE_CLOUD = 'Cloud';
+    private const DEFAULT_TIMEOUT       = 30;
 
     private ?string $debug_directory = null;
     private ?string $log_file        = null;
@@ -94,7 +95,7 @@ abstract class ClientWrapper implements JiraClient
         RequestFactoryInterface $request_factory,
         LoggerInterface $logger,
     ): JiraServerClient|JiraCloudClient {
-        $client_without_authentication = HttpClientFactory::createClient();
+        $client_without_authentication = HttpClientFactory::createClientWithCustomTimeout(self::DEFAULT_TIMEOUT);
         $server_info_uri               = $jira_credentials->getJiraUrl() . self::JIRA_CORE_BASE_URL . '/serverInfo';
         $logger->debug("Do we talk to JiraCloud or JiraServer ?");
         $logger->debug("GET $server_info_uri");
@@ -123,22 +124,24 @@ abstract class ClientWrapper implements JiraClient
         if (\ForgeConfig::get(self::CONFIG_KEY_FORCE_BASIC_AUTH) === '1') {
             return self::getClientWithBasicAuth($jira_credentials);
         }
-        return HttpClientFactory::createClient(
+        return HttpClientFactory::createClientWithCustomTimeout(
+            self::DEFAULT_TIMEOUT,
             new AuthenticationPlugin(
-                new Bearer($jira_credentials->getJiraToken()->getString())
-            )
+                new Bearer($jira_credentials->getJiraToken()->getString()),
+            ),
         );
     }
 
     private static function getClientWithBasicAuth(JiraCredentials $jira_credentials): ClientInterface
     {
-        return HttpClientFactory::createClient(
+        return HttpClientFactory::createClientWithCustomTimeout(
+            self::DEFAULT_TIMEOUT,
             new AuthenticationPlugin(
                 new BasicAuth(
                     $jira_credentials->getJiraUsername(),
-                    $jira_credentials->getJiraToken()->getString()
+                    $jira_credentials->getJiraToken()->getString(),
                 )
-            )
+            ),
         );
     }
 
