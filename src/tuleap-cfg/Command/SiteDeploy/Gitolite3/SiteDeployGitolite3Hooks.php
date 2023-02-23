@@ -31,11 +31,11 @@ final class SiteDeployGitolite3Hooks
     private const GITOLITE_BIN      = '/usr/bin/gitolite';
     private const GITOLITE_BASE_DIR = '/var/lib/gitolite';
 
-    private ProcessFactory $process_factory;
 
-    public function __construct(ProcessFactory $process_factory)
-    {
-        $this->process_factory = $process_factory;
+    public function __construct(
+        private readonly ProcessFactory $process_factory,
+        private readonly string $gitolite_base_dir = self::GITOLITE_BASE_DIR,
+    ) {
     }
 
     public function deploy(LoggerInterface $logger): void
@@ -62,15 +62,16 @@ final class SiteDeployGitolite3Hooks
 
     private function isGitolite3Setup(): bool
     {
-        $gitolite_conf_size = @filesize(self::GITOLITE_BASE_DIR . '/.gitolite/conf/gitolite.conf');
+        $gitolite_conf_size = @filesize($this->gitolite_base_dir . '/.gitolite/conf/gitolite.conf');
         return $gitolite_conf_size !== false && $gitolite_conf_size > 0;
     }
 
     private function createPostReceiveHookSymlink(LoggerInterface $logger): bool
     {
-        if (! file_exists(self::GITOLITE_BASE_DIR . '/.gitolite/hooks/common/post-receive')) {
-            $logger->info('Creating post-receive hook symlink at ' . self::GITOLITE_BASE_DIR . '/.gitolite/hooks/common/post-receive');
-            symlink(self::GITOLITE_BASE_DIR . '/.gitolite/hooks/common/post-receive', __DIR__ . '/../../../../../plugins/git/hooks/post-receive-gitolite');
+        $hook_path = $this->gitolite_base_dir . '/.gitolite/hooks/common/post-receive';
+        if (! file_exists($hook_path)) {
+            $logger->info('Creating post-receive hook symlink at ' . $hook_path);
+            self::symlink(__DIR__ . '/../../../../../plugins/git/hooks/post-receive-gitolite', $hook_path);
             return true;
         }
         return false;
@@ -81,5 +82,15 @@ final class SiteDeployGitolite3Hooks
         $logger->info('Executing gitolite setup --hooks-only');
 
         $this->process_factory->getProcess(['/usr/bin/sudo', '-u', 'gitolite', self::GITOLITE_BIN, 'setup', '--hooks-only'])->mustRun();
+    }
+
+    private static function symlink(string $target_path, string $link_path): void
+    {
+        $target_realpath = realpath($target_path);
+        error_clear_last();
+        $symlink_result = symlink($target_realpath, $link_path);
+        if ($symlink_result === false) {
+            throw new \RuntimeException(sprintf('Cannot create link %s (%s)', $link_path, error_get_last()['message'] ?? 'Unknown error'));
+        }
     }
 }
