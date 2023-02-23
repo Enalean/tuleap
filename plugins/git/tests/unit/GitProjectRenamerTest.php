@@ -36,7 +36,7 @@ final class GitProjectRenamerTest extends TestCase
     {
         $this->project             = ProjectTestBuilder::aProject()->build();
         $this->git_backend         = $this->createStub(Git_Backend_Interface::class);
-        $this->git_dao             = $this->createStub(GitDao::class);
+        $this->git_dao             = $this->createMock(GitDao::class);
         $this->git_project_renamer = new GitProjectRenamer($this->git_backend, $this->git_dao);
     }
 

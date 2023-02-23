@@ -57,8 +57,11 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
             'unix_status'     => 'A',
             'language_id'     => 'en_US',
         ]);
-        $this->sshkey_dumper = \Mockery::mock(\User_SSHKeyDumper::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->sshkey_dumper->__construct($this->backend);
+        $this->sshkey_dumper = $this->getMockBuilder(\User_SSHKeyDumper::class)
+            ->setConstructorArgs([$this->backend])
+            ->disableAutoReturnValueGeneration()
+            ->onlyMethods(['changeProcessUidGidToUser', 'restoreRootUidGid'])
+            ->getMock();
     }
 
     public function testItDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount(): void
@@ -82,8 +85,8 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend->shouldReceive('chgrp')->with($this->toto_home . '/.ssh', $this->toto_name)->once();
         $this->backend->shouldReceive('chgrp')->with($this->toto_home . '/.ssh/authorized_keys', $this->toto_name)->once();
 
-        $this->sshkey_dumper->shouldReceive('changeProcessUidGidToUser')->once();
-        $this->sshkey_dumper->shouldReceive('restoreRootUidGid')->once();
+        $this->sshkey_dumper->expects(self::once())->method('changeProcessUidGidToUser');
+        $this->sshkey_dumper->expects(self::once())->method('restoreRootUidGid');
 
         $this->sshkey_dumper->writeSSHKeys($this->user);
         $this->assertEquals($this->key, file_get_contents($this->toto_home . '/.ssh/authorized_keys'));
@@ -101,8 +104,8 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir($this->toto_home . '/.ssh', 0751, true);
         symlink($this->foobar_home . '/.ssh/authorized_keys', $this->toto_home . '/.ssh/authorized_keys');
 
-        $this->sshkey_dumper->shouldReceive('changeProcessUidGidToUser')->once();
-        $this->sshkey_dumper->shouldReceive('restoreRootUidGid')->once();
+        $this->sshkey_dumper->expects(self::once())->method('changeProcessUidGidToUser');
+        $this->sshkey_dumper->expects(self::once())->method('restoreRootUidGid');
         $this->backend->shouldReceive('changeOwnerGroupMode')->twice();
 
 
@@ -120,8 +123,8 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_ssh = $this->foobar_home . '/.ssh';
         symlink($foobar_ssh, $this->toto_home . '/.ssh');
 
-        $this->sshkey_dumper->shouldReceive('changeProcessUidGidToUser')->once();
-        $this->sshkey_dumper->shouldReceive('restoreRootUidGid')->once();
+        $this->sshkey_dumper->expects(self::once())->method('changeProcessUidGidToUser');
+        $this->sshkey_dumper->expects(self::once())->method('restoreRootUidGid');
 
         $this->backend->shouldReceive('log')->with(
             Hamcrest\Matchers::matchesPattern('%was a link to "' . $foobar_ssh . '"%'),
@@ -137,10 +140,11 @@ final class User_SSHKeyDumperTest extends \Tuleap\Test\PHPUnit\TestCase
         // /home/users/toto/.ssh -> /root/.ssh
         symlink($this->foobar_home . '/.ssh', $this->toto_home . '/.ssh');
 
-        $this->sshkey_dumper->shouldReceive('changeProcessUidGidToUser')->twice();
-        $this->sshkey_dumper->shouldReceive('restoreRootUidGid')->times(3);
+        $this->sshkey_dumper->expects(self::exactly(2))->method('changeProcessUidGidToUser');
+        $this->sshkey_dumper->expects(self::exactly(2))->method('restoreRootUidGid');
 
         $this->backend->shouldReceive('log');
+        $this->backend->shouldReceive('changeOwnerGroupMode');
 
         // First call will fail (see previous test) ...
         $this->sshkey_dumper->writeSSHKeys($this->user);

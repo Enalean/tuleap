@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -28,7 +27,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
      * @var Tracker_Report_REST
      */
     private $report;
-    private Tracker_FormElementFactory|Stub $formelement_factory;
+    private Tracker_FormElementFactory&\PHPUnit\Framework\MockObject\MockObject $formelement_factory;
     private Tracker $tracker;
 
     protected function setUp(): void
@@ -37,7 +36,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
         $this->tracker             = TrackerTestBuilder::aTracker()->withId(122)->build();
         $permissions_manager       = $this->createStub(\PermissionsManager::class);
         $dao                       = $this->createStub(\Tracker_ReportDao::class);
-        $this->formelement_factory = $this->createStub(\Tracker_FormElementFactory::class);
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
 
         $this->report = new Tracker_Report_REST(
             $current_user,

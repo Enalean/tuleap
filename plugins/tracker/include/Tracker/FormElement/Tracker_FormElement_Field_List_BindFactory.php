@@ -41,10 +41,12 @@ class Tracker_FormElement_Field_List_BindFactory
      * @var BindUgroupsValueDao
      */
     private $ugroups_value_dao;
+    private \Psr\Log\LoggerInterface $logger;
 
-    public function __construct(?UGroupManager $ugroup_manager = null)
+    public function __construct(?UGroupManager $ugroup_manager = null, ?\Psr\Log\LoggerInterface $logger = null)
     {
         $this->ugroup_manager = $ugroup_manager ? $ugroup_manager : new UGroupManager();
+        $this->logger         = $logger ?? BackendLogger::getDefaultLogger();
     }
 
     private function getUgroupsValueDao()
@@ -123,7 +125,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
                 break;
             default:
-                trigger_error('Unknown bind "' . $type . '"', E_USER_WARNING);
+                $this->logger->warning('Unknown bind "' . $type . '"');
                 break;
         }
         return $bind;
@@ -219,7 +221,7 @@ class Tracker_FormElement_Field_List_BindFactory
                     $this->getUgroupsValueDao()
                 );
             default:
-                trigger_error('Unknown bind "' . $row['type'] . '"', E_USER_WARNING);
+                $this->logger->warning('Unknown bind "' . $row['type'] . '"');
                 return new Tracker_FormElement_Field_List_Bind_Null($row['field']);
         }
     }
