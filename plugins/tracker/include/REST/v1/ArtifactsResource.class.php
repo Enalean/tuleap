@@ -668,6 +668,29 @@ class ArtifactsResource extends AuthenticatedResource
      *          Each new file must correspond to valid /artifact_temporary_files/:id resource.
      *          A user can only add their own temporary files</li>
      *      <li>To empty a file field of its content, the value should be empty (e.g. value: [] or value: "").</li>
+     *      <li>To link an artifact you can use the "<strong>all_links</strong>" key which contains a json array of artifact id you want to link with the wanted type. </br>
+     *          Example: {"id": 11, "direction": "reverse", "type": "my_link_type"} with: </br>
+     *          id: the artifact id to be linked</br>
+     *          direction: the direction of the link between two artifact, the value must be "<strong>forward</strong>" or "<strong>reverse</strong>" </br>
+     *          type: the artifact link type (e.g: _is_child) </br>
+     *          /!\ The "<strong>all_links</strong>" key cannot be used at the same time as "<strong>links</strong>" and/or "<strong>parent</strong>" key </br>
+     *          Example when I update artifact #5 with following payload:
+     *          <pre>
+     *           {  <br/>
+     *             &nbsp; "values": [{ <br/>
+     *             &nbsp; "field_id": 543, // field id of the artifact link field<br/>
+     *             &nbsp; "all_links": <br/>
+     *              &nbsp; &nbsp; [ <br/>
+     *                 &nbsp; &nbsp; &nbsp; {"id": 11, "direction": "reverse", "type": "_is_child"}, // artifact #11 will be the parent of the given artifact #5 <br/>
+     *                 &nbsp; &nbsp; &nbsp; {"id": 151, "direction": "forward", "type": "_is_child"} // artifact #151 will be the child of the given artifact #5 <br/>
+     *             &nbsp; &nbsp; ] <br/>
+     *            &nbsp; }] <br/>
+     *          }
+     *         </pre>
+     *          In previous payload:</br>
+     *          "<strong>Forward</strong>" direction will create a link between artifacts like the following : art #151 will be a direct link in art #5</br>
+     *          "<strong>Reverse</strong>" direction will create a link between artifacts like the following : art #11 will be a reverse link of art #5 </br>
+     *      </li>
      *    </ol>
      * </ol>
      *
@@ -835,21 +858,40 @@ class ArtifactsResource extends AuthenticatedResource
      *      "value": [41, 42]<br/>
      *    }<br/>
      *    </pre>
-     *    <br/><br/>
+     *    <br/>
      *  Note that 41 and 42 ids are provided by /artifact_temporary_files routes.
      *  A user can only add their own temporary files.
      *  To create a temporary file, use POST on /artifact_temporary_files.
+     *  </li>
+     *  <li>
+     *     To link an artifact you can use the "<strong>all_links</strong>" key which contains a json array of artifact id you want to link with the wanted type. </br>
+     *      Example: {"id": 11, "direction": "reverse", "type": "my_link_type"} with: </br>
+     *      id: the artifact id to be linked</br>
+     *      direction: the direction of the link between two artifact, the value must be "<strong>forward</strong>" or "<strong>reverse</strong>" </br>
+     *      type: the artifact link type (e.g: _is_child) </br>
+     *      /!\ The "<strong>all_links</strong>" key cannot be used at the same time as "<strong>links</strong>" and/or "<strong>parent</strong>" key </br>
      *  </li>
      *  <li>Full Example:
      *  <pre>
      *  {<br/>
      *    "tracker": {"id" : 54},<br/>
      *    "values": [<br/>
-     *      {"field_id": 1806, "value" : "my new artifact"},<br/>
-     *      {"field_id": 1841, "bind_value_ids" : [254,598,148]}<br/>
+     *       &nbsp; {"field_id": 1806, "value" : "my new artifact"},<br/>
+     *       &nbsp; {"field_id": 1841, "bind_value_ids" : [254,598,148]},<br/>
+     *       &nbsp; { <br/>
+     *             &nbsp; "field_id": 543, // field id of the artifact link field<br/>
+     *             &nbsp; "all_links": <br/>
+     *              &nbsp; &nbsp; [ <br/>
+     *                 &nbsp; &nbsp; &nbsp; {"id": 11, "direction": "reverse", "type": "_is_child"}, // artifact #11 will be the parent of the created artifact <br/>
+     *                 &nbsp; &nbsp; &nbsp; {"id": 151, "direction": "forward", "type": "_is_child"} // artifact #151 will be the child of the created artifact <br/>
+     *             &nbsp; &nbsp; ] <br/>
+     *            &nbsp; } <br/>
      *    ]<br/>
      *  }<br/>
      *  </pre>
+     *   Notes about the artifact link in the previous payload:</br>
+     *  "<strong>Forward</strong>" direction will create a direct link between the created artifact and the artifact #151</br>
+     *  "<strong>Reverse</strong>" direction will create a reverse link between the created artifact and the artifact #11</br>
      *  </li>
      * </ol>
      *
