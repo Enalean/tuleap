@@ -83,7 +83,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     /**
      * Display the artifact
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
      * @param PFUser                           $current_user    The current user
      *

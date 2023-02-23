@@ -156,8 +156,6 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
     /**
      * Handles POST requests for tree operations
      *
-     * @param String $method
-     *
      * @return bool
      */
     public function httpPOST(RequestInterface $request, ResponseInterface $response)

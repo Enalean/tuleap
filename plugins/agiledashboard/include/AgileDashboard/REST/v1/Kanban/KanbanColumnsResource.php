@@ -153,7 +153,7 @@ class KanbanColumnsResource
      *
      * @param int                             $id        Id of the column
      * @param int                             $kanban_id Id of the Kanban {@from query}
-     * @param KanbanColumnPATCHRepresentation $column    The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
+     * @param KanbanColumnPATCHRepresentation $updated_column_properties The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 403

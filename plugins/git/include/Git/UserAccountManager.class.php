@@ -63,7 +63,6 @@ class Git_UserAccountManager
 
     /**
      *
-     * @param Git_RemoteServer_GerritServerFactory $factory
      * @return void
      * @throws Git_UserSynchronisationException
      */

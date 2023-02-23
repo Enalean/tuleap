@@ -301,8 +301,6 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
-     * @param Planning         $planning
-     *
      * @return TreeNode
      */
     public function getPlannedArtifacts(

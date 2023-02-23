@@ -94,7 +94,6 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      *
      * @param int|string $report_id
      * @param int $renderer_id
-     * @param int $chart_id
      *
      * @return Tracker_Report_Session
      */

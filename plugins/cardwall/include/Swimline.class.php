@@ -43,10 +43,6 @@ class Cardwall_Swimline
      */
     public $is_no_matching_column = false;
 
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
     public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, array $cells)
     {
         $this->cells                  = $cells;

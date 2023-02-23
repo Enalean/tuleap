@@ -63,7 +63,6 @@ class Project_HierarchyManager
     /**
      * @param int $project_id
      * @param int $parent_project_id
-     * @param Project|null $current_parent
      * @return bool
      */
     private function validateParent($project_id, $parent_project_id)

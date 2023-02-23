@@ -51,9 +51,6 @@ final class AddAdditionalFieldUserRegistration implements \Tuleap\Event\Dispatch
         return $this->additional_fields_in_html;
     }
 
-    /**
-     * @param string $additional_fields_in_html
-     */
     public function appendAdditionalFieldsInHtml(string $additional_field_in_html): void
     {
         $this->additional_fields_in_html .= $additional_field_in_html;

@@ -118,8 +118,6 @@ class ExecutionRepresentationBuilder
 
     /**
      * @return \Tuleap\TestManagement\REST\v1\SlicedExecutionRepresentations
-     *
-     * @param false|int $execution_tracker_id
      */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,

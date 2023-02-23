@@ -72,12 +72,6 @@ class Git_GitoliteDriver
     public const NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
     public const EXTRA_REPO_RESTORE_DEPTH = 2;
 
-    /**
-     * Constructor
-     *
-     * @param string $adminPath The path to admin folder of gitolite.
-     *                          Default is $sys_data_dir . "/gitolite/admin"
-     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         Git_SystemEventManager $git_system_event_manager,
@@ -371,9 +365,7 @@ class Git_GitoliteDriver
     /**
      * Backup gitolite repository
      *
-     * @param String $path               The repository path
      * @param String $backup_directory The repository backup directory path
-     * @param String $repositoryName
      *
      */
     public function backup(GitRepository $repository, $backup_directory)
@@ -464,7 +456,6 @@ class Git_GitoliteDriver
      * Extract repository
      *
      * @param String $backup_path
-     * @param String $restore_path
      *
      */
     private function extractRepository($backup_path)

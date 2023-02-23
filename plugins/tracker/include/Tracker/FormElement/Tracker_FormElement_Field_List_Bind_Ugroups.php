@@ -138,8 +138,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * @param string $keyword
-     *
      * @return array
      */
     public function getAllValues()

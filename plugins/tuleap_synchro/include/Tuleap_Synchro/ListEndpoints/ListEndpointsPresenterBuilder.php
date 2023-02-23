@@ -21,14 +21,10 @@
 
 namespace Tuleap\TuleapSynchro\ListEndpoints;
 
-use CSRFSynchronizerToken;
-
 class ListEndpointsPresenterBuilder
 {
     /**
      * @param array $list_endpoints
-     * @param CSRFSynchronizerToken $csrf_token_add
-     * @param CSRFSynchronizerToken $csrf_token_delete
      * @return ListEndpointsPresenter[]
      */
     public function build(array $list_endpoints)

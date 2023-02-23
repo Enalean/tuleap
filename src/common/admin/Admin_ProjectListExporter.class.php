@@ -34,8 +34,6 @@ class Admin_ProjectListExporter
      *
      * @param String  $group_name_search
      * @param String  $status
-     * @param String  $var_return
-     *
      */
     public function exportProjectList($group_name_search, $status)
     {

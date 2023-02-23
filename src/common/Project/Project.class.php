@@ -551,7 +551,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     }
 
     /**
-     * @param Project $project
      * @return bool
      */
     public function isLegacyDefaultTemplate()

@@ -23,9 +23,6 @@ class Tracker_XML_Updater_TemporaryFileCreator
     /** @var string */
     private $copy_directory;
 
-    /**
-     * @param string $copy_directory
-     */
     public function __construct()
     {
         $this->copy_directory = $this->getUniqueRandomDirectory();

@@ -415,7 +415,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * Fetch the html code to display the field value in artifact in read only mode
      *
      * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
      *
      * @return string
      */

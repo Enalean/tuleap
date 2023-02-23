@@ -82,7 +82,6 @@ class BaseLanguageFactory
     /**
      * Instantiate and load a new BaseLanguage
      *
-     * @param string $supported_languages The supported languages eg: 'en_US,fr_FR'
      * @param string $locale              The current locale
      *
      * @return BaseLanguage

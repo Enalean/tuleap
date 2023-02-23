@@ -73,9 +73,6 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
 
     /**
      * set the inheritance on all Project's servers
-     * @param array $gerrit_servers
-     * @param type $project_name
-     * @param type $parent_project_name
      */
     private function setProjectInheritanceOnServers(array $gerrit_servers, Project $project, Project $parent_project)
     {

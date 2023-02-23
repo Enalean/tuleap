@@ -73,8 +73,6 @@ class BackendCVS extends Backend
      * Create project CVS repository
      * If the directory already exists, nothing is done.
      *
-     * @param int $group_id project id for wic CVS repository will be created
-     *
      * @return bool true if repo is successfully created, false otherwise
      */
     public function createProjectCVS(\Project $project)

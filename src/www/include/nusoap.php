@@ -6440,7 +6440,6 @@ class soap_client extends nusoap_base
     *
     * @param    mixed $endpoint SOAP server or WSDL URL (string), or wsdl instance (object)
     * @param    bool $wsdl optional, set to true if using WSDL
-    * @param    int $portName optional portName in WSDL document
     * @param    string $proxyhost
     * @param    string $proxyport
     * @param    string $proxyusername

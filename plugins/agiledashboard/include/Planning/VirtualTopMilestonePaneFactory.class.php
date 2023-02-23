@@ -75,7 +75,6 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
     }
 
     /**
-     * @param Planning_Milestone $milestone
      * @return int
      */
     private function getMilestoneArtifactId()

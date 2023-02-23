@@ -114,7 +114,6 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * Build the top list of link for the 2 ways (links and back_links).
      *
      * @param  String $way Either 'links' or 'back_links'
-     * @param  String $sql The SQL to get the links
      */
     private function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar): string
     {
@@ -153,7 +152,6 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      * "back links"
      *
      * @param  String $way Either 'links' or 'back_links'
-     * @param  String $res One row of link
      */
     private function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar): string
     {

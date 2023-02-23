@@ -71,11 +71,9 @@ class Git_Driver_Gerrit_UserAccountManager
      *
      * @param array $original_keys
      * @param array $new_keys
-     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
-     * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user)
+    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user): void
     {
         if (! $this->isGerrit($user)) {
             return;
@@ -111,11 +109,9 @@ class Git_Driver_Gerrit_UserAccountManager
     /**
      * Makes sure there is one copy of each key on each remote server
      *
-     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
-     * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(PFUser $user)
+    public function pushSSHKeys(PFUser $user): void
     {
         if (! $this->isGerrit($user)) {
             return;

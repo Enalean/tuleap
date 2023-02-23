@@ -71,9 +71,6 @@ class CheckPostActionsForTracker implements Dispatchable
         return $this->are_post_actions_eligible;
     }
 
-    /**
-     * @param bool $are_post_actions_eligible
-     */
     public function setPostActionsNonEligible(): void
     {
         $this->are_post_actions_eligible = false;

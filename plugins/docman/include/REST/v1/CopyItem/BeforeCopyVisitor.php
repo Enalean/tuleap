@@ -102,7 +102,6 @@ final class BeforeCopyVisitor implements ItemVisitor
     }
 
     /**
-     * @psalm-param callable(string, Docman_Folder): bool $does_title_conflict
      * @throws RestException
      */
     private function handleDocument(

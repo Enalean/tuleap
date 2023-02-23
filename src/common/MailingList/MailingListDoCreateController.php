@@ -178,9 +178,6 @@ class MailingListDoCreateController implements DispatchableWithRequest
         return 'https://' . ForgeConfig::get('sys_lists_host');
     }
 
-    /**
-     * @param string $sys_lists_domain
-     */
     private function sendThePasswordToTheUser(
         HTTPRequest $request,
         string $new_list_name,

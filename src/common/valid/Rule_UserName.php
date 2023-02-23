@@ -262,8 +262,6 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * Dedicate a method to be able to override it in descendent classes
      *
-     * @param String $val Value to test
-     *
      * @return bool
      */
     protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
@@ -275,8 +273,6 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      * Returns error message when name contains a space
      *
      * Dedicate a method to be able to override it in descendent classes
-     *
-     * @param String $val Value to test
      *
      * @return bool
      */

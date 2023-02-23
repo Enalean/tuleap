@@ -129,7 +129,6 @@ class Tracker_DateReminderFactory
      * @param int $fieldId Id of the date field
      * @param int $notificationType 0 if before, 1 if after the value of the date field
      * @param int $distance Distance from the value of the date fiels
-     * @param int $reminderId Id of the reminder if it is an updated one Else 0
      */
     private function checkDuplicatedRemindersAtCreation($fieldId, $notificationType, $distance): void
     {

@@ -246,8 +246,6 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @protected for test purpose
      *
-     * @param URL $url Accessed url
-     *
      * @return void
      */
     protected function displayRestrictedUserProjectError(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user, Project $project)
@@ -266,8 +264,6 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * Display error message for restricted user.
      *
      * @protected for test purpose
-     *
-     * @param URL $url Accessed url
      *
      * @return void
      */

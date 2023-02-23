@@ -37,12 +37,8 @@ class Cardwall_RendererBoardBuilder
 
     /**
      * Get the board
-     *
-     * @param array $artifact_ids
-     * @param Cardwall_MappingCollection $mappings_collection
-     * @return \Cardwall_Board
      */
-    public function getBoard(array $artifact_ids, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection)
+    public function getBoard(array $artifact_ids, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection): Cardwall_Board
     {
         return new Cardwall_Board($this->getSwimlines($artifact_ids, $columns), $columns, $mapping_collection);
     }

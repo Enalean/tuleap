@@ -69,9 +69,6 @@ class SVN_LogFactory
     /**
      * Returns the commiters on given period with their commit count
      *
-     * @param int $start_date
-     * @param int $end_date
-     *
      * @return Array
      */
     public function getCommiters(TimeInterval $interval)

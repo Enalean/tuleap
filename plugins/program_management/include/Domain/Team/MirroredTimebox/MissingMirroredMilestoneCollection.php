@@ -65,7 +65,6 @@ final class MissingMirroredMilestoneCollection
 
     /**
      * @param ProgramIncrement[] $open_program_increments
-     * @param ProjectReference[] $aggregated_teams
      */
     public static function buildFromProgramIdentifierAndTeam(
         SearchMirrorTimeboxesFromProgram $timebox_searcher,

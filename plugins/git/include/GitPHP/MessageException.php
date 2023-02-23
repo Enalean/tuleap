@@ -48,7 +48,6 @@ class MessageException extends Exception implements CodeIsAValidHTTPStatus
      * @param bool $error true if this is an error rather than informational
      * @param int $statusCode HTTP status code to return
      * @param int $code exception code
-     * @param Exception $previous previous exception
      * @return Exception message exception object
      */
     public function __construct($message, $error = false, $statusCode = 200, $code = 0)

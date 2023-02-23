@@ -72,8 +72,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
 
     /**
      * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
-     *
-     * @param Tracker_ArtifactFactory $factory
      */
     public static function clearInstance()
     {

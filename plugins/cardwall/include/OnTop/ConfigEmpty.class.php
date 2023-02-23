@@ -48,7 +48,6 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     /**
      * Get Frestyle columns for Cardwall_OnTop, or status columns if none
      *
-     * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getDashboardColumns()

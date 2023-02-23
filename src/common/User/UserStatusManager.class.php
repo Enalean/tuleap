@@ -78,7 +78,6 @@ class User_UserStatusManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     /**
      * Check user status validity
      *
-     * @param bool $allowpending
      * @return bool
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException

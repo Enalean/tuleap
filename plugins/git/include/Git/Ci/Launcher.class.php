@@ -46,8 +46,6 @@ class Git_Ci_Launcher
 
     /**
      * Trigger jobs corresponding to the Git repository
-     *
-     * @param GitRepository $repository_location Name of the git repository
      */
     public function executeForRepository(GitRepository $repository)
     {

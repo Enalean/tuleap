@@ -222,7 +222,7 @@ class Docman_ApprovalTableReminder
     /**
      * Retrieve url to access a given docman item
      *
-     * @param Docman_Item $table The approval table that its reminder notification will be sent
+     * @param Docman_Item $docmanItem The approval table that its reminder notification will be sent
      *
      * @return String
      */

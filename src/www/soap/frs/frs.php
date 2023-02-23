@@ -1226,7 +1226,6 @@ if (defined('NUSOAP')) {
  * addFileChunk - add a chunk of a file in the incoming directory.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group we want to add the file
  * @param string $filename the name of the file we want to add
  * @param string $contents the content of the chunk, encoded in base64
  * @param bool $first_chunk indicates if the chunk to add is the first
