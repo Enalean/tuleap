@@ -47,8 +47,6 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
-     *
-     * @param Tracker_Hierarchy_HierarchicalTrackerFactory $factory
      */
     public static function setInstance(Tracker_Hierarchy_HierarchicalTrackerFactory $instance)
     {

@@ -63,8 +63,6 @@ class ChartMessageFetcher
     }
 
     /**
-     * @param Tracker $tracker
-     *
      * @return string
      */
     public function fetchWarnings(Tracker_FormElement_Field $field, ChartFieldUsage $usage)

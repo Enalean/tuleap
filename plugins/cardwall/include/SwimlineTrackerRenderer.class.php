@@ -31,7 +31,6 @@ class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline
     public $swimline_id = self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER;
 
     /**
-     * @param string $title
      * @param array  $cells
      */
     public function __construct(array $cells)

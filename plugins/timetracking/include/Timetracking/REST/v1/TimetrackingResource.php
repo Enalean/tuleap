@@ -148,7 +148,7 @@ class TimetrackingResource extends AuthenticatedResource
      * @access protected
      *
      * @status 201
-     * @param TimetrackingPOSTRepresentation $item_representation The created Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPOSTRepresentation}
+     * @param TimetrackingPOSTRepresentation $item The created Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPOSTRepresentation}
      * @return TimetrackingRepresentation
      *
      * @throws RestException 400

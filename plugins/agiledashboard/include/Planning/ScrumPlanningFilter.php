@@ -158,9 +158,6 @@ class ScrumPlanningFilter
     }
 
     /**
-     * @param array $trackers
-     * @param array $kanban_tracker_ids
-     *
      * @return array
      */
     private function getPlanningTrackerFilteredForMultiMilestone(

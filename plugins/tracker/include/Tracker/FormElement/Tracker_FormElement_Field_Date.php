@@ -662,8 +662,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
      /**
      * Fetch the html code to display the field value in masschange submission form
-     * @param array $submitted_values the values already submitted
-     *
      * @return string html
      */
     protected function fetchSubmitValueMasschange()

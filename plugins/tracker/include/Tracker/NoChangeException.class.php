@@ -24,7 +24,6 @@ class Tracker_NoChangeException extends Tracker_Exception
      * @param int $artifact_id
      * @param string $artifact_xref cross reference text @see Tracker_Artifact::getXRef()
      * @param string $message
-     * @param Exception $previous
      */
     public function __construct($artifact_id, $artifact_xref, $message = null, int $code = 0)
     {

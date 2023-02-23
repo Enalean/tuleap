@@ -152,7 +152,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider dataProviderInjectAndInformUserAboutBacklogItemBeingCovered
      * @param array<string,string> $request_parameters
-     * @psalm-param callable(string):bool $has_expected_content
+     * @psalm-param callable(string):bool $has_expected_feedback_content
      */
     public function testInjectAndInformUserAboutBacklogItemBeingCovered(array $request_parameters, callable $has_expected_feedback_content): void
     {

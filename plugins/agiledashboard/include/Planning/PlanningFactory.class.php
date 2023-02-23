@@ -272,7 +272,6 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      *
      * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
-     * @param PlanningFactory $planning_factory
      *
      * @return Planning[]
      */
@@ -290,7 +289,6 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      *
      * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
-     * @param PlanningFactory $planning_factory
      *
      * @return Planning[]
      */

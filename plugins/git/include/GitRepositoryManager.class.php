@@ -389,10 +389,6 @@ class GitRepositoryManager
 
     /**
      * Return true if proposed name already exists as a repository path
-     *
-     * @param Project $project
-     * @param String  $name
-     *
      */
     public function isRepositoryNameAlreadyUsed(GitRepository $new_repository): bool
     {

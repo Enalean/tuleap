@@ -322,10 +322,9 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Execute actions after transition happens (if there is one)
      *
-     * @param PFUser                     $user               The user who changed things
      * @param array                      $fields_data        Request field data (array[field_id] => data)
      * @param Tracker_Artifact_Changeset $new_changeset      The changeset that has just been created
-     * @param Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
+     * @param ?Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
      *
      * @return void
      */

@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReference;
-use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\API\Tag\GitlabTag;
@@ -142,9 +141,6 @@ class TagPushWebhookCreateAction
         }
     }
 
-    /**
-     * @param Project[] $projects
-     */
     private function saveReferenceInIntegratedProject(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,

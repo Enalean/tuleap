@@ -424,7 +424,6 @@ function _safe_array_merge_recursive($array1, $array2)
  * @param string       $description       Description
  * @param string       $ordering          Ordering (begin, end)
  * @param string       $status            Status (none, draft, approved, rejected)
- * @param string       $obsolescence_date Obsolescence date
  * @param string       $type              Type (folder, file, embedded_file, link, empty, wiki)
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values

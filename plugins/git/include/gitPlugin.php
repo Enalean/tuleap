@@ -1141,8 +1141,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     }
 
     /**
-     *
-     * @param PFUser $user
      * @return Git_UserAccountManager
      */
     private function getUserAccountManager()

@@ -245,8 +245,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
      /**
      * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
      * @return string html
      */
     protected function fetchSubmitValueMasschange()

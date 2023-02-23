@@ -61,7 +61,6 @@ class ServiceMediawiki extends Service
     }
 
     /**
-     * @param HTTPRequest $request
      * @return bool
      */
     public function userIsAdmin(PFUser $user)

@@ -59,7 +59,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     }
 
     /**
-     * @param PFUser             $user
      * @param int              $timestamp
      *
      * @return mixed
@@ -71,8 +70,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     }
 
     /**
-     * @param PFUser             $user
-     *
      * @return mixed
      */
     private function getCurrentComputedValue(Artifact $artifact)
@@ -204,8 +201,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     /**
      * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
      * @return string html
      */
     protected function fetchSubmitValueMasschange()

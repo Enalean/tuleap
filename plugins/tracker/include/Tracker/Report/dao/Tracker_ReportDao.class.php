@@ -200,11 +200,7 @@ class Tracker_ReportDao extends DataAccessObject
      * @param int   $tracker_id       The id of the tracker
      * @param array $additional_from  If you have to join on some table put them here
      * @param array $additional_where If you have to select the results, help yourself!
-     * @param bool  $user_is_admin True if the user is superuser
      * @param array $permissions
-     * @param string $ugroups          Ugroups of the current user to check the permissions
-     * @param array $static_ugroups
-     * @param array $dynamic_ugroups
      * @param int $contributor_field_id The field id corresponding to the contributor semantic
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */

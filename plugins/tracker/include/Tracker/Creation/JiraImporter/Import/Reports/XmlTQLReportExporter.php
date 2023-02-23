@@ -43,9 +43,6 @@ class XmlTQLReportExporter
      */
     private $report_table_exporter;
 
-    /**
-     * @param FieldMapping[] $column_fields
-     */
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
         XML_SimpleXMLCDATAFactory $cdata_factory,

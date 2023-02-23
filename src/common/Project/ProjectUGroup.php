@@ -540,8 +540,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Check if the user group is bound
      *
-     * @param int $ugroupId Id of the user goup
-     *
      * @return bool
      */
     public function isBound()

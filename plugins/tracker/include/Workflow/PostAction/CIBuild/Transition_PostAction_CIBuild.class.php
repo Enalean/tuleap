@@ -50,7 +50,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
      *
      * @param Transition                   $transition The transition the post action belongs to
      * @param int                          $id         Id of the post action
-     * @param string                       $host       host of the jenkins server
      * @param string                       $job_url   name of the job
      */
     public function __construct(Transition $transition, $id, $job_url, Jenkins_Client $client)

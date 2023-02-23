@@ -187,8 +187,6 @@ class Docman_NotificationsManager
     *  )
     *
     * @param Docman_Item $item  Item which listenners will be retrieved
-    * @param Array       $users Array where listeners are inserted.
-    * @param String      $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
     *
     * @return Array
     */

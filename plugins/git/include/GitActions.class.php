@@ -291,8 +291,6 @@ class GitActions extends PluginActions
     /**
      * Generates a list of GitRepositoryWithPermissions which are migrated to a
      * gerrit server and belong to the project or the project's parent.
-     *
-     * @param Project[] $parent_projects
      */
     public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user)
     {

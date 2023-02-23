@@ -255,7 +255,6 @@ class enalean_licensemanagerPlugin extends Plugin
     }
 
     /**
-     * @param int $nb_used_users
      * @param int $nb_max_users
      * @return string
      */

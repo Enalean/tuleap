@@ -92,9 +92,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * 2- User decides to cascade deletion of the wiki page to wiki service too. In that case, we completely remove the
      * wiki page from wiki service.
      *
-     * @param Docman_Wiki $item
-     * @param array       $params params.
-     *
      * @return bool $deleted. True if there is no error.  False otherwise.
      * @throws DeleteFailedException
      */

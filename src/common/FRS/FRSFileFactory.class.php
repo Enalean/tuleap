@@ -451,7 +451,6 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      *
      * @static
      *
-     * @param int $release_id the ID of the release the file belongs to
      * @return string the sub-directory (wihtout any /) where to upload the file
      */
     public function getUploadSubDirectory(FRSRelease $release)
