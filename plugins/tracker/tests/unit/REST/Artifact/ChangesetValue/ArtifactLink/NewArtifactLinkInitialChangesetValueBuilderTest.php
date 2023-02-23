@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
@@ -108,8 +107,6 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
 
     public function testItBuildsFromARESTPayloadWithOnlyAllLinksKey(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, true);
-
         $link1_representation            = new LinkWithDirectionRepresentation();
         $link1_representation->id        = self::FIRST_ADDED_ARTIFACT_ID;
         $link1_representation->direction = "forward";

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
@@ -35,7 +34,6 @@ final class ValidArtifactLinkPayloadBuilderTest extends TestCase
 
     public function testItThrowsWhenAllLinkAndLinksAreUsedInTheSameTime(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
             ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
             ->withLinks(['id' => 24])
@@ -48,7 +46,6 @@ final class ValidArtifactLinkPayloadBuilderTest extends TestCase
 
     public function testItThrowsWhenNeitherLinksOrAllLinksAreUsed(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)->build();
 
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
@@ -58,7 +55,6 @@ final class ValidArtifactLinkPayloadBuilderTest extends TestCase
 
     public function testItThrowsWhenAllLinksIsUsedWithParent(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
             ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
             ->withParent(self::PARENT_ARTIFACT_ID)

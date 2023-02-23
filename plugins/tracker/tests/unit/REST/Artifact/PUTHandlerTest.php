@@ -31,7 +31,6 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
@@ -140,8 +139,6 @@ final class PUTHandlerTest extends TestCase
 
     public function testItDoesNotMakesTheReverseOfAnArtifactIfTheParentKeyWasGiven(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-
         $this->field_retriever = RetrieveUsedFieldsStub::withFields(
             ArtifactLinkFieldBuilder::anArtifactLinkField(1)
                                     ->withTrackerId(20)
@@ -165,8 +162,6 @@ final class PUTHandlerTest extends TestCase
 
     public function testItDoesNotMakesTheReverseOfAnArtifactIfTheLinksKeyIsGiven(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-
         $this->field_retriever = RetrieveUsedFieldsStub::withFields(
             ArtifactLinkFieldBuilder::anArtifactLinkField(1)
                                     ->withTrackerId(20)
@@ -190,8 +185,6 @@ final class PUTHandlerTest extends TestCase
 
     public function testItLinksTheArtifactWithForwardAndReverseLink(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
-
         $this->field_retriever = RetrieveUsedFieldsStub::withFields(
             ArtifactLinkFieldBuilder::anArtifactLinkField(1)
                                     ->withTrackerId(20)
