@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { linkGitlabGroupWithTuleap } from "./tuleap-api-querier";
 import { uri } from "@tuleap/fetch-result";
 
+vi.mock("@tuleap/fetch-result");
+
 describe("tuleap-api-querier", () => {
     it("should ask Tuleap to link the given group to the given project with given credentials", async () => {
-        const postSpy = jest.spyOn(fetch_result, "postJSON");
+        const postSpy = vi.spyOn(fetch_result, "postJSON");
         postSpy.mockReturnValue(okAsync(undefined));
 
         const project_id = 101;

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { vi } from "vitest";
 import type { MountingOptions } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import { createTestingPinia } from "@pinia/testing";
@@ -36,6 +37,7 @@ export function getGlobalTestOptions(
             createGettext({ silent: true }),
             createTestingPinia({
                 initialState: store_options,
+                createSpy: vi.fn,
             }),
         ],
     };

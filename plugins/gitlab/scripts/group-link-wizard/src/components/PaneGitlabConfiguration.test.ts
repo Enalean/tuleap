@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount, flushPromises } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
@@ -98,7 +99,7 @@ describe("PaneGitlabConfiguration", () => {
         it(`should call the tuleap api with all the information needed
             and should keep the button disabled with a spinner
             to prevent user from triggering create again while the page is reloading`, async () => {
-            const create_link_spy = jest
+            const create_link_spy = vi
                 .spyOn(tuleap_api, "linkGitlabGroupWithTuleap")
                 .mockReturnValue(okAsync(undefined));
 
@@ -124,7 +125,7 @@ describe("PaneGitlabConfiguration", () => {
         });
 
         it("When an error occurs, Then it should display an error message", async () => {
-            jest.spyOn(tuleap_api, "linkGitlabGroupWithTuleap").mockReturnValue(
+            vi.spyOn(tuleap_api, "linkGitlabGroupWithTuleap").mockReturnValue(
                 errAsync(Fault.fromMessage("some-reason"))
             );
 
