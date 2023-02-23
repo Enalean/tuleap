@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tuleap\GlobalLanguageMock;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\User\REST\UserRepresentation;
 
 final class FlatArtifactRepresentationTransformerTest extends TestCase
 {
-    use GlobalLanguageMock;
-
     public function testTransformRepresentationWithMultipleFieldValues(): void
     {
         $field_1 = $this->buildField(1, 'f1');
@@ -63,7 +62,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
      * @dataProvider dataProviderFieldValues
      */
     public function testTransformAllFieldValues(
-        ArtifactFieldValueFullRepresentation|ArtifactFieldValueTextRepresentation|ArtifactFieldComputedValueFullRepresentation $field_value,
+        ArtifactFieldValueFullRepresentation|ArtifactFieldValueTextRepresentation|ArtifactFieldComputedValueFullRepresentation|ArtifactFieldValueListFullRepresentation|ArtifactFieldValueOpenListFullRepresentation $field_value,
         array $expected_flat_value,
     ): void {
         $field_1 = $this->buildField(1, 'f1');
@@ -109,7 +108,19 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
         };
         yield 'computed field (computed value)' => [$build_computed_field_value(true, 123.456), ['f1' => 123.456]];
         yield 'computed field (manual value)' => [$build_computed_field_value(false, 456.123), ['f1' => 456.123]];
-        yield 'unknown filed type' => [$build_base_field_value('unknown', 'val'), []];
+        yield 'unknown field type' => [$build_base_field_value('unknown', 'val'), []];
+        $build_list_field = static function (array|null $list_values): ArtifactFieldValueListFullRepresentation {
+            $field_value = new ArtifactFieldValueListFullRepresentation();
+            $field_value->build(1, 'sb', 'label1', $list_values, []);
+            return $field_value;
+        };
+        yield 'list field (static values)' => [$build_list_field([['label' => 'value1'], ['label' => 'value2']]), ['f1' => ['value1', 'value2']]];
+        yield 'list field (user bind)' => [$build_list_field([UserRepresentation::build(UserTestBuilder::anActiveUser()->withId(103)->withLocale('en_US')->build())]), ['f1' => ['User #103 ()']]];
+        yield 'list field (user bind empty)' => [$build_list_field([UserRepresentation::build(\UserManager::instance()->getUserAnonymous())]), ['f1' => []]];
+        yield 'list field (user group bind)' => [$build_list_field([new MinimalUserGroupRepresentation(102, new \ProjectUGroup(['ugroup_id' => 999, 'name' => 'ugroup_name']))]), ['f1' => ['ugroup_name']]];
+        $openlist_representation = new ArtifactFieldValueOpenListFullRepresentation();
+        $openlist_representation->build(1, 'tbl', 'label1', 'static', [['label' => 'value1']], []);
+        yield 'openlist field' => [$openlist_representation, ['f1' => ['value1']]];
     }
 
     public function testArtifactRepresentationWithFieldValueReturnsAnError(): void

@@ -215,7 +215,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function __construct($row = null)
     {
         $this->is_super_user = null;
-        $this->locale        = '';
+        $this->locale        = BaseLanguage::DEFAULT_LANG;
         $this->preferences   = [];
 
         $this->user_id           = isset($row['user_id'])            ? $row['user_id']            : 0;
@@ -251,7 +251,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         if (! $this->language_id) {
             //Detect browser settings
             $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-            $this->locale    = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
+            if (isset($GLOBALS['Language'])) {
+                $this->locale = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
+            }
         } else {
             $this->locale = $this->language_id;
         }
