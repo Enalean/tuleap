@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as rest_querier from "./api/rest-querier";
 import type { GitlabIntegration } from "./fetch-gitlab-repositories-information";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
@@ -37,7 +38,7 @@ describe("fetch-gitlab-repositories-information", () => {
         const repo_1 = buildFakeGitLabIntegration(1);
         const repo_2 = buildFakeGitLabIntegration(2);
 
-        const spyGetBranchInfo = jest.spyOn(rest_querier, "getGitLabRepositoryBranchInformation");
+        const spyGetBranchInfo = vi.spyOn(rest_querier, "getGitLabRepositoryBranchInformation");
         spyGetBranchInfo.mockImplementation((integration_id: number) => {
             if (integration_id === 1) {
                 return okAsync({ ...repo_1, default_branch: "dev" });

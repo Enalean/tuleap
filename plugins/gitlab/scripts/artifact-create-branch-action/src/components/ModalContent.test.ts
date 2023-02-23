@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import ModalContent from "./ModalContent.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { flushPromises, shallowMount } from "@vue/test-utils";
@@ -60,13 +61,13 @@ describe("ModalContent", () => {
     }
 
     it("asks to create a GitLab branch and the associated merge request", async () => {
-        const create_gitlab_branch = jest.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
+        const create_gitlab_branch = vi.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
             okAsync({
                 branch_name: "prefix01/tuleap-123-artifact-title",
             } as GitLabIntegrationCreatedBranchInformation)
         );
 
-        const create_pull_request = jest
+        const create_pull_request = vi
             .spyOn(rest_queries, "postGitlabMergeRequest")
             .mockReturnValue(okAsync(undefined));
 
@@ -91,7 +92,7 @@ describe("ModalContent", () => {
     });
 
     it("asks to create only a GitLab branch", () => {
-        const create_gitlab_branch = jest.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
+        const create_gitlab_branch = vi.spyOn(rest_queries, "postGitlabBranch").mockReturnValue(
             okAsync({
                 branch_name: "prefix01/tuleap-123-artifact-title",
             } as GitLabIntegrationCreatedBranchInformation)
