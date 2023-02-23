@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import type { Router } from "vue-router";
@@ -28,6 +29,8 @@ import { useGitLabGroupsStore } from "../stores/groups";
 import type { GitlabGroupLinkStepName } from "../types";
 import { STEP_GITLAB_CONFIGURATION } from "../types";
 import type { GroupsState } from "../stores/types";
+
+vi.mock("vue-router");
 
 function getWrapper(groups_state: GroupsState): VueWrapper<InstanceType<typeof PaneGitlabGroup>> {
     return shallowMount(PaneGitlabGroup, {
@@ -51,8 +54,8 @@ describe("PaneGitlabGroup", () => {
     let push_route_spy: (to: { name: GitlabGroupLinkStepName }) => void;
 
     beforeEach(() => {
-        push_route_spy = jest.fn();
-        jest.spyOn(router, "useRouter").mockReturnValue({
+        push_route_spy = vi.fn();
+        vi.spyOn(router, "useRouter").mockReturnValue({
             push: push_route_spy,
         } as unknown as Router);
     });

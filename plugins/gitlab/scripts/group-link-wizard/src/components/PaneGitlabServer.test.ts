@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { StateTree } from "pinia";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
@@ -33,6 +34,8 @@ import type { Router } from "vue-router";
 import type { GitlabGroupLinkStepName } from "../types";
 import { STEP_GITLAB_GROUP } from "../types";
 import { useCredentialsStore } from "../stores/credentials";
+
+vi.mock("vue-router");
 
 const server_url = "https://example.com/";
 const token = "glpat-a1e2i3o4u5y6";
@@ -59,8 +62,8 @@ describe("PaneGitlabServer", () => {
     let push_route_spy: (to: { name: GitlabGroupLinkStepName }) => void;
 
     beforeEach(() => {
-        push_route_spy = jest.fn();
-        jest.spyOn(router, "useRouter").mockReturnValue({
+        push_route_spy = vi.fn();
+        vi.spyOn(router, "useRouter").mockReturnValue({
             push: push_route_spy,
         } as unknown as Router);
     });
@@ -78,7 +81,7 @@ describe("PaneGitlabServer", () => {
         ];
 
         const querier = GitlabApiQuerierStub.withGitlabGroups(groups);
-        jest.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(querier);
+        vi.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(querier);
 
         const wrapper = getWrapper();
         const groups_store = useGitLabGroupsStore();
@@ -103,7 +106,7 @@ describe("PaneGitlabServer", () => {
     it("should display an error when a fault is detected", async () => {
         const querier = GitlabApiQuerierStub.withFault(Fault.fromMessage("Nope"));
 
-        jest.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(querier);
+        vi.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(querier);
 
         const wrapper = getWrapper();
 
@@ -123,7 +126,7 @@ describe("PaneGitlabServer", () => {
         const wrapper = getWrapper();
 
         const fetcher = GitlabApiQuerierStub.withGitlabGroups([]);
-        jest.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(fetcher);
+        vi.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(fetcher);
 
         await wrapper.get("[data-test=gitlab-server-url]").setValue("not a url");
         await wrapper.get("[data-test=gitlab-access-token]").setValue(token);

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as gitlab_querier from "@tuleap/plugin-git-gitlab-api-querier";
 import { Fault } from "@tuleap/fault";
 import { okAsync, errAsync } from "neverthrow";
@@ -24,6 +25,8 @@ import type { ResultAsync } from "neverthrow";
 import { LINK_HEADER, createGitlabApiQuerier } from "./gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
 import { rawUri, uri } from "@tuleap/fetch-result";
+
+vi.mock("@tuleap/plugin-git-gitlab-api-querier");
 
 function buildResponse<TypeOfJSONPayload>(
     payload: TypeOfJSONPayload,
@@ -75,7 +78,7 @@ describe("gitlab-api-querier", () => {
 
         it("should query all the groups user can see on GitLab by fetching next pages urls extracted from the link header", async () => {
             let number_of_calls = 0;
-            const getSpy = jest.spyOn(gitlab_querier, "get").mockImplementation(() => {
+            const getSpy = vi.spyOn(gitlab_querier, "get").mockImplementation(() => {
                 number_of_calls++;
                 if (number_of_calls === 1) {
                     return okAsync(
@@ -114,7 +117,7 @@ describe("gitlab-api-querier", () => {
 
         it("should stop querying if a fetch operation has failed", async () => {
             let number_of_calls = 0;
-            const getSpy = jest.spyOn(gitlab_querier, "get").mockImplementation(() => {
+            const getSpy = vi.spyOn(gitlab_querier, "get").mockImplementation(() => {
                 number_of_calls++;
                 if (number_of_calls === 1) {
                     return okAsync(

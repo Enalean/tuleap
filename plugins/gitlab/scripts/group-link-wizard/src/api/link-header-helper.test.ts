@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { extractNextUrl } from "./link-header-helper";
 
 describe("link-header-helper", () => {
