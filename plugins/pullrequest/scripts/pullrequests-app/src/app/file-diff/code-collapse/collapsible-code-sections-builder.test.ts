@@ -6,7 +6,7 @@ import {
     getPaddedCollapsibleSections,
     getCollapsibleSectionsSideBySide,
 } from "./collaspible-code-sections-builder";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 
 describe("collapsible-code-sections-builder", () => {

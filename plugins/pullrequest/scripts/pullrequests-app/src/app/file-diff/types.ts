@@ -20,11 +20,11 @@
 import type {
     PullRequestCommentPresenter,
     PullRequestInlineCommentPresenter,
-} from "../comments/PullRequestCommentPresenter";
-import type { IRelativeDateHelper } from "../helpers/date-helpers";
-import type { ControlPullRequestComment } from "../comments/PullRequestCommentController";
-import type { CurrentPullRequestUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
-import type { PullRequestPresenter } from "../comments/PullRequestPresenter";
+    ControlPullRequestComment,
+    CurrentPullRequestUserPresenter,
+    HelpRelativeDatesDisplay,
+    PullRequestPresenter,
+} from "@tuleap/plugin-pullrequest-comments";
 import type { SaveNewInlineComment } from "../comments/new-comment-form/NewInlineCommentSaver";
 
 export type GroupType = "unmoved" | "deleted" | "added";
@@ -61,19 +61,17 @@ export type FileLine = UnMovedFileLine | AddedFileLine | RemovedFileLine;
 export type LeftLine = UnMovedFileLine | RemovedFileLine;
 export type RightLine = UnMovedFileLine | AddedFileLine;
 
-export type FileDiffWidgetType =
-    | "tuleap-pullrequest-new-comment-form"
-    | "tuleap-pullrequest-comment"
-    | "tuleap-pullrequest-placeholder";
-
 interface WidgetElement extends HTMLElement {
-    localName: FileDiffWidgetType;
+    localName:
+        | "tuleap-pullrequest-new-comment-form"
+        | "tuleap-pullrequest-comment"
+        | "tuleap-pullrequest-placeholder";
 }
 
 export interface InlineCommentWidget extends WidgetElement {
     localName: "tuleap-pullrequest-comment";
     comment: PullRequestCommentPresenter;
-    relativeDateHelper: IRelativeDateHelper;
+    relativeDateHelper: HelpRelativeDatesDisplay;
     controller: ControlPullRequestComment;
     currentUser: CurrentPullRequestUserPresenter;
     currentPullRequest: PullRequestPresenter;

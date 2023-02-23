@@ -20,7 +20,7 @@
 import { postJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { FileDiffCommentPayload } from "../types";
+import type { FileDiffCommentPayload } from "../PullRequestCommentPresenterBuilder";
 import type { InlineCommentContext } from "./NewInlineCommentContext";
 
 export interface SaveNewInlineComment {

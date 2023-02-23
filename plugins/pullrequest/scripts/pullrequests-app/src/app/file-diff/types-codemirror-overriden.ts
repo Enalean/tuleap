@@ -19,7 +19,7 @@
 
 import type { LineHandle, LineWidget, Editor } from "codemirror";
 import type { FileDiffWidget } from "./types";
-import type { PullRequestInlineCommentPresenter } from "../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { InlineCommentContext } from "../comments/new-comment-form/NewInlineCommentContext";
 
 /**

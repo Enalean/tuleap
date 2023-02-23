@@ -25,9 +25,9 @@ import type {
     NewInlineCommentFormWidget,
 } from "../types";
 import type { FileLineHandle, LineHandleWithWidgets } from "../types-codemirror-overriden";
-import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment";
+import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_NAME } from "./placeholders/FileDiffPlaceholder";
-import { TAG_NAME as NEW_INLINE_COMMENT_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
+import { NEW_INLINE_COMMENT_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
 
 export function doesHandleHaveWidgets(handle: FileLineHandle): handle is LineHandleWithWidgets {
     return "widgets" in handle && Array.isArray(handle.widgets) && handle.widgets.length > 0;
@@ -54,7 +54,7 @@ export function isCommentWidget(
 export function isPullRequestCommentWidget(
     widget: FileDiffWidget | HTMLElement
 ): widget is InlineCommentWidget {
-    return widget.localName === INLINE_COMMENT_NAME;
+    return widget.localName === PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME;
 }
 
 export function isANewInlineCommentWidget(

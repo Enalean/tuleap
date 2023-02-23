@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { FileLine, UnMovedFileLine } from "../types";
 import { isAnUnmovedLine } from "../file-lines/file-line-helper";
 

@@ -21,19 +21,13 @@ import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relat
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
-
-export interface IRelativeDateHelper {
-    getRelativeDatePreference: () => string;
-    getRelativeDatePlacement: () => string;
-    getUserLocale: () => string;
-    getFormatDateUsingPreferredUserFormat: (date: string) => string;
-}
+import type { HelpRelativeDatesDisplay } from "@tuleap/plugin-pullrequest-comments";
 
 export const RelativeDateHelper = (
     date_format: string,
     relative_date_display: RelativeDatesDisplayPreference,
     user_locale: string
-): IRelativeDateHelper => ({
+): HelpRelativeDatesDisplay => ({
     getRelativeDatePreference: (): string => relativeDatePreference(relative_date_display),
     getRelativeDatePlacement: (): string => relativeDatePlacement(relative_date_display, "right"),
     getUserLocale: (): string => user_locale,

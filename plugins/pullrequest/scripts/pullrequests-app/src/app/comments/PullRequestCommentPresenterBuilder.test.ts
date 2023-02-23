@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type {
+    AngularUIRouterState,
+    FileDiffCommentPayload,
+    PullRequestData,
+    TimelineEventPayload,
+} from "./PullRequestCommentPresenterBuilder";
+import {
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+    TYPE_EVENT_COMMENT,
+} from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentPresenterBuilder } from "./PullRequestCommentPresenterBuilder";
+import { setCatalog } from "../gettext-catalog";
+
+describe("PullRequestCommentPresenterBuilder", () => {
+    let $state: AngularUIRouterState;
+
+    beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
+
+        $state = { href: jest.fn().mockReturnValue("url/to/file") };
+    });
+
+    it("Builds a presenter from timeline payload for comment", () => {
+        const event: TimelineEventPayload = {
+            id: 12,
+            post_date: "2020/07/13 16:16",
+            content: "my comment\nwith line return",
+            file_path: "",
+            type: TYPE_GLOBAL_COMMENT,
+            is_outdated: false,
+            user: {},
+        } as TimelineEventPayload;
+        const pullRequest: PullRequestData = { id: 1 };
+        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+            $state,
+            event,
+            pullRequest
+        );
+
+        expect(result.content).toBe("my comment<br/>with line return");
+        expect(result.is_inline_comment).toBe(false);
+        expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toBeUndefined();
+    });
+
+    it("Builds a presenter from timeline payload for inline comments", () => {
+        const event: TimelineEventPayload = {
+            post_date: "2020/07/13 16:16",
+            content: "my comment\nwith line return",
+            file_path: "README.md",
+            unidiff_offset: 8,
+            position: "right",
+            type: TYPE_INLINE_COMMENT,
+            is_outdated: false,
+            user: {},
+        } as TimelineEventPayload;
+        const pullRequest: PullRequestData = { id: 1 };
+        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+            $state,
+            event,
+            pullRequest
+        );
+
+        expect(result.content).toBe("my comment<br/>with line return");
+        expect(result.is_inline_comment).toBe(true);
+        expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toStrictEqual({
+            file_url: "url/to/file",
+            file_path: "README.md",
+            unidiff_offset: 8,
+            position: "right",
+        });
+    });
+
+    it("Builds a presenter from timeline payload for timeline events", () => {
+        const event: TimelineEventPayload = {
+            post_date: "2020/07/13 16:16",
+            content: "",
+            file_path: "",
+            type: TYPE_EVENT_COMMENT,
+            is_outdated: false,
+            event_type: "update",
+            user: {},
+        } as TimelineEventPayload;
+        const pullRequest: PullRequestData = { id: 1 };
+        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+            $state,
+            event,
+            pullRequest
+        );
+
+        expect(result.content).toBe("Has updated the pull request.");
+        expect(result.is_inline_comment).toBe(false);
+        expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toBeUndefined();
+    });
+
+    it("Builds a presenter from comment payload", () => {
+        const event: FileDiffCommentPayload = {
+            id: 12,
+            post_date: "2020/07/13 16:16",
+            content: "my comment",
+            user: {
+                user_url: "/url/to/user_profile_page.html",
+                avatar_url: "/url/to/user_avatar.png",
+                display_name: "Joe l'asticot",
+            },
+            file_path: "README.md",
+            unidiff_offset: 8,
+            position: "right",
+            parent_id: 0,
+            color: "graffiti-yellow",
+        };
+        const result = PullRequestCommentPresenterBuilder.fromFileDiffComment(event);
+        expect(result.type).toBe("inline-comment");
+        expect(result.is_outdated).toBe(false);
+        expect(result.is_inline_comment).toBe(true);
+        expect(result.unidiff_offset).toBe(8);
+        expect(result.position).toBe("right");
+        expect(result.file_path).toBe("README.md");
+    });
+});

@@ -11,6 +11,7 @@
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/plugin-pullrequest-comments": "workspace:*",
     "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",

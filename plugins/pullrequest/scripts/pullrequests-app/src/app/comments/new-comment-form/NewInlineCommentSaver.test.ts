@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { okAsync } from "neverthrow";
 import * as tuleap_api from "@tuleap/fetch-result";
 import { NewInlineCommentContext } from "./NewInlineCommentContext";
-import { INLINE_COMMENT_POSITION_RIGHT } from "../types";
+import { INLINE_COMMENT_POSITION_RIGHT } from "@tuleap/plugin-pullrequest-comments";
 import { NewInlineCommentSaver } from "./NewInlineCommentSaver";
 import { uri } from "@tuleap/fetch-result";
 
 describe("NewInlineCommentSaver", () => {
     it("should save the new inline comment", () => {
-        const postSpy = jest.spyOn(tuleap_api, "postJSON").mockImplementation();
+        const postSpy = jest.spyOn(tuleap_api, "postJSON").mockReturnValue(okAsync({}));
         const comment_saver = NewInlineCommentSaver(
             NewInlineCommentContext.fromContext(1, "README.md", 55, INLINE_COMMENT_POSITION_RIGHT)
         );

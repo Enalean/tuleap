@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PullRequestCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
 
 export default TimelineService;
 
@@ -60,14 +60,18 @@ function TimelineService(TimelineRestService, gettextCatalog, $state) {
             return timeline
                 .filter((event) => event.type !== "reviewer-change")
                 .map((event) =>
-                    PullRequestCommentPresenter.fromTimelineEvent($state, event, pull_request)
+                    PullRequestCommentPresenterBuilder.fromTimelineEvent(
+                        $state,
+                        event,
+                        pull_request
+                    )
                 );
         });
     }
 
     function addComment(pullRequest, timeline, comment_replies_store, newComment) {
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
-            const comment_presenter = PullRequestCommentPresenter.fromTimelineEvent(
+            const comment_presenter = PullRequestCommentPresenterBuilder.fromTimelineEvent(
                 $state,
                 event,
                 pullRequest

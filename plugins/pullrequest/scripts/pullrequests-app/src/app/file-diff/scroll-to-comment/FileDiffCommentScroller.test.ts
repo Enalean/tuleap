@@ -18,16 +18,19 @@
  */
 
 import type { Editor } from "codemirror";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { InlineCommentWidget } from "../types";
 import type { ScrollToFileDiffComment } from "./FileDiffCommentScroller";
 import { FileDiffCommentScroller, getLineNumberFromComment } from "./FileDiffCommentScroller";
-import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
 import { FileDiffCommentWidgetsMap } from "./FileDiffCommentWidgetsMap";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
-import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import {
+    PullRequestCommentRepliesStore,
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+} from "@tuleap/plugin-pullrequest-comments";
 
 type ScrollableEditor = Editor & {
     refresh: jest.SpyInstance;

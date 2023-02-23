@@ -1,0 +1,42 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-comments",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "dist/plugin-pullrequest-comments.js",
+  "main": "dist/plugin-pullrequest-comments.umd.cjs",
+  "types": "dist/index.d.ts",
+  "style": "dist/style.css",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-pullrequest-comments.js",
+      "require": "./dist/plugin-pullrequest-comments.umd.cjs",
+      "default": "./dist/style.css"
+    }
+  },
+  "dependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-relative-date": "workspace:*",
+    "@tuleap/tooltip": "workspace:*",
+    "dompurify": "^2.3.6",
+    "hybrids": "^8.1.8",
+    "neverthrow": "6.0.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/dompurify": "^2.3.4"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

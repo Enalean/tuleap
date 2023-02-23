@@ -147,9 +147,6 @@ msgstr "OK"
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
-msgid "Outdated"
-msgstr "Obsolète"
-
 msgid "Overview"
 msgstr "Résumé"
 
@@ -197,9 +194,6 @@ msgstr ""
 
 msgid "Reopen"
 msgstr "Rouvrir"
-
-msgid "Reply"
-msgstr "Répondre"
 
 msgctxt "field-label"
 msgid "Reviewers"
@@ -252,9 +246,6 @@ msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
 
 msgid "Title"
 msgstr "Titre"
-
-msgid "Under construction, please come back later."
-msgstr "En cours de construction, veuillez revenir plus tard."
 
 msgid "Unified diff"
 msgstr "Diff unifié"

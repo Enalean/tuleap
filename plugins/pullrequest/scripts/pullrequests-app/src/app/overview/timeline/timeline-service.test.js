@@ -21,7 +21,7 @@ import angular from "angular";
 import tuleap_pullrequest_module from "../../app.js";
 
 import "angular-mocks";
-import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
+import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
 
 describe("TimelineService", function () {
     var $httpBackend, TimelineService;

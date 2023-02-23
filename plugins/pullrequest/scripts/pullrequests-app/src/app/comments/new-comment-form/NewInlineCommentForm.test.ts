@@ -21,9 +21,9 @@ import { selectOrThrow } from "@tuleap/dom";
 import { setCatalog } from "../../gettext-catalog";
 import type { HostElement } from "./NewInlineCommentForm";
 import { form_height_descriptor, getCancelButton, getSubmitButton } from "./NewInlineCommentForm";
-import { INLINE_COMMENT_POSITION_RIGHT } from "../types";
+import { INLINE_COMMENT_POSITION_RIGHT } from "@tuleap/plugin-pullrequest-comments";
 import { SaveNewInlineCommentStub } from "../../../../tests/stubs/SaveNewInlineCommentStub";
-import { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
+import { PullRequestCommentPresenterBuilder } from "../PullRequestCommentPresenterBuilder";
 
 describe("NewInlineCommentForm", () => {
     let target: ShadowRoot;
@@ -105,7 +105,7 @@ describe("NewInlineCommentForm", () => {
 
             expect(comment_saver.getLastCallParams()).toBe("Please remove this line");
             expect(host.post_submit_callback).toHaveBeenCalledWith(
-                PullRequestCommentPresenter.fromFileDiffComment(new_inline_comment_payload)
+                PullRequestCommentPresenterBuilder.fromFileDiffComment(new_inline_comment_payload)
             );
         });
 

@@ -23,7 +23,6 @@ import type {
 } from "../../src/app/file-diff/types";
 import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
-import { PullRequestCommentControllerStub } from "./PullRequestCommentControllerStub";
 import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
 import { CurrentPullRequestPresenterStub } from "./CurrentPullRequestPresenterStub";
 import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
@@ -59,7 +58,13 @@ export const FileDiffWidgetStub = {
         getBoundingClientRect: stubBounding(height),
         comment: PullRequestCommentPresenterStub.buildInlineComment(),
         relativeDateHelper: RelativeDateHelperStub,
-        controller: PullRequestCommentControllerStub(),
+        controller: {
+            displayReplies: jest.fn(),
+            hideReplyForm: jest.fn(),
+            saveReply: jest.fn(),
+            showReplyForm: jest.fn(),
+            updateCurrentReply: jest.fn(),
+        },
         currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
         currentPullRequest: CurrentPullRequestPresenterStub.withDefault(),
         post_rendering_callback: noop,
