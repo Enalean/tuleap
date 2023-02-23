@@ -70,7 +70,7 @@ final class AdminPermissionsController extends DispatchablePSR15Compatible imple
         assert($layout instanceof BaseLayout);
 
         try {
-            \Safe\ob_start();
+            \ob_start();
             $service->displayAdministrationHeader();
             $this->renderer_factory
                 ->getRenderer(__DIR__ . '/../../../templates')
@@ -85,11 +85,10 @@ final class AdminPermissionsController extends DispatchablePSR15Compatible imple
             $service->displayFooter();
 
             return $this->response_factory->createResponse()->withBody(
-                $this->stream_factory->createStream((string) \ob_get_clean())
+                $this->stream_factory->createStream((string) \ob_get_contents())
             );
-        } catch (\Throwable $exception) {
-            \Safe\ob_end_clean();
-            throw $exception;
+        } finally {
+            \ob_end_clean();
         }
     }
 

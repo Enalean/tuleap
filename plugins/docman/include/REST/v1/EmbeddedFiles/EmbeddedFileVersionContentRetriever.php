@@ -71,9 +71,14 @@ final class EmbeddedFileVersionContentRetriever
             ]
         );
 
+        $version_file_path = $version->getPath();
+        if ($version_file_path === null || $version_file_path === '') {
+            throw new \RuntimeException(sprintf('No file path found to access version #%d', $id));
+        }
+
         return new VersionContentRepresentation(
             (int) $version->getNumber(),
-            \Safe\file_get_contents($version->getPath())
+            \Psl\File\read($version_file_path),
         );
     }
 }

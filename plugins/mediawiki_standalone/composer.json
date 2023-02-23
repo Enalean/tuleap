@@ -12,8 +12,5 @@
   },
   "config": {
     "sort-packages": true
-  },
-  "require": {
-    "thecodingmachine/safe": "^2.4"
   }
 }
