@@ -41,7 +41,7 @@ final class ConfigNotificationAssignedToDao extends \Tuleap\DB\DataAccessObject
         $this->getDB()->run($sql, $tracker_id);
     }
 
-    public function delete($tracker_id): void
+    public function delete(int $tracker_id): void
     {
         $sql = 'DELETE FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?';
 
