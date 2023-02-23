@@ -20,19 +20,20 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\Transfer\Transfer;
 
-class BatchSuccessfulResponseTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchSuccessfulResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testResponseCanBeJsonSerialized()
+    public function testResponseCanBeJsonSerialized(): void
     {
         $transfer        = new Transfer('test');
-        $response_object = \Mockery::mock(BatchResponseObject::class);
-        $response_object->shouldReceive('jsonSerialize')->andReturns(new \stdClass());
-        $response = new BatchSuccessfulResponse($transfer, $response_object);
+        $response_object = new class implements BatchResponseObject {
+            public function jsonSerialize(): \stdClass
+            {
+                return new \stdClass();
+            }
+        };
+        $response        = new BatchSuccessfulResponse($transfer, $response_object);
 
         $expected_value           = new \stdClass();
         $expected_value->transfer = 'test';
