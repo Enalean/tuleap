@@ -45,6 +45,11 @@ final class InvitationTestBuilder
         return new self($id, Invitation::STATUS_SENT);
     }
 
+    public static function aCompletedInvitation(int $id): self
+    {
+        return new self($id, Invitation::STATUS_COMPLETED);
+    }
+
     public static function aUsedInvitation(int $id): self
     {
         return new self($id, Invitation::STATUS_USED);

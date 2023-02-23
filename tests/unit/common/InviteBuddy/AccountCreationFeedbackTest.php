@@ -149,17 +149,17 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAdministratorOf($another_project)
             ->build();
 
-        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
+        $used_invitation           = InvitationTestBuilder::aUsedInvitation(1)
             ->from(102)
             ->to('doe@example.com')
             ->toProjectId(111)
             ->build();
-        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
+        $another_invitation        = InvitationTestBuilder::aCompletedInvitation(2)
             ->from(102)
             ->to('doe@example.com')
             ->toProjectId(112)
             ->build();
-        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $not_in_project_invitation = InvitationTestBuilder::aCompletedInvitation(3)
             ->from(102)
             ->to('doe@example.com')
             ->build();
@@ -221,12 +221,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAdministratorOf($project)
             ->build();
 
-        $used_invitation    = InvitationTestBuilder::aSentInvitation(1)
+        $used_invitation    = InvitationTestBuilder::aUsedInvitation(1)
             ->from(102)
             ->to('doe@example.com')
             ->toProjectId(111)
             ->build();
-        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $another_invitation = InvitationTestBuilder::aCompletedInvitation(2)
             ->from(102)
             ->to('doe@example.com')
             ->toProjectId(111)
@@ -294,17 +294,17 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAdministratorOf($another_project)
             ->build();
 
-        $used_invitation           = InvitationTestBuilder::aSentInvitation(1)
+        $used_invitation           = InvitationTestBuilder::aUsedInvitation(1)
             ->from(102)
             ->to('doe@example.com')
             ->toProjectId(111)
             ->build();
-        $another_invitation        = InvitationTestBuilder::aSentInvitation(1)
+        $another_invitation        = InvitationTestBuilder::aCompletedInvitation(2)
             ->from(103)
             ->to('doe@example.com')
             ->toProjectId(112)
             ->build();
-        $not_in_project_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $not_in_project_invitation = InvitationTestBuilder::aCompletedInvitation(3)
             ->from(102)
             ->to('doe@example.com')
             ->build();
@@ -403,11 +403,11 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withStatus('A')
             ->build();
 
-        $an_invitation      = InvitationTestBuilder::aSentInvitation(1)
+        $an_invitation      = InvitationTestBuilder::aUsedInvitation(1)
             ->from(103)
             ->to('doe@example.com')
             ->build();
-        $another_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $another_invitation = InvitationTestBuilder::aCompletedInvitation(2)
             ->from(104)
             ->to('doe@example.com')
             ->build();
@@ -462,7 +462,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $an_invitation = InvitationTestBuilder::aUsedInvitation(1)
             ->from(103)
             ->to('doe@example.com')
             ->build();
@@ -512,7 +512,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $an_invitation = InvitationTestBuilder::aUsedInvitation(1)
             ->from(103)
             ->to('doe@example.com')
             ->build();
@@ -562,7 +562,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('doe@example.com')
             ->build();
 
-        $an_invitation = InvitationTestBuilder::aSentInvitation(1)
+        $an_invitation = InvitationTestBuilder::aUsedInvitation(1)
             ->from(103)
             ->to('doe@example.com')
             ->build();

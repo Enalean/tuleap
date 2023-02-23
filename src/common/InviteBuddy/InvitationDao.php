@@ -122,7 +122,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
             $this->getDB()->run(
                 "SELECT * FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
                 $user_id,
-                Invitation::STATUS_SENT,
+                Invitation::STATUS_COMPLETED,
                 Invitation::STATUS_USED,
             )
         );
@@ -136,7 +136,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         $this->getDB()->run(
             "UPDATE invitations
                 SET created_user_id = ?,
-                    status = IF(id = ?, ?, status),
+                    status = IF(id = ?, ?, ?),
                     to_email = '',
                     verifier = ''
                 WHERE to_email = ?
@@ -145,6 +145,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
             $just_created_user_id,
             $used_invitation_id,
             Invitation::STATUS_USED,
+            Invitation::STATUS_COMPLETED,
             $to_email,
             Invitation::STATUS_SENT,
         );
@@ -191,14 +192,16 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($today, $nb_days): array {
+                $status_to_keep = EasyStatement::open()->in('status NOT IN (?*)', [Invitation::STATUS_USED, Invitation::STATUS_COMPLETED]);
+
                 $obsolete_invitations = $db->run(
-                    'SELECT *
+                    "SELECT *
                     FROM invitations
                     WHERE created_on < ?
                       AND created_user_id IS NULL
-                      AND status <> ?',
+                      AND $status_to_keep",
                     $today->getTimestamp() - $nb_days * 24 * 3600,
-                    Invitation::STATUS_USED
+                    ...$status_to_keep->values(),
                 );
 
                 if ($obsolete_invitations) {

@@ -75,22 +75,22 @@ final class InvitedByPresenterBuilderTest extends TestCase
         $a_project       = ProjectTestBuilder::aProject()->withId(self::A_PROJECT_ID)->build();
         $another_project = ProjectTestBuilder::aProject()->withId(self::ANOTHER_PROJECT_ID)->build();
 
-        $invitation_1 = InvitationTestBuilder::aSentInvitation(1)
+        $invitation_1 = InvitationTestBuilder::aCompletedInvitation(1)
             ->from(self::ALICE_ID)
             ->toProjectId(self::A_PROJECT_ID)
             ->withCreatedUserId(self::INVITEE_ID)
             ->build();
-        $invitation_2 = InvitationTestBuilder::aSentInvitation(2)
+        $invitation_2 = InvitationTestBuilder::aCompletedInvitation(2)
             ->from(self::ALICE_ID)
             ->toProjectId(self::A_PROJECT_ID)
             ->withCreatedUserId(self::INVITEE_ID)
             ->build();
-        $invitation_3 = InvitationTestBuilder::aSentInvitation(3)
+        $invitation_3 = InvitationTestBuilder::aCompletedInvitation(3)
             ->from(self::BOB_ID)
             ->toProjectId(self::A_PROJECT_ID)
             ->withCreatedUserId(self::INVITEE_ID)
             ->build();
-        $invitation_4 = InvitationTestBuilder::aSentInvitation(4)
+        $invitation_4 = InvitationTestBuilder::aCompletedInvitation(4)
             ->from(self::ALICE_ID)
             ->toProjectId(self::ANOTHER_PROJECT_ID)
             ->withCreatedUserId(self::INVITEE_ID)
