@@ -48,6 +48,8 @@ final class KanbanPresenter
     public string $kanban_url;
     public bool $user_accessibility_mode;
 
+    public bool $mercure_enabled;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
@@ -120,5 +122,6 @@ final class KanbanPresenter
             ]
         );
         $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->mercure_enabled                   = ForgeConfig::getFeatureFlag('enable_mercure_dev') === "1";
     }
 }
