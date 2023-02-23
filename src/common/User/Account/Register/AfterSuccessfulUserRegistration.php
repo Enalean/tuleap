@@ -28,6 +28,7 @@ use HTTPRequest;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\InviteBuddy\InvitationToEmail;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\User\LogUser;

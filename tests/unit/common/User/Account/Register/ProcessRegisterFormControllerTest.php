@@ -25,6 +25,7 @@ namespace Tuleap\User\Account\Register;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Event\Dispatchable;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
+use Tuleap\InviteBuddy\InvitationToEmail;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;

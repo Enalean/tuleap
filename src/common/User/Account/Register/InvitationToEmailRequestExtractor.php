@@ -28,6 +28,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\InviteBuddy\InvalidInvitationTokenException;
 use Tuleap\InviteBuddy\InvitationByTokenRetriever;
 use Tuleap\InviteBuddy\InvitationNotFoundException;
+use Tuleap\InviteBuddy\InvitationToEmail;
 use Tuleap\Request\ForbiddenException;
 
 final class InvitationToEmailRequestExtractor implements IExtractInvitationToEmail
