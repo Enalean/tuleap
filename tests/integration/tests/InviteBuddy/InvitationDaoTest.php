@@ -124,7 +124,7 @@ class InvitationDaoTest extends TestCase
             DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
         );
         self::assertEquals(
-            [Invitation::STATUS_SENT, Invitation::STATUS_SENT, Invitation::STATUS_SENT],
+            [Invitation::STATUS_COMPLETED, Invitation::STATUS_SENT, Invitation::STATUS_COMPLETED],
             DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
         );
     }
@@ -144,7 +144,7 @@ class InvitationDaoTest extends TestCase
             DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
         );
         self::assertEquals(
-            [Invitation::STATUS_SENT, Invitation::STATUS_SENT, Invitation::STATUS_USED],
+            [Invitation::STATUS_COMPLETED, Invitation::STATUS_SENT, Invitation::STATUS_USED],
             DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
         );
         self::assertEquals(

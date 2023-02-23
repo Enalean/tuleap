@@ -27,10 +27,11 @@ namespace Tuleap\InviteBuddy;
  */
 final class Invitation
 {
-    public const STATUS_CREATING = 'creating';
-    public const STATUS_SENT     = 'sent';
-    public const STATUS_USED     = 'used';
-    public const STATUS_ERROR    = 'error';
+    public const STATUS_CREATING  = 'creating';
+    public const STATUS_SENT      = 'sent';
+    public const STATUS_USED      = 'used';
+    public const STATUS_ERROR     = 'error';
+    public const STATUS_COMPLETED = 'completed';
 
     /**
      * @param self::STATUS_* $status
