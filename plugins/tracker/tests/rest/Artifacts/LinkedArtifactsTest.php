@@ -167,6 +167,7 @@ final class LinkedArtifactsTest extends TrackerBase
         }
 
         $artifact_id_1 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+        $artifact_id_2 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
 
         $body = json_encode(
             [
@@ -180,6 +181,11 @@ final class LinkedArtifactsTest extends TrackerBase
                             [
                                 "id" => $artifact_id_1,
                                 "direction" => "forward",
+                                "type" => "",
+                            ],
+                            [
+                                "id" => $artifact_id_2,
+                                "direction" => "reverse",
                                 "type" => "",
                             ],
                         ],
@@ -201,6 +207,7 @@ final class LinkedArtifactsTest extends TrackerBase
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertReverseLinkExist($json['id'], $artifact_id_1, "");
+        $this->assertReverseLinkExist($artifact_id_2, $json['id'], "");
     }
 
     private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id, ?string $expected_type): void

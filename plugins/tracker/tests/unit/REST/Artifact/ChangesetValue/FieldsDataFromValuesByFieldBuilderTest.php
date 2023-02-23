@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue;
 
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -119,11 +121,11 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
         return null;
     }
 
-    private function buildFromValuesByField(array $payload): array
+    private function buildFromValuesByField(array $payload): InitialChangesetValuesContainer
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
 
-        $builder = new FieldsDataFromValuesByFieldBuilder($this->form_element_factory);
+        $builder = new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, new NewArtifactLinkInitialChangesetValueBuilder());
         return $builder->getFieldsDataOnCreate($payload, $tracker);
     }
 
@@ -152,14 +154,14 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
 
         $fields_data = $this->buildFromValuesByField($payload);
         $this->assertSame([
-            self::INT_FIELD_ID    => self::INT_VALUE,
-            self::FLOAT_FIELD_ID  => self::FLOAT_VALUE,
+            self::INT_FIELD_ID => self::INT_VALUE,
+            self::FLOAT_FIELD_ID => self::FLOAT_VALUE,
             self::STRING_FIELD_ID => self::STRING_VALUE,
-            self::TEXT_FIELD_ID   => [
-                'format'  => self::TEXT_FORMAT,
+            self::TEXT_FIELD_ID => [
+                'format' => self::TEXT_FORMAT,
                 'content' => self::TEXT_VALUE,
             ],
-        ], $fields_data);
+        ], $fields_data->getFieldsData());
     }
 
     public function testItThrowsAnExceptionIfFieldIsNotUsedInTracker(): void

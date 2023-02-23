@@ -24,49 +24,25 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Tracker_FormElementFactory;
-use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class ExecutionCreator
 {
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Config */
-    private $config;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var Tracker_REST_Artifact_ArtifactCreator */
-    private $artifact_creator;
-
-    /** @var ExecutionDao */
-    private $execution_dao;
-
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
-        Config $config,
-        ProjectManager $project_manager,
-        TrackerFactory $tracker_factory,
-        Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
-        ExecutionDao $execution_dao,
+        private Tracker_FormElementFactory $formelement_factory,
+        private Config $config,
+        private ProjectManager $project_manager,
+        private TrackerFactory $tracker_factory,
+        private ArtifactCreator $artifact_creator,
+        private ExecutionDao $execution_dao,
     ) {
-        $this->formelement_factory = $formelement_factory;
-        $this->config              = $config;
-        $this->project_manager     = $project_manager;
-        $this->tracker_factory     = $tracker_factory;
-        $this->artifact_creator    = $artifact_creator;
-        $this->execution_dao       = $execution_dao;
     }
 
     /**

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -46,6 +47,7 @@ final class NewArtifactLinkInitialChangesetValueBuilder
                 $link_field->getId(),
                 $this->buildForward($payload),
                 $this->buildParent($payload),
+                $this->buildReverse($payload)
             );
         }
 
@@ -53,6 +55,7 @@ final class NewArtifactLinkInitialChangesetValueBuilder
             $link_field->getId(),
             $this->buildLinks($payload),
             $this->buildParent($payload),
+            new CollectionOfReverseLinks([])
         );
     }
 
@@ -91,5 +94,17 @@ final class NewArtifactLinkInitialChangesetValueBuilder
             return new CollectionOfForwardLinks([]);
         }
         return AllLinkPayloadParser::buildForwardLinks($payload->all_links);
+    }
+
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
+    private function buildReverse(ArtifactValuesRepresentation $payload): CollectionOfReverseLinks
+    {
+        if ($payload->all_links === null) {
+            return new CollectionOfReverseLinks([]);
+        }
+
+        return AllLinkPayloadParser::buildReverseLinks($payload->all_links);
     }
 }

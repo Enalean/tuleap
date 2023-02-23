@@ -34,6 +34,7 @@ final class NewArtifactLinkInitialChangesetValue
         private int $field_id,
         private CollectionOfForwardLinks $new_links,
         private ?NewParentLink $parent,
+        private CollectionOfReverseLinks $reverse_links,
     ) {
     }
 
@@ -41,8 +42,9 @@ final class NewArtifactLinkInitialChangesetValue
         int $field_id,
         CollectionOfForwardLinks $new_links,
         ?NewParentLink $parent,
+        CollectionOfReverseLinks $reverse_links,
     ): self {
-        return new self($field_id, $new_links, $parent);
+        return new self($field_id, $new_links, $parent, $reverse_links);
     }
 
     public function getFieldId(): int
@@ -58,5 +60,10 @@ final class NewArtifactLinkInitialChangesetValue
     public function getNewLinks(): CollectionOfForwardLinks
     {
         return $this->new_links;
+    }
+
+    public function getReverseLinks(): CollectionOfReverseLinks
+    {
+        return $this->reverse_links;
     }
 }

@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\Artifact\ChangesetValue\ArtifactLink;
+namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class CollectionOfReverseLinksTest extends TestCase

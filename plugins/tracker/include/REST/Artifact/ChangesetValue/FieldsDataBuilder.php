@@ -26,9 +26,8 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-final class FieldsDataBuilder
+final class FieldsDataBuilder implements BuildFieldsData
 {
     public function __construct(
         private RetrieveUsedFields $fields_retriever,
@@ -38,7 +37,6 @@ final class FieldsDataBuilder
     }
 
     /**
-     * @param ArtifactValuesRepresentation[] $values
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
@@ -61,7 +59,6 @@ final class FieldsDataBuilder
     }
 
     /**
-     * @param ArtifactValuesRepresentation[] $values
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */

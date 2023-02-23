@@ -30,11 +30,13 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
     private const FIELD_ID = 675;
     private CollectionOfForwardLinks $new_links;
     private ?NewParentLink $parent;
+    private CollectionOfReverseLinks $reverse_links;
 
     protected function setUp(): void
     {
-        $this->new_links = new CollectionOfForwardLinks([]);
-        $this->parent    = null;
+        $this->new_links     = new CollectionOfForwardLinks([]);
+        $this->reverse_links = new CollectionOfReverseLinks([]);
+        $this->parent        = null;
     }
 
     private function format(): array
@@ -42,7 +44,8 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
         $value = NewArtifactLinkInitialChangesetValue::fromParts(
             self::FIELD_ID,
             $this->new_links,
-            $this->parent
+            $this->parent,
+            $this->reverse_links
         );
         return NewArtifactLinkInitialChangesetValueFormatter::formatForWebUI($value);
     }
