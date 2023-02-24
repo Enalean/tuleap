@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 /**
@@ -30,7 +29,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
  */
 final class ValidArtifactLinkPayloadBuilder
 {
-    private function __construct(private bool $payload_has_all_links_key, private bool $payload_has_links_key, private bool $payload_has_parent_key, private bool $is_all_links_supported)
+    private function __construct(private bool $payload_has_all_links_key, private bool $payload_has_links_key, private bool $payload_has_parent_key)
     {
     }
 
@@ -58,9 +57,7 @@ final class ValidArtifactLinkPayloadBuilder
             );
         }
 
-        $is_all_links_supported = (int) \ForgeConfig::getFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY) === 1;
-
-        return new self($payload_has_all_links_key, $payload_has_links_key, $payload_has_parent_key, $is_all_links_supported);
+        return new self($payload_has_all_links_key, $payload_has_links_key, $payload_has_parent_key);
     }
 
     public function hasNotDefinedLinksOrParent(): bool
@@ -70,6 +67,6 @@ final class ValidArtifactLinkPayloadBuilder
 
     public function isAllLinksPayload(): bool
     {
-        return $this->payload_has_all_links_key && $this->is_all_links_supported;
+        return $this->payload_has_all_links_key;
     }
 }

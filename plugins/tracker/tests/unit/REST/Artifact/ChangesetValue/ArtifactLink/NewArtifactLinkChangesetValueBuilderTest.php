@@ -20,11 +20,9 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -124,19 +122,8 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_depends_on', $third_link->getType());
     }
 
-    public function testItThrowsWhenAllLinkIsUsedAndFeatureFlagIsDisabled(): void
-    {
-        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
-            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
-            ->build();
-
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $this->build($payload);
-    }
-
     public function testItBuildsWhenFeatureFlagIsSet(): void
     {
-        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
             ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
             ->build();
