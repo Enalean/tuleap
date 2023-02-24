@@ -117,10 +117,31 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         );
     }
 
-    public function testAnEmptyValueForListFieldAtCreationShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
+    public function testAnEmptyValueForListFieldAtCreationShouldUseDefaultValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
     {
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $list_field->method('getId')->willReturn(22);
+        $list_field->method('getDefaultValue')->willReturn([598]);
+
+        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+            ->with($this->tracker)
+            ->andReturns([$list_field]);
+
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+
+        $fields_data = [];
+
+        $this->assertEquals(
+            [22 => [598]],
+            $this->initializator->process($this->artifact, $fields_data)
+        );
+    }
+
+    public function testAnEmptyValueForListFieldAtCreationShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterwardIfThereIsNoDefaultValue(): void
+    {
+        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field->method('getId')->willReturn(22);
+        $list_field->method('getDefaultValue')->willReturn([100]);
 
         $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
             ->with($this->tracker)

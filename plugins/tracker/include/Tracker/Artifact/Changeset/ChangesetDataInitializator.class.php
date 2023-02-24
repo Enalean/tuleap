@@ -69,7 +69,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
                 $tracker_data[$field->getId()] = $field->getDefaultValue();
             }
             if ($field instanceof Tracker_FormElement_Field_List && ! isset($tracker_data[$field->getId()])) {
-                $tracker_data[$field->getId()] = [Tracker_FormElement_Field_List::NONE_VALUE];
+                $tracker_data[$field->getId()] = $field->getDefaultValue();
             }
         }
 
