@@ -26,6 +26,7 @@ use Tuleap\Tracker\Creation\PostCreationProcessor;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
+use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
@@ -433,8 +434,9 @@ class TrackerFactory implements RetrieveTracker
             new UgroupsToNotifyDuplicationDao(),
             new ConfigNotificationAssignedToDao(),
             new ConfigNotificationEmailCustomSenderDao(),
+            new DateReminderDao(),
         );
-        $notification_settings_duplicator->duplicate((int) $id_template, $id, $duplication_user_group_mapping);
+        $notification_settings_duplicator->duplicate((int) $id_template, $id, $duplication_user_group_mapping, $field_mapping);
 
         $tracker = $this->getTrackerById($id);
 

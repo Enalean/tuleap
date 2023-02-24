@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\DateReminder;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 
 class DateReminderDao extends DataAccessObject
 {
@@ -229,5 +230,65 @@ class DateReminderDao extends DataAccessObject
                 ORDER BY reminder_id";
 
         return $this->getDB()->column($sql, []);
+    }
+
+    public function duplicate(int $template_tracker_id, int $new_tracker_id, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping, array $fields_mapping): void
+    {
+        if (count($fields_mapping) === 0) {
+            return;
+        }
+
+        $fields_hash = [];
+        foreach ($fields_mapping as $field_mapping) {
+            $fields_hash[$field_mapping['from']] = $field_mapping['to'];
+        }
+        $ugroups_mapping    = $duplication_user_group_mapping->ugroup_mapping;
+        $ugroups_mapping[3] = 3;
+        $ugroups_mapping[4] = 4;
+
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($template_tracker_id, $new_tracker_id, $ugroups_mapping, $fields_hash) {
+            foreach ($this->getDB()->run('SELECT * FROM tracker_reminder WHERE tracker_id = ?', $template_tracker_id) as $row) {
+                if (! isset($fields_hash[$row['field_id']])) {
+                    continue;
+                }
+
+                $ugroups = implode(
+                    ',',
+                    array_filter(
+                        array_map(
+                            fn (int $value): ?int => $ugroups_mapping[$value] ?? null,
+                            array_map(
+                                fn (string $value): int => (int) $value,
+                                array_map(
+                                    trim(...),
+                                    explode(',', $row['ugroups']),
+                                )
+                            )
+                        )
+                    )
+                );
+
+                $new_reminder_id = $db->insertReturnId(
+                    'tracker_reminder',
+                    [
+                        'tracker_id' => $new_tracker_id,
+                        'field_id' => $fields_hash[$row['field_id']],
+                        'ugroups' => $ugroups,
+                        'notification_type' => $row['notification_type'],
+                        'distance' => $row['distance'],
+                        'status' => $row['status'],
+                        'notify_closed_artifacts' => $row['notify_closed_artifacts'],
+                    ]
+                );
+
+                $sql = <<<SQL
+                INSERT INTO tracker_reminder_notified_roles(reminder_id, role_id)
+                SELECT ?, role_id
+                FROM tracker_reminder_notified_roles
+                WHERE reminder_id = ?
+                SQL;
+                $db->run($sql, $new_reminder_id, $row['reminder_id']);
+            }
+        });
     }
 }
