@@ -14,7 +14,6 @@
     "sort-packages": true
   },
   "require": {
-    "maennchen/zipstream-php": "^2.0",
-    "thecodingmachine/safe": "^2.4"
+    "maennchen/zipstream-php": "^2.0"
   }
 }

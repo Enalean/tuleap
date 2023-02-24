@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Text;
 
-use Safe\DateTimeImmutable;
 use Tracker_FormElement_Field_Text;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -97,7 +96,7 @@ final class TextValueValidatorTest extends TestCase
                     str_repeat('a', 70000),
                     CommentFormatIdentifier::buildText(),
                     UserTestBuilder::aUser()->build(),
-                    (new DateTimeImmutable())->getTimestamp(),
+                    (new \DateTimeImmutable())->getTimestamp(),
                     []
                 ),
                 1459,
@@ -118,7 +117,7 @@ final class TextValueValidatorTest extends TestCase
                     'metavoltine huggermugger',
                     CommentFormatIdentifier::buildText(),
                     UserTestBuilder::aUser()->build(),
-                    (new DateTimeImmutable())->getTimestamp(),
+                    (new \DateTimeImmutable())->getTimestamp(),
                     []
                 ),
                 1459,
