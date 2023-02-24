@@ -20,28 +20,26 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 
-class BatchResponseObjectWithActionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchResponseObjectWithActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testBatchReponseObjectsWithActionsCanBeSerialized()
+    public function testBatchResponseObjectsWithActionsCanBeSerialized(): void
     {
-        $action_content = \Mockery::mock(BatchResponseActions::class);
-        $action_content->shouldReceive('jsonSerialize')->andReturns(new \stdClass());
+        $action_content = new class implements BatchResponseActions {
+            public function jsonSerialize(): \stdClass
+            {
+                return new \stdClass();
+            }
+        };
 
-        $oid  = 'oid';
+        $oid  = str_repeat('a', 64);
         $size = 123456;
 
-        $lfs_object = \Mockery::mock(LFSObject::class);
-        $lfs_object->shouldReceive('getSize')->andReturns($size);
-        $lfs_object_id = \Mockery::mock(LFSObjectID::class);
-        $lfs_object_id->shouldReceive('getValue')->andReturns($oid);
-        $lfs_object->shouldReceive('getOID')->andReturns($lfs_object_id);
+        $lfs_object_id = new LFSObjectID($oid);
+        $lfs_object    = new LFSObject($lfs_object_id, $size);
 
         $response_object            = new BatchResponseObjectWithActions($lfs_object, $action_content);
         $serialized_response_object = json_decode(json_encode($response_object));

@@ -20,9 +20,7 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use Project;
+use Psr\Log\Test\TestLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Admin\AdminDao;
@@ -33,84 +31,50 @@ use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var MockInterface
-     */
-    private $token_creator;
-
-    /**
-     * @var MockInterface
-     */
-    private $token_formatter;
-
-    /**
-     * @var MockInterface
-     */
-    private $object_retriever;
-
-    /**
-     * @var MockInterface
-     */
-    private $admin_dao;
-
-    /**
-     * @var MockInterface
-     */
-    private $logger;
-
-    private $prometheus;
-
-    /**
-     * @var MockInterface
-     */
-    private $project_quota_checker;
-    /**
-     * @var MockInterface
-     */
-    private $repository;
+    private ActionAuthorizationTokenCreator&\PHPUnit\Framework\MockObject\Stub $token_creator;
+    private SplitTokenFormatter&\PHPUnit\Framework\MockObject\Stub $token_formatter;
+    private LFSObjectRetriever&\PHPUnit\Framework\MockObject\Stub $object_retriever;
+    private AdminDao&\PHPUnit\Framework\MockObject\Stub $admin_dao;
+    private TestLogger $logger;
+    private Prometheus&\PHPUnit\Framework\MockObject\MockObject $prometheus;
+    private ProjectQuotaChecker&\PHPUnit\Framework\MockObject\Stub $project_quota_checker;
+    private \GitRepository&\PHPUnit\Framework\MockObject\Stub $repository;
 
     protected function setUp(): void
     {
-        $this->token_creator         = \Mockery::mock(ActionAuthorizationTokenCreator::class);
-        $this->token_formatter       = \Mockery::mock(SplitTokenFormatter::class);
-        $this->object_retriever      = \Mockery::mock(LFSObjectRetriever::class);
-        $this->admin_dao             = \Mockery::mock(AdminDao::class);
-        $this->logger                = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->prometheus            = \Mockery::mock(Prometheus::class);
-        $this->project_quota_checker = \Mockery::mock(ProjectQuotaChecker::class);
-        $this->repository            = \Mockery::mock(\GitRepository::class);
+        $this->token_creator         = $this->createStub(ActionAuthorizationTokenCreator::class);
+        $this->token_formatter       = $this->createStub(SplitTokenFormatter::class);
+        $this->object_retriever      = $this->createStub(LFSObjectRetriever::class);
+        $this->admin_dao             = $this->createStub(AdminDao::class);
+        $this->logger                = new TestLogger();
+        $this->prometheus            = $this->createMock(Prometheus::class);
+        $this->project_quota_checker = $this->createStub(ProjectQuotaChecker::class);
+        $this->repository            = $this->createStub(\GitRepository::class);
 
-        $project = \Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-        $this->repository->shouldReceive('getProject')->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
+        $this->repository->method('getProject')->willReturn($project);
     }
 
-    public function testResponseForUploadRequestIsBuilt()
+    public function testResponseForUploadRequestIsBuilt(): void
     {
-        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
-        $this->logger->shouldReceive('debug');
-        $this->prometheus->shouldReceive('increment')->once();
+        $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
+        $this->prometheus->expects(self::once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $operation    = \Mockery::mock(BatchRequestOperation::class);
-        $operation->shouldReceive('isUpload')->andReturns(true);
-        $operation->shouldReceive('isDownload')->andReturns(false);
+        $operation    = $this->createStub(BatchRequestOperation::class);
+        $operation->method('isUpload')->willReturn(true);
+        $operation->method('isDownload')->willReturn(false);
 
-        $request_new_object = \Mockery::mock(LFSObject::class);
-        $request_new_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_new_object->shouldReceive('getSize')->andReturns(123456);
-        $request_existing_object = \Mockery::mock(LFSObject::class);
-        $request_existing_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_existing_object->shouldReceive('getSize')->andReturns(456789);
+        $request_new_object      = new LFSObject($this->buildLFSObjectID(), 123456);
+        $request_existing_object = new LFSObject($this->buildLFSObjectID(), 456789);
 
-        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_existing_object]);
-        $this->project_quota_checker->shouldReceive('hasEnoughSpaceForProject')->andReturnTrue();
-        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
+        $this->object_retriever->method('getExistingLFSObjectsFromTheSetForRepository')->willReturn([$request_existing_object]);
+        $this->project_quota_checker->method('hasEnoughSpaceForProject')->willReturn(true);
+        $this->admin_dao->method('getFileMaxSize')->willReturn(536870912);
 
         $builder        = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -131,29 +95,25 @@ class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
-    public function testResponseForDownloadRequestIsBuilt()
+    public function testResponseForDownloadRequestIsBuilt(): void
     {
-        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
-        $this->logger->shouldReceive('debug');
-        $this->prometheus->shouldReceive('increment')->once();
+        $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
+        $this->prometheus->expects(self::once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $operation    = \Mockery::mock(BatchRequestOperation::class);
-        $operation->shouldReceive('isUpload')->andReturns(false);
-        $operation->shouldReceive('isDownload')->andReturns(true);
+        $operation    = $this->createStub(BatchRequestOperation::class);
+        $operation->method('isUpload')->willReturn(false);
+        $operation->method('isDownload')->willReturn(true);
 
-        $request_object1 = \Mockery::mock(LFSObject::class);
-        $request_object1->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object1->shouldReceive('getSize')->andReturns(123456);
-        $request_object2 = \Mockery::mock(LFSObject::class);
-        $request_object2->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object2->shouldReceive('getSize')->andReturns(654321);
+        $request_object1 = new LFSObject($this->buildLFSObjectID(), 123456);
+        $request_object2 = new LFSObject($this->buildLFSObjectID(), 654321);
 
-        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_object2]);
-        $this->project_quota_checker->shouldReceive('hasEnoughSpaceForProject')->andReturnTrue();
-        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
+        $this->object_retriever->method('getExistingLFSObjectsFromTheSetForRepository')->willReturn([$request_object2]);
+        $this->project_quota_checker->method('hasEnoughSpaceForProject')->willReturn(true);
+        $this->admin_dao->method('getFileMaxSize')->willReturn(536870912);
 
         $builder        = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -174,17 +134,18 @@ class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
-    public function testBuildingResponseForAnUnknownResponseIsRejected()
+    public function testBuildingResponseForAnUnknownResponseIsRejected(): void
     {
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $operation    = \Mockery::mock(BatchRequestOperation::class);
-        $operation->shouldReceive('isUpload')->andReturns(false);
-        $operation->shouldReceive('isDownload')->andReturns(false);
+        $operation    = $this->createStub(BatchRequestOperation::class);
+        $operation->method('isUpload')->willReturn(false);
+        $operation->method('isDownload')->willReturn(false);
 
-        $this->project_quota_checker->shouldReceive('hasEnoughSpaceForProject')->andReturnTrue();
-        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
+        $this->project_quota_checker->method('hasEnoughSpaceForProject')->willReturn(true);
+        $this->admin_dao->method('getFileMaxSize')->willReturn(536870912);
 
         $builder = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -206,27 +167,20 @@ class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testBuildingResponseWithAFileWithASizeBiggerThanMaxSizeIsRejected()
+    public function testBuildingResponseWithAFileWithASizeBiggerThanMaxSizeIsRejected(): void
     {
-        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
-        $this->logger->shouldReceive('debug');
-        $this->prometheus->shouldReceive('increment')->once();
+        $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
+        $this->prometheus->expects(self::once())->method('increment');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $operation    = \Mockery::mock(BatchRequestOperation::class);
-        $operation->shouldReceive('isUpload')->andReturns(true);
-        $operation->shouldReceive('isDownload')->andReturns(false);
+        $operation    = new BatchRequestOperation(BatchRequestOperation::UPLOAD_OPERATION);
 
-        $request_object1 = \Mockery::mock(LFSObject::class);
-        $request_object1->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object1->shouldReceive('getSize')->andReturns(1);
-        $request_object2 = \Mockery::mock(LFSObject::class);
-        $request_object2->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object2->shouldReceive('getSize')->andReturns(654321);
+        $request_object1 = new LFSObject($this->buildLFSObjectID(), 1);
+        $request_object2 = new LFSObject($this->buildLFSObjectID(), 654321);
 
-        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([]);
-        $this->project_quota_checker->shouldReceive('hasEnoughSpaceForProject')->andReturnTrue();
-        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(1);
+        $this->object_retriever->method('getExistingLFSObjectsFromTheSetForRepository')->willReturn([]);
+        $this->project_quota_checker->method('hasEnoughSpaceForProject')->willReturn(true);
+        $this->admin_dao->method('getFileMaxSize')->willReturn(1);
 
         $builder = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -250,25 +204,19 @@ class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testBuildingResponseWithAFileWithASizeBiggerThanProjectQuotaIsRejected()
+    public function testBuildingResponseWithAFileWithASizeBiggerThanProjectQuotaIsRejected(): void
     {
-        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
+        $this->token_creator->method('createActionAuthorizationToken')->willReturn($this->createStub(SplitToken::class));
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $operation    = \Mockery::mock(BatchRequestOperation::class);
-        $operation->shouldReceive('isUpload')->andReturns(true);
-        $operation->shouldReceive('isDownload')->andReturns(false);
+        $operation    = new BatchRequestOperation(BatchRequestOperation::UPLOAD_OPERATION);
 
-        $request_object1 = \Mockery::mock(LFSObject::class);
-        $request_object1->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object1->shouldReceive('getSize')->andReturns(1);
-        $request_object2 = \Mockery::mock(LFSObject::class);
-        $request_object2->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object2->shouldReceive('getSize')->andReturns(654321);
+        $request_object1 = new LFSObject($this->buildLFSObjectID(), 1);
+        $request_object2 = new LFSObject($this->buildLFSObjectID(), 654321);
 
-        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([]);
-        $this->project_quota_checker->shouldReceive('hasEnoughSpaceForProject')->andReturnFalse();
-        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
+        $this->object_retriever->method('getExistingLFSObjectsFromTheSetForRepository')->willReturn([]);
+        $this->project_quota_checker->method('hasEnoughSpaceForProject')->willReturn(false);
+        $this->admin_dao->method('getFileMaxSize')->willReturn(536870912);
 
         $builder = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -290,5 +238,10 @@ class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $request_object1,
             $request_object2
         );
+    }
+
+    private function buildLFSObjectID(): LFSObjectID
+    {
+        return new LFSObjectID(str_repeat('a', 64));
     }
 }

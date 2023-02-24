@@ -20,23 +20,29 @@
 
 namespace Tuleap\GitLFS\Batch\Response\Action;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-class BatchResponseActionContentTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchResponseActionContentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testActionContentHasAnAuthenticationHeader()
+    public function testActionContentHasAnAuthenticationHeader(): void
     {
-        $action_href = \Mockery::mock(BatchResponseActionHref::class);
-        $action_href->shouldReceive('getHref')->andReturns('https://example.com/action');
-        $authorization_token    = \Mockery::mock(SplitToken::class);
-        $token_header_formatter = \Mockery::mock(SplitTokenFormatter::class);
-        $token_header_formatter->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier'));
-        $action_content = new BatchResponseActionContent(
+        $action_href            = new class implements BatchResponseActionHref {
+            public function getHref(): string
+            {
+                return 'https://example.com/action';
+            }
+        };
+        $authorization_token    = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
+        $token_header_formatter = new class implements SplitTokenFormatter {
+            public function getIdentifier(SplitToken $token): ConcealedString
+            {
+                return new ConcealedString('identifier');
+            }
+        };
+        $action_content         = new BatchResponseActionContent(
             $action_href,
             $authorization_token,
             $token_header_formatter,
