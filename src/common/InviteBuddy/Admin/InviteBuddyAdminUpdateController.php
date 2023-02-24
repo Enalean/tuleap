@@ -26,32 +26,17 @@ use Tuleap\Config\ConfigDao;
 use HTTPRequest;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
 class InviteBuddyAdminUpdateController implements DispatchableWithRequest
 {
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var ConfigDao
-     */
-    private $dao;
-    /**
-     * @var InviteBuddyConfiguration
-     */
-    private $configuration;
-
     public function __construct(
-        \CSRFSynchronizerToken $csrf_token,
-        InviteBuddyConfiguration $configuration,
-        ConfigDao $config_dao,
+        private CSRFSynchronizerTokenInterface $csrf_token,
+        private InviteBuddyConfiguration $configuration,
+        private ConfigDao $dao,
     ) {
-        $this->csrf_token    = $csrf_token;
-        $this->configuration = $configuration;
-        $this->dao           = $config_dao;
     }
 
     public static function buildSelf(): self

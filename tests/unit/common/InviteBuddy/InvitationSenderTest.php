@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Err;
@@ -41,7 +40,6 @@ use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 
 final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     protected function setUp(): void
