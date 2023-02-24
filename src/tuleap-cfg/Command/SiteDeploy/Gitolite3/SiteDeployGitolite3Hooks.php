@@ -28,9 +28,9 @@ use TuleapCfg\Command\ProcessFactory;
 
 final class SiteDeployGitolite3Hooks
 {
-    private const GITOLITE_BIN      = '/usr/bin/gitolite';
-    private const GITOLITE_BASE_DIR = '/var/lib/gitolite';
-
+    private const GITOLITE_BIN       = '/usr/bin/gitolite';
+    private const GITOLITE_BASE_DIR  = '/var/lib/gitolite';
+    private const TULEAP_SRC_PLUGINS = "/usr/share/tuleap/plugins";
 
     public function __construct(
         private readonly ProcessFactory $process_factory,
@@ -50,7 +50,7 @@ final class SiteDeployGitolite3Hooks
             return;
         }
 
-        if ($this->createPostReceiveHookSymlink($logger)) {
+        if ($this->createHooksSymlink($logger)) {
             $this->deployHooks($logger);
         }
     }
@@ -66,15 +66,25 @@ final class SiteDeployGitolite3Hooks
         return $gitolite_conf_size !== false && $gitolite_conf_size > 0;
     }
 
-    private function createPostReceiveHookSymlink(LoggerInterface $logger): bool
+    private function createHooksSymlink(LoggerInterface $logger): bool
     {
-        $hook_path = $this->gitolite_base_dir . '/.gitolite/hooks/common/post-receive';
-        if (! file_exists($hook_path)) {
-            $logger->info('Creating post-receive hook symlink at ' . $hook_path);
-            self::symlink(__DIR__ . '/../../../../../plugins/git/hooks/post-receive-gitolite', $hook_path);
-            return true;
+        $new_symlink = false;
+
+        $post_receive_hook_path = $this->gitolite_base_dir . '/.gitolite/hooks/common/post-receive';
+        if (! file_exists($post_receive_hook_path)) {
+            $logger->info('Creating post-receive hook symlink at ' . $post_receive_hook_path);
+            self::symlink(__DIR__ . '/../../../../../plugins/git/hooks/post-receive-gitolite', $post_receive_hook_path);
+            $new_symlink = true;
         }
-        return false;
+
+        $pre_receive_hook_path = $this->gitolite_base_dir . '/.gitolite/hooks/common/pre-receive';
+        if (! file_exists($pre_receive_hook_path)) {
+            $logger->info('Creating pre-receive hook symlink at ' . $pre_receive_hook_path);
+            self::symlink(__DIR__ . '/../../../../../plugins/git/hooks/pre-receive', $pre_receive_hook_path);
+            $new_symlink = true;
+        }
+
+        return $new_symlink;
     }
 
     private function deployHooks(LoggerInterface $logger): void
