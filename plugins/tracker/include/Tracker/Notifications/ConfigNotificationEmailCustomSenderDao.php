@@ -28,9 +28,9 @@ use Tuleap\DB\DataAccessObject;
 class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
 {
     /**
-     * @return array array(array(format, enabled),...)
-     * */
-    public function searchCustomSender($tracker_id)
+     * @return list<array{format: string, enabled: int}>
+     */
+    public function searchCustomSender(int $tracker_id): array
     {
         $sql = "SELECT
                     f.format,
@@ -40,7 +40,7 @@ class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
         return $this->getDB()->run($sql, $tracker_id);
     }
 
-    public function create($tracker_id, $format, $enabled)
+    public function create(int $tracker_id, string $format, int $enabled): void
     {
         $sql = "INSERT INTO plugin_tracker_notification_email_custom_sender_format(tracker_id,format,enabled) VALUES (?,?,?)
                 ON DUPLICATE KEY UPDATE tracker_id = tracker_id, format = ?, enabled = ?";
