@@ -22,39 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
-class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var InviteBuddyAdminUpdateController
-     */
-    private $controller;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InviteBuddyConfiguration
-     */
-    private $configuration;
-    /**
-     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $csrf_token;
-    /**
-     * @var \Tuleap\Config\ConfigDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $config_dao;
+    private InviteBuddyAdminUpdateController $controller;
+    private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
+    private CSRFSynchronizerTokenStub $csrf_token;
+    private \Tuleap\Config\ConfigDao&\PHPUnit\Framework\MockObject\MockObject $config_dao;
 
     protected function setUp(): void
     {
-        $this->configuration = Mockery::mock(InviteBuddyConfiguration::class);
-        $this->csrf_token    = Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->config_dao    = Mockery::mock(\Tuleap\Config\ConfigDao::class);
+        $this->configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $this->csrf_token    = CSRFSynchronizerTokenStub::buildSelf();
+        $this->config_dao    = $this->createMock(\Tuleap\Config\ConfigDao::class);
 
         $this->controller = new InviteBuddyAdminUpdateController(
             $this->csrf_token,
@@ -65,7 +51,7 @@ class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionIfUserIsNotSuperUser(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => false])->getMock();
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -78,94 +64,86 @@ class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesNothingIfThereIsNoChange(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->configuration
-            ->shouldReceive('getNbMaxInvitationsByDay')
-            ->andReturn(42);
-
-        $this->csrf_token
-            ->shouldReceive('check')
-            ->once();
+            ->method('getNbMaxInvitationsByDay')
+            ->willReturn(42);
 
         $this->config_dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '42')->build(),
             LayoutBuilder::build(),
             []
         );
+
+        self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
     public function testItSavesNothingIfValueIsNegative(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->configuration
-            ->shouldReceive('getNbMaxInvitationsByDay')
-            ->andReturn(42);
-
-        $this->csrf_token
-            ->shouldReceive('check')
-            ->once();
+            ->method('getNbMaxInvitationsByDay')
+            ->willReturn(42);
 
         $this->config_dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '-10')->build(),
             LayoutBuilder::build(),
             []
         );
+
+        self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
     public function testItSavesNothingIfValueIsZero(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->configuration
-            ->shouldReceive('getNbMaxInvitationsByDay')
-            ->andReturn(42);
-
-        $this->csrf_token
-            ->shouldReceive('check')
-            ->once();
+            ->method('getNbMaxInvitationsByDay')
+            ->willReturn(42);
 
         $this->config_dao
-            ->shouldReceive('save')
-            ->never();
+            ->expects(self::never())
+            ->method('save');
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '0')->build(),
             LayoutBuilder::build(),
             []
         );
+
+        self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
     public function testItSavesTheNewValue(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+        $user = UserTestBuilder::aUser()->withSiteAdministrator()->build();
 
         $this->configuration
-            ->shouldReceive('getNbMaxInvitationsByDay')
-            ->andReturn(42);
-
-        $this->csrf_token
-            ->shouldReceive('check')
-            ->once();
+            ->method('getNbMaxInvitationsByDay')
+            ->willReturn(42);
 
         $this->config_dao
-            ->shouldReceive('saveInt')
-            ->with('max_invitations_by_day', 10)
-            ->once();
+            ->expects(self::once())
+            ->method('saveInt')
+            ->with('max_invitations_by_day', 10);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '10')->build(),
             LayoutBuilder::build(),
             []
         );
+
+        self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 }

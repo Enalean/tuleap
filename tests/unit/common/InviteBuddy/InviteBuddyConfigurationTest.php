@@ -22,58 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
-class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testBuddiesCannotBeInvitedIfUserIsAnonymous(): void
     {
-        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-        $event_manager
-            ->shouldReceive('dispatch')
-            ->andReturn(new RegistrationGuardEvent());
+        $user          = UserTestBuilder::anAnonymousUser()->build();
+        $event_manager = EventDispatcherStub::withIdentityCallback();
 
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCanBeInvitedIfTheUserIsLoggedIn(): void
     {
-        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-        $event_manager
-            ->shouldReceive('dispatch')
-            ->andReturn(new RegistrationGuardEvent());
+        $user          = UserTestBuilder::anActiveUser()->build();
+        $event_manager = EventDispatcherStub::withIdentityCallback();
 
         self::assertTrue((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfThePlatformPreventsUsersToRegister(): void
     {
-        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-        $guard_event   = new RegistrationGuardEvent();
-        $guard_event->disableRegistration();
-        $event_manager
-            ->shouldReceive('dispatch')
-            ->andReturn($guard_event);
+        $user          = UserTestBuilder::anActiveUser()->build();
+        $event_manager = EventDispatcherStub::withCallback(function (RegistrationGuardEvent $event): RegistrationGuardEvent {
+            $event->disableRegistration();
+            return $event;
+        });
 
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
     public function testBuddiesCannotBeInvitedIfNbMaxIsLesserOrEqualThanOne(): void
     {
-        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-        $event_manager
-            ->shouldReceive('dispatch')
-            ->andReturn(new RegistrationGuardEvent());
+        $user          = UserTestBuilder::anActiveUser()->build();
+        $event_manager = EventDispatcherStub::withIdentityCallback();
 
         \ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 0);
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
@@ -90,21 +78,23 @@ class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSiteAdminCanConfigureWhenNoPluginPreventIt(): void
     {
-        $event_manager = new \EventManager();
+        $event_manager = EventDispatcherStub::withIdentityCallback();
         self::assertTrue((new InviteBuddyConfiguration($event_manager))->canSiteAdminConfigureTheFeature());
     }
 
     public function testSiteAdminCannotConfigureWhenPluginPreventIt(): void
     {
-        $event_manager = new \EventManager();
-        $event_manager->addClosureOnEvent(RegistrationGuardEvent::NAME, fn (RegistrationGuardEvent $event) => $event->disableRegistration());
+        $event_manager = EventDispatcherStub::withCallback(function (RegistrationGuardEvent $event): RegistrationGuardEvent {
+            $event->disableRegistration();
+            return $event;
+        });
 
         self::assertFalse((new InviteBuddyConfiguration($event_manager))->canSiteAdminConfigureTheFeature());
     }
 
     public function itReturnsTheNbMax(): void
     {
-        $event_manager = \Mockery::mock(EventDispatcherInterface::class);
+        $event_manager = EventDispatcherStub::withIdentityCallback();
 
         self::assertEquals(
             InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,

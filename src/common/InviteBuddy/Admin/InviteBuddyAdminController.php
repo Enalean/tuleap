@@ -27,6 +27,7 @@ use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -38,7 +39,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
     public function __construct(
         private AdminPageRenderer $admin_page_renderer,
         private InviteBuddyConfiguration $configuration,
-        private CSRFSynchronizerToken $csrf_token,
+        private CSRFSynchronizerTokenInterface $csrf_token,
     ) {
     }
 

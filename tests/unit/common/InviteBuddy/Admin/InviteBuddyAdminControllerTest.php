@@ -22,42 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy\Admin;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
-class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var InviteBuddyAdminController
-     */
-    private $controller;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InviteBuddyConfiguration
-     */
-    private $configuration;
-    /**
-     * @var \CSRFSynchronizerToken|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $csrf_token;
+    private InviteBuddyAdminController $controller;
+    private AdminPageRenderer&\PHPUnit\Framework\MockObject\MockObject $admin_page_renderer;
+    private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
+    private CSRFSynchronizerTokenStub $csrf_token;
 
     protected function setUp(): void
     {
-        $this->admin_page_renderer = Mockery::mock(AdminPageRenderer::class);
-        $this->configuration       = Mockery::mock(InviteBuddyConfiguration::class);
-        $this->configuration->shouldReceive('canSiteAdminConfigureTheFeature')->andReturnTrue()->byDefault();
-        $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);
+        $this->configuration       = $this->createMock(InviteBuddyConfiguration::class);
+        $this->csrf_token          = CSRFSynchronizerTokenStub::buildSelf();
 
         $this->controller = new InviteBuddyAdminController(
             $this->admin_page_renderer,
@@ -68,7 +52,9 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionIfUserIsNotSuperUser(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => false])->getMock();
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
+
+        $this->configuration->method('canSiteAdminConfigureTheFeature')->willReturn(true);
 
         $this->expectException(ForbiddenException::class);
 
@@ -82,7 +68,8 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionIfPlatformsCannotInvite(): void
     {
         $user = UserTestBuilder::anActiveUser()->withSiteAdministrator()->build();
-        $this->configuration->shouldReceive('canSiteAdminConfigureTheFeature')->andReturnFalse();
+
+        $this->configuration->method('canSiteAdminConfigureTheFeature')->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -95,15 +82,18 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRendersThePage(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => true])->getMock();
+        $user = UserTestBuilder::anActiveUser()->withSiteAdministrator()->build();
+
+        $this->configuration->method('canSiteAdminConfigureTheFeature')->willReturn(true);
 
         $this->configuration
-            ->shouldReceive('getNbMaxInvitationsByDay')
-            ->once()
-            ->andReturn(42);
+            ->expects(self::once())
+            ->method('getNbMaxInvitationsByDay')
+            ->willReturn(42);
 
         $this->admin_page_renderer
-            ->shouldReceive('renderANoFramedPresenter')
+            ->expects(self::once())
+            ->method('renderANoFramedPresenter')
             ->with(
                 "Invitations",
                 realpath(__DIR__ . '/../../../../../src/templates/admin/invitations'),
@@ -112,8 +102,7 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     'max_invitations_by_day' => 42,
                     'csrf_token'             => $this->csrf_token,
                 ],
-            )
-            ->once();
+            );
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),

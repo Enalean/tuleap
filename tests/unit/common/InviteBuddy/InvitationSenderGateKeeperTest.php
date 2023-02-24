@@ -22,36 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private InvitationLimitChecker&\PHPUnit\Framework\MockObject\MockObject $limit_checker;
 
-    /**
-     * @var InvitationLimitChecker
-     */
-    private $limit_checker;
-
-    /**
-     * @var InvitationSenderGateKeeper
-     */
-    private $gate_keeper;
-    /**
-     * @var InviteBuddyConfiguration
-     */
-    private $configuration;
-    private $current_user;
+    private InvitationSenderGateKeeper $gate_keeper;
+    private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
+    private PFUser $current_user;
 
     protected function setUp(): void
     {
-        $this->current_user = Mockery::spy(PFUser::class);
+        $this->current_user = UserTestBuilder::buildWithDefaults();
 
-        $this->configuration = Mockery::mock(InviteBuddyConfiguration::class);
+        $this->configuration = $this->createMock(InviteBuddyConfiguration::class);
 
-        $this->limit_checker = Mockery::mock(InvitationLimitChecker::class);
+        $this->limit_checker = $this->createMock(InvitationLimitChecker::class);
 
         $this->gate_keeper = new InvitationSenderGateKeeper(
             new \Valid_Email(),
@@ -62,7 +50,7 @@ class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfConfigurationDisablesTheFeature(): void
     {
-        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(false);
+        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(false);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -71,7 +59,7 @@ class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfNoEmailIsGiven(): void
     {
-        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
+        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -80,7 +68,7 @@ class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfOneOfTheEmailIsNotValid(): void
     {
-        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
+        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -89,9 +77,9 @@ class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfUserReachedLimit(): void
     {
-        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
-        $this->limit_checker->shouldReceive('checkForNewInvitations')->once()->andThrow(
-            InvitationSenderGateKeeperException::class
+        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->limit_checker->expects(self::once())->method('checkForNewInvitations')->willThrowException(
+            new InvitationSenderGateKeeperException()
         );
 
         $this->expectException(InvitationSenderGateKeeperException::class);
@@ -101,8 +89,8 @@ class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRaiseAnExceptionIfEverythingIsOk(): void
     {
-        $this->configuration->shouldReceive('canBuddiesBeInvited')->once()->andReturn(true);
-        $this->limit_checker->shouldReceive('checkForNewInvitations')->once();
+        $this->configuration->expects(self::once())->method('canBuddiesBeInvited')->willReturn(true);
+        $this->limit_checker->expects(self::once())->method('checkForNewInvitations');
 
         $this->gate_keeper->checkNotificationsCanBeSent($this->current_user, ["john@example.com", "doe@example.com"]);
     }

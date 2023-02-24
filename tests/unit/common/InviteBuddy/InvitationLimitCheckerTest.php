@@ -23,27 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var InvitationLimitChecker
-     */
-    private $checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InvitationDao
-     */
-    private $dao;
+    private InvitationLimitChecker $checker;
+    private InvitationDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->dao     = \Mockery::mock(InvitationDao::class);
-        $configuration = new InviteBuddyConfiguration(\Mockery::mock(\EventManager::class));
+        $this->dao     = $this->createMock(InvitationDao::class);
+        $configuration = new InviteBuddyConfiguration(EventDispatcherStub::withIdentityCallback());
 
         $this->checker = new InvitationLimitChecker($this->dao, $configuration);
 
@@ -53,10 +47,9 @@ final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserCanNotSendInvitationIfHeByPassLimit(): void
     {
         $nb_invitation_to_send = 3;
-        $user                  = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $user                  = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(3);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(3);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
         $this->checker->checkForNewInvitations($nb_invitation_to_send, $user);
@@ -65,10 +58,9 @@ final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserCanNotSendInvitationIfHeAlreadyExceedsLimitForTheDay(): void
     {
         $nb_invitation_to_send = 2;
-        $user                  = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $user                  = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(6);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(6);
 
         $this->expectException(InvitationSenderGateKeeperException::class);
         $this->expectExceptionMessage('You are trying to send 2 invitations, but the maximum is 5 per day.');
@@ -79,32 +71,29 @@ final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserCanSendInvitationsIfHeDoesNotByPassLimit(): void
     {
         $nb_invitation_to_send = 3;
-        $user                  = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $user                  = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
         $this->checker->checkForNewInvitations($nb_invitation_to_send, $user);
 
         $this->addToAssertionCount(1);
     }
 
-    public function limitIsReachedWhenInvitationsAreSuperiorOrEqualToServerLimit(): void
+    public function testLimitIsReachedWhenInvitationsAreSuperiorOrEqualToServerLimit(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(5);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(5);
 
         $this->assertTrue($this->checker->isLimitReached($user));
     }
 
-    public function limitIsNotReachedOtherwise(): void
+    public function testLimitIsNotReachedOtherwise(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $user = UserTestBuilder::aUser()->withId(101)->build();
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
         $this->assertFalse($this->checker->isLimitReached($user));
     }
