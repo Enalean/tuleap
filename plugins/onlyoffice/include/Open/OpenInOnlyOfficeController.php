@@ -69,8 +69,15 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
                     ) . ' ' . $document->project->getPublicName();
 
                     $layout->addJavascriptAsset($this->js_asset);
+
+                    $item_title = $document->item->getTitle();
+                    $page_title = dgettext('tuleap-onlyoffice', 'ONLYOFFICE');
+                    if ($item_title !== null && $item_title !== '') {
+                        $page_title = "$item_title – $page_title";
+                    }
+
                     $layout->header(
-                        HeaderConfigurationBuilder::get(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
+                        HeaderConfigurationBuilder::get($page_title)
                             ->inProjectWithoutSidebar(
                                 new BackToLinkPresenter(
                                     sprintf(
