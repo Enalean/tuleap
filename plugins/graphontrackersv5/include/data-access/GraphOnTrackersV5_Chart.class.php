@@ -38,7 +38,7 @@ use Tuleap\Widget\WidgetFactory;
  */
 abstract class GraphOnTrackersV5_Chart implements Visitable
 {
-    public const MARKER_BEGINNING_OUTPUT_FETCH = '💩';
+    public const MARKER_BEGINNING_OUTPUT_FETCH = '🥀';
 
     public $id;
     protected $rank;

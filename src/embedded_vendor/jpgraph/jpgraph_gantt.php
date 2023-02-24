@@ -1892,7 +1892,7 @@ class TextProperty
                 }
             } else {
                 $tmp = preg_split('/\t/', $this->iText);
-                $n   = min(count($tmp), count($aX));
+                $n   = min(count($tmp), is_countable($aX) ? count($aX) : (float) $aX);
                 for ($i = 0; $i < $n; ++$i) {
                     if ($i < count($this->iFontArray)) {
                         $font = $this->iFontArray[$i];
@@ -1900,7 +1900,7 @@ class TextProperty
                     } else {
                         $aImg->SetFont($this->iFFamily, $this->iFStyle, $this->iFSize);
                     }
-                    $aImg->StrokeText($aX[$i], $aY, $tmp[$i]);
+                    $aImg->StrokeText($aX[$i] ?? $aX, $aY, $tmp[$i]);
                 }
             }
         }
