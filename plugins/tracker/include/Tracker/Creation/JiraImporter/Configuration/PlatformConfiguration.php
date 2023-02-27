@@ -28,11 +28,9 @@ final class PlatformConfiguration
     /**
      * @var string[]
      */
-    private $allowed_configuration_names = [];
-    /**
-     * @var ?string
-     */
-    private $story_points_field;
+    private $allowed_configuration_names       = [];
+    private ?string $story_points_field        = null;
+    private bool $agile_features_are_available = true;
 
     public function isConfigurationAllowed(string $configuration_name): bool
     {
@@ -60,5 +58,15 @@ final class PlatformConfiguration
             throw new \RuntimeException('There is no Story Points field configured. Developer should have checked with `hasStoryPointsField`.');
         }
         return $this->story_points_field;
+    }
+
+    public function areAgileFeaturesAvailable(): bool
+    {
+        return $this->agile_features_are_available;
+    }
+
+    public function setAgileFeaturesAreNotAvailable(): void
+    {
+        $this->agile_features_are_available = false;
     }
 }

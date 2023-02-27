@@ -60,6 +60,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
@@ -179,72 +180,66 @@ final class CreateProjectFromJira
             $logger,
         );
 
+        $board = null;
         if ($jira_board_id) {
             $board = $board_retriever->getScrumBoardByIdForProject($jira_project, $jira_board_id);
         } else {
-            $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
-        }
-
-        $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
-            new JiraEpicFromBoardRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new JiraEpicFromIssueTypeRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new JiraEpicIssuesRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-        );
-
-        $board_configuration = null;
-        if ($board) {
-            $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            );
-            $board_configuration           = $board_configuration_retriever->getScrumBoardConfiguration($board);
-            if ($board_configuration === null) {
-                throw new \RuntimeException('Cannot fetch configuration for board ' . $board->id);
-            }
-            if ($board_configuration->estimation_field) {
-                $logger->debug('Agile: estimation field: ' . $board_configuration->estimation_field);
-                $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
-            }
-
-            $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board);
-        } else {
-            $logger->info("No scrum board found. We will try to get linked Epic issues with provided Epic issueType name");
-            $logger->debug("Provided Epic issueType name: " . $jira_epic_issue_type);
-            foreach ($jira_issue_types as $jira_issue_type) {
-                if ($jira_issue_type->getName() === $jira_epic_issue_type) {
-                    $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromIssueTypeInProject(
-                        $jira_issue_type,
-                        $jira_project,
-                    );
-                    break;
+            try {
+                $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
+            } catch (JiraConnectionException $exception) {
+                if ($exception->getCode() === 404) {
+                    $logger->info("Jira software agile content does not seem to be available on your instance. Skipping the Scrum agile export.");
+                    $platform_configuration_collection->setAgileFeaturesAreNotAvailable();
                 }
             }
         }
 
-        $jira_agile_importer = new JiraAgileImporter(
-            new JiraSprintRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new JiraSprintIssuesRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new JiraBoardBacklogRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            \EventManager::instance()
-        );
+        $board_configuration = null;
+        if ($platform_configuration_collection->areAgileFeaturesAvailable()) {
+            $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
+                new JiraEpicFromBoardRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                new JiraEpicFromIssueTypeRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                new JiraEpicIssuesRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+            );
+
+            if ($board) {
+                $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                );
+                $board_configuration           = $board_configuration_retriever->getScrumBoardConfiguration($board);
+                if ($board_configuration === null) {
+                    throw new \RuntimeException('Cannot fetch configuration for board ' . $board->id);
+                }
+                if ($board_configuration->estimation_field) {
+                    $logger->debug('Agile: estimation field: ' . $board_configuration->estimation_field);
+                    $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
+                }
+
+                $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board);
+            } else {
+                $logger->info("No scrum board found. We will try to get linked Epic issues with provided Epic issueType name");
+                $logger->debug("Provided Epic issueType name: " . $jira_epic_issue_type);
+                foreach ($jira_issue_types as $jira_issue_type) {
+                    if ($jira_issue_type->getName() === $jira_epic_issue_type) {
+                        $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromIssueTypeInProject(
+                            $jira_issue_type,
+                            $jira_project,
+                        );
+                        break;
+                    }
+                }
+            }
+        }
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);
@@ -268,9 +263,11 @@ final class CreateProjectFromJira
         $xml_element['access']    = 'private';
 
         foreach ($xml_element->services->service as $service) {
-            if (
-                (string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME ||
-                (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME
+            if ((string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME) {
+                $service['enabled'] = '1';
+            } elseif (
+                (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME &&
+                $platform_configuration_collection->areAgileFeaturesAvailable()
             ) {
                 $service['enabled'] = '1';
             }
@@ -323,6 +320,22 @@ final class CreateProjectFromJira
         }
 
         if ($board && $board_configuration) {
+            $jira_agile_importer = new JiraAgileImporter(
+                new JiraSprintRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                new JiraSprintIssuesRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                new JiraBoardBacklogRetrieverFromAPI(
+                    $jira_client,
+                    $logger,
+                ),
+                \EventManager::instance()
+            );
+
             $jira_agile_importer->exportScrum(
                 $logger,
                 $xml_element,
@@ -333,15 +346,17 @@ final class CreateProjectFromJira
                 $jira_issue_types,
                 $jira_epic_issue_type
             );
+
+            $xml_element = $this->addWidgetOnDashboard(
+                $xml_element,
+                $board,
+                $jira_issue_types,
+                $jira_epic_issue_type,
+                $logger
+            );
         }
 
-        return $this->addWidgetOnDashboard(
-            $xml_element,
-            $board,
-            $jira_issue_types,
-            $jira_epic_issue_type,
-            $logger
-        );
+        return $xml_element;
     }
 
     /**
