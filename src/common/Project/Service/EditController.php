@@ -89,7 +89,7 @@ class EditController implements DispatchableWithRequest
                 $add_missing_service = $this->dispatcher->dispatch(new AddMissingService($project, []));
                 foreach ($add_missing_service->getAllowedServices() as $missing_service) {
                     if ($missing_service->getShortName() === $service_data->getShortName()) {
-                        $this->service_updator->addSystemService($project, $missing_service);
+                        $this->service_updator->addSystemService($project, $missing_service, $service_data);
                         break;
                     }
                 }
