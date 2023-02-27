@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2022 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Hook\PreReceive;
+declare(strict_types=1);
 
-class PreReceiveCannotRetrieveReferenceException extends \Exception
+namespace Tuleap\WebAssembly;
+
+use Tuleap\Option\Option;
+use function Psl\Type\string;
+
+final class EmptyWASMCaller implements WASMCaller
 {
+    public function __construct()
+    {
+    }
+
+    public function call(string $wasm_path, string $json_input): Option
+    {
+        return Option::nothing(string());
+    }
 }

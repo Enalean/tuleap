@@ -22,7 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
+use Tuleap\Option\Option;
+
 interface WASMCaller
 {
-    public function call(string $wasm_path, string $json_input): string;
+    /**
+     * @psalm-return Option<string>
+     */
+    public function call(string $wasm_path, string $json_input): Option;
 }

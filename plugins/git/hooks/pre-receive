@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 
+set -euo pipefail
+
 git_dir_path=$(/usr/lib/tuleap/git/bin/git rev-parse --git-dir 2>/dev/null)
 repository_path=$(cd "$git_dir_path"; pwd)
 
-sudo -u codendiadm /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/plugins/git/hooks/pre-receive.php "$repository_path" 2> /dev/null
+sudo -u codendiadm /usr/bin/tuleap git:pre-receive -- "$repository_path"
