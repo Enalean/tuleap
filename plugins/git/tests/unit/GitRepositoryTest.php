@@ -164,13 +164,6 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($repo->canMigrateToGerrit());
     }
 
-    public function testItIsNotMigratableIfItIsAGitshellRepo(): void
-    {
-        $repo = new GitRepository();
-        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
-        $this->assertFalse($repo->canMigrateToGerrit());
-    }
-
     public function testItIsNotMigratableIfAlreadyAGerritRepo(): void
     {
         $repo = new GitRepository();

@@ -68,16 +68,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     /**
-     * Create new reference
-     *
-     * @see plugins/git/include/Git_Backend_Interface::createReference()
-     * @param GitRepository $repository
-     */
-    public function createReference($repository)
-    {
-    }
-
-    /**
      * @return bool
      */
     public function updateRepoConf($repository)

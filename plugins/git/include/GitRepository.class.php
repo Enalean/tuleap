@@ -693,16 +693,6 @@ class GitRepository
     }
 
     /**
-     * Create a reference repository
-     * @deprecated to be removed when we purge gitshell creation from the code  (SystemEvent_GIT_REPO_CREATE)
-     * @see GitRepositoryManager::create
-     */
-    public function create()
-    {
-        $this->getBackend()->createReference($this);
-    }
-
-    /**
      * Physically delete a repository already marked for deletion
      */
     public function delete()

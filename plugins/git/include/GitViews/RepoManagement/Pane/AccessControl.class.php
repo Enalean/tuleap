@@ -117,8 +117,6 @@ class AccessControl extends Pane
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
         if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
             $html .= $this->accessControlGitolite();
-        } else {
-            $html .= $this->accessControl();
         }
 
         $are_regexp_enabled     = (bool) $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
@@ -131,35 +129,6 @@ class AccessControl extends Pane
                 class="btn btn-primary save-permissions-with-regexp" value="' .
             dgettext('tuleap-git', 'Save permissions') . '" /></p>';
         $html .= '</form>';
-
-        return $html;
-    }
-
-    /**
-     * Display access control management for gitshell backend
-     *
-     * @return void
-     */
-    private function accessControl()
-    {
-        $html    = '';
-        $public  = '';
-        $private = '';
-        $checked = 'checked="checked"';
-        if ($this->repository->getAccess() == GitRepository::PRIVATE_ACCESS) {
-            $private = $checked;
-            $html   .= '<input type="hidden" id="action" name="action" value="edit" />';
-        } elseif ($this->repository->getAccess() == GitRepository::PUBLIC_ACCESS) {
-            $public = $checked;
-            $html  .= '<input type="hidden" id="action" name="action" value="confirm_private" />';
-        }
-        $html .= '<p id="plugin_git_access">';
-        $html .= dgettext('tuleap-git', 'Access');
-        $html .= ': <span><input type="radio" name="repo_access" value="private" ' . $private . '/> ';
-        $html .= dgettext('tuleap-git', 'Private');
-        $html .= '<input type="radio" name="repo_access" value="public" ' . $public . '/> Public';
-        $html .= '</span>';
-        $html .= '</p>';
 
         return $html;
     }

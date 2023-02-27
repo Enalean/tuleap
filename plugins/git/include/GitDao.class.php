@@ -44,7 +44,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
 
     public const REPO_NAME_MAX_LENGTH = 255;
 
-    public const BACKEND_GITSHELL = 'gitshell';
     public const BACKEND_GITOLITE = 'gitolite';
 
     public const REMOTE_SERVER_ID               = 'remote_server_id';
@@ -123,10 +122,11 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
             return true;
         }
 
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+        $repository_backend = $repository->getBackend();
+        if ($repository_backend instanceof Git_Backend_Gitolite) {
             $backendType = self::BACKEND_GITOLITE;
         } else {
-            $backendType = self::BACKEND_GITSHELL;
+            throw new \LogicException(sprintf("Unexpected Git backend (%s)", $repository_backend::class));
         }
 
         try {
@@ -212,7 +212,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
      * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
      * @param int $projectId    Project id
-     * @param bool $onlyGitShell If true list will contain only git repositories no gitolite
      * @param bool $scope Allows to get all projects ignoring if the scope is project or personal
      * @param int $userId User id
      *
@@ -220,14 +219,11 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $scope = true, $userId = null)
+    public function getProjectRepositoryList($projectId, $scope = true, $userId = null)
     {
         $condition = EasyStatement::open();
         $condition->andWith('project_id = ?', $projectId);
         $condition->andWith('repository_deletion_date = ?', '0000-00-00 00:00:00');
-        if ($onlyGitShell) {
-            $condition->andWith('repository_backend_type = ?', self::BACKEND_GITSHELL);
-        }
 
         if (empty($projectId)) {
             return [];
@@ -293,18 +289,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                   AND repository_backend_type = ?";
 
         return $this->getDB()->run($sql, $projectId, self::BACKEND_GITOLITE);
-    }
-
-    public function hasGitShellRepositories()
-    {
-        $has_git_shell_repositories = $this->getDB()->single(
-            'SELECT TRUE FROM plugin_git
-                       WHERE repository_backend_type = ? AND repository_deletion_date = "0000-00-00 00:00:00"
-                       LIMIT 1',
-            [self::BACKEND_GITSHELL]
-        );
-
-        return (bool) $has_git_shell_repositories;
     }
 
     /**

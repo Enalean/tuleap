@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_is_initialized` tinyint(4) NOT NULL default '0',
   `repository_access` varchar(255) NOT NULL default 'private',
   `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]',
-  `repository_backend_type` varchar(16) DEFAULT 'gitshell',
+  `repository_backend_type` varchar(16) DEFAULT 'gitolite',
   `repository_scope` varchar(1) NOT NULL,
   `repository_namespace` varchar(255),
   `repository_backup_path` text NULL,

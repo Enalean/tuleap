@@ -442,8 +442,8 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $dao = \Mockery::spy(\GitDao::class);
-        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, null)->andReturns($project_repos);
-        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, $userId)->andReturns($sandra_repos);
+        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, true, null)->andReturns($project_repos);
+        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, true, $userId)->andReturns($sandra_repos);
         $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);
 
         $controller = \Mockery::spy(\Git::class);

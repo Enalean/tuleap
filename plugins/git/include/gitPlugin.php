@@ -593,17 +593,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     EventManager::instance(),
                 ];
                 break;
-            case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
-                $params['class']        = 'SystemEvent_GIT_LEGACY_REPO_DELETE';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
-                    $this->getManifestManager(),
-                    $this->getLogger(),
-                ];
-                break;
-            case SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME:
-                $params['class'] = 'SystemEvent_GIT_LEGACY_REPO_ACCESS';
-                break;
             case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class']        = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = [

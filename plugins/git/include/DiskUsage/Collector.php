@@ -74,24 +74,14 @@ class Collector
         return $this->retriever->getLastSizeForProject($project);
     }
 
-    private function extractInFileSystem(Project $project)
+    private function extractInFileSystem(Project $project): int
     {
-        $git_shell_size = (int) $this->getGitShellSizeOnFileSystem($project);
-        $giolite_size   = (int) $this->getGitoliteSizeOnFileSystem($project);
-
-        return $git_shell_size + $giolite_size;
+        return (int) $this->getGitoliteSizeOnFileSystem($project);
     }
 
     private function getGitoliteSizeOnFileSystem(Project $project)
     {
         $path = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/' . $project->getUnixNameLowerCase();
-
-        return $this->disk_usage_manager->getDirSize($path);
-    }
-
-    private function getGitShellSizeOnFileSystem(Project $project)
-    {
-        $path = ForgeConfig::get('sys_data_dir') . '/gitroot/' . $project->getUnixNameLowerCase();
 
         return $this->disk_usage_manager->getDirSize($path);
     }

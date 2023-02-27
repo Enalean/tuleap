@@ -81,13 +81,6 @@ class Git_SystemEventManager
                 SystemEvent::PRIORITY_MEDIUM,
                 SystemEvent::OWNER_APP
             );
-        } else {
-            $this->system_event_manager->createEvent(
-                SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
-                $repository->getProjectId() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId(),
-                SystemEvent::PRIORITY_MEDIUM,
-                SystemEvent::OWNER_ROOT
-            );
         }
     }
 
@@ -118,16 +111,6 @@ class Git_SystemEventManager
             $old_repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $new_repository->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueGitShellAccess(GitRepository $repository, $type)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
-            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $type,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_ROOT
         );
     }
 
@@ -348,7 +331,6 @@ class Git_SystemEventManager
     /**
      * Note: for a newly developed feature, it would be better to have a dedicated
      * queue for root event but
-     * - The events below are meant to disapear when legacy backend will be removed
      * - This mean that for all new platforms there would be a new empty pane (git root
      *   events)
      * So it's better to make them run in the default queue like before
@@ -357,20 +339,8 @@ class Git_SystemEventManager
      */
     public function getTypesForDefaultQueue(): array
     {
-        $types = [
+        return [
             ParseGitolite3Logs::NAME,
         ];
-
-        if ($this->repository_factory->hasGitShellRepositories()) {
-            return array_merge(
-                $types,
-                [
-                    SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
-                    SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
-                ]
-            );
-        }
-
-        return $types;
     }
 }

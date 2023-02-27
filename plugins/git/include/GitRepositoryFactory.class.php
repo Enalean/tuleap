@@ -86,7 +86,7 @@ class GitRepositoryFactory
     }
 
     /**
-     * Return all git repositories of a project (gitshell, gitolite, personal forks)
+     * Return all git repositories of a project (gitolite, personal forks)
      *
      *
      * @return GitRepository[]
@@ -94,7 +94,7 @@ class GitRepositoryFactory
     public function getAllRepositories(Project $project)
     {
         $repositories    = [];
-        $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);
+        $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false);
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);
@@ -322,11 +322,6 @@ class GitRepositoryFactory
             array_push($repositories, $repository);
         }
         return $repositories;
-    }
-
-    public function hasGitShellRepositories()
-    {
-        return $this->dao->hasGitShellRepositories();
     }
 
     /**
