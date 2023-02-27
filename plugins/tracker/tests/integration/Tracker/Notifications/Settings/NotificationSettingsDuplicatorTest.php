@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
 use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
@@ -44,6 +45,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
             new UgroupsToNotifyDuplicationDao(),
             new ConfigNotificationAssignedToDao(),
             new ConfigNotificationEmailCustomSenderDao(),
+            new DateReminderDao(),
         );
     }
 
@@ -55,6 +57,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $db->query('TRUNCATE TABLE tracker_global_notification');
         $db->query('TRUNCATE TABLE plugin_tracker_notification_assigned_to');
         $db->query('TRUNCATE TABLE plugin_tracker_notification_email_custom_sender_format');
+        $db->query('TRUNCATE TABLE tracker_reminder');
+        $db->query('TRUNCATE TABLE tracker_reminder_notified_roles');
         $db->query('SET FOREIGN_KEY_CHECKS=1'); // because plugin_tracker_notification_email_custom_sender_format has a constraint we don't want to resolve in tests
     }
 
@@ -72,7 +76,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping)
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            [],
         );
 
         $notifications = $db->run('SELECT * FROM tracker_global_notification WHERE tracker_id = ?', $new_tracker_id);
@@ -97,7 +102,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping)
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            [],
         );
 
         $notifications = $db->run('SELECT * FROM tracker_global_notification WHERE tracker_id = ?', $new_tracker_id);
@@ -133,7 +139,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping)
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            [],
         );
 
         // 1. One static user group
@@ -167,7 +174,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping)
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            [],
         );
 
         $new_notification_id = $db->column('SELECT * FROM tracker_global_notification WHERE tracker_id = ?', [$new_tracker_id]);
@@ -192,7 +200,8 @@ class NotificationSettingsDuplicatorTest extends TestCase
         $this->duplicator->duplicate(
             $template_tracker_id,
             $new_tracker_id,
-            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping)
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            [],
         );
 
         $notifications = $db->run('SELECT * FROM tracker_global_notification WHERE tracker_id = ?', $new_tracker_id);
@@ -220,6 +229,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
             $template_tracker_id,
             $new_tracker_id,
             TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            [],
         );
 
         self::assertTrue($db->exists('SELECT 1 FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ?', $new_tracker_id));
@@ -234,6 +244,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
             $template_tracker_id,
             $new_tracker_id,
             TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            [],
         );
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -253,6 +264,7 @@ class NotificationSettingsDuplicatorTest extends TestCase
             $template_tracker_id,
             $new_tracker_id,
             TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            [],
         );
 
         $rows = $db->run('SELECT * FROM plugin_tracker_notification_email_custom_sender_format WHERE tracker_id = ?', $new_tracker_id);
@@ -270,10 +282,113 @@ class NotificationSettingsDuplicatorTest extends TestCase
             $template_tracker_id,
             $new_tracker_id,
             TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            [],
         );
 
         $db   = DBFactory::getMainTuleapDBConnection()->getDB();
         $rows = $db->run('SELECT * FROM plugin_tracker_notification_email_custom_sender_format WHERE tracker_id = ?', $new_tracker_id);
         self::assertCount(0, $rows);
+    }
+
+    public function testDuplicateDateRemindersWithGroups(): void
+    {
+        $template_tracker_id             = 1;
+        $template_tracker_date1_field_id = 55;
+        $template_tracker_date2_field_id = 56;
+        $new_tracker_id                  = 2;
+        $new_tracker_date1_field_id      = 66;
+        $new_tracker_date2_field_id      = 67;
+        $ugroup_mapping                  = [
+            122 => 777,
+        ];
+        $field_mapping                   = [
+            [
+                'from'    => $template_tracker_date1_field_id,
+                'to'      => $new_tracker_date1_field_id,
+                'values'  => [],
+                'workflow' => false,
+            ],
+            [
+                'from'    => $template_tracker_date2_field_id,
+                'to'      => $new_tracker_date2_field_id,
+                'values'  => [],
+                'workflow' => false,
+            ],
+        ];
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insert('tracker_reminder', ['tracker_id' => $template_tracker_id, 'field_id' => $template_tracker_date1_field_id, 'ugroups' => '3, 122', 'notification_type' => 0, 'distance' => 2, 'status' => 1, 'notify_closed_artifacts' => 1]);
+        $db->insert('tracker_reminder', ['tracker_id' => $template_tracker_id, 'field_id' => $template_tracker_date2_field_id, 'ugroups' => '4', 'notification_type' => 1, 'distance' => 3, 'status' => 0, 'notify_closed_artifacts' => 0]);
+        $db->insert('tracker_reminder', ['tracker_id' => 858, 'field_id' => 777, 'ugroups' => '4', 'notification_type' => 1, 'distance' => 3, 'status' => 0, 'notify_closed_artifacts' => 0]);
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping),
+            $field_mapping,
+        );
+
+        $rows = $db->run('SELECT * FROM tracker_reminder WHERE tracker_id = ?', $new_tracker_id);
+        self::assertCount(2, $rows);
+
+        self::assertEquals($new_tracker_date1_field_id, $rows[0]['field_id']);
+        self::assertEqualsCanonicalizing(['3', '777'], explode(',', $rows[0]['ugroups']));
+        self::assertEquals(0, $rows[0]['notification_type']);
+        self::assertEquals(2, $rows[0]['distance']);
+        self::assertEquals(1, $rows[0]['status']);
+        self::assertEquals(1, $rows[0]['notify_closed_artifacts']);
+
+        self::assertEmpty($db->column('SELECT role_id FROM tracker_reminder_notified_roles WHERE reminder_id = ?', [$rows[0]['reminder_id']]));
+
+        self::assertEquals($new_tracker_date2_field_id, $rows[1]['field_id']);
+        self::assertEqualsCanonicalizing(['4'], explode(',', $rows[1]['ugroups']));
+        self::assertEquals(1, $rows[1]['notification_type']);
+        self::assertEquals(3, $rows[1]['distance']);
+        self::assertEquals(0, $rows[1]['status']);
+        self::assertEquals(0, $rows[1]['notify_closed_artifacts']);
+
+        self::assertEmpty($db->column('SELECT role_id FROM tracker_reminder_notified_roles WHERE reminder_id = ?', [$rows[1]['reminder_id']]));
+    }
+
+    public function testDuplicateDateRemindersWithRoles(): void
+    {
+        $template_tracker_id             = 1;
+        $template_tracker_date1_field_id = 55;
+        $new_tracker_id                  = 2;
+        $new_tracker_date1_field_id      = 66;
+
+        $field_mapping = [
+            [
+                'from'    => $template_tracker_date1_field_id,
+                'to'      => $new_tracker_date1_field_id,
+                'values'  => [],
+                'workflow' => false,
+            ],
+        ];
+
+        $db                   = DBFactory::getMainTuleapDBConnection()->getDB();
+        $template_reminder_id = $db->insertReturnId('tracker_reminder', ['tracker_id' => $template_tracker_id, 'field_id' => $template_tracker_date1_field_id, 'ugroups' => '', 'notification_type' => 0, 'distance' => 2, 'status' => 1, 'notify_closed_artifacts' => 1]);
+        $db->insert('tracker_reminder_notified_roles', ['reminder_id' => $template_reminder_id, 'role_id' => \Tracker_DateReminder_Role_Submitter::IDENTIFIER]);
+        $db->insert('tracker_reminder_notified_roles', ['reminder_id' => $template_reminder_id, 'role_id' => \Tracker_DateReminder_Role_Assignee::IDENTIFIER]);
+
+        $this->duplicator->duplicate(
+            $template_tracker_id,
+            $new_tracker_id,
+            TrackerDuplicationUserGroupMapping::fromNewProjectWithMapping([]),
+            $field_mapping,
+        );
+
+        $rows = $db->run('SELECT * FROM tracker_reminder WHERE tracker_id = ?', $new_tracker_id);
+        self::assertCount(1, $rows);
+
+        self::assertEquals($new_tracker_date1_field_id, $rows[0]['field_id']);
+        self::assertEquals('', $rows[0]['ugroups']);
+        self::assertEquals(0, $rows[0]['notification_type']);
+        self::assertEquals(2, $rows[0]['distance']);
+        self::assertEquals(1, $rows[0]['status']);
+        self::assertEquals(1, $rows[0]['notify_closed_artifacts']);
+
+        $role_rows = $db->column('SELECT role_id FROM tracker_reminder_notified_roles WHERE reminder_id = ?', [$rows[0]['reminder_id']]);
+        self::assertEqualsCanonicalizing([\Tracker_DateReminder_Role_Assignee::IDENTIFIER, \Tracker_DateReminder_Role_Submitter::IDENTIFIER], $role_rows);
     }
 }

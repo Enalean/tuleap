@@ -58,6 +58,19 @@ setup_database() {
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker_date_reminder/db/examples.sql"
 }
 
+load_project() {
+    base_dir=$1
+
+    user_mapping="-m $base_dir/user_map.csv"
+    if [ ! -f $base_dir/user_map.csv ]; then
+        user_mapping="--automap=no-email,create:A"
+    fi
+    PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap import-project-xml \
+        -u admin \
+        -i $base_dir \
+        $user_mapping
+}
+
 seed_data() {
     sudo -u codendiadm /usr/bin/tuleap plugin:install \
         tracker \
@@ -76,7 +89,17 @@ seed_data() {
         gitlab
 }
 
+seed_plugin_data() {
+    for fixture_dir in $(find /usr/share/tuleap/plugins/*/tests/integration/_fixtures/* -maxdepth 1 -type d)
+    do
+        if [ -f "$fixture_dir/project.xml" ] && [ -f "$fixture_dir/users.xml" ]; then
+            load_project "$fixture_dir"
+        fi
+    done
+}
+
 setup_tuleap
 setup_redis
 setup_database
 seed_data
+seed_plugin_data
