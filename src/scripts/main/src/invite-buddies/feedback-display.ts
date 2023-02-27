@@ -235,7 +235,7 @@ function getAlertForUsers(
 function clearFeedback(): void {
     const feedback = getFeedbacksContainer();
 
-    feedback.innerHTML = "";
+    render(html``, feedback);
 }
 
 function getFeedbacksContainer(): HTMLElement {

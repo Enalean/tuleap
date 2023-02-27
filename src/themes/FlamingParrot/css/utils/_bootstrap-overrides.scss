@@ -168,24 +168,50 @@ kbd {
         margin: 0 0 20px;
         color: inherit;
     }
+
+    code {
+        border: 0;
+        background: var(--tlp-warning-color-transparent-90);
+        color: inherit;
+    }
 }
 
 .alert-success {
     border-left: var(--tlp-alert-success-border);
     background: var(--tlp-alert-success-background);
     color: var(--tlp-alert-success-color);
+
+    code {
+        background: var(--tlp-success-color-transparent-90);
+    }
 }
 
 .alert-info {
     border-left: var(--tlp-alert-info-border);
     background: var(--tlp-alert-info-background);
     color: var(--tlp-alert-info-color);
+
+    code {
+        background: var(--tlp-info-color-transparent-90);
+    }
 }
 
 .alert-error {
     border-left: var(--tlp-alert-danger-border);
     background: var(--tlp-alert-danger-background);
     color: var(--tlp-alert-danger-color);
+
+    code {
+        background: var(--tlp-danger-color-transparent-90);
+    }
+}
+
+.tlp-alert-title,
+.tlp-alert-title:last-child {
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5rem;
 }
 
 legend {

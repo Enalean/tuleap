@@ -60,6 +60,39 @@ describe("feedback-display", () => {
             expect(document.body.querySelectorAll("[data-test=restricted]")).toHaveLength(0);
         });
 
+        it("can displaySuccess multiple times in a row", () => {
+            const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
+
+            displaySuccess(
+                ["peter@example.com"],
+                {
+                    failures: [],
+                    already_project_members: [],
+                    known_users_added_to_project_members: [],
+                    known_users_not_alive: [],
+                    known_users_are_restricted: [],
+                },
+                gettext_provider
+            );
+            displaySuccess(
+                ["wendy@example.com"],
+                {
+                    failures: [],
+                    already_project_members: [],
+                    known_users_added_to_project_members: [],
+                    known_users_not_alive: [],
+                    known_users_are_restricted: [],
+                },
+                gettext_provider
+            );
+
+            expect(document.body.querySelectorAll("[data-test=success]")).toHaveLength(1);
+            expect(document.body.querySelectorAll("[data-test=already-member]")).toHaveLength(0);
+            expect(document.body.querySelectorAll("[data-test=could-not-be-sent]")).toHaveLength(0);
+            expect(document.body.querySelectorAll("[data-test=known-user-added]")).toHaveLength(0);
+            expect(document.body.querySelectorAll("[data-test=restricted]")).toHaveLength(0);
+        });
+
         it("Extracts emails that are in error to display a warning", () => {
             const gettext_provider = initGettextSync("invite-buddies", {}, "en_US");
 
