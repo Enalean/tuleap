@@ -26,7 +26,7 @@ exit 0 if $newsha eq '0000000000000000000000000000000000000000';
 
 # / (.*) +\| Bin 0 -> (\d+) bytes/
 
-for my $newbin (`git diff --stat=999,999 $oldtree $newtree | grep Bin.0.-`) {
+for my $newbin (`/usr/lib/tuleap/git/bin/git diff --stat=999,999 $oldtree $newtree | grep Bin.0.-`) {
     next unless $newbin =~ /^ (.*) +\| +Bin 0 -> (\d+) bytes/;
     my ( $f, $s ) = ( $1, $2 );
     next if $s <= $max;
