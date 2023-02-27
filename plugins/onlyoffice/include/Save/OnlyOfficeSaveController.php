@@ -32,6 +32,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Option\Option;
 
 final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatible implements \Tuleap\Request\DispatchableWithRequestNoAuthz
 {
@@ -63,10 +64,10 @@ final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Co
             ->parseCallbackResponseContent($response_content, $save_token_information)
             ->andThen(
                 /**
-                 * @psalm-param OptionalValue<OnlyOfficeCallbackSaveResponseData> $save_response_data
+                 * @psalm-param Option<OnlyOfficeCallbackSaveResponseData> $save_response_data
                  * @psalm-return Ok<null>|Err<Fault>
                  */
-                function (OptionalValue $save_response_data) use ($save_token_information): Ok|Err {
+                function (Option $save_response_data) use ($save_token_information): Ok|Err {
                     return $this->only_office_callback_document_saver->saveDocument($save_token_information, $save_response_data);
                 }
             )

@@ -43,6 +43,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
@@ -89,7 +90,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         );
 
         self::assertEquals(
-            OptionalValue::fromValue(
+            Option::fromValue(
                 new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
             ),
             $res->unwrapOr(null)
@@ -104,7 +105,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         );
 
         self::assertEquals(
-            OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class),
+            Option::nothing(OnlyOfficeCallbackSaveResponseData::class),
             $res->unwrapOr(null)
         );
     }

@@ -20,18 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Save;
+namespace Tuleap\Option;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class OptionalValueTest extends TestCase
+final class OptionTest extends TestCase
 {
     public function testCanApplyWhenValueIsProvided(): void
     {
         $value         = new \stdClass();
         $applied_value = null;
 
-        $optional = OptionalValue::fromValue($value);
+        $optional = Option::fromValue($value);
         $optional->apply(function (mixed $received_value) use (&$applied_value): void {
             $applied_value = $received_value;
         });
@@ -41,7 +41,7 @@ final class OptionalValueTest extends TestCase
 
     public function testDoNoApplyOnNothing(): void
     {
-        $optional = OptionalValue::nothing(\stdClass::class);
+        $optional = Option::nothing(\stdClass::class);
 
         $has_called_apply_function = false;
 
@@ -56,7 +56,7 @@ final class OptionalValueTest extends TestCase
     {
         $fn = fn(): string => 'callback';
 
-        self::assertEquals('callback', OptionalValue::fromValue('expected')->mapOr($fn, 'default'));
-        self::assertEquals('default', OptionalValue::nothing(\stdClass::class)->mapOr($fn, 'default'));
+        self::assertEquals('callback', Option::fromValue('expected')->mapOr($fn, 'default'));
+        self::assertEquals('default', Option::nothing(\stdClass::class)->mapOr($fn, 'default'));
     }
 }

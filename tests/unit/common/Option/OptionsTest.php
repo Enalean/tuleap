@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Save;
+namespace Tuleap\Option;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
+use Tuleap\Test\PHPUnit\TestCase;
 
-interface OnlyOfficeCallbackResponseParser
+final class OptionsTest extends TestCase
 {
-    /**
-     * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
-     */
-    public function parseCallbackResponseContent(
-        string $response_content,
-        SaveDocumentTokenData $save_token_information,
-    ): Ok|Err;
+    public function testCollectValues(): void
+    {
+        $some_optional_values = [
+            \Tuleap\Option\Option::fromValue('a'),
+            \Tuleap\Option\Option::nothing(\Psl\Type\string()),
+            \Tuleap\Option\Option::fromValue('b'),
+        ];
+
+        self::assertEquals(['a', 'b'], \Tuleap\Option\Options::collect($some_optional_values));
+    }
 }

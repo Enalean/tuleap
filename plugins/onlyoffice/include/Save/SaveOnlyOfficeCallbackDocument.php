@@ -25,15 +25,16 @@ namespace Tuleap\OnlyOffice\Save;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Option\Option;
 
 interface SaveOnlyOfficeCallbackDocument
 {
     /**
-     * @psalm-param OptionalValue<OnlyOfficeCallbackSaveResponseData> $optional_response_data
+     * @psalm-param Option<OnlyOfficeCallbackSaveResponseData> $optional_response_data
      * @psalm-return Ok<null>|Err<Fault>
      */
     public function saveDocument(
         SaveDocumentTokenData $save_token_information,
-        OptionalValue $optional_response_data,
+        Option $optional_response_data,
     ): Ok|Err;
 }
