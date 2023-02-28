@@ -154,13 +154,22 @@ abstract class Note extends \Widget
             ];
         }
 
-        if ($this->code_block_features->isMermaidNeeded()) {
-            $javascript_dependencies[] = [
-                'file' => $this->getAssets()->getFileURL('mermaid.js'),
-            ];
-        }
-
         return $javascript_dependencies;
+    }
+
+    public function getJavascriptAssets(): array
+    {
+        if ($this->code_block_features->isMermaidNeeded()) {
+            $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/mermaid-diagram-element/frontend-assets',
+                    '/assets/core/mermaid-diagram-element',
+                ),
+                'src/index.ts',
+            );
+            return [$js_asset];
+        }
+        return [];
     }
 
     /**

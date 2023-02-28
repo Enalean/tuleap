@@ -82,15 +82,12 @@ export class MermaidDiagramElement extends HTMLElement {
         if (!this.container || !this.source_wrapper || !this.backdrop) {
             return;
         }
-        const { render } = await import(
-            /* webpackChunkName: "mermaid-render" */ "./mermaid-render"
-        );
+        const { render } = await import("./mermaid-render");
 
         try {
-            const svg_code = render(
+            const rendered_result = await render(
                 generateMermaidElementId(),
                 this.source_code,
-                undefined,
                 this.container
             );
 
@@ -98,7 +95,7 @@ export class MermaidDiagramElement extends HTMLElement {
             // If we start using DOMPurify, then it will remove elements that
             // can be used by mermaid / d3 to produce the graph.
             // eslint-disable-next-line no-unsanitized/property
-            this.container.innerHTML = svg_code;
+            this.container.innerHTML = rendered_result.svg;
             this.svg = this.container.querySelector("svg");
 
             // Replace the pre by the generated svg_element because we do not have
@@ -195,7 +192,7 @@ export class MermaidDiagramElement extends HTMLElement {
 
         this.backdrop.classList.add(this.magnified_classname, "diagram-mermaid-panzoom-loading");
 
-        const { panzoom } = await import(/* webpackChunkName: "panzoom" */ "./panzoom");
+        const { panzoom } = await import("./panzoom");
 
         this.panzoom_instance = panzoom(this.svg, {
             transformOrigin: { x: 0, y: 0 },

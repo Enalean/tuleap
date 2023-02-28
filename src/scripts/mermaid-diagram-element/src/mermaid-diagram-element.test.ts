@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { RenderResult } from "mermaid";
+import { describe, it, expect, vi, beforeEach, beforeAll, afterEach } from "vitest";
 import { MermaidDiagramElement } from "./mermaid-diagram-element";
 
-jest.mock("./id-generator", () => {
+vi.mock("./id-generator", () => {
     return {
-        generateMermaidElementId: jest.fn(),
+        generateMermaidElementId: vi.fn(),
     };
 });
 
-const render = jest.fn();
-jest.mock("./mermaid-render", () => {
+const render = vi.fn();
+vi.mock("./mermaid-render", () => {
     return { render };
 });
 
@@ -59,7 +61,10 @@ describe("MermaidDiagramElement", () => {
 
     beforeEach(() => {
         render.mockReset();
-        render.mockImplementation((id: string, txt: string) => `<svg>${txt}</svg>`);
+        render.mockImplementation(
+            (id: string, txt: string): Promise<RenderResult> =>
+                Promise.resolve({ svg: `<svg>${txt}</svg>` })
+        );
     });
 
     afterEach(() => {
@@ -67,8 +72,8 @@ describe("MermaidDiagramElement", () => {
     });
 
     it("displays a spinner while observing if mermaid block is in the viewport", () => {
-        const observe = jest.fn();
-        const mockIntersectionObserver = jest.fn();
+        const observe = vi.fn();
+        const mockIntersectionObserver = vi.fn();
         mockIntersectionObserver.mockReturnValue({
             observe,
         });
@@ -85,8 +90,8 @@ describe("MermaidDiagramElement", () => {
         const observe = (): void => {
             // mocking observe
         };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
+        const unobserve = vi.fn();
+        const mockIntersectionObserver = vi.fn();
         mockIntersectionObserver.mockReturnValue({
             observe,
             unobserve,
@@ -107,8 +112,8 @@ describe("MermaidDiagramElement", () => {
         const observe = (): void => {
             // mocking observe
         };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
+        const unobserve = vi.fn();
+        const mockIntersectionObserver = vi.fn();
         mockIntersectionObserver.mockReturnValue({
             observe,
             unobserve,
@@ -133,8 +138,8 @@ describe("MermaidDiagramElement", () => {
         const observe = (): void => {
             // mocking observe
         };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
+        const unobserve = vi.fn();
+        const mockIntersectionObserver = vi.fn();
         mockIntersectionObserver.mockReturnValue({
             observe,
             unobserve,
@@ -160,8 +165,8 @@ describe("MermaidDiagramElement", () => {
         const observe = (): void => {
             // mocking observe
         };
-        const unobserve = jest.fn();
-        const mockIntersectionObserver = jest.fn();
+        const unobserve = vi.fn();
+        const mockIntersectionObserver = vi.fn();
         mockIntersectionObserver.mockReturnValue({
             observe,
             unobserve,

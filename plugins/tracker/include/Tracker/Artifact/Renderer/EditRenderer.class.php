@@ -130,6 +130,16 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayHeader()
     {
+        if (CodeBlockFeaturesOnArtifact::getInstance()->isMermaidNeeded()) {
+            $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../../../../../../src/scripts/mermaid-diagram-element/frontend-assets',
+                    '/assets/core/mermaid-diagram-element',
+                ),
+                'src/index.ts',
+            );
+            $GLOBALS['HTML']->addJavascriptAsset($js_asset);
+        }
         $parents = $this->getParentHierarchy();
         if ($parents->isGraph()) {
             $GLOBALS['HTML']->addFeedback(Feedback::WARN, dgettext('tuleap-tracker', 'When more than one parent, we cannot display rest of hierarchy.'));
@@ -346,13 +356,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayFooter()
     {
-        $code_block_features = CodeBlockFeaturesOnArtifact::getInstance();
-        $assets              = new \Tuleap\Layout\IncludeCoreAssets();
-        if ($code_block_features->isMermaidNeeded()) {
-            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'mermaid.js'));
-        }
-        if ($code_block_features->isSyntaxHighlightNeeded()) {
-            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'syntax-highlight.js'));
+        if (CodeBlockFeaturesOnArtifact::getInstance()->isSyntaxHighlightNeeded()) {
+            $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'syntax-highlight.js'));
         }
 
         $this->tracker->displayFooter($this->layout);

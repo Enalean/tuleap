@@ -259,7 +259,14 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 )
             );
             if ($code_block_features->isMermaidNeeded()) {
-                $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'mermaid.js'));
+                $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
+                    new \Tuleap\Layout\IncludeViteAssets(
+                        __DIR__ . '/../../../../../src/scripts/mermaid-diagram-element/frontend-assets',
+                        '/assets/core/mermaid-diagram-element',
+                    ),
+                    'src/index.ts',
+                );
+                $GLOBALS['HTML']->addJavascriptAsset($js_asset);
             }
         } else {
             $this->tpl->assign(

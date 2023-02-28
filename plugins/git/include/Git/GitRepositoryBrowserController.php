@@ -152,12 +152,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
-        $this->header_displayer->display($request, $layout, $current_user, $repository);
-        $renderer->renderToPage(
-            'repository/gitphp/header',
-            $this->files_header_presenter_builder->build($request, $repository)
-        );
-
+        ob_start();
         $view = new GitViews_ShowRepo_Content(
             $repository,
             $git_php_viewer,
@@ -166,6 +161,15 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             $this->access_logger
         );
         $view->display();
+        $gitphp_content = ob_get_clean();
+
+        $this->header_displayer->display($request, $layout, $current_user, $repository);
+        $renderer->renderToPage(
+            'repository/gitphp/header',
+            $this->files_header_presenter_builder->build($request, $repository)
+        );
+
+        echo $gitphp_content;
 
         $renderer->renderToPage('repository/gitphp/footer', []);
         $layout->footer([]);
