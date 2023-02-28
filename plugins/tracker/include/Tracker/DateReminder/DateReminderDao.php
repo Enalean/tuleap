@@ -252,28 +252,20 @@ class DateReminderDao extends DataAccessObject
                     continue;
                 }
 
-                $ugroups = implode(
-                    ',',
-                    array_filter(
-                        array_map(
-                            fn (int $value): ?int => $ugroups_mapping[$value] ?? null,
-                            array_map(
-                                fn (string $value): int => (int) $value,
-                                array_map(
-                                    trim(...),
-                                    explode(',', $row['ugroups']),
-                                )
-                            )
-                        )
-                    )
-                );
+                $new_project_ugroups = [];
+                foreach (explode(',', $row['ugroups']) as $template_ugroup) {
+                    $template_ugroup = (int) trim($template_ugroup);
+                    if (isset($ugroups_mapping[$template_ugroup])) {
+                        $new_project_ugroups[] = $ugroups_mapping[$template_ugroup];
+                    }
+                }
 
                 $new_reminder_id = $db->insertReturnId(
                     'tracker_reminder',
                     [
                         'tracker_id' => $new_tracker_id,
                         'field_id' => $fields_hash[$row['field_id']],
-                        'ugroups' => $ugroups,
+                        'ugroups' => implode(',', $new_project_ugroups),
                         'notification_type' => $row['notification_type'],
                         'distance' => $row['distance'],
                         'status' => $row['status'],
