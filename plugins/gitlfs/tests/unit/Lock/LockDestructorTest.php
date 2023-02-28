@@ -18,38 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Lock;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 
-class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var LockDestructor
-     */
-    private $lock_destructor;
-
-    /**
-     * @var MockInterface
-     */
-    private $lock_dao;
+    private LockDestructor $lock_destructor;
+    private LockDao&\PHPUnit\Framework\MockObject\MockObject $lock_dao;
 
     public function setUp(): void
     {
-        $this->lock_dao        = \Mockery::mock(LockDao::class);
+        $this->lock_dao        = $this->createMock(LockDao::class);
         $this->lock_destructor = new LockDestructor($this->lock_dao);
     }
 
-    public function testLockIsNotDeletedIfUserIsNotOwner()
+    public function testLockIsNotDeletedIfUserIsNotOwner(): void
     {
-        $lock_owner   = \Mockery::mock(\PFUser::class);
-        $request_user = \Mockery::mock(\PFUser::class);
+        $lock_owner   = $this->createStub(\PFUser::class);
+        $request_user = $this->createStub(\PFUser::class);
 
-        $lock_owner->shouldReceive('getId')->andReturn(103);
-        $request_user->shouldReceive('getId')->andReturn(104);
+        $lock_owner->method('getId')->willReturn(103);
+        $request_user->method('getId')->willReturn(104);
 
         $lock = new Lock(
             1,
@@ -58,17 +49,17 @@ class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->shouldNotReceive('deleteLock');
+        $this->lock_dao->expects(self::never())->method('deleteLock');
         $this->expectException(LockDestructionNotAuthorizedException::class);
 
         $this->lock_destructor->deleteLock($lock, $request_user);
     }
 
-    public function testLockIsDeletedIfUserIsOwner()
+    public function testLockIsDeletedIfUserIsOwner(): void
     {
-        $lock_owner = \Mockery::mock(\PFUser::class);
+        $lock_owner = $this->createStub(\PFUser::class);
 
-        $lock_owner->shouldReceive('getId')->andReturn(103);
+        $lock_owner->method('getId')->willReturn(103);
 
         $lock = new Lock(
             1,
@@ -77,16 +68,16 @@ class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId())->atLeast()->once();
+        $this->lock_dao->expects(self::atLeastOnce())->method('deleteLock')->with($lock->getId());
 
         $this->lock_destructor->deleteLock($lock, $lock_owner);
     }
 
-    public function testLockIsDeletedEvenIfUserIsNotOwnerIfForced()
+    public function testLockIsDeletedEvenIfUserIsNotOwnerIfForced(): void
     {
-        $lock_owner = \Mockery::mock(\PFUser::class);
+        $lock_owner = $this->createStub(\PFUser::class);
 
-        $lock_owner->shouldReceive('getId')->andReturn(103);
+        $lock_owner->method('getId')->willReturn(103);
 
         $lock = new Lock(
             1,
@@ -95,7 +86,7 @@ class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId())->atLeast()->once();
+        $this->lock_dao->expects(self::once())->method('deleteLock')->with($lock->getId());
 
         $this->lock_destructor->forceDeleteLock($lock);
     }

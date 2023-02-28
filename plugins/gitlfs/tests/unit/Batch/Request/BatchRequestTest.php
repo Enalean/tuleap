@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Batch\Request;
 
-
-class BatchRequestTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testParsingRequestWithAllProperties()
+    public function testParsingRequestWithAllProperties(): void
     {
         $json          = <<<JSON
 {
@@ -52,10 +53,10 @@ JSON;
         $this->assertSame('3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d', $objects[1]->getOID()->getValue());
         $this->assertSame(456, $objects[1]->getSize());
         $this->assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
-        $this->assertSame('refs/heads/contrib', $batch_request->getReference()->getName());
+        $this->assertSame('refs/heads/contrib', $batch_request->getReference()?->getName());
     }
 
-    public function testParsingBatchRequestWithMinimalProperties()
+    public function testParsingBatchRequestWithMinimalProperties(): void
     {
         $json          = '{"operation": "download", "objects": []}';
         $batch_request = BatchRequest::buildFromJSONString($json);
@@ -70,13 +71,13 @@ JSON;
     /**
      * @dataProvider providerIncorrectJSONBatchRequest
      */
-    public function testParsingIncorrectBatchRequest($json_string)
+    public function testParsingIncorrectBatchRequest(string $json_string): void
     {
         $this->expectException(IncorrectlyFormattedBatchRequestException::class);
         BatchRequest::buildFromJSONString($json_string);
     }
 
-    public static function providerIncorrectJSONBatchRequest()
+    public static function providerIncorrectJSONBatchRequest(): array
     {
         return [
             ['{bad_json'],

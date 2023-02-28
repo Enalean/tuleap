@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\LFSObject;
 
-
-class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testCanConstructValidOID()
+    public function testCanConstructValidOID(): void
     {
         $oid_value = 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb';
         $oid       = new LFSObjectID($oid_value);
@@ -31,7 +32,7 @@ class LFSObjectIDTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($oid_value, $oid->getValue());
     }
 
-    public function testInvalidOIDValueIsRejected()
+    public function testInvalidOIDValueIsRejected(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         new LFSObjectID('invalid_oid');

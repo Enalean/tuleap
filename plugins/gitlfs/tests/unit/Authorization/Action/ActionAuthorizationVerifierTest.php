@@ -20,44 +20,41 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 
-class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $dao;
-    private $hasher;
-    private $repository_factory;
-    private $current_time;
+    private \PHPUnit\Framework\MockObject\Stub&ActionAuthorizationDAO $dao;
+    private SplitTokenVerificationStringHasher&\PHPUnit\Framework\MockObject\Stub $hasher;
+    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\Stub $repository_factory;
+    private \DateTimeImmutable $current_time;
 
     protected function setUp(): void
     {
-        $this->dao                = \Mockery::mock(ActionAuthorizationDAO::class);
-        $this->hasher             = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->repository_factory = \Mockery::mock(\GitRepositoryFactory::class);
+        $this->dao                = $this->createStub(ActionAuthorizationDAO::class);
+        $this->hasher             = $this->createStub(SplitTokenVerificationStringHasher::class);
+        $this->repository_factory = $this->createStub(\GitRepositoryFactory::class);
         $this->current_time       = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
     }
 
-    public function testAuthorizedActionCanBeRetrievedFromTheAuthorizationToken()
+    public function testAuthorizedActionCanBeRetrievedFromTheAuthorizationToken(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
         $oid_value = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
         $size      = 123456;
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -66,9 +63,9 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'object_oid'      => $oid_value,
             'object_size'     => $size,
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
-        $expected_repository = \Mockery::mock(\GitRepository::class);
-        $this->repository_factory->shouldReceive('getRepositoryById')->with(3)->andReturns($expected_repository);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
+        $expected_repository = $this->createStub(\GitRepository::class);
+        $this->repository_factory->method('getRepositoryById')->with(3)->willReturn($expected_repository);
 
         $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid_value, $action_type);
 
@@ -77,33 +74,33 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected_repository, $authorized_action->getRepository());
     }
 
-    public function testVerificationFailsWhenANotExpiredAuthorizationCanNotBeFound()
+    public function testVerificationFailsWhenANotExpiredAuthorizationCanNotBeFound(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns(null);
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn(null);
 
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
 
         $this->expectException(ActionAuthorizationNotFoundException::class);
 
         $verifier->getAuthorization($this->current_time, $authorization_token, 'oid', new ActionAuthorizationTypeUpload());
     }
 
-    public function testVerificationFailsWhenVerificationStringDoesNotMatch()
+    public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
         $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -112,25 +109,25 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'object_oid'      => $oid,
             'object_size'     => 123456,
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(false);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(false);
 
         $this->expectException(InvalidActionAuthorizationException::class);
 
         $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
-    public function testVerificationFailsWhenOIDDoesNotMatch()
+    public function testVerificationFailsWhenOIDDoesNotMatch(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
         $current_time        = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -139,27 +136,27 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'object_oid'      => 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b',
             'object_size'     => 123456,
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->expectException(InvalidActionAuthorizationException::class);
 
         $verifier->getAuthorization($current_time, $authorization_token, 'not_requested_oid', $action_type);
     }
 
-    public function testVerificationFailsWhenActionTypeDoesNotMatch()
+    public function testVerificationFailsWhenActionTypeDoesNotMatch(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $action_type = \Mockery::mock(ActionAuthorizationType::class);
-        $action_type->shouldReceive('getName')->andReturns('not_requested_action_type');
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $authorization_token->method('getVerificationString')->willReturn($verification_string);
+        $action_type = $this->createStub(ActionAuthorizationType::class);
+        $action_type->method('getName')->willReturn('not_requested_action_type');
 
         $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -168,26 +165,26 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'object_oid'      => $oid,
             'object_size'     => 123456,
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->expectException(InvalidActionAuthorizationException::class);
 
         $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
-    public function testVerificationFailsWHenTheCorrespondingRepositoryCanNotBeFound()
+    public function testVerificationFailsWHenTheCorrespondingRepositoryCanNotBeFound(): void
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = \Mockery::mock(SplitToken::class);
-        $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
         $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -196,8 +193,8 @@ class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'object_oid'      => $oid,
             'object_size'     => 123456,
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
+        $this->repository_factory->method('getRepositoryById')->willReturn(null);
 
         $this->expectException(ActionAuthorizationMatchingUnknownRepositoryException::class);
 

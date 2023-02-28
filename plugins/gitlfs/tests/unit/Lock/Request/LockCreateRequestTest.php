@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Lock\Request;
 
-
-class LockCreateRequestTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LockCreateRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testParsingRequest()
+    public function testParsingRequest(): void
     {
         $json         = <<<JSON
 {
@@ -41,7 +42,7 @@ JSON;
         $this->assertFalse($lock_request->isRead());
     }
 
-    public function testRequestCanBeParsedWhenNoRefIsGiven()
+    public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
         $json_without_ref = <<<JSON
 {

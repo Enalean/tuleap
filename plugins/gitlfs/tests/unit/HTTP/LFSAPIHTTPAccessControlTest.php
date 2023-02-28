@@ -20,16 +20,13 @@
 
 namespace Tuleap\GitLFS\HTTP;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Request\NotFoundException;
 
-class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private $lfs_http_api_access_control;
     private $http_access_control;
     private $user_manager;
@@ -37,115 +34,115 @@ class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->lfs_http_api_access_control = \Mockery::mock(LSFAPIHTTPAuthorization::class);
-        $this->http_access_control         = \Mockery::mock(HTTPAccessControl::class);
-        $this->user_manager                = \Mockery::mock(\UserManager::class);
-        $this->access_control_verifier     = \Mockery::mock(AccessControlVerifier::class);
+        $this->lfs_http_api_access_control = $this->createStub(LSFAPIHTTPAuthorization::class);
+        $this->http_access_control         = $this->createStub(HTTPAccessControl::class);
+        $this->user_manager                = $this->createStub(\UserManager::class);
+        $this->access_control_verifier     = $this->createStub(AccessControlVerifier::class);
     }
 
-    public function testAnonymousUserCanDownloadFromAPublicRepository()
+    public function testAnonymousUserCanDownloadFromAPublicRepository(): void
     {
-        $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
-        $this->http_access_control->shouldReceive('getUser')->andReturns(null);
+        $this->lfs_http_api_access_control->method('getUserFromAuthorizationToken')->willReturn(null);
+        $this->http_access_control->method('getUser')->willReturn(null);
 
         $batch_api_access_control = new LFSAPIHTTPAccessControl(
             $this->access_control_verifier
         );
 
-        $repository    = \Mockery::mock(\GitRepository::class);
-        $batch_request = \Mockery::mock(BatchRequest::class);
-        $batch_request->shouldReceive('isRead')->andReturns(true);
+        $repository    = $this->createStub(\GitRepository::class);
+        $batch_request = $this->createStub(BatchRequest::class);
+        $batch_request->method('isRead')->willReturn(true);
 
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, null));
     }
 
-    public function testAuthenticatedViaBasicAuthUserWithReadPermissionCanDownload()
+    public function testAuthenticatedViaBasicAuthUserWithReadPermissionCanDownload(): void
     {
-        $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
+        $this->lfs_http_api_access_control->method('getUserFromAuthorizationToken')->willReturn(null);
 
-        $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUserName')->andReturns('username');
-        $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
+        $pfo_user = $this->createStub(\PFO_User::class);
+        $pfo_user->method('getUserName')->willReturn('username');
+        $this->http_access_control->method('getUser')->willReturn($pfo_user);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
 
         $batch_api_access_control = new LFSAPIHTTPAccessControl(
             $this->access_control_verifier
         );
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->andReturns(true);
-        $batch_request = \Mockery::mock(BatchRequest::class);
-        $batch_request->shouldReceive('isRead')->andReturns(true);
-        $batch_request->shouldReceive('isWrite')->andReturns(false);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->willReturn(true);
+        $batch_request = $this->createStub(BatchRequest::class);
+        $batch_request->method('isRead')->willReturn(true);
+        $batch_request->method('isWrite')->willReturn(false);
 
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, $user));
     }
 
-    public function testAuthenticatedViaBasicAuthUserWithWritePermissionCanUpload()
+    public function testAuthenticatedViaBasicAuthUserWithWritePermissionCanUpload(): void
     {
-        $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
+        $this->lfs_http_api_access_control->method('getUserFromAuthorizationToken')->willReturn(null);
 
-        $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUserName')->andReturns('username');
-        $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
+        $pfo_user = $this->createStub(\PFO_User::class);
+        $pfo_user->method('getUserName')->willReturn('username');
+        $this->http_access_control->method('getUser')->willReturn($pfo_user);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
 
-        $this->access_control_verifier->shouldReceive('canWrite')->andReturns(true);
+        $this->access_control_verifier->method('canWrite')->willReturn(true);
 
         $batch_api_access_control = new LFSAPIHTTPAccessControl(
             $this->access_control_verifier
         );
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->andReturns(true);
-        $batch_request = \Mockery::mock(BatchRequest::class);
-        $batch_request->shouldReceive('isRead')->andReturns(false);
-        $batch_request->shouldReceive('isWrite')->andReturns(true);
-        $batch_request->shouldReceive('getReference')->andReturns(null);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->willReturn(true);
+        $batch_request = $this->createStub(BatchRequest::class);
+        $batch_request->method('isRead')->willReturn(false);
+        $batch_request->method('isWrite')->willReturn(true);
+        $batch_request->method('getReference')->willReturn(null);
 
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, $user));
     }
 
-    public function testUserAuthenticatedViaLFSAuthorizationTokenCanAccessTheRepository()
+    public function testUserAuthenticatedViaLFSAuthorizationTokenCanAccessTheRepository(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
-        $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $this->lfs_http_api_access_control->method('getUserFromAuthorizationToken')->willReturn($user);
 
         $batch_api_access_control = new LFSAPIHTTPAccessControl(
             $this->access_control_verifier
         );
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->andReturns(true);
-        $batch_request = \Mockery::mock(BatchRequest::class);
-        $batch_request->shouldReceive('isRead')->andReturns(true);
-        $batch_request->shouldReceive('isWrite')->andReturns(false);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->willReturn(true);
+        $batch_request = $this->createStub(BatchRequest::class);
+        $batch_request->method('isRead')->willReturn(true);
+        $batch_request->method('isWrite')->willReturn(false);
 
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, $user));
     }
 
-    public function testUserWithoutReadPermissionDoesNotSeeTheRepository()
+    public function testUserWithoutReadPermissionDoesNotSeeTheRepository(): void
     {
-        $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
+        $this->lfs_http_api_access_control->method('getUserFromAuthorizationToken')->willReturn(null);
 
-        $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUserName')->andReturns('username');
-        $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
+        $pfo_user = $this->createStub(\PFO_User::class);
+        $pfo_user->method('getUserName')->willReturn('username');
+        $this->http_access_control->method('getUser')->willReturn($pfo_user);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $this->user_manager->method('getUserByUserName')->willReturn($user);
 
         $batch_api_access_control = new LFSAPIHTTPAccessControl(
             $this->access_control_verifier
         );
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->andReturns(false);
-        $batch_request = \Mockery::mock(BatchRequest::class);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->willReturn(false);
+        $batch_request = $this->createStub(BatchRequest::class);
 
         $this->expectException(NotFoundException::class);
 

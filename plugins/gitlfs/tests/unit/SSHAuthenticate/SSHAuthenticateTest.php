@@ -19,37 +19,34 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\Authorization\User\Operation\UnknownUserOperationException;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
-use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $auth;
-    private $git_repository_factory;
-    private $project_manager;
-    private $user_manager;
-    private $plugin;
-    private $ssh_response;
-    private $user_operation_factory;
+    private SSHAuthenticate $auth;
+    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\Stub $git_repository_factory;
+    private \ProjectManager&\PHPUnit\Framework\MockObject\Stub $project_manager;
+    private \UserManager&\PHPUnit\Framework\MockObject\Stub $user_manager;
+    private \gitlfsPlugin&\PHPUnit\Framework\MockObject\MockObject $plugin;
+    private \PHPUnit\Framework\MockObject\MockObject&SSHAuthenticateResponseBuilder $ssh_response;
+    private \Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory&\PHPUnit\Framework\MockObject\Stub $user_operation_factory;
 
     protected function setUp(): void
     {
-        $this->project_manager        = Mockery::mock(\ProjectManager::class);
-        $this->user_manager           = Mockery::mock(\UserManager::class);
-        $this->git_repository_factory = Mockery::mock(\GitRepositoryFactory::class);
-        $this->plugin                 = Mockery::mock(\gitlfsPlugin::class);
-        $this->ssh_response           = Mockery::mock(SSHAuthenticateResponseBuilder::class);
-        $this->user_operation_factory = \Mockery::mock(UserOperationFactory::class);
+        $this->project_manager        = $this->createStub(\ProjectManager::class);
+        $this->user_manager           = $this->createStub(\UserManager::class);
+        $this->git_repository_factory = $this->createStub(\GitRepositoryFactory::class);
+        $this->plugin                 = $this->createMock(\gitlfsPlugin::class);
+        $this->ssh_response           = $this->createMock(SSHAuthenticateResponseBuilder::class);
+        $this->user_operation_factory = $this->createStub(\Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory::class);
 
         $this->auth = new SSHAuthenticate(
             $this->project_manager,
@@ -61,129 +58,129 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItFailsWhenThereAreNoArguments()
+    public function testItFailsWhenThereAreNoArguments(): void
     {
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate']);
     }
 
-    public function testSecondArgumentIsNotAValidOperation()
+    public function testSecondArgumentIsNotAValidOperation(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')->andThrow(UnknownUserOperationException::class);
+        $this->user_operation_factory->method('getUserOperationFromName')->willThrowException(new UnknownUserOperationException('test'));
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'faa.git', 'foo']);
     }
 
-    public function test1stArgWithInvalidProjectNameMustFail()
+    public function test1stArgWithInvalidProjectNameMustFail(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns(null);
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn(null);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function test1stArgWithNonActiveProjectMustFail()
+    public function test1stArgWithNonActiveProjectMustFail(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => false]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('foo')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withStatusSuspended()->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->with('foo')->willReturn($project);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function test1stArgWithInvalidRepositoryMustFail()
+    public function test1stArgWithInvalidRepositoryMustFail(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns(null);
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn(null);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(true);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(true);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testUserNotFoundMustHaveAFailure()
+    public function testUserNotFoundMustHaveAFailure(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
-        $repository = Mockery::mock(\GitRepository::class);
-        $repository->shouldNotReceive('userCanRead');
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns($repository);
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->expects(self::never())->method('userCanRead');
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
-        $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns(null);
+        $this->user_manager->method('getUserByUserName')->with('mary')->willReturn(null);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(true);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(true);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testUserNotActiveMustHaveAFailure()
+    public function testUserNotActiveMustHaveAFailure(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
-        $repository = Mockery::mock(\GitRepository::class);
-        $repository->shouldNotReceive('userCanRead');
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns($repository);
+        $repository = $this->createMock(\GitRepository::class);
+        $repository->expects(self::never())->method('userCanRead');
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
-        $user = Mockery::mock(\PFUser::class, ['isAlive' => false]);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns($user);
+        $user = UserTestBuilder::aUser()->withStatus(\PFUser::STATUS_SUSPENDED)->build();
+        $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(true);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(true);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testUserWithoutReadAccessToRepoMustHaveAFailure()
+    public function testUserWithoutReadAccessToRepoMustHaveAFailure(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
-        $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns($user);
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->with($user)->andReturns(false);
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns($repository);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->with($user)->willReturn(false);
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(true);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(true);
 
         $this->expectException(InvalidCommandException::class);
 
         $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testNoAccessWhenPluginIsNotAvailable()
+    public function testNoAccessWhenPluginIsNotAvailable(): void
     {
         $auth = new SSHAuthenticate(
             $this->project_manager,
@@ -199,22 +196,22 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', 'foo/faa.git', 'download']);
     }
 
-    public function testNoAccessWhenPluginIsNotGrantedForProject()
+    public function testNoAccessWhenPluginIsNotGrantedForProject(): void
     {
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns(\Mockery::mock(UserOperation::class));
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($this->createStub(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
 
-        $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns($user);
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns($repository);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->with($user)->willReturn(true);
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(false);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(false);
 
         $this->expectException(InvalidCommandException::class);
 
@@ -226,30 +223,28 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItReturnsBatchResponseActionContentWhenEverythingIsOk(string $repository_path): void
     {
-        $user_operation = \Mockery::mock(UserOperation::class);
-        $this->user_operation_factory->shouldReceive('getUserOperationFromName')
-            ->andReturns($user_operation);
+        $user_operation = $this->createStub(UserOperation::class);
+        $this->user_operation_factory->method('getUserOperationFromName')
+            ->willReturn($user_operation);
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('foo')->andReturns($project);
+        $project = ProjectTestBuilder::aProject()->withId(122)->build();
+        $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->with('foo')->willReturn($project);
 
-        $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
-        $this->user_manager->shouldReceive('getUserByUserName')->with('mary')->andReturns($user);
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('userCanRead')->with($user)->andReturns(true);
-        $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns($repository);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('userCanRead')->with($user)->willReturn(true);
+        $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
-        $this->plugin->shouldReceive('isAllowed')->with(122)->andReturns(true);
+        $this->plugin->method('isAllowed')->with(122)->willReturn(true);
 
-        $this->ssh_response->shouldReceive('getResponse')->with(
+        $this->ssh_response->method('getResponse')->with(
             $repository,
             $user,
             $user_operation,
-            Mockery::on(function ($param) {
-                return $param instanceof \DateTimeImmutable;
-            })
-        )->andReturns(Mockery::mock(BatchResponseActionContent::class));
+            self::anything(),
+        )->willReturn($this->createStub(BatchResponseActionContent::class));
 
         $response = $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', $repository_path, 'download']);
         $this->assertInstanceOf(BatchResponseActionContent::class, $response);

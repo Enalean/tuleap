@@ -19,63 +19,53 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\UserTokenCreator;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $token_creator;
-    private $user;
-    private $repository;
-    private $response_builder;
-    private $current_time;
+    private UserTokenCreator|\PHPUnit\Framework\MockObject\MockObject $token_creator;
+    private \PFUser $user;
+    private \GitRepository&\PHPUnit\Framework\MockObject\Stub $repository;
+    private SSHAuthenticateResponseBuilder $response_builder;
+    private \DateTimeImmutable $current_time;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->token_creator    = Mockery::mock(UserTokenCreator::class);
+        $this->token_creator    = $this->createMock(UserTokenCreator::class);
         $this->response_builder = new SSHAuthenticateResponseBuilder(
             $this->token_creator
         );
 
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->user = UserTestBuilder::aUser()->build();
 
-        $this->repository = Mockery::mock(\GitRepository::class);
-        $this->repository->shouldReceive('getFullHTTPUrlWithDotGit')->andReturns('https://lfs-server/foo/bar');
+        $this->repository = $this->createStub(\GitRepository::class);
+        $this->repository->method('getFullHTTPUrlWithDotGit')->willReturn('https://lfs-server/foo/bar');
 
-        $this->current_time = new \DateTimeImmutable();
+        $this->current_time = new \DateTimeImmutable('@10');
     }
 
-    public function testReturnsAResponseConformToSpec()
+    public function testReturnsAResponseConformToSpec(): void
     {
-        $this->token_creator->shouldReceive('createUserAuthorizationToken')->andReturns(
-            Mockery::mock(
-                SplitToken::class,
-                [
-                    'getId' => 100,
-                    'getVerificationString' => Mockery::mock(
-                        SplitTokenVerificationString::class,
-                        [
-                            'getString' => new ConcealedString('bar'),
-                        ]
-                    ),
-                ]
-            )
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string->method('getString')->willReturn(new ConcealedString('bar'));
+        $this->token_creator->method('createUserAuthorizationToken')->willReturn(
+            new SplitToken(100, $verification_string)
         );
 
-        $this->response_builder = $this->response_builder->getResponse(
+        $response = $this->response_builder->getResponse(
             $this->repository,
             $this->user,
-            \Mockery::mock(UserOperation::class),
+            $this->createStub(UserOperation::class),
             $this->current_time
         );
 
@@ -87,24 +77,19 @@ class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     'Authorization' => 'RemoteAuth 100.626172',
                 ],
             ],
-            $this->response_builder->jsonSerialize()
+            $response->jsonSerialize()
         );
     }
 
-    public function testItCreatesTheToken()
+    public function testItCreatesTheToken(): void
     {
-        $user_operation = \Mockery::mock(UserOperation::class);
-        $this->token_creator->shouldReceive('createUserAuthorizationToken')->with(
+        $user_operation = $this->createStub(UserOperation::class);
+        $this->token_creator->expects(self::atLeastOnce())->method('createUserAuthorizationToken')->with(
             $this->repository,
-            Mockery::on(function (\DateTimeImmutable $expiration_time) {
-                if ($expiration_time->getTimestamp() === $this->current_time->getTimestamp() + SSHAuthenticateResponseBuilder::EXPIRES_IN_SECONDS) {
-                    return true;
-                }
-                return false;
-            }),
+            (new \DateTimeImmutable())->setTimestamp($this->current_time->getTimestamp() + SSHAuthenticateResponseBuilder::EXPIRES_IN_SECONDS),
             $this->user,
             $user_operation
-        )->andReturns(Mockery::mock(SplitToken::class))->atLeast()->once();
+        )->willReturn($this->createStub(SplitToken::class));
 
         $this->response_builder->getResponse(
             $this->repository,

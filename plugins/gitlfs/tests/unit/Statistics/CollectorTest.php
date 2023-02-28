@@ -18,28 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Statistics;
 
-use Mockery;
-
-class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testSizeOccupiedByProjectAndCollectionTimeAreRetrieved()
+    public function testSizeOccupiedByProjectAndCollectionTimeAreRetrieved(): void
     {
-        $disk_usage_dao       = Mockery::mock(\Statistics_DiskUsageDao::class);
-        $statistics_retriever = Mockery::mock(Retriever::class);
+        $disk_usage_dao       = $this->createMock(\Statistics_DiskUsageDao::class);
+        $statistics_retriever = $this->createStub(Retriever::class);
 
         $collector = new Collector($disk_usage_dao, $statistics_retriever);
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns(102);
+        $project = $this->createStub(\Project::class);
+        $project->method('getID')->willReturn(102);
         $params       = ['project' => $project, 'time_to_collect' => []];
         $current_time = new \DateTimeImmutable('17-12-2018');
-        $statistics_retriever->shouldReceive('getProjectDiskUsage')->andReturns(123456);
+        $statistics_retriever->method('getProjectDiskUsage')->willReturn(123456);
 
-        $disk_usage_dao->shouldReceive('addGroup')->once();
+        $disk_usage_dao->expects(self::once())->method('addGroup');
 
         $collector->proceedToDiskUsageCollection($params, $current_time);
 
