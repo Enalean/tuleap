@@ -1,4 +1,4 @@
-# Internationalization (i18n) {#i18n}
+# Internationalization (i18n)
 
 I18n in Tuleap should always be done with
 [Gettext](https://www.gnu.org/software/gettext/).
@@ -43,8 +43,7 @@ Your language is not in the list? Contributions are most welcome!
 In short, the process is the following (example for Brazilian Portuguese
 `pt_BR`):
 
-1.  If it is not already done, `clone-tuleap`{.interpreted-text
-    role="ref"}
+1.  If it is not already done, [Clone Tuleap Sources](./quick-start/clone-tuleap.md)
 
 2.  Create folder for your locale:
 

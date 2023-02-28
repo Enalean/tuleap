@@ -1,4 +1,4 @@
-# Push your code {#push-code}
+# Push your code
 
 As a prerequisite, please read [Don\'t \"Push\" Your Pull
 Requests](https://www.igvita.com/2011/12/19/dont-push-your-pull-requests/).
@@ -260,7 +260,7 @@ HEAD is now at 7de74b4... request #8840 Remove usage of Bless
 
 You can make your own changes.
 
-Then you should [amend]{.title-ref} the commit with your changes:
+Then you should `amend` the commit with your changes:
 
 ``` bash
 $ git commit -a --amend
