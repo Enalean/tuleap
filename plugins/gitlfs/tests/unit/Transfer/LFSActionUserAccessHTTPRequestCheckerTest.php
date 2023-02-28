@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Transfer;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -30,36 +31,33 @@ use Tuleap\GitLFS\Authorization\Action\AuthorizedAction;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $plugin;
-    private $authorization_token_unserializer;
-    private $authorization_verifier;
+    private \gitlfsPlugin&\PHPUnit\Framework\MockObject\Stub $plugin;
+    private SplitTokenIdentifierTranslator&\PHPUnit\Framework\MockObject\Stub $authorization_token_unserializer;
+    private \PHPUnit\Framework\MockObject\Stub&ActionAuthorizationVerifier $authorization_verifier;
 
     protected function setUp(): void
     {
-        $this->plugin                           = \Mockery::mock(\gitlfsPlugin::class);
-        $this->authorization_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
-        $this->authorization_verifier           = \Mockery::mock(ActionAuthorizationVerifier::class);
+        $this->plugin                           = $this->createStub(\gitlfsPlugin::class);
+        $this->authorization_token_unserializer = $this->createStub(SplitTokenIdentifierTranslator::class);
+        $this->authorization_verifier           = $this->createStub(ActionAuthorizationVerifier::class);
     }
 
-    public function testUserWithValidAuthorizationCanAccess()
+    public function testUserWithValidAuthorizationCanAccess(): void
     {
-        $this->plugin->shouldReceive('isAllowed')->andReturns(true);
-        $this->authorization_token_unserializer->shouldReceive('getSplitToken')
-            ->andReturns(\Mockery::mock(SplitToken::class));
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns(101);
-        $project->shouldReceive('isActive')->andReturns(true);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getProject')->andReturns($project);
-        $repository->shouldReceive('isCreated')->andReturns(true);
-        $authorized_action = \Mockery::mock(AuthorizedAction::class);
-        $authorized_action->shouldReceive('getRepository')->andReturns($repository);
-        $this->authorization_verifier->shouldReceive('getAuthorization')->andReturns($authorized_action);
+        $this->plugin->method('isAllowed')->willReturn(true);
+        $this->authorization_token_unserializer->method('getSplitToken')
+            ->willReturn($this->createStub(SplitToken::class));
+        $project    = ProjectTestBuilder::aProject()->withId(101)->build();
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getProject')->willReturn($project);
+        $repository->method('isCreated')->willReturn(true);
+        $authorized_action = $this->createStub(AuthorizedAction::class);
+        $authorized_action->method('getRepository')->willReturn($repository);
+        $this->authorization_verifier->method('getAuthorization')->willReturn($authorized_action);
 
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,
@@ -67,19 +65,19 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->authorization_verifier
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
-            ->andReturns('valid_auth');
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
+            ->willReturn('valid_auth');
 
         $authorized_action = $access_checker->userCanAccess(
             $request,
-            \Mockery::mock(ActionAuthorizationType::class),
+            $this->createStub(ActionAuthorizationType::class),
             'oid'
         );
         $this->assertInstanceOf(AuthorizedAction::class, $authorized_action);
     }
 
-    public function testRequestWithoutAuthorizationIsDenied()
+    public function testRequestWithoutAuthorizationIsDenied(): void
     {
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,
@@ -87,23 +85,23 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->authorization_verifier
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
-            ->andReturns(false);
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
         $access_checker->userCanAccess(
             $request,
-            \Mockery::mock(ActionAuthorizationType::class),
+            $this->createStub(ActionAuthorizationType::class),
             'oid'
         );
     }
 
-    public function testRequestWithAnIncorrectlyFormattedAuthorizationIsDenied()
+    public function testRequestWithAnIncorrectlyFormattedAuthorizationIsDenied(): void
     {
-        $this->authorization_token_unserializer->shouldReceive('getSplitToken')
-            ->andThrow(new InvalidIdentifierFormatException());
+        $this->authorization_token_unserializer->method('getSplitToken')
+            ->willThrowException(new InvalidIdentifierFormatException());
 
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,
@@ -111,25 +109,25 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->authorization_verifier
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
-            ->andReturns('incorrectly_formatted_header');
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
+            ->willReturn('incorrectly_formatted_header');
 
         $this->expectException(ForbiddenException::class);
 
         $access_checker->userCanAccess(
             $request,
-            \Mockery::mock(ActionAuthorizationType::class),
+            $this->createStub(ActionAuthorizationType::class),
             'oid'
         );
     }
 
-    public function testRequestWithAnInvalidAuthorizationIsDenied()
+    public function testRequestWithAnInvalidAuthorizationIsDenied(): void
     {
-        $this->authorization_token_unserializer->shouldReceive('getSplitToken')
-            ->andReturns(\Mockery::mock(SplitToken::class));
-        $authorization_expection = \Mockery::mock(ActionAuthorizationException::class);
-        $this->authorization_verifier->shouldReceive('getAuthorization')->andThrow($authorization_expection);
+        $this->authorization_token_unserializer->method('getSplitToken')
+            ->willReturn($this->createStub(SplitToken::class));
+        $authorization_expection = $this->createStub(ActionAuthorizationException::class);
+        $this->authorization_verifier->method('getAuthorization')->willThrowException($authorization_expection);
 
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,
@@ -137,26 +135,26 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->authorization_verifier
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
-            ->andReturns('invalid_authorization');
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
+            ->willReturn('invalid_authorization');
 
         $this->expectException(ForbiddenException::class);
 
         $access_checker->userCanAccess(
             $request,
-            \Mockery::mock(ActionAuthorizationType::class),
+            $this->createStub(ActionAuthorizationType::class),
             'oid'
         );
     }
 
-    public function testRequestAboutANotAccessibleRepositoryIsRejected()
+    public function testRequestAboutANotAccessibleRepositoryIsRejected(): void
     {
-        $this->authorization_token_unserializer->shouldReceive('getSplitToken')
-            ->andReturns(\Mockery::mock(SplitToken::class));
-        $authorized_action = \Mockery::mock(AuthorizedAction::class);
-        $authorized_action->shouldReceive('getRepository')->andReturns(null);
-        $this->authorization_verifier->shouldReceive('getAuthorization')->andReturns($authorized_action);
+        $this->authorization_token_unserializer->method('getSplitToken')
+            ->willReturn($this->createStub(SplitToken::class));
+        $authorized_action = $this->createStub(AuthorizedAction::class);
+        $authorized_action->method('getRepository')->willReturn(null);
+        $this->authorization_verifier->method('getAuthorization')->willReturn($authorized_action);
 
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,
@@ -164,15 +162,15 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->authorization_verifier
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
-            ->andReturns('valid_auth');
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_AUTHORIZATION')
+            ->willReturn('valid_auth');
 
         $this->expectException(NotFoundException::class);
 
         $access_checker->userCanAccess(
             $request,
-            \Mockery::mock(ActionAuthorizationType::class),
+            $this->createStub(ActionAuthorizationType::class),
             'oid'
         );
     }

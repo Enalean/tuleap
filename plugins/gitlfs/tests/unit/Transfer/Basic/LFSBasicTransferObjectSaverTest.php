@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use League\Flysystem\FilesystemOperator;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
@@ -29,22 +30,20 @@ use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $filesystem;
-    private $db_connection;
-    private $lfs_object_retriever;
-    private $path_allocator;
-    private $prometheus;
+    private FilesystemOperator&\PHPUnit\Framework\MockObject\MockObject $filesystem;
+    private DBConnection&\PHPUnit\Framework\MockObject\MockObject $db_connection;
+    private LFSObjectRetriever&\PHPUnit\Framework\MockObject\Stub $lfs_object_retriever;
+    private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\Stub $path_allocator;
+    private Prometheus $prometheus;
 
     protected function setUp(): void
     {
-        $this->filesystem           = \Mockery::mock(FilesystemOperator::class);
-        $this->db_connection        = \Mockery::mock(DBConnection::class);
-        $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
-        $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
+        $this->filesystem           = $this->createMock(FilesystemOperator::class);
+        $this->db_connection        = $this->createMock(DBConnection::class);
+        $this->lfs_object_retriever = $this->createStub(LFSObjectRetriever::class);
+        $this->path_allocator       = $this->createStub(LFSObjectPathAllocator::class);
         $this->prometheus           = Prometheus::getInMemory();
     }
 
@@ -59,12 +58,12 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
         $temporary_save_path = 'upload-path';
-        $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
+        $this->path_allocator->method('getPathForSaveInProgressObject')->willReturn($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->willReturn(false);
 
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
@@ -74,20 +73,21 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_oid_value = \hash('sha256', $input_data);
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream): void {
+        $this->filesystem->method('writeStream')->willReturnCallback(
+            function ($save_path, $input_stream) use ($temporary_save_path): void {
+                self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
             }
         );
 
-        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
+        $this->db_connection->expects(self::once())->method('reconnectAfterALongRunningProcess');
 
-        $this->filesystem->shouldReceive('move')->with($temporary_save_path, $ready_path)->once();
-        $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
+        $this->filesystem->expects(self::once())->method('move')->with($temporary_save_path, $ready_path);
+        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
 
-        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
+        $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     public function testAlreadySavedObjectIsSkipped(): void
@@ -100,14 +100,14 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->prometheus
         );
 
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn('path');
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(true);
 
-        $this->filesystem->shouldReceive('move')->never();
+        $this->filesystem->expects(self::never())->method('move');
 
         $object_saver->saveObject(
-            \Mockery::mock(\GitRepository::class),
-            \Mockery::mock(LFSObject::class),
+            $this->createStub(\GitRepository::class),
+            $this->createStub(LFSObject::class),
             fopen('php://memory', 'rb+')
         );
     }
@@ -122,16 +122,16 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->prometheus
         );
 
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->andReturns(false);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn('path');
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->willReturn(false);
 
         $this->expectException(\InvalidArgumentException::class);
 
         $broken_input_resource = false;
         $object_saver->saveObject(
-            \Mockery::mock(\GitRepository::class),
-            \Mockery::mock(LFSObject::class),
+            $this->createStub(\GitRepository::class),
+            $this->createStub(LFSObject::class),
             $broken_input_resource
         );
     }
@@ -147,12 +147,12 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
         $temporary_save_path = 'upload-path';
-        $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
+        $this->path_allocator->method('getPathForSaveInProgressObject')->willReturn($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->with($ready_path)->willReturn(false);
 
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
@@ -165,18 +165,19 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(LFSBasicTransferObjectIntegrityException::class);
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream): void {
+        $this->filesystem->method('writeStream')->willReturnCallback(
+            function ($save_path, $input_stream) use ($temporary_save_path): void {
+                self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
             }
         );
 
-        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess');
-        $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
+        $this->db_connection->method('reconnectAfterALongRunningProcess');
+        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
 
-        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
+        $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     /**
@@ -196,12 +197,12 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
         $temporary_save_path = 'upload-path';
-        $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
+        $this->path_allocator->method('getPathForSaveInProgressObject')->willReturn($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->with($ready_path)->willReturn(false);
 
         $input_data     = str_repeat('A', $input_size);
         $input_resource = fopen('php://memory', 'rb+');
@@ -212,19 +213,20 @@ class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             $object_size
         );
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream): void {
+        $this->filesystem->method('writeStream')->willReturnCallback(
+            function ($save_path, $input_stream) use ($temporary_save_path): void {
+                self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
             }
         );
 
-        $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
-        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess');
+        $this->filesystem->expects(self::once())->method('delete')->with($temporary_save_path);
+        $this->db_connection->method('reconnectAfterALongRunningProcess');
 
         $this->expectException($excepted_exception);
-        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
+        $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     public static function objectSizeProvider()

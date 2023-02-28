@@ -18,17 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\StreamFilter;
 
 require_once __DIR__ . '/ReplaceDataFilter.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testFilterIsAttachedToResource()
+    public function testFilterIsAttachedToResource(): void
     {
         $source_resource = fopen('php://memory', 'rb+');
         fwrite($source_resource, '02e24c2314cb27f7b7c043345ca30c567c58e064');
@@ -47,7 +45,7 @@ class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         fclose($destination_resource);
     }
 
-    public function testFilterCanBeDetachedFromAResource()
+    public function testFilterCanBeDetachedFromAResource(): void
     {
         $resource      = fopen('php://memory', 'rb+');
         $expected_data = 'Tuleap test case without test case';
@@ -68,18 +66,18 @@ class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         fclose($resource);
     }
 
-    public function testAttachingAFilterToSomethingElseThanAResourceIsRejected()
+    public function testAttachingAFilterToSomethingElseThanAResourceIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $not_a_resource = false;
-        StreamFilter::prependFilter($not_a_resource, \Mockery::mock(FilterInterface::class));
+        StreamFilter::prependFilter($not_a_resource, $this->createStub(FilterInterface::class));
     }
 
-    public function testFilterWithInvalidChainIdentifierIsRejected()
+    public function testFilterWithInvalidChainIdentifierIsRejected(): void
     {
         $resource = fopen('php://memory', 'rb');
-        $filter   = \Mockery::mock(FilterInterface::class);
-        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(123456789);
+        $filter   = $this->createStub(FilterInterface::class);
+        $filter->method('getFilteredChainIdentifier')->willReturn(123456789);
 
         $this->expectException(\DomainException::class);
 
@@ -95,10 +93,10 @@ class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $source_resource = fopen('php://memory', 'rb+');
         fwrite($source_resource, 'Test data');
         rewind($source_resource);
-        $filter = \Mockery::mock(FilterInterface::class);
-        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
-        $filter->shouldReceive('process')->andThrows(\Exception::class);
-        $filter->shouldReceive('filterDetachedEvent');
+        $filter = $this->createStub(FilterInterface::class);
+        $filter->method('getFilteredChainIdentifier')->willReturn(STREAM_FILTER_READ);
+        $filter->method('process')->willThrowException(new \Exception());
+        $filter->method('filterDetachedEvent');
 
         StreamFilter::prependFilter($source_resource, $filter);
 
@@ -112,9 +110,9 @@ class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserFilterIsNotifiedWhenTheResourceIsBeingClosed(): void
     {
-        $filter = \Mockery::mock(FilterInterface::class);
-        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
-        $filter->shouldReceive('filterDetachedEvent')->once();
+        $filter = $this->createMock(FilterInterface::class);
+        $filter->method('getFilteredChainIdentifier')->willReturn(STREAM_FILTER_READ);
+        $filter->expects(self::once())->method('filterDetachedEvent');
 
         $source_resource = fopen('php://memory', 'rb+');
         StreamFilter::prependFilter($source_resource, $filter);
@@ -123,9 +121,9 @@ class StreamFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserFilterIsNotifiedWhenTheFilterIsBeingDetached(): void
     {
-        $filter = \Mockery::mock(FilterInterface::class);
-        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
-        $filter->shouldReceive('filterDetachedEvent')->once();
+        $filter = $this->createMock(FilterInterface::class);
+        $filter->method('getFilteredChainIdentifier')->willReturn(STREAM_FILTER_READ);
+        $filter->expects(self::once())->method('filterDetachedEvent');
 
         $source_resource = fopen('php://memory', 'rb+');
         $handle          = StreamFilter::prependFilter($source_resource, $filter);

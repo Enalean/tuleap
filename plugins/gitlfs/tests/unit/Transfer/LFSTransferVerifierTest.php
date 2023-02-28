@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Transfer;
 
 use League\Flysystem\FilesystemOperator;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
@@ -29,21 +30,19 @@ use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $filesystem;
-    private $lfs_object_retriever;
-    private $path_allocator;
-    private $dao;
+    private FilesystemOperator&\PHPUnit\Framework\MockObject\MockObject $filesystem;
+    private LFSObjectRetriever&\PHPUnit\Framework\MockObject\Stub $lfs_object_retriever;
+    private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\Stub $path_allocator;
+    private LFSObjectDAO&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->filesystem           = \Mockery::mock(FilesystemOperator::class);
-        $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
-        $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
-        $this->dao                  = \Mockery::mock(LFSObjectDAO::class);
+        $this->filesystem           = $this->createMock(FilesystemOperator::class);
+        $this->lfs_object_retriever = $this->createStub(LFSObjectRetriever::class);
+        $this->path_allocator       = $this->createStub(LFSObjectPathAllocator::class);
+        $this->dao                  = $this->createMock(LFSObjectDAO::class);
     }
 
     public function testReadyObjectIsMarkedAsAvailable(): void
@@ -57,24 +56,24 @@ class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
         $available_path = 'available-path';
-        $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns($available_path);
+        $this->path_allocator->method('getPathForAvailableObject')->willReturn($available_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(true);
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->with($ready_path)->willReturn(true);
+        $this->lfs_object_retriever->method('doesLFSObjectExists')->willReturn(false);
 
-        $lfs_object = $lfs_object = new LFSObject(
+        $lfs_object = new LFSObject(
             new LFSObjectID('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
             10000
         );
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(100);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(100);
 
-        $this->dao->shouldReceive('saveObject')->once();
-        $this->dao->shouldReceive('saveObjectReference')->once();
-        $this->filesystem->shouldReceive('move')->with($ready_path, $available_path)->once();
+        $this->dao->expects(self::once())->method('saveObject');
+        $this->dao->expects(self::once())->method('saveObjectReference');
+        $this->filesystem->expects(self::once())->method('move')->with($ready_path, $available_path);
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
@@ -90,21 +89,21 @@ class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(true);
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(true);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(false);
+        $this->filesystem->method('fileExists')->with($ready_path)->willReturn(true);
+        $this->lfs_object_retriever->method('doesLFSObjectExists')->willReturn(true);
 
-        $lfs_object = $lfs_object = new LFSObject(
+        $lfs_object = new LFSObject(
             new LFSObjectID('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
             10000
         );
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(100);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(100);
 
-        $this->dao->shouldReceive('saveObjectReferenceByOIDValue')->once();
-        $this->filesystem->shouldReceive('delete')->with($ready_path)->once();
+        $this->dao->expects(self::once())->method('saveObjectReferenceByOIDValue');
+        $this->filesystem->expects(self::once())->method('delete')->with($ready_path);
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
@@ -120,12 +119,12 @@ class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $ready_path = 'ready-path';
-        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+        $this->path_allocator->method('getPathForReadyToBeAvailableObject')->willReturn($ready_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
+        $this->lfs_object_retriever->method('doesLFSObjectExistsForRepository')->willReturn(true);
 
-        $this->filesystem->shouldReceive('delete')->with($ready_path)->once();
+        $this->filesystem->expects(self::once())->method('delete')->with($ready_path);
 
-        $verifier->verifyAndMarkLFSObjectAsAvailable(\Mockery::mock(LFSObject::class), \Mockery::mock(\GitRepository::class));
+        $verifier->verifyAndMarkLFSObjectAsAvailable($this->createStub(LFSObject::class), $this->createStub(\GitRepository::class));
     }
 }
