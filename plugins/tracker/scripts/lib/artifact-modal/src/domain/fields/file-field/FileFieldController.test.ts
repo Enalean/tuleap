@@ -28,7 +28,6 @@ import type { FileFieldValueModel } from "./FileFieldValueModel";
 import type { FileFieldType } from "./FileFieldType";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 import { EventDispatcher } from "../../EventDispatcher";
-import { DidCheckFileFieldIsPresent } from "../../DidCheckFileFieldIsPresent";
 import { WillGetFileUploadSetup } from "./WillGetFileUploadSetup";
 
 const FIELD_ID = 588;
@@ -52,15 +51,6 @@ describe(`FileFieldController`, () => {
             const value_model = {} as FileFieldValueModel;
             return FileFieldController(field, value_model, event_dispatcher);
         };
-
-        it(`marks file field as present`, () => {
-            getController();
-
-            const event = DidCheckFileFieldIsPresent();
-            event_dispatcher.dispatch(event);
-
-            expect(event.is_there_at_least_one_file_field).toBe(true);
-        });
 
         it(`sets file upload setup from its field`, () => {
             getController();

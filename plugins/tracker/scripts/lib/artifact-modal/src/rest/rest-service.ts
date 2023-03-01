@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, post, options } from "@tuleap/tlp-fetch";
+import { get, put, post } from "@tuleap/tlp-fetch";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
@@ -201,25 +201,6 @@ export function getUserPreference(
         resetError();
         return response.json();
     }, errorHandler);
-}
-
-interface FileUploadRulesRepresentation {
-    readonly disk_quota: number;
-    readonly disk_usage: number;
-    readonly max_chunk_size: number;
-}
-
-export async function getFileUploadRules(): Promise<FileUploadRulesRepresentation> {
-    const response = await options("/api/v1/artifact_temporary_files");
-    const disk_quota = parseInt(response.headers.get("X-QUOTA") ?? "0", 10);
-    const disk_usage = parseInt(response.headers.get("X-DISK-USAGE") ?? "0", 10);
-    const max_chunk_size = parseInt(response.headers.get("X-UPLOAD-MAX-FILE-CHUNKSIZE") ?? "0", 10);
-
-    return {
-        disk_quota,
-        disk_usage,
-        max_chunk_size,
-    };
 }
 
 async function errorHandler(error: FetchWrapperError): Promise<never> {

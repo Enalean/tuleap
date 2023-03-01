@@ -274,36 +274,4 @@ describe("rest-service", () => {
             });
         });
     });
-
-    describe("getFileUploadRules() -", () => {
-        it("When I get the file upload rules, then a promise will be resolved with an object containing the disk quota for the logged user, her disk usage and the max chunk size that can be sent when uploading a file", async () => {
-            const tlpOptionsSpy = jest.spyOn(tlp_fetch, "options");
-            mockFetchSuccess(tlpOptionsSpy, {
-                headers: {
-                    get: (header) => {
-                        if (header === "X-QUOTA") {
-                            return "2229535";
-                        }
-                        if (header === "X-DISK-USAGE") {
-                            return "596878";
-                        }
-                        if (header === "X-UPLOAD-MAX-FILE-CHUNKSIZE") {
-                            return "732798";
-                        }
-                        return null;
-                    },
-                },
-            });
-
-            const rules = await RestService.getFileUploadRules();
-
-            expect(tlpOptionsSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
-            expect(rules).toEqual({
-                disk_quota: 2229535,
-                disk_usage: 596878,
-                max_chunk_size: 732798,
-            });
-            expect(tlpOptionsSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
-        });
-    });
 });

@@ -17,17 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FileUploadQuotaPresenter } from "./FileUploadQuotaPresenter";
-import type { RetrieveUserTemporaryFileQuota } from "../../../domain/fields/file-field/RetrieveUserTemporaryFileQuota";
+import type { DispatchEvents } from "../DispatchEvents";
+import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
 
 export interface FileUploadQuotaControllerType {
-    displayUploadQuota(): FileUploadQuotaPresenter;
+    getMaxAllowedUploadSizeInBytes(): Promise<number>;
 }
 
 export const FileUploadQuotaController = (
-    quota_store: RetrieveUserTemporaryFileQuota
+    event_dispatcher: DispatchEvents
 ): FileUploadQuotaControllerType => ({
-    displayUploadQuota(): FileUploadQuotaPresenter {
-        return FileUploadQuotaPresenter.fromQuota(quota_store.getUserTemporaryFileQuota());
+    getMaxAllowedUploadSizeInBytes(): Promise<number> {
+        return new Promise((resolve) => {
+            // wait for File field controllers to observe the event
+            setTimeout(() => {
+                const event = WillGetFileUploadSetup();
+                event_dispatcher.dispatch(event);
+                const max_upload_size = event.setup?.max_size_upload ?? 0;
+                resolve(max_upload_size);
+            });
+        });
     },
 });

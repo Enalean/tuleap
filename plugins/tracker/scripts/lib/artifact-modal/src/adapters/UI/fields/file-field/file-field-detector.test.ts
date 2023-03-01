@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isThereAtLeastOneFileField, getAllFileFields } from "./file-field-detector";
+import { getAllFileFields } from "./file-field-detector";
 import * as disabled_field_detector from "../disabled-field-detector";
 import type { Field } from "../../../../domain/fields/Field";
 
@@ -25,33 +25,6 @@ describe("file-field-detector", () => {
     let isDisabled: jest.SpyInstance;
     beforeEach(() => {
         isDisabled = jest.spyOn(disabled_field_detector, "isDisabled");
-    });
-
-    describe("isThereAtLeastOneFileField()", () => {
-        it(`Given a tracker with two enabled file fields, then it returns true`, () => {
-            const tracker_fields = [
-                { field_id: 95, type: "file" },
-                { field_id: 72, type: "int" },
-                { field_id: 64, type: "file" },
-            ] as Field[];
-            isDisabled.mockReturnValue(false);
-
-            expect(isThereAtLeastOneFileField(tracker_fields)).toBe(true);
-        });
-
-        it(`Given a tracker with a disabled file field, then it returns false`, () => {
-            const tracker_fields = [{ field_id: 95, type: "file" }] as Field[];
-            isDisabled.mockReturnValue(true);
-
-            expect(isThereAtLeastOneFileField(tracker_fields)).toBe(false);
-        });
-
-        it("Given a tracker with no file field, then it will return false", () => {
-            const tracker_fields = [{ field_id: 62, type: "int" }] as Field[];
-            isDisabled.mockReturnValue(false);
-
-            expect(isThereAtLeastOneFileField(tracker_fields)).toBe(false);
-        });
     });
 
     describe("getAllFileFields()", () => {
