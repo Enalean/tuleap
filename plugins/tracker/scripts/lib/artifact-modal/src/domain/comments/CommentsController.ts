@@ -21,7 +21,6 @@ import type { FollowUpComment } from "./FollowUpComment";
 import type { RetrieveComments } from "./RetrieveComments";
 import type { CurrentArtifactIdentifier } from "../CurrentArtifactIdentifier";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
-import type { CurrentProjectIdentifier } from "../CurrentProjectIdentifier";
 import { CommentsRetrievalFault } from "./CommentsRetrievalFault";
 import type { DispatchEvents } from "../DispatchEvents";
 import { WillNotifyFault } from "../WillNotifyFault";
@@ -29,18 +28,15 @@ import { WillNotifyFault } from "../WillNotifyFault";
 export type CommentsControllerType = {
     getPreferences(): CommentUserPreferences;
     getComments(): PromiseLike<readonly FollowUpComment[]>;
-    getProjectIdentifier(): CurrentProjectIdentifier;
 };
 
 export const CommentsController = (
     comments_retriever: RetrieveComments,
     event_dispatcher: DispatchEvents,
     current_artifact_identifier: CurrentArtifactIdentifier,
-    current_project_identifier: CurrentProjectIdentifier,
     user_preferences: CommentUserPreferences
 ): CommentsControllerType => ({
     getPreferences: () => user_preferences,
-    getProjectIdentifier: () => current_project_identifier,
 
     getComments: (): PromiseLike<readonly FollowUpComment[]> => {
         return comments_retriever

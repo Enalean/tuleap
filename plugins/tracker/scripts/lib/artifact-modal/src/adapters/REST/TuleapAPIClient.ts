@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getAllJSON, getJSON, postJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, getJSON, postJSON, postFormWithTextResponse, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { Option } from "@tuleap/option";
@@ -70,6 +70,8 @@ import { MINIMAL_REPRESENTATION, SEMANTIC_TO_CHECK, TrackerProxy } from "./Track
 import type { RetrieveProjectTrackers } from "../../domain/fields/link-field/creation/RetrieveProjectTrackers";
 import type { TrackerWithTitleSemantic } from "./fields/link-field/TrackerWithTitleSemantic";
 import type { RetrieveTrackerWithTitleSemantic } from "./RetrieveTrackerWithTitleSemantic";
+import type { InterpretCommonMark } from "../../domain/common/InterpretCommonMark";
+import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -87,14 +89,16 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveProjects &
     CreateArtifact &
     RetrieveProjectTrackers &
-    RetrieveTrackerWithTitleSemantic;
+    RetrieveTrackerWithTitleSemantic &
+    InterpretCommonMark;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
 };
 
 export const TuleapAPIClient = (
-    current_artifact_option: Option<CurrentArtifactIdentifier>
+    current_artifact_option: Option<CurrentArtifactIdentifier>,
+    current_project_identifier: CurrentProjectIdentifier
 ): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         getJSON<ParentArtifact>(uri`/api/v1/artifacts/${artifact_id.id}`).mapErr(
@@ -224,5 +228,14 @@ export const TuleapAPIClient = (
 
     getTrackerWithTitleSemantic(tracker_id): ResultAsync<TrackerWithTitleSemantic, Fault> {
         return getJSON<TrackerWithTitleSemantic>(uri`/api/trackers/${tracker_id.id}`);
+    },
+
+    interpretCommonMark(commonmark): ResultAsync<string, Fault> {
+        const form_data = new FormData();
+        form_data.set("content", commonmark);
+        return postFormWithTextResponse(
+            uri`/project/${current_project_identifier.id}/interpret-commonmark`,
+            form_data
+        );
     },
 });

@@ -52,7 +52,6 @@ const getNewCommentTemplate = (
     return html`<tuleap-artifact-modal-followup-editor
         class="${getNewCommentClasses(host.presenter.preferences.is_comment_order_inverted)}"
         format="${host.presenter.preferences.text_format}"
-        projectId="${host.controller.getProjectIdentifier().id}"
         controller="${host.formattedTextController}"
         onvalue-changed="${onValueChanged}"
         data-test="add-comment-form"

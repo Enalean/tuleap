@@ -17,5 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const credentials: RequestCredentials = "same-origin";
-export const json_headers = new Headers({ "Content-Type": "application/json" });
+import type { InterpretCommonMark } from "../../src/domain/common/InterpretCommonMark";
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+
+export const InterpretCommonMarkStub = {
+    withHTML: (html_string: string): InterpretCommonMark => ({
+        interpretCommonMark: () => okAsync(html_string),
+    }),
+
+    withFault: (fault: Fault): InterpretCommonMark => ({
+        interpretCommonMark: () => errAsync(fault),
+    }),
+};

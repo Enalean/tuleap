@@ -24,27 +24,28 @@ import type {
     TextEditorInterface,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
-import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
 import { setCatalog } from "../gettext-catalog";
 import type { HostElement } from "./RichTextEditor";
 import {
-    RichTextEditor,
     connect,
     createEditor,
     getValidFormat,
     onInstanceReady,
     onTextareaInput,
+    RichTextEditor,
     setupImageUpload,
 } from "./RichTextEditor";
 import { FormattedTextController } from "../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
 import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
+import { InterpretCommonMarkStub } from "../../tests/stubs/InterpretCommonMarkStub";
 
 type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 
@@ -63,9 +64,14 @@ jest.mock("pretty-kibibytes", () => {
     };
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const noop = (): void => {
+    // Do nothing
+};
+
 const noopHandler = (event: CKEDITOR.eventInfo): void => {
-    // do nothing unless overwritten
+    if (event) {
+        // do nothing unless overwritten
+    }
 };
 const null_event = {} as CKEDITOR.eventInfo;
 
@@ -95,7 +101,11 @@ function getHost(): HostElement {
         textarea: {} as unknown as HTMLTextAreaElement,
         is_help_shown: false,
         upload_setup,
-        controller: FormattedTextController(event_dispatcher, TEXT_FORMAT_TEXT),
+        controller: FormattedTextController(
+            event_dispatcher,
+            InterpretCommonMarkStub.withHTML(`<p>HTML</p>`),
+            TEXT_FORMAT_TEXT
+        ),
         dispatchEvent,
     } as unknown as HostElement;
 }
@@ -166,20 +176,23 @@ describe(`RichTextEditor`, () => {
                 then it will dispatch a "content-change" event with the new content`, () => {
                 let triggerChange = noopHandler;
                 ckeditor = {
-                    on(event_name: string, handler: CKEditorEventHandler) {
+                    on(
+                        event_name: string,
+                        handler: CKEditorEventHandler
+                    ): CKEDITOR.listenerRegistration {
                         if (event_name === "change") {
                             triggerChange = handler;
-                            return undefined;
+                            return { removeListener: noop };
                         }
                         if (event_name === "mode" || event_name === "fileUploadRequest") {
-                            return undefined;
+                            return { removeListener: noop };
                         }
                         throw new Error("Unexpected event name: " + event_name);
                     },
                     getData() {
                         return "caramba";
                     },
-                } as unknown as CKEDITOR.editor;
+                } as CKEDITOR.editor;
 
                 onInstanceReady(getHost(), ckeditor);
                 triggerChange(null_event);

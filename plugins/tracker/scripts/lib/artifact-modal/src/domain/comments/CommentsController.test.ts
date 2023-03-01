@@ -23,13 +23,11 @@ import { CommentsController } from "./CommentsController";
 import type { RetrieveComments } from "./RetrieveComments";
 import { RetrieveCommentsStub } from "../../../tests/stubs/RetrieveCommentsStub";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
 import { CommentUserPreferencesBuilder } from "../../../tests/builders/CommentUserPreferencesBuilder";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import { FollowUpCommentBuilder } from "../../../tests/builders/FollowUpCommentBuilder";
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 
-const PROJECT_ID = 196;
 const FIRST_COMMENT_BODY = "<p>An HTML comment</p>";
 const SECOND_COMMENT_BODY = "Plain text comment";
 
@@ -52,19 +50,12 @@ describe(`CommentsController`, () => {
             comments_retriever,
             event_dispatcher,
             CurrentArtifactIdentifierStub.withId(45),
-            CurrentProjectIdentifierStub.withId(PROJECT_ID),
             user_preferences
         );
 
     describe(`getPreferences()`, () => {
         it(`returns the user preferences passed to the controller`, () => {
             expect(getController().getPreferences()).toBe(user_preferences);
-        });
-    });
-
-    describe(`getProjectIdentifier()`, () => {
-        it(`returns the project id passed to the controller`, () => {
-            expect(getController().getProjectIdentifier().id).toBe(PROJECT_ID);
         });
     });
 

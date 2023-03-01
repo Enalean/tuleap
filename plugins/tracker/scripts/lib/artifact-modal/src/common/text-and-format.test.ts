@@ -17,22 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tuleap_api from "../api/tuleap-api";
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
 import { setCatalog } from "../gettext-catalog";
 import { FormattedTextController } from "../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
-
-function getHost(data?: Partial<TextAndFormat>): HostElement {
-    return {
-        ...data,
-        interpreted_commonmark: "",
-        controller: FormattedTextController(DispatchEventsStub.buildNoOp(), TEXT_FORMAT_TEXT),
-        dispatchEvent: jest.fn(),
-    } as unknown as HostElement;
-}
+import type { InterpretCommonMark } from "../domain/common/InterpretCommonMark";
+import { InterpretCommonMarkStub } from "../../tests/stubs/InterpretCommonMarkStub";
+import { Fault } from "@tuleap/fault";
 
 const noop = (): void => {
     //Do nothing
@@ -46,54 +39,66 @@ const getOptions = (data?: Partial<TextAndFormatOptions>): TextAndFormatOptions 
     ...data,
 });
 
+const HTML_STRING = `<h1>Oh no! Anyway...</h1>`;
+const COMMONMARK_STRING = "# Oh no! Anyway...";
+
 describe(`TextAndFormat`, () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot, interpreter: InterpretCommonMark, doc: Document;
+
     beforeEach(() => {
-        const doc = document.implementation.createHTMLDocument();
+        doc = document.implementation.createHTMLDocument();
         target = doc.createElement("div") as unknown as ShadowRoot;
         setCatalog({ getString: (msgid) => msgid });
+
+        interpreter = InterpretCommonMarkStub.withHTML(HTML_STRING);
     });
 
+    function getHost(data?: Partial<TextAndFormat>): HostElement {
+        const element = doc.createElement("span");
+        const host = {
+            ...data,
+            interpreted_commonmark: "",
+            controller: FormattedTextController(
+                DispatchEventsStub.buildNoOp(),
+                interpreter,
+                TEXT_FORMAT_TEXT
+            ),
+        } as HostElement;
+        return Object.assign(element, host);
+    }
+
     describe(`interpretCommonMark()`, () => {
+        const interpret = (host: HostElement): Promise<void> =>
+            interpretCommonMark(host, COMMONMARK_STRING);
+
         it(`when in preview mode, it switches to edit mode`, async () => {
-            const post = jest.spyOn(tuleap_api, "postInterpretCommonMark");
-            const content = "# Oh no! Anyway...";
-
-            await interpretCommonMark(getHost({ is_in_preview_mode: true }), content);
-
-            expect(post).not.toHaveBeenCalled();
+            const host = getHost({ is_in_preview_mode: true });
+            await interpret(host);
+            expect(host.is_in_preview_mode).toBe(false);
         });
 
         it(`when in edit mode, it switches to preview mode
             and sets the interpreted CommonMark on the host`, async () => {
-            const post = jest
-                .spyOn(tuleap_api, "postInterpretCommonMark")
-                .mockResolvedValue("<p>HTML</p>");
-            const content = "# Markdown title";
-
             const host = getHost({ is_in_preview_mode: false });
-            const promise = interpretCommonMark(host, content);
+            const promise = interpret(host);
             expect(host.is_preview_loading).toBe(true);
-            expect(post).toHaveBeenCalled();
 
             await promise;
             expect(host.has_error).toBe(false);
             expect(host.error_message).toBe("");
             expect(host.is_preview_loading).toBe(false);
             expect(host.is_in_preview_mode).toBe(true);
-            expect(host.interpreted_commonmark).toBe("<p>HTML</p>");
+            expect(host.interpreted_commonmark).toBe(HTML_STRING);
         });
 
         it(`sets the error message when CommonMark cannot be interpreted`, async () => {
-            const error = new Error("Failed to interpret the CommonMark");
-            jest.spyOn(tuleap_api, "postInterpretCommonMark").mockRejectedValue(error);
-            const content = "# Oh no! Anyway...";
-
+            const error_message = "Invalid CommonMark";
+            interpreter = InterpretCommonMarkStub.withFault(Fault.fromMessage(error_message));
             const host = getHost({ is_in_preview_mode: false });
-            await interpretCommonMark(host, content);
+            await interpret(host);
 
             expect(host.has_error).toBe(true);
-            expect(host.error_message).toBe(error.message);
+            expect(host.error_message).toBe(error_message);
             expect(host.is_preview_loading).toBe(false);
             expect(host.is_in_preview_mode).toBe(true);
             expect(host.interpreted_commonmark).toBe("");

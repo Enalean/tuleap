@@ -66,7 +66,6 @@ export const TextField = define<TextField>({
     contentValue: "",
     required: false,
     disabled: false,
-    projectId: 0,
     interpreted_commonmark: "",
     is_in_preview_mode: false,
     is_preview_loading: false,
