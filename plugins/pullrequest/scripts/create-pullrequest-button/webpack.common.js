@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 
 const entry_points = {
     "create-pullrequest-button": "./src/index.js",
-    "repository-style": "../../themes/repository.scss",
+    "repository-style": "./themes/style.scss",
 };
 
 export default [
