@@ -18,31 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Lock\Response;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Tuleap\GitLFS\Lock\Lock;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var LockResponseBuilder
-     */
-    private $lock_response_builder;
+    private LockResponseBuilder $lock_response_builder;
 
     public function setUp(): void
     {
         $this->lock_response_builder = new LockResponseBuilder();
     }
 
-    public function testSuccessfulResponseIsCorrect()
+    public function testSuccessfulResponseIsCorrect(): void
     {
-        $user = \Mockery::mock(PFUser::class);
-
-        $user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+        $user = UserTestBuilder::aUser()->withRealName('Mick Jagger')->build();
 
         $lock = new Lock(
             1,
@@ -60,13 +54,11 @@ class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
     }
 
-    public function testListLocksResponseIsCorrect()
+    public function testListLocksResponseIsCorrect(): void
     {
-        $user_1 = \Mockery::mock(PFUser::class);
-        $user_1->shouldReceive('getRealName')->andReturn('Mick Jagger');
+        $user_1 = UserTestBuilder::aUser()->withRealName('Mick Jagger')->build();
 
-        $user_2 = \Mockery::mock(PFUser::class);
-        $user_2->shouldReceive('getRealName')->andReturn('Jean Bono');
+        $user_2 = UserTestBuilder::aUser()->withRealName('Jean Bono')->build();
 
         $lock_1 = new Lock(
             1,
@@ -102,13 +94,11 @@ class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('2019-01-16T19:18:15+01:00', $serialized_lock_2->locked_at);
     }
 
-    public function testVerifyLocksResponseIsCorrect()
+    public function testVerifyLocksResponseIsCorrect(): void
     {
-        $our_user = \Mockery::mock(PFUser::class);
-        $our_user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+        $our_user = UserTestBuilder::aUser()->withRealName('Mick Jagger')->build();
 
-        $their_user = \Mockery::mock(PFUser::class);
-        $their_user->shouldReceive('getRealName')->andReturn('Jean Bono');
+        $their_user = UserTestBuilder::aUser()->withRealName('Jean Bono')->build();
 
         $our_lock = new Lock(
             1,
@@ -146,7 +136,7 @@ class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('2019-01-16T19:18:15+01:00', $their_serialized_lock->locked_at);
     }
 
-    public function testErrorResponseIsCorrect()
+    public function testErrorResponseIsCorrect(): void
     {
         $message             = "this is a test error message";
         $response            = $this->lock_response_builder->buildErrorResponse($message);
@@ -155,11 +145,9 @@ class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($message, $serialized_response->message);
     }
 
-    public function testDeleteLockResponseIsCorrect()
+    public function testDeleteLockResponseIsCorrect(): void
     {
-        $user = \Mockery::mock(PFUser::class);
-
-        $user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+        $user = UserTestBuilder::aUser()->withRealName('Mick Jagger')->build();
 
         $lock = new Lock(
             1,
@@ -177,10 +165,9 @@ class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
     }
 
-    public function testLockConflictResponseIsCorrect()
+    public function testLockConflictResponseIsCorrect(): void
     {
-        $user = \Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+        $user = UserTestBuilder::aUser()->withRealName('Mick Jagger')->build();
 
         $lock = new Lock(
             1,

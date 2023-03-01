@@ -18,17 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\LFSObject;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class LFSObjectTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSObjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testCanConstructValidObject()
+    public function testCanConstructValidObject(): void
     {
-        $oid  = \Mockery::mock(LFSObjectID::class);
+        $oid  = $this->createStub(LFSObjectID::class);
         $size = 123;
 
         $lfs_object = new LFSObject($oid, $size);
@@ -37,9 +35,9 @@ class LFSObjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($size, $lfs_object->getSize());
     }
 
-    public function testInvalidSizeIsRejected()
+    public function testInvalidSizeIsRejected(): void
     {
         $this->expectException(\UnexpectedValueException::class);
-        new LFSObject(\Mockery::mock(LFSObjectID::class), -123);
+        new LFSObject($this->createStub(LFSObjectID::class), -123);
     }
 }

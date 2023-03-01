@@ -18,34 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\GitPHPDisplay;
 
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 
-class DownloadURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DownloadURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $repository;
-    private $user;
-    private $download_url_builder;
+    private GitRepository&\PHPUnit\Framework\MockObject\MockObject $repository;
+    private PFUser&\PHPUnit\Framework\MockObject\Stub $user;
+    private DownloadURLBuilder $download_url_builder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->repository = Mockery::mock(GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturn(1);
+        $this->repository = $this->createMock(GitRepository::class);
+        $this->repository->method('getId')->willReturn(1);
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createStub(PFUser::class);
 
         $this->download_url_builder = new DownloadURLBuilder();
     }
 
-    public function testItBuildsTheDownloadURL()
+    public function testItBuildsTheDownloadURL(): void
     {
         $file = <<<EOS
 version https://git-lfs.github.com/spec/v1
@@ -53,14 +51,14 @@ oid sha256:eca87262c137f4847c6a78fcb8e035a7cb725570f5a70af91c591d77fa7e9d1a
 size 12
 
 EOS;
-        $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
+        $this->repository->method('userCanRead')->with($this->user)->willReturn(true);
 
         $expected = 'plugins/git-lfs/1/objects/eca87262c137f4847c6a78fcb8e035a7cb725570f5a70af91c591d77fa7e9d1a';
 
         $this->assertSame($expected, $this->download_url_builder->buildDownloadURL($this->repository, $this->user, $file));
     }
 
-    public function testItReturnsEmptyUrlIfFileIsNotWellFormed()
+    public function testItReturnsEmptyUrlIfFileIsNotWellFormed(): void
     {
         $file = <<<EOS
 version https://git-lfs.github.com/spec/v1
@@ -68,12 +66,12 @@ oid sha256:eca87262c137f4
 size 12
 
 EOS;
-        $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturn(true);
+        $this->repository->method('userCanRead')->with($this->user)->willReturn(true);
 
         $this->assertSame('', $this->download_url_builder->buildDownloadURL($this->repository, $this->user, $file));
     }
 
-    public function testItReturnsEmptyUrlIfUserCannotReadTheRepository()
+    public function testItReturnsEmptyUrlIfUserCannotReadTheRepository(): void
     {
         $file = <<<EOS
 version https://git-lfs.github.com/spec/v1
@@ -82,7 +80,7 @@ size 12
 
 EOS;
 
-        $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturn(false);
+        $this->repository->method('userCanRead')->with($this->user)->willReturn(false);
 
         $this->assertSame('', $this->download_url_builder->buildDownloadURL($this->repository, $this->user, $file));
     }

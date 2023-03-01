@@ -23,31 +23,28 @@ declare(strict_types=1);
 namespace Tuleap\GitLFS;
 
 use HTTPRequest;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
-class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @runInSeparateProcess
      * @dataProvider providerAcceptHeader
      */
-    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header): void
+    public function testRequestAcceptingGitLFSResponseAreProcessed(string $accept_header): void
     {
-        $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-        $dispatchable->shouldReceive('process')->once();
+        $dispatchable = $this->createMock(DispatchableWithRequestNoAuthz::class);
+        $dispatchable->expects(self::once())->method('process');
 
-        $request = \Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')
-            ->andReturns($accept_header);
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_ACCEPT')
+            ->willReturn($accept_header);
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
         $lfs_json_dispatchable->process(
             $request,
-            \Mockery::mock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             []
         );
     }
@@ -62,11 +59,11 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestNotAcceptingGitLFSResponseAreNotProcessed(): void
     {
-        $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-        $dispatchable->shouldReceive('process')->never();
+        $dispatchable = $this->createMock(DispatchableWithRequestNoAuthz::class);
+        $dispatchable->expects(self::never())->method('process');
 
-        $request = \Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')->andReturns('text/plain');
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_ACCEPT')->willReturn('text/plain');
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
 
@@ -74,7 +71,7 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $lfs_json_dispatchable->process(
             $request,
-            \Mockery::mock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             []
         );
     }
@@ -84,7 +81,7 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGitLFSErrorsAreGivenAccordingToTheGitLFSSpecification(): void
     {
-        $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+        $dispatchable = $this->createStub(DispatchableWithRequestNoAuthz::class);
 
         $error_message = 'Error message test';
         $error_code    = 444;
@@ -95,16 +92,16 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $dispatchable->shouldReceive('process')->andThrows($git_lfs_error);
+        $dispatchable->method('process')->willThrowException($git_lfs_error);
 
-        $request = \Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')
-            ->andReturns('application/vnd.git-lfs+json');
+        $request = $this->createMock(HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_ACCEPT')
+            ->willReturn('application/vnd.git-lfs+json');
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
         $lfs_json_dispatchable->process(
             $request,
-            \Mockery::mock(BaseLayout::class),
+            $this->createStub(BaseLayout::class),
             []
         );
 

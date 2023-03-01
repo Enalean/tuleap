@@ -18,49 +18,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Authorization\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 
-class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $dao;
-    private $hasher;
-    private $user_manager;
-    private $current_time;
+    private UserAuthorizationDAO&\PHPUnit\Framework\MockObject\MockObject $dao;
+    private SplitTokenVerificationStringHasher&\PHPUnit\Framework\MockObject\MockObject $hasher;
+    private \UserManager&\PHPUnit\Framework\MockObject\Stub $user_manager;
+    private \DateTimeImmutable $current_time;
 
     protected function setUp(): void
     {
-        $this->dao          = \Mockery::mock(UserAuthorizationDAO::class);
-        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->dao          = $this->createMock(UserAuthorizationDAO::class);
+        $this->hasher       = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->user_manager = $this->createStub(\UserManager::class);
         $this->current_time = new \DateTimeImmutable('2018-11-30', new \DateTimeZone('UTC'));
     }
 
-    public function testUserCanBeRetrievedFromUserToken()
+    public function testUserCanBeRetrievedFromUserToken(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation');
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAlive')->andReturns(true);
-        $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $user->method('isAlive')->willReturn(true);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -68,7 +67,7 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->assertSame(
             $user,
@@ -76,66 +75,66 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testUserTokenCanBeUsedMoreThanOnce()
+    public function testUserTokenCanBeUsedMoreThanOnce(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation');
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAlive')->andReturns(true);
-        $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $user->method('isAlive')->willReturn(true);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->expects(self::atLeastOnce())->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
             'user_id'         => 123,
             'operation_name'  => 'operation',
-        ])->atLeast()->once();
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true)->atLeast()->once();
+        ]);
+        $this->hasher->expects(self::atLeastOnce())->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    public function testGettingUserFailsWhenANotExpiredAuthorizationCanNotBeFound()
+    public function testGettingUserFailsWhenANotExpiredAuthorizationCanNotBeFound(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns(null);
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn(null);
         $this->expectException(UserAuthorizationNotFoundException::class);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    public function testGettingUserFailsWhenAVerificationStringDoesNotMatch()
+    public function testGettingUserFailsWhenAVerificationStringDoesNotMatch(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'notvalid',
             'expiration_date' => PHP_INT_MAX,
@@ -143,27 +142,27 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'notvalid')->andReturns(false);
+        $this->hasher->method('verifyHash')->with($verification_string, 'notvalid')->willReturn(false);
 
         $this->expectException(InvalidUserUserAuthorizationException::class);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    public function testGettingUserFailsWhenOperationDoesNotMatch()
+    public function testGettingUserFailsWhenOperationDoesNotMatch(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation_A');
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation_A');
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -171,29 +170,29 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation_B',
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->expectException(InvalidUserUserAuthorizationException::class);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    public function testGettingUserFailsWhenUserCannotBeFound()
+    public function testGettingUserFailsWhenUserCannotBeFound(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation');
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation');
 
-        $this->user_manager->shouldReceive('getUserById')->andReturns(null);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -201,31 +200,31 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->expectException(UserNotFoundExceptionUser::class);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    public function testGettingUserFailsWhenUserIsNotAlive()
+    public function testGettingUserFailsWhenUserIsNotAlive(): void
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
 
-        $user_token = \Mockery::mock(SplitToken::class);
-        $user_token->shouldReceive('getID')->andReturns(1);
-        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
-        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(3);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation');
+        $user_token = $this->createStub(SplitToken::class);
+        $user_token->method('getID')->willReturn(1);
+        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $user_token->method('getVerificationString')->willReturn($verification_string);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(3);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAlive')->andReturns(false);
-        $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+        $user = $this->createStub(\PFUser::class);
+        $user->method('isAlive')->willReturn(false);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
-        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+        $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
@@ -233,7 +232,7 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
 
         $this->expectException(UserNotFoundExceptionUser::class);
 

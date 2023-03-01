@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\GitLFS\Download;
 
 use League\Flysystem\FilesystemReader;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -32,25 +31,23 @@ use Tuleap\Request\NotFoundException;
 
 final class FileDownloaderControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNotFoundExceptionIsThrownWhenTheGitRepositoryCanNotBeFound(): void
     {
-        $repository_factory        = \Mockery::mock(\GitRepositoryFactory::class);
+        $repository_factory        = $this->createStub(\GitRepositoryFactory::class);
         $file_downloader_controler = new FileDownloaderController(
             $repository_factory,
-            \Mockery::mock(LFSObjectRetriever::class),
-            \Mockery::mock(LFSObjectPathAllocator::class),
-            \Mockery::mock(FilesystemReader::class),
+            $this->createStub(LFSObjectRetriever::class),
+            $this->createStub(LFSObjectPathAllocator::class),
+            $this->createStub(FilesystemReader::class),
             Prometheus::getInMemory()
         );
 
-        $repository_factory->shouldReceive('getRepositoryById')->andReturnNull();
+        $repository_factory->method('getRepositoryById')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
         $file_downloader_controler->process(
-            \Mockery::mock(\HTTPRequest::class),
-            \Mockery::mock(BaseLayout::class),
+            $this->createStub(\HTTPRequest::class),
+            $this->createStub(BaseLayout::class),
             ['repo_id' => '102']
         );
     }

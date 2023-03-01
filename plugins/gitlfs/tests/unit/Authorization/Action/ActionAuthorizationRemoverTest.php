@@ -18,58 +18,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Authorization\Action;
 
 use ArrayObject;
 use League\Flysystem\DirectoryListing;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemOperator;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 
-class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ActionAuthorizationRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDeletionOfActionsOldWorkingFiles(): void
     {
-        $dao            = \Mockery::mock(ActionAuthorizationDAO::class);
-        $filesystem     = \Mockery::mock(FilesystemOperator::class);
-        $path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);
+        $dao            = $this->createMock(ActionAuthorizationDAO::class);
+        $filesystem     = $this->createMock(FilesystemOperator::class);
+        $path_allocator = $this->createStub(LFSObjectPathAllocator::class);
 
         $remover = new ActionAuthorizationRemover($dao, $filesystem, $path_allocator);
 
         $current_time = new \DateTimeImmutable('04-12-2018', new \DateTimeZone('UTC'));
 
-        $path_allocator->shouldReceive('getBasePathForSaveInProgressObject')->andReturns('in-progress/');
-        $path_allocator->shouldReceive('getBasePathForReadyToBeAvailableObject')->andReturns('ready/');
+        $path_allocator->method('getBasePathForSaveInProgressObject')->willReturn('in-progress/');
+        $path_allocator->method('getBasePathForReadyToBeAvailableObject')->willReturn('ready/');
 
-        $filesystem->shouldReceive('listContents')->with('in-progress/')->andReturns(
-            new DirectoryListing(
-                new ArrayObject(
-                    [
-                        new FileAttributes('in-progress/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-                        new FileAttributes('in-progress/cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'),
-                    ]
+        $filesystem->method('listContents')->willReturnCallback(
+            fn (string $location): DirectoryListing => match ($location) {
+                'in-progress/' => new DirectoryListing(
+                    new ArrayObject(
+                        [
+                            new FileAttributes('in-progress/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                            new FileAttributes('in-progress/cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'),
+                        ]
+                    )
+                ),
+                'ready/' => new DirectoryListing(
+                    new ArrayObject(
+                        [
+                            new FileAttributes('ready/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                            new FileAttributes('ready/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
+                        ]
+                    )
                 )
-            )
+            }
         );
-        $filesystem->shouldReceive('listContents')->with('ready/')->andReturns(
-            new DirectoryListing(
-                new ArrayObject(
-                    [
-                        new FileAttributes('ready/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-                        new FileAttributes('ready/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
-                    ]
-                )
-            )
-        );
-        $dao->shouldReceive('searchExistingOIDsForAuthorizedActionByExpirationAndOIDs')->andReturns([
+        $dao->method('searchExistingOIDsForAuthorizedActionByExpirationAndOIDs')->willReturn([
             'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
         ]);
 
-        $dao->shouldReceive('deleteByExpirationDate')->once();
-        $filesystem->shouldReceive('deleteDirectory')->andReturns(true)->times(3);
+        $dao->expects(self::once())->method('deleteByExpirationDate');
+        $filesystem->expects(self::exactly(3))->method('deleteDirectory');
 
         $remover->deleteExpired($current_time);
     }

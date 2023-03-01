@@ -18,25 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\GitPHPDisplay;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider fileProvider
      */
-    public function testItDetectsLFSFile($file, $expected)
+    public function testItDetectsLFSFile(string $file, bool $expected): void
     {
         $detector = new Detector();
 
         $this->assertSame($expected, $detector->isFileALFSFile($file));
     }
 
-    public static function fileProvider()
+    public static function fileProvider(): array
     {
         $file01 = <<<EOS
 version https://git-lfs.github.com/spec/v1

@@ -19,32 +19,26 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-require_once __DIR__ . '/../bootstrap.php';
-
-class LFSEndPointDiscoveryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSEndPointDiscoveryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var LFSEndPointDiscovery
-     */
-    private $endpoint_discovery;
-    private $git_repository;
+    private LFSEndPointDiscovery $endpoint_discovery;
+    private \GitRepository&\PHPUnit\Framework\MockObject\Stub $git_repository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->git_repository = \Mockery::mock(\GitRepository::class, ['getFullHTTPUrlWithDotGit' => 'https://tuleap.example.com/plugins/git/foo/bar.git']);
+        $this->git_repository = $this->createStub(\GitRepository::class);
+        $this->git_repository->method('getFullHTTPUrlWithDotGit')->willReturn('https://tuleap.example.com/plugins/git/foo/bar.git');
 
         $this->endpoint_discovery = new LFSEndPointDiscovery($this->git_repository);
     }
 
-    public function testItHasAnHref()
+    public function testItHasAnHref(): void
     {
         $this->assertEquals('https://tuleap.example.com/plugins/git/foo/bar.git/info/lfs', $this->endpoint_discovery->getHref());
     }

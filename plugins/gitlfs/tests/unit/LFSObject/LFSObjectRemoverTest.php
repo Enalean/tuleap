@@ -18,26 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\LFSObject;
 
 use League\Flysystem\FilesystemWriter;
 use League\Flysystem\UnableToDeleteFile;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $filesystem;
-    private $path_allocator;
-    private $dao;
+    private FilesystemWriter&\PHPUnit\Framework\MockObject\MockObject $filesystem;
+    private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\Stub $path_allocator;
+    private LFSObjectDAO&\PHPUnit\Framework\MockObject\MockObject $dao;
 
     protected function setUp(): void
     {
-        $this->filesystem     = \Mockery::mock(FilesystemWriter::class);
-        $this->path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);
-        $this->dao            = \Mockery::mock(LFSObjectDAO::class);
+        $this->filesystem     = $this->createMock(FilesystemWriter::class);
+        $this->path_allocator = $this->createStub(LFSObjectPathAllocator::class);
+        $this->dao            = $this->createMock(LFSObjectDAO::class);
     }
 
     public function testDanglingObjectsAreRemoved(): void
@@ -50,15 +49,15 @@ class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->path_allocator
         );
 
-        $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
+        $this->dao->method('searchUnusedObjects')->willReturn([
             ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741],
             ['id' => 456, 'object_oid' => 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'object_size' => 852],
         ]);
-        $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
+        $this->path_allocator->method('getPathForAvailableObject')->willReturn('object/path');
 
-        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
-        $this->filesystem->shouldReceive('delete')->twice();
-        $this->dao->shouldReceive('deleteObjectByID')->twice();
+        $this->dao->expects(self::once())->method('deleteUnusableReferences')->with($deletion_delay);
+        $this->filesystem->expects(self::exactly(2))->method('delete');
+        $this->dao->expects(self::exactly(2))->method('deleteObjectByID');
 
         $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
@@ -73,14 +72,14 @@ class LFSObjectRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->path_allocator
         );
 
-        $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
+        $this->dao->method('searchUnusedObjects')->willReturn([
             ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741],
         ]);
-        $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
+        $this->path_allocator->method('getPathForAvailableObject')->willReturn('object/path');
 
-        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
-        $this->filesystem->shouldReceive('delete')->andThrow(UnableToDeleteFile::class);
-        $this->dao->shouldReceive('deleteObjectByID')->never();
+        $this->dao->expects(self::once())->method('deleteUnusableReferences')->with($deletion_delay);
+        $this->filesystem->method('delete')->willThrowException(new UnableToDeleteFile());
+        $this->dao->expects(self::never())->method('deleteObjectByID');
 
         $this->expectException(UnableToDeleteFile::class);
         $lfs_object_remover->removeDanglingObjects($deletion_delay);

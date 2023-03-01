@@ -18,33 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Authorization\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 
-class UserTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testUserTokenIsCreated()
+    public function testUserTokenIsCreated(): void
     {
-        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $hasher->shouldReceive('computeHash')->andReturns('hashed_verification_string');
-        $dao = \Mockery::mock(UserAuthorizationDAO::class);
-        $dao->shouldReceive('create')->andReturns(100);
+        $hasher = $this->createStub(SplitTokenVerificationStringHasher::class);
+        $hasher->method('computeHash')->willReturn('hashed_verification_string');
+        $dao = $this->createStub(UserAuthorizationDAO::class);
+        $dao->method('create')->willReturn(100);
 
         $creator = new UserTokenCreator($hasher, $dao);
 
-        $repository = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(1);
+        $repository = $this->createStub(\GitRepository::class);
+        $repository->method('getId')->willReturn(1);
         $expiration = new \DateTimeImmutable('2018-11-30', new \DateTimeZone('UTC'));
-        $user       = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
-        $operation = \Mockery::mock(UserOperation::class);
-        $operation->shouldReceive('getName')->andReturns('operation_name');
+        $user       = $this->createStub(\PFUser::class);
+        $user->method('getId')->willReturn(102);
+        $operation = $this->createStub(UserOperation::class);
+        $operation->method('getName')->willReturn('operation_name');
 
         $token = $creator->createUserAuthorizationToken($repository, $expiration, $user, $operation);
 

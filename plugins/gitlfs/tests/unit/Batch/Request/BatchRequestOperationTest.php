@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Batch\Request;
 
-
-class BatchRequestOperationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BatchRequestOperationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testValidOperation()
+    public function testValidOperation(): void
     {
         $upload_operation = new BatchRequestOperation('upload');
         $this->assertFalse($upload_operation->isDownload());
@@ -33,7 +34,7 @@ class BatchRequestOperationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($download_operation->isUpload());
     }
 
-    public function testUnknownOperationIsRejected()
+    public function testUnknownOperationIsRejected(): void
     {
         $this->expectException(IncorrectlyFormattedBatchRequestException::class);
 

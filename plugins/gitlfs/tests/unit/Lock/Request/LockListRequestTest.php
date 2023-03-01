@@ -18,21 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Lock\Request;
+declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\GitLFS\Lock\Request;
 
 final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildFromRequest(): void
     {
-        $request = \Mockery::mock('HTTPRequest');
+        $request = $this->createStub(\HTTPRequest::class);
 
-        $request->shouldReceive('get')->with('id')->andReturn("2");
-        $request->shouldReceive('get')->with('path')->andReturn('test/toto.bin');
-        $request->shouldReceive('get')->with('refspec')->andReturn('refs/heads/master');
+        $request->method('get')->willReturnCallback(
+            fn (string $variable): string => match ($variable) {
+                'id' => '2',
+                'path' => 'test/toto.bin',
+                'refspec' => 'refs/heads/master',
+            }
+        );
 
         $list_request = LockListRequest::buildFromHTTPRequest($request);
 
@@ -43,11 +45,15 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
-        $request_without_ref = \Mockery::mock('HTTPRequest');
+        $request_without_ref = $this->createStub(\HTTPRequest::class);
 
-        $request_without_ref->shouldReceive('get')->with('id')->andReturn("2");
-        $request_without_ref->shouldReceive('get')->with('path')->andReturn('test/toto.bin');
-        $request_without_ref->shouldReceive('get')->with('refspec')->andReturnNull();
+        $request_without_ref->method('get')->willReturnCallback(
+            fn (string $variable): ?string => match ($variable) {
+                'id' => '2',
+                'path' => 'test/toto.bin',
+                'refspec' => null,
+            }
+        );
 
         $list_request = LockListRequest::buildFromHTTPRequest($request_without_ref);
 
@@ -66,10 +72,14 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testListRequestShouldBeConsideredAsBothReadAndWriteRequest(): void
     {
-        $request = \Mockery::mock('HTTPRequest');
-        $request->shouldReceive('get')->with('id')->andReturn('2');
-        $request->shouldReceive('get')->with('path')->andReturn('test/toto.bin');
-        $request->shouldReceive('get')->with('refspec')->andReturn('refs/heads/master');
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('get')->willReturnCallback(
+            fn (string $variable): string => match ($variable) {
+                'id' => '2',
+                'path' => 'test/toto.bin',
+                'refspec' => 'refs/heads/master',
+            }
+        );
         $list_request = LockListRequest::buildFromHTTPRequest($request);
 
         $this->assertTrue($list_request->isRead());
