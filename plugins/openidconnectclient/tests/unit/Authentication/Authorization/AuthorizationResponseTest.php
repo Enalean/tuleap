@@ -20,17 +20,13 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 
-class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testResponseIsBuiltWhenAllParametersAreAvailable()
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('code')->andReturns('code');
-        $request->shouldReceive('get')->with('state')->andReturns('state');
+        $request = HTTPRequestBuilder::get()->withParams(['code' => 'code', 'state' => 'state'])->build();
 
         $response = AuthorizationResponse::buildFromHTTPRequest($request);
         $this->assertSame('code', $response->getCode());
@@ -39,8 +35,7 @@ class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testResponseConstructionIsRejectedWhenCodeIsMissing()
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('code')->andReturns(false);
+        $request = HTTPRequestBuilder::get()->build();
 
         $this->expectException(MissingParameterAuthorizationResponseException::class);
         $this->expectExceptionMessage('code');
@@ -50,9 +45,7 @@ class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testResponseConstructionIsRejectedWhenStateIsMissing()
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('code')->andReturns('code');
-        $request->shouldReceive('get')->with('state')->andReturns(false);
+        $request = HTTPRequestBuilder::get()->withParams(['code' => 'code'])->build();
 
         $this->expectException(MissingParameterAuthorizationResponseException::class);
         $this->expectExceptionMessage('state');

@@ -22,45 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\FakeDataAccessResult;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserMappingDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserDao
-     */
-    private $user_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CanRemoveUserMappingChecker
-     */
-    private $can_remove_user_mapping_checker;
-    /**
-     * @var UserMappingManager
-     */
-    private $user_mapping_manager;
+    private UserMappingManager $user_mapping_manager;
+    private UserMappingDao&\PHPUnit\Framework\MockObject\MockObject $dao;
+    private \UserDao&\PHPUnit\Framework\MockObject\MockObject $user_dao;
+    private CanRemoveUserMappingChecker&\PHPUnit\Framework\MockObject\MockObject $can_remove_user_mapping_checker;
 
     protected function setUp(): void
     {
-        $this->dao                             = \Mockery::mock(UserMappingDao::class);
-        $this->user_dao                        = \Mockery::mock(\UserDao::class);
-        $this->can_remove_user_mapping_checker = \Mockery::mock(CanRemoveUserMappingChecker::class);
+        $this->dao                             = $this->createMock(UserMappingDao::class);
+        $this->user_dao                        = $this->createMock(\UserDao::class);
+        $this->can_remove_user_mapping_checker = $this->createMock(CanRemoveUserMappingChecker::class);
         $this->user_mapping_manager            = new UserMappingManager($this->dao, $this->user_dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
     }
 
     public function testItThrowsAnExceptionIfTheMappingCanNotBeFound(): void
     {
-        $this->dao->shouldReceive('searchByProviderIdAndUserId')->andReturns(false);
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $user     = \Mockery::spy(\PFUser::class);
+        $this->dao->method('searchByProviderIdAndUserId')->willReturn(false);
+        $provider = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('getId');
+
+        $user = UserTestBuilder::buildWithDefaults();
 
         $this->expectException(UserMappingNotFoundException::class);
         $this->user_mapping_manager->getByProviderAndUser($provider, $user);
@@ -80,8 +67,8 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user         = UserTestBuilder::aUser()->withId(102)->build();
         $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
 
-        $this->dao->shouldReceive('searchUsageByUserId')->andReturn(\TestHelper::emptyDar());
-        $this->can_remove_user_mapping_checker->shouldReceive('canAUserMappingBeRemoved')->andReturn(false);
+        $this->dao->method('searchUsageByUserId')->willReturn(\TestHelper::emptyDar());
+        $this->can_remove_user_mapping_checker->method('canAUserMappingBeRemoved')->willReturn(false);
 
         $this->expectException(UserMappingDataAccessException::class);
         $this->user_mapping_manager->remove($user, $user_mapping);
@@ -92,17 +79,17 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user         = UserTestBuilder::aUser()->withId(102)->build();
         $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
 
-        $this->dao->shouldReceive('searchUsageByUserId')->andReturn(\TestHelper::emptyDar());
-        $this->can_remove_user_mapping_checker->shouldReceive('canAUserMappingBeRemoved')->andReturn(true);
-        $this->dao->shouldReceive('deleteById')->once()->andReturn(true);
+        $this->dao->method('searchUsageByUserId')->willReturn(\TestHelper::emptyDar());
+        $this->can_remove_user_mapping_checker->method('canAUserMappingBeRemoved')->willReturn(true);
+        $this->dao->expects(self::once())->method('deleteById')->willReturn(true);
 
         $this->user_mapping_manager->remove($user, $user_mapping);
     }
 
     public function testUpdatesLastUsedInformation(): void
     {
-        $this->user_dao->shouldReceive('storeLoginSuccess')->once();
-        $this->dao->shouldReceive('updateLastUsed')->once()->andReturn(true);
+        $this->user_dao->expects(self::once())->method('storeLoginSuccess');
+        $this->dao->expects(self::once())->method('updateLastUsed')->willReturn(true);
 
         $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
 
@@ -111,8 +98,8 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreatesAMapping(): void
     {
-        $this->user_dao->shouldReceive('storeLoginSuccess')->once();
-        $this->dao->shouldReceive('save')->once()->andReturn(true);
+        $this->user_dao->expects(self::once())->method('storeLoginSuccess');
+        $this->dao->expects(self::once())->method('save')->willReturn(true);
 
         $this->user_mapping_manager->create(102, 1, 'identifier', 10);
     }
@@ -126,7 +113,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesntHaveMappingWhenDBIsMad(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(false);
+        $this->dao->method('searchUsageByUserId')->with(102)->willReturn(false);
 
         self::assertFalse($this->user_mapping_manager->userHasProvider($user));
     }
@@ -134,7 +121,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesntHaveMappingWhenDBReturnsNoResults(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(new \DataAccessResultEmpty());
+        $this->dao->method('searchUsageByUserId')->with(102)->willReturn(new \DataAccessResultEmpty());
 
         self::assertFalse($this->user_mapping_manager->userHasProvider($user));
     }
@@ -142,7 +129,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItHasMapping(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
-        $this->dao->shouldReceive('searchUsageByUserId')->with(102)->andReturn(new FakeDataAccessResult([1]));
+        $this->dao->method('searchUsageByUserId')->with(102)->willReturn(new FakeDataAccessResult([1]));
 
         self::assertTrue($this->user_mapping_manager->userHasProvider($user));
     }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OpenIDConnectClient\Authentication\State;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
@@ -30,8 +29,6 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const SIGNED_STATE        = 'Tuleap_signed_state';
     private const NONCE_FOR_TEST      = '000000';
     private const PKCE_CODE_VERIFIER  = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
@@ -41,12 +38,12 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     protected function setUp(): void
     {
-        $state = \Mockery::mock(State::class);
-        $state->shouldReceive('getSignedState')->andReturns(self::SIGNED_STATE);
-        $state->shouldReceive('getNonce')->andReturns(self::NONCE_FOR_TEST);
-        $state->shouldReceive('getPKCECodeVerifier')->andReturns(new ConcealedString(self::PKCE_CODE_VERIFIER));
-        $this->state_manager = \Mockery::mock(StateManager::class);
-        $this->state_manager->shouldReceive('initState')->andReturns($state);
+        $state = $this->createMock(State::class);
+        $state->method('getSignedState')->willReturn(self::SIGNED_STATE);
+        $state->method('getNonce')->willReturn(self::NONCE_FOR_TEST);
+        $state->method('getPKCECodeVerifier')->willReturn(new ConcealedString(self::PKCE_CODE_VERIFIER));
+        $this->state_manager = $this->createMock(StateManager::class);
+        $this->state_manager->method('initState')->willReturn($state);
     }
 
     public function testValidAuthorizationRequestIsCreated(): void
@@ -55,11 +52,11 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $authorization_request_creator = new AuthorizationRequestCreator($this->state_manager);
 
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint);
-        $provider->shouldReceive('getClientId')->andReturns('1234');
-        $provider->shouldReceive('getRedirectUri')->andReturns('https://exemple.com');
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(true);
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn($authorization_endpoint);
+        $provider->method('getClientId')->willReturn('1234');
+        $provider->method('getRedirectUri')->willReturn('https://exemple.com');
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(true);
 
         $authorization_request = $authorization_request_creator->createAuthorizationRequest($provider, 'return_to');
 
@@ -82,17 +79,17 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $authorization_request_creator = new AuthorizationRequestCreator($this->state_manager);
 
-        $provider_1 = \Mockery::mock(Provider::class);
-        $provider_1->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint_1);
-        $provider_1->shouldReceive('getClientId')->andReturns('1234');
-        $provider_1->shouldReceive('getRedirectUri')->andReturns('https://exemple.com');
-        $provider_1->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
+        $provider_1 = $this->createMock(Provider::class);
+        $provider_1->method('getAuthorizationEndpoint')->willReturn($authorization_endpoint_1);
+        $provider_1->method('getClientId')->willReturn('1234');
+        $provider_1->method('getRedirectUri')->willReturn('https://exemple.com');
+        $provider_1->method('isUniqueAuthenticationEndpoint')->willReturn(false);
 
-        $provider_2 = \Mockery::mock(Provider::class);
-        $provider_2->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint_2);
-        $provider_2->shouldReceive('getClientId')->andReturns('5678');
-        $provider_2->shouldReceive('getRedirectUri')->andReturns('https://exemple.org');
-        $provider_2->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
+        $provider_2 = $this->createMock(Provider::class);
+        $provider_2->method('getAuthorizationEndpoint')->willReturn($authorization_endpoint_2);
+        $provider_2->method('getClientId')->willReturn('5678');
+        $provider_2->method('getRedirectUri')->willReturn('https://exemple.org');
+        $provider_2->method('isUniqueAuthenticationEndpoint')->willReturn(false);
 
         $authorization_request_1 = $authorization_request_creator->createAuthorizationRequest($provider_1, 'return_to');
         $this->assertStringStartsWith($authorization_endpoint_1, $authorization_request_1->getURL());

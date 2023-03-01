@@ -20,26 +20,23 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testAnEmptyRequestIsCreatedWhenNoUserEndpointIsAvailable()
     {
-        $request_factory           = \Mockery::mock(RequestFactoryInterface::class);
+        $request_factory           = $this->createMock(RequestFactoryInterface::class);
         $user_info_request_creator = new UserInfoRequestCreator($request_factory);
 
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getUserInfoEndpoint')->andReturns('');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getUserInfoEndpoint')->willReturn('');
 
         $user_info_request = $user_info_request_creator->createUserInfoRequest(
             $provider,
-            \Mockery::mock(TokenResponse::class)
+            $this->createMock(TokenResponse::class)
         );
         $this->assertInstanceOf(EmptyUserInfoRequest::class, $user_info_request);
     }

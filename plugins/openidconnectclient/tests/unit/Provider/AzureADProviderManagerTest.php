@@ -22,23 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 
-class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCreatesNewAzureProvider(): void
     {
-        $azure_provider_dao     = \Mockery::mock(AzureADProviderDao::class);
+        $azure_provider_dao     = $this->createMock(AzureADProviderDao::class);
         $azure_provider_manager = new AzureADProviderManager($azure_provider_dao);
 
-        $azure_provider_dao->shouldReceive('create')->andReturn(1)->once();
+        $azure_provider_dao->expects(self::once())->method('create')->willReturn(1);
 
         $tenant_setup = AzureADTenantSetup::common();
 
@@ -69,7 +66,7 @@ class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesProvider(): void
     {
-        $generic_provider_dao     = \Mockery::mock(AzureADProviderDao::class);
+        $generic_provider_dao     = $this->createMock(AzureADProviderDao::class);
         $generic_provider_manager = new AzureADProviderManager(
             $generic_provider_dao
         );
@@ -88,7 +85,7 @@ class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID($tenant_setup, 'tenant id')
         );
 
-        $generic_provider_dao->shouldReceive('save')->once();
+        $generic_provider_dao->expects(self::once())->method('save');
         $generic_provider_manager->updateAzureADProvider($provider, $tenant_setup);
     }
 }

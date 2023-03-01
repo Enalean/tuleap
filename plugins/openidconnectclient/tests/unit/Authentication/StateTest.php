@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
 final class StateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCreatesStateFromSignedState(): void
     {
         $secret_key         = str_repeat('a', 32);

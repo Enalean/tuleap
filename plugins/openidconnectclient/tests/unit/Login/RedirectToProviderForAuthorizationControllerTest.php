@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Login;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequest;
@@ -36,25 +35,14 @@ use Tuleap\Request\NotFoundException;
 
 final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProviderManager
-     */
-    private $provider_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthorizationRequestCreator
-     */
-    private $authorization_request_creator;
-    /**
-     * @var RedirectToProviderForAuthorizationController
-     */
-    private $controller;
+    private RedirectToProviderForAuthorizationController $controller;
+    private \PHPUnit\Framework\MockObject\MockObject&ProviderManager $provider_manager;
+    private AuthorizationRequestCreator&\PHPUnit\Framework\MockObject\MockObject $authorization_request_creator;
 
     protected function setUp(): void
     {
-        $this->provider_manager              = \Mockery::mock(ProviderManager::class);
-        $this->authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
+        $this->provider_manager              = $this->createMock(ProviderManager::class);
+        $this->authorization_request_creator = $this->createMock(AuthorizationRequestCreator::class);
         $this->controller                    = new RedirectToProviderForAuthorizationController(
             HTTPFactoryBuilder::responseFactory(),
             $this->provider_manager,
@@ -65,14 +53,14 @@ final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Tes
 
     public function testRedirectsToAuthorizationEndpoint(): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturn(false);
+        $provider = $this->createMock(Provider::class);
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(false);
 
-        $this->provider_manager->shouldReceive('getById')->andReturn($provider);
-        $this->provider_manager->shouldReceive('isAProviderConfiguredAsUniqueAuthenticationEndpoint')->andReturn(false);
+        $this->provider_manager->method('getById')->willReturn($provider);
+        $this->provider_manager->method('isAProviderConfiguredAsUniqueAuthenticationEndpoint')->willReturn(false);
 
         $authorization_request = new AuthorizationRequest('https://endpoint.example.com/authorization');
-        $this->authorization_request_creator->shouldReceive('createAuthorizationRequest')->andReturn($authorization_request);
+        $this->authorization_request_creator->method('createAuthorizationRequest')->willReturn($authorization_request);
 
         $request  = (new NullServerRequest())->withQueryParams(['return_to' => '/my/'])->withAttribute('provider_id', '123');
         $response = $this->controller->handle($request);
@@ -83,7 +71,7 @@ final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Tes
 
     public function testRejectsRequestWhenProviderDoesNotExist(): void
     {
-        $this->provider_manager->shouldReceive('getById')->andThrow(ProviderNotFoundException::class);
+        $this->provider_manager->method('getById')->willThrowException(new ProviderNotFoundException());
 
         $request = (new NullServerRequest())->withAttribute('provider_id', '404');
 
@@ -93,11 +81,11 @@ final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Tes
 
     public function testRejectsRequestWhenAskingToAuthenticateAgainstAnotherProviderThanTheOneSetInUniqueAuthenticationEndpointMode(): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturn(false);
+        $provider = $this->createMock(Provider::class);
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(false);
 
-        $this->provider_manager->shouldReceive('getById')->andReturn($provider);
-        $this->provider_manager->shouldReceive('isAProviderConfiguredAsUniqueAuthenticationEndpoint')->andReturn(true);
+        $this->provider_manager->method('getById')->willReturn($provider);
+        $this->provider_manager->method('isAProviderConfiguredAsUniqueAuthenticationEndpoint')->willReturn(true);
 
         $request = (new NullServerRequest())->withAttribute('provider_id', '124');
 

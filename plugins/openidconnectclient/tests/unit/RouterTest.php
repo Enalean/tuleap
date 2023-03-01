@@ -22,18 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 
 final class RouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testProcessRequest(): void
     {
         $login_controller          = $this->createMock(\Tuleap\OpenIDConnectClient\Login\Controller::class);
         $account_linker_controller = $this->createStub(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
-        $request                   = \Mockery::spy(\HTTPRequest::class);
+        $request                   = HTTPRequestBuilder::get()->build();
 
         $login_controller->expects(self::atLeastOnce())->method('login');
 

@@ -22,25 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
 
-require_once(__DIR__ . '/../bootstrap.php');
-
-class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItAcceptsToEnableIfUserIsSuperUserAndLinkedToTheProvider(): void
     {
-        $user_mapping_manager                           = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager = $this->createMock(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager->method('getByProviderAndUser');
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
-        $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturns(true);
+        $provider                                       = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(false);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
 
@@ -49,13 +45,13 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUni
 
     public function testItCanNotBeEnabledByANonSuperUser(): void
     {
-        $user_mapping_manager                           = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager                           = $this->createMock(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
-        $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $user                                           = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturns(false);
+        $provider                                       = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $user                                           = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
 
@@ -64,14 +60,14 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUni
 
     public function testItAcceptsToEnableAnAlreadyEnabledProvider(): void
     {
-        $user_mapping_manager                           = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager                           = $this->createMock(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
-        $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(true);
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturns(true);
+        $provider                                       = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(true);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
 
@@ -80,15 +76,15 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends \Tuleap\Test\PHPUni
 
     public function testItRefusesToEnableIfUserIsLinkedToTheProvider(): void
     {
-        $user_mapping_manager = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
-        $user_mapping_manager->shouldReceive('getByProviderAndUser')->andThrows(new UserMappingNotFoundException());
+        $user_mapping_manager = $this->createMock(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager->method('getByProviderAndUser')->willThrowException(new UserMappingNotFoundException());
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
-        $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturns(true);
+        $provider                                       = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('isUniqueAuthenticationEndpoint')->willReturn(false);
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
 

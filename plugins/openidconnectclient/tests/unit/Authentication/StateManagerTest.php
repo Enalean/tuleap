@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
 final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItValidatesValidState(): void
     {
         $this->expectNotToPerformAssertions();
@@ -37,12 +34,12 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $return_to          = '/return_to';
         $nonce              = 'random_string';
         $pkce_code_verifier = new ConcealedString('code_verifier');
-        $state_factory      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state_factory      = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage      = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
         $state              = new State(1234, $return_to, $key, $nonce, $pkce_code_verifier);
         $signed_state       = $state->getSignedState();
         $stored_state       = new SessionState($key, $return_to, $nonce, $pkce_code_verifier);
-        $state_storage->shouldReceive('loadState')->andReturns($stored_state);
+        $state_storage->method('loadState')->willReturn($stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $state_manager->validateState($signed_state);
@@ -53,12 +50,12 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $return_to          = '/return_to';
         $nonce              = 'random_string';
         $pkce_code_verifier = new ConcealedString('code_verifier');
-        $state_factory      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state_factory      = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage      = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
         $state              = new State(1234, $return_to, str_repeat('a', 32), $nonce, $pkce_code_verifier);
         $signed_state       = $state->getSignedState();
         $stored_state       = new SessionState(str_repeat('b', 32), $return_to, $nonce, $pkce_code_verifier);
-        $state_storage->shouldReceive('loadState')->andReturns($stored_state);
+        $state_storage->method('loadState')->willReturn($stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $this->expectException(State\StateMismatchException::class);
@@ -67,9 +64,9 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTryToValidateInvalidStoredStateHash(): void
     {
-        $state_factory = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
-        $state_storage->shouldReceive('loadState')->andReturns(null);
+        $state_factory = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state_storage->method('loadState')->willReturn(null);
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $this->expectException(State\InvalidLocalStateException::class);
@@ -78,9 +75,9 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTryToValidateMissingStateHash(): void
     {
-        $state_factory = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
-        $state_storage->shouldReceive('loadState')->andReturns('stored_state_hash');
+        $state_factory = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage = $this->createMock(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state_storage->method('loadState')->willReturn('stored_state_hash');
 
         $state_manager = new StateManager($state_storage, $state_factory);
         $this->expectException(State\InvalidRemoteStateException::class);

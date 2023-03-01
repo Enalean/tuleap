@@ -23,14 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Http\Mock\Client;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var Client
      */
@@ -48,16 +45,16 @@ final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotTryToFetchTheKeyIfTheProviderDoesNotHaveAJWKSEndpoint(): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getJWKSEndpoint')->andReturn(null);
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getJWKSEndpoint')->willReturn(null);
 
         $this->assertNull($this->key_fetcher->fetchKey($provider));
     }
 
     public function testFetchKeyFromValidJWKSDocument(): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getJWKSEndpoint')->andReturn('https://example.com/oidc/jwks');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getJWKSEndpoint')->willReturn('https://example.com/oidc/jwks');
 
         $this->client->addResponse(
             HTTPFactoryBuilder::responseFactory()->createResponse(200)->withBody(
@@ -74,8 +71,8 @@ final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCannotFetchKeyWhenTheJWKSEndpointDoesNotHaveTheExpectedHTTPCodeStatus(): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getJWKSEndpoint')->andReturn('https://example.com/oidc/jwks');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getJWKSEndpoint')->willReturn('https://example.com/oidc/jwks');
 
         $this->client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse(500));
 
@@ -88,8 +85,8 @@ final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testCannotFetchKeyFromAnInvalidJWKSDocument(string $document): void
     {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getJWKSEndpoint')->andReturn('https://example.com/oidc/jwks');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getJWKSEndpoint')->willReturn('https://example.com/oidc/jwks');
 
         $this->client->addResponse(
             HTTPFactoryBuilder::responseFactory()->createResponse(200)->withBody(
