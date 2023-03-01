@@ -1347,9 +1347,7 @@ function $w(string) {
 
   Object.extend(arrayProto, Enumerable);
 
-  if (arrayProto.entries === Enumerable.entries) {
-    delete arrayProto.entries;
-  }
+  arrayProto.entries = Array.prototype.entries;
 
   if (!arrayProto._reverse)
     arrayProto._reverse = arrayProto.reverse;
