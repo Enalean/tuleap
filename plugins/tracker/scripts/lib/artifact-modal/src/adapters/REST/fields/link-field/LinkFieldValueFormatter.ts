@@ -19,7 +19,6 @@
 
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
-import { FORWARD_DIRECTION, LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
 import { NewChangesetLinkProxy } from "./NewChangesetLinkProxy";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
@@ -36,7 +35,6 @@ export const LinkFieldValueFormatter = (
     getFormattedValuesByFieldId: (field_id: number): ArtifactLinkNewChangesetValue => {
         const links_not_removed = retrieve_linked_artifacts
             .getLinkedArtifacts()
-            .filter(({ link_type }) => link_type.direction === FORWARD_DIRECTION)
             .filter(
                 (linked_artifact) =>
                     !verify_link_is_marked_for_removal.isMarkedForRemoval(linked_artifact)
@@ -45,16 +43,10 @@ export const LinkFieldValueFormatter = (
 
         const new_links = retrieve_new_links.getNewLinks();
 
-        const new_forward_links = new_links
-            .filter(({ link_type }) => link_type.direction === FORWARD_DIRECTION)
-            .map(NewChangesetLinkProxy.fromNewLink);
+        const new_forward_links = new_links.map(NewChangesetLinkProxy.fromNewLink);
 
-        const links = links_not_removed.concat(new_forward_links);
-        const new_parent = new_links.find(({ link_type }) => LinkType.isReverseChild(link_type));
-        if (!new_parent) {
-            return { field_id, links };
-        }
+        const all_links = links_not_removed.concat(new_forward_links);
 
-        return { field_id, links, parent: { id: new_parent.identifier.id } };
+        return { field_id, all_links };
     },
 });

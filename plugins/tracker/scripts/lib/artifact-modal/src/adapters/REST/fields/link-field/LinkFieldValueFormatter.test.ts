@@ -29,6 +29,10 @@ import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
+import {
+    FORWARD_DIRECTION,
+    REVERSE_DIRECTION,
+} from "../../../../domain/fields/link-field/LinkType";
 
 const FIELD_ID = 1060;
 const FIRST_LINKED_ARTIFACT_ID = 666;
@@ -78,45 +82,28 @@ describe("LinkFieldValueFormatter", () => {
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
 
         const value = format();
-        if (!("links" in value)) {
-            throw new Error("Expected a links key");
-        }
-        expect(value.links).toHaveLength(0);
+        expect(value.all_links).toHaveLength(0);
     });
 
     it("formats the existing links and the new links into a single array", () => {
         expect(format()).toStrictEqual({
             field_id: FIELD_ID,
-            links: [
-                { id: FIRST_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
-                { id: SECOND_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
-                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK },
-                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK },
-                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE },
+            all_links: [
+                {
+                    id: FIRST_LINKED_ARTIFACT_ID,
+                    type: IS_CHILD_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
+                {
+                    id: SECOND_LINKED_ARTIFACT_ID,
+                    type: IS_CHILD_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
+                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: FORWARD_DIRECTION },
             ],
         });
-    });
-
-    it(`filters out the reverse link types in existing and new links because the API does not support them yet`, () => {
-        links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(
-                FIRST_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildReverseCustom()
-            ),
-            LinkedArtifactStub.withIdAndType(
-                SECOND_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildParentLinkType()
-            )
-        );
-        new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildReverseCustom()),
-            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildReverseCustom())
-        );
-        const value = format();
-        if (!("links" in value)) {
-            throw new Error("Expected a links key");
-        }
-        expect(value.links).toHaveLength(0);
     });
 
     it(`adds only new links when there are no existing links`, () => {
@@ -124,9 +111,9 @@ describe("LinkFieldValueFormatter", () => {
 
         expect(format()).toStrictEqual({
             field_id: FIELD_ID,
-            links: [
-                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK },
-                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE },
+            all_links: [
+                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: FORWARD_DIRECTION },
             ],
         });
     });
@@ -136,15 +123,23 @@ describe("LinkFieldValueFormatter", () => {
 
         expect(format()).toStrictEqual({
             field_id: FIELD_ID,
-            links: [
-                { id: FIRST_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
-                { id: SECOND_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
-                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK },
+            all_links: [
+                {
+                    id: FIRST_LINKED_ARTIFACT_ID,
+                    type: IS_CHILD_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
+                {
+                    id: SECOND_LINKED_ARTIFACT_ID,
+                    type: IS_CHILD_LINK_TYPE,
+                    direction: FORWARD_DIRECTION,
+                },
+                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
             ],
         });
     });
 
-    it(`sets the "parent" key of the payload when there is a new parent link`, () => {
+    it(`sets the "all_links" with the "reverse" direction in the payload when there is a new parent link`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
             NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildParentLinkType()),
@@ -153,8 +148,14 @@ describe("LinkFieldValueFormatter", () => {
 
         expect(format()).toStrictEqual({
             field_id: FIELD_ID,
-            parent: { id: FIRST_NEW_LINK_ID },
-            links: [{ id: SECOND_NEW_LINK_ID, type: UNTYPED_LINK }],
+            all_links: [
+                {
+                    id: FIRST_NEW_LINK_ID,
+                    type: IS_CHILD_LINK_TYPE,
+                    direction: REVERSE_DIRECTION,
+                },
+                { id: SECOND_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
+            ],
         });
     });
 
@@ -163,9 +164,6 @@ describe("LinkFieldValueFormatter", () => {
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
 
         const value = format();
-        if (!("links" in value)) {
-            throw new Error("Expected a links key");
-        }
-        expect(value.links).toHaveLength(0);
+        expect(value.all_links).toHaveLength(0);
     });
 });

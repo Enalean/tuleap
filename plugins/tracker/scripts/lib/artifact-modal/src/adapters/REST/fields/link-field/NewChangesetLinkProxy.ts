@@ -24,11 +24,13 @@ import type { ArtifactLinkNewChangesetLink } from "@tuleap/plugin-tracker-rest-a
 export const NewChangesetLinkProxy = {
     fromLinkedArtifact: (artifact: LinkedArtifact): ArtifactLinkNewChangesetLink => ({
         id: artifact.identifier.id,
+        direction: artifact.link_type.direction,
         type: artifact.link_type.shortname,
     }),
 
     fromNewLink: (new_link: NewLink): ArtifactLinkNewChangesetLink => ({
         id: new_link.identifier.id,
+        direction: new_link.link_type.direction,
         type: new_link.link_type.shortname,
     }),
 };
