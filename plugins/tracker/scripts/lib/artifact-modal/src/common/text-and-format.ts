@@ -23,6 +23,7 @@ import { sanitize } from "dompurify";
 import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { postInterpretCommonMark } from "../api/tuleap-api";
+import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
 import "../common/FormatSelector";
 import "../common/RichTextEditor";
 
@@ -38,6 +39,7 @@ export interface TextAndFormat {
     is_preview_loading: boolean;
     has_error: boolean;
     error_message: string;
+    readonly controller: FormattedTextControllerType;
 }
 
 export type HostElement = TextAndFormat & HTMLElement;
@@ -110,6 +112,7 @@ export const getTextAndFormatTemplate = (
         disabled="${isDisabled(host)}"
         required="${host.required}"
         rows="${options.rows}"
+        controller="${host.controller}"
         oncontent-change="${options.onContentChange}"
         onupload-image="${onUploadImage}"
         onformat-change="${options.onFormatChange}"

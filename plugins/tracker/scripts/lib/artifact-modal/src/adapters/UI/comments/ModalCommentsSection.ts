@@ -30,6 +30,7 @@ import { CommentsPresenter } from "./CommentsPresenter";
 import "./FollowupEditor";
 import { getCommentTemplate } from "./CommentTemplate";
 import type { NewComment } from "../../../domain/comments/NewComment";
+import type { FormattedTextControllerType } from "../../../domain/common/FormattedTextController";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -56,6 +57,7 @@ const getNewCommentTemplate = (
         class="${getNewCommentClasses(host.presenter.preferences.is_comment_order_inverted)}"
         format="${host.presenter.preferences.text_format}"
         projectId="${host.controller.getProjectIdentifier().id}"
+        controller="${host.formattedTextController}"
         onvalue-changed="${onValueChanged}"
         onupload-image="${onUploadImage}"
         data-test="add-comment-form"
@@ -102,6 +104,7 @@ export const getSectionTemplate = (
 export type ModalCommentsSection = {
     presenter: CommentsPresenter;
     readonly controller: CommentsControllerType;
+    readonly formattedTextController: FormattedTextControllerType;
 };
 export type HostElement = ModalCommentsSection & HTMLElement;
 
@@ -124,6 +127,7 @@ export const ModalCommentsSection = define<ModalCommentsSection>({
             return controller;
         },
     },
+    formattedTextController: undefined,
     content: (host) => html` <h2
             class="tlp-modal-subtitle tuleap-artifact-modal-followups-title"
             title="${getChangesetsCommentMessage()}"

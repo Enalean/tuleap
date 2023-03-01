@@ -50,6 +50,17 @@ export const FileFieldController = (
         event.is_there_at_least_one_file_field = true;
     });
 
+    event_dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
+        if (event.setup !== null) {
+            return;
+        }
+        event.setup = {
+            file_field_id: field.field_id,
+            file_creation_uri: field.file_creation_uri,
+            max_size_upload: field.max_size_upload,
+        };
+    });
+
     return {
         getNewFilesToAttach: (): NewFileToAttachCollection => value_model.temporary_files,
 

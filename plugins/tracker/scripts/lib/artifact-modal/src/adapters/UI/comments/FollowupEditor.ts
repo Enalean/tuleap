@@ -55,6 +55,7 @@ export const FollowupEditor = define<FollowupEditor>({
     is_preview_loading: false,
     has_error: false,
     error_message: "",
+    controller: undefined,
     content: (host) =>
         getTextAndFormatTemplate(host, {
             identifier: "followup_comment",

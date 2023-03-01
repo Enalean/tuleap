@@ -24,6 +24,7 @@ import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
 import type { WillNotifyFault } from "./WillNotifyFault";
 import type { WillClearFaultNotification } from "./WillClearFaultNotification";
 import type { DidChangeAllowedValues } from "./fields/select-box-field/DidChangeAllowedValues";
+import type { WillGetFileUploadSetup } from "./fields/file-field/WillGetFileUploadSetup";
 
 export type AllEvents = {
     DidChangeAllowedValues: DidChangeAllowedValues;
@@ -33,6 +34,7 @@ export type AllEvents = {
     WillDisableSubmit: WillDisableSubmit;
     WillEnableSubmit: WillEnableSubmit;
     WillNotifyFault: WillNotifyFault;
+    WillGetFileUploadSetup: WillGetFileUploadSetup;
 };
 
 export type EventType = keyof AllEvents;

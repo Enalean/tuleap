@@ -20,9 +20,15 @@
 import { setCatalog } from "../../../gettext-catalog";
 import type { HostElement } from "./FollowupEditor";
 import { FollowupEditor } from "./FollowupEditor";
+import { FormattedTextController } from "../../../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
 function getHost(data: Partial<HostElement>): HostElement {
-    return { ...data, dispatchEvent: jest.fn() } as HostElement;
+    return {
+        ...data,
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
+        dispatchEvent: jest.fn(),
+    } as HostElement;
 }
 
 describe(`FollowupEditor`, () => {

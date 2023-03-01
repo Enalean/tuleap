@@ -45,8 +45,8 @@ import {
     getUploadSizeExceeded,
 } from "../gettext-catalog";
 import { getTextFieldDefaultFormat } from "../model/UserPreferencesStore";
-import type { FirstFileField } from "../model/FirstFileFieldStore";
-import { getFirstFileField } from "../model/FirstFileFieldStore";
+import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
+import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
 
 export interface RichTextEditor {
     identifier: string;
@@ -58,7 +58,8 @@ export interface RichTextEditor {
     textarea: HTMLTextAreaElement | null;
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
-    first_file_field: FirstFileField | null;
+    upload_setup: FileUploadSetup | null;
+    controller: FormattedTextControllerType;
     content: () => HTMLElement;
 }
 export type HostElement = RichTextEditor & HTMLElement;
@@ -108,10 +109,11 @@ function onChange(host: HostElement, ckeditor: CKEDITOR.editor): void {
     dispatch(host, "content-change", { detail: { content: new_content } });
 }
 
-const isUploadPossible = (field: FirstFileField | null): field is FirstFileField => field !== null;
+const isUploadPossible = (setup: FileUploadSetup | null): setup is FileUploadSetup =>
+    setup !== null;
 
 export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): void {
-    if (!isUploadPossible(host.first_file_field)) {
+    if (!isUploadPossible(host.upload_setup)) {
         disablePasteOfImages(ckeditor);
         return;
     }
@@ -128,7 +130,7 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
         }
         setIsNotUploadingInCKEditor();
     };
-    const field_id = host.first_file_field.field_id;
+    const field_id = host.upload_setup.file_field_id;
     const onSuccessCallback = (id: number, download_href: string): void => {
         dispatch(host, "upload-image", {
             detail: {
@@ -141,7 +143,7 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
 
     const fileUploadRequestHandler = buildFileUploadHandler({
         ckeditor_instance: ckeditor,
-        max_size_upload: host.first_file_field.max_size_upload,
+        max_size_upload: host.upload_setup.max_size_upload,
         onStartCallback,
         onErrorCallback,
         onSuccessCallback,
@@ -171,24 +173,24 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
         locale,
         default_format
     );
+    const upload_setup = host.controller.getFileUploadSetup();
 
     return editor_factory.createRichTextEditor(host.textarea, {
         format_selectbox_id: "format_" + host.identifier,
         format_selectbox_value: host.format,
         getAdditionalOptions: () => {
-            if (!isUploadPossible(host.first_file_field)) {
+            if (!isUploadPossible(upload_setup)) {
                 return { height: "100px", readOnly: host.disabled };
             }
             return {
                 height: "100px",
                 readOnly: host.disabled,
                 extraPlugins: "uploadimage",
-                uploadUrl: "/api/v1/" + host.first_file_field.file_creation_uri,
+                uploadUrl: "/api/v1/" + upload_setup.file_creation_uri,
             };
         },
         onFormatChange: (new_format) => {
-            host.is_help_shown =
-                isUploadPossible(host.first_file_field) && new_format === TEXT_FORMAT_HTML;
+            host.is_help_shown = isUploadPossible(upload_setup) && new_format === TEXT_FORMAT_HTML;
             if (!host.textarea) {
                 return;
             }
@@ -238,10 +240,14 @@ export const RichTextEditor = define<RichTextEditor>({
         }
         return textarea;
     },
-    first_file_field: {
-        get: getFirstFileField,
-    },
+    upload_setup: undefined,
     is_help_shown: false,
+    controller: {
+        set(host, controller: FormattedTextControllerType) {
+            host.upload_setup = controller.getFileUploadSetup();
+            return controller;
+        },
+    },
     content: (host) => html`
         <textarea
             data-textarea

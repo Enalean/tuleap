@@ -32,8 +32,3 @@ export const getAllFileFields = (
 
 export const isThereAtLeastOneFileField = (tracker_fields: readonly Field[]): boolean =>
     tracker_fields.some(isEnabledFileField);
-
-export function getFirstFileField(tracker_fields: readonly Field[]): FileFieldValueModel | null {
-    const result = tracker_fields.find(isEnabledFileField);
-    return result !== undefined ? result : null;
-}

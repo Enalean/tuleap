@@ -19,9 +19,15 @@
 
 import type { HostElement } from "./TextField";
 import { getClasses, getIdentifier, TextField } from "./TextField";
+import { FormattedTextController } from "../../../../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 function getHost(data?: Partial<HostElement>): HostElement {
-    return { ...data, dispatchEvent: jest.fn() } as HostElement;
+    return {
+        ...data,
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
+        dispatchEvent: jest.fn(),
+    } as HostElement;
 }
 
 describe(`TextField`, () => {

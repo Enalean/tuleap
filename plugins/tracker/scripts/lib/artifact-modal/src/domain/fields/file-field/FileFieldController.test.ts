@@ -29,6 +29,11 @@ import type { FileFieldType } from "./FileFieldType";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 import { EventDispatcher } from "../../EventDispatcher";
 import { DidCheckFileFieldIsPresent } from "../../DidCheckFileFieldIsPresent";
+import { WillGetFileUploadSetup } from "./WillGetFileUploadSetup";
+
+const FIELD_ID = 588;
+const MAX_SIZE_UPLOAD = 2500;
+const FILE_UPLOAD_URI = "https://example.com/upload";
 
 describe(`FileFieldController`, () => {
     describe(`Events`, () => {
@@ -39,7 +44,11 @@ describe(`FileFieldController`, () => {
         });
 
         const getController = (): FileFieldControllerType => {
-            const field = {} as FileFieldType;
+            const field = {
+                field_id: FIELD_ID,
+                max_size_upload: MAX_SIZE_UPLOAD,
+                file_creation_uri: FILE_UPLOAD_URI,
+            } as FileFieldType;
             const value_model = {} as FileFieldValueModel;
             return FileFieldController(field, value_model, event_dispatcher);
         };
@@ -51,6 +60,21 @@ describe(`FileFieldController`, () => {
             event_dispatcher.dispatch(event);
 
             expect(event.is_there_at_least_one_file_field).toBe(true);
+        });
+
+        it(`sets file upload setup from its field`, () => {
+            getController();
+
+            const event = WillGetFileUploadSetup();
+            event_dispatcher.dispatch(event);
+
+            const setup = event.setup;
+            if (setup === null) {
+                throw Error("Expected a file upload setup");
+            }
+            expect(setup.file_field_id).toBe(FIELD_ID);
+            expect(setup.max_size_upload).toBe(MAX_SIZE_UPLOAD);
+            expect(setup.file_creation_uri).toBe(FILE_UPLOAD_URI);
         });
     });
 
