@@ -81,6 +81,7 @@ use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
+use Tuleap\SVN\Hooks\MissingHooksPathsFromFileSystemRetriever;
 use Tuleap\SVN\Setup\SetupSVNCommand;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
 use Tuleap\SVNCore\ApacheConfGenerator;
@@ -237,6 +238,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
+        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1337,5 +1339,15 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getPluginPath() . '/admin'
             )
         );
+    }
+
+    //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function proccess_system_check(array $params): void
+    {
+        (new \Tuleap\SVN\Hooks\RestoreMissingHooks(
+            new MissingHooksPathsFromFileSystemRetriever(self::getLogger(), $this->getRepositoryManager()),
+            $params['logger'],
+            $this->getBackendSVN(),
+        ))->restoreAllMissingHooks();
     }
 }
