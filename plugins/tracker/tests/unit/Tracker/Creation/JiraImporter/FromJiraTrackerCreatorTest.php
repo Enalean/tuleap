@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -84,14 +84,14 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDuplicatedATrackerFromJira(): void
     {
-        $jira_client = Mockery::mock(JiraClient::class)
-            ->shouldReceive('getUrl')
-            ->once()
-            ->andReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false])
-            ->getMock();
+        $jira_client = $this->createMock(JiraClient::class);
+        $jira_client->method('getUrl')
+            ->willReturnOnConsecutiveCalls(
+                ['id' => '10005', 'name' => 'Story', 'subtask' => false],
+                ['startAt' => 0, 'total' => 0, 'isLast' => true, 'values' => []],
+            );
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->creation_data_checker->shouldReceive('checkAtProjectCreation')->once();
 
@@ -147,7 +147,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $jira_client,
             'Jira project',
             'Story',
-            Mockery::mock(\PFUser::class)
+            UserTestBuilder::aUser()->build(),
         );
     }
 

@@ -46,6 +46,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
     public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
+    public const FIELD_OPEN_LIST_TYPE        = 'tbl';
     public const FIELD_FILE_TYPE             = 'file';
     public const FIELD_ARTIFACT_LINKS        = 'art_link';
     public const FIELD_CROSS_REFERENCES      = 'cross';
@@ -84,7 +85,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_FILE_TYPE             => Tracker_FormElement_Field_File::class,
         'cb'                              => Tracker_FormElement_Field_Checkbox::class,
         self::FIELD_INTEGER_TYPE          => Tracker_FormElement_Field_Integer::class,
-        'tbl'                             => Tracker_FormElement_Field_OpenList::class,
+        self::FIELD_OPEN_LIST_TYPE        => Tracker_FormElement_Field_OpenList::class,
         self::FIELD_ARTIFACT_LINKS        => Tracker_FormElement_Field_ArtifactLink::class,
         'perm'                            => Tracker_FormElement_Field_PermissionsOnArtifact::class,
         'shared'                          => Tracker_FormElement_Shared::class,

@@ -60,6 +60,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecently
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -270,6 +271,7 @@ class JiraXmlExporter
         IssueType $issue_type,
         IDGenerator $field_id_generator,
         LinkedIssuesCollection $linked_issues_collection,
+        JiraLabelsCollection $jira_labels_collection,
     ): \SimpleXMLElement {
         $this->logger->debug("Start export Jira to XML: " . $issue_type->getId());
 
@@ -309,6 +311,7 @@ class JiraXmlExporter
             $issue_type,
             $jira_platform_configuration,
             $jira_field_mapping_collection,
+            $jira_labels_collection,
         );
 
         $this->logger->debug("Export semantics");
@@ -438,9 +441,11 @@ class JiraXmlExporter
         IssueType $issue_type,
         PlatformConfiguration $platform_configuration,
         FieldMappingCollection $field_mapping_collection,
+        JiraLabelsCollection $jira_labels_collection,
     ): XMLTracker {
         $this->logger->debug("Start exporting jira field structure (custom fields) ...");
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $issue_type->getId(), $id_generator);
+
         foreach ($fields as $key => $field) {
             $xml_tracker = $this->field_type_mapper->exportFieldToXml(
                 $field,
@@ -448,6 +453,7 @@ class JiraXmlExporter
                 $id_generator,
                 $platform_configuration,
                 $field_mapping_collection,
+                $jira_labels_collection,
             );
         }
         $this->logger->debug("Field structure exported successfully");

@@ -29,7 +29,7 @@ use SimpleXMLElement;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -59,12 +59,33 @@ class FieldChangeListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [123, 456]
         );
 
-        $this->assertTrue(isset($changeset_node->field_change));
+        self::assertTrue(isset($changeset_node->field_change));
         $field_change_node = $changeset_node->field_change;
 
-        $this->assertSame("list", (string) $field_change_node['type']);
-        $this->assertSame("static", (string) $field_change_node['bind']);
-        $this->assertSame("field_SB_01", (string) $field_change_node['field_name']);
-        $this->assertCount(2, $field_change_node->value);
+        self::assertSame("list", (string) $field_change_node['type']);
+        self::assertSame("static", (string) $field_change_node['bind']);
+        self::assertSame("field_SB_01", (string) $field_change_node['field_name']);
+        self::assertCount(2, $field_change_node->value);
+    }
+
+    public function testItBuildsAStaticOpenListFieldChangeNode(): void
+    {
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+
+        $this->builder->buildAStaticOpenList(
+            $changeset_node,
+            'field_SB_01',
+            [123, 456]
+        );
+
+        self::assertTrue(isset($changeset_node->field_change));
+        $field_change_node = $changeset_node->field_change;
+
+        self::assertSame("open_list", (string) $field_change_node['type']);
+        self::assertSame("static", (string) $field_change_node['bind']);
+        self::assertSame("field_SB_01", (string) $field_change_node['field_name']);
+        self::assertCount(2, $field_change_node->value);
+        self::assertSame('b123', (string) $field_change_node->value[0]);
+        self::assertSame('b456', (string) $field_change_node->value[1]);
     }
 }
