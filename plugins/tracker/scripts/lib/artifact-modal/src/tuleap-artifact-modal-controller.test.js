@@ -26,7 +26,6 @@ import BaseModalController from "./tuleap-artifact-modal-controller.js";
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
-import * as is_uploading_in_ckeditor_state from "./common/is-uploading-in-ckeditor-state";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 
@@ -46,7 +45,6 @@ describe("TuleapArtifactModalController", () => {
         editArtifact,
         editArtifactWithConcurrencyChecking,
         getAllFileFields,
-        isUploadingInCKEditor,
         validateValues;
 
     beforeEach(() => {
@@ -118,7 +116,6 @@ describe("TuleapArtifactModalController", () => {
             "editArtifactWithConcurrencyChecking"
         );
         getAllFileFields = jest.spyOn(file_field_detector, "getAllFileFields");
-        isUploadingInCKEditor = jest.spyOn(is_uploading_in_ckeditor_state, "isUploadingInCKEditor");
         validateValues = jest.spyOn(fields_validator, "validateArtifactFieldsValues");
     });
 
@@ -173,29 +170,11 @@ describe("TuleapArtifactModalController", () => {
 
             expect(ArtifactModalController.title).toBe("");
         });
-
-        it(`when I close the modal, then it will reset the isUploadingInCKEditor state`, () => {
-            const spySetIsNotUploadingInCKEditor = jest.spyOn(
-                is_uploading_in_ckeditor_state,
-                "setIsNotUploadingInCKEditor"
-            );
-            controller_params.modal_instance.tlp_modal = {
-                addEventListener: jest.fn((event_name, handler) => {
-                    handler();
-                }),
-            };
-
-            ArtifactModalController = $controller(BaseModalController, controller_params);
-            ArtifactModalController.$onInit();
-
-            expect(spySetIsNotUploadingInCKEditor).toHaveBeenCalled();
-        });
     });
 
     describe("submit() - Given a tracker id, field values, a callback function", () => {
         beforeEach(() => {
             validateValues.mockImplementation((values) => values);
-            isUploadingInCKEditor.mockReturnValue(false);
             getAllFileFields.mockReturnValue([]);
             TuleapArtifactModalLoading.loading = false;
         });
@@ -206,11 +185,9 @@ describe("TuleapArtifactModalController", () => {
             );
         }
 
-        it(`and given that an upload is still ongoing in CKEditor,
-            then it does nothing`, () => {
-            isUploadingInCKEditor.mockReturnValue(true);
-
+        it(`when submit is disabled, it does nothing`, () => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.submit_disabling_reason = "Disabled";
             ArtifactModalController.submit();
             $scope.$apply();
 

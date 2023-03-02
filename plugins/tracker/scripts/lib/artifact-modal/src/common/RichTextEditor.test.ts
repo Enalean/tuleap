@@ -24,7 +24,6 @@ import type {
     TextEditorInterface,
 } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import * as is_uploading_in_ckeditor_state from "./is-uploading-in-ckeditor-state";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -82,9 +81,8 @@ let format: TextFieldFormat,
     ckeditor: CKEDITOR.editor,
     upload_setup: FileUploadSetup | null,
     buildFileUploadHandler: jest.SpyInstance,
-    setIsUploadingInCKEditor: jest.SpyInstance,
-    setIsNotUploadingInCKEditor: jest.SpyInstance,
-    isThereAnImageWithDataURI: jest.SpyInstance;
+    isThereAnImageWithDataURI: jest.SpyInstance,
+    event_dispatcher: DispatchEventsStub;
 
 function getHost(): HostElement {
     return {
@@ -97,7 +95,7 @@ function getHost(): HostElement {
         textarea: {} as unknown as HTMLTextAreaElement,
         is_help_shown: false,
         upload_setup,
-        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
+        controller: FormattedTextController(event_dispatcher),
         dispatchEvent,
     } as unknown as HostElement;
 }
@@ -109,14 +107,7 @@ describe(`RichTextEditor`, () => {
 
         buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");
 
-        setIsUploadingInCKEditor = jest.spyOn(
-            is_uploading_in_ckeditor_state,
-            "setIsUploadingInCKEditor"
-        );
-        setIsNotUploadingInCKEditor = jest.spyOn(
-            is_uploading_in_ckeditor_state,
-            "setIsNotUploadingInCKEditor"
-        );
+        event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
         isThereAnImageWithDataURI = jest.spyOn(image_upload, "isThereAnImageWithDataURI");
 
@@ -367,8 +358,11 @@ describe(`RichTextEditor`, () => {
                         options.onStartCallback();
                     });
 
-                    it(`disables form submits`, () =>
-                        expect(setIsUploadingInCKEditor).toHaveBeenCalled());
+                    it(`disables form submits`, () => {
+                        expect(event_dispatcher.getDispatchedEventTypes()).toContain(
+                            "WillDisableSubmit"
+                        );
+                    });
                 });
 
                 describe(`when the upload succeeds`, () => {
@@ -387,8 +381,11 @@ describe(`RichTextEditor`, () => {
                         });
                     });
 
-                    it(`enables back form submits`, () =>
-                        expect(setIsNotUploadingInCKEditor).toHaveBeenCalled());
+                    it(`enables back form submits`, () => {
+                        expect(event_dispatcher.getDispatchedEventTypes()).toContain(
+                            "WillEnableSubmit"
+                        );
+                    });
                 });
 
                 describe(`when the upload fails`, () => {
@@ -411,7 +408,9 @@ describe(`RichTextEditor`, () => {
                         triggerError(error);
 
                         expect(error.loader.message).toBeDefined();
-                        expect(setIsNotUploadingInCKEditor).toHaveBeenCalled();
+                        expect(event_dispatcher.getDispatchedEventTypes()).toContain(
+                            "WillEnableSubmit"
+                        );
                     });
 
                     it(`and the upload failed,

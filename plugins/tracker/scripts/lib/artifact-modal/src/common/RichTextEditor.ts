@@ -22,11 +22,11 @@ import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
+import type { UploadError } from "@tuleap/ckeditor-image-upload";
 import {
     isThereAnImageWithDataURI,
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
-    UploadError,
 } from "@tuleap/ckeditor-image-upload";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
@@ -35,18 +35,16 @@ import {
     TEXT_FORMAT_HTML,
 } from "@tuleap/plugin-tracker-constants";
 import {
-    setIsNotUploadingInCKEditor,
-    setIsUploadingInCKEditor,
-} from "./is-uploading-in-ckeditor-state";
-import {
     getNoPasteMessage,
     getRTEHelpMessage,
+    getSubmitDisabledImageUploadReason,
     getUploadError,
     getUploadSizeExceeded,
 } from "../gettext-catalog";
 import { getTextFieldDefaultFormat } from "../model/UserPreferencesStore";
 import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
 import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
+import { WillDisableSubmit } from "../domain/submit/WillDisableSubmit";
 
 export interface RichTextEditor {
     identifier: string;
@@ -59,7 +57,7 @@ export interface RichTextEditor {
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
     upload_setup: FileUploadSetup | null;
-    controller: FormattedTextControllerType;
+    readonly controller: FormattedTextControllerType;
     content: () => HTMLElement;
 }
 export type HostElement = RichTextEditor & HTMLElement;
@@ -118,17 +116,18 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
         return;
     }
 
-    const onStartCallback = setIsUploadingInCKEditor;
+    const onStartCallback = (): void =>
+        host.controller.onFileUploadStart(WillDisableSubmit(getSubmitDisabledImageUploadReason()));
     const onErrorCallback = (error: MaxSizeUploadExceededError | UploadError): void => {
         if (error instanceof MaxSizeUploadExceededError) {
             error.loader.message = sprintf(
                 getUploadSizeExceeded(),
                 prettyKibibytes(error.max_size_upload)
             );
-        } else if (error instanceof UploadError) {
+        } else {
             error.loader.message = getUploadError();
         }
-        setIsNotUploadingInCKEditor();
+        host.controller.onFileUploadError();
     };
     const field_id = host.upload_setup.file_field_id;
     const onSuccessCallback = (id: number, download_href: string): void => {
@@ -138,7 +137,7 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
                 image: { id, download_href },
             },
         });
-        setIsNotUploadingInCKEditor();
+        host.controller.onFileUploadSuccess();
     };
 
     const fileUploadRequestHandler = buildFileUploadHandler({
