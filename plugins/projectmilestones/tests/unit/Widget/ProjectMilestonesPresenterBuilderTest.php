@@ -27,8 +27,6 @@ use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Planning;
 use Planning_Milestone;
@@ -41,6 +39,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Project\ProjectAccessChecker;
 use Project_AccessProjectNotFoundException;
@@ -49,114 +48,61 @@ use AgileDashboardPlugin;
 
 final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $http_request;
-    /**
-     * @var ProjectMilestonesPresenterBuilder
-     */
-    private $builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $john_doe;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $planning_milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_VirtualTopMilestone
-     */
-    private $planning_virtual_top_milestone;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $agileDashboard_milestone_backlog_item_collection;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $agiledashboard_milestone_backlog_item_collection_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $agiledashboard_milestone_backlog_factory;
-    /**
-     * @var AgileDashboard_Milestone_Backlog_Backlog|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $agiledashboard_milestone_backlog;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    private $root_planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframe
-     */
-    private $semantic_timeframe;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CountElementsModeChecker
-     */
-    private $count_elements_mode_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
+    private ProjectMilestonesPresenterBuilder $builder;
+    private \PHPUnit\Framework\MockObject\MockObject&HTTPRequest $http_request;
+    private Planning_MilestoneFactory&\PHPUnit\Framework\MockObject\MockObject $planning_milestone_factory;
+    private Project&\PHPUnit\Framework\MockObject\MockObject $project;
+    private \PHPUnit\Framework\MockObject\MockObject&PFUser $john_doe;
+    private Planning_VirtualTopMilestone&\PHPUnit\Framework\MockObject\MockObject $planning_virtual_top_milestone;
+    private AgileDashboard_Milestone_Backlog_IBacklogItemCollection&\PHPUnit\Framework\MockObject\MockObject $agileDashboard_milestone_backlog_item_collection;
+    private AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog_item_collection_factory;
+    private \PHPUnit\Framework\MockObject\MockObject&AgileDashboard_Milestone_Backlog_BacklogFactory $agiledashboard_milestone_backlog_factory;
+    private AgileDashboard_Milestone_Backlog_Backlog&\PHPUnit\Framework\MockObject\MockObject $agiledashboard_milestone_backlog;
+    private ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_dao;
+    private \PHPUnit\Framework\MockObject\MockObject&ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao;
+    private Planning&\PHPUnit\Framework\MockObject\MockObject $root_planning;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private SemanticTimeframe&\PHPUnit\Framework\MockObject\MockObject $semantic_timeframe;
+    private CountElementsModeChecker&\PHPUnit\Framework\MockObject\MockObject $count_elements_mode_checker;
+    private ProjectAccessChecker&\PHPUnit\Framework\MockObject\MockObject $project_access_checker;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->http_request                                             = Mockery::mock(HTTPRequest::class);
-        $this->planning_milestone_factory                               = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->project                                                  = Mockery::mock(Project::class, ['getID' => 101, 'getPublicName' => 'My Project']);
-        $this->john_doe                                                 = Mockery::mock(PFUser::class);
-        $this->planning_virtual_top_milestone                           = Mockery::mock(Planning_VirtualTopMilestone::class);
-        $this->agileDashboard_milestone_backlog_item_collection         = Mockery::mock(AgileDashboard_Milestone_Backlog_IBacklogItemCollection::class);
-        $this->agiledashboard_milestone_backlog_item_collection_factory = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
-        $this->agiledashboard_milestone_backlog_factory                 = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
-        $this->agiledashboard_milestone_backlog                         = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->explicit_backlog_dao                                     = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao                        = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->root_planning                                            = Mockery::mock(Planning::class);
-        $this->tracker                                                  = Mockery::mock(Tracker::class);
-        $this->semantic_timeframe_builder                               = Mockery::mock(SemanticTimeframeBuilder::class);
-        $this->semantic_timeframe                                       = Mockery::mock(SemanticTimeframe::class);
-        $this->count_elements_mode_checker                              = Mockery::mock(CountElementsModeChecker::class);
-        $this->project_access_checker                                   = Mockery::mock(ProjectAccessChecker::class);
+        $this->http_request                                             = $this->createMock(HTTPRequest::class);
+        $this->planning_milestone_factory                               = $this->createMock(Planning_MilestoneFactory::class);
+        $this->project                                                  = $this->createMock(Project::class, ['getID' => 101, 'getPublicName' => 'My Project']);
+        $this->john_doe                                                 = $this->createMock(PFUser::class);
+        $this->planning_virtual_top_milestone                           = $this->createMock(Planning_VirtualTopMilestone::class);
+        $this->agileDashboard_milestone_backlog_item_collection         = $this->createMock(AgileDashboard_Milestone_Backlog_IBacklogItemCollection::class);
+        $this->agiledashboard_milestone_backlog_item_collection_factory = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $this->agiledashboard_milestone_backlog_factory                 = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->agiledashboard_milestone_backlog                         = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->explicit_backlog_dao                                     = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao                        = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->root_planning                                            = $this->createMock(Planning::class);
+        $this->tracker                                                  = $this->createMock(Tracker::class);
+        $this->semantic_timeframe_builder                               = $this->createMock(SemanticTimeframeBuilder::class);
+        $this->semantic_timeframe                                       = $this->createMock(SemanticTimeframe::class);
+        $this->count_elements_mode_checker                              = $this->createMock(CountElementsModeChecker::class);
+        $this->project_access_checker                                   = $this->createMock(ProjectAccessChecker::class);
 
-        $this->root_planning->shouldReceive('getPlanningTracker')->andReturn($this->tracker);
-        $this->tracker->shouldReceive('getName')->andReturn("Releases");
+        $this->project->method('getID')->willReturn(101);
+        $this->project->method('getPublicName')->willReturn('My Project');
 
-        $this->http_request->shouldReceive('getProject')->andReturn($this->project);
-        $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->john_doe);
+        $this->root_planning->method('getPlanningTracker')->willReturn($this->tracker);
+        $this->tracker->method('getName')->willReturn("Releases");
+
+        $this->http_request->method('getProject')->willReturn($this->project);
+        $this->http_request->method('getCurrentUser')->willReturn($this->john_doe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->method('getVirtualTopMilestone')
+            ->with($this->john_doe, $this->project)
+            ->willReturn($this->planning_virtual_top_milestone);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->andReturn($this->semantic_timeframe);
+        $this->semantic_timeframe_builder->method('getSemantic')->willReturn($this->semantic_timeframe);
 
         $this->builder = new ProjectMilestonesPresenterBuilder(
             $this->http_request,
@@ -179,24 +125,24 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(5);
 
-        $this->planning_milestone_factory->shouldReceive('getAllFutureMilestones')->once()->andReturn([]);
+        $this->planning_milestone_factory->expects(self::once())->method('getAllFutureMilestones')->willReturn([]);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -211,27 +157,27 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(5);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -246,27 +192,27 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
+        $this->agileDashboard_milestone_backlog_item_collection->method('count')->willReturn(5);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -275,37 +221,37 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testGetTrackersId(): void
     {
-        $this->agiledashboard_milestone_backlog_factory->shouldReceive('getBacklog')->andReturn($this->agiledashboard_milestone_backlog)->once();
+        $this->agiledashboard_milestone_backlog_factory->expects(self::once())->method('getBacklog')->willReturn($this->agiledashboard_milestone_backlog);
         $this->agiledashboard_milestone_backlog
-            ->shouldReceive('getDescendantTrackers')
-            ->andReturn([$this->mockAnArtifact(122, 'Bug', 'fiesta-red'), $this->mockAnArtifact(124, 'Story', 'deep-blue')])
-            ->once();
+            ->expects(self::once())
+            ->method('getDescendantTrackers')
+            ->willReturn([$this->aTracker(122, 'Bug', 'fiesta-red'), $this->aTracker(124, 'Story', 'deep-blue')]);
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
         $tracker_json    = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
@@ -318,38 +264,38 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->mockMilestoneBacklog();
 
         $this->agiledashboard_milestone_backlog_factory
-            ->shouldReceive('getSelfBacklog')
-            ->withArgs([$this->planning_virtual_top_milestone])
-            ->never();
+            ->expects(self::never())
+            ->method('getSelfBacklog')
+            ->with($this->planning_virtual_top_milestone);
 
         $this->agiledashboard_milestone_backlog_item_collection_factory
-            ->shouldReceive('getUnassignedOpenCollection')
-            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
-            ->never();
+            ->expects(self::never())
+            ->method('getUnassignedOpenCollection')
+            ->willReturn($this->agileDashboard_milestone_backlog_item_collection);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getNumberOfItemsInExplicitBacklog')->andReturn(50)->once();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getNumberOfItemsInExplicitBacklog')->willReturn(50);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
+        $this->agileDashboard_milestone_backlog_item_collection->method('count')->willReturn(5);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -364,26 +310,26 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(5);
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -398,29 +344,33 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
-        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(null);
-        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
-        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+        $this->semantic_timeframe->method('getDurationField')->willReturn(null);
+        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start->method('getLabel')->willReturn('start');
+        $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
+        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end->method('getLabel')->willReturn('end');
+        $this->semantic_timeframe->method('getEndDateField')->willReturn($end);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -436,29 +386,33 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
-        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
-        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
-        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(null);
+        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration->method('getLabel')->willReturn('duration');
+        $this->semantic_timeframe->method('getDurationField')->willReturn($duration);
+        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start->method('getLabel')->willReturn('start');
+        $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
+        $this->semantic_timeframe->method('getEndDateField')->willReturn(null);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -474,28 +428,30 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
-        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(null);
-        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
-        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(null);
-        $this->semantic_timeframe->shouldReceive('getTracker')->once()->andReturn(Mockery::mock(Tracker::class, ['getId' => 100]));
+        $this->semantic_timeframe->method('getDurationField')->willReturn(null);
+        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start->method('getLabel')->willReturn('start');
+        $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
+        $this->semantic_timeframe->method('getEndDateField')->willReturn(null);
+        $this->semantic_timeframe->expects(self::once())->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withId(100)->build());
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $this->expectException(TimeframeBrokenConfigurationException::class);
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -509,27 +465,27 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(false);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker]);
+        $this->tracker->method('userCanView')->willReturn(false);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -544,27 +500,27 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker, Mockery::mock(Tracker::class)]);
-        $this->tracker->shouldReceive('userCanView')->andReturn(true);
+        $this->tracker->method('getChildren')->willReturn([$this->tracker, $this->createMock(Tracker::class)]);
+        $this->tracker->method('userCanView')->willReturn(true);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -579,26 +535,26 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+        $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -613,26 +569,26 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+        $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(false);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(false);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -647,26 +603,26 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+        $this->agileDashboard_milestone_backlog_item_collection->expects(self::once())->method('count')->willReturn(0);
 
         $this->mockTimeframe($this->semantic_timeframe);
 
         $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+            ->expects(self::once())
+            ->method('getAllFutureMilestones')
+            ->willReturn([$this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class), $this->createMock(Planning_Milestone::class)]);
 
-        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+        $this->tracker->method('getChildren')->willReturn([]);
 
-        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+        $this->count_elements_mode_checker->expects(self::once())->method("burnupMustUseCountElementsMode")->willReturn(true);
 
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
 
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
 
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -675,8 +631,8 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testThrowExceptionWhenUserCantAccessToProject(): void
     {
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once()->andThrow(Project_AccessProjectNotFoundException::class);
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject")->willThrowException(new Project_AccessProjectNotFoundException());
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToProject()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -684,8 +640,8 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testThrowExceptionWhenUserCantAccessToAPrivateProject(): void
     {
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once()->andThrow(\Project_AccessPrivateException::class);
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject")->willThrowException(new \Project_AccessPrivateException());
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToPrivateProject()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -693,7 +649,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testThrowExceptionWhenNoProject(): void
     {
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildProjectDontExist()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter(null, $this->root_planning);
@@ -701,63 +657,66 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     public function testThrowExceptionWhenNoRootPlanning(): void
     {
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(true);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildRootPlanningDontExist()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, null);
 
-        $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
+        $this->http_request->method("getCurrentUser")->willReturn($this->john_doe);
     }
 
     public function testThrowExceptionWhenNoServiceAgileDashboard(): void
     {
-        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
-        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(false);
+        $this->http_request->method('getFromServer')->willReturn('Some user-agent string');
+        $this->project_access_checker->expects(self::once())->method("checkUserCanAccessProject");
+        $this->project->expects(self::once())->method('usesService')->with(AgileDashboardPlugin::PLUGIN_SHORTNAME)->willReturn(false);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildNoAgileDashboardPlugin()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
-        $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
+        $this->http_request->method("getCurrentUser")->willReturn($this->john_doe);
     }
 
-    private function mockAnArtifact(int $id, string $name, string $color)
+    private function aTracker(int $id, string $name, string $color): Tracker
     {
-        $artifact = Mockery::mock(\Artifact::class);
-        $artifact->shouldReceive('getId')->once()->andReturn($id);
-        $artifact->shouldReceive('getName')->once()->andReturn($name);
-        $artifact->shouldReceive('getColor')->once()->andReturn(Mockery::mock(TrackerColor::fromName($color)));
-        return $artifact;
+        return TrackerTestBuilder::aTracker()->withId($id)->withName($name)->withColor(TrackerColor::fromName($color))->build();
     }
 
     private function mockMilestoneBacklog(): void
     {
-        $this->agiledashboard_milestone_backlog_factory->shouldReceive('getBacklog')->andReturn($this->agiledashboard_milestone_backlog)->once();
-        $this->agiledashboard_milestone_backlog->shouldReceive('getDescendantTrackers')->andReturn([])->once();
+        $this->agiledashboard_milestone_backlog_factory->expects(self::once())->method('getBacklog')->willReturn($this->agiledashboard_milestone_backlog);
+        $this->agiledashboard_milestone_backlog->expects(self::once())->method('getDescendantTrackers')->willReturn([]);
     }
 
     private function mockAgiledashboardBacklogFactory($factory): void
     {
-        $factory->shouldReceive('getSelfBacklog')
-            ->withArgs([$this->planning_virtual_top_milestone])
-            ->andReturn($this->agiledashboard_milestone_backlog)
-            ->once();
+        $factory->expects(self::once())->method('getSelfBacklog')
+            ->with($this->planning_virtual_top_milestone)
+            ->willReturn($this->agiledashboard_milestone_backlog);
     }
 
     private function mockAgiledashboardBacklogItemFactory($agiledashboard_milestone_backlog_item_collection_factory): void
     {
-        $agiledashboard_milestone_backlog_item_collection_factory->shouldReceive('getUnassignedOpenCollection')
-            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
-            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
-            ->once();
+        $agiledashboard_milestone_backlog_item_collection_factory->expects(self::once())->method('getUnassignedOpenCollection')
+            ->with($this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false)
+            ->willReturn($this->agileDashboard_milestone_backlog_item_collection);
     }
 
     private function mockTimeframe($semantic_timeframe): void
     {
-        $semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
-        $semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
-        $semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration->method('getLabel')->willReturn('duration');
+
+        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start->method('getLabel')->willReturn('start');
+
+        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end->method('getLabel')->willReturn('end');
+
+        $semantic_timeframe->method('getDurationField')->willReturn($duration);
+        $semantic_timeframe->method('getStartDateField')->willReturn($start);
+        $semantic_timeframe->method('getEndDateField')->willReturn($end);
     }
 }

@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery;
 use Tuleap\Project\ProjectAccessChecker;
 use HTTPRequest;
 use ProjectManager;
@@ -39,75 +37,28 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
 final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
-     * @var ProjectMilestonesWidgetRetriever
-     */
-    private $retriever;
-    /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $http;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectMilestonesDao
-     */
-    private $project_milestones_dao;
-    /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $csrf_token;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRenderer
-     */
-    private $template_rendered;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    private $root_planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectMilestonesPresenterBuilder
-     */
-    private $presenter_builder;
-
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $this->http = Mockery::mock(HTTPRequest::class);
-        $this->http->shouldReceive('getCurrentUser')->andReturn($this->user);
+        $this->http = $this->createMock(HTTPRequest::class);
+        $this->http->method('getCurrentUser')->willReturn($this->user);
 
-        $this->project_manager        = Mockery::mock(ProjectManager::class);
-        $this->project_milestones_dao = Mockery::mock(ProjectMilestonesDao::class);
-        $this->csrf_token             = Mockery::mock(CSRFSynchronizerToken::class);
-        $this->template_rendered      = Mockery::mock(TemplateRenderer::class);
-        $this->root_planning          = Mockery::mock(Planning::class);
-        $this->presenter_builder      = Mockery::mock(ProjectMilestonesPresenterBuilder::class);
+        $this->project_manager        = $this->createMock(ProjectManager::class);
+        $this->project_milestones_dao = $this->createMock(ProjectMilestonesDao::class);
+        $this->csrf_token             = $this->createMock(CSRFSynchronizerToken::class);
+        $this->template_rendered      = $this->createMock(TemplateRenderer::class);
+        $this->root_planning          = $this->createMock(Planning::class);
+        $this->presenter_builder      = $this->createMock(ProjectMilestonesPresenterBuilder::class);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getUnixName')->andReturn('MyProject');
-        $this->project->shouldReceive('getPublicName')->andReturn('MyProject');
-        $this->project->shouldReceive('getID')->andReturn(101);
+        $this->project = $this->createMock(Project::class);
+        $this->project->method('getUnixName')->willReturn('MyProject');
+        $this->project->method('getPublicName')->willReturn('MyProject');
+        $this->project->method('getID')->willReturn(101);
 
         $this->retriever = new ProjectMilestonesWidgetRetriever(
             $this->project_access_checker,
@@ -120,7 +71,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetGoodTitleWhenThereIsProject(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once();
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
         $title = $this->retriever->getTitle($this->project, $this->user);
 
         $this->assertStringContainsString('MyProject Milestones', $title);
@@ -135,7 +86,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetGenericTitleWhenUserCanNotAccesProject(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once()->andThrow(Project_AccessProjectNotFoundException::class);
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
         $title = $this->retriever->getTitle($this->project, $this->user);
 
         $this->assertStringContainsString('Project Milestones', $title);
@@ -143,49 +94,49 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetRendererContentWhenThereIsProject(): void
     {
-        $this->presenter_builder->shouldReceive('getProjectMilestonePresenter')->andReturn(Mockery::mock(ProjectMilestonesPresenter::class));
-        $this->template_rendered->shouldReceive('renderToString')->once()->andReturn("");
+        $this->presenter_builder->method('getProjectMilestonePresenter')->willReturn($this->createMock(ProjectMilestonesPresenter::class));
+        $this->template_rendered->expects(self::once())->method('renderToString')->willReturn("");
         $this->retriever->getContent($this->project, $this->root_planning);
     }
 
     public function testGetProjectMilestoneExceptionWhenThereIsNoProject(): void
     {
-        $this->presenter_builder->shouldReceive('getProjectMilestonePresenter')->andThrow(ProjectMilestonesException::buildProjectDontExist());
+        $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(ProjectMilestonesException::buildProjectDontExist());
         $content = $this->retriever->getContent(null, null);
         $this->assertStringContainsString("Project does not exist.", $content);
     }
 
     public function testGetExceptionContentWhenThereIsNoProject(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(110);
-        $this->presenter_builder->shouldReceive('getProjectMilestonePresenter')->andThrow(new TimeframeBrokenConfigurationException($tracker));
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(110);
+        $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(new TimeframeBrokenConfigurationException($tracker));
         $content = $this->retriever->getContent(null, null);
         $this->assertStringContainsString("Invalid Timeframe Semantic configuration.", $content);
     }
 
     public function testGetProjectMilestonesPreferencesWhenUserCanSeeProject(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once();
-        $this->template_rendered->shouldReceive('renderToString')->once()->withArgs(['projectmilestones-preferences', ProjectMilestonesPreferencesPresenter::class])->andReturn("");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
+        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn("");
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
 
     public function testGetProjectMilestonesPreferencesWithoutProjectWhenUserCanSeeProject(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once()->andThrow(Project_AccessProjectNotFoundException::class);
-        $this->template_rendered->shouldReceive('renderToString')->once()->withArgs(['projectmilestones-preferences', ProjectMilestonesPreferencesPresenter::class])->andReturn("");
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->willThrowException(new Project_AccessProjectNotFoundException());
+        $this->template_rendered->expects(self::once())->method('renderToString')->with('projectmilestones-preferences', self::isInstanceOf(ProjectMilestonesPreferencesPresenter::class))->willReturn("");
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
 
     public function testCreatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void
     {
-        $this->http->shouldReceive('getValidated')->andReturn(null);
-        $this->project_manager->shouldReceive('getProjectFromAutocompleter')->andReturn(false);
+        $this->http->method('getValidated')->willReturn(null);
+        $this->project_manager->method('getProjectFromAutocompleter')->willReturn(false);
 
-        $this->project_milestones_dao->shouldNotReceive('create');
+        $this->project_milestones_dao->expects(self::never())->method('create');
 
         $this->assertNull($this->retriever->create($this->http));
     }
@@ -197,17 +148,17 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
             'project' => ProjectTestBuilder::aProject()->build(),
         ]);
 
-        $this->project_milestones_dao->shouldReceive('create')->with(101)->andReturn(455);
+        $this->project_milestones_dao->method('create')->with(101)->willReturn("455");
 
         $this->assertEquals(455, $this->retriever->create($request));
     }
 
     public function testUpdatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void
     {
-        $this->http->shouldReceive('getValidated')->andReturn(null);
-        $this->project_manager->shouldReceive('getProjectFromAutocompleter')->andReturn(false);
+        $this->http->method('getValidated')->willReturn(null);
+        $this->project_manager->method('getProjectFromAutocompleter')->willReturn(false);
 
-        $this->project_milestones_dao->shouldNotReceive('updateProjectMilestoneId');
+        $this->project_milestones_dao->expects(self::never())->method('updateProjectMilestoneId');
 
         $this->retriever->updatePreferences($this->http);
     }
