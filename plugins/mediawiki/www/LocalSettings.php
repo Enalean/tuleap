@@ -502,9 +502,11 @@ $wgPFEnableStringFunctions = true;
 // SyntaxHighlight_GeSHi Extension inclusion
 require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 
-// PdfBook Extension inclusion
-require_once("$IP/extensions/PdfBook/PdfBook.php");
-$wgPdfBookTab = true;
+if (is_file('/usr/bin/htmldoc')) {
+    // PdfBook Extension inclusion
+    require_once("$IP/extensions/PdfBook/PdfBook.php");
+    $wgPdfBookTab = true;
+}
 
 // Labeled Section Transclusion
 require_once("$IP/extensions/LabeledSectionTransclusion/lst.php");
