@@ -22,9 +22,8 @@ namespace Tuleap\Velocity;
 
 use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
@@ -39,29 +38,23 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var VelocityCalculator
-     */
-    private $calculator;
-
-    private $artifact_factory;
-    private $initial_effort_factory;
-    private $semantic_done_factory;
-    private $velocity_dao;
-    private $artifact;
-    private $tracker;
-    private $user;
+    private VelocityCalculator $calculator;
+    private Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\MockObject $artifact_factory;
+    private AgileDashboard_Semantic_InitialEffortFactory&\PHPUnit\Framework\MockObject\MockObject $initial_effort_factory;
+    private SemanticDoneFactory&\PHPUnit\Framework\MockObject\MockObject $semantic_done_factory;
+    private VelocityDao&\PHPUnit\Framework\MockObject\MockObject $velocity_dao;
+    private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
+    private \PHPUnit\Framework\MockObject\MockObject&PFUser $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifact_factory       = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->initial_effort_factory = Mockery::mock(AgileDashboard_Semantic_InitialEffortFactory::class);
-        $this->semantic_done_factory  = Mockery::mock(SemanticDoneFactory::class);
-        $this->velocity_dao           = Mockery::mock(VelocityDao::class);
+        $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->initial_effort_factory = $this->createMock(AgileDashboard_Semantic_InitialEffortFactory::class);
+        $this->semantic_done_factory  = $this->createMock(SemanticDoneFactory::class);
+        $this->velocity_dao           = $this->createMock(VelocityDao::class);
 
         $this->calculator = new VelocityCalculator(
             $this->artifact_factory,
@@ -70,34 +63,32 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->velocity_dao
         );
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->user     = Mockery::mock(PFUser::class);
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->tracker  = $this->createMock(Tracker::class);
+        $this->user     = $this->createMock(PFUser::class);
 
-        $this->artifact->shouldReceive('getId')->andReturn(200);
+        $this->artifact->method('getId')->willReturn(200);
     }
 
     public function testItCalculatesVelocityBasedOnInitialEffort()
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
-        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $linked_artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $this->mockSemanticInitialEffort($linked_artifact, $initial_effort_field);
         $status_field = $this->mockSemanticDone();
 
-        $last_changeset_value_list = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->shouldReceive('getValue')
-            ->once()
-            ->andReturn([0 => '431']);
+        $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $last_changeset_value_list->expects(self::once())->method('getValue')
+            ->willReturn([0 => '431']);
 
-        $last_changeset->shouldReceive('getValue')
+        $last_changeset->expects(self::once())->method('getValue')
             ->with($status_field)
-            ->once()
-            ->andReturn($last_changeset_value_list);
+            ->willReturn($last_changeset_value_list);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -108,23 +99,21 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
-        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $linked_artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockSemanticInitialEffort($linked_artifact, $initial_effort_field);
 
         $status_field = $this->mockSemanticDone();
 
-        $last_changeset_value_list = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->shouldReceive('getValue')
-            ->once()
-            ->andReturn([0 => '431']);
+        $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $last_changeset_value_list->expects(self::once())->method('getValue')
+            ->willReturn([0 => '431']);
 
-        $last_changeset->shouldReceive('getValue')
+        $last_changeset->expects(self::once())->method('getValue')
             ->with($status_field)
-            ->once()
-            ->andReturn($last_changeset_value_list);
+            ->willReturn($last_changeset_value_list);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -133,10 +122,9 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsZeroIfNoLinkedArtifacts()
     {
-        $this->velocity_dao->shouldReceive('searchPlanningLinkedArtifact')
+        $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
             ->with(200)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -147,9 +135,9 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mockLinkedArtifact();
 
-        $this->initial_effort_factory->shouldReceive('getByTracker')
+        $this->initial_effort_factory->method('getByTracker')
             ->with($this->tracker)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -170,13 +158,13 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsZeroIfLinkedArtifactsHAveNoDoneSemantic()
     {
         $linked_artifact      = $this->mockLinkedArtifact();
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $this->mockSemanticInitialEffort($linked_artifact, $initial_effort_field);
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
+        $this->semantic_done_factory->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -186,9 +174,9 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsZeroIfLinkedArtifactsHaveNoLastChangeset()
     {
         $linked_artifact = $this->mockLinkedArtifact();
-        $linked_artifact->shouldReceive('getLastChangeset')->andReturnNull();
+        $linked_artifact->method('getLastChangeset')->willReturn(null);
 
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $this->mockSemanticInitialEffort($linked_artifact, $initial_effort_field);
         $this->mockSemanticDone();
@@ -202,18 +190,17 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
 
         $this->mockSemanticInitialEffort($linked_artifact, $initial_effort_field);
         $status_field = $this->mockSemanticDone();
 
-        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $last_changeset->shouldReceive('getValue')
+        $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $last_changeset->expects(self::once())->method('getValue')
             ->with($status_field)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $linked_artifact->method('getLastChangeset')->willReturn($last_changeset);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -224,23 +211,21 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
-        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $linked_artifact->method('getLastChangeset')->willReturn($last_changeset);
 
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockSemanticInitialEffortWithListValueNotInteger($linked_artifact, $initial_effort_field);
 
         $status_field = $this->mockSemanticDone();
 
-        $last_changeset_value_list = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $last_changeset_value_list->shouldReceive('getValue')
-            ->once()
-            ->andReturn([0 => '431']);
+        $last_changeset_value_list = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $last_changeset_value_list->expects(self::once())->method('getValue')
+            ->willReturn([0 => '431']);
 
-        $last_changeset->shouldReceive('getValue')
+        $last_changeset->expects(self::once())->method('getValue')
             ->with($status_field)
-            ->once()
-            ->andReturn($last_changeset_value_list);
+            ->willReturn($last_changeset_value_list);
 
         $calculated_effort = $this->calculator->calculate($this->artifact, $this->user);
 
@@ -251,83 +236,81 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         Artifact $linked_artifact,
         Tracker_FormElement_Field $initial_effort_field,
     ) {
-        $initial_effort_field->shouldReceive('getComputedValue')
+        $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)
-            ->andReturn(15);
+            ->willReturn(15);
 
-        $semantic_initial_effort = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
-        $semantic_initial_effort->shouldReceive('getField')->andReturn($initial_effort_field);
+        $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
+        $semantic_initial_effort->method('getField')->willReturn($initial_effort_field);
 
-        $this->initial_effort_factory->shouldReceive('getByTracker')
+        $this->initial_effort_factory->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn($semantic_initial_effort);
+            ->willReturn($semantic_initial_effort);
     }
 
     private function mockSemanticInitialEffortWithListValueNotInteger(
         Artifact $linked_artifact,
         Tracker_FormElement_Field $initial_effort_field,
     ) {
-        $initial_effort_field->shouldReceive('getComputedValue')
+        $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $semantic_initial_effort = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
-        $semantic_initial_effort->shouldReceive('getField')->andReturn($initial_effort_field);
+        $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
+        $semantic_initial_effort->method('getField')->willReturn($initial_effort_field);
 
-        $this->initial_effort_factory->shouldReceive('getByTracker')
+        $this->initial_effort_factory->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn($semantic_initial_effort);
+            ->willReturn($semantic_initial_effort);
     }
 
     private function mockSemanticInitialEffortWithoutField()
     {
-        $semantic_initial_effort = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
-        $semantic_initial_effort->shouldReceive('getField')->andReturnNull();
+        $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
+        $semantic_initial_effort->method('getField')->willReturn(null);
 
-        $this->initial_effort_factory->shouldReceive('getByTracker')
+        $this->initial_effort_factory->method('getByTracker')
             ->with($this->tracker)
-            ->andReturn($semantic_initial_effort);
+            ->willReturn($semantic_initial_effort);
     }
 
     private function mockSemanticDone()
     {
-        $status_field    = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
-        $semantic_status->shouldReceive('getField')->andReturn($status_field);
+        $status_field    = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $semantic_status->method('getField')->willReturn($status_field);
 
-        $semantic_done = Mockery::mock(SemanticDone::class);
-        $semantic_done->shouldReceive('getSemanticStatus')->andReturn($semantic_status);
-        $semantic_done->shouldReceive('getDoneValuesIds')->andReturn([
+        $semantic_done = $this->createMock(SemanticDone::class);
+        $semantic_done->method('getSemanticStatus')->willReturn($semantic_status);
+        $semantic_done->method('getDoneValuesIds')->willReturn([
             430,
             431,
         ]);
 
-        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
+        $this->semantic_done_factory->method('getInstanceByTracker')
             ->with($this->tracker)
-            ->andReturn($semantic_done);
+            ->willReturn($semantic_done);
 
         return $status_field;
     }
 
     /**
-     * @return Mockery\MockInterface|Artifact
+     * @return Artifact&MockObject
      */
     private function mockLinkedArtifact()
     {
-        $this->velocity_dao->shouldReceive('searchPlanningLinkedArtifact')
+        $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
             ->with(200)
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 ['id' => 201],
             ]);
 
-        $linked_artifact = Mockery::mock(Artifact::class);
-        $linked_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $linked_artifact = $this->createMock(Artifact::class);
+        $linked_artifact->method('getTracker')->willReturn($this->tracker);
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
+        $this->artifact_factory->expects(self::once())->method('getArtifactById')
             ->with(201)
-            ->once()
-            ->andReturn($linked_artifact);
+            ->willReturn($linked_artifact);
 
         return $linked_artifact;
     }

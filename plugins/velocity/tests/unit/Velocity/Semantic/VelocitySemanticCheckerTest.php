@@ -20,25 +20,20 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Mockery;
 use Tracker;
-
-require_once __DIR__ . '/../../bootstrap.php';
 
 class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersHasMissingRequiredSemantics()
     {
-        $children_trackers = [Mockery::mock(Tracker::class)];
+        $children_trackers = [$this->createMock(Tracker::class)];
 
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn($children_trackers);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(false);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn($children_trackers);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(false);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(true);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
         $this->assertFalse(
@@ -51,14 +46,14 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersAreCorrectlySet()
     {
-        $children_trackers = [Mockery::mock(Tracker::class)];
+        $children_trackers = [$this->createMock(Tracker::class)];
 
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn($children_trackers);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(false);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn($children_trackers);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(false);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(false);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
         $this->assertTrue(
@@ -71,14 +66,14 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreCorrectlySetAndBacklogTrackersAreCorrectlySet()
     {
-        $children_trackers = [Mockery::mock(Tracker::class)];
+        $children_trackers = [$this->createMock(Tracker::class)];
 
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn($children_trackers);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(true);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn($children_trackers);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(true);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(false);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
         $this->assertTrue(
@@ -91,14 +86,14 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreNotCorrectlySetAndBacklogTrackersAreCorrectlySet()
     {
-        $children_trackers = [Mockery::mock(Tracker::class)];
+        $children_trackers = [$this->createMock(Tracker::class)];
 
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn($children_trackers);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(false);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn($children_trackers);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(false);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(true);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
         $this->assertFalse(
@@ -111,12 +106,12 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSemanticAreNotCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreNotCorrectlySet()
     {
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn([]);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(false);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn([]);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(false);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(true);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
         $this->assertFalse(
@@ -129,12 +124,12 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSemanticAreCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreCorrectlySet()
     {
-        $children_trackers_collection = Mockery::mock(ChildrenRequiredTrackerCollection::class);
-        $children_trackers_collection->shouldReceive('getChildrenTrackers')->andReturn([]);
-        $children_trackers_collection->shouldReceive('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->andReturn(false);
+        $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
+        $children_trackers_collection->method('getChildrenTrackers')->willReturn([]);
+        $children_trackers_collection->method('hasAtLeastOneChildrenWithVelocitySemanticForBacklogTrackers')->willReturn(false);
 
-        $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
-        $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(false);
+        $backlog_trackers_collection = $this->createMock(BacklogRequiredTrackerCollection::class);
+        $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
         $this->assertTrue(
