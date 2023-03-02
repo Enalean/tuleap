@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/core-mermaid-diagram-element",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "mermaid": "^10.0.1",
+    "panzoom": "^9.4.3"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

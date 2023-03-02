@@ -17,18 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { initializeMermaid } from "./initialize-mermaid";
-import mermaid from "mermaid";
+import * as mermaid from "mermaid";
 
-jest.mock("mermaid", () => {
+vi.mock("mermaid", () => {
     return {
-        initialize: jest.fn(),
+        default: {
+            initialize: vi.fn(),
+        },
     };
 });
 
 describe("initializeMermaid", () => {
     it("initializes Mermaid only once", () => {
-        const initialize = jest.spyOn(mermaid, "initialize");
+        const initialize = vi.spyOn(mermaid.default, "initialize");
 
         initializeMermaid();
         initializeMermaid();

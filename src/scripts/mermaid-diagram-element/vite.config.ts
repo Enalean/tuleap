@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import crypto from "crypto";
-import { generateMermaidElementId } from "./id-generator";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-describe("generateMermaidElementId", () => {
-    it("Generates unique id", () => {
-        Object.defineProperty(window, "crypto", {
-            value: {
-                getRandomValues: (array: Uint8Array): Buffer => crypto.randomBytes(array.length),
+export default vite.defineAppConfig(
+    {
+        plugin_name: "core",
+        sub_app_name: "mermaid-diagram-element",
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    mermaid: path.resolve(__dirname, "src/index.ts"),
+                },
             },
-        });
-
-        const an_id = generateMermaidElementId();
-        const another_id = generateMermaidElementId();
-        expect(an_id).not.toBe(another_id);
-    });
-});
+        },
+    }
+);

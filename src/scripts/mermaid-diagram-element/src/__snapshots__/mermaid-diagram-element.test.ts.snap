@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`MermaidDiagramElement Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport 1`] = `
+exports[`MermaidDiagramElement > Renders the diagram (and stops observing) whenever the mermaid block enters in the viewport 1`] = `
 <tlp-mermaid-diagram>
   <div>
     <div
@@ -18,7 +18,7 @@ exports[`MermaidDiagramElement Renders the diagram (and stops observing) wheneve
 </tlp-mermaid-diagram>
 `;
 
-exports[`MermaidDiagramElement displays a spinner while observing if mermaid block is in the viewport 1`] = `
+exports[`MermaidDiagramElement > displays a spinner while observing if mermaid block is in the viewport 1`] = `
 <tlp-mermaid-diagram>
   <div
     class="diagram-mermaid-source-computing"

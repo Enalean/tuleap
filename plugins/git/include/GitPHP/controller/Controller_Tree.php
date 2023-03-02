@@ -164,7 +164,14 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
             $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'syntax-highlight.js'));
             if ($code_block_features->isMermaidNeeded()) {
-                $GLOBALS['HTML']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($core_assets, 'mermaid.js'));
+                $js_asset = new \Tuleap\Layout\JavascriptViteAsset(
+                    new \Tuleap\Layout\IncludeViteAssets(
+                        __DIR__ . '/../../../../../src/scripts/mermaid-diagram-element/frontend-assets',
+                        '/assets/core/mermaid-diagram-element',
+                    ),
+                    'src/index.ts',
+                );
+                $GLOBALS['HTML']->addJavascriptAsset($js_asset);
             }
         }
 
