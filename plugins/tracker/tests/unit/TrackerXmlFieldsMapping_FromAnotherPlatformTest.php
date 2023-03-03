@@ -79,12 +79,15 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
             ->shouldReceive('getId')->andReturns(24076)->getMock();
         $static_value_02 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
             ->shouldReceive('getId')->andReturns(24077)->getMock();
+        $static_value_03 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
+            ->shouldReceive('getId')->andReturns('bug_label')->getMock();
 
         $open_list_field  = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
         $open_xml_mapping = [
-            "F21840" => $open_list_field,
-            "V24058" => $static_value_01,
-            "V24059" => $static_value_02,
+            "F21840"     => $open_list_field,
+            "V24058"     => $static_value_01,
+            "V24059"     => $static_value_02,
+            "Vbug_label" => $static_value_03,
         ];
 
         $this->xml_open_fields_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($open_xml_mapping);
@@ -140,7 +143,11 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
     {
         $new_value_id = $this->xml_open_fields_mapping->getNewOpenValueId('b24058');
 
-        $this->assertEquals('24076', $new_value_id);
+        self::assertEquals('24076', $new_value_id);
+
+        $new_value_id = $this->xml_open_fields_mapping->getNewOpenValueId('bbug_label');
+
+        self::assertEquals('bug_label', $new_value_id);
     }
 
     public function testItThrowsAnExceptionIfTheNewValueOfOpenStatisIsNotFound(): void

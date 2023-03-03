@@ -63,6 +63,15 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
 
     private function getOldValueReferenceFromOldOpenValueId($old_value_id)
     {
-        return str_replace(Tracker_FormElement_Field_List_BindValue::BIND_PREFIX, Tracker_FormElement_Field_List_Value::XML_ID_PREFIX, $old_value_id);
+        if (substr($old_value_id, 0, 1) === Tracker_FormElement_Field_List_BindValue::BIND_PREFIX) {
+            return substr_replace(
+                $old_value_id,
+                Tracker_FormElement_Field_List_Value::XML_ID_PREFIX,
+                0,
+                1,
+            );
+        } else {
+            return $old_value_id;
+        }
     }
 }
