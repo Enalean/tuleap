@@ -23,8 +23,7 @@
  */
 
 class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
-    AgileDashboard_Milestone_Backlog_IBacklogItemCollection,
-    Countable
+    AgileDashboard_Milestone_Backlog_IBacklogItemCollection
 {
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItem[] */
     private $rows = [];

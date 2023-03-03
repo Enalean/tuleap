@@ -29,27 +29,18 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Validator;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var resource
      */
     private static $rsa_key;
 
-    /**
-     * @var Mockery\LegacyMockInterface&Mockery\MockInterface&JWKSKeyFetcher
-     */
-    private $jwks_key_fetcher;
-    /**
-     * @var IDTokenVerifier
-     */
-    private $id_token_verifier;
+    private IDTokenVerifier $id_token_verifier;
+
+    private \PHPUnit\Framework\MockObject\MockObject&JWKSKeyFetcher $jwks_key_fetcher;
 
     public static function setUpBeforeClass(): void
     {
@@ -64,13 +55,13 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->jwks_key_fetcher  = Mockery::mock(JWKSKeyFetcher::class);
+        $this->jwks_key_fetcher  = $this->createMock(JWKSKeyFetcher::class);
         $this->id_token_verifier = new IDTokenVerifier(new Parser(new JoseEncoder()), $this->generateIssuerValidatorValid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
     }
 
     public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
     {
-        $provider      = Mockery::mock(Provider::class);
+        $provider      = $this->createMock(Provider::class);
         $nonce         = 'random_string';
         $fake_id_token = 'aaaaa.aaaaa';
 
@@ -80,7 +71,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenIfPayloadCantBeRead(): void
     {
-        $provider      = Mockery::mock(Provider::class);
+        $provider      = $this->createMock(Provider::class);
         $nonce         = 'random_string';
         $fake_id_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
             'fail.' .
@@ -93,9 +84,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenIfSubjectIdentifierIsNotPresent(): void
     {
-        $provider = Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id');
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
@@ -109,9 +100,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenIfAudienceClaimIsInvalid(): void
     {
-        $provider = Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id');
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
@@ -129,9 +120,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenIfIssuerIdentifierIsInvalid(): void
     {
-        $provider = Mockery::spy(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id');
         $nonce = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier(new Parser(new JoseEncoder()), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
@@ -150,9 +141,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenIfNonceIsInvalid(): void
     {
-        $provider = Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id');
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
@@ -170,9 +161,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsIDTokenOutsideItsExpectedValidityPeriod(): void
     {
-        $provider = Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id');
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
@@ -191,9 +182,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRejectsIDTokenWithIncorrectSignature(): void
     {
-        $provider = Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id_2');
+        $provider = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id_2');
         $nonce = 'random_string';
 
         $id_token_builder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
@@ -204,7 +195,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $id_token = $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText(str_repeat('a', 32)))->toString();
 
         $key_details = openssl_pkey_get_details(self::$rsa_key);
-        $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);
+        $this->jwks_key_fetcher->method('fetchKey')->willReturn([$key_details['key']]);
 
         $this->expectException(MalformedIDTokenException::class);
         $this->expectExceptionMessage('ID token signature is not valid');
@@ -216,9 +207,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItAcceptsAValidIDToken(bool $with_jwks_key): void
     {
-        $provider = Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id_2');
+        $provider = $this->createMock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->method('getAuthorizationEndpoint')->willReturn('https://example.com/oauth2/auth');
+        $provider->method('getClientId')->willReturn('client_id_2');
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
@@ -230,9 +221,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         if ($with_jwks_key) {
             $key_details = openssl_pkey_get_details(self::$rsa_key);
-            $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);
+            $this->jwks_key_fetcher->method('fetchKey')->willReturn([$key_details['key']]);
         } else {
-            $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn(null);
+            $this->jwks_key_fetcher->method('fetchKey')->willReturn(null);
         }
 
         $verified_sub = $this->id_token_verifier->validate($provider, $nonce, $id_token);

@@ -22,7 +22,7 @@
 /**
  * First class collection of Backlog Items
  */
-interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterator
+interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection extends Iterator, Countable
 {
     public function getParentItemName();
 

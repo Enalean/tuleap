@@ -20,22 +20,19 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
-class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testTheLoginUrlIsGeneratedForTheProviderDefinedAsUniqueAuthenticationEndpoint(): void
     {
-        $provider         = \Mockery::mock(Provider::class);
-        $provider_manager = \Mockery::mock(ProviderManager::class);
-        $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([$provider]);
-        $login_url_generator = \Mockery::mock(LoginURLGenerator::class);
-        $login_url_generator->shouldReceive('getLoginURL')
-            ->withArgs([$provider, 'return_to'])->andReturns('login_url')->atLeast()->once();
+        $provider         = $this->createMock(Provider::class);
+        $provider_manager = $this->createMock(ProviderManager::class);
+        $provider_manager->method('getProvidersUsableToLogIn')->willReturn([$provider]);
+        $login_url_generator = $this->createMock(LoginURLGenerator::class);
+        $login_url_generator->expects(self::atLeastOnce())->method('getLoginURL')
+            ->with($provider, 'return_to')->willReturn('login_url');
 
         $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);
         $url_generator->getURL('return_to');
@@ -43,8 +40,8 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testAProviderDefinedAsUniqueAuthenticationEndpointIsExpected(): void
     {
-        $provider_manager = \Mockery::mock(ProviderManager::class);
-        $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([]);
+        $provider_manager = $this->createMock(ProviderManager::class);
+        $provider_manager->method('getProvidersUsableToLogIn')->willReturn([]);
         $login_url_generator = new LoginURLGenerator('base_url');
 
         $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);
@@ -56,10 +53,10 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testOnlyOneProviderDefinedAsUniqueAuthenticationEndpointIsExpected(): void
     {
-        $provider_manager = \Mockery::mock(ProviderManager::class);
-        $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([
-            \Mockery::mock(Provider::class),
-            \Mockery::mock(Provider::class),
+        $provider_manager = $this->createMock(ProviderManager::class);
+        $provider_manager->method('getProvidersUsableToLogIn')->willReturn([
+            $this->createMock(Provider::class),
+            $this->createMock(Provider::class),
         ]);
         $login_url_generator = new LoginURLGenerator('base_url');
 

@@ -22,51 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AcceptableTenantForAuthenticationConfiguration;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
-use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADTenantSetup;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
-use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
-class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ProviderManager $provider_manager;
 
-    /**
-     * @var GenericProviderManager|\Mockery\MockInterface|GenericProviderDao
-     */
-    private $generic_provider_manager;
-    /**
-     * @var AzureADProviderManager|\Mockery\MockInterface|AzureADProviderDao
-     */
-    private $azure_provider_manager;
-    /**
-     * @var ProviderManager
-     */
-    private $provider_manager;
-    /**
-     * @var ProviderDao|\Mockery\MockInterface|ProviderDao
-     */
-    private $provider_dao;
-
-    /**
-     * @var AzureADProvider
-     */
-    private $azure_provider;
-    /**
-     * @var GenericProvider
-     */
-    private $generic_provider;
+    private AzureADProvider $azure_provider;
+    private GenericProvider $generic_provider;
+    private GenericProviderManager&\PHPUnit\Framework\MockObject\MockObject $generic_provider_manager;
+    private AzureADProviderManager&\PHPUnit\Framework\MockObject\MockObject $azure_provider_manager;
+    private ProviderDao&\PHPUnit\Framework\MockObject\MockObject $provider_dao;
 
     public function setUp(): void
     {
-        $this->generic_provider_manager = \Mockery::mock(GenericProviderManager::class);
-        $this->azure_provider_manager   = \Mockery::mock(AzureADProviderManager::class);
-        $this->provider_dao             = \Mockery::mock(ProviderDao::class);
+        $this->generic_provider_manager = $this->createMock(GenericProviderManager::class);
+        $this->azure_provider_manager   = $this->createMock(AzureADProviderManager::class);
+        $this->provider_dao             = $this->createMock(ProviderDao::class);
         $this->provider_manager         = new ProviderManager(
             $this->provider_dao,
             $this->generic_provider_manager,
@@ -106,11 +83,11 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'id' => 42,
             'tenant_id' => 'tenant',
         ];
-        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);
+        $this->provider_dao->method('searchById')->with(42)->willReturn($data_row);
         $this->azure_provider_manager
-            ->shouldReceive('instantiateAzureProviderFromRow')
-            ->withArgs([$data_row])
-            ->andReturn($this->azure_provider);
+            ->method('instantiateAzureProviderFromRow')
+            ->with($data_row)
+            ->willReturn($this->azure_provider);
 
         self::assertSame($this->azure_provider, $this->provider_manager->getById(42));
     }
@@ -122,18 +99,18 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'pas tenant id' => 'pas tenant',
         ];
 
-        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);
+        $this->provider_dao->method('searchById')->with(42)->willReturn($data_row);
         $this->generic_provider_manager
-            ->shouldReceive('instantiateGenericProviderFromRow')
-            ->withArgs([$data_row])
-            ->andReturn($this->generic_provider);
+            ->method('instantiateGenericProviderFromRow')
+            ->with($data_row)
+            ->willReturn($this->generic_provider);
 
         self::assertSame($this->generic_provider, $this->provider_manager->getById(42));
     }
 
     public function testGetByIdCallTrowErrorIfInvalidParameters(): void
     {
-        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn(false);
+        $this->provider_dao->method('searchById')->with(42)->willReturn(false);
 
         $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException');
         $this->provider_manager->getById(42);

@@ -20,17 +20,14 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ResponseInterface;
 
-class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testContentTypeNotAnnouncedAsJSONIsRejected()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getHeaderLine')->andReturns('application/jwt');
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getHeaderLine')->willReturn('application/jwt');
 
         $this->expectException(NotSupportedContentTypeUserInfoResponseException::class);
 
@@ -39,9 +36,9 @@ class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNotValidJSONISRejected()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getHeaderLine')->andReturns('application/json');
-        $http_response->shouldReceive('getBody')->andReturns('{NotJSONValid');
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getHeaderLine')->willReturn('application/json');
+        $http_response->method('getBody')->willReturn('{NotJSONValid');
 
         $this->expectException(IncorrectlyFormattedUserInfoResponseException::class);
 
@@ -59,9 +56,9 @@ class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
             'email'              => 'janedoe@example.com',
         ];
         foreach (['application/json', 'application/json; charset=UTF-8'] as $content_type) {
-            $http_response = \Mockery::mock(ResponseInterface::class);
-            $http_response->shouldReceive('getHeaderLine')->andReturns($content_type);
-            $http_response->shouldReceive('getBody')->andReturns(json_encode($claims));
+            $http_response = $this->createMock(ResponseInterface::class);
+            $http_response->method('getHeaderLine')->willReturn($content_type);
+            $http_response->method('getBody')->willReturn(json_encode($claims));
 
             $user_info_response = UserInfoResponse::buildFromHTTPResponse($http_response);
             $this->assertSame($claims, $user_info_response->getClaims());

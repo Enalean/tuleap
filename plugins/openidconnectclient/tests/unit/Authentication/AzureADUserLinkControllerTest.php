@@ -20,22 +20,19 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Mockery;
 use Tuleap\OpenIDConnectClient\Login\Controller;
 use Tuleap\Test\Builders\LayoutBuilder;
 
 final class AzureADUserLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testProcessRequest(): void
     {
-        $login_controller = \Mockery::mock(Controller::class);
-        $request          = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getTime')->andReturns(false);
-        $request->shouldReceive('get')->withArgs(['return_to']);
+        $login_controller = $this->createMock(Controller::class);
+        $request          = $this->createMock(\HTTPRequest::class);
+        $request->method('getTime')->willReturn(false);
+        $request->method('get')->with('return_to');
 
-        $login_controller->shouldReceive('login')->once();
+        $login_controller->expects(self::once())->method('login');
 
         $router = new AzureADUserLinkController($login_controller);
 

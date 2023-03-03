@@ -20,7 +20,6 @@
 
 namespace Tuleap\Velocity;
 
-use Mockery;
 use PFUser;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -33,70 +32,42 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-    /**
-     * @var VelocityCalculator
-     */
-    private $velocity_calculator;
-    /**
-     * @var VelocityComputationChecker
-     */
-    private $velocity_computation_checker;
-    /**
-     * @var Tracker_Semantic_Status
-     */
-    private $semantic_status;
-    /**
-     * @var SemanticDone
-     */
-    private $semantic_done;
-    /**
-     * @var SemanticVelocity
-     */
-    private $semantic_velocity;
-    /**
-     * @var Artifact
-     */
-    private $artifact;
-    /**
-     * @var VelocityComputation
-     */
-    private $velocity_computation;
+    private VelocityCalculator&\PHPUnit\Framework\MockObject\MockObject $velocity_calculator;
+    private VelocityComputationChecker&\PHPUnit\Framework\MockObject\MockObject $velocity_computation_checker;
+    private VelocityComputation $velocity_computation;
+    private \PHPUnit\Framework\MockObject\MockObject&PFUser $user;
+    private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;
+    private Tracker_Semantic_Status&\PHPUnit\Framework\MockObject\MockObject $semantic_status;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticDone $semantic_done;
+    private \PHPUnit\Framework\MockObject\MockObject&SemanticVelocity $semantic_velocity;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->velocity_calculator          = Mockery::mock(VelocityCalculator::class);
-        $this->velocity_computation_checker = Mockery::mock(VelocityComputationChecker::class);
+        $this->velocity_calculator          = $this->createMock(VelocityCalculator::class);
+        $this->velocity_computation_checker = $this->createMock(VelocityComputationChecker::class);
 
         $this->velocity_computation = new VelocityComputation(
             $this->velocity_calculator,
             $this->velocity_computation_checker
         );
 
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = $this->createMock(PFUser::class);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-        $this->artifact = Mockery::mock(Artifact::class);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(101);
+        $this->artifact = $this->createMock(Artifact::class);
 
-        $this->semantic_status   = Mockery::mock(Tracker_Semantic_Status::class);
-        $this->semantic_done     = Mockery::mock(SemanticDone::class);
-        $this->semantic_velocity = Mockery::mock(SemanticVelocity::class);
+        $this->semantic_status   = $this->createMock(Tracker_Semantic_Status::class);
+        $this->semantic_done     = $this->createMock(SemanticDone::class);
+        $this->semantic_velocity = $this->createMock(SemanticVelocity::class);
 
-        $velocity_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $velocity_field->shouldReceive('getId')->andReturn(100);
-        $this->semantic_velocity->shouldReceive('getFieldId')->andReturn($velocity_field);
-        $velocity_field->shouldReceive('userCanRead')->andReturn(false);
-        $velocity_field->shouldReceive('getId')->andReturn(1);
+        $velocity_field = $this->createMock(Tracker_FormElement_Field::class);
+        $velocity_field->method('getId')->willReturn(100);
+        $this->semantic_velocity->method('getFieldId')->willReturn($velocity_field);
+        $velocity_field->method('userCanRead')->willReturn(false);
+        $velocity_field->method('getId')->willReturn(1);
     }
 
     public function testItLaunchComputationVelocity()
@@ -105,21 +76,21 @@ class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_id  = 101;
         $changeset_id = 1001;
-        $before_event = Mockery::mock(BeforeEvent::class);
-        $before_event->shouldReceive('getArtifact')->andReturn($this->artifact);
-        $this->artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $artifact_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($artifact_changeset);
-        $artifact_changeset->shouldReceive('getId')->andReturn($changeset_id);
+        $before_event = $this->createMock(BeforeEvent::class);
+        $before_event->method('getArtifact')->willReturn($this->artifact);
+        $this->artifact->method('getId')->willReturn($artifact_id);
+        $artifact_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->artifact->method('getLastChangeset')->willReturn($artifact_changeset);
+        $artifact_changeset->method('getId')->willReturn($changeset_id);
 
-        $velocity_field = Mockery::mock(Tracker_FormElement_Field::class);
-        $velocity_field->shouldReceive('userCanRead')->andReturn(false);
-        $this->semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
-        $this->velocity_computation_checker->shouldReceive('shouldComputeCapacity')->andReturn(true);
-        $this->velocity_calculator->shouldReceive('calculate')->andReturn(20);
-        $before_event->shouldReceive('getUser')->andReturn($this->user);
+        $velocity_field = $this->createMock(Tracker_FormElement_Field::class);
+        $velocity_field->method('userCanRead')->willReturn(false);
+        $this->semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
+        $this->velocity_computation_checker->method('shouldComputeCapacity')->willReturn(true);
+        $this->velocity_calculator->method('calculate')->willReturn(20);
+        $before_event->method('getUser')->willReturn($this->user);
 
-        $before_event->shouldReceive('forceFieldData');
+        $before_event->method('forceFieldData');
 
         $this->velocity_computation->compute(
             $before_event,
@@ -141,17 +112,17 @@ class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $already_computed_velocity[$artifact_id][$changeset_id] = 30;
 
-        $before_event = Mockery::mock(BeforeEvent::class);
-        $before_event->shouldReceive('getArtifact')->andReturn($this->artifact);
-        $this->artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $artifact_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($artifact_changeset);
-        $artifact_changeset->shouldReceive('getId')->andReturn($changeset_id);
+        $before_event = $this->createMock(BeforeEvent::class);
+        $before_event->method('getArtifact')->willReturn($this->artifact);
+        $this->artifact->method('getId')->willReturn($artifact_id);
+        $artifact_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $this->artifact->method('getLastChangeset')->willReturn($artifact_changeset);
+        $artifact_changeset->method('getId')->willReturn($changeset_id);
 
-        $this->velocity_computation_checker->shouldReceive('shouldComputeCapacity')->andReturn(true);
-        $this->velocity_calculator->shouldNotHaveReceived('calculate');
+        $this->velocity_computation_checker->method('shouldComputeCapacity')->willReturn(true);
+        $this->velocity_calculator->expects(self::never())->method('calculate');
 
-        $before_event->shouldReceive('forceFieldData');
+        $before_event->method('forceFieldData');
 
         $this->velocity_computation->compute(
             $before_event,

@@ -20,17 +20,14 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ResponseInterface;
 
-class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNotValidJSONISRejected()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getBody')->andReturns('{NotJSONValid');
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getBody')->willReturn('{NotJSONValid');
 
         $this->expectException(IncorrectlyFormattedTokenResponseException::class);
 
@@ -39,8 +36,8 @@ class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testJSONWithMissingEntryIsRejected()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getBody')->andReturns(json_encode(['id_token' => 'token']));
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getBody')->willReturn(json_encode(['id_token' => 'token']));
 
         $this->expectException(IncorrectlyFormattedTokenResponseException::class);
         $this->expectExceptionMessageMatches('{"id_token":"token"}');
@@ -50,8 +47,8 @@ class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInvalidTokenTypeIsRejected()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getBody')->andReturns(
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getBody')->willReturn(
             json_encode(
                 [
                     'id_token'     => 'token',
@@ -68,8 +65,8 @@ class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testResponseTokenIsParsed()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getBody')->andReturns(
+        $http_response = $this->createMock(ResponseInterface::class);
+        $http_response->method('getBody')->willReturn(
             json_encode(
                 [
                     'id_token'     => 'token',

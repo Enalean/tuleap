@@ -20,100 +20,70 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 
-class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    /**
-     * @var BacklogRequiredTrackerCollectionFormatter
-     */
-    private $formatter;
-    /**
-     * @var Tracker
-     */
-    private $tracker_with_done_semantic;
-    /**
-     * @var Tracker
-     */
-    private $tracker_without_done_semantic;
-    /**
-     * @var Tracker
-     */
-    private $tracker_with_initial_effort_semantic;
-    /**
-     * @var Tracker
-     */
-    private $tracker_without_initial_effort_semantic;
-    /**
-     * @var Tracker
-     */
-    private $other_tracker_without_done_semantic;
-    /**
-     * @var Tracker
-     */
-    private $other_tracker_without_initial_effort_semantic;
+    private \PHPUnit\Framework\MockObject\MockObject&BacklogRequiredTrackerCollectionFormatter $formatter;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker_with_done_semantic;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker_without_done_semantic;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker_with_initial_effort_semantic;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker_without_initial_effort_semantic;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $other_tracker_without_done_semantic;
+    private Tracker&\PHPUnit\Framework\MockObject\MockObject $other_tracker_without_initial_effort_semantic;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->formatter = Mockery::mock(BacklogRequiredTrackerCollectionFormatter::class);
+        $this->formatter = $this->createMock(BacklogRequiredTrackerCollectionFormatter::class);
 
-        $language = Mockery::mock(\BaseLanguage::class);
-        $language->shouldReceive('getLanguageFromAcceptLanguage');
-        $GLOBALS['Language'] = $language;
+        $GLOBALS['Language']->method('getLanguageFromAcceptLanguage');
 
-        $this->tracker_with_done_semantic = Mockery::mock(Tracker::class);
-        $this->tracker_with_done_semantic->shouldReceive('getName')->andReturn('tracker with done semantic');
-        $this->tracker_with_done_semantic->shouldReceive('getId')->andReturn(1);
+        $this->tracker_with_done_semantic = $this->createMock(Tracker::class);
+        $this->tracker_with_done_semantic->method('getName')->willReturn('tracker with done semantic');
+        $this->tracker_with_done_semantic->method('getId')->willReturn(1);
 
-        $this->tracker_without_done_semantic = Mockery::mock(Tracker::class);
-        $this->tracker_without_done_semantic->shouldReceive('getName')->andReturn('tracker without done semantic');
-        $this->tracker_without_done_semantic->shouldReceive('getId')->andReturn(2);
+        $this->tracker_without_done_semantic = $this->createMock(Tracker::class);
+        $this->tracker_without_done_semantic->method('getName')->willReturn('tracker without done semantic');
+        $this->tracker_without_done_semantic->method('getId')->willReturn(2);
 
-        $this->tracker_with_initial_effort_semantic = Mockery::mock(Tracker::class);
-        $this->tracker_with_initial_effort_semantic->shouldReceive('getName')->andReturn('tracker with initial effort semantic');
-        $this->tracker_with_initial_effort_semantic->shouldReceive('getId')->andReturn(3);
+        $this->tracker_with_initial_effort_semantic = $this->createMock(Tracker::class);
+        $this->tracker_with_initial_effort_semantic->method('getName')->willReturn('tracker with initial effort semantic');
+        $this->tracker_with_initial_effort_semantic->method('getId')->willReturn(3);
 
-        $this->tracker_without_initial_effort_semantic = Mockery::mock(Tracker::class);
-        $this->tracker_without_initial_effort_semantic->shouldReceive('getName')->andReturn('tracker without initial effort semantic');
-        $this->tracker_without_initial_effort_semantic->shouldReceive('getId')->andReturn(4);
+        $this->tracker_without_initial_effort_semantic = $this->createMock(Tracker::class);
+        $this->tracker_without_initial_effort_semantic->method('getName')->willReturn('tracker without initial effort semantic');
+        $this->tracker_without_initial_effort_semantic->method('getId')->willReturn(4);
 
-        $this->other_tracker_without_done_semantic = Mockery::mock(Tracker::class);
-        $this->other_tracker_without_done_semantic->shouldReceive('getName')->andReturn('other tracker without done semantic');
-        $this->other_tracker_without_done_semantic->shouldReceive('getId')->andReturn(5);
+        $this->other_tracker_without_done_semantic = $this->createMock(Tracker::class);
+        $this->other_tracker_without_done_semantic->method('getName')->willReturn('other tracker without done semantic');
+        $this->other_tracker_without_done_semantic->method('getId')->willReturn(5);
 
-        $this->other_tracker_without_initial_effort_semantic = Mockery::mock(Tracker::class);
-        $this->other_tracker_without_initial_effort_semantic->shouldReceive('getName')->andReturn('other tracker without initial effort semantic');
-        $this->other_tracker_without_initial_effort_semantic->shouldReceive('getId')->andReturn(4);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        parent::tearDown();
+        $this->other_tracker_without_initial_effort_semantic = $this->createMock(Tracker::class);
+        $this->other_tracker_without_initial_effort_semantic->method('getName')->willReturn('other tracker without initial effort semantic');
+        $this->other_tracker_without_initial_effort_semantic->method('getId')->willReturn(4);
     }
 
     public function testItBuildsACollectionWithTrackersMissingDoneSemantic()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_with_done_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_with_done_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_done_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('getTracker')->willReturn($this->tracker_without_done_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
@@ -127,17 +97,17 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsACollectionWithTrackersMissingInitialEffortSemantic()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_with_initial_effort_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_with_initial_effort_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_initial_effort_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('getTracker')->willReturn($this->tracker_without_initial_effort_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
@@ -151,18 +121,18 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsACollectionWithMixedMissingSemantics()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_done_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_without_done_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_initial_effort_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('getTracker')->willReturn($this->tracker_without_initial_effort_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
@@ -177,18 +147,18 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsACollectionWithTrackersMissingBothSemantics()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_done_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_without_done_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_with_initial_effort_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('getTracker')->willReturn($this->tracker_with_initial_effort_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
@@ -202,18 +172,18 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsACollectionWithWellConfiguredTrackers()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_with_done_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_with_done_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_with_initial_effort_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('getTracker')->willReturn($this->tracker_with_initial_effort_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
@@ -226,29 +196,29 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsDoneLabelWhenAllTrackersMissIt()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_done_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_without_done_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->other_tracker_without_done_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('getTracker')->willReturn($this->other_tracker_without_done_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('Initial effort');
+        $GLOBALS['Language']->method('getText')->willReturn('Initial effort');
         $semantic_done = new SemanticDone(
-            Mockery::mock(Tracker::class),
-            Mockery::mock(\Tracker_Semantic_Status::class),
-            Mockery::mock(SemanticDoneDao::class),
-            Mockery::mock(SemanticDoneValueChecker::class),
+            $this->createMock(Tracker::class),
+            $this->createMock(\Tracker_Semantic_Status::class),
+            $this->createMock(SemanticDoneDao::class),
+            $this->createMock(SemanticDoneValueChecker::class),
             []
         );
         $this->assertEquals([$semantic_done->getLabel()], $collection->getSemanticMisconfiguredForAllTrackers());
@@ -256,18 +226,18 @@ class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsInitialEffortLabelWhenAllTrackersMissIt()
     {
-        $required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(true);
-        $required_tracker->shouldReceive('getTracker')->andReturn($this->tracker_without_initial_effort_semantic);
+        $required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $required_tracker->method('isInitialEffortSemanticMissing')->willReturn(true);
+        $required_tracker->method('getTracker')->willReturn($this->tracker_without_initial_effort_semantic);
 
-        $other_required_tracker = Mockery::mock(BacklogRequiredTracker::class);
-        $other_required_tracker->shouldReceive('isDoneSemanticMissing')->andReturn(false);
-        $other_required_tracker->shouldReceive('isInitialEffortSemanticMissing')->andReturn(true);
-        $other_required_tracker->shouldReceive('getTracker')->andReturn($this->other_tracker_without_initial_effort_semantic);
+        $other_required_tracker = $this->createMock(BacklogRequiredTracker::class);
+        $other_required_tracker->method('isDoneSemanticMissing')->willReturn(false);
+        $other_required_tracker->method('isInitialEffortSemanticMissing')->willReturn(true);
+        $other_required_tracker->method('getTracker')->willReturn($this->other_tracker_without_initial_effort_semantic);
 
-        $this->formatter->shouldReceive('formatTrackerWithoutInitialEffortSemantic')->andReturn([]);
-        $this->formatter->shouldReceive('formatTrackerWithoutDoneSemantic')->andReturn([]);
+        $this->formatter->method('formatTrackerWithoutInitialEffortSemantic')->willReturn([]);
+        $this->formatter->method('formatTrackerWithoutDoneSemantic')->willReturn([]);
 
         $collection = new BacklogRequiredTrackerCollection($this->formatter);
         $collection->addBacklogRequiredTracker($required_tracker);

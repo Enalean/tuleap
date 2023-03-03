@@ -20,23 +20,20 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
-class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCreatesNewGenericProvider(): void
     {
-        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_dao     = $this->createMock(GenericProviderDao::class);
         $generic_provider_manager = new GenericProviderManager(
             $generic_provider_dao
         );
 
-        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
+        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -69,12 +66,12 @@ class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesNewGenericProviderWithAnEmptyUserInfoEndpoint(): void
     {
-        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_dao     = $this->createMock(GenericProviderDao::class);
         $generic_provider_manager = new GenericProviderManager(
             $generic_provider_dao
         );
 
-        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
+        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -108,12 +105,12 @@ class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesNewGenericProviderWithAnEmptyJWKSEndpoint(): void
     {
-        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_dao     = $this->createMock(GenericProviderDao::class);
         $generic_provider_manager = new GenericProviderManager(
             $generic_provider_dao
         );
 
-        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
+        $generic_provider_dao->expects(self::once())->method('create')->willReturn(1);
 
         $generic_provider = new GenericProvider(
             1,
@@ -147,7 +144,7 @@ class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesProvider(): void
     {
-        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_dao     = $this->createMock(GenericProviderDao::class);
         $generic_provider_manager = new GenericProviderManager(
             $generic_provider_dao
         );
@@ -166,19 +163,19 @@ class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
-        $generic_provider_dao->shouldReceive('save')->once()->andReturns(true);
+        $generic_provider_dao->expects(self::once())->method('save');
         $generic_provider_manager->updateGenericProvider($provider);
     }
 
     public function testItChecksDataBeforeManipulatingGenericProvider(): void
     {
-        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_dao     = $this->createMock(GenericProviderDao::class);
         $generic_provider_manager = new GenericProviderManager(
             $generic_provider_dao
         );
 
-        $generic_provider_dao->shouldReceive('create')->never();
-        $generic_provider_dao->shouldReceive('save')->never();
+        $generic_provider_dao->expects(self::never())->method('create');
+        $generic_provider_dao->expects(self::never())->method('save');
         $this->expectException(ProviderMalformedDataException::class);
 
         $provider = new GenericProvider(

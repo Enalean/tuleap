@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const BASE_URL    = '/base';
     private const PROVIDER_ID = 1;
 
@@ -39,7 +36,10 @@ final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $login_url_generator = new LoginURLGenerator(self::BASE_URL);
 
-        self::assertEquals($expected_url, $login_url_generator->getLoginURL(self::buildProvider(), $return_to));
+        $provider = $this->createMock(Provider::class);
+        $provider->method('getId')->willReturn(self::PROVIDER_ID);
+
+        self::assertEquals($expected_url, $login_url_generator->getLoginURL($provider, $return_to));
     }
 
     public static function dataProviderReturnTo(): array
@@ -49,13 +49,5 @@ final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Empty return_to'        => ['', self::BASE_URL . '/login_to/' . self::PROVIDER_ID],
             'return_to with a value' => ['/my/', self::BASE_URL . '/login_to/' . self::PROVIDER_ID . '?return_to=%2Fmy%2F'],
         ];
-    }
-
-    private static function buildProvider(): Provider
-    {
-        $provider = \Mockery::mock(Provider::class);
-        $provider->shouldReceive('getId')->andReturn(self::PROVIDER_ID);
-
-        return $provider;
     }
 }
