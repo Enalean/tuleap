@@ -172,6 +172,7 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     private $private_comment_extractor;
     private $response;
     private Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping;
+    private \Tuleap\DB\DBConnection&\PHPUnit\Framework\MockObject\MockObject $db_connection;
 
     public function setUp(): void
     {
@@ -220,6 +221,9 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
+        $this->db_connection = $this->createMock(\Tuleap\DB\DBConnection::class);
+        $this->db_connection->method('reconnectAfterALongRunningProcess');
+
         $this->private_comment_extractor = Mockery::mock(TrackerPrivateCommentUGroupExtractor::class);
 
         $this->importer = new Tracker_Artifact_XMLImport(
@@ -237,7 +241,8 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->existing_artifact_source_id_extractor,
             $this->artifact_source_id_dao,
             $this->external_field_extractor,
-            $this->private_comment_extractor
+            $this->private_comment_extractor,
+            $this->db_connection,
         );
     }
 
@@ -510,7 +515,8 @@ final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->existing_artifact_source_id_extractor,
             $this->artifact_source_id_dao,
             $this->external_field_extractor,
-            $this->private_comment_extractor
+            $this->private_comment_extractor,
+            $this->db_connection,
         );
 
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
