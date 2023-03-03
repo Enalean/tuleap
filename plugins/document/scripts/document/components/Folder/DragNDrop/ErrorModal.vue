@@ -27,7 +27,7 @@
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
                 <slot name="modal-title">
-                    <translate>Oops…</translate>
+                    {{ $gettext("Oops…") }}
                 </slot>
             </h1>
             <button
@@ -43,13 +43,8 @@
             <slot></slot>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button
-                type="submit"
-                class="tlp-button-danger tlp-modal-action"
-                data-dismiss="modal"
-                v-translate
-            >
-                Close
+            <button type="submit" class="tlp-button-danger tlp-modal-action" data-dismiss="modal">
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>

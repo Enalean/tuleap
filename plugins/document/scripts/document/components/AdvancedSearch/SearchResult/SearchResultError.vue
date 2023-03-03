@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-framed-horizontally">
         <div class="tlp-alert-danger">
-            <translate>An error occurred while searching for results.</translate>
+            {{ $gettext("An error occurred while searching for results.") }}
             <blockquote class="document-search-error-quote" v-if="error_message.length > 0">
                 {{ error_message }}
             </blockquote>

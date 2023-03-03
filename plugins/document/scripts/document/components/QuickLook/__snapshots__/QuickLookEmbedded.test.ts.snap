@@ -11,12 +11,9 @@ exports[`QuickLookEmbedded Component can be rendered for embedded 1`] = `
     tag="a"
     to="[object Object]"
   >
-    <translate-stub
-      tag="span"
-    >
-      Open
-    </translate-stub>
-     
+    
+        Open
+        
     <i
       aria-hidden="true"
       class="fa-solid fa-right-long tlp-button-icon-right"

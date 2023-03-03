@@ -22,7 +22,7 @@
     <div class="tlp-form-element document-search-criterion">
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
         <select class="tlp-select" v-bind:id="id" v-on:change="$emit('input', $event.target.value)">
-            <option v-bind:selected="isSelected('')" value="" v-translate>Any</option>
+            <option v-bind:selected="isSelected('')" value="">{{ $gettext("Any") }}</option>
             <option
                 v-for="option in criterion.options"
                 v-bind:key="id + '_' + option.value"

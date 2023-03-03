@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element" v-if="is_displayed">
         <label class="tlp-label" for="document-new-item-wiki-page-name">
-            <translate>Wiki page</translate>
+            {{ $gettext("Wiki page") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">

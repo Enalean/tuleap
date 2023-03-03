@@ -21,7 +21,7 @@
 <template>
     <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small" v-on:click="redirectUrl">
-            <translate>Open link</translate>
+            {{ $gettext("Open link") }}
             <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
         </button>
         <drop-down-quick-look v-bind:item="item" />

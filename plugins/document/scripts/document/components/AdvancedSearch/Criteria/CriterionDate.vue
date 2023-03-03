@@ -23,10 +23,14 @@
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <select class="tlp-prepend" v-on:change="onChangeOperator($event.target.value)">
-                <option value=">" v-bind:selected="'>' === operator" v-translate>After</option>
-                <option value="<" v-bind:selected="'<' === operator" v-translate>Before</option>
-                <option value="=" v-bind:selected="'=' === operator" data-test="equal" v-translate>
-                    On
+                <option value=">" v-bind:selected="'>' === operator">
+                    {{ $gettext("After") }}
+                </option>
+                <option value="<" v-bind:selected="'<' === operator">
+                    {{ $gettext("Before") }}
+                </option>
+                <option value="=" v-bind:selected="'=' === operator" data-test="equal">
+                    {{ $gettext("On") }}
                 </option>
             </select>
             <date-flat-picker

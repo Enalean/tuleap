@@ -24,7 +24,7 @@
             class="tlp-button-primary tlp-button-small"
             v-bind:to="{ name: 'item', params: { folder_id: item.parent_id, item_id: item.id } }"
         >
-            <translate>Open</translate>
+            {{ $gettext("Open") }}
             <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
         </router-link>
         <drop-down-quick-look v-bind:item="item" />

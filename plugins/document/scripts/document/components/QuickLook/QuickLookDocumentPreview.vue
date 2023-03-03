@@ -38,8 +38,8 @@
     >
         <div class="document-quick-look-image-overlay">
             <i class="fa-regular fa-file-image document-quick-look-update-image-icon"></i>
-            <span class="document-quick-look-dropzone-text" v-translate>
-                Drop to upload a new version
+            <span class="document-quick-look-dropzone-text">
+                {{ $gettext("Drop to upload a new version") }}
             </span>
         </div>
         <img
@@ -54,8 +54,8 @@
     >
         <div class="document-quick-look-image-overlay">
             <i class="fa-solid fa-ban"></i>
-            <span class="document-quick-look-dropzone-text" v-translate>
-                You are not allowed to upload a new version of this file
+            <span class="document-quick-look-dropzone-text">
+                {{ $gettext("You are not allowed to upload a new version of this file") }}
             </span>
         </div>
         <img
@@ -71,8 +71,8 @@
     >
         <icon-quicklook-folder />
         <icon-quicklook-drop-into-folder />
-        <span key="upload" class="document-quick-look-dropzone-text" v-translate>
-            Drop to upload in folder
+        <span key="upload" class="document-quick-look-dropzone-text">
+            {{ $gettext("Drop to upload in folder") }}
         </span>
     </div>
     <div
@@ -81,8 +81,8 @@
     >
         <icon-quicklook-folder />
         <i class="fa-solid fa-ban"></i>
-        <span key="folder" class="document-quick-look-dropzone-text tlp-text-danger" v-translate>
-            You are not allowed to write in this folder
+        <span key="folder" class="document-quick-look-dropzone-text tlp-text-danger">
+            {{ $gettext("You are not allowed to write in this folder") }}
         </span>
     </div>
 
@@ -91,15 +91,15 @@
         v-else-if="currently_previewed_item.user_can_write"
     >
         <i class="document-quick-look-icon" v-bind:class="iconClass"></i>
-        <span key="upload" class="document-quick-look-dropzone-text" v-translate>
-            Drop to upload a new version
+        <span key="upload" class="document-quick-look-dropzone-text">
+            {{ $gettext("Drop to upload a new version") }}
         </span>
     </div>
     <div class="document-quick-look-icon-container" v-else>
         <i class="document-quick-look-icon" v-bind:class="iconClass"></i>
         <i class="fa-solid fa-ban"></i>
-        <span key="file" class="document-quick-look-dropzone-text" v-translate>
-            You are not allowed to upload a new version of this file
+        <span key="file" class="document-quick-look-dropzone-text">
+            {{ $gettext("You are not allowed to upload a new version of this file") }}
         </span>
     </div>
 </template>

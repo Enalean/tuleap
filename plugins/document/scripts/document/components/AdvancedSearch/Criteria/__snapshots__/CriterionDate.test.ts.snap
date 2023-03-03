@@ -18,26 +18,22 @@ exports[`CriterionDate should render the component when date is set 1`] = `
       class="tlp-prepend"
     >
       <option
-        data-current-language="en_US"
-        data-msgid="After"
         value=">"
       >
-        After
+        
+                After
+            
       </option>
        
       <option
-        data-current-language="en_US"
-        data-msgid="Before"
         value=<
       >
-        Before
+        
+                Before
+            
       </option>
        
       <option
-        data-current-language="en_US"
-        data-msgid="
-                On
-            "
         data-test="equal"
         value="="
       >
@@ -74,26 +70,22 @@ exports[`CriterionDate should render the component when no date set 1`] = `
       class="tlp-prepend"
     >
       <option
-        data-current-language="en_US"
-        data-msgid="After"
         value=">"
       >
-        After
+        
+                After
+            
       </option>
        
       <option
-        data-current-language="en_US"
-        data-msgid="Before"
         value=<
       >
-        Before
+        
+                Before
+            
       </option>
        
       <option
-        data-current-language="en_US"
-        data-msgid="
-                On
-            "
         data-test="equal"
         value="="
       >

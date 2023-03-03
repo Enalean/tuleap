@@ -16,8 +16,6 @@ exports[`CriterionList should render the component 1`] = `
     id="document-criterion-list-type"
   >
     <option
-      data-current-language="en_US"
-      data-msgid="Any"
       value=""
     >
       Any

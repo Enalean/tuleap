@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="document-description" v-translate>Description</label>
+        <label class="tlp-label" for="document-description">{{ $gettext("Description") }}</label>
         <textarea
             class="tlp-textarea"
             id="document-description"

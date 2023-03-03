@@ -23,10 +23,10 @@
             <empty-folder-for-readers-svg />
         </div>
         <h1 class="empty-state-title">
-            <translate>This folder is empty</translate>
+            {{ $gettext("This folder is empty") }}
         </h1>
-        <p class="empty-state-text" v-translate>
-            There are no items here or you don't have permissions to see them.
+        <p class="empty-state-text">
+            {{ $gettext("There are no items here or you don't have permissions to see them.") }}
         </p>
         <router-link
             v-bind:to="route_to"
@@ -34,7 +34,7 @@
             v-if="can_go_to_parent"
         >
             <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
-            <translate>Go to parent folder</translate>
+            {{ $gettext("Go to parent folder") }}
         </router-link>
     </section>
 </template>

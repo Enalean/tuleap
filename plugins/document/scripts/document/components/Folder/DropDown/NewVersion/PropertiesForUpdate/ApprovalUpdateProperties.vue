@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-file-upload-approval-table-action">
-            <translate>Approval table</translate>
+            {{ $gettext("Approval table") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <div id="document-new-file-upload-approval-table-action">
@@ -37,10 +37,10 @@
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
                         required
                     />
-                    <translate>Copy the previous approval table.</translate>
+                    {{ $gettext("Copy the previous approval table.") }}
                 </label>
                 <p class="tlp-text-info">
-                    <translate>Keep reviewers, comments and commitments.</translate>
+                    {{ $gettext("Keep reviewers, comments and commitments.") }}
                 </p>
             </div>
             <div class="tlp-form-element">
@@ -55,11 +55,14 @@
                         value="reset"
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
                     />
-                    <translate>Reset the approval cycle.</translate>
+                    {{ $gettext("Reset the approval cycle.") }}
                 </label>
-                <p class="tlp-text-info" v-translate>
-                    Only the table structure will be kept. Reviewer comments and commitments will be
-                    discarded.
+                <p class="tlp-text-info">
+                    {{
+                        $gettext(
+                            "Only the table structure will be kept. Reviewer comments and commitments will be discarded."
+                        )
+                    }}
                 </p>
             </div>
             <div class="tlp-form-element">
@@ -74,10 +77,10 @@
                         value="empty"
                         v-on:change="$emit('approval-table-action-change', $event.target.value)"
                     />
-                    <translate>Create a new empty approval table.</translate>
+                    {{ $gettext("Create a new empty approval table.") }}
                 </label>
-                <p class="tlp-text-info" v-translate>
-                    Start over with a completely new approval table.
+                <p class="tlp-text-info">
+                    {{ $gettext("Start over with a completely new approval table.") }}
                 </p>
             </div>
         </div>

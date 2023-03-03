@@ -20,40 +20,19 @@
 <template>
     <p class="tlp-text-info" v-if="item_title !== null && !pasting_in_progress">
         <i class="fa-solid fa-circle-info document-clipboard-content-information-icon"></i>
-        <translate
-            key="cut-information"
-            v-bind:translate-params="{ title: item_title }"
-            v-if="operation_type === CLIPBOARD_OPERATION_CUT"
-        >
-            You are currently moving "%{ title }". You can paste it in a folder you are allowed to
-            write into using the folder action drop-down. You also cannot move the item somewhere
-            where the name is already used by another item.
-        </translate>
-        <translate
-            key="copy-information"
-            v-bind:translate-params="{ title: item_title }"
-            v-else-if="operation_type === CLIPBOARD_OPERATION_COPY"
-        >
-            You are currently copying "%{ title }". You can paste it in a folder you are allowed to
-            write into using the folder action drop-down.
-        </translate>
+        <template v-if="operation_type === CLIPBOARD_OPERATION_CUT">{{ moving_title }}</template>
+        <template v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+            {{ copying_title }}
+        </template>
     </p>
     <p class="tlp-text-info" v-else-if="item_title !== null && pasting_in_progress">
         <i class="fa-solid fa-spin fa-circle-notch document-clipboard-content-information-icon"></i>
-        <translate
-            key="cut-in-progress-information"
-            v-bind:translate-params="{ title: item_title }"
-            v-if="operation_type === CLIPBOARD_OPERATION_CUT"
-        >
-            "%{ title }" is being moved…
-        </translate>
-        <translate
-            key="copy-in-progress-information"
-            v-bind:translate-params="{ title: item_title }"
-            v-else-if="operation_type === CLIPBOARD_OPERATION_COPY"
-        >
-            "%{ title }" is being copied…
-        </translate>
+        <template v-if="operation_type === CLIPBOARD_OPERATION_CUT">
+            {{ item_being_moved_title }}
+        </template>
+        <template v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+            {{ item_being_copied_title }}
+        </template>
     </p>
 </template>
 
@@ -61,8 +40,44 @@
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 import { useState } from "vuex-composition-helpers";
 import type { ClipboardState } from "../../../store/clipboard/module";
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { interpolate, $gettext } = useGettext();
 
 const { pasting_in_progress, item_title, operation_type } = useState<
     Pick<ClipboardState, "pasting_in_progress" | "item_title" | "operation_type">
 >("clipboard", ["pasting_in_progress", "item_title", "operation_type"]);
+
+const moving_title = computed((): string => {
+    return interpolate(
+        $gettext(
+            'You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down. You also cannot move the item somewhere where the name is already used by another item.'
+        ),
+        {
+            title: item_title.value,
+        }
+    );
+});
+
+const copying_title = computed((): string => {
+    return interpolate(
+        $gettext(
+            'You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down.'
+        ),
+        {
+            title: item_title.value,
+        }
+    );
+});
+const item_being_moved_title = computed((): string => {
+    return interpolate($gettext('"%{ title }" is being moved…'), {
+        title: item_title.value,
+    });
+});
+const item_being_copied_title = computed((): string => {
+    return interpolate($gettext('"%{ title }" is being copied…'), {
+        title: item_title.value,
+    });
+});
 </script>

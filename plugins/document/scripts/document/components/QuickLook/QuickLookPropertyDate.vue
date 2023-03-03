@@ -24,9 +24,8 @@
             v-bind:data-tlp-tooltip="getFormattedDate"
             v-if="is_obsolescence_date_today"
             data-test="property-date-today"
-            v-translate
         >
-            Today
+            {{ $gettext("Today") }}
         </div>
         <tlp-relative-date
             v-else-if="is_date_valid"
@@ -43,17 +42,11 @@
             class="document-quick-look-property-empty"
             data-test="property-date-permanent"
             v-else-if="has_obsolescence_date_property_unlimited_validity"
-            v-translate
         >
-            Permanent
+            {{ $gettext("Permanent") }}
         </span>
-        <span
-            class="document-quick-look-property-empty"
-            data-test="property-date-empty"
-            v-else
-            v-translate
-        >
-            Empty
+        <span class="document-quick-look-property-empty" data-test="property-date-empty" v-else>
+            {{ $gettext("Empty") }}
         </span>
     </div>
 </template>

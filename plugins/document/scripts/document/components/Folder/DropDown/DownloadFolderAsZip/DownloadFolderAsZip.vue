@@ -33,7 +33,7 @@
                 'fa-solid fa-spin fa-circle-notch': is_retrieving_folder_size,
             }"
         ></i>
-        <translate>Download as zip</translate>
+        {{ $gettext("Download as zip") }}
     </button>
 </template>
 <script setup lang="ts">

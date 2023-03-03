@@ -23,14 +23,14 @@
             <permission-error-svg />
         </div>
         <h1 class="empty-state-title">
-            <translate>This is a private folder</translate>
+            {{ $gettext("This is a private folder") }}
         </h1>
-        <p class="empty-state-text" v-translate>
-            You may only access documents you are granted read permission on.
+        <p class="empty-state-text">
+            {{ $gettext("You may only access documents you are granted read permission on.") }}
         </p>
         <a href="/my/" class="empty-state-action tlp-button-primary">
             <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
-            <translate>Go to my home page</translate>
+            {{ $gettext("Go to my home page") }}
         </a>
     </section>
 </template>

@@ -95,9 +95,8 @@
                 class="tlp-button-warning tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
                 data-test="confirm-download-archive-button-despite-size-warning"
-                v-translate
             >
-                Download anyway
+                {{ $gettext("Download anyway") }}
             </a>
         </div>
     </div>

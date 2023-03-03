@@ -68,6 +68,7 @@
                 type="button"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
+                v-translate
             >
                 Cancel
             </button>

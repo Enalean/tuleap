@@ -25,7 +25,7 @@
         role="menuitem"
     >
         <i class="fa-solid fa-download tlp-dropdown-menu-item-icon"></i>
-        <translate>Download</translate>
+        {{ $gettext("Download") }}
     </a>
 </template>
 

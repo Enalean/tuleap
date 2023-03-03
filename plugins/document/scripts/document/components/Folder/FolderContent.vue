@@ -24,17 +24,16 @@
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th class="document-tree-head-name" v-translate>Name</th>
+                            <th class="document-tree-head-name">{{ $gettext("Name") }}</th>
                             <template v-if="!toggle_quick_look">
                                 <th
                                     class="document-tree-head-owner"
                                     data-test="document-folder-owner-information"
-                                    v-translate
                                 >
-                                    Owner
+                                    {{ $gettext("Owner") }}
                                 </th>
-                                <th class="document-tree-head-updatedate" v-translate>
-                                    Last update date
+                                <th class="document-tree-head-updatedate">
+                                    {{ $gettext("Last update date") }}
                                 </th>
                             </template>
                         </tr>

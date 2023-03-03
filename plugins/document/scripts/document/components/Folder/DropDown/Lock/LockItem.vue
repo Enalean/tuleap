@@ -28,7 +28,7 @@
         data-shortcut-lock-document
     >
         <i class="fa-solid fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
-        <translate>Lock</translate>
+        {{ $gettext("Lock") }}
     </button>
 </template>
 <script setup lang="ts">

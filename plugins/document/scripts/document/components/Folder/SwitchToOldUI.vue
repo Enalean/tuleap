@@ -27,7 +27,7 @@
             <i class="fa-solid fa-shuffle document-switch-to-docman-icon"></i>
             <!--
             -->
-            <translate>Switch to old user interface</translate>
+            {{ $gettext("Switch to old user interface") }}
         </a>
     </div>
 </template>

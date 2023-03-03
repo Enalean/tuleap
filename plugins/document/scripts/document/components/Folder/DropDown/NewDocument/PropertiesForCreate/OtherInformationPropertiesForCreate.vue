@@ -32,7 +32,7 @@
             >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
-            <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
+            <h2 class="tlp-modal-subtitle">{{ $gettext("Other information") }}</h2>
         </div>
         <template v-if="has_loaded_properties">
             <obsolescence-date-property-for-create

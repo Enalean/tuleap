@@ -28,7 +28,7 @@
         data-test="document-permissions"
     >
         <i class="fa-solid fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
-        <translate>Permissions</translate>
+        {{ $gettext("Permissions") }}
     </button>
 </template>
 

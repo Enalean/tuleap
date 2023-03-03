@@ -37,7 +37,7 @@
             ]"
         ></i>
         <div class="document-clipboard-item-to-paste-container">
-            <translate>Paste</translate>
+            {{ $gettext("Paste") }}
             <span class="document-clipboard-item-to-paste">
                 <i class="fa-regular fa-file"></i>
                 {{ item_title }}

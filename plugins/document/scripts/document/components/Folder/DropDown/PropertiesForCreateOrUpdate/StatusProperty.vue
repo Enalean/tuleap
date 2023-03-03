@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-item-status">
-            <translate>Status</translate>
+            {{ $gettext("Status") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <select
@@ -33,13 +33,15 @@
             ref="input"
             data-test="document-new-item-status"
         >
-            <option name="none" value="none" data-test="value-none" v-translate>None</option>
-            <option name="draft" value="draft" data-test="value-draft" v-translate>Draft</option>
-            <option name="approved" value="approved" data-test="value-approved" v-translate>
-                Approved
+            <option name="none" value="none" data-test="value-none">{{ $gettext("None") }}</option>
+            <option name="draft" value="draft" data-test="value-draft">
+                {{ $gettext("Draft") }}
             </option>
-            <option name="rejected" value="rejected" data-test="value-rejected" v-translate>
-                Rejected
+            <option name="approved" value="approved" data-test="value-approved">
+                {{ $gettext("Approved") }}
+            </option>
+            <option name="rejected" value="rejected" data-test="value-rejected">
+                {{ $gettext("Rejected") }}
             </option>
         </select>
     </div>

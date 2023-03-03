@@ -34,8 +34,8 @@
             v-bind:to="{ name: 'search', params: { folder_id: current_folder.id } }"
             v-bind:title="`${$gettext('Search')}`"
         >
-            <a class="document-advanced-link" data-test="document-advanced-link" v-translate>
-                Advanced
+            <a class="document-advanced-link" data-test="document-advanced-link">
+                {{ $gettext("Advanced") }}
             </a>
         </router-link>
     </div>

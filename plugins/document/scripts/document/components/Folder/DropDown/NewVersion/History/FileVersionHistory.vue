@@ -20,20 +20,20 @@
 <template>
     <fragment v-if="is_filename_pattern_enforced">
         <hr class="tlp-modal-separator document-file-version-separator" />
-        <h2 class="tlp-modal-subtitle" v-translate>Latest versions</h2>
+        <h2 class="tlp-modal-subtitle">{{ $gettext("Latest versions") }}</h2>
         <p v-if="display_latest_version_text">
-            <translate>Only the last 5 versions are displayed.</translate>
+            {{ $gettext("Only the last 5 versions are displayed.") }}
             <a v-bind:href="history_url" target="_blank" rel="noopener noreferrer">
-                <translate>View all versions</translate>
+                {{ $gettext("View all versions") }}
                 <i class="fa-solid fa-right-long"></i>
             </a>
         </p>
         <table class="tlp-table" v-if="!has_error">
             <thead>
                 <tr>
-                    <th class="document-file-version-version" v-translate>Version</th>
-                    <th class="document-file-version-name" v-translate>Version name</th>
-                    <th class="document-file-version-filename" v-translate>Filename</th>
+                    <th class="document-file-version-version">{{ $gettext("Version") }}</th>
+                    <th class="document-file-version-name">{{ $gettext("Version name") }}</th>
+                    <th class="document-file-version-filename">{{ $gettext("Filename") }}</th>
                 </tr>
             </thead>
             <tbody v-if="!has_error">
@@ -43,7 +43,9 @@
                     v-bind:version="version"
                 />
                 <tr v-if="is_version_history_empty && !is_loading">
-                    <td colspan="3" class="tlp-table-cell-empty" v-translate>No version history</td>
+                    <td colspan="3" class="tlp-table-cell-empty">
+                        {{ $gettext("No version history") }}
+                    </td>
                 </tr>
                 <template v-if="is_loading">
                     <file-version-history-skeleton v-for="line in 5" v-bind:key="line" />

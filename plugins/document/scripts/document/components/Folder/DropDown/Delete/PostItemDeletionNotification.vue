@@ -25,7 +25,7 @@
         }"
         v-if="is_displayed"
     >
-        <translate>The item has been deleted successfully.</translate>
+        {{ $gettext("The item has been deleted successfully.") }}
     </div>
 </template>
 

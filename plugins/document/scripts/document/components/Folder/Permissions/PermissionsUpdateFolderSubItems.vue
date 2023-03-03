@@ -25,7 +25,7 @@
                 v-bind:value="value"
                 v-on:input="$emit('input', $event.target.checked)"
             />
-            <translate>Apply same permissions to all sub-items of this folder</translate>
+            {{ $gettext("Apply same permissions to all sub-items of this folder") }}
         </label>
     </div>
 </template>

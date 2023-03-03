@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-item-owner">
-            <translate>Owner</translate>
+            {{ $gettext("Owner") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <people-picker v-bind:currently_selected_user="value" id="document-item-owner" />
