@@ -19,7 +19,7 @@
 
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
+import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface StorePullRequestCommentReplies {
     getCommentReplies: (

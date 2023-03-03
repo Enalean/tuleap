@@ -20,11 +20,14 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { PullRequestComment } from "./PullRequestComment";
+import { TYPE_EVENT_PULLREQUEST_ACTION } from "@tuleap/plugin-pullrequest-constants";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import { TYPE_EVENT_COMMENT } from "./PullRequestCommentPresenter";
 
-const isLastReply = (host: PullRequestComment, comment: PullRequestCommentPresenter): boolean => {
+const isLastReply = (
+    host: PullRequestCommentComponentType,
+    comment: PullRequestCommentPresenter
+): boolean => {
     if (host.replies.length === 0) {
         return host.comment.id !== comment.id;
     }
@@ -33,11 +36,11 @@ const isLastReply = (host: PullRequestComment, comment: PullRequestCommentPresen
 };
 
 export const buildFooterForComment = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => {
-    if (comment.type === TYPE_EVENT_COMMENT) {
+): UpdateFunction<PullRequestCommentComponentType> => {
+    if (comment.type === TYPE_EVENT_PULLREQUEST_ACTION) {
         return html``;
     }
 
@@ -45,7 +48,7 @@ export const buildFooterForComment = (
         return html``;
     }
 
-    const onClickToggleReplyForm = (host: PullRequestComment): void => {
+    const onClickToggleReplyForm = (host: PullRequestCommentComponentType): void => {
         host.controller.showReplyForm(host);
     };
 
@@ -64,7 +67,7 @@ export const buildFooterForComment = (
 };
 
 export const getCommentFooter = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> =>
+): UpdateFunction<PullRequestCommentComponentType> =>
     buildFooterForComment(host, host.comment, gettext_provider);

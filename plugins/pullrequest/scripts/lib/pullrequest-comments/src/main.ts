@@ -22,24 +22,19 @@ import "../themes/style.scss";
 export * from "./types";
 
 export {
-    PullRequestComment,
+    PullRequestCommentComponent,
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
 } from "./comment/PullRequestComment";
 export { PullRequestCommentReplyFormFocusHelper } from "./comment/PullRequestCommentReplyFormFocusHelper";
 export { PullRequestCommentNewReplySaver } from "./comment/PullRequestCommentReplySaver";
 export { PullRequestCommentController } from "./comment/PullRequestCommentController";
 export { PullRequestCommentRepliesStore } from "./comment/PullRequestCommentRepliesStore";
-export {
-    TYPE_INLINE_COMMENT,
-    TYPE_GLOBAL_COMMENT,
-    TYPE_EVENT_COMMENT,
-} from "./comment/PullRequestCommentPresenter";
 
 export type {
     PullRequestInlineCommentPresenter,
     PullRequestCommentPresenter,
-    CommentType,
     PullRequestGlobalCommentPresenter,
+    PullRequestCommentFile,
 } from "./comment/PullRequestCommentPresenter";
 
 export type { ControlPullRequestComment } from "./comment/PullRequestCommentController";

@@ -22,10 +22,10 @@ import { mount, flushPromises } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAuthor from "./PullRequestAuthor.vue";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import type { PullRequestInfo } from "../../api/types";
 
 const getWrapper = (): VueWrapper => {
     return mount(PullRequestAuthor, {
@@ -58,7 +58,7 @@ describe("PullRequestAuthor", () => {
         wrapper.setProps({
             pull_request_info: {
                 user_id: 102,
-            } as PullRequestInfo,
+            } as PullRequest,
         });
 
         await wrapper.vm.$nextTick();
@@ -91,7 +91,7 @@ describe("PullRequestAuthor", () => {
         wrapper.setProps({
             pull_request_info: {
                 user_id: 102,
-            } as PullRequestInfo,
+            } as PullRequest,
         });
 
         await wrapper.vm.$nextTick();

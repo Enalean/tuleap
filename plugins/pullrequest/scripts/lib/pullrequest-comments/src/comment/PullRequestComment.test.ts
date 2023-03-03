@@ -25,7 +25,7 @@ import type { HostElement } from "./PullRequestComment";
 import {
     after_render_once_descriptor,
     element_height_descriptor,
-    PullRequestComment,
+    PullRequestCommentComponent,
 } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import "@tuleap/tlp-relative-date";
@@ -58,7 +58,7 @@ describe("PullRequestComment", () => {
                 relativeDateHelper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
-            const update = PullRequestComment.content(host);
+            const update = PullRequestCommentComponent.content(host);
             update(host, target);
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
@@ -74,7 +74,7 @@ describe("PullRequestComment", () => {
                 relativeDateHelper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
-            const update = PullRequestComment.content(host);
+            const update = PullRequestCommentComponent.content(host);
 
             update(host, target);
 
@@ -91,7 +91,7 @@ describe("PullRequestComment", () => {
                 relativeDateHelper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
-            const update = PullRequestComment.content(host);
+            const update = PullRequestCommentComponent.content(host);
 
             update(host, target);
 
@@ -108,7 +108,7 @@ describe("PullRequestComment", () => {
                 relativeDateHelper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
-            const update = PullRequestComment.content(host);
+            const update = PullRequestCommentComponent.content(host);
 
             update(host, target);
 

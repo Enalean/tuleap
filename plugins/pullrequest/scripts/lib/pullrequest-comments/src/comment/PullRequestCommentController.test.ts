@@ -18,19 +18,22 @@
  */
 
 import { describe, beforeEach, expect, it } from "vitest";
-import type { HostElement, PullRequestComment } from "./PullRequestComment";
+
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+
+import type { HostElement, PullRequestCommentComponentType } from "./PullRequestComment";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
 import { FocusTextReplyToCommentAreaStub } from "../../tests/stubs/FocusTextReplyToCommentAreaStub";
 import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
-import type { CommentReplyPayload } from "./PullRequestCommentPresenter";
 import { SaveNewCommentStub } from "../../tests/stubs/SaveNewCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { ReplyCommentFormPresenterStub } from "../../tests/stubs/ReplyCommentFormPresenterStub";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
-import { PullRequestCommentPresenter, TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
+import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
 
@@ -38,14 +41,14 @@ describe("PullRequestCommentController", () => {
     let focus_helper: FocusReplyToCommentTextArea,
         replies_store: StorePullRequestCommentReplies,
         new_comment_saver: SaveNewCommentStub,
-        new_comment_reply_payload: CommentReplyPayload;
+        new_comment_reply_payload: PullRequestComment;
 
     beforeEach(() => {
         new_comment_reply_payload = {
             id: 13,
             content: "Please don't",
             color: "",
-        } as CommentReplyPayload;
+        } as PullRequestComment;
 
         focus_helper = FocusTextReplyToCommentAreaStub();
         replies_store = PullRequestCommentRepliesStore([]);
@@ -76,7 +79,7 @@ describe("PullRequestCommentController", () => {
         new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-        } as unknown as PullRequestComment;
+        } as unknown as PullRequestCommentComponentType;
 
         getController().hideReplyForm(host);
 
@@ -121,7 +124,7 @@ describe("PullRequestCommentController", () => {
             id: 13,
             content: "Please don't",
             color: "flamingo-pink",
-        } as CommentReplyPayload;
+        } as PullRequestComment;
         new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
 
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
@@ -144,7 +147,7 @@ describe("PullRequestCommentController", () => {
                 id: 12,
                 type: TYPE_INLINE_COMMENT,
             }),
-        } as unknown as PullRequestComment;
+        } as unknown as PullRequestCommentComponentType;
 
         replies_store = PullRequestCommentRepliesStore([
             PullRequestCommentPresenterStub.buildWithData({

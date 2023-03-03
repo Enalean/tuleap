@@ -21,9 +21,9 @@ import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { SaveNewInlineComment } from "./NewInlineCommentSaver";
-import type { FileDiffCommentPayload } from "../types";
 import { PullRequestCommentPresenterBuilder } from "../PullRequestCommentPresenterBuilder";
 import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../../gettext-catalog";
+import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export const NEW_INLINE_COMMENT_NAME = "tuleap-pullrequest-new-comment-form";
 export type HostElement = NewInlineCommentForm & HTMLElement;
@@ -45,7 +45,7 @@ const onClickSaveComment = (host: NewInlineCommentForm): void => {
     host.comment_saver
         .postComment(host.comment)
         .match(
-            (payload: FileDiffCommentPayload) => {
+            (payload: CommentOnFile) => {
                 host.post_submit_callback(
                     PullRequestCommentPresenterBuilder.fromFileDiffComment(payload)
                 );

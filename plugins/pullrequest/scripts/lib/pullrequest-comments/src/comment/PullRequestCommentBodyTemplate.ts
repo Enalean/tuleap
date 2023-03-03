@@ -22,13 +22,13 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
 
 type MapOfClasses = Record<string, boolean>;
 
 const displayFileNameIfNeeded = (
     comment: PullRequestCommentPresenter
-): UpdateFunction<PullRequestComment> => {
+): UpdateFunction<PullRequestCommentComponentType> => {
     if (!comment.file || comment.parent_id !== 0) {
         return html``;
     }
@@ -62,10 +62,10 @@ const displayFileNameIfNeeded = (
 };
 
 const displayOutdatedBadgeIfNeeded = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => {
+): UpdateFunction<PullRequestCommentComponentType> => {
     if (host.comment.id !== comment.id || !comment.is_outdated) {
         return html``;
     }
@@ -78,15 +78,15 @@ const displayOutdatedBadgeIfNeeded = (
     `;
 };
 
-const getBodyClasses = (host: PullRequestComment): MapOfClasses => ({
+const getBodyClasses = (host: PullRequestCommentComponentType): MapOfClasses => ({
     "pull-request-comment-outdated": host.comment.is_outdated,
 });
 
 export const buildBodyForComment = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => html`
+): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
             <div class="pull-request-comment-author-and-date">
@@ -118,6 +118,7 @@ export const buildBodyForComment = (
 `;
 
 export const getCommentBody = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => buildBodyForComment(host, host.comment, gettext_provider);
+): UpdateFunction<PullRequestCommentComponentType> =>
+    buildBodyForComment(host, host.comment, gettext_provider);

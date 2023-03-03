@@ -20,7 +20,7 @@
 import { okAsync } from "neverthrow";
 import * as tuleap_api from "@tuleap/fetch-result";
 import { NewInlineCommentContext } from "./NewInlineCommentContext";
-import { INLINE_COMMENT_POSITION_RIGHT } from "@tuleap/plugin-pullrequest-comments";
+import { INLINE_COMMENT_POSITION_RIGHT } from "@tuleap/plugin-pullrequest-constants";
 import { NewInlineCommentSaver } from "./NewInlineCommentSaver";
 import { uri } from "@tuleap/fetch-result";
 

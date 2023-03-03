@@ -23,10 +23,8 @@ import type { StubCreateInlineCommentWidget } from "../../../../tests/stubs/Crea
 import type { StubCreatePlaceholderWidget } from "../../../../tests/stubs/CreatePlaceholderWidgetStub";
 import type { StubCreateNewInlineCommentFormWidget } from "../../../../tests/stubs/CreateNewInlineCommentFormWidgetStub";
 import type { SynchronizedLineHandles } from "../file-lines/SideBySideLineMapper";
-import type {
-    InlineCommentPosition,
-    PullRequestInlineCommentPresenter,
-} from "@tuleap/plugin-pullrequest-comments";
+import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
+import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
 import type { CommentWidgetCreationParams } from "../types-codemirror-overriden";
 
 import type {
@@ -53,7 +51,7 @@ import { SideBySidePlaceholderPositioner } from "./placeholders/SideBySidePlaceh
 import {
     INLINE_COMMENT_POSITION_LEFT,
     INLINE_COMMENT_POSITION_RIGHT,
-} from "@tuleap/plugin-pullrequest-comments";
+} from "@tuleap/plugin-pullrequest-constants";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 describe("side-by-side-code-mirror-widgets-creation-manager", () => {

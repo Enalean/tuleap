@@ -42,11 +42,11 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import PropertySkeleton from "./PropertySkeleton.vue";
-import type { PullRequestInfo } from "../../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    pull_request_info: PullRequestInfo | null;
+    pull_request_info: PullRequest | null;
 }>();
 </script>

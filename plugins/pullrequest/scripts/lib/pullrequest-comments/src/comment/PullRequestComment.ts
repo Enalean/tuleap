@@ -31,11 +31,11 @@ import { gettext_provider } from "../gettext-provider";
 import type { HelpRelativeDatesDisplay } from "../types";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
-export type HostElement = PullRequestComment & HTMLElement;
+export type HostElement = PullRequestCommentComponentType & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
-export interface PullRequestComment {
+export interface PullRequestCommentComponentType {
     readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
     readonly after_render_once: unknown;
@@ -47,7 +47,7 @@ export interface PullRequestComment {
     reply_comment_presenter: ReplyCommentFormPresenter | null;
 }
 
-const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
+const getCommentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment": true,
     };
@@ -57,7 +57,7 @@ const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     return classes;
 };
 
-const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment-content": true,
     };
@@ -71,7 +71,7 @@ const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
 };
 
 export const setReplies = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     presenter: PullRequestCommentRepliesCollectionPresenter | undefined
 ): PullRequestCommentRepliesCollectionPresenter => {
     if (!presenter) {
@@ -82,7 +82,7 @@ export const setReplies = (
 };
 
 export const setNewCommentState = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     presenter: ReplyCommentFormPresenter | undefined
 ): ReplyCommentFormPresenter | null => {
     if (!presenter) {
@@ -93,20 +93,21 @@ export const setNewCommentState = (
 };
 
 export const after_render_once_descriptor = {
-    get: (host: PullRequestComment): unknown => host.content(),
+    get: (host: PullRequestCommentComponentType): unknown => host.content(),
     observe(): void {
         loadTooltips();
     },
 };
 
 export const element_height_descriptor = {
-    get: (host: PullRequestComment): number => host.content().getBoundingClientRect().height,
-    observe(host: PullRequestComment): void {
+    get: (host: PullRequestCommentComponentType): number =>
+        host.content().getBoundingClientRect().height,
+    observe(host: PullRequestCommentComponentType): void {
         host.post_rendering_callback?.();
     },
 };
 
-export const PullRequestComment = define<PullRequestComment>({
+export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     comment: undefined,
     post_rendering_callback: undefined,

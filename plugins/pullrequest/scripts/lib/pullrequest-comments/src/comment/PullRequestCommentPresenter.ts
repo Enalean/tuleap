@@ -17,23 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InlineCommentPosition, PullRequestUser } from "../types";
+import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
+import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { SupportedTimelineItemTypes } from "../types";
 
-export type CommentType = "inline-comment" | "comment" | "timeline-event";
-export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
-export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
-export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
-
-export interface CommentReplyPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: PullRequestUser;
-    readonly post_date: string;
-    readonly parent_id: number;
-    readonly color: string;
-}
-
-interface PullRequestCommentFile {
+export interface PullRequestCommentFile {
     readonly file_path: string;
     readonly file_url: string;
     readonly position: InlineCommentPosition;
@@ -42,9 +30,9 @@ interface PullRequestCommentFile {
 
 interface CommonComment {
     readonly id: number;
-    readonly user: PullRequestUser;
+    readonly user: User;
     readonly content: string;
-    readonly type: CommentType;
+    readonly type: SupportedTimelineItemTypes;
     readonly is_outdated: boolean;
     readonly is_inline_comment: boolean;
     readonly post_date: string;
@@ -71,7 +59,7 @@ export type PullRequestCommentPresenter =
 export const PullRequestCommentPresenter = {
     fromCommentReply: (
         parent_comment: PullRequestCommentPresenter,
-        reply: CommentReplyPayload
+        reply: PullRequestComment
     ): PullRequestCommentPresenter => ({
         id: reply.id,
         user: reply.user,

@@ -26,11 +26,11 @@ import { FileDiffCommentWidgetsMap } from "./FileDiffCommentWidgetsMap";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
+import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
 import {
-    PullRequestCommentRepliesStore,
     INLINE_COMMENT_POSITION_RIGHT,
     INLINE_COMMENT_POSITION_LEFT,
-} from "@tuleap/plugin-pullrequest-comments";
+} from "@tuleap/plugin-pullrequest-constants";
 
 type ScrollableEditor = Editor & {
     refresh: jest.SpyInstance;

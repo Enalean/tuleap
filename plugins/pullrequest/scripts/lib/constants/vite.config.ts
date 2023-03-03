@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-export interface FileDiffCommentPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: User;
-    readonly post_date: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly parent_id: number;
-    readonly color: string;
-}
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/constants.ts"),
+            name: "PullrequestConstants",
+        },
+    },
+    plugins: [viteDtsPlugin()],
+});

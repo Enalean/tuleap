@@ -48,9 +48,10 @@
 import { provide, ref } from "vue";
 import { useRoute } from "vue-router";
 import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
-import type { PullRequestInfo } from "../api/types";
-import { PULL_REQUEST_ID_KEY } from "../constants";
+
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
+import { PULL_REQUEST_ID_KEY } from "../constants";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
@@ -62,7 +63,7 @@ import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);
-const pull_request_info = ref<PullRequestInfo | null>(null);
+const pull_request_info = ref<PullRequest | null>(null);
 const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);

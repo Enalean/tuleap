@@ -24,7 +24,7 @@ import type { RouteLocationNormalizedLoaded } from "vue-router";
 import * as router from "vue-router";
 import * as tuleap_api from "../api/tuleap-rest-querier";
 import OverviewPane from "./OverviewPane.vue";
-import type { PullRequestInfo } from "../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 vi.mock("vue-router");
 
@@ -44,7 +44,7 @@ describe("OverviewPane", () => {
         vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
             okAsync({
                 title: "My pull request title",
-            } as PullRequestInfo)
+            } as PullRequest)
         );
 
         shallowMount(OverviewPane);

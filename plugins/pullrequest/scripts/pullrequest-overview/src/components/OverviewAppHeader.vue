@@ -36,9 +36,9 @@
 
 <script setup lang="ts">
 import OverviewTabs from "./OverviewTabs.vue";
-import type { PullRequestInfo } from "../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 const props = defineProps<{
-    pull_request: PullRequestInfo | null;
+    pull_request: PullRequest | null;
 }>();
 </script>

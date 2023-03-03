@@ -20,7 +20,7 @@
 import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OverviewAppHeader from "./OverviewAppHeader.vue";
-import type { PullRequestInfo } from "../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("OverviewAppHeader", () => {
     it("should render a skeleton in place of the title when there is no pull request info yet", async () => {
@@ -35,7 +35,7 @@ describe("OverviewAppHeader", () => {
         wrapper.setProps({
             pull_request: {
                 title: "My pull request title",
-            } as PullRequestInfo,
+            } as PullRequest,
         });
 
         await wrapper.vm.$nextTick();

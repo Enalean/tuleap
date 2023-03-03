@@ -43,14 +43,14 @@ import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { Fault } from "@tuleap/fault";
 import { fetchUserInfo } from "../../api/tuleap-rest-querier";
-import type { PullRequestInfo, UserInfo } from "../../api/types";
+import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PropertySkeleton from "./PropertySkeleton.vue";
 
 const { $gettext } = useGettext();
 
-const author = ref<UserInfo | null>(null);
+const author = ref<User | null>(null);
 const props = defineProps<{
-    pull_request_info: PullRequestInfo | null;
+    pull_request_info: PullRequest | null;
 }>();
 
 const emit = defineEmits<{

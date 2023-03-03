@@ -24,7 +24,7 @@ import type { HostElement } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import "@tuleap/tlp-relative-date";
 import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
-import { TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 
 describe("PullRequestCommentBodyTemplate", () => {

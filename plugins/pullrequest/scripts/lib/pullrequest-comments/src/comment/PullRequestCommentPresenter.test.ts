@@ -18,22 +18,22 @@
  */
 
 import { describe, expect, it } from "vitest";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { CommentReplyPayload } from "./PullRequestCommentPresenter";
-import type { PullRequestUser } from "../types";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 
 describe("PullRequestCommentPresenterBuilder", () => {
     it("should build a CommentReplyPresenter from a new comment payload", () => {
         const parent_comment = PullRequestCommentPresenterStub.buildGlobalComment();
-        const new_comment_payload: CommentReplyPayload = {
+        const new_comment_payload: PullRequestComment = {
             id: 13,
             post_date: "2020/07/13 16:16",
             content: "",
-            user: {} as PullRequestUser,
+            user: {} as User,
             parent_id: 12,
             color: "",
-        };
+        } as PullRequestComment;
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(
             parent_comment,
