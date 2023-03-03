@@ -55,10 +55,17 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
         $this->testmanagement_assets  = $testmanagement_assets;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('mermaid.js'));
+        $mermaid_asset = new \Tuleap\Layout\JavascriptViteAsset(
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../../../../src/scripts/mermaid-diagram-element/frontend-assets',
+                '/assets/core/mermaid-diagram-element',
+            ),
+            'src/index.ts',
+        );
+        $layout->addJavascriptAsset($mermaid_asset);
         $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement.js'));
         $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement-admin.js'));
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testmanagement_assets, 'testmanagement-style'));
