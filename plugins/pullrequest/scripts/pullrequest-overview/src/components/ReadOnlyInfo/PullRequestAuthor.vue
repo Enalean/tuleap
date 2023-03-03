@@ -41,10 +41,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { Fault } from "@tuleap/fault";
 import { fetchUserInfo } from "../../api/tuleap-rest-querier";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PropertySkeleton from "./PropertySkeleton.vue";
+import { strictInject } from "../../helpers/strict-inject";
+import { DISPLAY_TULEAP_API_ERROR } from "../../constants";
 
 const { $gettext } = useGettext();
 
@@ -53,9 +54,7 @@ const props = defineProps<{
     pull_request_info: PullRequest | null;
 }>();
 
-const emit = defineEmits<{
-    (e: "tuleap-api-fault", fault: Fault): void;
-}>();
+const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
 watch(
     () => props.pull_request_info,
@@ -69,7 +68,7 @@ watch(
                 author.value = result;
             },
             (fault) => {
-                emit("tuleap-api-fault", fault);
+                displayTuleapAPIFault(fault);
             }
         );
     }

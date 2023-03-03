@@ -23,16 +23,11 @@
 
         <div class="tlp-pane pullrequest-overview-content-pane">
             <div class="tlp-pane-container pullrequest-overview-threads">
-                <section class="tlp-pane-section">
-                    <p class="empty-state-text">Threads of comments section</p>
-                </section>
+                <overview-threads />
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
                 <section class="tlp-pane-section">
-                    <pull-request-author
-                        v-bind:pull_request_info="pull_request_info"
-                        v-on:tuleap-api-fault="handleAPIFault($event)"
-                    />
+                    <pull-request-author v-bind:pull_request_info="pull_request_info" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
@@ -48,12 +43,12 @@
 import { provide, ref } from "vue";
 import { useRoute } from "vue-router";
 import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
-
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
-import { PULL_REQUEST_ID_KEY } from "../constants";
+import { PULL_REQUEST_ID_KEY, DISPLAY_TULEAP_API_ERROR } from "../constants";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
+import OverviewThreads from "./Threads/OverviewThreads.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
 import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue";
 import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
@@ -67,6 +62,7 @@ const pull_request_info = ref<PullRequest | null>(null);
 const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
+provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));
 
 fetchPullRequestInfo(pull_request_id).match(
     (result) => {

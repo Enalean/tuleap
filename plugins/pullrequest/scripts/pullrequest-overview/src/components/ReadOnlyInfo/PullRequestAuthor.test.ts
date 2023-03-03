@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import type { SpyInstance } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
@@ -26,19 +27,29 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAuthor from "./PullRequestAuthor.vue";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-
-const getWrapper = (): VueWrapper => {
-    return mount(PullRequestAuthor, {
-        global: {
-            ...getGlobalTestOptions(),
-        },
-        props: {
-            pull_request_info: null,
-        },
-    });
-};
+import { DISPLAY_TULEAP_API_ERROR } from "../../constants";
 
 describe("PullRequestAuthor", () => {
+    let display_error_callback: SpyInstance;
+
+    const getWrapper = (): VueWrapper => {
+        return mount(PullRequestAuthor, {
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [DISPLAY_TULEAP_API_ERROR as symbol]: display_error_callback,
+                },
+            },
+            props: {
+                pull_request_info: null,
+            },
+        });
+    };
+
+    beforeEach(() => {
+        display_error_callback = vi.fn();
+    });
+
     it(`Should display a skeleton when:
         - The pull-request data is loading
         - The author data is loading
@@ -79,10 +90,12 @@ describe("PullRequestAuthor", () => {
         const author_name = wrapper.find("[data-test=pullrequest-author-name]");
         expect(author_name.attributes("href")).toBe("/url/to/author_profile_page.html");
         expect(author_name.text()).toBe("The Author");
+
+        expect(display_error_callback).not.toHaveBeenCalled();
     });
 
     it(`When an error occurres while loading the author info
-        Then it should emit a tuleap-api-fault event containing the fault`, async () => {
+        Then it should call the display_error_callback with the fault`, async () => {
         const api_fault = Fault.fromMessage("Forbidden");
         vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(errAsync(api_fault));
 
@@ -97,8 +110,6 @@ describe("PullRequestAuthor", () => {
         await wrapper.vm.$nextTick();
         await flushPromises();
 
-        const emitted_events = wrapper.emitted("tuleap-api-fault");
-        expect(emitted_events).toHaveLength(1);
-        expect((emitted_events ?? [])[0]).toStrictEqual([api_fault]);
+        expect(display_error_callback).toHaveBeenCalledWith(api_fault);
     });
 });

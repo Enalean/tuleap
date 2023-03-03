@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/dom': workspace:*
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
+  '@tuleap/plugin-pullrequest-comments': workspace:*
   '@tuleap/plugin-pullrequest-constants': workspace:*
   '@tuleap/plugin-pullrequest-rest-api-types': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
@@ -24,6 +25,7 @@ dependencies:
   '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
+  '@tuleap/plugin-pullrequest-comments': link:../lib/pullrequest-comments
   '@tuleap/plugin-pullrequest-constants': link:../lib/constants
   '@tuleap/plugin-pullrequest-rest-api-types': link:../lib/rest-api-types
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
