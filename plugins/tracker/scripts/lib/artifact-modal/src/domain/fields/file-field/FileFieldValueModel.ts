@@ -19,6 +19,7 @@
 
 import type { NewFileToAttach } from "./NewFileToAttach";
 import type { FileFieldType } from "./FileFieldType";
+import type { UploadedImage } from "./UploadedImage";
 
 /**
  * I hold an extension of the File field's representation, where the modal adds
@@ -28,4 +29,5 @@ import type { FileFieldType } from "./FileFieldType";
 export interface FileFieldValueModel extends Omit<FileFieldType, "required"> {
     temporary_files: ReadonlyArray<NewFileToAttach>;
     value: ReadonlyArray<number>;
+    images_added_by_text_fields: ReadonlyArray<UploadedImage>;
 }

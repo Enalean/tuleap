@@ -18,7 +18,7 @@
  */
 
 import type { UpdateFunction } from "hybrids";
-import { html, dispatch } from "hybrids";
+import { html } from "hybrids";
 import { sanitize } from "dompurify";
 import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
@@ -77,10 +77,6 @@ const togglePreview = (host: TextAndFormat): void => {
     interpretCommonMark(host, host.contentValue);
 };
 
-export const onUploadImage = (host: HostElement, event: CustomEvent): void => {
-    dispatch(host, "upload-image", { detail: event.detail });
-};
-
 const getRichTextEditorClass = (host: TextAndFormat): string[] =>
     host.is_in_preview_mode || host.has_error ? ["tuleap-artifact-modal-hidden"] : [];
 
@@ -114,7 +110,6 @@ export const getTextAndFormatTemplate = (
         rows="${options.rows}"
         controller="${host.controller}"
         oncontent-change="${options.onContentChange}"
-        onupload-image="${onUploadImage}"
         onformat-change="${options.onFormatChange}"
         data-test="text-editor"
     ></tuleap-artifact-modal-rich-text-editor>

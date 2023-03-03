@@ -358,38 +358,6 @@ describe("TuleapArtifactModalController", () => {
             });
         });
 
-        describe(`addToFilesAddedByTextField()`, () => {
-            it(`Given an event containing file field id and an uploaded file,
-                it adds the file to the field's value model`, () => {
-                ArtifactModalController.values = {
-                    204: {
-                        images_added_by_text_fields: [
-                            {
-                                id: 180,
-                                download_href: "https://example.com/sacrilegiously",
-                            },
-                            { id: 59, download_href: "https://example.com/swinishly" },
-                        ],
-                    },
-                };
-
-                const uploaded_file = {
-                    id: 16,
-                    download_href: "https://example.com/microthorax",
-                };
-                ArtifactModalController.addToFilesAddedByTextField(
-                    new CustomEvent("upload-image", {
-                        detail: { field_id: 204, image: uploaded_file },
-                    })
-                );
-
-                expect(ArtifactModalController.values[204].images_added_by_text_fields).toContain(
-                    uploaded_file
-                );
-                expect(ArtifactModalController.values[204].value).toContain(uploaded_file.id);
-            });
-        });
-
         describe(`setFollowupComment()`, () => {
             it(`Given an event, it will set the new_followup_comment with the detail`, () => {
                 const format = "html";

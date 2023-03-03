@@ -38,10 +38,6 @@ export const onValueChanged = (host: HostElement, event: CustomEvent<NewComment>
     dispatch(host, "new-comment", { detail: event.detail });
 };
 
-export const onUploadImage = (host: HostElement, event: CustomEvent): void => {
-    dispatch(host, "upload-image", { detail: event.detail });
-};
-
 export const getNewCommentClasses = (is_comment_order_inverted: boolean): MapOfClasses => ({
     "artifact-modal-followups-add-form": true,
     "invert-order": is_comment_order_inverted,
@@ -59,7 +55,6 @@ const getNewCommentTemplate = (
         projectId="${host.controller.getProjectIdentifier().id}"
         controller="${host.formattedTextController}"
         onvalue-changed="${onValueChanged}"
-        onupload-image="${onUploadImage}"
         data-test="add-comment-form"
     ></tuleap-artifact-modal-followup-editor>`;
 };

@@ -129,7 +129,6 @@
     project-id="modal.tracker.project.id"
     controller="modal.getFormattedTextController()"
     on-value-changed="modal.setFieldValueForCustomElement($event)"
-    on-upload-image="modal.addToFilesAddedByTextField($event)"
     ce-one-way
     data-test="text-field"
 ></tuleap-artifact-modal-text-field>
@@ -338,7 +337,6 @@
             controller="modal.comments_controller"
             formatted-text-controller="modal.getFormattedTextController()"
             on-new-comment="modal.setFollowupComment($event)"
-            on-upload-image="modal.addToFilesAddedByTextField($event)"
             ce-one-way
         ></tuleap-artifact-modal-comments-section>
     </div>

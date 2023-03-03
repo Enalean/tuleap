@@ -52,10 +52,21 @@ export const FileFieldController = (
             return;
         }
         event.setup = {
-            file_field_id: field.field_id,
             file_creation_uri: field.file_creation_uri,
             max_size_upload: field.max_size_upload,
         };
+    });
+
+    event_dispatcher.addObserver("DidUploadImage", (event) => {
+        if (event.handled) {
+            // Avoid adding the same image to multiple file fields
+            return;
+        }
+        value_model.value = [event.image.id].concat(value_model.value);
+        value_model.images_added_by_text_fields = [event.image].concat(
+            value_model.images_added_by_text_fields
+        );
+        event.handled = true;
     });
 
     return {

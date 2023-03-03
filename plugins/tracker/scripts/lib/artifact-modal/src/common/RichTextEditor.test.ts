@@ -67,7 +67,6 @@ const noopHandler = (event: CKEDITOR.eventInfo): void => {
     // do nothing unless overwritten
 };
 const null_event = {} as CKEDITOR.eventInfo;
-const FIRST_FILE_FIELD_ID = 197;
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -151,7 +150,6 @@ describe(`RichTextEditor`, () => {
         format = "text";
         value = "";
         upload_setup = {
-            file_field_id: FIRST_FILE_FIELD_ID,
             max_size_upload: 3000,
             file_creation_uri: "https://example.com/upload",
         };
@@ -371,20 +369,10 @@ describe(`RichTextEditor`, () => {
                         options.onSuccessCallback(64, "http://example.com/sacrilegiously");
                     });
 
-                    it(`emits an upload-image event`, () => {
-                        const event = dispatchEvent.mock.calls[0][0];
-                        expect(event.type).toBe("upload-image");
-                        expect(event.detail.field_id).toEqual(FIRST_FILE_FIELD_ID);
-                        expect(event.detail.image).toEqual({
-                            id: 64,
-                            download_href: "http://example.com/sacrilegiously",
-                        });
-                    });
-
-                    it(`enables back form submits`, () => {
-                        expect(event_dispatcher.getDispatchedEventTypes()).toContain(
-                            "WillEnableSubmit"
-                        );
+                    it(`enables back form submits and asks the file field to attach the uploaded image`, () => {
+                        const dispatched_events = event_dispatcher.getDispatchedEventTypes();
+                        expect(dispatched_events).toContain("WillEnableSubmit");
+                        expect(dispatched_events).toContain("DidUploadImage");
                     });
                 });
 

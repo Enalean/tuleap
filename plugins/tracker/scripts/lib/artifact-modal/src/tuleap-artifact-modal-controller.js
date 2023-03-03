@@ -245,7 +245,6 @@ function ArtifactModalController(
         setFieldValueForCustomElement,
         setFieldValueForRadioButtonsCustomElement,
         setFieldValueForComputedFieldElement,
-        addToFilesAddedByTextField,
         setFollowupComment,
         toggleFieldset,
         hasHiddenFieldsets,
@@ -432,15 +431,6 @@ function ArtifactModalController(
         const { field_id, autocomputed, manual_value } = event.detail;
         self.values[field_id].is_autocomputed = autocomputed;
         self.values[field_id].manual_value = manual_value;
-    }
-
-    function addToFilesAddedByTextField(event) {
-        const { field_id, image: uploaded_file } = event.detail;
-        const value_model = self.values[field_id];
-        value_model.value = [uploaded_file.id].concat(value_model.value);
-        value_model.images_added_by_text_fields = [uploaded_file].concat(
-            value_model.images_added_by_text_fields
-        );
     }
 
     function setFollowupComment(event) {

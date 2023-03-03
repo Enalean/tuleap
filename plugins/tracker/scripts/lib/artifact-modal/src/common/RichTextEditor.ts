@@ -45,6 +45,7 @@ import { getTextFieldDefaultFormat } from "../model/UserPreferencesStore";
 import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
 import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
 import { WillDisableSubmit } from "../domain/submit/WillDisableSubmit";
+import { DidUploadImage } from "../domain/fields/file-field/DidUploadImage";
 
 export interface RichTextEditor {
     identifier: string;
@@ -129,15 +130,8 @@ export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): 
         }
         host.controller.onFileUploadError();
     };
-    const field_id = host.upload_setup.file_field_id;
     const onSuccessCallback = (id: number, download_href: string): void => {
-        dispatch(host, "upload-image", {
-            detail: {
-                field_id,
-                image: { id, download_href },
-            },
-        });
-        host.controller.onFileUploadSuccess();
+        host.controller.onFileUploadSuccess(DidUploadImage({ id, download_href }));
     };
 
     const fileUploadRequestHandler = buildFileUploadHandler({

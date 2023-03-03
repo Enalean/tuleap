@@ -18,9 +18,10 @@
  */
 
 /**
- * Minimum data needed to allow and setup file upload capability
+ * Image file that was uploaded by a Text field.
+ * It will be attached to the File field at submit.
  */
-export type FileUploadSetup = {
-    readonly file_creation_uri: string;
-    readonly max_size_upload: number;
+export type UploadedImage = {
+    readonly id: number;
+    readonly download_href: string;
 };

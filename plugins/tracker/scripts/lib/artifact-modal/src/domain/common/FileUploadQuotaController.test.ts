@@ -37,7 +37,6 @@ describe(`FileUploadQuotaController`, () => {
         it(`will dispatch an event and return the max upload size`, async () => {
             event_dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
                 event.setup = {
-                    file_field_id: 509,
                     max_size_upload: MAX_SIZE_UPLOAD,
                     file_creation_uri: "https://example.com/upload",
                 };

@@ -25,7 +25,6 @@ import {
     getNewCommentClasses,
     getSectionClasses,
     getSectionTemplate,
-    onUploadImage,
     onValueChanged,
 } from "./ModalCommentsSection";
 import type { NewComment } from "../../../domain/comments/NewComment";
@@ -63,17 +62,6 @@ describe(`ModalCommentsSection`, () => {
             expect(event.type).toBe("new-comment");
             expect(event.detail.body).toBe(body);
             expect(event.detail.format).toBe(format);
-        });
-
-        it(`bubbles the "upload-image" event it receives from the follow-up editor`, () => {
-            const field_id = 451;
-            const uploaded_file = { id: 64, download_href: "https://example.com/uninterruptible" };
-            const event_detail = { field_id, image: uploaded_file };
-            onUploadImage(host, new CustomEvent("upload-image", { detail: event_detail }));
-
-            const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toBe("upload-image");
-            expect(event.detail).toBe(event_detail);
         });
     });
 

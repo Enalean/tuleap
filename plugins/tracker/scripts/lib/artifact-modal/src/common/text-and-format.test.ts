@@ -99,30 +99,6 @@ describe(`TextAndFormat`, () => {
         });
     });
 
-    describe(`onUploadImage`, () => {
-        let host: HostElement;
-        beforeEach(() => {
-            host = getHost();
-            const update = getTextAndFormatTemplate(host, getOptions());
-            update(host, target);
-        });
-
-        it(`when the RichTextEditor emits an "upload-image" event, it will reemit it`, () => {
-            const detail = { image: { id: 9 } };
-            const dispatch = jest.spyOn(host, "dispatchEvent");
-            getSelector("[data-test=text-editor]").dispatchEvent(
-                new CustomEvent("upload-image", { detail })
-            );
-
-            const reemitted_event = dispatch.mock.calls[0][0];
-            if (!(reemitted_event instanceof CustomEvent)) {
-                throw new Error("Expected a CustomEvent");
-            }
-            expect(reemitted_event.type).toBe("upload-image");
-            expect(reemitted_event.detail).toBe(detail);
-        });
-    });
-
     describe("Template", () => {
         it(`assigns the same identifier on Format Selector and Rich Text Editor
             so that the lib can bind them together`, () => {
