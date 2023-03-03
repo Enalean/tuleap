@@ -258,6 +258,9 @@ Summary: Mediawiki plugin
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Requires: php-mediawiki-tuleap-123 >= 1.23.9-17, tuleap-plugin-mediawiki-standalone
+%if "%{?dist}" == ".el7"
+Requires: htmldoc
+%endif
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
