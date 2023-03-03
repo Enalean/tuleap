@@ -94,7 +94,7 @@ function getHost(): HostElement {
         textarea: {} as unknown as HTMLTextAreaElement,
         is_help_shown: false,
         upload_setup,
-        controller: FormattedTextController(event_dispatcher),
+        controller: FormattedTextController(event_dispatcher, TEXT_FORMAT_TEXT),
         dispatchEvent,
     } as unknown as HostElement;
 }

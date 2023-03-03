@@ -21,11 +21,12 @@ import type { HostElement } from "./TextField";
 import { getClasses, getIdentifier, TextField } from "./TextField";
 import { FormattedTextController } from "../../../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 function getHost(data?: Partial<HostElement>): HostElement {
     return {
         ...data,
-        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp(), TEXT_FORMAT_TEXT),
         dispatchEvent: jest.fn(),
     } as HostElement;
 }

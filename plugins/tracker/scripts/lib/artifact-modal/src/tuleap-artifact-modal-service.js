@@ -31,7 +31,6 @@ import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
-import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
 
@@ -202,7 +201,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             .then(function (data) {
                 const format = isValidTextFormat(data.value) ? data.value : TEXT_FORMAT_COMMONMARK;
                 modal_model.text_fields_format = format;
-                setTextFieldDefaultFormat(format);
             });
     }
 

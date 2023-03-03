@@ -23,8 +23,10 @@ import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSe
 import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../submit/WillEnableSubmit";
 import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 export type FormattedTextControllerType = {
+    getDefaultTextFormat(): TextFieldFormat;
     getFileUploadSetup(): FileUploadSetup | null;
     onFileUploadStart(event: WillDisableSubmit): void;
     onFileUploadError(): void;
@@ -32,8 +34,11 @@ export type FormattedTextControllerType = {
 };
 
 export const FormattedTextController = (
-    event_dispatcher: DispatchEvents
+    event_dispatcher: DispatchEvents,
+    default_text_format: TextFieldFormat
 ): FormattedTextControllerType => ({
+    getDefaultTextFormat: () => default_text_format,
+
     getFileUploadSetup(): FileUploadSetup | null {
         const event = WillGetFileUploadSetup();
         event_dispatcher.dispatch(event);

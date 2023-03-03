@@ -23,12 +23,13 @@ import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./tex
 import { setCatalog } from "../gettext-catalog";
 import { FormattedTextController } from "../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 function getHost(data?: Partial<TextAndFormat>): HostElement {
     return {
         ...data,
         interpreted_commonmark: "",
-        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp(), TEXT_FORMAT_TEXT),
         dispatchEvent: jest.fn(),
     } as unknown as HostElement;
 }

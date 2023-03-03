@@ -41,7 +41,6 @@ import {
     getUploadError,
     getUploadSizeExceeded,
 } from "../gettext-catalog";
-import { getTextFieldDefaultFormat } from "../model/UserPreferencesStore";
 import type { FormattedTextControllerType } from "../domain/common/FormattedTextController";
 import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
 import { WillDisableSubmit } from "../domain/submit/WillDisableSubmit";
@@ -160,7 +159,7 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
         return undefined;
     }
     const locale = document.body.dataset.userLocale ?? "en_US";
-    const default_format = getTextFieldDefaultFormat();
+    const default_format = host.controller.getDefaultTextFormat();
     const editor_factory = RichTextEditorFactory.forBurningParrotWithExistingFormatSelector(
         document,
         locale,
