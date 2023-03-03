@@ -33,6 +33,7 @@ use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -98,6 +99,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $private_comment_extractor;
     private int $summary_field_id;
+    private \Tuleap\DB\DBConnection&\PHPUnit\Framework\MockObject\MockObject $db_connection;
 
     protected function setUp(): void
     {
@@ -142,6 +144,9 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
         );
 
+        $this->db_connection = $this->createMock(\Tuleap\DB\DBConnection::class);
+        $this->db_connection->method('reconnectAfterALongRunningProcess');
+
         $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->rng_validator = \Mockery::spy(\XML_RNGValidator::class);
@@ -170,7 +175,8 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(\Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor::class),
             Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
             $this->external_field_extractor,
-            $this->private_comment_extractor
+            $this->private_comment_extractor,
+            $this->db_connection,
         );
 
         $this->tracker_xml_config->shouldReceive('isWithAllData')->andReturnFalse();
@@ -202,6 +208,7 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
                 $this->external_field_extractor,
                 $this->private_comment_extractor,
+                $this->db_connection,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
         $importer->shouldReceive('importFromXML')->with($this->tracker, Mockery::on(function ($element) {
@@ -1234,6 +1241,51 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->tracker, Mockery::any(), strtotime('2014-01-16T11:38:06+01:00'))
             ->once()
             ->andReturn($artifact);
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_element,
+            $this->extraction_path,
+            new TrackerXmlFieldsMapping_InSamePlatform(),
+            $this->url_mapping,
+            $this->config,
+            $this->tracker_xml_config
+        );
+    }
+
+    public function testItForcesReconnectionToTheDbForEachImportedArtifactSoThatHugeImportDoesNotLoseConnection(): void
+    {
+        $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+              <artifact id="4913">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-16T11:38:06+01:00</submitted_on>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->artifact_creator->shouldReceive('createBare')
+            ->with($this->tracker, Mockery::any(), strtotime('2014-01-15T10:38:06+01:00'))
+            ->andReturn(ArtifactTestBuilder::anArtifact(101)->inTracker($this->tracker)->build());
+
+        $this->artifact_creator->shouldReceive('createBare')
+            ->with($this->tracker, Mockery::any(), strtotime('2014-01-16T11:38:06+01:00'))
+            ->andReturn(ArtifactTestBuilder::anArtifact(102)->inTracker($this->tracker)->build());
+
+        $this->db_connection->expects(self::exactly(2))->method('reconnectAfterALongRunningProcess');
 
         $this->importer->importFromXML(
             $this->tracker,
@@ -2411,7 +2463,8 @@ class Tracker_Artifact_XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class),
             Mockery::mock(TrackerArtifactSourceIdDao::class),
             Mockery::mock(ExternalFieldsExtractor::class),
-            $private_comment_extractor
+            $private_comment_extractor,
+            $this->db_connection,
         );
 
         $xml_element = new SimpleXMLElement(

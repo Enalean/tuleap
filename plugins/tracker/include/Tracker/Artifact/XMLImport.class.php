@@ -117,6 +117,7 @@ class Tracker_Artifact_XMLImport
         TrackerArtifactSourceIdDao $artifact_source_id_dao,
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerPrivateCommentUGroupExtractor $private_comment_ugroup_extractor,
+        private \Tuleap\DB\DBConnection $db_connection,
     ) {
         $this->rng_validator                          = $rng_validator;
         $this->artifact_creator                       = $artifact_creator;
@@ -259,6 +260,7 @@ class Tracker_Artifact_XMLImport
     ): bool {
         $tracker->getWorkflow()->disable();
         foreach (iterator_to_array($xml_element->artifact, false) as $i => $artifact_xml) {
+            $this->db_connection->reconnectAfterALongRunningProcess();
             $fields_data_builder = $this->createFieldsDataBuilder(
                 $tracker,
                 $artifact_xml,
