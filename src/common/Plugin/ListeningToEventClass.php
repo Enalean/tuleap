@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,11 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Event;
+declare(strict_types=1);
 
-interface Dispatchable
+namespace Tuleap\Plugin;
+
+#[\Attribute(\Attribute::TARGET_METHOD)]
+final class ListeningToEventClass implements ListeningToEvent
 {
-    final public const HOOK_CONST_NAME = 'NAME';
 }

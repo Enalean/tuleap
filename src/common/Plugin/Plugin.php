@@ -22,6 +22,10 @@
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\Event\Dispatchable;
+use Tuleap\Plugin\ListeningToEvent;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Plugin\PluginInstallRequirement;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
@@ -145,6 +149,13 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
 
     public function getHooksAndCallbacks()
     {
+        $this->addHooksFromImplementedInterfaces();
+        $this->addHooksDeclaredInAttributes();
+        return $this->hooks->getValues();
+    }
+
+    private function addHooksFromImplementedInterfaces(): void
+    {
         if ($this instanceof PluginWithConfigKeys) {
             $this->addHookIfNotAlreadyListened(GetConfigKeys::NAME);
         }
@@ -156,7 +167,55 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
             $this->addHookIfNotAlreadyListened(ServiceDisabledCollector::NAME);
             $this->addHookIfNotAlreadyListened(AddMissingService::NAME);
         }
-        return $this->hooks->getValues();
+    }
+
+    private function addHooksDeclaredInAttributes(): void
+    {
+        $reflected_class = new \ReflectionClass($this);
+        foreach ($reflected_class->getMethods() as $reflected_method) {
+            $attributes = $reflected_method->getAttributes(ListeningToEvent::class, ReflectionAttribute::IS_INSTANCEOF);
+            if (count($attributes) !== 1) {
+                continue;
+            }
+            $listening_to_event = $attributes[0]->newInstance();
+            match ($listening_to_event::class) {
+                ListeningToEventClass::class => $this->addHooksFromEventClass($reflected_method),
+                ListeningToEventName::class => $this->addHooksFromEventName($reflected_method, $listening_to_event),
+            };
+        }
+    }
+
+    private function addHooksFromEventClass(ReflectionMethod $method): void
+    {
+        $method_parameters = $method->getParameters();
+        if (count($method_parameters) !== 1) {
+            throw new \LogicException('Callback must declare exactly one parameter (the event). Check ' . $method->getName() . ' usage in ' . static::class);
+        }
+        $type = $method_parameters[0]->getType();
+        if (! $type instanceof ReflectionNamedType) {
+            throw new \LogicException('Callback parameter must have a type. Check ' . $method->getName() . ' usage in ' . static::class);
+        }
+        $type_class = $type->getName();
+        if (! class_exists($type_class)) {
+            throw new \LogicException('Callback parameter type cannot be found. Check ' . $method->getName() . ' usage in ' . static::class);
+        }
+        $event_class   = new \ReflectionClass($type_class);
+        $name_constant = $event_class->getConstant(Dispatchable::HOOK_CONST_NAME);
+        if ($name_constant === false) {
+            $this->addHook($event_class->name, $method->name);
+        } else {
+            if ($this->hooks->containsKey($name_constant)) {
+                throw new \LogicException('Hooks can only be listening to once check ' . $name_constant . ' usage in ' . static::class);
+            }
+            $this->addHook($name_constant, $method->name);
+        }
+    }
+
+    private function addHooksFromEventName(ReflectionMethod $method, ListeningToEventName $listening_to_event): void
+    {
+        if (! $this->hooks->containsKey($listening_to_event->event_name)) {
+            $this->addHook($listening_to_event->event_name, $method->name);
+        }
     }
 
     private function addHookIfNotAlreadyListened(string $name): void

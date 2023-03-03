@@ -39,6 +39,8 @@ use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\HomePage\LastMonthStatisticsCollectorSVN;
 use Tuleap\Layout\HomePage\StatisticsCollectorSVN;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -184,7 +186,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->setScope(Plugin::SCOPE_PROJECT);
         bindtextdomain('tuleap-svn', __DIR__ . '/../site-content');
 
-        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::UGROUP_RENAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
@@ -225,22 +226,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(PostRotateEvent::NAME);
 
         $this->addHook(CollectRoutesEvent::NAME);
-    }
-
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(StatisticsCollectorSVN::NAME);
-        $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
-        $this->addHook(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent::NAME);
-        $this->addHook(PendingDocumentsRetriever::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(GetAllRepositories::NAME);
-        $this->addHook(SvnCoreUsage::NAME);
-        $this->addHook(SvnCoreAccess::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
-
-        return parent::getHooksAndCallbacks();
     }
 
     public static function getLogger(): \Psr\Log\LoggerInterface
@@ -357,6 +342,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
+    #[ListeningToEventClass]
     public function updateProjectAccessFiles(UpdateProjectAccessFilesEvent $event): void
     {
         $this->updateAllAccessFileOfProject($event->getProject(), null, null);
@@ -376,12 +362,14 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
+    #[ListeningToEventClass()]
     public function getAllRepositories(GetAllRepositories $get_all_repositories): void
     {
         (new ApacheRepositoriesCollector($this->getRepositoryManager()))->process($get_all_repositories);
     }
 
-    public function system_event_get_types_for_default_queue($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[ListeningToEventName(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE)]
+    public function getSystemEventsDefaultTypesForQueue(array &$params): void
     {
         $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME;
@@ -870,6 +858,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->getRepositoryManager()->purgeArchivedRepositories();
     }
 
+    #[ListeningToEventClass]
     public function pendingDocumentsRetriever(PendingDocumentsRetriever $documents_retriever): void
     {
         $project               = $documents_retriever->getProject();
@@ -1240,6 +1229,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $collector->collectPane($event);
     }
 
+    #[ListeningToEventClass]
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
         if ($this->isInSvnHomepage()) {
@@ -1294,6 +1284,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         DBWriter::build($event->getLogger())->postrotate();
     }
 
+    #[ListeningToEventClass]
     public function statisticsCollectorSVN(StatisticsCollectorSVN $collector)
     {
         $dao     = new Dao();
@@ -1305,6 +1296,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $collector->setSvnCommits($commits);
     }
 
+    #[ListeningToEventClass]
     public function lastMonthStatisticsCollectorSVN(LastMonthStatisticsCollectorSVN $collector)
     {
         $dao     = new Dao();
@@ -1316,11 +1308,13 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $collector->setSvnCommits($commits);
     }
 
+    #[ListeningToEventClass]
     public function svnCoreUsageEvent(SvnCoreUsage $svn_core_usage): void
     {
         $this->getRepositoryManager()->svnCoreUsage($svn_core_usage);
     }
 
+    #[ListeningToEventClass]
     public function svnCoreAccess(SvnCoreAccess $svn_core_access): void
     {
         (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
@@ -1331,6 +1325,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $config_keys->addConfigClass(FileSizeValidator::class);
     }
 
+    #[ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void
     {
         $event->addPluginOption(
@@ -1341,8 +1336,8 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         );
     }
 
-    //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function proccess_system_check(array $params): void
+    #[ListeningToEventName(Event::PROCCESS_SYSTEM_CHECK)]
+    public function processSystemCheck(array $params): void
     {
         (new \Tuleap\SVN\Hooks\RestoreMissingHooks(
             new MissingHooksPathsFromFileSystemRetriever(self::getLogger(), $this->getRepositoryManager()),

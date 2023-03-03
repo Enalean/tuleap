@@ -108,7 +108,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $m->processEvent($e2, $params);
     }
 
-    public function testItCanSendAnEventObjectInsteadOfStringPlusParams()
+    public function testItCanSendAnEventObjectWithNameInsteadOfStringPlusParams()
     {
         $event = new class
         {
@@ -120,6 +120,21 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
         $event_manager = new EventManager();
         $event_manager->addListener($event::NAME, $listener, 'doSomething', false);
+
+        $event_manager->processEvent($event);
+    }
+
+    public function testItCanSendAnEventObjectWithoutName()
+    {
+        $event = new class
+        {
+        };
+
+        $listener = Mockery::mock();
+        $listener->shouldReceive('doSomething')->with($event)->once();
+
+        $event_manager = new EventManager();
+        $event_manager->addListener($event::class, $listener, 'doSomething', false);
 
         $event_manager->processEvent($event);
     }
