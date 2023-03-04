@@ -853,6 +853,9 @@ done
 
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
+%{__install} plugins/svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_svn_plugin
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_svn_plugin
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_svn_plugin
 
 # Plugin docman
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/docman
@@ -1360,6 +1363,8 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/svn
 %attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/svn_plugin
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_svn_plugin
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_svn_plugin
 
 %files plugin-tracker
 %defattr(-,root,root,-)
