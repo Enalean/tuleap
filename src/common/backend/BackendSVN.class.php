@@ -29,11 +29,13 @@ use Tuleap\URI\URIModifier;
 
 require_once __DIR__ . '/../../www/svn/svn_utils.php';
 
-/**
- * Backend class to work on subversion repositories
- */
 class BackendSVN extends Backend
 {
+    public const PRE_COMMIT_HOOK          = 'pre-commit';
+    public const POST_COMMIT_HOOK         = 'post-commit';
+    public const PRE_REVPROP_CHANGE_HOOK  = 'pre-revprop-change';
+    public const POST_REVPROP_CHANGE_HOOK = 'post-revprop-change';
+
     protected $SVNApacheConfNeedUpdate;
     /**
      * @var SvnCoreUsage
@@ -302,7 +304,7 @@ class BackendSVN extends Backend
      */
     public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file)
     {
-        $filename    = "$system_path/hooks/post-commit";
+        $filename    = "$system_path/hooks/" . self::POST_COMMIT_HOOK;
         $update_hook = false;
         if (! is_file($filename)) {
             // File header
@@ -334,14 +336,14 @@ class BackendSVN extends Backend
             $command .= $post_commit_launcher . ' ' . $hook_commit_path . '/' . $post_commit_file . ' "$REPOS" "$REV" >/dev/null';
 
             $this->addBlock($filename, $command);
-            $this->chown($filename, $this->getHTTPUser());
-            $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
-            chmod("$filename", 0775);
         }
+        $this->chown($filename, $this->getHTTPUser());
+        $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
+        chmod("$filename", 0775);
 
         // Put in place the Codendi svn pre-commit hook
         // if not present (if the file does not exist it is created)
-        $filename    = "$system_path/hooks/pre-commit";
+        $filename    = "$system_path/hooks/" . self::PRE_COMMIT_HOOK;
         $update_hook = false;
         if (! is_file($filename)) {
             // File header
@@ -370,10 +372,10 @@ class BackendSVN extends Backend
             $command .= 'TXN="$2"' . "\n";
             $command .= ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
-            $this->chown($filename, $this->getHTTPUser());
-            $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
-            chmod("$filename", 0775);
         }
+        $this->chown($filename, $this->getHTTPUser());
+        $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
+        chmod("$filename", 0775);
 
         if ($can_change_svn_log) {
             try {
@@ -841,7 +843,7 @@ class BackendSVN extends Backend
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check    = ['db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db'];
+        $files_to_check    = ['db/current', 'hooks/' . self::PRE_COMMIT_HOOK, 'hooks/' . self::POST_COMMIT_HOOK, 'db/rep-cache.db'];
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             // Get file stat
@@ -913,7 +915,7 @@ class BackendSVN extends Backend
 
     private function enableCommitMessageUpdate($project_svnroot, $hooks_path)
     {
-        $hook_names = ['pre-revprop-change', 'post-revprop-change'];
+        $hook_names = [self::PRE_REVPROP_CHANGE_HOOK, self::POST_REVPROP_CHANGE_HOOK];
         $hook_error = [];
 
         foreach ($hook_names as $hook_name) {
@@ -964,8 +966,8 @@ class BackendSVN extends Backend
 
     private function disableCommitMessageUpdate($project_svnroot)
     {
-        $this->deleteHook($project_svnroot, 'pre-revprop-change');
-        $this->deleteHook($project_svnroot, 'post-revprop-change');
+        $this->deleteHook($project_svnroot, self::PRE_REVPROP_CHANGE_HOOK);
+        $this->deleteHook($project_svnroot, self::POST_REVPROP_CHANGE_HOOK);
     }
 
     private function deleteHook($project_svnroot, $hook_name)
