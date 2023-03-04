@@ -31,6 +31,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use UserManager;
@@ -94,7 +95,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
         }
 
         try {
-            $project = $this->create_project_from_jira->create(
+            return $this->create_project_from_jira->create(
                 $logger,
                 $jira_client,
                 $jira_credentials,
@@ -103,18 +104,25 @@ final class ReplayCreateProjectFromJiraCommand extends Command
                 $tuleap_project_name,
                 $input->getOption('epic-name'),
                 $jira_board_id,
+            )->match(
+                function (\Project $project) use ($output): int {
+                    $output->writeln(sprintf('Project %d created', $project->getID()));
+                    $output->writeln("Import completed");
+                    return Command::SUCCESS;
+                },
+                function (Fault $fault) use ($logger): int {
+                    Fault::writeToLogger($fault, $logger);
+                    return Command::FAILURE;
+                }
             );
-            $output->writeln(sprintf('Project %d created', $project->getID()));
-            $output->writeln("Import completed");
         } catch (\XML_ParseException $exception) {
             foreach ($exception->getErrors() as $error) {
                 $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
             }
             $logger->info("Generated XML file: " . $traces_path . '/project.xml');
             file_put_contents($traces_path . '/project.xml', $exception->getXMLWithoutLineNumbers());
-            return 1;
+            return Command::FAILURE;
         }
-        return 0;
     }
 
     private function getCredentialsFromManifestURL(string $path): JiraCredentials

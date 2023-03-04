@@ -73,8 +73,18 @@ class AgileDashboard_FirstScrumCreator
         $config->addExtraConfiguration($extra_configuration);
 
         try {
-            $this->xml_importer->import($config, $this->project->getId(), $this->template_path);
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!'));
+            $this->xml_importer->import($config, $this->project->getId(), $this->template_path)
+                ->match(
+                    function (): void {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::INFO,
+                            dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!')
+                        );
+                    },
+                    function (\Tuleap\NeverThrow\Fault $fault): void {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, (string) $fault);
+                    }
+                );
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::WARN, dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an internal error prevented it.'));
         }

@@ -25,6 +25,7 @@ namespace Tuleap\Project\XML;
 
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\UGroups\XML\XMLUserGroup;
 use Tuleap\TemporaryTestDirectory;
@@ -63,21 +64,25 @@ final class XMLUserGroupsTest extends TestCase
     {
         $xml_file_content_retriever = new XMLFileContentRetriever();
         $empty_template             = new EmptyTemplate(new GlyphFinder(new \EventManager()));
-        $xml_element                = $xml_file_content_retriever->getSimpleXMLElementFromFilePath($empty_template->getXMLPath());
+        $xml_file_content_retriever->getSimpleXMLElementFromFilePath($empty_template->getXMLPath())
+            ->match(
+                function (\SimpleXMLElement $xml_element): void {
+                    unset($xml_element->ugroups);
 
-        unset($xml_element->ugroups);
+                    $user_group = new XMLUserGroups(
+                        [
+                            new XMLUserGroup(
+                                \ProjectUGroup::PROJECT_ADMIN_NAME,
+                                [new XMLUser('username', 'foo')]
+                            ),
+                        ]
+                    );
 
-        $user_group = new XMLUserGroups(
-            [
-                new XMLUserGroup(
-                    \ProjectUGroup::PROJECT_ADMIN_NAME,
-                    [new XMLUser('username', 'foo')]
-                ),
-            ]
-        );
+                    $user_group->export($xml_element);
 
-        $user_group->export($xml_element);
-
-        self::assertEquals('foo', (string) $xml_element->xpath('/project/ugroups/ugroup[1]/members/member[1]')[0]);
+                    self::assertEquals('foo', (string) $xml_element->xpath('/project/ugroups/ugroup[1]/members/member[1]')[0]);
+                },
+                static fn(Fault $fault) => self::fail((string) $fault)
+            );
     }
 }

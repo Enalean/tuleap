@@ -4561,6 +4561,12 @@ msgstr ""
 "que é o Tuleap no seu contexto. Mas não escreva demais, mantenha a chamada "
 "curta."
 
+msgid "XML content is empty"
+msgstr ""
+
+msgid "XML content is not valid"
+msgstr ""
+
 msgid "Year"
 msgstr "Ano"
 

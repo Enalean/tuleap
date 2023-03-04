@@ -38,6 +38,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
@@ -189,7 +190,7 @@ final class CreateProjectFromJiraCommand extends Command
 
         try {
             if ($archive_path !== false) {
-                $this->create_project_from_jira->generateArchive(
+                return $this->create_project_from_jira->generateArchive(
                     $logger,
                     $jira_client,
                     $jira_credentials,
@@ -199,10 +200,20 @@ final class CreateProjectFromJiraCommand extends Command
                     $jira_epic_issue_type,
                     $jira_board_id,
                     $archive_path,
+                )->match(
+                    function () use ($output, $archive_path): int {
+                        $output->writeln("XML file generated: $archive_path");
+
+                        return Command::SUCCESS;
+                    },
+                    function (Fault $fault) use ($logger): int {
+                        Fault::writeToLogger($fault, $logger);
+
+                        return Command::FAILURE;
+                    }
                 );
-                $output->writeln("XML file generated: $archive_path");
             } else {
-                $project = $this->create_project_from_jira->create(
+                return $this->create_project_from_jira->create(
                     $logger,
                     $jira_client,
                     $jira_credentials,
@@ -211,9 +222,19 @@ final class CreateProjectFromJiraCommand extends Command
                     $fullname,
                     $jira_epic_issue_type,
                     $jira_board_id,
+                )->match(
+                    function (\Project $project) use ($output): int {
+                        $output->writeln(sprintf('Project %d created', $project->getID()));
+                        $output->writeln("Import completed");
+
+                        return Command::SUCCESS;
+                    },
+                    function (Fault $fault) use ($logger): int {
+                        Fault::writeToLogger($fault, $logger);
+
+                        return Command::FAILURE;
+                    }
                 );
-                $output->writeln(sprintf('Project %d created', $project->getID()));
-                $output->writeln("Import completed");
             }
         } catch (\XML_ParseException $exception) {
             $logger->debug($exception->getIndentedXml());
@@ -221,9 +242,8 @@ final class CreateProjectFromJiraCommand extends Command
                 $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
                 $logger->error('Error L' . $error->getLine() . ': ' . $exception->getSourceXMLForError($error));
             }
-            return 1;
+            return Command::FAILURE;
         }
-        return 0;
     }
 
     private function getStringOption(InputInterface $input, string $key): string

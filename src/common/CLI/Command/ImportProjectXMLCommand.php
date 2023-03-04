@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use SystemEventProcessor_Factory;
 use Tuleap\CLI\ConsoleLogger;
 use Tuleap\DB\DBConnection;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -198,7 +199,7 @@ class ImportProjectXMLCommand extends Command
                     $event_manager
                 );
                 $system_event_runner = new \Tuleap\Project\SystemEventRunner($factory);
-                $xml_importer->importNewFromArchive(
+                $result              = $xml_importer->importNewFromArchive(
                     $configuration,
                     $archive,
                     $system_event_runner,
@@ -206,9 +207,17 @@ class ImportProjectXMLCommand extends Command
                     $project_name_override
                 );
             } else {
-                $xml_importer->importFromArchive($configuration, $project_id, $archive);
+                $result = $xml_importer->importFromArchive($configuration, $project_id, $archive);
             }
-            return 0;
+
+            return $result->match(
+                static fn() => Command::SUCCESS,
+                function (Fault $fault) use ($broker_log): int {
+                    Fault::writeToLogger($fault, $broker_log);
+
+                    return Command::FAILURE;
+                }
+            );
         } catch (\XML_ParseException $exception) {
             $broker_log->error($exception->getMessage());
             foreach ($exception->getErrors() as $parse_error) {
@@ -227,6 +236,6 @@ class ImportProjectXMLCommand extends Command
                 $archive->cleanUp();
             }
         }
-        return 1;
+        return Command::FAILURE;
     }
 }

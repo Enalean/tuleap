@@ -24,26 +24,59 @@ declare(strict_types=1);
 namespace Tuleap\Project\XML;
 
 use DOMDocument;
-use RuntimeException;
 use SimpleXMLElement;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 class XMLFileContentRetriever
 {
-    public function getSimpleXMLElementFromFilePath(string $file_path): SimpleXMLElement
+    /**
+     * @return Ok<SimpleXMLElement>|Err<Fault>
+     */
+    public function getSimpleXMLElementFromFilePath(string $file_path): Ok|Err
     {
         $xml_contents = file_get_contents($file_path);
+        if ($xml_contents === false) {
+            return Result::err(Fault::fromMessage("Got unexpected failure while loading xml file"));
+        }
 
         return $this->getSimpleXMLElementFromString($xml_contents);
     }
 
-    public function getSimpleXMLElementFromString(string $file_contents): SimpleXMLElement
+    /**
+     * @return Ok<SimpleXMLElement>|Err<Fault>
+     */
+    public function getSimpleXMLElementFromString(string $file_contents): Ok|Err
     {
-        $this->checkFileIsValidXML($file_contents);
+        if (empty($file_contents)) {
+            return Result::err(InvalidXMLContentFault::fromEmptyContent());
+        }
 
-        return simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
+        return $this->checkFileIsValidXML($file_contents)
+            ->andThen(
+                /**
+                 * @return Ok<SimpleXMLElement>|Err<Fault>
+                 */
+                function () use ($file_contents): Ok|Err {
+                    $xml = simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
+
+                    if ($xml === false) {
+                        return Result::err(Fault::fromMessage("Got unexpected failure while loading XML content"));
+                    }
+
+                    return Result::ok($xml);
+                }
+            );
     }
 
-    private function checkFileIsValidXML($file_contents): void
+    /**
+     * @psalm-param non-empty-string $file_contents
+     *
+     * @return Ok<true>|Err<Fault>
+     */
+    private function checkFileIsValidXML(string $file_contents): Ok|Err
     {
         libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -52,8 +85,10 @@ class XMLFileContentRetriever
         $errors = libxml_get_errors();
 
         if (! empty($errors)) {
-            throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
+            return Result::err(InvalidXMLContentFault::fromLibXMLErrors($errors));
         }
+
+        return Result::ok(true);
     }
 
     private function getLibXMLOptions(): int

@@ -47,6 +47,10 @@ use Tuleap\JiraImport\Project\Components\ComponentsRetrieverFromAPI;
 use Tuleap\JiraImport\Project\Components\ComponentsTrackerBuilder;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
 use Tuleap\JiraImport\Project\GroupMembers\GroupMembersImporter;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
@@ -97,6 +101,7 @@ final class CreateProjectFromJira
     /**
      * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
      * @throws \Tuleap\Project\XML\Import\ImportNotValidException
+     * @return Ok<Project>|Err<Fault>
      */
     public function create(
         LoggerInterface $logger,
@@ -107,11 +112,12 @@ final class CreateProjectFromJira
         string $fullname,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
-    ): \Project {
+    ): Ok|Err {
         if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
             throw new \RuntimeException('Project shortname already exists');
         }
-        $xml_element = $this->generateFromJira(
+
+        return $this->generateFromJira(
             $logger,
             $jira_client,
             $jira_credentials,
@@ -120,12 +126,16 @@ final class CreateProjectFromJira
             $fullname,
             $jira_epic_issue_type,
             $jira_board_id,
-        );
+        )->andThen(function (SimpleXMLElement $xml_element) use ($logger) {
+            $archive = new JiraProjectArchive($xml_element);
 
-        $archive = new JiraProjectArchive($xml_element);
-        return $this->createProject($logger, $xml_element, $archive);
+            return $this->createProject($logger, $xml_element, $archive);
+        });
     }
 
+    /**
+     * @return Ok<true>|Err<Fault>
+     */
     public function generateArchive(
         LoggerInterface $logger,
         JiraClient $jira_client,
@@ -136,8 +146,8 @@ final class CreateProjectFromJira
         string $jira_epic_issue_type,
         ?int $jira_board_id,
         string $archive_path,
-    ): void {
-        $xml_element = $this->generateFromJira(
+    ): Ok|Err {
+        return $this->generateFromJira(
             $logger,
             $jira_client,
             $jira_credentials,
@@ -146,11 +156,21 @@ final class CreateProjectFromJira
             $fullname,
             $jira_epic_issue_type,
             $jira_board_id
-        );
+        )->andThen(
+            /**
+             * @return Ok<true>|Err<Fault>
+             */
+            function (SimpleXMLElement $xml_element) use ($archive_path): Ok|Err {
+                $xml_element->saveXML($archive_path);
 
-        $xml_element->saveXML($archive_path);
+                return Result::ok(true);
+            }
+        );
     }
 
+    /**
+     * @return Ok<SimpleXMLElement>|Err<Fault>
+     */
     private function generateFromJira(
         LoggerInterface $logger,
         JiraClient $jira_client,
@@ -160,7 +180,7 @@ final class CreateProjectFromJira
         string $fullname,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
-    ): SimpleXMLElement {
+    ): Ok|Err {
         $this->user_roles_checker->checkUserIsAdminOfJiraProject(
             $jira_client,
             $logger,
@@ -250,142 +270,159 @@ final class CreateProjectFromJira
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);
 
-        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
-            new JiraTuleapUsersMapping(),
-            $import_user,
-        );
-
-        $jira_exporter = JiraXmlExporter::build(
-            $jira_client,
-            $logger,
-            $jira_user_on_tuleap_cache,
-        );
-
-        $template    = $this->template_factory->getTemplate(EmptyTemplate::NAME);
-        $xml_element = $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($template->getXMLPath());
-
-        $xml_element['unix-name'] = $shortname;
-        $xml_element['full-name'] = $fullname;
-        $xml_element['access']    = 'private';
-
-        foreach ($xml_element->services->service as $service) {
-            if ((string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME) {
-                $service['enabled'] = '1';
-            } elseif (
-                (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME &&
-                $platform_configuration_collection->areAgileFeaturesAvailable()
-            ) {
-                $service['enabled'] = '1';
-            }
-        }
-
-        $group_members_importer = new GroupMembersImporter(
-            $jira_client,
-            $logger,
-            new JiraUserRetriever(
-                $logger,
-                $this->user_manager,
-                $jira_user_on_tuleap_cache,
-                new JiraUserInfoQuerier(
+        $template = $this->template_factory->getTemplate(EmptyTemplate::NAME);
+        return $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($template->getXMLPath())
+            ->andThen(
+                function (SimpleXMLElement $xml_element) use (
+                    $shortname,
+                    $fullname,
                     $jira_client,
-                    $logger
-                ),
-                $import_user
-            ),
-            $import_user
-        );
-        $xml_user_groups        = $group_members_importer->getUserGroups($jira_project);
-        if ($xml_user_groups) {
-            unset($xml_element->ugroups);
-            $xml_user_groups->export($xml_element);
-        }
-
-        $logger->info("Retrieving Jira labels");
-        $labels                 = (new JiraLabelsRetrieverFromAPI($jira_client, $logger))->getPlatformLabels();
-        $jira_labels_collection = JiraLabelsCollection::buildFromLabels($labels);
-
-        $field_id_generator = new FieldAndValueIDGenerator();
-
-        $trackers_xml = $xml_element->addChild('trackers');
-        foreach ($jira_issue_types as $jira_issue_type) {
-            $logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
-
-            $tracker_fullname = $jira_issue_type->getName();
-            $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
-
-            $tracker = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
-
-            $tracker_xml = $jira_exporter->exportJiraToXml(
-                $platform_configuration_collection,
-                $tracker,
-                $jira_credentials->getJiraUrl(),
-                $jira_project,
-                $jira_issue_type,
-                $field_id_generator,
-                $linked_issues_collection,
-                $jira_labels_collection,
-            );
-
-            $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
-        }
-
-        $logger->info("Import project components");
-        (new ComponentsImporter(
-            new ComponentsRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new ComponentIssuesRetrieverFromAPI(
-                $jira_client,
-                $logger,
-            ),
-            new ComponentsTrackerBuilder(),
-            $logger,
-        ))->importProjectComponents(
-            $trackers_xml,
-            $jira_project,
-            $field_id_generator,
-            $import_user,
-        );
-
-        if ($board && $board_configuration) {
-            $jira_agile_importer = new JiraAgileImporter(
-                new JiraSprintRetrieverFromAPI(
-                    $jira_client,
+                    $jira_project,
+                    $jira_credentials,
                     $logger,
-                ),
-                new JiraSprintIssuesRetrieverFromAPI(
-                    $jira_client,
-                    $logger,
-                ),
-                new JiraBoardBacklogRetrieverFromAPI(
-                    $jira_client,
-                    $logger,
-                ),
-                \EventManager::instance()
-            );
+                    $import_user,
+                    $platform_configuration_collection,
+                    $jira_issue_types,
+                    $linked_issues_collection,
+                    $board,
+                    $board_configuration,
+                    $jira_epic_issue_type,
+                ) {
+                    $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
+                        new JiraTuleapUsersMapping(),
+                        $import_user,
+                    );
 
-            $jira_agile_importer->exportScrum(
-                $logger,
-                $xml_element,
-                $board,
-                $board_configuration,
-                $field_id_generator,
-                $import_user,
-                $jira_issue_types,
-                $jira_epic_issue_type
-            );
+                    $jira_exporter = JiraXmlExporter::build(
+                        $jira_client,
+                        $logger,
+                        $jira_user_on_tuleap_cache,
+                    );
 
-            $xml_element = $this->addWidgetOnDashboard(
-                $xml_element,
-                $board,
-                $jira_issue_types,
-                $jira_epic_issue_type,
-                $logger
-            );
-        }
+                    $xml_element['unix-name'] = $shortname;
+                    $xml_element['full-name'] = $fullname;
+                    $xml_element['access']    = 'private';
 
-        return $xml_element;
+                    foreach ($xml_element->services->service as $service) {
+                        if ((string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME) {
+                            $service['enabled'] = '1';
+                        } elseif (
+                            (string) $service['shortname'] === \AgileDashboardPlugin::PLUGIN_SHORTNAME &&
+                            $platform_configuration_collection->areAgileFeaturesAvailable()
+                        ) {
+                            $service['enabled'] = '1';
+                        }
+                    }
+
+                    $group_members_importer = new GroupMembersImporter(
+                        $jira_client,
+                        $logger,
+                        new JiraUserRetriever(
+                            $logger,
+                            $this->user_manager,
+                            $jira_user_on_tuleap_cache,
+                            new JiraUserInfoQuerier(
+                                $jira_client,
+                                $logger
+                            ),
+                            $import_user
+                        ),
+                        $import_user
+                    );
+                    $xml_user_groups        = $group_members_importer->getUserGroups($jira_project);
+                    if ($xml_user_groups) {
+                        unset($xml_element->ugroups);
+                        $xml_user_groups->export($xml_element);
+                    }
+
+                    $logger->info("Retrieving Jira labels");
+                    $labels                 = (new JiraLabelsRetrieverFromAPI($jira_client, $logger))->getPlatformLabels();
+                    $jira_labels_collection = JiraLabelsCollection::buildFromLabels($labels);
+
+                    $field_id_generator = new FieldAndValueIDGenerator();
+
+                    $trackers_xml = $xml_element->addChild('trackers');
+                    foreach ($jira_issue_types as $jira_issue_type) {
+                        $logger->info(sprintf("Import tracker %s", $jira_issue_type->getName()));
+
+                        $tracker_fullname = $jira_issue_type->getName();
+                        $tracker_itemname = TrackerCreationDataChecker::getShortNameWithValidFormat($jira_issue_type->getName());
+
+                        $tracker = (new XMLTracker($jira_issue_type->getId(), $tracker_itemname))->withName($tracker_fullname);
+
+                        $tracker_xml = $jira_exporter->exportJiraToXml(
+                            $platform_configuration_collection,
+                            $tracker,
+                            $jira_credentials->getJiraUrl(),
+                            $jira_project,
+                            $jira_issue_type,
+                            $field_id_generator,
+                            $linked_issues_collection,
+                            $jira_labels_collection,
+                        );
+
+                        $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
+                    }
+
+                    $logger->info("Import project components");
+                    (new ComponentsImporter(
+                        new ComponentsRetrieverFromAPI(
+                            $jira_client,
+                            $logger,
+                        ),
+                        new ComponentIssuesRetrieverFromAPI(
+                            $jira_client,
+                            $logger,
+                        ),
+                        new ComponentsTrackerBuilder(),
+                        $logger,
+                    ))->importProjectComponents(
+                        $trackers_xml,
+                        $jira_project,
+                        $field_id_generator,
+                        $import_user,
+                    );
+
+                    if ($board && $board_configuration) {
+                        $jira_agile_importer = new JiraAgileImporter(
+                            new JiraSprintRetrieverFromAPI(
+                                $jira_client,
+                                $logger,
+                            ),
+                            new JiraSprintIssuesRetrieverFromAPI(
+                                $jira_client,
+                                $logger,
+                            ),
+                            new JiraBoardBacklogRetrieverFromAPI(
+                                $jira_client,
+                                $logger,
+                            ),
+                            \EventManager::instance()
+                        );
+
+                        $jira_agile_importer->exportScrum(
+                            $logger,
+                            $xml_element,
+                            $board,
+                            $board_configuration,
+                            $field_id_generator,
+                            $import_user,
+                            $jira_issue_types,
+                            $jira_epic_issue_type
+                        );
+
+                        $xml_element = $this->addWidgetOnDashboard(
+                            $xml_element,
+                            $board,
+                            $jira_issue_types,
+                            $jira_epic_issue_type,
+                            $logger
+                        );
+                    }
+
+                    return Result::ok($xml_element);
+                }
+            );
     }
 
     /**
@@ -425,8 +462,9 @@ final class CreateProjectFromJira
     /**
      * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
      * @throws \Tuleap\Project\XML\Import\ImportNotValidException
+     * @return Ok<Project>|Err<Fault>
      */
-    private function createProject(LoggerInterface $logger, SimpleXMLElement $xml_element, ArchiveInterface $archive): Project
+    private function createProject(LoggerInterface $logger, SimpleXMLElement $xml_element, ArchiveInterface $archive): Ok|Err
     {
         $data = ProjectCreationData::buildFromXML(
             $xml_element,
