@@ -63,3 +63,19 @@
     dateext
     create 640 %APP_USER% %APP_USER%
 }
+
+/var/log/%PROJECT_NAME%/project_xml_import_syslog {
+    missingok
+    weekly
+    rotate 4
+    dateext
+    create 640 %APP_USER% %APP_USER%
+}
+
+/var/log/%PROJECT_NAME%/project_xml_export_syslog {
+    missingok
+    weekly
+    rotate 4
+    dateext
+    create 640 %APP_USER% %APP_USER%
+}
