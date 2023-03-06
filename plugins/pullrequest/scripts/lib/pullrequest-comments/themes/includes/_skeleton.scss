@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * tlp-skeleton-color is a RGBa color, meaning that if two elements overlap,
+ * opacities will sum up and the visual rendering will be terrible.
+ * Let's use a hex color instead.
+ */
+$comment-skeleton-color: #e3e6e9;
+
+.pull-request-comment-skeleton {
+    width: 100%;
+    animation: skeleton-blink 0.75s linear infinite alternate;
+
+    .pull-request-comment-content {
+        border: 1px solid $comment-skeleton-color;
+        background: transparent;
+        box-shadow: $comment-skeleton-color;
+
+        &::before {
+            border-color: transparent $comment-skeleton-color transparent transparent;
+        }
+
+        &::after {
+            background: $comment-skeleton-color;
+        }
+    }
+
+    .pull-request-comment-skeleton-avatar {
+        width: 32px;
+        height: 32px;
+        margin: var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) * 1.5) 0 0;
+        border-radius: 50%;
+        background-color: #e3e6e9;
+    }
+
+    .pull-request-comment-follow-up {
+        border-left: 2px solid $comment-skeleton-color;
+    }
+
+    .pull-request-comment-text {
+        padding: var(--tlp-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+
+        > .tlp-skeleton-text:first-child {
+            width: 80%;
+        }
+
+        > .tlp-skeleton-text:last-child {
+            width: 50%;
+        }
+    }
+
+    .pull-request-comment-author-and-date > .tlp-skeleton-text {
+        width: 30%;
+    }
+}
+
+@keyframes skeleton-blink {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}

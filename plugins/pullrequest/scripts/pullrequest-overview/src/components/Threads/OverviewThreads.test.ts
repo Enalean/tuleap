@@ -24,7 +24,10 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount, flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
-import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
+import {
+    PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
+    PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
+} from "@tuleap/plugin-pullrequest-comments";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
 import {
@@ -65,6 +68,7 @@ describe("OverviewThreads", () => {
                 },
                 stubs: {
                     [PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME]: true,
+                    [PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME]: true,
                 },
             },
         });
