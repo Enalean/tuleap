@@ -25,24 +25,14 @@ interface UnknownNewChangesetValue extends BaseNewChangesetValue {
     readonly value: never;
 }
 
-type ArtifactLinkNewChangesetParent = {
-    readonly id: number;
-};
-
-type ArtifactLinkVariantWithParent = {
-    readonly parent: ArtifactLinkNewChangesetParent;
-};
-
 export type ArtifactLinkNewChangesetLink = {
     readonly id: number;
+    readonly direction: "forward" | "reverse";
     readonly type?: string | null;
 };
 
-type ArtifactLinkVariantWithLinks = {
-    readonly links: ReadonlyArray<ArtifactLinkNewChangesetLink>;
+export type ArtifactLinkNewChangesetValue = BaseNewChangesetValue & {
+    readonly all_links: ReadonlyArray<ArtifactLinkNewChangesetLink>;
 };
-
-export type ArtifactLinkNewChangesetValue = BaseNewChangesetValue &
-    (ArtifactLinkVariantWithParent | ArtifactLinkVariantWithLinks);
 
 export type NewChangesetValue = UnknownNewChangesetValue | ArtifactLinkNewChangesetValue;
