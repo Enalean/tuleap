@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../scripts/pullrequests-app/node_modules/codemirror/lib/codemirror";
-@use "../scripts/pullrequests-app/node_modules/codemirror/addon/merge/merge";
+@use "codemirror/lib/codemirror";
+@use "codemirror/addon/merge/merge";
+@use "@tuleap/plugin-pullrequest-comments";
+
 @use "./includes/dashboard";
 @use "./includes/pull-request";
 @use "./includes/overview";
@@ -28,5 +30,4 @@
 @use "./includes/tuleap-username";
 @use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
-@use "../scripts/lib/pullrequest-comments/dist/style";
-@use "../../../src/themes/BurningParrot/css/includes/labels/labels-box";
+@use "../../../../../src/themes/BurningParrot/css/includes/labels/labels-box";

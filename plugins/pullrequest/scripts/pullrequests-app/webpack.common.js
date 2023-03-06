@@ -24,7 +24,7 @@ module.exports = [
     {
         entry: {
             "tuleap-pullrequest": "./src/app/app.js",
-            "pull-requests-style": "../../themes/pull-requests.scss",
+            "pull-requests-style": "./themes/style.scss",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
