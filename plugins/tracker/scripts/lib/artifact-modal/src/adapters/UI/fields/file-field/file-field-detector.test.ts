@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    isThereAtLeastOneFileField,
-    getAllFileFields,
-    getFirstFileField,
-} from "./file-field-detector";
+import { isThereAtLeastOneFileField, getAllFileFields } from "./file-field-detector";
 import * as disabled_field_detector from "../disabled-field-detector";
 import type { Field } from "../../../../domain/fields/Field";
 
@@ -87,45 +83,6 @@ describe("file-field-detector", () => {
             const result = getAllFileFields(tracker_fields);
 
             expect(result).toStrictEqual([enabled_field]);
-        });
-    });
-
-    describe(`getFirstFileField()`, () => {
-        it(`Given a tracker with two enabled file fields,
-            then it will return one of them`, () => {
-            const tracker_fields = [
-                { field_id: 85, type: "file" },
-                { field_id: 96, type: "float" },
-                { field_id: 45, type: "file" },
-            ] as Field[];
-            isDisabled.mockReturnValue(false);
-
-            const result = getFirstFileField(tracker_fields);
-
-            expect(result?.type).toBe("file");
-        });
-
-        it(`Given a tracker with only one enabled file field,
-            then it will return it`, () => {
-            const enabled_field = { field_id: 62, type: "file" };
-            const disabled_field = { field_id: 38, type: "file " };
-            const tracker_fields = [enabled_field, disabled_field] as Field[];
-            isDisabled.mockImplementation((field) => field === disabled_field);
-
-            const result = getFirstFileField(tracker_fields);
-
-            expect(result).toStrictEqual(enabled_field);
-        });
-
-        it(`Given a tracker with no enabled file field,
-            then it will return null`, () => {
-            const disabled_field = { field_id: 64, type: "file" };
-            const tracker_fields = [disabled_field] as Field[];
-            isDisabled.mockImplementation((field) => field === disabled_field);
-
-            const result = getFirstFileField(tracker_fields);
-
-            expect(result).toBeNull();
         });
     });
 });

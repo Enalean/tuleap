@@ -72,6 +72,7 @@ export const TextField = define<TextField>({
     is_preview_loading: false,
     has_error: false,
     error_message: "",
+    controller: undefined,
     content: (host) => {
         return html`
             <div class="${getClasses(host)}">

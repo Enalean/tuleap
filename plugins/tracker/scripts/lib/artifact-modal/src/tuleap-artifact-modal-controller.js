@@ -72,6 +72,7 @@ import { EventDispatcher } from "./domain/EventDispatcher";
 import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
+import { FormattedTextController } from "./domain/common/FormattedTextController";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -233,6 +234,9 @@ function ArtifactModalController(
                 self.isDisabled(field),
                 user_locale
             );
+        },
+        getFormattedTextController: () => {
+            return FormattedTextController(event_dispatcher);
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,

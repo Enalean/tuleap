@@ -21,11 +21,14 @@ import * as tuleap_api from "../api/tuleap-api";
 import type { HostElement, TextAndFormat, TextAndFormatOptions } from "./text-and-format";
 import { getTextAndFormatTemplate, interpretCommonMark, isDisabled } from "./text-and-format";
 import { setCatalog } from "../gettext-catalog";
+import { FormattedTextController } from "../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
 
 function getHost(data?: Partial<TextAndFormat>): HostElement {
     return {
         ...data,
         interpreted_commonmark: "",
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
         dispatchEvent: jest.fn(),
     } as unknown as HostElement;
 }

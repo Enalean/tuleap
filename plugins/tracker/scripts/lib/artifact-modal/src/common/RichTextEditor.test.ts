@@ -42,7 +42,9 @@ import {
     onTextareaInput,
     setupImageUpload,
 } from "./RichTextEditor";
-import type { FirstFileField } from "../model/FirstFileFieldStore";
+import { FormattedTextController } from "../domain/common/FormattedTextController";
+import { DispatchEventsStub } from "../../tests/stubs/DispatchEventsStub";
+import type { FileUploadSetup } from "../domain/fields/file-field/FileUploadSetup";
 
 type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 
@@ -78,7 +80,7 @@ let format: TextFieldFormat,
     editor_factory: RichTextEditorFactory,
     editor: TextEditorInterface,
     ckeditor: CKEDITOR.editor,
-    first_file_field: FirstFileField | null,
+    upload_setup: FileUploadSetup | null,
     buildFileUploadHandler: jest.SpyInstance,
     setIsUploadingInCKEditor: jest.SpyInstance,
     setIsNotUploadingInCKEditor: jest.SpyInstance,
@@ -93,8 +95,9 @@ function getHost(): HostElement {
         required,
         rows: 5,
         textarea: {} as unknown as HTMLTextAreaElement,
-        first_file_field,
         is_help_shown: false,
+        upload_setup,
+        controller: FormattedTextController(DispatchEventsStub.buildNoOp()),
         dispatchEvent,
     } as unknown as HostElement;
 }
@@ -156,7 +159,11 @@ describe(`RichTextEditor`, () => {
         disabled = false;
         format = "text";
         value = "";
-        first_file_field = { field_id: 834 } as FirstFileField;
+        upload_setup = {
+            file_field_id: FIRST_FILE_FIELD_ID,
+            max_size_upload: 3000,
+            file_creation_uri: "https://example.com/upload",
+        };
     });
 
     describe(`when the editor's format is "html"`, () => {
@@ -264,7 +271,7 @@ describe(`RichTextEditor`, () => {
 
         describe(`when uploading is not possible`, () => {
             beforeEach(() => {
-                first_file_field = null;
+                upload_setup = null;
             });
 
             it(`removes the uploadimage plugin from ckeditor's configuration`, () => {
@@ -328,13 +335,6 @@ describe(`RichTextEditor`, () => {
         });
 
         describe(`setupImageUpload() when uploading is possible`, () => {
-            beforeEach(() => {
-                first_file_field = {
-                    field_id: FIRST_FILE_FIELD_ID,
-                    max_size_upload: 3000,
-                } as FirstFileField;
-            });
-
             it(`informs users that they can paste images`, () => {
                 const target = getDocument().createElement("div") as unknown as ShadowRoot;
                 const host = getHost();

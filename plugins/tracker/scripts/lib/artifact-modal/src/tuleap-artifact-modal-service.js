@@ -35,7 +35,6 @@ import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracke
 import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
 import { getSelectedValues } from "./model/field-values-formatter.js";
 import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.js";
-import { setTrackerFields } from "./model/FirstFileFieldStore";
 
 export default ArtifactModalService;
 
@@ -148,7 +147,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 return file_upload_rules_promise;
             })
             .then(function () {
-                initializeFileFieldStore(modal_model);
                 return modal_model;
             });
 
@@ -203,15 +201,10 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 return file_upload_rules_promise;
             })
             .then(function () {
-                initializeFileFieldStore(modal_model);
                 return modal_model;
             });
 
         return promise;
-    }
-
-    function initializeFileFieldStore(modal_model) {
-        setTrackerFields(modal_model.tracker.fields);
     }
 
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {
