@@ -97,7 +97,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
     private function getFieldChangeId(Tracker_FormElement_Field $field, SimpleXMLElement $value)
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
-            return $this->xml_fields_mapping->getNewOpenValueId((string) $value);
+            $value_id = $this->xml_fields_mapping->getNewOpenValueId((string) $value);
+            if (is_numeric($value_id)) {
+                return Tracker_FormElement_Field_List_BindValue::BIND_PREFIX . $value_id;
+            }
+
+            return $value_id;
         }
 
         return $field->getFieldData((string) $value);
