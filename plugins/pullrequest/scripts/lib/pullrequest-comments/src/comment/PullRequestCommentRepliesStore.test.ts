@@ -21,7 +21,7 @@ import { describe, beforeEach, expect, it } from "vitest";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
+import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 describe("PullRequestCommentRepliesStore", () => {
     let comment_1: PullRequestCommentPresenter,

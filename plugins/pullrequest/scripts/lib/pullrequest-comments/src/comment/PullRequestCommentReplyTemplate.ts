@@ -19,7 +19,7 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import { buildBodyForComment } from "./PullRequestCommentBodyTemplate";
 import { buildFooterForComment } from "./PullRequestCommentFooterTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
@@ -27,7 +27,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 type MapOfClasses = Record<string, boolean>;
 
-const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment-content": true,
     };
@@ -40,7 +40,7 @@ const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
     return classes;
 };
 
-const getFollowUpClasses = (host: PullRequestComment): MapOfClasses => {
+const getFollowUpClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment-follow-up": true,
     };
@@ -54,10 +54,10 @@ const getFollowUpClasses = (host: PullRequestComment): MapOfClasses => {
 };
 
 export const getCommentReplyTemplate = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     reply: PullRequestCommentPresenter,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => html`
+): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getFollowUpClasses(host)}">
         <div class="pull-request-comment pull-request-comment-follow-up-content">
             <div class="tlp-avatar-medium">

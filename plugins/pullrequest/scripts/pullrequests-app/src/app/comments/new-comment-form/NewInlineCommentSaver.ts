@@ -20,18 +20,18 @@
 import { postJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { FileDiffCommentPayload } from "../PullRequestCommentPresenterBuilder";
 import type { InlineCommentContext } from "./NewInlineCommentContext";
+import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export interface SaveNewInlineComment {
-    postComment: (content: string) => ResultAsync<FileDiffCommentPayload, Fault>;
+    postComment: (content: string) => ResultAsync<CommentOnFile, Fault>;
 }
 
 export const NewInlineCommentSaver = (
     inline_comment_context: InlineCommentContext
 ): SaveNewInlineComment => ({
-    postComment: (content: string): ResultAsync<FileDiffCommentPayload, Fault> =>
-        postJSON<FileDiffCommentPayload>(
+    postComment: (content: string): ResultAsync<CommentOnFile, Fault> =>
+        postJSON<CommentOnFile>(
             uri`/api/v1/pull_requests/${inline_comment_context.pull_request_id}/inline-comments`,
             {
                 file_path: inline_comment_context.file_path,

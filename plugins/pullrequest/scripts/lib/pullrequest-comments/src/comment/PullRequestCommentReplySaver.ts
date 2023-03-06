@@ -20,36 +20,31 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { postJSON, uri } from "@tuleap/fetch-result";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
-import type {
-    CommentReplyPayload,
-    PullRequestCommentPresenter,
-} from "./PullRequestCommentPresenter";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
 export interface SaveNewComment {
     saveReply(
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter
-    ): ResultAsync<CommentReplyPayload, Fault>;
+    ): ResultAsync<PullRequestComment, Fault>;
 }
 
 const saveReplyToComment = (
     root_comment: PullRequestCommentPresenter,
     new_reply: ReplyCommentFormPresenter
-): ResultAsync<CommentReplyPayload, Fault> =>
-    postJSON<CommentReplyPayload>(
-        uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`,
-        {
-            user_id: new_reply.comment_author.user_id,
-            parent_id: root_comment.id,
-            content: new_reply.comment_content,
-        }
-    );
+): ResultAsync<PullRequestComment, Fault> =>
+    postJSON<PullRequestComment>(uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
+        user_id: new_reply.comment_author.user_id,
+        parent_id: root_comment.id,
+        content: new_reply.comment_content,
+    });
 
 const saveReplyToInlineComment = (
     root_comment: PullRequestCommentPresenter,
     new_reply: ReplyCommentFormPresenter
-): ResultAsync<CommentReplyPayload, Fault> => {
+): ResultAsync<PullRequestComment, Fault> => {
     let file_info;
 
     if (root_comment.is_file_diff_comment) {
@@ -70,7 +65,7 @@ const saveReplyToInlineComment = (
         );
     }
 
-    return postJSON<CommentReplyPayload>(
+    return postJSON<PullRequestComment>(
         uri`/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
         {
             user_id: new_reply.comment_author.user_id,
@@ -85,7 +80,7 @@ export const PullRequestCommentNewReplySaver = (): SaveNewComment => ({
     saveReply: (
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter
-    ): ResultAsync<CommentReplyPayload, Fault> =>
+    ): ResultAsync<PullRequestComment, Fault> =>
         root_comment.is_inline_comment
             ? saveReplyToInlineComment(root_comment, new_reply)
             : saveReplyToComment(root_comment, new_reply),

@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { PullRequestInfo } from "../../api/types";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../constants";
 import PropertySkeleton from "./PropertySkeleton.vue";
@@ -57,7 +56,8 @@ import {
     BUILD_STATUS_PENDING,
     BUILD_STATUS_SUCCESS,
     BUILD_STATUS_UNKNOWN,
-} from "../../api/types";
+} from "@tuleap/plugin-pullrequest-constants";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "../../helpers/strict-inject";
 import {
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
@@ -74,7 +74,7 @@ const is_absolute_date_first =
     relative_date_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP;
 
 const props = defineProps<{
-    pull_request_info: PullRequestInfo | null;
+    pull_request_info: PullRequest | null;
 }>();
 
 function getBadgeClass(): string {

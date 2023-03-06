@@ -21,9 +21,13 @@ import { selectOrThrow } from "@tuleap/dom";
 import { setCatalog } from "../../gettext-catalog";
 import type { HostElement } from "./NewInlineCommentForm";
 import { form_height_descriptor, getCancelButton, getSubmitButton } from "./NewInlineCommentForm";
-import { INLINE_COMMENT_POSITION_RIGHT } from "@tuleap/plugin-pullrequest-comments";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    TYPE_INLINE_COMMENT,
+} from "@tuleap/plugin-pullrequest-constants";
 import { SaveNewInlineCommentStub } from "../../../../tests/stubs/SaveNewInlineCommentStub";
 import { PullRequestCommentPresenterBuilder } from "../PullRequestCommentPresenterBuilder";
+import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("NewInlineCommentForm", () => {
     let target: ShadowRoot;
@@ -75,7 +79,7 @@ describe("NewInlineCommentForm", () => {
         it(`When the submit button is clicked
             Then the comment is saved
             And post_submit_callback is triggered`, async () => {
-            const new_inline_comment_payload = {
+            const new_inline_comment_payload: CommentOnFile = {
                 id: 13,
                 content: "Please don't",
                 user: {
@@ -89,6 +93,8 @@ describe("NewInlineCommentForm", () => {
                 position: INLINE_COMMENT_POSITION_RIGHT,
                 parent_id: 0,
                 color: "",
+                is_outdated: false,
+                type: TYPE_INLINE_COMMENT,
             };
 
             const comment_saver = SaveNewInlineCommentStub.withResponsePayload(

@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
 
 export interface FocusReplyToCommentTextArea {
-    focusFormReplyToCommentTextArea: (host: PullRequestComment) => void;
+    focusFormReplyToCommentTextArea: (host: PullRequestCommentComponentType) => void;
 }
 
 export const PullRequestCommentReplyFormFocusHelper = (): FocusReplyToCommentTextArea => ({
-    focusFormReplyToCommentTextArea: (host: PullRequestComment): void => {
+    focusFormReplyToCommentTextArea: (host: PullRequestCommentComponentType): void => {
         host.content()
             .querySelector<HTMLInputElement>(".pull-request-comment-reply-textarea")
             ?.focus();

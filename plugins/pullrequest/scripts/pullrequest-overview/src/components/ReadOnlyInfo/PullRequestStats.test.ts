@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import PullRequestStats from "./PullRequestStats.vue";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import type { PullRequestInfo } from "../../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("PullRequestStats", () => {
     it("should display a skeleton while the pull request is loading, and the stats when finished", async () => {
@@ -43,7 +43,7 @@ describe("PullRequestStats", () => {
                     lines_added: 75,
                     lines_removed: 200,
                 },
-            } as PullRequestInfo,
+            } as PullRequest,
         });
 
         await wrapper.vm.$nextTick();

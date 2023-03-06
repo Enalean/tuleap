@@ -1,0 +1,25 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-rest-api-types",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/main.js",
+      "require": "./dist/main.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
+    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json"
+  }
+}

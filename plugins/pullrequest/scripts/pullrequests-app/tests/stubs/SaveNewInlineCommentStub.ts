@@ -20,7 +20,7 @@
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { FileDiffCommentPayload } from "../../src/app/comments/PullRequestCommentPresenterBuilder";
+import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveNewInlineComment } from "../../src/app/comments/new-comment-form/NewInlineCommentSaver";
 
 export type SaveNewInlineCommentStub = SaveNewInlineComment & {
@@ -28,12 +28,12 @@ export type SaveNewInlineCommentStub = SaveNewInlineComment & {
 };
 
 export const SaveNewInlineCommentStub = {
-    withResponsePayload: (payload: FileDiffCommentPayload): SaveNewInlineCommentStub => {
+    withResponsePayload: (payload: CommentOnFile): SaveNewInlineCommentStub => {
         let last_call_params: string | undefined = undefined;
 
         return {
             getLastCallParams: () => last_call_params,
-            postComment: (content: string): ResultAsync<FileDiffCommentPayload, Fault> => {
+            postComment: (content: string): ResultAsync<CommentOnFile, Fault> => {
                 last_call_params = content;
 
                 return okAsync(payload);
@@ -41,7 +41,7 @@ export const SaveNewInlineCommentStub = {
         };
     },
     withDefault: (): SaveNewInlineComment => ({
-        postComment: (): ResultAsync<FileDiffCommentPayload, Fault> => {
+        postComment: (): ResultAsync<CommentOnFile, Fault> => {
             return errAsync(
                 Fault.fromMessage(
                     "SaveNewInlineCommentStub::postComment was called while it's not configured"

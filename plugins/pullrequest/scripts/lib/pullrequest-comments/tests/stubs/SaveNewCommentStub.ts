@@ -20,12 +20,10 @@
 import { okAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveNewComment } from "../../src/comment/PullRequestCommentReplySaver";
 import type { ReplyCommentFormPresenter } from "../../src/comment/ReplyCommentFormPresenter";
-import type {
-    CommentReplyPayload,
-    PullRequestCommentPresenter,
-} from "../../src/comment/PullRequestCommentPresenter";
+import type { PullRequestCommentPresenter } from "../../src/comment/PullRequestCommentPresenter";
 
 export type SaveNewCommentStub = SaveNewComment & {
     getNbCalls: () => number;
@@ -33,7 +31,7 @@ export type SaveNewCommentStub = SaveNewComment & {
 };
 
 export const SaveNewCommentStub = {
-    withResponsePayload: (payload: CommentReplyPayload): SaveNewCommentStub => {
+    withResponsePayload: (payload: PullRequestComment): SaveNewCommentStub => {
         let nb_calls = 0;
         let last_call_params: ReplyCommentFormPresenter | undefined = undefined;
 
@@ -43,7 +41,7 @@ export const SaveNewCommentStub = {
             saveReply: (
                 comment: PullRequestCommentPresenter,
                 new_reply: ReplyCommentFormPresenter
-            ): ResultAsync<CommentReplyPayload, Fault> => {
+            ): ResultAsync<PullRequestComment, Fault> => {
                 nb_calls++;
                 last_call_params = new_reply;
 

@@ -77,6 +77,12 @@ export type UserHistoryEntry = {
     readonly badges: ReadonlyArray<Badge>;
 };
 
+export type User = {
+    readonly avatar_url: string;
+    readonly user_url: string;
+    readonly display_name: string;
+};
+
 export type SearchResultEntry = UserHistoryEntry & {
     readonly cropped_content: string | null;
 };

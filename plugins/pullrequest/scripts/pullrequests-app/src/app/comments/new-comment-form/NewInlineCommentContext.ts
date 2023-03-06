@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-comments";
+import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
 
 export interface InlineCommentContext {
     readonly pull_request_id: number;

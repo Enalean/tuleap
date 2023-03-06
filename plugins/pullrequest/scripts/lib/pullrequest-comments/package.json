@@ -20,6 +20,8 @@
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",

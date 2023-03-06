@@ -10,6 +10,8 @@ specifiers:
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
   '@tuleap/plugin-pullrequest-comments': workspace:*
+  '@tuleap/plugin-pullrequest-constants': workspace:*
+  '@tuleap/plugin-pullrequest-rest-api-types': workspace:*
   '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
   '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
@@ -39,6 +41,8 @@ dependencies:
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/plugin-pullrequest-comments': link:../lib/pullrequest-comments
+  '@tuleap/plugin-pullrequest-constants': link:../lib/constants
+  '@tuleap/plugin-pullrequest-rest-api-types': link:../lib/rest-api-types
   '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch

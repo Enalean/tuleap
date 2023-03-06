@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import PullRequestReferences from "./PullRequestReferences.vue";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import type { PullRequestInfo } from "../../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("PullRequestReferences", () => {
     it("should display a skeleton while the pull request is loading, and the references when finished", async () => {
@@ -43,7 +43,7 @@ describe("PullRequestReferences", () => {
                 reference_src: "a1e2i3o4u5y6",
                 branch_src: "vowels-and-numbers",
                 branch_dest: "master",
-            } as PullRequestInfo,
+            } as PullRequest,
         });
 
         await wrapper.vm.$nextTick();

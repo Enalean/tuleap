@@ -22,7 +22,7 @@ import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import PullRequestCIStatus from "./PullRequestCIStatus.vue";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import type { PullRequestInfo } from "../../api/types";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import {
     PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
@@ -36,12 +36,12 @@ import {
     BUILD_STATUS_PENDING,
     BUILD_STATUS_SUCCESS,
     BUILD_STATUS_UNKNOWN,
-} from "../../api/types";
+} from "@tuleap/plugin-pullrequest-constants";
 import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../constants";
 
 const getWrapper = (
     relative_date_pref: RelativeDatesDisplayPreference,
-    pull_request_info: PullRequestInfo | null
+    pull_request_info: PullRequest | null
 ): VueWrapper => {
     return mount(PullRequestCIStatus, {
         global: {
@@ -77,7 +77,7 @@ describe("PullRequestCIStatus", () => {
                 pull_request_info: {
                     last_build_status,
                     last_build_date: "2023-02-20T10:00:00Z",
-                } as PullRequestInfo,
+                } as PullRequest,
             });
 
             await wrapper.vm.$nextTick();
@@ -128,7 +128,7 @@ describe("PullRequestCIStatus", () => {
                 {
                     last_build_status: ci_status,
                     last_build_date: "2023-02-20T10:00:00Z",
-                } as PullRequestInfo
+                } as PullRequest
             );
             expect(wrapper.find("[data-test=pullrequest-ci-badge-status-name]").text()).toContain(
                 expected_badge_text

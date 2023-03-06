@@ -17,7 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-comments";
+import {
+    EVENT_TYPE_ABANDON,
+    EVENT_TYPE_MERGE,
+    EVENT_TYPE_REBASE,
+    EVENT_TYPE_REOPEN,
+    EVENT_TYPE_UPDATE,
+    TYPE_EVENT_PULLREQUEST_ACTION,
+    TYPE_INLINE_COMMENT,
+} from "@tuleap/plugin-pullrequest-constants";
+import type {
+    CommentOnFile,
+    ActionOnPullRequestEvent,
+    PullRequest,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    PullRequestInlineCommentPresenter,
+    PullRequestCommentPresenter,
+    SupportedTimelineItem,
+    PullRequestCommentFile,
+} from "@tuleap/plugin-pullrequest-comments";
 import {
     getUserAbandonedPullRequest,
     getUserMergePullRequest,
@@ -25,52 +44,13 @@ import {
     getUserUpdatePullRequest,
     getUserReopenedPullRequest,
 } from "../gettext-catalog";
-import type {
-    InlineCommentPosition,
-    PullRequestUser,
-    CommentType,
-    PullRequestInlineCommentPresenter,
-    PullRequestCommentPresenter,
-} from "@tuleap/plugin-pullrequest-comments";
 
 export interface AngularUIRouterState {
     readonly href: (name: string, url_parameters: Record<string, unknown>) => string;
 }
 
-export interface TimelineEventPayload {
-    readonly id: number;
-    readonly is_inline_comment: boolean;
-    readonly post_date: string;
-    readonly content: string;
-    readonly type: CommentType;
-    readonly event_type?: string;
-    readonly is_outdated: boolean;
-    readonly user: PullRequestUser;
-    readonly parent_id: number;
-    readonly file_path?: string;
-    readonly position?: InlineCommentPosition;
-    readonly unidiff_offset?: number;
-    readonly color: string;
-}
-
-export interface FileDiffCommentPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: PullRequestUser;
-    readonly post_date: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly parent_id: number;
-    readonly color: string;
-}
-
-export interface PullRequestData {
-    readonly id: number;
-}
-
 export const PullRequestCommentPresenterBuilder = {
-    fromFileDiffComment: (comment: FileDiffCommentPayload): PullRequestInlineCommentPresenter => ({
+    fromFileDiffComment: (comment: CommentOnFile): PullRequestInlineCommentPresenter => ({
         id: comment.id,
         user: comment.user,
         post_date: comment.post_date,
@@ -87,65 +67,86 @@ export const PullRequestCommentPresenterBuilder = {
     }),
     fromTimelineEvent: (
         $state: AngularUIRouterState,
-        event: TimelineEventPayload,
-        pull_request: PullRequestData
+        payload: SupportedTimelineItem,
+        pull_request: PullRequest
     ): PullRequestCommentPresenter => {
-        const is_inline_comment = event.type === TYPE_INLINE_COMMENT;
-        const file =
-            is_inline_comment && event.file_path && event.position && event.unidiff_offset
-                ? {
-                      file: {
-                          file_url: $state.href("diff", {
-                              id: pull_request.id,
-                              file_path: event.file_path,
-                              comment_id: event.id,
-                          }),
-                          file_path: event.file_path,
-                          unidiff_offset: event.unidiff_offset,
-                          position: event.position,
-                      },
-                  }
-                : {};
+        const id = payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id;
+        const is_inline_comment = payload.type === TYPE_INLINE_COMMENT;
+        const is_outdated = is_inline_comment ? payload.is_outdated : false;
+        const file = is_inline_comment ? buildFilePresenter(payload, $state, pull_request) : {};
 
         return {
-            id: event.id,
-            user: event.user,
-            content: getContentMessage(event),
-            type: event.type,
-            is_outdated: event.is_outdated,
+            id,
+            user: payload.user,
+            content: getContentMessage(payload),
+            type: payload.type,
+            is_outdated,
             is_inline_comment,
-            post_date: event.post_date,
-            parent_id: event.parent_id,
-            ...file,
             is_file_diff_comment: false,
-            color: event.color,
+            post_date: payload.post_date,
+            ...file,
+            ...buildThreadPresenter(payload),
         };
     },
 };
+
+function buildThreadPresenter(payload: SupportedTimelineItem): {
+    parent_id: number;
+    color: string;
+} {
+    if (payload.type === TYPE_EVENT_PULLREQUEST_ACTION) {
+        return {
+            parent_id: 0,
+            color: "",
+        };
+    }
+    return {
+        parent_id: payload.parent_id,
+        color: payload.color,
+    };
+}
+function buildFilePresenter(
+    payload: CommentOnFile,
+    $state: AngularUIRouterState,
+    pull_request: PullRequest
+): { file: PullRequestCommentFile } {
+    return {
+        file: {
+            file_url: $state.href("diff", {
+                id: pull_request.id,
+                file_path: payload.file_path,
+                comment_id: payload.id,
+            }),
+            file_path: payload.file_path,
+            unidiff_offset: payload.unidiff_offset,
+            position: payload.position,
+        },
+    };
+}
 
 function replaceLineReturns(content: string): string {
     return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
 }
 
-function getContentMessage(event: TimelineEventPayload): string {
-    if (event.type === TYPE_GLOBAL_COMMENT || event.type === TYPE_INLINE_COMMENT) {
-        return replaceLineReturns(event.content);
+function getContentMessage(payload: SupportedTimelineItem): string {
+    if (payload.type === TYPE_EVENT_PULLREQUEST_ACTION) {
+        return getTimelineEventMessage(payload);
     }
 
-    return getTimelineEventMessage(event);
+    return replaceLineReturns(payload.content);
 }
 
-function getTimelineEventMessage(event: TimelineEventPayload): string {
+function getTimelineEventMessage(event: ActionOnPullRequestEvent): string {
     switch (event.event_type) {
-        case "update":
+        case EVENT_TYPE_UPDATE:
             return getUserUpdatePullRequest();
-        case "rebase":
+        case EVENT_TYPE_REBASE:
             return getUserRebasePullRequest();
-        case "merge":
+        case EVENT_TYPE_MERGE:
             return getUserMergePullRequest();
-        case "abandon":
+        case EVENT_TYPE_ABANDON:
             return getUserAbandonedPullRequest();
-        case "reopen":
+        case EVENT_TYPE_REOPEN:
             return getUserReopenedPullRequest();
         default:
             return "";

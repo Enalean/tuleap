@@ -23,12 +23,11 @@ import type {
     PullRequestGlobalCommentPresenter,
 } from "../../src/comment/PullRequestCommentPresenter";
 import {
-    TYPE_EVENT_COMMENT,
+    TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
-} from "../../src/comment/PullRequestCommentPresenter";
-
-import { INLINE_COMMENT_POSITION_RIGHT } from "../../src/types";
+    INLINE_COMMENT_POSITION_RIGHT,
+} from "@tuleap/plugin-pullrequest-constants";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
@@ -79,7 +78,7 @@ export const PullRequestCommentPresenterStub = {
     buildPullRequestEventComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
         is_inline_comment: false,
-        type: TYPE_EVENT_COMMENT,
+        type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 
     buildWithData: (

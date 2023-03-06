@@ -24,7 +24,7 @@ import type {
 } from "@tuleap/plugin-pullrequest-comments";
 import type { FileLine } from "../types";
 import type { MapCommentWidgets } from "./FileDiffCommentWidgetsMap";
-import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-comments";
+import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-constants";
 import { isAnAddedLine, isAnUnmovedLine } from "../file-lines/file-line-helper";
 
 export interface ScrollToFileDiffComment {

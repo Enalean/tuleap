@@ -19,28 +19,28 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { GettextProvider } from "@tuleap/gettext";
 
 type MapOfClasses = Record<string, boolean>;
 
 export const getReplyFormTemplate = (
-    host: PullRequestComment,
+    host: PullRequestCommentComponentType,
     gettext_provider: GettextProvider
-): UpdateFunction<PullRequestComment> => {
+): UpdateFunction<PullRequestCommentComponentType> => {
     if (!host.reply_comment_presenter) {
         return html``;
     }
 
-    const onClickHideReplyForm = (host: PullRequestComment): void => {
+    const onClickHideReplyForm = (host: PullRequestCommentComponentType): void => {
         host.controller.hideReplyForm(host);
     };
 
-    const onClickSaveReply = (host: PullRequestComment): void => {
+    const onClickSaveReply = (host: PullRequestCommentComponentType): void => {
         host.controller.saveReply(host);
     };
 
-    const onTextAreaInput = (host: PullRequestComment, event: InputEvent): void => {
+    const onTextAreaInput = (host: PullRequestCommentComponentType, event: InputEvent): void => {
         const textarea = event.target;
         if (!(textarea instanceof HTMLTextAreaElement)) {
             return;
@@ -49,7 +49,7 @@ export const getReplyFormTemplate = (
         host.controller.updateCurrentReply(host, textarea.value);
     };
 
-    const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+    const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
         const classes: MapOfClasses = {
             "pull-request-comment-content": true,
         };

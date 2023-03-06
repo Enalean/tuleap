@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
 import { getJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
-import type { ResultAsync } from "neverthrow";
-import type { PullRequestInfo, UserInfo } from "./types";
+import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export const fetchPullRequestInfo = (
-    pullrequest_id: string
-): ResultAsync<PullRequestInfo, Fault> => {
+export const fetchPullRequestInfo = (pullrequest_id: string): ResultAsync<PullRequest, Fault> => {
     return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pullrequest_id)}`);
 };
 
-export const fetchUserInfo = (user_id: number): ResultAsync<UserInfo, Fault> => {
+export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
     return getJSON(uri`/api/v1/users/${encodeURIComponent(user_id)}`);
 };

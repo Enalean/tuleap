@@ -18,11 +18,11 @@
  */
 
 import {
-    TYPE_EVENT_COMMENT,
+    TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
     INLINE_COMMENT_POSITION_RIGHT,
-} from "@tuleap/plugin-pullrequest-comments";
+} from "@tuleap/plugin-pullrequest-constants";
 
 import type {
     PullRequestCommentPresenter,
@@ -79,7 +79,7 @@ export const PullRequestCommentPresenterStub = {
     buildPullRequestEventComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
         is_inline_comment: false,
-        type: TYPE_EVENT_COMMENT,
+        type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 
     buildWithData: (

@@ -17,17 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
+export type { User } from "@tuleap/core-rest-api-types";
 
-export interface FileDiffCommentPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: User;
-    readonly post_date: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly parent_id: number;
-    readonly color: string;
-}
+// Export an empty constant so that the resulting JS file is not completely empty
+export const _z = "";
+
+export * from "./pull-request";
+export * from "./timeline";

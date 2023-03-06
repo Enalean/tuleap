@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type InlineCommentPosition = "left" | "right";
-export const INLINE_COMMENT_POSITION_LEFT: InlineCommentPosition = "left";
-export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
-
-export interface PullRequestUser {
-    readonly avatar_url: string;
-    readonly display_name: string;
-    readonly user_url: string;
-}
+import type { CommentType, PullRequestEventType } from "@tuleap/plugin-pullrequest-constants";
+import type { TYPE_EVENT_PULLREQUEST_ACTION } from "@tuleap/plugin-pullrequest-constants";
+import type {
+    ActionOnPullRequestEvent,
+    CommentOnFile,
+    GlobalComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export interface HelpRelativeDatesDisplay {
     getRelativeDatePreference: () => string;
@@ -33,3 +31,8 @@ export interface HelpRelativeDatesDisplay {
     getUserLocale: () => string;
     getFormatDateUsingPreferredUserFormat: (date: string) => string;
 }
+
+export type SupportedTimelineItemTypes =
+    | CommentType
+    | Extract<PullRequestEventType, typeof TYPE_EVENT_PULLREQUEST_ACTION>;
+export type SupportedTimelineItem = GlobalComment | CommentOnFile | ActionOnPullRequestEvent;

@@ -17,14 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type BuildStatus = "unknown" | "pending" | "fail" | "success";
+import type { BuildStatus } from "@tuleap/plugin-pullrequest-constants";
 
-export const BUILD_STATUS_UNKNOWN: BuildStatus = "unknown";
-export const BUILD_STATUS_PENDING: BuildStatus = "pending";
-export const BUILD_STATUS_FAILED: BuildStatus = "fail";
-export const BUILD_STATUS_SUCCESS: BuildStatus = "success";
-
-export interface PullRequestInfo {
+export interface PullRequest {
+    readonly id: number;
     readonly title: string;
     readonly creation_date: string;
     readonly short_stat: {
@@ -37,10 +33,4 @@ export interface PullRequestInfo {
     readonly last_build_status: BuildStatus;
     readonly last_build_date: string;
     readonly user_id: number;
-}
-
-export interface UserInfo {
-    readonly avatar_url: string;
-    readonly user_url: string;
-    readonly display_name: string;
 }

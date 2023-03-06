@@ -27,10 +27,10 @@ import type { FileLine } from "../types";
 import type { FileLinesState } from "../file-lines/SideBySideLineState";
 import type { EqualizeLinesHeights } from "./placeholders/SideBySideLinesHeightEqualizer";
 import type { ManageCodeMirrorsContent } from "../editors/SideBySideCodeMirrorsContentManager";
-import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-comments";
+import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
 
 import { isAnAddedLine, isARemovedLine } from "../file-lines/file-line-helper";
-import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-comments";
+import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-constants";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 export interface ManageCodeMirrorWidgetsCreation {
