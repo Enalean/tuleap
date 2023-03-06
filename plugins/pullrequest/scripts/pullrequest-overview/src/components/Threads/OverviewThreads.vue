@@ -20,7 +20,7 @@
 <template>
     <!-- Prevent eslint-plugin-vue to mess up with the relativeDateHelper attribute of our custom element -->
     <!-- eslint-disable vue/attribute-hyphenation -->
-    <section class="tlp-pane-section">
+    <section class="tlp-pane-section pull-request-threads-section">
         <div
             v-if="is_loading_threads"
             class="pull-request-overview-threads-spinner-container"
@@ -28,7 +28,7 @@
         >
             <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
         </div>
-        <div v-if="!is_loading_threads" data-test="pull-request-threads">
+        <div v-if="!is_loading_threads && threads.length > 0" data-test="pull-request-threads">
             <tuleap-pullrequest-comment
                 data-test="pull-request-thread"
                 class="pull-request-overview-thread"
@@ -39,6 +39,7 @@
                 v-bind:relativeDateHelper="relative_date_helper"
             />
         </div>
+        <overview-threads-empty-state v-if="!is_loading_threads && threads.length === 0" />
     </section>
 </template>
 
@@ -60,6 +61,7 @@ import {
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
+import OverviewThreadsEmptyState from "./OverviewThreadsEmptyState.vue";
 
 import "@tuleap/plugin-pullrequest-comments";
 
@@ -154,5 +156,9 @@ fetchPullRequestTimelineItems(pull_request_id)
 
 .pull-request-overview-thread > .pull-request-comment-component {
     margin: 0 0 var(--tlp-small-spacing);
+}
+
+.pull-request-threads-section {
+    height: 100%;
 }
 </style>
