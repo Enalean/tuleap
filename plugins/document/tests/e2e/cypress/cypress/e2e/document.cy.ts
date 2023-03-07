@@ -28,7 +28,7 @@ describe("Document new UI", () => {
                 now = Date.now();
                 project_unixname = `docman-${now}`;
                 cy.projectAdministratorSession();
-                cy.createNewPublicProject(project_unixname, "issues");
+                cy.createNewPublicProject(project_unixname, "issues").as("project_id");
             });
 
             it("can access to admin section", function () {
@@ -72,53 +72,52 @@ describe("Document new UI", () => {
                 );
             });
 
+            function createProjectWithAVersionnedEmbededFile(): void {
+                cy.createNewPublicProject(`doc-version-${now}`, "issues")
+                    .as("project_id")
+                    .then((project_id) =>
+                        cy
+                            .getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
+                            .then((response) => {
+                                const root_folder_id = response.body.root_item.id;
+                                const embedded_payload = {
+                                    title: "test",
+                                    description: "",
+                                    type: "embedded",
+                                    embedded_properties: {
+                                        content: "<p>embedded</p>\n",
+                                    },
+                                    should_lock_file: false,
+                                };
+                                return cy.postFromTuleapApi(
+                                    `api/docman_folders/${root_folder_id}/embedded_files`,
+                                    embedded_payload
+                                );
+                            })
+                            .then((response) => response.body.id)
+                            .then((item) => {
+                                const updated_embedded_payload = {
+                                    embedded_properties: {
+                                        content: "<p>updated content</p>\n",
+                                    },
+                                    should_lock_file: false,
+                                };
+                                cy.postFromTuleapApi(
+                                    `api/docman_embedded_files/${item}/versions`,
+                                    updated_embedded_payload
+                                );
+                                cy.visit(
+                                    `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`
+                                );
+                            })
+                    );
+            }
+
             it("document versioning", function () {
                 cy.projectAdministratorSession();
-                cy.log("create an embed document");
-                cy.visitProjectService(project_unixname, "Documents");
-                cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-item-action-new-button]").click();
-                    cy.get("[data-test=document-new-embedded-creation-button]").click();
-                });
-
-                cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=document-new-item-title]").type("My embedded");
-
-                    cy.window().then((win) => {
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        win.CKEDITOR.instances["document-new-item-embedded"].setData(
-                            `<strong>This is the story of my life </strong>`
-                        );
-                    });
-                    cy.get("[data-test=document-modal-submit-button-create-item]").click();
-                });
-
-                cy.visitProjectService(project_unixname, "Documents");
-                cy.get("[data-test=document-tree-content]")
-                    .contains("tr", "My embedded")
-                    .within(() => {
-                        // button is displayed on tr::hover, so we need to force click
-                        cy.get("[data-test=quick-look-button]").click({ force: true });
-                    });
-
-                cy.log("create a new version of a document");
-                cy.get("[data-test=document-quick-look]").contains("My embedded");
-
-                cy.get(`[data-test="document-quicklook-action-button-new-version"]`).click({
-                    force: true,
-                });
-
-                cy.intercept("/api/docman_embedded_files/*/versions").as("postVersions");
-
-                cy.get("[data-test=document-update-version-title]").type("new version");
-                cy.get("[data-test=document-modal-submit-button-create-embedded-version]").click();
-
-                cy.wait("@postVersions", { timeout: 60000 });
+                createProjectWithAVersionnedEmbededFile();
 
                 cy.log("delete a given version of a document");
-                // need to force due to drop down
-                cy.get("[data-test=document-history]").last().click({ force: true });
                 cy.get(`[data-test=delete-2]`).click();
                 cy.get("[data-test=confirm-deletion]").click();
 
@@ -137,6 +136,7 @@ describe("Document new UI", () => {
 
     context("Project members", function () {
         before(() => {
+            now = Date.now();
             cy.projectAdministratorSession();
             cy.createNewPublicProject(`document-project-${now}`, "issues");
             cy.visit(`/projects/document-project-${now}`);
@@ -309,49 +309,47 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
 
-            it(`user can download a folder as a zip archive`, () => {
-                cy.projectAdministratorSession();
-                cy.visitProjectService(`document-project-${now}`, "Documents");
-                // Create a folder
-                cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-item-action-new-button]").click();
-                    // need to force click because buttons can be out of viewport
-                    cy.get("[data-test=document-new-folder-creation-button]").click({
-                        force: true,
-                    });
-                });
+            function createProjectWithDownloadableDocuments(): void {
+                cy.createNewPublicProject(`download-${now}`, "issues")
+                    .then((document_project_id) =>
+                        cy.getFromTuleapAPI(`api/projects/${document_project_id}/docman_service`)
+                    )
+                    .then((response) => {
+                        const root_folder_id = response.body.root_item.id;
 
-                cy.get("[data-test=document-new-folder-modal]").within(() => {
-                    cy.get("[data-test=document-new-item-title]").type("Folder download");
-                    cy.get("[data-test=document-modal-submit-button-create-folder]").click();
-                });
-
-                // Go to the folder
-                cy.get("[data-test=document-tree-content]").contains("a", "Folder download").click({
-                    force: true,
-                });
-
-                // Create an embedded file in this folder
-                cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-item-action-new-button]").click();
-                    cy.get("[data-test=document-new-embedded-creation-button]").click();
-                });
-
-                cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=document-new-item-title]").type("Embedded file");
-
-                    cy.window().then((win) => {
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        win.CKEDITOR.instances["document-new-item-embedded"].setData(
-                            `<strong>Our deeds determine us, as much as we determine our deeds.</strong>`
+                        const folder_payload = {
+                            title: "Folder download",
+                            description: "",
+                            type: "folder",
+                        };
+                        return cy.postFromTuleapApi(
+                            `api/docman_folders/${root_folder_id}/folders`,
+                            folder_payload
+                        );
+                    })
+                    .then((response) => {
+                        const folder = response.body.id;
+                        const item = {
+                            title: "test",
+                            description: "",
+                            type: "embedded",
+                            embedded_properties: {
+                                content:
+                                    "<strong>Our deeds determine us, as much as we determine our deeds.</strong>",
+                            },
+                        };
+                        return cy.postFromTuleapApi(
+                            `api/docman_folders/${folder}/embedded_files`,
+                            item
                         );
                     });
+            }
 
-                    cy.get("[data-test=document-modal-submit-button-create-item]").click();
-                });
+            it(`user can download a folder as a zip archive`, () => {
+                cy.projectAdministratorSession();
+                createProjectWithDownloadableDocuments();
 
-                cy.visitProjectService(`document-project-${now}`, "Documents");
+                cy.visitProjectService(`download-${now}`, "Documents");
 
                 cy.get("[data-test=document-tree-content]")
                     .contains("tr", "Folder download")
@@ -379,13 +377,7 @@ describe("Document new UI", () => {
                                 'attachment; filename="Folder download.zip"'
                             );
                         });
-
-                        // Open quick look so we can delete the folder
-                        // button is displayed on tr::hover, so we need to force click
-                        cy.get("[data-test=quick-look-button]").click({ force: true });
                     });
-
-                deleteFolder();
             });
         });
     });
@@ -395,22 +387,36 @@ describe("Document new UI", () => {
             disableSpecificErrorThrownByCkeditor();
         });
 
+        function createAProjectWithAnEmptyDocument(
+            project_name: string,
+            document_name: string
+        ): void {
+            cy.createNewPublicProject(project_name, "issues").then((project_id) => {
+                cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then(
+                    (response) => {
+                        const root_folder_id = response.body.root_item.id;
+
+                        const payload = {
+                            title: document_name,
+                            description: "",
+                            type: "empty",
+                        };
+                        cy.postFromTuleapApi(
+                            `api/docman_folders/${root_folder_id}/empties`,
+                            payload
+                        );
+                    }
+                );
+            });
+        }
+
         it("have specifics permissions", function () {
             cy.projectAdministratorSession();
             const project_name = `document-perm-${now}`;
-            cy.createNewPublicProject(project_name, "issues");
-            cy.visitProjectService(project_name, "Documents");
-
             const document_name = `Document ${now}`;
-            cy.log("Add a document");
-            cy.get("[data-test=document-header-actions]").within(() => {
-                cy.get("[data-test=document-item-action-new-button]").click();
-                cy.get("[data-test=document-new-empty-creation-button]").click();
-            });
-            cy.get("[data-test=document-new-item-modal]").within(() => {
-                cy.get("[data-test=document-new-item-title]").type(document_name);
-                cy.get("[data-test=document-modal-submit-button-create-item]").click();
-            });
+            createAProjectWithAnEmptyDocument(project_name, document_name);
+
+            cy.visitProjectService(project_name, "Documents");
 
             cy.log("Project administrator can define specifics permissions for Writers");
             cy.get("[data-test=breadcrumb-project-documentation]").click();

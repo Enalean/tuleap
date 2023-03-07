@@ -50,6 +50,7 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=start-working]").click({
             timeout: 20000,
         });
+        cy.addProjectMember("projectMember");
     });
 
     it("Creates wiki service pages", () => {
@@ -58,16 +59,33 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=create-wiki]").click();
     });
 
-    it("Multiple document can references the same wiki page", function () {
-        cy.projectAdministratorSession();
+    it("User can create a phpwiki document through UI", function () {
+        cy.projectMemberSession();
         cy.visitProjectService(project_unixname, "Documents");
 
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-item-action-new-button]").click();
+            cy.get("[data-test=document-new-wiki-creation-button]").click();
+        });
+
+        cy.get("[data-test=document-new-item-modal]").within(() => {
+            cy.get("[data-test=document-new-item-title]").type("My title");
+            cy.get("[data-test=document-new-item-wiki-page-name]").type("A page Name");
+            cy.get("[data-test=document-modal-submit-button-create-item]").click();
+        });
+    });
+
+    it("Multiple document can references the same wiki page", function () {
+        cy.projectAdministratorSession();
         const now = Date.now();
 
-        createAWikiDocument(`A wiki document${now}`, "Wiki page");
-        createAWikiDocument(`An other wiki document${now}`, "Wiki page");
-        createAWikiDocument(`A third wiki document${now}`, "Wiki page");
+        cy.getProjectId(project_unixname).then((project_id) => {
+            createAWikiDocument(`A wiki document${now}`, "Wiki page", project_id);
+            createAWikiDocument(`An other wiki document${now}`, "Wiki page", project_id);
+            createAWikiDocument(`A third wiki document${now}`, "Wiki page", project_id);
+        });
 
+        cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=wiki-document-link]").first().click();
 
         cy.get("[data-test=wiki-document-location-toggle]").click();
@@ -88,8 +106,9 @@ describe("Document PhpWiki integration", () => {
 
         cy.log("wiki document have their permissions in document service");
 
-        cy.visitProjectService(project_unixname, "Documents");
-        createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`);
+        cy.getProjectId(project_unixname).then((project_id) => {
+            createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`, project_id);
+        });
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
         // having page reload prevent to do assertions before the quicklook is rendered and prevent flaky test
@@ -160,16 +179,19 @@ describe("Document PhpWiki integration", () => {
     });
 });
 
-function createAWikiDocument(document_title: string, page_name: string): void {
-    cy.get("[data-test=document-header-actions]").within(() => {
-        cy.get("[data-test=document-item-action-new-button]").click();
-        cy.get("[data-test=document-new-wiki-creation-button]").click();
-    });
+function createAWikiDocument(document_title: string, page_name: string, project_id: number): void {
+    cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
+        const root_folder_id = response.body.root_item.id;
 
-    cy.get("[data-test=document-new-item-modal]").within(() => {
-        cy.get("[data-test=document-new-item-title]").type(document_title);
-        cy.get("[data-test=document-new-item-wiki-page-name]").type(page_name);
-        cy.get("[data-test=document-modal-submit-button-create-item]").click();
+        const payload = {
+            title: document_title,
+            description: "",
+            type: "empty",
+            wiki_properties: {
+                page_name: page_name,
+            },
+        };
+        cy.postFromTuleapApi(`api/docman_folders/${root_folder_id}/wikis`, payload);
     });
 }
 
