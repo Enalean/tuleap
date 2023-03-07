@@ -27,6 +27,7 @@ use Mockery;
 use PFUser;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
@@ -50,7 +51,7 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use function PHPUnit\Framework\assertFalse;
 
-class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -742,5 +743,98 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $id_generator->id = $pre_defined_id;
         return $id_generator;
+    }
+
+    public function testItExportsOpenListFieldWithValueAsArray(): void
+    {
+        $mapping = new ListFieldMapping(
+            'labels',
+            'Labels',
+            'Flabels',
+            'labels',
+            'tbl',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
+                    0,
+                    "label01"
+                ),
+                JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
+                    0,
+                    "label02"
+                ),
+            ],
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            UserTestBuilder::aUser()->build(),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    ["label01"],
+                    null
+                ),
+            ],
+            null
+        );
+
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        self::assertSame('open_list', (string) $field_change_node['type']);
+        self::assertCount(1, $field_change_node->value);
+        self::assertSame('blabel01', (string) $field_change_node->value[0]);
+    }
+
+    public function testItExportsOpenListFieldWithValueAsString(): void
+    {
+        $mapping = new ListFieldMapping(
+            'labels',
+            'Labels',
+            'Flabels',
+            'labels',
+            'tbl',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
+                    0,
+                    "label01"
+                ),
+                JiraFieldAPIAllowedValueRepresentation::buildFromIDAndName(
+                    0,
+                    "label02"
+                ),
+            ],
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            UserTestBuilder::aUser()->build(),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    "label01 label02",
+                    null
+                ),
+            ],
+            null
+        );
+
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        self::assertSame('open_list', (string) $field_change_node['type']);
+        self::assertCount(2, $field_change_node->value);
+        self::assertSame('blabel01', (string) $field_change_node->value[0]);
+        self::assertSame('blabel02', (string) $field_change_node->value[1]);
     }
 }

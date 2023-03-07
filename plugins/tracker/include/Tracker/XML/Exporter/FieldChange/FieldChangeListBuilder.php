@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\XML\Exporter\FieldChange;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElement_Field_List_BindValue;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
@@ -69,6 +70,30 @@ class FieldChangeListBuilder
                     $field_change,
                     'value',
                     (string) $value,
+                    ['format' => 'id']
+                );
+            }
+        }
+    }
+
+    public function buildAStaticOpenList(
+        SimpleXMLElement $changeset_xml,
+        string $field_name,
+        array $values,
+    ): void {
+        $field_change = $changeset_xml->addChild('field_change');
+        $field_change->addAttribute('field_name', $field_name);
+        $field_change->addAttribute('type', 'open_list');
+        $field_change->addAttribute('bind', 'static');
+
+        if (empty($values)) {
+            $field_change->addChild('value');
+        } else {
+            foreach ($values as $value) {
+                $this->simple_xml_cdata_factory->insertWithAttributes(
+                    $field_change,
+                    'value',
+                    Tracker_FormElement_Field_List_BindValue::BIND_PREFIX . (string) $value,
                     ['format' => 'id']
                 );
             }

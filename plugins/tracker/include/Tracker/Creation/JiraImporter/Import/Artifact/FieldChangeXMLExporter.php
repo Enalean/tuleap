@@ -177,6 +177,42 @@ class FieldChangeXMLExporter
                 $mapping->getBindType(),
                 $value_ids
             );
+        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE) {
+            $this->logger->info("Checking TBL field " . $mapping->getFieldName());
+            if (! $mapping instanceof ListFieldMapping) {
+                throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);
+            }
+            if ($mapping->getBindType() !== \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
+                throw new \RuntimeException('Bind type ' . $mapping->getBindType() . ' must only be ' . \Tracker_FormElement_Field_List_Bind_Static::TYPE . ' for OpenList fields.');
+            }
+
+            if (is_string($value)) {
+                if ($value === "") {
+                    $value = [];
+                } else {
+                    $value = explode(" ", $value);
+                }
+
+                if ($value === false) {
+                    throw new \RuntimeException('Error while exploding values');
+                }
+            }
+
+            assert(is_array($value));
+            $value_ids = [];
+            foreach ($value as $label_name) {
+                $mapped_value = $mapping->getValueForLabel($label_name);
+                if (! $mapped_value) {
+                    throw new \RuntimeException('Value ' . $label_name . ' doesnt exist in structure mapping');
+                }
+                $value_ids[] = $mapped_value->getXMLIdValue();
+            }
+
+            $this->field_change_list_builder->buildAStaticOpenList(
+                $changeset_node,
+                $mapping->getFieldName(),
+                $value_ids,
+            );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FILE_TYPE) {
             assert(is_array($value));
 

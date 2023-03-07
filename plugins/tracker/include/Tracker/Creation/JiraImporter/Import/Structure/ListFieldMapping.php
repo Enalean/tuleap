@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLOpenListField;
 
 /**
  * @psalm-immutable
@@ -94,8 +95,12 @@ class ListFieldMapping implements FieldMapping
 
         $bound_values = [];
         foreach ($tuleap_field->bind_values as $bind_value) {
-            if ($bind_value instanceof XMLBindStaticValue && isset($jira_values_by_name[$bind_value->label])) {
-                $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromTuleapXML($jira_values_by_name[$bind_value->label], $bind_value);
+            if ($bind_value instanceof XMLBindStaticValue) {
+                if ($tuleap_field instanceof XMLOpenListField) {
+                    $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromTuleapXML(0, $bind_value);
+                } elseif (isset($jira_values_by_name[$bind_value->label])) {
+                    $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromTuleapXML($jira_values_by_name[$bind_value->label], $bind_value);
+                }
             }
         }
 
@@ -147,6 +152,16 @@ class ListFieldMapping implements FieldMapping
     {
         foreach ($this->bound_values as $value) {
             if ($value->getId() === $id) {
+                return $value;
+            }
+        }
+        return null;
+    }
+
+    public function getValueForLabel(string $label): ?JiraFieldAPIAllowedValueRepresentation
+    {
+        foreach ($this->bound_values as $value) {
+            if ($value->getName() === $label) {
                 return $value;
             }
         }

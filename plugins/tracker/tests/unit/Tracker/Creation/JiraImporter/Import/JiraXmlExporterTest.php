@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -64,6 +64,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabel;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
@@ -87,7 +89,7 @@ use UserXMLExporter;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
-class JiraXmlExporterTest extends TestCase
+final class JiraXmlExporterTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -352,6 +354,9 @@ class JiraXmlExporterTest extends TestCase
             new IssueType($jira_client->getJiraIssueTypeId(), 'Bogue', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
+            JiraLabelsCollection::buildFromLabels([
+                JiraLabel::build("zezezez"),
+            ]),
         );
 
         // Uncomment below to update the fixture
