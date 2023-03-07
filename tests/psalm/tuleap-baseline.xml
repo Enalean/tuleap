@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.7.4@c46eccda769925073b8f65d66c4a3a7dc5d440b1">
+<files psalm-version="5.7.5@5390c212bab06ee230c8720c2e9c54b823db00c8">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -3758,6 +3758,92 @@
     </MissingParamType>
   </file>
   <file src="plugins/agiledashboard/include/agiledashboardPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$parameters</code>
@@ -3874,6 +3960,10 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/api_explorer/include/api_explorerPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -3888,6 +3978,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/archivedeleteditems/include/archivedeleteditemsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code>getWellFormattedArchivePath</code>
     </MissingReturnType>
@@ -4150,6 +4243,24 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/artifactsfolders/include/artifactsfoldersPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -4367,6 +4478,15 @@
     </MissingReturnType>
   </file>
   <file src="plugins/baseline/include/baselinePlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -4516,6 +4636,14 @@
     </MissingReturnType>
   </file>
   <file src="plugins/botmattermost/include/botmattermostPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -4728,6 +4856,11 @@
       <code><![CDATA[MarkdownTemplateRendererFactory::build()
                 ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates')]]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -4911,6 +5044,14 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[PluginManager::instance()->getPluginByName('git')]]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -5151,6 +5292,15 @@
     </MissingReturnType>
   </file>
   <file src="plugins/bugzilla_reference/include/bugzilla_referencePlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$keyword</code>
@@ -5218,6 +5368,13 @@
     </MissingParamType>
   </file>
   <file src="plugins/captcha/include/captchaPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -6590,6 +6747,36 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$event_retriever->getField()]]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$cardwall</code>
       <code>$group_id</code>
@@ -6819,6 +7006,18 @@
     </MissingReturnType>
   </file>
   <file src="plugins/create_test_env/include/create_test_envPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -7578,6 +7777,14 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/crosstracker/include/crosstrackerPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -13670,6 +13877,64 @@
       <code><![CDATA['DocmanPluginInfo']]></code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>getRow</code>
       <code>rowCount</code>
     </DeprecatedMethod>
@@ -15623,6 +15888,11 @@
       <code>\docmanPlugin</code>
     </InvalidClass>
   </file>
+  <file src="plugins/document_generation/include/document_generationPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/dynamic_credentials/include/Credential/Credential.php">
     <MissingParamType>
       <code>$identifier</code>
@@ -15724,6 +15994,15 @@
     </MissingReturnType>
   </file>
   <file src="plugins/dynamic_credentials/include/dynamic_credentialsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -15737,6 +16016,11 @@
     <TypeDoesNotContainType>
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/embed/include/embedPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/DueLicencesDao.php">
     <InvalidReturnStatement>
@@ -15813,6 +16097,15 @@
     </MissingParamType>
   </file>
   <file src="plugins/enalean_licensemanager/include/enalean_licensemanagerPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[[
                 new StatisticsBadgePresenter(
@@ -16072,6 +16365,17 @@
     <DeprecatedMethod>
       <code><![CDATA[$dao->searchByProject($params['project']->getId())]]></code>
       <code><![CDATA[$dao->searchByProject($params['project']->getId())]]></code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
@@ -16408,6 +16712,21 @@
     </MissingReturnType>
   </file>
   <file src="plugins/frs/include/frsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code>$artifact_id</code>
     </InvalidArgument>
@@ -16432,6 +16751,17 @@
       <code>tracker_artifact_editrenderer_add_view_in_collection</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/fts_common/include/FullTextSearchBackendPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/fts_common/tests/unit/CLI/ProgressQueueIndexItemCategorySymfonyOutputTest.php">
     <InvalidOperand>
       <code><![CDATA[$progress_queue->iterate(['a'])]]></code>
@@ -16442,6 +16772,13 @@
     <PossiblyUndefinedArrayOffset>
       <code>$first_badge_representation</code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/fts_meilisearch/include/fts_meilisearchPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/git/include/AccessRightsPresenterOptionsBuilder.php">
     <MissingParamType>
@@ -16528,9 +16865,7 @@
     </InvalidScalarArgument>
     <MissingReturnType>
       <code>collectForGitoliteRepositories</code>
-      <code>extractInFileSystem</code>
       <code>getDiskUsageForYesterday</code>
-      <code>getGitShellSizeOnFileSystem</code>
       <code>getGitoliteSizeOnFileSystem</code>
     </MissingReturnType>
   </file>
@@ -19828,7 +20163,6 @@
       <code>$project_id</code>
       <code>$remote_server_id</code>
       <code>$repository_path</code>
-      <code>$type</code>
       <code>$user_id</code>
     </MissingParamType>
     <MissingReturnType>
@@ -19843,7 +20177,6 @@
       <code>queueDumpOfAllMirroredRepositories</code>
       <code>queueEditSSHKey</code>
       <code>queueGerritReplicationKeyUpdate</code>
-      <code>queueGitShellAccess</code>
       <code>queueGrokMirrorGitoliteAdminUpdate</code>
       <code>queueGrokMirrorManifest</code>
       <code>queueGrokMirrorManifestCheck</code>
@@ -20270,7 +20603,6 @@
       <code>getProjectRepositoryByName</code>
       <code>getUGroupsByRepositoryPermissions</code>
       <code>hasChild</code>
-      <code>hasGitShellRepositories</code>
       <code>hydrateRepositoryObject</code>
       <code>initialize</code>
       <code>isRepositoryExisting</code>
@@ -21406,7 +21738,6 @@
       <code>canMigrateToGerrit</code>
       <code>changeAccess</code>
       <code>changeMailPrefix</code>
-      <code>create</code>
       <code>delete</code>
       <code>forceMarkAsDeleted</code>
       <code>getAccess</code>
@@ -21470,7 +21801,6 @@
     </PossiblyInvalidArgument>
     <UndefinedInterfaceMethod>
       <code>changeRepositoryAccess</code>
-      <code>createReference</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/GitRepositoryFactory.class.php">
@@ -21498,7 +21828,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code>getAllGerritRepositoriesFromProject</code>
-      <code>hasGitShellRepositories</code>
       <code>instanciateFromRow</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
@@ -21694,16 +22023,11 @@
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/AccessControl.class.php">
     <InvalidOperand>
-      <code><![CDATA[$this->accessControl()]]></code>
       <code><![CDATA[$this->accessControlGitolite()]]></code>
     </InvalidOperand>
     <InvalidReturnStatement>
       <code><![CDATA[$forkPermissionsManager->displayAccessControl()]]></code>
-      <code>$html</code>
     </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>void</code>
-    </InvalidReturnType>
     <MissingReturnType>
       <code>getAccessRightsPresenterOptionsBuilder</code>
     </MissingReturnType>
@@ -21864,7 +22188,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code>clonePermissions</code>
-      <code>createReference</code>
       <code>delete</code>
       <code>deleteArchivedRepository</code>
       <code>disconnectFromGerrit</code>
@@ -22476,14 +22799,6 @@
       <code>process</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_LEGACY_REPO_ACCESS.class.php">
-    <DeprecatedMethod>
-      <code>load</code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_PROJECTS_UPDATE.class.php">
     <MissingReturnType>
       <code>getProjectIdsFromParameters</code>
@@ -22611,6 +22926,90 @@
   </file>
   <file src="plugins/git/include/gitPlugin.php">
     <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>load</code>
       <code>load</code>
     </DeprecatedMethod>
@@ -22906,6 +23305,25 @@
     <NamedArgumentNotAllowed>
       <code>$references_collections</code>
     </NamedArgumentNotAllowed>
+  </file>
+  <file src="plugins/gitlab/include/gitlabPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType>
@@ -23289,6 +23707,20 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/gitlfsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -24627,6 +25059,24 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['GraphOnTrackersV5PluginInfo']]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$params</code>
       <code>$params</code>
@@ -24959,6 +25409,17 @@
       <code><![CDATA['hudsonPluginInfo']]></code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>current</code>
       <code>current</code>
       <code>current</code>
@@ -25328,6 +25789,19 @@
     </MissingReturnType>
   </file>
   <file src="plugins/hudson_git/include/hudson_gitPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -25444,6 +25918,15 @@
     <ArgumentTypeCoercion>
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$job_id</code>
@@ -25484,6 +25967,11 @@
     <PossiblyNullArgument>
       <code><![CDATA[$issue['id'] ?? 'null']]></code>
     </PossiblyNullArgument>
+  </file>
+  <file src="plugins/jira_import/include/jira_importPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/label/include/Label/REST/ResourcesInjector.php">
     <MissingReturnType>
@@ -25645,6 +26133,15 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/label/include/labelPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -26501,6 +26998,56 @@
       <code><![CDATA[db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>getRow</code>
     </DeprecatedMethod>
     <InvalidArgument>
@@ -27588,6 +28135,51 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['MediaWikiPluginInfo']]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$group_id</code>
       <code>$group_id</code>
@@ -27703,6 +28295,36 @@
       <code>new self($identifier)</code>
     </InvalidReturnStatement>
   </file>
+  <file src="plugins/mediawiki_standalone/include/mediawiki_standalonePlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/mediawiki_standalone/tests/unit/Permissions/ISearchByProjectStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->permissions]]></code>
@@ -27784,6 +28406,9 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/mfa/include/mfaPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -27841,6 +28466,14 @@
     </MissingParamType>
   </file>
   <file src="plugins/mytuleap_contact_support/include/mytuleap_contact_supportPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -27880,6 +28513,19 @@
       <code><![CDATA[$this->getSupportedScopeIdentifiers()]]></code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="plugins/oauth2_server/include/oauth2_serverPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/oauth2_server/tests/unit/User/AuthorizationComparatorTest.php">
     <ArgumentTypeCoercion>
       <code>$requested_scopes</code>
@@ -27889,6 +28535,16 @@
     <ArgumentTypeCoercion>
       <code>$co_authors</code>
     </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/onlyoffice/include/onlyofficePlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/onlyoffice/tests/unit/Stubs/IRetrieveDocumentServersStub.php">
     <ArgumentTypeCoercion>
@@ -28409,6 +29065,20 @@
     </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/openidconnectclientPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -28640,6 +29310,13 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['PluginsAdministrationPluginInfo']]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -29152,6 +29829,18 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['ProftpdPluginInfo']]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$group_id</code>
       <code>$id</code>
@@ -29211,6 +29900,53 @@
     <MoreSpecificReturnType>
       <code><![CDATA[non-empty-list<ProgramUserGroup>]]></code>
     </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/program_management/include/program_managementPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/program_management/tests/unit/Stub/GatherSynchronizedFieldsStub.php">
     <InvalidArgument>
@@ -29308,6 +30044,19 @@
     </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/project_ownershipPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -29737,6 +30486,12 @@
     <DeprecatedMethod>
       <code><![CDATA[$dao->searchLinksByType($link_type_id)]]></code>
       <code><![CDATA[$dao->searchLinksByType($link_type_id)]]></code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>rowCount</code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -29846,6 +30601,14 @@
     </RedundantCast>
   </file>
   <file src="plugins/projectmilestones/include/projectmilestonesPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -29869,6 +30632,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/prometheus_metrics/include/prometheus_metricsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -30902,6 +31669,41 @@
     </MissingParamType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$branch_name</code>
       <code>$dest_branch_name</code>
@@ -30978,6 +31780,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_core/include/referencealias_corePlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -31020,6 +31827,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_git/include/referencealias_gitPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -31059,6 +31871,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_mediawiki/include/referencealias_mediawikiPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -31103,6 +31920,11 @@
     <ArgumentTypeCoercion>
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -31161,6 +31983,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_tracker/include/referencealias_trackerPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -31170,6 +31997,22 @@
       <code>importCompatRefXML</code>
       <code>registerExtraReferences</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/roadmap/include/roadmapPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/securitytxt/include/securitytxtPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass>
@@ -32686,6 +33529,28 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/statistics/include/statisticsPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -34793,6 +35658,42 @@
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
       <code>rowCount</code>
     </DeprecatedMethod>
     <InvalidClass>
@@ -34811,7 +35712,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
       <code>burningParrotGetStylesheets</code>
@@ -34820,7 +35720,6 @@
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
       <code>cssFile</code>
       <code>getApacheConfGenerator</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
       <code>getReferenceExtractor</code>
       <code>getTypes</code>
@@ -34847,7 +35746,6 @@
       <code>statistics_collector</code>
       <code>svn_repository_created</code>
       <code>systemEventProjectRename</code>
-      <code>system_event_get_types_for_default_queue</code>
       <code>systemevent_user_rename</code>
       <code>updateAllAccessFileOfProject</code>
     </MissingReturnType>
@@ -34958,6 +35856,16 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/taskboardPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -35248,6 +36156,43 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/testmanagementPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -35306,6 +36251,15 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testplan/include/testplanPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -35711,6 +36665,24 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/timetrackingPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -35845,16 +36817,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactCreator.class.php">
-    <DeprecatedMethod>
-      <code>userCanSubmitArtifact</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$artifact</code>
       <code>$format</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>checkUserCanSubmit</code>
-      <code>getTracker</code>
       <code>returnReferenceOrError</code>
     </MissingReturnType>
   </file>
@@ -39686,26 +40653,11 @@
       <code>revokeProject</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/ConfigNotificationAssignedTo.php">
-    <MissingReturnType>
-      <code>disableAssignedToInSubject</code>
-      <code>enableAssignedToInSubject</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSender.php">
     <MissingParamType>
-      <code>$dao</code>
       <code>$enabled</code>
       <code>$format</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>setCustomSender</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-      <code>ConfigNotificationAssignedToDao</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSenderFormatter.php">
     <InvalidReturnStatement>
@@ -39861,9 +40813,6 @@
       <code><![CDATA[$this->getTracker()->getGroupId()]]></code>
       <code><![CDATA[$this->tracker->getGroupId()]]></code>
     </PossiblyInvalidArgument>
-    <UndefinedVariable>
-      <code>$reminderId</code>
-    </UndefinedVariable>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminderManager.class.php">
     <DeprecatedMethod>
@@ -39903,15 +40852,6 @@
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($ugs)</code>
     </DeprecatedFunction>
-    <InvalidOperand>
-      <code><![CDATA[$this->displayAllReminders()]]></code>
-    </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[$html_table->
-                    setColumnsTitle($titles)->
-                    setBody($output)->
-                    render()]]></code>
-    </InvalidReturnStatement>
     <MissingParamType>
       <code>$reminderId</code>
     </MissingParamType>
@@ -52305,42 +53245,6 @@
       <code>update</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/dao/ConfigNotificationAssignedToDao.php">
-    <DeprecatedMethod>
-      <code>enableExceptionsOnError</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>getDa</code>
-      <code>getDa</code>
-      <code>getDa</code>
-      <code>parent::__construct($da)</code>
-      <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>create</code>
-      <code>delete</code>
-      <code>searchConfigurationAssignedTo</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/dao/ConfigNotificationEmailCustomSenderDao.php">
-    <MissingParamType>
-      <code>$enabled</code>
-      <code>$format</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>create</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/dao/ProjectDao.php">
     <MissingParamType>
       <code>$limit</code>
@@ -54035,6 +54939,96 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/trackerPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code>$project_with_tracker_administration</code>
     </InvalidArgument>
@@ -54509,6 +55503,17 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -54703,6 +55708,14 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker_encryption/include/tracker_encryptionPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$key</code>
@@ -54878,6 +55891,10 @@
     </MissingParamType>
   </file>
   <file src="plugins/tuleap_synchro/include/tuleap_synchroPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -55077,6 +56094,12 @@
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="plugins/userlog/include/userlogPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -55323,6 +56346,18 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/velocity/include/velocityPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$parameters</code>
@@ -55506,6 +56541,13 @@
       <code>getIncomingFileSize</code>
       <code>setInstance</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/webdav/include/webdavPlugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+      <code>addHook</code>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="src/common/Authentication/SplitToken/SplitTokenVerificationStringHasher.php">
     <ImplicitToStringCast>
@@ -59875,6 +60917,9 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Plugin/Plugin.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$hook</code>
       <code>$is_custom</code>
@@ -60094,6 +61139,11 @@
       <code>setPluginRestricted</code>
       <code>unsetPluginRestricted</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/Plugin/PluginWithLegacyInternalRouting.php">
+    <DeprecatedMethod>
+      <code>addHook</code>
+    </DeprecatedMethod>
   </file>
   <file src="src/common/Plugin/SerializedPluginProxy.php">
     <LessSpecificReturnStatement>
@@ -79613,8 +80663,6 @@
     </PossiblyInvalidOperand>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType>
       <code>(int) $groupId</code>
@@ -79685,18 +80733,6 @@
       <code>$userId</code>
       <code>$userfile_tmpname</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$attachmentId</code>
-      <code>$basedir</code>
-      <code>$date</code>
-      <code>$file</code>
-      <code>$gid</code>
-      <code>$id</code>
-      <code>$mimeType</code>
-      <code>$owner_id</code>
-      <code>$revision</code>
-      <code>$size</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>create</code>
       <code>dbFetch</code>
@@ -79722,10 +80758,6 @@
       <code>setRevision</code>
       <code>setSize</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->filename]]></code>
-      <code><![CDATA[$this->filename]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/wiki/lib/WikiAttachmentRevisionDao.class.php">
     <DeprecatedMethod>
