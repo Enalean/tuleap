@@ -135,7 +135,8 @@ fetchPullRequestTimelineItems(pull_request_id)
             replies_store,
             PullRequestCommentNewReplySaver(),
             current_user_presenter.value,
-            current_pull_request_presenter.value
+            current_pull_request_presenter.value,
+            displayTuleapAPIFault
         );
 
         is_loading_threads.value = false;
