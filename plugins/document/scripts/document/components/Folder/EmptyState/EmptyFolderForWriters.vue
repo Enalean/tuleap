@@ -25,7 +25,7 @@
         <div class="empty-state-illustration">
             <empty-folder-for-writers-svg />
         </div>
-        <h1 class="empty-state-title" v-translate>It's time to add new documents!</h1>
+        <h1 class="empty-state-title">{{ $gettext("It's time to add new documents!") }}</h1>
         <div class="empty-state-action">
             <new-item-dropdown v-bind:item="current_folder" />
         </div>

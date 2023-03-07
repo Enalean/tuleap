@@ -39,7 +39,7 @@
             data-shortcut-notifications
         >
             <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>Notifications</span>
+            <span>{{ $gettext("Notifications") }}</span>
         </a>
         <router-link
             v-if="should_display_versions_link"
@@ -53,7 +53,7 @@
                 class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"
                 aria-hidden="true"
             ></i>
-            <span v-translate>Versions</span>
+            <span>{{ $gettext("Versions") }}</span>
         </router-link>
         <a
             v-if="!should_display_history_in_document"
@@ -64,7 +64,7 @@
             data-test="document-history"
         >
             <i class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>History</span>
+            <span>{{ $gettext("History") }}</span>
         </a>
         <router-link
             v-else
@@ -75,7 +75,7 @@
             data-test="document-history"
         >
             <i class="fa-solid fa-fw fa-list tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-            <span v-translate>Logs</span>
+            <span>{{ $gettext("Logs") }}</span>
         </router-link>
 
         <slot name="update-permissions" />
@@ -88,7 +88,7 @@
             data-shortcut-approval-tables
         >
             <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>Approval tables</span>
+            <span>{{ $gettext("Approval tables") }}</span>
         </a>
 
         <drop-down-separator />

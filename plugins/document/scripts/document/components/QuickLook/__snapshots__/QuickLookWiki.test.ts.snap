@@ -9,12 +9,9 @@ exports[`QuickLookWiki renders quick look for wiki document 1`] = `
     data-test="go-to-the-wiki-page"
     type="button"
   >
-    <translate-stub
-      tag="span"
-    >
-      Open
-    </translate-stub>
-     
+    
+        Open
+        
     <i
       aria-hidden="true"
       class="fa-solid fa-right-long tlp-button-icon-right"

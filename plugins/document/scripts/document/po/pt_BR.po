@@ -47,8 +47,7 @@ msgstr ""
 
 msgid ""
 "A document already exists with the same title. However you can create a new "
-"version of\n"
-"        this document by dropping the item on the file you want to update."
+"version of this document by dropping the item on the file you want to update."
 msgstr ""
 
 msgid "A folder already exists with the same title."
@@ -68,8 +67,7 @@ msgstr ""
 
 msgid ""
 "All the properties values that you define here will be proposed as default "
-"values\n"
-"            for the items that will be created within this folder."
+"values for the items that will be created within this folder."
 msgstr ""
 
 msgid "An error has occurred, please contact your administrator"
@@ -348,6 +346,9 @@ msgstr ""
 msgid "Large view"
 msgstr ""
 
+msgid "Last"
+msgstr ""
+
 msgid "Last update date"
 msgstr ""
 
@@ -466,8 +467,7 @@ msgstr ""
 
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
-"will be\n"
-"                discarded."
+"will be discarded."
 msgstr ""
 
 msgid "Oops, there's an issue."
@@ -821,16 +821,13 @@ msgstr ""
 
 msgid ""
 "You are currently copying \"%{ title }\". You can paste it in a folder you "
-"are allowed to\n"
-"        write into using the folder action drop-down."
+"are allowed to write into using the folder action drop-down."
 msgstr ""
 
 msgid ""
 "You are currently moving \"%{ title }\". You can paste it in a folder you "
-"are allowed to\n"
-"        write into using the folder action drop-down. You also cannot move "
-"the item somewhere\n"
-"        where the name is already used by another item."
+"are allowed to write into using the folder action drop-down. You also cannot "
+"move the item somewhere where the name is already used by another item."
 msgstr ""
 
 msgid "You are not allowed to drag 'n drop more than %{ nb } file at once."

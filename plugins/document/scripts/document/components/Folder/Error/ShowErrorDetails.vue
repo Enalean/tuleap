@@ -20,13 +20,13 @@
 <template>
     <div>
         <h1 class="empty-state-title">
-            <translate>Oops, there's an issue.</translate>
+            {{ $gettext("Oops, there's an issue.") }}
         </h1>
-        <p class="empty-state-text" v-translate v-if="!has_document_lock_error">
-            It seems the content of this element can't be loaded.
+        <p class="empty-state-text" v-if="!has_document_lock_error">
+            {{ $gettext("It seems the content of this element can't be loaded.") }}
         </p>
-        <p class="empty-state-text" v-translate v-else>
-            It seems an action you tried to perform can't be done.
+        <p class="empty-state-text" v-else>
+            {{ $gettext("It seems an action you tried to perform can't be done.") }}
         </p>
         <template v-if="has_any_loading_error">
             <div class="document-folder-error-link">
@@ -35,9 +35,8 @@
                     data-test="error-details-show-more-button"
                     v-on:click.prevent="is_more_shown = true"
                     href="#"
-                    v-translate
                 >
-                    Show error details
+                    {{ $gettext("Show error details") }}
                 </a>
             </div>
             <pre

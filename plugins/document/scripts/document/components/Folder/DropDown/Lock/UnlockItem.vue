@@ -28,7 +28,7 @@
         data-shortcut-lock-document
     >
         <i class="fa-solid fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
-        <translate>Unlock</translate>
+        {{ $gettext("Unlock") }}
     </button>
 </template>
 

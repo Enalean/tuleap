@@ -28,7 +28,7 @@
         data-shortcut-copy
     >
         <i class="fa-solid fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
-        <translate>Copy</translate>
+        {{ $gettext("Copy") }}
     </button>
 </template>
 

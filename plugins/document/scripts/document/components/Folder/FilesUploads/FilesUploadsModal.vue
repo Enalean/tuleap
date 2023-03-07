@@ -21,7 +21,7 @@
     <div class="tlp-modal" role="dialog" aria-labelledby="document-uploads-files-modal-title">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-uploads-files-modal-title">
-                <translate>Uploading documents</translate>
+                {{ $gettext("Uploading documents") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -51,22 +51,17 @@
                     v-if="file.is_uploading || file.is_uploading_new_version"
                     v-bind:item="file"
                 />
-                <span v-else-if="file.upload_error !== null" class="tlp-badge-danger" v-translate>
-                    Upload error
+                <span v-else-if="file.upload_error !== null" class="tlp-badge-danger">
+                    {{ $gettext("Upload error") }}
                 </span>
             </div>
             <div class="document-uploads-modal-empty-state" v-if="files_uploads_list.length === 0">
-                <p class="empty-state-text" v-translate>There is no upload in progress</p>
+                <p class="empty-state-text">{{ $gettext("There is no upload in progress") }}</p>
             </div>
         </div>
         <div class="tlp-modal-footer">
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-modal-action"
-                data-dismiss="modal"
-                v-translate
-            >
-                Close
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>

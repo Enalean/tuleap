@@ -25,7 +25,7 @@
         data-test="obsolescence-date-property"
     >
         <label class="tlp-label" for="document-obsolescence-date-update">
-            <translate>Obsolescence date</translate>
+            {{ $gettext("Obsolescence date") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element document-obsolescence-date-properties-fields">
@@ -37,12 +37,12 @@
                 ref="selectDateValue"
                 data-test="document-obsolescence-date-select-update"
             >
-                <option name="permanent" value="permanent" v-translate>Permanent</option>
-                <option name="3months" value="3" v-translate>3 months</option>
-                <option name="6months" value="6" v-translate>6 months</option>
-                <option name="12months" value="12" v-translate>12 months</option>
-                <option name="fixedDate" value="fixed" v-translate>Fixed date</option>
-                <option name="today" value="today" v-translate>Obsolete today</option>
+                <option name="permanent" value="permanent">{{ $gettext("Permanent") }}</option>
+                <option name="3months" value="3">{{ $gettext("3 months") }}</option>
+                <option name="6months" value="6">{{ $gettext("6 months") }}</option>
+                <option name="12months" value="12">{{ $gettext("12 months") }}</option>
+                <option name="fixedDate" value="fixed">{{ $gettext("Fixed date") }}</option>
+                <option name="today" value="today">{{ $gettext("Obsolete today") }}</option>
             </select>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa-regular fa-calendar"></i></span>

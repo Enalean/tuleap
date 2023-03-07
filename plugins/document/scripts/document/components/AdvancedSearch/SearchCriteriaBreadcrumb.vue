@@ -20,7 +20,7 @@
 
 <template>
     <p class="document-search-breadcrumbs">
-        <span class="document-search-breadcrumbs-label" v-translate>Searching in</span>
+        <span class="document-search-breadcrumbs-label">{{ $gettext("Searching in") }}</span>
         <i
             class="fa-solid fa-circle-notch fa-spin"
             aria-hidden="true"
@@ -43,8 +43,8 @@
                 </router-link>
             </template>
             <span class="document-search-breadcrumbs-final-separator">.</span>
-            <router-link v-bind:to="getSearchInRootFolderRoute()" v-translate>
-                Search in whole project documentation
+            <router-link v-bind:to="getSearchInRootFolderRoute()">
+                {{ $gettext("Search in whole project documentation") }}
             </router-link>
             .
         </template>

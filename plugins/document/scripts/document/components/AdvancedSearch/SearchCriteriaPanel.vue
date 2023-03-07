@@ -22,7 +22,7 @@
     <section class="tlp-pane search-criteria-panel">
         <form class="tlp-pane-container" data-test="form" v-on:submit.prevent="advancedSearch">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
+                <h1 class="tlp-pane-title">{{ $gettext("Search criteria") }}</h1>
             </div>
             <section class="tlp-pane-section search-criteria-panel-criteria-container">
                 <search-criteria-breadcrumb v-if="!is_in_root_folder" />
@@ -42,10 +42,9 @@
                 <button
                     type="submit"
                     class="tlp-button-primary document-search-submit"
-                    v-translate
                     data-test="submit"
                 >
-                    Apply
+                    {{ $gettext("Apply") }}
                 </button>
             </section>
         </form>

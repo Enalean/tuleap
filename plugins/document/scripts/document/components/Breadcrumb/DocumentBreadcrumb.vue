@@ -41,7 +41,7 @@
                     data-test="breadcrumb-project-documentation"
                 >
                     <i class="breadcrumb-link-icon fa-regular fa-folder-open"></i>
-                    <translate>Documents</translate>
+                    {{ $gettext("Documents") }}
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">
                     <nav class="breadcrumb-switch-menu" v-if="user_is_admin">
@@ -53,7 +53,7 @@
                                 data-test="breadcrumb-administrator-link"
                             >
                                 <i class="fa-solid fa-gear fa-fw"></i>
-                                <translate>Administration</translate>
+                                {{ $gettext("Administration") }}
                             </a>
                         </span>
                     </nav>

@@ -25,9 +25,8 @@
                 v-bind:colspan="nb_columns"
                 class="tlp-table-cell-empty"
                 data-test="search-results-table-body-empty"
-                v-translate
             >
-                No matching results
+                {{ $gettext("No matching results") }}
             </td>
         </tr>
     </tbody>

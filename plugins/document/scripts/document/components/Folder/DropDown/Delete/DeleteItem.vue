@@ -28,7 +28,7 @@
         data-shortcut-delete
     >
         <i class="fa-solid fa-trash fa-fw tlp-dropdown-menu-item-icon"></i>
-        <translate>Delete</translate>
+        {{ $gettext("Delete") }}
     </button>
 </template>
 

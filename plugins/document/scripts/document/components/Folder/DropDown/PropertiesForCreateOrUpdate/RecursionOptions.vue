@@ -31,7 +31,7 @@
                 d="M19.2947 6.17726C19.6871 5.8003 19.7053 5.1798 19.3367 4.77944L15.2906 0.383877C15.0703 0.163594 14.7766 0.0350952 14.4645 0.0350952C13.822 0.0350952 13.2897 0.567446 13.2897 1.20993L13.2897 4.19644L1.15178 4.19645C0.515677 4.19645 1.62842e-05 4.71211 1.04905e-05 5.34821V5.34821C4.69678e-06 5.98431 0.51567 6.49998 1.15178 6.49998H13.2897L13.2897 9.21283C13.2897 9.85532 13.822 10.3877 14.4645 10.3877C14.7766 10.3877 15.0703 10.2592 15.2906 10.0389C15.6354 9.69405 18.0672 7.35637 19.2947 6.17726Z"
             />
         </svg>
-        <label class="tlp-label" for="recursion-option" v-translate>Recursion option</label>
+        <label class="tlp-label" for="recursion-option">{{ $gettext("Recursion option") }}</label>
         <select
             class="tlp-select tlp-select-adjusted"
             id="recursion-option"
@@ -40,11 +40,11 @@
             v-on:input="$emit('input', $event.target.value)"
         >
             <option value="none"></option>
-            <option value="folders" v-translate>
-                Apply new values on this folder and its subfolders only
+            <option value="folders">
+                {{ $gettext("Apply new values on this folder and its subfolders only") }}
             </option>
-            <option value="all_items" v-translate>
-                Apply new values on this folder and all its content
+            <option value="all_items">
+                {{ $gettext("Apply new values on this folder and all its content") }}
             </option>
         </select>
     </section>

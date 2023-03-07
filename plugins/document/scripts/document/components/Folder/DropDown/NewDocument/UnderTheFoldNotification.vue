@@ -23,8 +23,8 @@
         v-bind:class="notification_class"
         v-if="is_displayed"
     >
-        <translate v-if="is_folder">The folder has been created below.</translate>
-        <translate v-else>The document has been created below.</translate>
+        <template v-if="is_folder">{{ $gettext("The folder has been created below.") }}</template>
+        <template v-else>{{ $gettext("The document has been created below.") }}</template>
         <i class="fa-solid fa-arrow-down document-new-item-under-the-fold-notification-icon"></i>
     </div>
 </template>

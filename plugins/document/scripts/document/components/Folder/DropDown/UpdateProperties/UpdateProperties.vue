@@ -27,7 +27,7 @@
         data-shortcut-update-properties
     >
         <i class="fa-solid fa-fw fa-pencil tlp-dropdown-menu-item-icon"></i>
-        <translate>Update properties</translate>
+        {{ $gettext("Update properties") }}
     </button>
 </template>
 

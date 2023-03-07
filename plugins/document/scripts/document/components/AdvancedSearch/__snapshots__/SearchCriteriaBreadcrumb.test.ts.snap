@@ -6,8 +6,6 @@ exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder
 >
   <span
     class="document-search-breadcrumbs-label"
-    data-current-language="en_US"
-    data-msgid="Searching in"
   >
     Searching in
   </span>
@@ -40,12 +38,7 @@ exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder
     .
   </span>
    
-  <a
-    data-current-language="en_US"
-    data-msgid="
-            Search in whole project documentation
-        "
-  >
+  <a>
     
             Search in whole project documentation
         
@@ -62,8 +55,6 @@ exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hiera
 >
   <span
     class="document-search-breadcrumbs-label"
-    data-current-language="en_US"
-    data-msgid="Searching in"
   >
     Searching in
   </span>

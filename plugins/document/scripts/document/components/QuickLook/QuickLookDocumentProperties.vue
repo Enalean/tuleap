@@ -21,11 +21,11 @@
     <section class="tlp-pane-section document-quick-look-properties">
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label for="document-id" class="tlp-label" v-translate>Id</label>
+                <label for="document-id" class="tlp-label">{{ $gettext("Id") }}</label>
                 <p id="document-id">#{{ item.id }}</p>
             </div>
             <div class="tlp-property">
-                <label for="document-owner" class="tlp-label" v-translate>Owner</label>
+                <label for="document-owner" class="tlp-label">{{ $gettext("Owner") }}</label>
                 <p id="document-owner">
                     <user-badge v-bind:user="item.owner" />
                 </p>
@@ -41,14 +41,14 @@
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label class="tlp-label" v-translate>Creation</label>
+                <label class="tlp-label">{{ $gettext("Creation") }}</label>
                 <document-relative-date
                     v-bind:date="item.creation_date"
                     v-bind:relative_placement="'right'"
                 />
             </div>
             <div class="tlp-property">
-                <label class="tlp-label" v-translate>Last update date</label>
+                <label class="tlp-label">{{ $gettext("Last") }} update date</label>
                 <document-relative-date
                     v-bind:date="item.last_update_date"
                     v-bind:relative_placement="'right'"

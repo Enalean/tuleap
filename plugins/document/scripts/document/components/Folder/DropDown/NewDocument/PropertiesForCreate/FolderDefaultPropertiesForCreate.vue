@@ -28,12 +28,15 @@
             >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
-            <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
+            <h2 class="tlp-modal-subtitle">{{ $gettext("Default properties") }}</h2>
         </div>
         <template v-if="has_loaded_properties">
-            <p v-translate data-test="document-folder-default-properties">
-                All the properties values that you define here will be proposed as default values
-                for the items that will be created within this folder.
+            <p data-test="document-folder-default-properties">
+                {{
+                    $gettext(
+                        "All the properties values that you define here will be proposed as default values for the items that will be created within this folder."
+                    )
+                }}
             </p>
             <status-property-with-custom-binding-for-folder-create
                 v-bind:status_value="status_value"

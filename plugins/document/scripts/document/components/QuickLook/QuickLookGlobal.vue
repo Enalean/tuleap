@@ -43,7 +43,9 @@
         <quick-look-document-properties v-bind:item="currently_previewed_item" />
         <section class="tlp-pane-section" v-if="currently_previewed_item.description">
             <div class="tlp-property">
-                <label class="tlp-label" for="item-description" v-translate>Description</label>
+                <label class="tlp-label" for="item-description">{{
+                    $gettext("Description")
+                }}</label>
                 <p
                     id="item-description"
                     v-dompurify-html="currently_previewed_item.post_processed_description"

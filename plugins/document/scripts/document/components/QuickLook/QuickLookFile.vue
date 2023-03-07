@@ -26,7 +26,7 @@
             v-bind:href="open_href"
             data-test="document-quick-look-document-cta-open"
         >
-            <translate>Open</translate>
+            {{ $gettext("Open") }}
             <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
         </a>
         <download-button class="tlp-button-primary tlp-button-small" v-bind:item="item" v-else />

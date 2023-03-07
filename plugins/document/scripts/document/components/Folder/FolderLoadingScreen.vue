@@ -30,10 +30,12 @@
             ]"
             v-bind:cell_classes="['', 'document-tree-cell-owner', 'document-tree-cell-updatedate']"
         >
-            <th class="document-tree-head-name" v-translate>Name</th>
-            <th class="document-tree-head-owner document-tree-head-skeleton" v-translate>Owner</th>
-            <th class="document-tree-head-updatedate document-tree-head-skeleton" v-translate>
-                Last update date
+            <th class="document-tree-head-name">{{ $gettext("Name") }}</th>
+            <th class="document-tree-head-owner document-tree-head-skeleton">
+                {{ $gettext("Owner") }}
+            </th>
+            <th class="document-tree-head-updatedate document-tree-head-skeleton">
+                {{ $gettext("Last update date") }}
             </th>
         </skeleton-table>
     </div>

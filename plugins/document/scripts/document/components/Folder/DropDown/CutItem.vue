@@ -29,7 +29,7 @@
         data-shortcut-cut
     >
         <i class="fa-solid fa-fw fa-scissors tlp-dropdown-menu-item-icon"></i>
-        <translate>Cut</translate>
+        {{ $gettext("Cut") }}
     </button>
 </template>
 <script setup lang="ts">

@@ -27,7 +27,7 @@
             >
                 <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
-            <h2 class="tlp-modal-subtitle" v-translate>Permissions</h2>
+            <h2 class="tlp-modal-subtitle">{{ $gettext("Permissions") }}</h2>
         </div>
         <permissions-for-groups-selector
             v-if="project_ugroups !== null"

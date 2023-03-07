@@ -26,7 +26,7 @@
         v-on:click="toggleQuickLook()"
     >
         <i class="fa-solid fa-eye tlp-button-icon"></i>
-        <translate>Quick look</translate>
+        {{ $gettext("Quick look") }}
     </button>
 </template>
 

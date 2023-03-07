@@ -19,8 +19,8 @@
 
 <template>
     <div class="tlp-form-element docman-item-version-title-update">
-        <label class="tlp-label" for="document-update-version-title" v-translate>
-            Version name
+        <label class="tlp-label" for="document-update-version-title">
+            {{ $gettext("Version name") }}
         </label>
         <input
             type="text"

@@ -12,26 +12,20 @@ exports[`FolderLoadingScreen displays the folder loading screen 1`] = `
   >
     <th
       class="document-tree-head-name"
-      data-current-language="en_US"
-      data-msgid="Name"
     >
       Name
     </th>
      
     <th
       class="document-tree-head-owner document-tree-head-skeleton"
-      data-current-language="en_US"
-      data-msgid="Owner"
     >
-      Owner
+      
+            Owner
+        
     </th>
      
     <th
       class="document-tree-head-updatedate document-tree-head-skeleton"
-      data-current-language="en_US"
-      data-msgid="
-            Last update date
-        "
     >
       
             Last update date
