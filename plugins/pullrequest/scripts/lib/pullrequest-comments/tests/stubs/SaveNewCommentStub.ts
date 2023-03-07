@@ -18,8 +18,9 @@
  */
 
 import { okAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import { errAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveNewComment } from "../../src/comment/PullRequestCommentReplySaver";
 import type { ReplyCommentFormPresenter } from "../../src/comment/ReplyCommentFormPresenter";
@@ -49,4 +50,8 @@ export const SaveNewCommentStub = {
             },
         };
     },
+
+    withFault: (fault: Fault): SaveNewComment => ({
+        saveReply: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),
+    }),
 };

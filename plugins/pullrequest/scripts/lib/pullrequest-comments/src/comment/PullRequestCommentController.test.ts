@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 
+import { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 import type { HostElement, PullRequestCommentComponentType } from "./PullRequestComment";
-import type { ControlPullRequestComment } from "./PullRequestCommentController";
+import type {
+    ControlPullRequestComment,
+    PullRequestCommentErrorCallback,
+} from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
 import { FocusTextReplyToCommentAreaStub } from "../../tests/stubs/FocusTextReplyToCommentAreaStub";
 import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
@@ -36,12 +40,14 @@ import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestComme
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
+import type { SaveNewComment } from "./PullRequestCommentReplySaver";
 
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusReplyToCommentTextArea,
         replies_store: StorePullRequestCommentReplies,
         new_comment_saver: SaveNewCommentStub,
-        new_comment_reply_payload: PullRequestComment;
+        new_comment_reply_payload: PullRequestComment,
+        on_error_callback: PullRequestCommentErrorCallback;
 
     beforeEach(() => {
         new_comment_reply_payload = {
@@ -53,15 +59,17 @@ describe("PullRequestCommentController", () => {
         focus_helper = FocusTextReplyToCommentAreaStub();
         replies_store = PullRequestCommentRepliesStore([]);
         new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
+        on_error_callback = vi.fn();
     });
 
-    const getController = (): ControlPullRequestComment =>
+    const getController = (save_new_comment: SaveNewComment): ControlPullRequestComment =>
         PullRequestCommentController(
             focus_helper,
             replies_store,
-            new_comment_saver,
+            save_new_comment,
             CurrentPullRequestUserPresenterStub.withDefault(),
-            CurrentPullRequestPresenterStub.withDefault()
+            CurrentPullRequestPresenterStub.withDefault(),
+            on_error_callback
         );
 
     it("should show the reply to comment form and sets the focus on the textarea", () => {
@@ -69,7 +77,7 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as HostElement;
 
-        getController().showReplyForm(host);
+        getController(new_comment_saver).showReplyForm(host);
 
         expect(host.reply_comment_presenter).not.toBeNull();
         expect(focus_helper.focusFormReplyToCommentTextArea).toHaveBeenCalledTimes(1);
@@ -81,7 +89,7 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestCommentComponentType;
 
-        getController().hideReplyForm(host);
+        getController(new_comment_saver).hideReplyForm(host);
 
         expect(host.reply_comment_presenter).toBeNull();
     });
@@ -92,7 +100,7 @@ describe("PullRequestCommentController", () => {
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
         } as unknown as HostElement;
 
-        getController().updateCurrentReply(host, "Please rebase");
+        getController(new_comment_saver).updateCurrentReply(host, "Please rebase");
 
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
     });
@@ -105,7 +113,7 @@ describe("PullRequestCommentController", () => {
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
 
-        await getController().saveReply(host);
+        await getController(new_comment_saver).saveReply(host);
 
         expect(new_comment_saver.getNbCalls()).toBe(1);
         expect(new_comment_saver.getLastCallParams()).toStrictEqual(
@@ -134,7 +142,7 @@ describe("PullRequestCommentController", () => {
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
 
-        await getController().saveReply(host);
+        await getController(new_comment_saver).saveReply(host);
 
         expect(host.reply_comment_presenter).toBeNull();
         expect(host.comment.color).toBe("flamingo-pink");
@@ -164,8 +172,23 @@ describe("PullRequestCommentController", () => {
             }),
         ]);
 
-        getController().displayReplies(host);
+        getController(new_comment_saver).displayReplies(host);
 
         expect(host.replies).toHaveLength(3);
+    });
+
+    it("should trigger the on_error_callback when it is defined and an error occurred while saving a reply", async () => {
+        const tuleap_api_fault = Fault.fromMessage("You cannot");
+        const save_new_comment = SaveNewCommentStub.withFault(tuleap_api_fault);
+
+        const comment = PullRequestCommentPresenterStub.buildGlobalComment();
+        const host = {
+            comment,
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
+        } as unknown as HostElement;
+
+        await getController(save_new_comment).saveReply(host);
+
+        expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
     });
 });
