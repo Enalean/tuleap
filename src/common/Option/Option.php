@@ -84,4 +84,14 @@ final class Option
 
         return $fn($this->value);
     }
+
+    public function isValue(): bool
+    {
+        return $this->has_value;
+    }
+
+    public function isNothing(): bool
+    {
+        return ! $this->has_value;
+    }
 }
