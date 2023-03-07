@@ -9,18 +9,21 @@ There are two types of events:
 -   Regular events (aka hooks)
 -   System Events
 
-The former is a open call for extensions. It\'s a function call meant to
+The former is an open call for extensions. It's a function call meant to
 be listened by plugins, while there are some usage of hooks within core
 itself, 99% of hooks are there for plugins. Hooks are synchronous.
 
-The later is an asynchronous event queue meant for actions that can be
+The latter is an asynchronous event queue meant for actions that can be
 delayed or actions that require higher privileges (esp. root).
+
+Relevant architecture changes that applies to events:
+- [Attribute based events](./../../adr/0021-attributes-based-events.md)
 
 ## Hooks
 
 There are two sides of a hook:
 
--   the caller code, often in Core. It\'s there for a plugin to listen
+-   the caller code, often in Core. It's there for a plugin to listen
     and extend the functionality.
 
 -   the listener code, in a Plugin. React to something that is happening
@@ -53,15 +56,14 @@ There are two sides of a hook:
             |                |                        |                    |           |
 
 In the following sections, we will detail the hook management. To be
-consistent with the naming in the core we will stick to \"event\" term
-for \"hook\". We will see how to define an event, how to listen to an
+consistent with the naming in the core we will stick to "event" term
+for "hook". We will see how to define an event, how to listen to an
 event and how to process an event.
 
 ### How to define an event
 
-Every events are reified as a class with a constant `NAME` wich
-implements `Tuleap\Event\Dispatchable` interface. A minimal event is
-thus the following:
+Every event is reified as a class which implements `Tuleap\Event\Dispatchable` interface.
+A minimal event is thus the following:
 
 ``` php
 declare(strict_types=1);
@@ -72,15 +74,10 @@ use Tuleap\Event\Dispatchable;
 
 class MyEvent implements Dispatchable
 {
-
-    public const NAME = 'my_event';
-
 }
 ```
 
-Please note that the name used besides the constant must be unique
-across all events raised by the platform, therefore you must be specific
-enough to avoid ambiguities.
+The `Dispatchable` interface is there mainly to be able to collect all possible events.
 
 There is no restrictions about what you can put in an Event class. The
 event can have a constructor, private members, getters and setters, ...
@@ -92,48 +89,20 @@ Now that we have defined our event we can listen to it.
 ### How to listen to an event
 
 In our plugin, we need to declare that we want to listen to the event.
-This is done via the parent method `Plugin::addHook`. This method is
-often called in the constructor of the plugin but the preferred way is
-to call it in `getHooksAndCallback`:
+This is done with the attribute `Tuleap\Plugin\ListeningToEventClass`:
+
 
 ``` php
-public function getHooksAndCallbacks()
-{
-    $this->addHook(\Tuleap\Stuff\MyEvent::NAME);
 
-    return parent::getHooksAndCallbacks();
+final class stuffPlugin
+{
+    #[Tuleap\Plugin\ListeningToEventClass]
+    public function aListener(\Tuleap\Stuff\MyEvent $event)
+    {
+        …
+    }
 }
 ```
-
-The value of `NAME` constant of the event will be used as the name of
-the callback, `my_event` in our example. Therefore we need to declare
-this method:
-
-``` php
-public function getHooksAndCallbacks()
-{
-    $this->addHook(\Tuleap\Stuff\MyEvent::NAME);
-
-    return parent::getHooksAndCallbacks();
-}
-
-public function my_event(\Tuleap\Stuff\MyEvent $event)
-{
-    …
-}
-```
-
-The method `addHook` accepts two additional parameters:
-`function addHook($hook, $callback = null, $recallHook = false)`.
-
-The `$callback` parameter is used to define the callback that will be
-used when we process the event.
-
-The other parameter `$recallHook` is here for legacy reason and should
-not be used. If `true`, the name of the event was given as first
-parameter of the callback to be able to have only one callback with a
-big switch to do answer to different events. You don\'t need to use it
-anymore.
 
 For performance reasons, the list of hooks listened by a plugin are
 cached.
@@ -160,7 +129,7 @@ $my_event = EventManager::instance()->dispatch(new \Tuleap\Stuff\MyEvent());
 
 You can (should?) add some business logic into your event. This is
 useful to add some context to the listeners and allow them to give back
-results if needed. For example we can look at the following usage:
+results if needed. For example, we can look at the following usage:
 
 ``` php
 $get_public_areas = EventManager::instance()->dispatch(new GetPublicAreas($project));
@@ -170,7 +139,7 @@ foreach($get_public_areas->getAreas() as $area) {
 ```
 
 This event is used to display additional information in the widget
-\"Public areas\". For example the `tracker` plugin wants to list all
+"Public areas". For example the `tracker` plugin wants to list all
 trackers of the project whereas the `docman` plugin only displays a link
 to the service:
 
@@ -193,8 +162,6 @@ use Tuleap\Event\Dispatchable;
 
 class GetPublicAreas implements Dispatchable
 {
-    public const NAME = 'service_public_areas';
-
     /**
      * @var string[]
      */
@@ -281,29 +248,29 @@ of plugin hook method.
 
 #### Names
 
-Hooks are simple to use but it\'s often hard to get right. When you are
+Hooks are simple to use, but it's often hard to get them right. When you are
 only listening to existing hooks, the work is rather easy because people
 already did the hard work for you once.
 
 The tricky part is when you need to introduce a new hook.
 
-First of all, the name of the hook must be self descriptive and generic.
-Most of the time, when you need to introduce an hook, it\'s for one
-usecase and one plugin in particular. While the specific behaviour and
+First of all, the name of the hook must be self-descriptive and generic.
+Most of the time, when you need to introduce an hook, it's for one
+use case and one plugin in particular. While the specific behaviour and
 naming should be placed in the plugin, the hook itself must not enclose
 anything related to your plugin.
 
-A good way to name your hook is to name it after it\'s place in the
+A good way to name your hook is to name it after it's place in the
 process execution:
 
 -   PostArtifactCreation
 -   PreEmailNotification
--   \...
+-   ...
 
 #### Leak
 
 One common mistake when designing new hooks is the leak of information.
-The caller must never depend on a specific behaviour set by a listner.
+The caller must never depend on a specific behaviour set by a listener.
 
 When the calling code must deal with values modified by a plugin (try to
 avoid that by all means), the behaviour must be 100% under control of
@@ -324,7 +291,7 @@ update of an item with `item_metdata` passed by reference (for
 modification).
 
 But the code, in the docman, check a specific value depending on a very
-specific other plugin (mediawiki). It\'s bad because docman should have
+specific other plugin (mediawiki). It's bad because docman should have
 no knowledge at all that mediawiki even exist.
 
 ## System Events
@@ -341,7 +308,7 @@ backend process. This backend process is a managed by a cron job (see
 
 In Core, all system events are managed by `SystemEventManager` (which
 is, bye the way a good example of Core listening on Core events\...).
-Let\'s have a look at how users are renamed.
+Let's have a look at how users are renamed.
 
 In site administration `usergroup.php` there is an event triggered when
 user name change:
@@ -393,5 +360,5 @@ Wrap-up, to add a new system event, developer should:
     method that finish by `$this->done()` when successful or
     `$this->error()` otherwise.
 
-That\'s all! All the process of instantiation and queue management is
+That's all! All the process of instantiation and queue management is
 done by Tuleap.

@@ -488,6 +488,18 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $plugin->getHooksAndCallbacks();
     }
 
+    public function testPluginIsListeningToEventThatIsNotAvailableBecausePluginIsNotInstalled(): void
+    {
+        $plugin = new class extends \Plugin {
+            #[\Tuleap\Plugin\ListeningToEventClass]
+            public function someCallbackMethod(SomeEventFromNotLoadedPlugin $option): void
+            {
+            }
+        };
+
+        self::assertEmpty($plugin->getHooksAndCallbacks()->toArray());
+    }
+
     public function testPluginUsesListeningToEventNameAttribute(): void
     {
         $plugin = new class extends \Plugin {

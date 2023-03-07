@@ -23,7 +23,6 @@ namespace Tuleap\Statistics;
 use DateInterval;
 use DateTime;
 use EventManager;
-use Statistics_Event;
 use Tuleap\Statistics\Frequencies\FrequenciesSearchFieldsPresenter;
 
 class SearchFieldsPresenterBuilder
@@ -194,26 +193,10 @@ class SearchFieldsPresenterBuilder
 
     private function getListOfTypeValuePresenter(array $type_values)
     {
-        $all_data = [
-            'session'   => dgettext('tuleap-statistics', 'Sessions'),
-            'user'      => dgettext('tuleap-statistics', 'Users'),
-            'forum'     => dgettext('tuleap-statistics', 'Messages in forums'),
-            'filedl'    => dgettext('tuleap-statistics', 'Files downloaded'),
-            'file'      => dgettext('tuleap-statistics', 'Files released'),
-            'groups'    => dgettext('tuleap-statistics', 'Project created'),
-            'wikidl'    => dgettext('tuleap-statistics', 'Wiki pages viewed'),
-            'oartifact' => dgettext('tuleap-statistics', 'Opened Artifacts (V3)'),
-            'cartifact' => dgettext('tuleap-statistics', 'Closed (or wished end date) Artifacts (V3)'),
-        ];
-
-        EventManager::instance()->processEvent(
-            Statistics_Event::FREQUENCE_STAT_ENTRIES,
-            ['entries' => &$all_data]
-        );
+        $all_data = EventManager::instance()->dispatch(new FrequenciesLabels());
 
         $type_options = [];
-
-        foreach ($all_data as $type => $label) {
+        foreach ($all_data->getLabels() as $type => $label) {
             $type_options[] = $this->getValuePresenter($type, $type_values, $label);
         }
 
