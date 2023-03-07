@@ -33,7 +33,6 @@ use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
-use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
 
 final class ArtifactLinkerTest extends TestCase
 {
@@ -44,7 +43,6 @@ final class ArtifactLinkerTest extends TestCase
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveForwardLinksStub $links_retriever;
-    private RetrieveViewableArtifactStub $artifact_retriever;
 
     private \PFUser $user;
 
@@ -60,7 +58,6 @@ final class ArtifactLinkerTest extends TestCase
         $this->links_retriever      = RetrieveForwardLinksStub::withLinks(
             new CollectionOfForwardLinks([ForwardLinkStub::withNoType(10)])
         );
-        $this->artifact_retriever   = RetrieveViewableArtifactStub::withNoArtifact();
     }
 
     private function linkArtifact(): bool
@@ -72,7 +69,6 @@ final class ArtifactLinkerTest extends TestCase
             $this->form_element_factory,
             $this->changeset_creator,
             $this->links_retriever,
-            $this->artifact_retriever
         );
         return $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, '');
     }
@@ -104,7 +100,7 @@ final class ArtifactLinkerTest extends TestCase
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
         self::assertFalse($this->linkArtifact());
-        self::assertSame(0, $this->changeset_creator->getCallsCount());
+        self::assertSame(1, $this->changeset_creator->getCallsCount());
     }
 
     public function testItReturnsFalseAndDisplayAnInfoWhenThereIsAnErrorDuringTheChangesetCreation(): void
@@ -113,6 +109,6 @@ final class ArtifactLinkerTest extends TestCase
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         self::assertFalse($this->linkArtifact());
-        self::assertSame(0, $this->changeset_creator->getCallsCount());
+        self::assertSame(1, $this->changeset_creator->getCallsCount());
     }
 }

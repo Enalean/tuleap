@@ -31,10 +31,12 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
@@ -42,9 +44,10 @@ use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class ArtifactUpdateHandlerTest extends TestCase
 {
-    private const CURRENT_ARTIFACT_ID = 10;
-    private const SOURCE_ARTIFACT_ID  = 18;
-    private const ARTIFACT_TYPE       = "_is_child";
+    private const CURRENT_ARTIFACT_ID  = 10;
+    private const SOURCE_ARTIFACT_ID   = 18;
+    private const SOURCE_ARTIFACT_ID_2 = 36;
+    private const ARTIFACT_TYPE        = "_is_child";
 
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
@@ -96,7 +99,7 @@ final class ArtifactUpdateHandlerTest extends TestCase
     {
         $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([]);
 
-          $result = $this->unlinkReverseArtifact();
+        $result = $this->unlinkReverseArtifact();
 
         self::assertSame(0, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isErr($result));
@@ -134,8 +137,10 @@ final class ArtifactUpdateHandlerTest extends TestCase
         self::assertNull($result->value);
     }
 
-    private function updateTypeAndAddReverseLinks(CollectionOfReverseLinks $added_links, CollectionOfReverseLinks $updated_type): Ok|Err
-    {
+    private function updateTypeAndAddReverseLinks(
+        CollectionOfReverseLinks $added_links,
+        CollectionOfReverseLinks $updated_type,
+    ): Ok|Err {
         $artifact = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
         $user     = UserTestBuilder::aUser()->build();
 
@@ -176,7 +181,7 @@ final class ArtifactUpdateHandlerTest extends TestCase
         self::assertNull($result->value);
     }
 
-    public function testItUpdateTheReverseLinkType(): void
+    public function testItUpdatesTheReverseLinkType(): void
     {
         $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
@@ -186,6 +191,32 @@ final class ArtifactUpdateHandlerTest extends TestCase
 
         $result = $this->updateTypeAndAddReverseLinks(new CollectionOfReverseLinks([]), $updated_reverse_links_type);
         self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value);
+    }
+
+    public function testItContinuesTheUpdatingOfReverseLinkWhenASourceArtifactIsNotModified(): void
+    {
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(function (NewChangeset $new_changeset) {
+            if ($new_changeset->getArtifact()->getId() === self::SOURCE_ARTIFACT_ID_2) {
+                throw new \Tracker_NoChangeException(
+                    self::SOURCE_ARTIFACT_ID_2,
+                    sprintf('art #%d', self::SOURCE_ARTIFACT_ID_2)
+                );
+            }
+            return ChangesetTestBuilder::aChangeset('658')->build();
+        });
+
+        $source_artifact_1           = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
+        $source_artifact_2_no_change = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID_2)->build();
+        $this->artifact_retriever    = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact_1, $source_artifact_2_no_change);
+
+        $updated_link_no_change     = ReverseLinkStub::withNoType(self::SOURCE_ARTIFACT_ID_2);
+        $updated_link               = ReverseLinkStub::withType(self::SOURCE_ARTIFACT_ID, self::ARTIFACT_TYPE);
+        $updated_reverse_links_type = new CollectionOfReverseLinks([$updated_link, $updated_link_no_change]);
+
+        $result = $this->updateTypeAndAddReverseLinks(new CollectionOfReverseLinks([]), $updated_reverse_links_type);
+        self::assertSame(2, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);
     }
