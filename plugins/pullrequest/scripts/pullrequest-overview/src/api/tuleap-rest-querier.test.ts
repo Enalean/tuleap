@@ -21,7 +21,16 @@ import { describe, it, expect, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
-import { fetchPullRequestInfo, fetchUserInfo } from "./tuleap-rest-querier";
+import type {
+    ActionOnPullRequestEvent,
+    GlobalComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
+import { EVENT_TYPE_MERGE } from "@tuleap/plugin-pullrequest-constants";
+import {
+    fetchPullRequestInfo,
+    fetchPullRequestTimelineItems,
+    fetchUserInfo,
+} from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
 
@@ -63,6 +72,35 @@ describe("tuleap-rest-querier", () => {
 
             expect(fetch_result.getJSON).toHaveBeenCalledWith(uri`/api/v1/users/${user_id}`);
             expect(result.value).toStrictEqual(user_info);
+        });
+    });
+
+    describe("fetchPullRequestComments", () => {
+        it("Given a pull-request id, Then it should fetch all the timeline items of the pull-request", async () => {
+            const pull_request_id = "50";
+            const timeline_items = [
+                {
+                    id: 12,
+                    content: "This is fine",
+                } as GlobalComment,
+                {
+                    event_type: EVENT_TYPE_MERGE,
+                } as ActionOnPullRequestEvent,
+            ];
+
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(timeline_items));
+
+            const result = await fetchPullRequestTimelineItems(pull_request_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/timeline`,
+                expect.any(Object)
+            );
+
+            expect(result.value).toStrictEqual(timeline_items);
         });
     });
 });

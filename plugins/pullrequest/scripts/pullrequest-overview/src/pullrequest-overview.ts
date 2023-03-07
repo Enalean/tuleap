@@ -25,6 +25,8 @@ import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
 import OverviewApp from "./components/OverviewApp.vue";
 import {
+    CURRENT_USER_AVATAR_URL,
+    CURRENT_USER_ID,
     OVERVIEW_APP_BASE_URL_KEY,
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
@@ -42,6 +44,11 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(OVERVIEW_APP_BASE_URL_KEY, readonly(base_url))
         .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
         .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
+        .provide(
+            CURRENT_USER_ID,
+            Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10)
+        )
+        .provide(CURRENT_USER_AVATAR_URL, getDatasetItemOrThrow(mount_point, "userAvatarUrl"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
             getDatasetItemOrThrow(mount_point, "relativeDateDisplay")
