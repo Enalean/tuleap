@@ -20,7 +20,9 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\Layout\HomePage\LastMonthStatisticsCollectorSVN;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
@@ -406,7 +408,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         self::assertArrayHasKey('getConfigKeys', $plugin->getHooksAndCallbacks()->toArray());
     }
 
-    public function testImplementingPluginWithServiceIsEnoughToLisentToEvents(): void
+    public function testImplementingPluginWithServiceIsEnoughToListenToEvents(): void
     {
         $plugin = new class extends \Plugin implements PluginWithService {
             public function serviceClassnames(array &$params): void
@@ -436,6 +438,68 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         self::assertArrayHasKey(ProjectServiceBeforeActivation::NAME, $plugin->getHooksAndCallbacks()->toArray());
         self::assertArrayHasKey(ServiceDisabledCollector::NAME, $plugin->getHooksAndCallbacks()->toArray());
         self::assertArrayHasKey(AddMissingService::NAME, $plugin->getHooksAndCallbacks()->toArray());
+    }
+
+    public function testPluginUsesListeningToEventClassAttribute(): void
+    {
+        $plugin = new class extends \Plugin {
+            #[\Tuleap\Plugin\ListeningToEventClass]
+            public function someCallbackMethod(SiteAdministrationAddOption $option): void
+            {
+            }
+        };
+
+        $hooks_and_callbacks = $plugin->getHooksAndCallbacks()->toArray();
+        self::assertArrayHasKey(SiteAdministrationAddOption::NAME, $hooks_and_callbacks);
+        self::assertEquals('someCallbackMethod', $hooks_and_callbacks[SiteAdministrationAddOption::NAME]['callback']);
+    }
+
+    public function testPluginUsesListeningToEventClassWithoutNameAttribute(): void
+    {
+        $plugin = new class extends \Plugin {
+            #[\Tuleap\Plugin\ListeningToEventClass]
+            public function someCallbackMethod(LastMonthStatisticsCollectorSVN $option): void
+            {
+            }
+        };
+
+        $hooks_and_callbacks = $plugin->getHooksAndCallbacks()->toArray();
+        self::assertArrayHasKey(LastMonthStatisticsCollectorSVN::class, $hooks_and_callbacks);
+        self::assertEquals('someCallbackMethod', $hooks_and_callbacks[LastMonthStatisticsCollectorSVN::class]['callback']);
+    }
+
+    public function testPluginCannotListeningHooksTwice(): void
+    {
+        $plugin = new class extends \Plugin {
+            public function getHooksAndCallbacks()
+            {
+                $this->addHook(SiteAdministrationAddOption::NAME);
+                return parent::getHooksAndCallbacks();
+            }
+
+            #[\Tuleap\Plugin\ListeningToEventClass]
+            public function siteAdministrationAddOption(SiteAdministrationAddOption $option): void
+            {
+            }
+        };
+
+        $this->expectException(LogicException::class);
+
+        $plugin->getHooksAndCallbacks();
+    }
+
+    public function testPluginUsesListeningToEventNameAttribute(): void
+    {
+        $plugin = new class extends \Plugin {
+            #[\Tuleap\Plugin\ListeningToEventName('foo_bar')]
+            public function someCallbackMethod(): void
+            {
+            }
+        };
+
+        $hooks_and_callbacks = $plugin->getHooksAndCallbacks()->toArray();
+        self::assertArrayHasKey('foo_bar', $hooks_and_callbacks);
+        self::assertEquals('someCallbackMethod', $hooks_and_callbacks['foo_bar']['callback']);
     }
 
     private function getFakePluginToTestHooks(): Plugin

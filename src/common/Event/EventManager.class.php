@@ -21,6 +21,7 @@
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
+use Tuleap\Event\Dispatchable;
 
 class EventManager implements EventDispatcherInterface // phpcs:ignore
 {
@@ -153,7 +154,7 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
     {
         $class_name = $event::class;
         try {
-            $constant_reflex = new \ReflectionClassConstant($class_name, 'NAME');
+            $constant_reflex = new \ReflectionClassConstant($class_name, Dispatchable::HOOK_CONST_NAME);
             $event_name      = $constant_reflex->getValue();
             return $this->listeners[$event_name] ?? [];
         } catch (\ReflectionException $e) {

@@ -24,6 +24,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0018](0018-js-bundler.md) - Choice of JavaScript Bundler
 * [ADR-0019](0019-split-tlp.md) - Split `tlp` global library in small packages
 * [ADR-0020](0020-repository-organization-tuleap-codebase) - Repository organization of the Tuleap codebase
+* [ADR-0021](0021-attributes-based-events.md) - Usage of PHP attributes to declare listened hooks in plugins
 
 <!-- adrlogstop -->
 
