@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Save;
+namespace Tuleap\Option;
 
 /**
  * @template Value
  */
-final class OptionalValue
+final class Option
 {
     /**
      * @psalm-param Value $value
@@ -48,10 +48,10 @@ final class OptionalValue
 
     /**
      * @template T
-     * @psalm-param class-string<T> $type
+     * @psalm-param class-string<T>|\Psl\Type\TypeInterface<T> $type
      * @psalm-return self<T>
      */
-    public static function nothing(string $type): self
+    public static function nothing(string|\Psl\Type\TypeInterface $type): self
     {
         /** @psalm-var self<T> $res */
         $res = new self(null, false);

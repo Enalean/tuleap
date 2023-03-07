@@ -26,6 +26,8 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
+use Tuleap\Option\Options;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\User\REST\UserRepresentation;
@@ -105,32 +107,32 @@ final class FlatArtifactRepresentationTransformer
      * @psalm-param array<array|UserRepresentation|MinimalUserGroupRepresentation> $list_values
      * @psalm-return list<string>
      */
-    private function transformListValues(array $list_values): ?array
+    private function transformListValues(array $list_values): array
     {
         $value_labels = [];
         foreach ($list_values as $list_value) {
-            $value_label = $this->getListValueLabel($list_value);
-            if ($value_label !== null) {
-                $value_labels[] = $value_label;
-            }
+            $value_labels[] = $this->getListValueLabel($list_value);
         }
-        return $value_labels;
+        return Options::collect($value_labels);
     }
 
-    private function getListValueLabel(array|UserRepresentation|MinimalUserGroupRepresentation $list_value): ?string
+    /**
+     * @psalm-return Option<string>
+     */
+    private function getListValueLabel(array|UserRepresentation|MinimalUserGroupRepresentation $list_value): Option
     {
         if (is_array($list_value)) {
-            return $list_value['label'] ?? null;
+            return isset($list_value['label']) ? Option::fromValue($list_value['label']) : Option::nothing(\Psl\Type\string());
         }
 
         if ($list_value instanceof MinimalUserGroupRepresentation) {
-            return $list_value->label;
+            return Option::fromValue($list_value->label);
         }
 
         if ($list_value->id !== null) {
-            return $list_value->display_name;
+            return Option::fromValue($list_value->display_name);
         }
 
-        return null;
+        return Option::nothing(\Psl\Type\string());
     }
 }

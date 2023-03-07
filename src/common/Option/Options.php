@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Save;
-
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
-
-interface OnlyOfficeCallbackResponseParser
+namespace Tuleap\Option;
+final class Options
 {
+    private function __construct()
+    {
+    }
+
     /**
-     * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
+     * @template T
+     * @psalm-param array<Option<T>> $optional_values
+     * @psalm-return list<T>
      */
-    public function parseCallbackResponseContent(
-        string $response_content,
-        SaveDocumentTokenData $save_token_information,
-    ): Ok|Err;
+    public static function collect(array $optional_values): array
+    {
+        $values = [];
+        foreach ($optional_values as $optional_value) {
+            $optional_value->apply(
+                function (mixed $value) use (&$values): void {
+                    $values[] = $value;
+                }
+            );
+        }
+        return $values;
+    }
 }

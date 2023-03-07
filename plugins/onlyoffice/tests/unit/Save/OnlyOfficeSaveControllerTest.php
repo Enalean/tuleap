@@ -32,6 +32,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeSaveControllerTest extends TestCase
@@ -40,7 +41,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class)
+                Option::nothing(OnlyOfficeCallbackSaveResponseData::class)
             ),
             true,
         );
@@ -55,7 +56,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(
+                Option::fromValue(
                     new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
                 )
             ),
@@ -85,7 +86,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(
+                Option::fromValue(
                     new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
                 )
             ),
@@ -99,7 +100,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     }
 
     /**
-     * @psalm-param Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $parser_response
+     * @psalm-param Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $parser_response
      */
     private static function buildController(
         Ok|Err $parser_response,
@@ -108,7 +109,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
         return new OnlyOfficeSaveController(
             new class ($parser_response) implements OnlyOfficeCallbackResponseParser {
                 /**
-                 * @param Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $result
+                 * @param Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $result
                  */
                 public function __construct(
                     private Ok|Err $result,
@@ -129,7 +130,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
 
                 public function saveDocument(
                     SaveDocumentTokenData $save_token_information,
-                    OptionalValue $optional_response_data,
+                    Option $optional_response_data,
                 ): Ok|Err {
                     if ($this->is_success) {
                         return Result::ok(null);

@@ -39,6 +39,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
+use Tuleap\Option\Option;
 
 final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackResponseParser
 {
@@ -53,7 +54,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     }
 
     /**
-     * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
+     * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
     public function parseCallbackResponseContent(
         string $response_content,
@@ -188,7 +189,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     }
 
     /**
-     * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
+     * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
     private function parseJWTClaims(Token\DataSet $claims): Ok|Err
     {
@@ -197,12 +198,12 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
             OnlyOfficeDocumentStatusCallback::STATUS_SAVE, OnlyOfficeDocumentStatusCallback::STATUS_SAVE_CORRUPTED => $this->parseJWTClaimsOfSaveRequest(
                 $claims
             ),
-            default => Result::ok(OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class)),
+            default => Result::ok(Option::nothing(OnlyOfficeCallbackSaveResponseData::class)),
         };
     }
 
     /**
-     * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
+     * @psalm-return Ok<Option<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
     private function parseJWTClaimsOfSaveRequest(Token\DataSet $claims): Ok|Err
     {
@@ -246,7 +247,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         }
 
         return Result::ok(
-            OptionalValue::fromValue(
+            Option::fromValue(
                 new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion'], $author_identifiers)
             )
         );

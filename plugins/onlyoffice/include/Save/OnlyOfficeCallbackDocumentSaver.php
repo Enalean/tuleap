@@ -39,6 +39,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\User\RetrieveUserById;
 
 final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDocument
@@ -59,7 +60,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
 
     public function saveDocument(
         SaveDocumentTokenData $save_token_information,
-        OptionalValue $optional_response_data,
+        Option $optional_response_data,
     ): Ok|Err {
         return $optional_response_data->mapOr(
             /** @psalm-return Ok<null>|Err<Fault> */
