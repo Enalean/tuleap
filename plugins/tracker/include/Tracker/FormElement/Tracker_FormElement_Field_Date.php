@@ -736,7 +736,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html_value       = $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
         $user             = $this->getCurrentUser();
 
-        if ($timeframe_helper->artifactHelpShouldBeShownToUser($user, $this)) {
+        if (
+            $timeframe_helper->artifactHelpShouldBeShownToUser($user, $this) &&
+            $value &&
+            $value instanceof Tracker_Artifact_ChangesetValue_Date &&
+            $value->getTimestamp() !== null
+        ) {
             $html_value = $html_value
                 . '<span class="artifact-timeframe-helper"> ('
                 . $timeframe_helper->getDurationArtifactHelperForReadOnlyView($user, $artifact)
