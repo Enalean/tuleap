@@ -38,6 +38,7 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
+import OverviewThreadsEmptyState from "./OverviewThreadsEmptyState.vue";
 import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("OverviewThreads", () => {
@@ -106,5 +107,14 @@ describe("OverviewThreads", () => {
         await flushPromises();
 
         expect(display_error_callback).toHaveBeenCalledWith(api_fault);
+    });
+
+    it("should display a placeholder when there is no thread to display", async () => {
+        vi.spyOn(tuleap_api, "fetchPullRequestTimelineItems").mockReturnValue(okAsync([]));
+
+        const wrapper = getWrapper();
+        await flushPromises();
+
+        expect(wrapper.findComponent(OverviewThreadsEmptyState).exists()).toBe(true);
     });
 });
