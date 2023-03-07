@@ -27,10 +27,6 @@ import {
     editArtifactWithConcurrencyChecking,
 } from "./rest/rest-service";
 import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-detector";
-import {
-    isUploadingInCKEditor,
-    setIsNotUploadingInCKEditor,
-} from "./common/is-uploading-in-ckeditor-state";
 import { sprintf } from "sprintf-js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
@@ -242,9 +238,7 @@ function ArtifactModalController(
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
-        isSubmitDisabled: () => {
-            return self.submit_disabling_reason !== null || isUploadingInCKEditor();
-        },
+        isSubmitDisabled: () => self.submit_disabling_reason !== null,
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,
@@ -279,7 +273,6 @@ function ArtifactModalController(
         });
         FieldDependenciesValuesHelper(event_dispatcher, self.tracker.workflow.rules.lists);
 
-        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
         TuleapArtifactModalLoading.loading = false;
         self.setupTooltips();
     }
@@ -335,7 +328,7 @@ function ArtifactModalController(
     }
 
     function submit() {
-        if (isUploadingInCKEditor() || TuleapArtifactModalLoading.loading) {
+        if (self.isSubmitDisabled() || TuleapArtifactModalLoading.loading) {
             return $q.resolve();
         }
         TuleapArtifactModalLoading.loading = true;

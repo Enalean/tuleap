@@ -126,3 +126,5 @@ export const getCommentsRetrievalErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the comments: %s");
 export const getSubmitDisabledForLinksReason = (): string =>
     gettextCatalog.getString("Linked artifacts are loading");
+export const getSubmitDisabledImageUploadReason = (): string =>
+    gettextCatalog.getString("An image in a text field or in a new comment is being uploaded");

@@ -21,6 +21,9 @@ msgstr ""
 msgid "An error occurred while saving the artifact."
 msgstr ""
 
+msgid "An image in a text field or in a new comment is being uploaded"
+msgstr ""
+
 msgid "Auto-compute"
 msgstr ""
 
