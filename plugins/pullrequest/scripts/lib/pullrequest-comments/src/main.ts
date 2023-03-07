@@ -41,3 +41,8 @@ export type { ControlPullRequestComment } from "./comment/PullRequestCommentCont
 export type { StorePullRequestCommentReplies } from "./comment/PullRequestCommentRepliesStore";
 export type { CurrentPullRequestUserPresenter } from "./comment/PullRequestCurrentUserPresenter";
 export type { PullRequestPresenter } from "./comment/PullRequestPresenter";
+
+export {
+    PullRequestCommentSkeletonComponent,
+    PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
+} from "./skeleton/PullRequestCommentSkeleton";

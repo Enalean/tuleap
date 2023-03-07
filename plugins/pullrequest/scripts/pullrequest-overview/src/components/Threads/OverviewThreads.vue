@@ -21,13 +21,10 @@
     <!-- Prevent eslint-plugin-vue to mess up with the relativeDateHelper attribute of our custom element -->
     <!-- eslint-disable vue/attribute-hyphenation -->
     <section class="tlp-pane-section pull-request-threads-section">
-        <div
+        <tuleap-pullrequest-comment-skeleton
             v-if="is_loading_threads"
-            class="pull-request-overview-threads-spinner-container"
             data-test="pull-request-threads-spinner"
-        >
-            <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
-        </div>
+        />
         <div v-if="!is_loading_threads && threads.length > 0" data-test="pull-request-threads">
             <tuleap-pullrequest-comment
                 data-test="pull-request-thread"
@@ -147,12 +144,6 @@ fetchPullRequestTimelineItems(pull_request_id)
 
 <style lang="scss">
 @use "@tuleap/plugin-pullrequest-comments";
-
-.pull-request-overview-threads-spinner-container {
-    display: flex;
-    justify-content: center;
-    padding: var(--tlp-x-large-spacing) 0;
-}
 
 .pull-request-overview-thread > .pull-request-comment-component {
     margin: 0 0 var(--tlp-small-spacing);
