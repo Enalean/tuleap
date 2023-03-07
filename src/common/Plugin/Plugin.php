@@ -202,19 +202,19 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         $event_class   = new \ReflectionClass($type_class);
         $name_constant = $event_class->getConstant(Dispatchable::HOOK_CONST_NAME);
         if ($name_constant === false) {
-            $this->addHook($event_class->name, $method->name);
+            $this->listenToHook($event_class->name, $method->name);
         } else {
             if ($this->hooks->containsKey($name_constant)) {
                 throw new \LogicException('Hooks can only be listening to once check ' . $name_constant . ' usage in ' . static::class);
             }
-            $this->addHook($name_constant, $method->name);
+            $this->listenToHook($name_constant, $method->name);
         }
     }
 
     private function addHooksFromEventName(ReflectionMethod $method, ListeningToEventName $listening_to_event): void
     {
         if (! $this->hooks->containsKey($listening_to_event->event_name)) {
-            $this->addHook($listening_to_event->event_name, $method->name);
+            $this->listenToHook($listening_to_event->event_name, $method->name);
         }
     }
 
@@ -226,7 +226,15 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         $this->addHook($name);
     }
 
+    /**
+     * @deprecated Use ListeningToEventClass attribute instead (adr/0021-attributes-based-events.md)
+     */
     public function addHook($hook, $callback = null, $recallHook = false)
+    {
+        $this->listenToHook($hook, $callback, $recallHook);
+    }
+
+    private function listenToHook(string $hook, ?string $callback = null, bool $recall_hook = false): void
     {
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check ' . $hook);
@@ -234,7 +242,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         $value               = [];
         $value['hook']       = $hook;
         $value['callback']   = $callback ?: $this->deduceCallbackFromHook($hook);
-        $value['recallHook'] = $recallHook;
+        $value['recallHook'] = $recall_hook;
         $this->hooks->put($hook, $value);
     }
 
