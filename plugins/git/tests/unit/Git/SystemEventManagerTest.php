@@ -68,17 +68,6 @@ final class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
-    public function testItCreatesRepositoryDeletionEventForRootWhenRepositoryIsGitShell(): void
-    {
-        $repository = \Mockery::spy(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(54);
-        $repository->shouldReceive('getProjectId')->andReturns(116);
-        $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Interface::class));
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_LEGACY_REPO_DELETE::NAME, "116" . SystemEvent::PARAMETER_SEPARATOR . "54", \Mockery::any(), SystemEvent::OWNER_ROOT)->once();
-
-        $this->git_system_event_manager->queueRepositoryDeletion($repository);
-    }
-
     public function testItCreatesRepositoryForkEvent(): void
     {
         $old_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(554)->getMock();
@@ -87,15 +76,6 @@ final class Git_SystemEventManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_FORK::NAME, "554" . SystemEvent::PARAMETER_SEPARATOR . "667", SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP)->once();
 
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
-    }
-
-    public function testItCreatesRepositoryAccessEvent(): void
-    {
-        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(54)->getMock();
-
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME, "54" . SystemEvent::PARAMETER_SEPARATOR . "private", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_ROOT)->once();
-
-        $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
     }
 
     public function testItCreatesGerritMigrationEvent(): void

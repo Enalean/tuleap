@@ -69,9 +69,6 @@ msgid ""
 "the .gitolite.rc file. Do you want to continue?"
 msgstr ""
 
-msgid "Access"
-msgstr "Acesso"
-
 msgid "Access control"
 msgstr "Controle de acesso"
 
@@ -911,9 +908,6 @@ msgstr ""
 
 msgid "Plugin which provides Git support for Tuleap"
 msgstr ""
-
-msgid "Private"
-msgstr "Particular"
 
 msgid "Project"
 msgstr "Projeto"

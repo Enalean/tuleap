@@ -278,11 +278,10 @@ class GitActions extends PluginActions
      */
     public function getProjectRepositoryList($projectId, $userId = null)
     {
-        $onlyGitShell = false;
-        $scope        = true;
-        $dao          = $this->getDao();
+        $scope = true;
+        $dao   = $this->getDao();
         $this->addData([
-            'repository_list'     => $dao->getProjectRepositoryList($projectId, $onlyGitShell, $scope, $userId),
+            'repository_list'     => $dao->getProjectRepositoryList($projectId, $scope, $userId),
             'repositories_owners' => $dao->getProjectRepositoriesOwners($projectId),
         ]);
         return true;
@@ -899,7 +898,6 @@ class GitActions extends PluginActions
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
         }
-        $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
         $c->addInfo(dgettext('tuleap-git', 'Repository access permissions are going to be modified in a few seconds'));
     }
 
@@ -967,7 +965,6 @@ class GitActions extends PluginActions
             $repository->getBackend()->savePermissions($repository, $repoAccess);
         } else {
             if ($repository->getAccess() != $repoAccess) {
-                $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
                 $controller->addInfo(dgettext('tuleap-git', 'Repository access permissions are going to be modified in a few seconds'));
             }
         }

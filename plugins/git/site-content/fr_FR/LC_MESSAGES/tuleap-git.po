@@ -89,9 +89,6 @@ msgstr ""
 "en tenant compte du hostname de chaque miroir ainsi que de celui de ce "
 "serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?"
 
-msgid "Access"
-msgstr "Accès"
-
 msgid "Access control"
 msgstr "Permissions"
 
@@ -1003,9 +1000,6 @@ msgstr ""
 
 msgid "Plugin which provides Git support for Tuleap"
 msgstr "Plugin qui implémente le support de Git"
-
-msgid "Private"
-msgstr "Privé"
 
 msgid "Project"
 msgstr "Projet"
