@@ -46,9 +46,6 @@ export const FileFieldController = (
     event_dispatcher: EventDispatcher
 ): FileFieldControllerType => {
     let attached_files: AttachedFileCollection = field.file_descriptions;
-    event_dispatcher.addObserver("DidCheckFileFieldIsPresent", (event) => {
-        event.is_there_at_least_one_file_field = true;
-    });
 
     event_dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
         if (event.setup !== null) {

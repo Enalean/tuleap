@@ -18,19 +18,19 @@
  */
 
 import { EventDispatcher } from "./EventDispatcher";
-import { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
 import { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
+import { WillEnableSubmit } from "./submit/WillEnableSubmit";
 
-const FIRST_EVENT_TYPE = "DidCheckFileFieldIsPresent",
+const FIRST_EVENT_TYPE = "WillEnableSubmit",
     SECOND_EVENT_TYPE = "DidChangeListFieldValue";
 
 describe(`EventDispatcher`, () => {
-    let first_event: DidCheckFileFieldIsPresent,
+    let first_event: WillEnableSubmit,
         second_event: DidChangeListFieldValue,
         dispatcher: EventDispatcher;
 
     beforeEach(() => {
-        first_event = DidCheckFileFieldIsPresent();
+        first_event = WillEnableSubmit();
         second_event = DidChangeListFieldValue(12, [123]);
         dispatcher = EventDispatcher();
     });

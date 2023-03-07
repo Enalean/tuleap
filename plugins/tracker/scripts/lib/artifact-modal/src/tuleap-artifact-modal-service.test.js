@@ -25,7 +25,6 @@ import * as modal_creation_mode_state from "./modal-creation-mode-state.ts";
 import * as rest_service from "./rest/rest-service";
 import * as form_tree_builder from "./model/form-tree-builder.js";
 import * as workflow_field_values_filter from "./model/workflow-field-values-filter.js";
-import * as file_upload_rules_state from "./fields/file-field/file-upload-rules-state.js";
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 import * as field_values_formatter from "./model/field-values-formatter.js";
 import * as tracker_transformer from "./model/tracker-transformer.js";
@@ -43,7 +42,6 @@ describe("NewTuleapArtifactModalService", () => {
         getTracker,
         getUserPreference,
         getArtifactWithCompleteTrackerStructure,
-        updateFileUploadRulesWhenNeeded,
         tracker,
         wrapPromise,
         getSelectedValues;
@@ -75,10 +73,6 @@ describe("NewTuleapArtifactModalService", () => {
         getArtifactWithCompleteTrackerStructure = jest.spyOn(
             rest_service,
             "getArtifactWithCompleteTrackerStructure"
-        );
-        updateFileUploadRulesWhenNeeded = jest.spyOn(
-            file_upload_rules_state,
-            "updateFileUploadRulesWhenNeeded"
         );
         buildFormTree = jest.spyOn(form_tree_builder, "buildFormTree").mockReturnValue({});
         enforceWorkflowTransitions = jest.spyOn(
@@ -119,7 +113,6 @@ describe("NewTuleapArtifactModalService", () => {
                 fields: [],
             };
             getTracker.mockReturnValue($q.when(tracker));
-            updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
 
             const promise = NewTuleapArtifactModalService.initCreationModalModel(
                 user_id,
@@ -130,7 +123,6 @@ describe("NewTuleapArtifactModalService", () => {
 
             await expect(wrapPromise(promise)).resolves.toBeDefined();
             expect(getTracker).toHaveBeenCalledWith(tracker_id);
-            expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
             expect(getSelectedValues).toHaveBeenCalledWith({}, tracker);
             expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, true);
             expect(buildFormTree).toHaveBeenCalledWith(tracker);
@@ -192,7 +184,6 @@ describe("NewTuleapArtifactModalService", () => {
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
-                updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
 
                 const promise = wrapPromise(
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
@@ -226,7 +217,6 @@ describe("NewTuleapArtifactModalService", () => {
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
-                updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
 
                 const promise = wrapPromise(
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
@@ -251,7 +241,6 @@ describe("NewTuleapArtifactModalService", () => {
                     workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
-                updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
 
                 const promise = wrapPromise(
                     NewTuleapArtifactModalService.initCreationModalModel(tracker_id)
@@ -298,7 +287,6 @@ describe("NewTuleapArtifactModalService", () => {
                     });
                 }
             });
-            updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
         });
 
         describe("Create modal edition model", () => {
@@ -350,7 +338,6 @@ describe("NewTuleapArtifactModalService", () => {
                     "user_edition_default_format"
                 );
 
-                expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                 expect(getSelectedValues).toHaveBeenCalledWith(expect.any(Object), tracker);
                 expect(tracker_transformer.transform).toHaveBeenCalledWith(tracker, false);
                 expect(tracker_transformer.addFieldValuesToTracker).toHaveBeenCalledWith(

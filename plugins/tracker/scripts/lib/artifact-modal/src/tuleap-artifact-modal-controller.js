@@ -43,8 +43,7 @@ import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactI
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/fields/link-field/LinksMarkedForRemovalStore";
 import { LinksStore } from "./adapters/Memory/fields/link-field/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
-import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
-import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
+import { FileUploadQuotaController } from "./domain/common/FileUploadQuotaController";
 import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
 import { FileFieldController } from "./domain/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
@@ -69,7 +68,6 @@ import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistor
 import { CommentsController } from "./domain/comments/CommentsController";
 import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
 import { EventDispatcher } from "./domain/EventDispatcher";
-import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { FormattedTextController } from "./domain/common/FormattedTextController";
@@ -156,7 +154,7 @@ function ArtifactModalController(
             parent_identifier
         ),
         fault_feedback_controller,
-        file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
+        file_upload_quota_controller: FileUploadQuotaController(event_dispatcher),
         comments_controller: CommentsController(
             api_client,
             event_dispatcher,
@@ -246,11 +244,6 @@ function ArtifactModalController(
         isDisabled,
         isSubmitDisabled: () => {
             return self.submit_disabling_reason !== null || isUploadingInCKEditor();
-        },
-        isThereAtLeastOneFileField: () => {
-            const event = DidCheckFileFieldIsPresent();
-            event_dispatcher.dispatch(event);
-            return event.is_there_at_least_one_file_field;
         },
         setupTooltips,
         submit,

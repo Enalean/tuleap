@@ -22,7 +22,7 @@ import { define, html } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import {
-    getAddFileButtonlabel,
+    getAddFileButtonLabel,
     getEmptyLabel,
     getFileSizeText,
     getFileSubmittedByText,
@@ -154,7 +154,7 @@ export const getAddNewFileToAttachButtonTemplate = (host: FileField): UpdateFunc
             data-test="add-new-file"
         >
             <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-            ${getAddFileButtonlabel()}
+            ${getAddFileButtonLabel()}
         </button>
     `;
 

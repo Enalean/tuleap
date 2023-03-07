@@ -23,29 +23,3 @@
     align-items: center;
     font-size: 14px;
 }
-
-.angular-artifact-modal-disk-usage-file-upload-icon {
-    margin: 0 3px 0 0;
-}
-
-.angular-artifact-modal-disk-usage-progress-info {
-    display: flex;
-    align-items: center;
-}
-
-.angular-artifact-modal-disk-usage-progress-bar {
-    position: relative;
-    width: 100px;
-    height: 10px;
-    margin: 0 5px 0 0;
-    border-radius: 5px;
-    background: var(--tlp-background-color);
-}
-
-.angular-artifact-modal-disk-usage-progress-bar-progression {
-    position: absolute;
-    width: var(--disk-usage-progress, 0);
-    height: 10px;
-    border-radius: 5px;
-    background: var(--tlp-info-color);
-}

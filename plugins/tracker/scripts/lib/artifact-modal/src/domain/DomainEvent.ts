@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
 import type { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
 import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
 import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
@@ -29,7 +28,6 @@ import type { WillGetFileUploadSetup } from "./fields/file-field/WillGetFileUplo
 export type AllEvents = {
     DidChangeAllowedValues: DidChangeAllowedValues;
     DidChangeListFieldValue: DidChangeListFieldValue;
-    DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
     WillClearFaultNotification: WillClearFaultNotification;
     WillDisableSubmit: WillDisableSubmit;
     WillEnableSubmit: WillEnableSubmit;

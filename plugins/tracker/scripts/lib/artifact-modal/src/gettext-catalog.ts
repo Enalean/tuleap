@@ -70,19 +70,15 @@ export const getFieldDateRequiredAndEmptyMessage = (): string =>
 export const getEmptyCrossReferencesCollectionText = (): string =>
     gettextCatalog.getString("References list is empty.");
 export const getDefaultLinkTypeLabel = (): string => gettextCatalog.getString("Linked to");
-export const getEmptyDiskQuotaMessage = (): string =>
+export const getMaxAllowedUploadSizeText = (): string =>
     gettextCatalog.getString("Max allowed upload size: %s");
-export const getUsedQuotaMessage = (): string =>
-    gettextCatalog.getString("File upload quota allowed");
-export const getQuotaUsageMessage = (): string =>
-    gettextCatalog.getString("%(usage)s of %(quota)s");
 export const getFileSubmittedByText = (): string => gettextCatalog.getString("By: %s");
 export const getFileSizeText = (): string => gettextCatalog.getString("Size: %s");
 export const getUndoFileRemovalLabel = (): string => gettextCatalog.getString("Keep the file");
 export const getFileDescriptionPlaceholder = (): string =>
     gettextCatalog.getString("File description");
 export const getResetLabel = (): string => gettextCatalog.getString("Reset");
-export const getAddFileButtonlabel = (): string => gettextCatalog.getString("Add another file");
+export const getAddFileButtonLabel = (): string => gettextCatalog.getString("Add another file");
 export const getNewArtifactLabel = (): string => gettextCatalog.getString("New artifact");
 export const getParentFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the parent artifact: %s");

@@ -27,7 +27,6 @@ import {
     getTracker,
     getUserPreference,
 } from "./rest/rest-service";
-import { updateFileUploadRulesWhenNeeded } from "./fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
@@ -125,32 +124,22 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         const creation_mode = true;
         setCreationMode(creation_mode);
 
-        var promise = $q
-            .when(getTracker(tracker_id))
-            .then(function (tracker) {
-                const transformed_tracker = transform(tracker, creation_mode);
-                modal_model.tracker = transformed_tracker;
-                modal_model.color = transformed_tracker.color_name;
-                modal_model.title = transformed_tracker.item_name;
+        return $q.when(getTracker(tracker_id)).then(function (tracker) {
+            const transformed_tracker = transform(tracker, creation_mode);
+            modal_model.tracker = transformed_tracker;
+            modal_model.color = transformed_tracker.color_name;
+            modal_model.title = transformed_tracker.item_name;
 
-                const initial_values = mapPrefillsToFieldValues(
-                    prefill_values || [],
-                    modal_model.tracker.fields
-                );
-                applyWorkflowTransitions(transformed_tracker, {});
-                modal_model.values = getSelectedValues(initial_values, transformed_tracker);
-                modal_model.ordered_fields = buildFormTree(transformed_tracker);
+            const initial_values = mapPrefillsToFieldValues(
+                prefill_values || [],
+                modal_model.tracker.fields
+            );
+            applyWorkflowTransitions(transformed_tracker, {});
+            modal_model.values = getSelectedValues(initial_values, transformed_tracker);
+            modal_model.ordered_fields = buildFormTree(transformed_tracker);
 
-                const file_upload_rules_promise = $q.when(
-                    updateFileUploadRulesWhenNeeded(transformed_tracker.fields)
-                );
-                return file_upload_rules_promise;
-            })
-            .then(function () {
-                return modal_model;
-            });
-
-        return promise;
+            return modal_model;
+        });
     }
 
     function initEditionModalModel(user_id, tracker_id, artifact_id) {
@@ -166,7 +155,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         setCreationMode(creation_mode);
         var transformed_tracker;
 
-        var promise = $q
+        return $q
             .all([
                 getArtifactWithCompleteTrackerStructure(artifact_id),
                 getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
@@ -195,16 +184,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 modal_model.tracker = tracker_with_field_values;
                 modal_model.ordered_fields = buildFormTree(tracker_with_field_values);
 
-                const file_upload_rules_promise = $q.when(
-                    updateFileUploadRulesWhenNeeded(transformed_tracker.fields)
-                );
-                return file_upload_rules_promise;
-            })
-            .then(function () {
                 return modal_model;
             });
-
-        return promise;
     }
 
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {

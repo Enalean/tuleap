@@ -6,9 +6,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%(usage)s of %(quota)s"
-msgstr ""
-
 msgid "(already linked)"
 msgstr ""
 
@@ -76,9 +73,6 @@ msgid "Error:"
 msgstr ""
 
 msgid "File description"
-msgstr ""
-
-msgid "File upload quota allowed"
 msgstr ""
 
 msgid "Follow-ups"
