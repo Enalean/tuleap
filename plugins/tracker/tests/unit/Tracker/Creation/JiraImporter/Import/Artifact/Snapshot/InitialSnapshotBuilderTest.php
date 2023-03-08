@@ -159,6 +159,13 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $initial_snapshot->getFieldInSnapshot('fixVersions')->getValue()
         );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10005' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('components')->getValue()
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection
@@ -480,6 +487,26 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ]
             ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "111",
+                    "created" => "2020-03-25T14:15:18.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "components",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10000",
+                            "toString"   => "Comp 01",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
         ];
     }
 
@@ -601,6 +628,13 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                     null,
                 ),
+                new FieldSnapshot(
+                    $this->getComponentsMapping(),
+                    [
+                        [ 'id' => '10005' ],
+                    ],
+                    null,
+                ),
             ],
             null
         );
@@ -626,6 +660,19 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Fixed in versions',
             'Ffixversions',
             'fixversions',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getComponentsMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'components',
+            'Components',
+            'Fcomponents',
+            'components',
             \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],

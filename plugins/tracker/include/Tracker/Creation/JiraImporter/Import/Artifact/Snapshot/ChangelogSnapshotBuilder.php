@@ -75,7 +75,11 @@ class ChangelogSnapshotBuilder
         $fields_snapshot = [];
         foreach ($changelog_entry->getItemRepresentations() as $item_representation) {
             $field_id = $item_representation->getFieldId();
-            if ($field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS || $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS) {
+            if (
+                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS ||
+                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS ||
+                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_COMPONENTS
+            ) {
                 $this->logger->warning('Rebuild of ' . $field_id . ' is not supported yet (weird history), only last value will be found');
                 continue;
             }

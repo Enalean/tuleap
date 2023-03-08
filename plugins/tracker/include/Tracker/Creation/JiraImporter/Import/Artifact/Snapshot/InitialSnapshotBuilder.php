@@ -209,7 +209,11 @@ class InitialSnapshotBuilder
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
             $changed_field_id = $changed_field->getFieldId();
-            if ($changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS || $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS) {
+            if (
+                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS ||
+                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS ||
+                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_COMPONENTS
+            ) {
                 $this->logger->warning('Rebuild of ' . $changed_field_id . ' is not supported yet (weird history), only last value will be found');
                 continue;
             }
