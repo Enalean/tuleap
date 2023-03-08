@@ -209,78 +209,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         parent::__construct($id);
         bindtextdomain('tuleap-docman', __DIR__ . '/../site-content');
         bindtextdomain('tuleap-document', __DIR__ . '/../../document/site-content');
-
-        $this->addHook('cssfile', 'cssFile');
-        $this->addHook('javascript_file');
-        $this->addHook('logs_daily', 'logsDaily');
-        $this->addHook('permission_get_name', 'permission_get_name');
-        $this->addHook('permission_get_object_type', 'permission_get_object_type');
-        $this->addHook('permission_get_object_name', 'permission_get_object_name');
-        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change');
-        $this->addHook(GetPublicAreas::NAME);
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook('soap', 'soap');
-        $this->addHook(GetWidget::NAME);
-        $this->addHook(GetUserWidgetList::NAME);
-        $this->addHook(GetProjectWidgetList::NAME);
-        $this->addHook('codendi_daily_start', 'codendiDaily');
-        $this->addHook('wiki_page_updated', 'wiki_page_updated');
-        $this->addHook('wiki_before_content', 'wiki_before_content');
-        $this->addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON, 'wiki_display_remove_button');
-        $this->addHook('isWikiPageReferenced', 'isWikiPageReferenced');
-        $this->addHook('isWikiPageEditable', 'isWikiPageEditable');
-        $this->addHook('userCanAccessWikiDocument', 'userCanAccessWikiDocument');
-        $this->addHook('getPermsLabelForWiki', 'getPermsLabelForWiki');
-        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipRepresentationEvent::NAME);
-        $this->addHook('SystemEvent_PROJECT_RENAME', 'renameProject');
-        $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir');
-        $this->addHook('webdav_root_for_service', 'webdav_root_for_service');
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        // Stats plugin
-        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project');
-        $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label');
-        $this->addHook('plugin_statistics_color', 'plugin_statistics_color');
-
-        $this->addHook('backend_system_purge_files', 'purgeFiles');
-        $this->addHook('project_admin_remove_user', 'projectRemoveUser');
-
-        $this->addHook('permission_request_information', 'permissionRequestInformation');
-
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
-        $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
-        $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
-
-        $this->addHook(GetReferenceEvent::NAME);
-        $this->addHook('project_admin_ugroup_deletion');
-        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
-        $this->addHook(Event::SITE_ACCESS_CHANGE);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
-        $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-    }
-
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_RESOURCES);
-
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        $this->addHook(GetItemsReferencingWikiPageCollectionEvent::NAME);
-
-        $this->addHook(StatisticsCollectionCollector::NAME);
-        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
-
-        $this->addHook(ExportXmlProject::NAME);
-        $this->addHook(Event::IMPORT_XML_PROJECT);
-        $this->addHook(PendingDocumentsRetriever::NAME);
-        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
-
-        return parent::getHooksAndCallbacks();
     }
 
     public function getServiceShortname()
@@ -288,8 +217,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return self::SERVICE_SHORTNAME;
     }
 
-    /** @see Event::SERVICE_CLASSNAMES */
-    public function service_classnames(&$params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICE_CLASSNAMES)]
+    public function serviceClassnames(&$params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Docman\ServiceDocman::class;
     }
@@ -308,7 +237,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function permission_get_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('permission_get_name')]
+    public function permissionGetName($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['name']) {
             switch ($params['permission_type']) {
@@ -330,7 +260,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function permission_get_object_type($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('permission_get_object_type')]
+    public function permissionGetObjectType($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
@@ -343,7 +274,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function permission_get_object_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('permission_get_object_name')]
+    public function permissionGetObjectName($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
@@ -357,7 +289,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     }
 
     public $_cached_permission_user_allowed_to_change; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    public function permission_user_allowed_to_change($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('permission_user_allowed_to_change')]
+    public function permissionUserAllowedToChange($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['allowed']) {
             if (! $this->_cached_permission_user_allowed_to_change) {
@@ -387,7 +320,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return $this->pluginInfo;
     }
 
-    public function cssFile($params): void
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
+    public function cssfile($params): void
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
@@ -399,7 +333,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function javascript_file($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('javascript_file')]
+    public function javascriptFile($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
@@ -419,7 +354,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function logsDaily($params)
+    #[\Tuleap\Plugin\ListeningToEventName('logs_daily')]
+    public function logsDaily($params): void
     {
         $project = $this->getProject($params['group_id']);
         if ($project->usesService($this->getServiceShortname())) {
@@ -428,7 +364,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function service_public_areas(GetPublicAreas $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function servicePublicAreas(GetPublicAreas $event): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project = $event->getProject();
         $service = $project->getService($this->getServiceShortname());
@@ -442,6 +379,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $this->getHTTPController()->installDocman(
@@ -450,7 +388,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function service_is_used($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICE_IS_USED)]
+    public function serviceIsUsed($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
@@ -462,12 +401,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function soap($arams)
+    #[\Tuleap\Plugin\ListeningToEventName('soap')]
+    public function soap($arams): void
     {
         require_once('soap.php');
     }
 
-    public function widgetInstance(GetWidget $get_widget_event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function widgetInstance(GetWidget $get_widget_event): void
     {
         switch ($get_widget_event->getName()) {
             case 'plugin_docman_mydocman':
@@ -487,14 +428,16 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function getUserWidgetList(GetUserWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserWidgetList(GetUserWidgetList $event): void
     {
         $event->addWidget('plugin_docman_mydocman');
         $event->addWidget('plugin_docman_mydocman_search');
         $event->addWidget('plugin_docman_my_embedded');
     }
 
-    public function getProjectWidgetList(GetProjectWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectWidgetList(GetProjectWidgetList $event): void
     {
         $event->addWidget('plugin_docman_project_embedded');
     }
@@ -512,7 +455,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     /**
      * Hook: called by daily codendi script.
      */
-    public function codendiDaily()
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
     {
         $controler = $this->getHTTPController();
         $controler->notifyFuturObsoleteDocuments();
@@ -540,7 +484,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return $this->getSOAPController($request)->process();
     }
 
-    public function wiki_page_updated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('wiki_page_updated')]
+    public function wikiPageUpdated($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = new Docman_WikiRequest(['action' => 'wiki_page_updated',
             'wiki_page' => $params['wiki_page'],
@@ -552,47 +497,54 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->getWikiController($request)->process();
     }
 
-    public function wiki_before_content($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('wiki_before_content')]
+    public function wikiBeforeContent($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['action'] = 'wiki_before_content';
         $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    public function wiki_display_remove_button($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::WIKI_DISPLAY_REMOVE_BUTTON)]
+    public function wikiDisplayRemoveButton($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['action'] = 'wiki_display_remove_button';
         $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    public function isWikiPageReferenced($params)
+    #[\Tuleap\Plugin\ListeningToEventName('isWikiPageReferenced')]
+    public function isWikiPageReferenced($params): void
     {
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    public function isWikiPageEditable($params)
+    #[\Tuleap\Plugin\ListeningToEventName('isWikiPageEditable')]
+    public function isWikiPageEditable($params): void
     {
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    public function userCanAccessWikiDocument($params)
+    #[\Tuleap\Plugin\ListeningToEventName('userCanAccessWikiDocument')]
+    public function userCanAccessWikiDocument($params): void
     {
         $params['action'] = 'check_whether_user_can_access';
         $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    public function getPermsLabelForWiki($params)
+    #[\Tuleap\Plugin\ListeningToEventName('getPermsLabelForWiki')]
+    public function getPermsLabelForWiki($params): void
     {
         $params['action'] = 'getPermsLabelForWiki';
         $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function referenceGetTooltipRepresentationEvent(Tuleap\Reference\ReferenceGetTooltipRepresentationEvent $event): void
     {
         if ($event->getReference()->getServiceShortName() !== 'docman') {
@@ -618,6 +570,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $event->setOutput($tooltip_json);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
         $tracker_organizer = new CrossReferenceDocmanOrganizer(
@@ -629,7 +582,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $tracker_organizer->organizeDocumentReferences($by_nature_organizer);
     }
 
-    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event): void
     {
         if ($event->getReference()->getServiceShortName() === 'docman') {
             $request    = new Codendi_Request([
@@ -644,29 +598,23 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    /**
-     * Hook called when a project is being renamed
-     * @param Array $params
-     * @return bool
-     */
-    public function renameProject($params)
+    public function systemEventProjectRename(array $params): void
     {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
         //Is this project using docman
         if (is_dir($docmanPath . $params['project']->getUnixName())) {
             $version = new Docman_VersionFactory();
 
-            return $version->renameProject($docmanPath, $params['project'], $params['new_name']);
+            $version->renameProject($docmanPath, $params['project'], $params['new_name']);
         }
-
-        return true;
     }
 
     /**
      * Hook called before renaming project to check the name validity
      * @param Array $params
      */
-    public function file_exists_in_data_dir($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('file_exists_in_data_dir')]
+    public function fileExistsInDataDir($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
         $path       = $docmanPath . $params['new_name'];
@@ -683,7 +631,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
      *
      * @param Array $params
      */
-    public function webdav_root_for_service($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('webdav_root_for_service')]
+    public function webdavRootForService($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project_id = (int) $params['project']->getId();
         if (! $params['project']->usesService('docman')) {
@@ -709,7 +658,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
      *
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_collect_project($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('plugin_statistics_disk_usage_collect_project')]
+    public function pluginStatisticsDiskUsageCollectProject($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $row  = $params['project_row'];
         $root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
@@ -733,7 +683,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
      *
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_service_label($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('plugin_statistics_disk_usage_service_label')]
+    public function pluginStatisticsDiskUsageServiceLabel($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['services']['plugin_docman'] = 'Docman';
     }
@@ -743,13 +694,15 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
      *
      * @param array $params
      */
-    public function plugin_statistics_color($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('plugin_statistics_color')]
+    public function pluginStatisticsColor($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['service'] == 'plugin_docman') {
             $params['color'] = 'royalblue';
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function pendingDocumentsRetriever(PendingDocumentsRetriever $event): void
     {
         $request = HTTPRequest::instance();
@@ -1007,14 +960,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return $html;
     }
 
-    /**
-     * Hook to purge deleted items if their agony ends today
-     *
-     * @param Array $params
-     *
-     * @return void
-     */
-    public function purgeFiles(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName('backend_system_purge_files')]
+    public function backendSystemPurgeFiles(array $params): void
     {
         $itemFactory = new Docman_ItemFactory();
         $itemFactory->purgeDeletedItems($params['time']);
@@ -1025,6 +972,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->cleanUnusedResources();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === Project::STATUS_DELETED) {
@@ -1035,16 +983,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    /**
-     * Function called when a user is removed from a project
-     * If a user is removed from a private project, the
-     * documents monitored by that user should be monitored no more.
-     *
-     * @param array $params
-     *
-     * @return void
-     */
-    public function projectRemoveUser($params)
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_remove_user')]
+    public function projectAdminRemoveUser(array $params): void
     {
         $project_id = $params['group_id'];
         $user_id    = $params['user_id'];
@@ -1055,12 +995,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 
-    /**
-     * Display information about admin delegation
-     *
-     * @return void
-     */
-    public function permissionRequestInformation($params)
+    #[\Tuleap\Plugin\ListeningToEventName('permission_request_information')]
+    public function permissionRequestInformation(array $params): void
     {
         $params['notices'][] = dgettext('tuleap-docman', 'The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.');
     }
@@ -1069,7 +1005,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
      * Fill the list of subEvents related to docman in the project history interface
      *
      */
-    public function fillProjectHistorySubEvents($params)
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents($params): void
     {
         array_push(
             $params['subEvents']['event_permission'],
@@ -1109,7 +1046,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return $this->controller[$controller];
     }
 
-    public function proccess_system_check($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::PROCCESS_SYSTEM_CHECK)]
+    public function proccessSystemCheck($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $docman_system_check = new Docman_SystemCheck(
             $this,
@@ -1122,7 +1060,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $docman_system_check->process();
     }
 
-    public function services_truncated_emails($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICES_TRUNCATED_EMAILS)]
+    public function servicesTruncatedEmails($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project = $params['project'];
         if ($project->usesService('docman')) {
@@ -1156,6 +1095,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getReference(GetReferenceEvent $event): void
     {
         $keyword       = $event->getKeyword();
@@ -1191,7 +1131,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return $result->getRow();
     }
 
-    public function project_admin_ugroup_deletion($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_ugroup_deletion')]
+    public function projectAdminUgroupDeletion($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project_id = $params['group_id'];
         $ugroup     = $params['ugroup'];
@@ -1200,7 +1141,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 
-    /** @see Event::PROJECT_ACCESS_CHANGE */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::PROJECT_ACCESS_CHANGE)]
     public function projectAccessChange(array $params): void
     {
         $project_id = $params['project_id'];
@@ -1215,7 +1156,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $notifications_for_project_member_cleaner->cleanNotificationsAfterProjectVisibilityChange($project, $new_access);
     }
 
-    public function site_access_change($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SITE_ACCESS_CHANGE)]
+    public function siteAccessChange($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $old_access = $params['old_value'];
 
@@ -1312,7 +1254,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return new UsersUpdater($this->getUsersToNotifyDao());
     }
 
-    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector): void
     {
         $project = $quick_links_collector->getProject();
 
@@ -1333,7 +1276,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
     {
         if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
             return;
@@ -1363,15 +1307,15 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    /** @see Event::REST_RESOURCES */
-    public function restResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    /** @see \Event::REST_PROJECT_RESOURCES */
-    public function rest_project_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_PROJECT_RESOURCES)]
+    public function restProjectResources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         ResourcesInjector::declareProjectResources($params['resources'], $params['project']);
     }
@@ -1638,6 +1582,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return new DocumentTreeProjectExtractor(ProjectManager::instance());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $route_collector = $event->getRouteCollector();
@@ -1715,6 +1660,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $cleaner->deleteDanglingDocumentToUpload(new DateTimeImmutable());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
@@ -1741,6 +1687,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $event->addConfigClass(\Tuleap\Document\Tree\DocumentTreePresenter::class);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event): void
     {
         $wiki_page = $event->getWikiPage();
@@ -1765,6 +1712,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return new DocumentLinkProvider(ServerHostname::HTTPSUrl(), $project);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
     {
         $collector->addStatistics(
@@ -1779,11 +1727,13 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return new Docman_ItemDao();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function exportXmlProject(ExportXmlProject $event): void
     {
         if (! $event->shouldExportAllData()) {
@@ -1815,7 +1765,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $export->export($project, $event->getIntoXml(), $archive);
     }
 
-    /** @see Event::IMPORT_XML_PROJECT */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::IMPORT_XML_PROJECT)]
     public function importXmlProject(array $params): void
     {
         if (empty($params['xml_content']->docman)) {

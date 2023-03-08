@@ -45,11 +45,20 @@ class ConvertAddHookToAttributesRule extends AbstractRector
     public function refactor(Node $node): ?Node
     {
         $constructor = $node->getMethod('__construct');
-        if (! $constructor) {
-            return $node;
+        if ($constructor) {
+            $this->extractHooksFrom($node, $constructor);
+        }
+        $hooks_and_callbacks = $node->getMethod('getHooksAndCallbacks');
+        if ($hooks_and_callbacks) {
+            $this->extractHooksFrom($node, $hooks_and_callbacks);
         }
 
-        foreach ($constructor->stmts as $k => $stmt) {
+        return $node;
+    }
+
+    private function extractHooksFrom(Node $node, ClassMethod $method)
+    {
+        foreach ($method->stmts as $k => $stmt) {
             $add_hook_call = $this->getAddHookCall($stmt);
             if (! $add_hook_call) {
                 continue;
@@ -66,10 +75,8 @@ class ConvertAddHookToAttributesRule extends AbstractRector
             }
 
             $this->enhanceCallback($actual_callback, $callback_and_attribute);
-            unset($constructor->stmts[$k]);
+            unset($method->stmts[$k]);
         }
-
-        return $node;
     }
 
     private function getAddHookCall(Node $stmt): ?Node\Expr\MethodCall
