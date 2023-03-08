@@ -1,0 +1,359 @@
+# Angular
+[[IgnoredVulns]]
+id = "GHSA-m2h2-264f-f486" # CVE-2022-25844
+reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
+[[IgnoredVulns]]
+id = "GHSA-prc3-vjfx-vhm9" # CVE-2022-25869
+reason = "Angular is EOL. XSS can only be trigerred with IE. IE users would not be able to load the JS of Angular app in Tuleap."
+
+# plugins/git/composer.lock
+## smarty/smarty
+[[IgnoredVulns]]
+id = "GHSA-29gp-2c3m-3j6m" # CVE-2021-29454
+reason = "No usage of the math function."
+
+[[IgnoredVulns]]
+id = "GHSA-3rpf-5rqv-689q"  # CVE-2021-26120
+reason = "All templates content are trusted."
+
+[[IgnoredVulns]]
+id = "GHSA-4h9c-v5vg-5m6m" # CVE-2021-21408
+reason = "All templates content are trusted."
+
+[[IgnoredVulns]]
+id = "GHSA-634x-pc3q-cf4c" # CVE-2022-29221
+reason = "All templates content are trusted."
+
+[[IgnoredVulns]]
+id = "GHSA-w5hr-jm4j-9jvq" # CVE-2021-26119
+reason = "All templates content are trusted."
+
+[[IgnoredVulns]]
+id = "GHSA-hwq7-5vv9-c6cf" # CVE-2018-25047
+reason = "No usage of smarty_function_mailto."
+
+# src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
+## atty
+[[IgnoredVulns]]
+id = "RUSTSEC-2021-0145"
+reason = "Windows only."
+
+### TO BE FIXED
+
+# Lodash
+[[IgnoredVulns]]
+id = "GHSA-jf85-cpcp-j695" # CVE-2019-10744
+reason = "No usage of defaultsDeep."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-fvqr-27wr-82fm" # CVE-2018-3721
+reason = "No usage of defaultsDeep, merge or mergeWith on user content."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-4xc9-xhrj-v574" # CVE-2018-16487
+reason = "No usage of defaultsDeep, merge or mergeWith on user content."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-x5rq-j2xg-h7qm" # CVE-2019-1010266
+reason = "ReDoS."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-p6mc-m468-83gw" # CVE-2020-8203
+reason = "No usage of zipObjectDeep/baseSet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-29mw-wpgm-hmr9" # CVE-2020-28500
+reason = "ReDoS."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-35jh-r3h4-6jhm" # CVE-2021-23337
+reason = "Only used on the frontend and no usage of lodash.template."
+ignoreUntil = 2023-05-08
+
+# Dev tools
+## minimatch
+[[IgnoredVulns]]
+id = "GHSA-f8q6-p94x-37v3" # CVE-2022-3517
+reason = "ReDoS. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## moment-timezone
+[[IgnoredVulns]]
+id = "GHSA-56x4-j7p9-fcf9"
+reason = "Not exploitable. Command injection at build time."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-v78c-4p63-2j6c"
+reason = "Not exploitable. Command injection at build time."
+ignoreUntil = 2023-05-08
+
+## json5
+[[IgnoredVulns]]
+id = "GHSA-9c47-m6qq-7p4h" # CVE-2022-46175
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## terser
+[[IgnoredVulns]]
+id = "GHSA-4wf5-vphf-c2xc" # CVE-2022-25858
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## loader-utils
+[[IgnoredVulns]]
+id = "GHSA-76p3-8jx3-jpfq" # CVE-2022-37601
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-3rfm-jhwj-7488" # CVE-2022-37603
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-hhq3-ff78-jv3g" # CVE-2022-37599
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## minimist
+[[IgnoredVulns]]
+id = "GHSA-xvch-5gv4-984h" # CVE-2021-44906
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## async
+[[IgnoredVulns]]
+id = "GHSA-fwr7-v2mv-hh25" # CVE-2021-43138
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+## qs
+[[IgnoredVulns]]
+id = "GHSA-hrpp-h998-j3pp" # CVE-2022-24999
+reason = "Not exploitable. Only used as a dev tool."
+ignoreUntil = 2023-05-08
+
+# src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
+## remove_dir_all
+[[IgnoredVulns]]
+id = "RUSTSEC-2023-0018"
+reason = "Only used at build time."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-mc8h-8q98-g5hr" # RUSTSEC-2023-0018
+reason = "Only used at build time."
+ignoreUntil = 2023-05-08
+
+# src/additional-packages/tuleap-mercure/go.mod
+## golang.org/x/net
+[[IgnoredVulns]]
+id = "GO-2023-1495" # CVE-2022-41721
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-fxg5-wq6x-vr4w" # CVE-2022-41721
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GO-2022-1144" # CVE-2022-41717
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GO-2023-1571" # CVE-2022-41723
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-vvpx-j8f3-3w6h" # CVE-2022-41723
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+## golang.org/x/text
+[[IgnoredVulns]]
+id = "GO-2022-1059" # CVE-2022-32149
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-69ch-w2m2-3vjp" # CVE-2022-32149
+reason = "Not used in production yet."
+ignoreUntil = 2023-05-08
+
+# plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
+## jsdom
+[[IgnoredVulns]]
+id = "GHSA-f4c9-cqv8-9v98" # CVE-2021-20066
+reason = "To be investigated/reported upstream."
+ignoreUntil = 2023-05-08
+
+## ms
+[[IgnoredVulns]]
+id = "GHSA-w9mr-4mfr-499f" # CVE-2017-20162
+reason = "ReDoS. To be investigated/reported upstream/ignored."
+ignoreUntil = 2023-05-08
+
+## nth-check
+[[IgnoredVulns]]
+id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
+reason = "ReDoS. To be investigated/reported upstream/ignored."
+ignoreUntil = 2023-05-08
+
+## requestretry
+[[IgnoredVulns]]
+id = "GHSA-hjp8-2cm3-cc45" # CVE-2022-0654
+reason = "No external call in our setup. To be investigated/reported upstream/ignored."
+ignoreUntil = 2023-05-08
+
+## swagger-ui-dist
+[[IgnoredVulns]]
+id = "GHSA-6c9x-mj3g-h47x" # CVE-2021-46708
+reason = "Not exposed (CLI usage only). To be investigated/reported upstream/ignored."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-qrmm-w75w-3wpx"
+reason = "Not exposed (CLI usage only). To be investigated/reported upstream/ignored."
+ignoreUntil = 2023-05-08
+
+# plugins/tracker_encryption/composer.lock
+## phpseclib/phpseclib
+[[IgnoredVulns]]
+id = "GHSA-hm7p-r324-hhf3" # CVE-2022-37599
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+# d3-color
+[[IgnoredVulns]]
+id = "GHSA-36jr-mh4h-2g58"
+reason = "ReDos. To be investigated."
+ignoreUntil = 2023-05-08
+
+# plugins/api_explorer/pnpm-lock.yaml
+## @braintree/sanitize-url
+[[IgnoredVulns]]
+id = "GHSA-q8gg-vj6m-hgmj" # CVE-2022-48345
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+# docx related
+## jszip
+[[IgnoredVulns]]
+id = "GHSA-36fh-84j7-cv5h" # CVE-2022-48285
+reason = "Not exploitable in our context (building docx files)."
+ignoreUntil = 2023-05-08
+
+## nanoid
+[[IgnoredVulns]]
+id = "GHSA-qrpm-p2h7-hrv2" # CVE-2021-23566
+reason = "Not exploitable in our context (building docx files)."
+ignoreUntil = 2023-05-08
+
+# src/additional-packages/tuleap-realtime/pnpm-lock.yaml
+## convict
+[[IgnoredVulns]]
+id = "GHSA-jjf5-wx3j-3fv7" # CVE-2022-21190
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-x2w5-725j-gf2g" # CVE-2022-22143
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-4jrm-c32x-w4jf" # CVE-2023-0163
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## debug
+[[IgnoredVulns]]
+id = "GHSA-9vvw-cc9w-f27h" # CVE-2017-20165
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-gxpj-cx7g-858c" # CVE-2017-16137
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## engine.io
+[[IgnoredVulns]]
+id = "GHSA-r7qp-cfhv-p84w" # CVE-2022-41940
+reason = "DoS. To be investigated."
+ignoreUntil = 2023-05-08
+
+## merge
+[[IgnoredVulns]]
+id = "GHSA-7wpw-2hjm-89gp" # CVE-2020-28499
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## minimist
+[[IgnoredVulns]]
+id = "GHSA-vh95-rmgr-6w4m" # CVE-2020-7598
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## moment
+[[IgnoredVulns]]
+id = "GHSA-446m-mv8f-q348" # CVE-2017-18214
+reason = "ReDoS. To be investigated."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-8hfj-j24r-96c4" # CVE-2022-24785
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+[[IgnoredVulns]]
+id = "GHSA-wc69-rhjr-hc9g" # CVE-2022-31129
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## nconf
+[[IgnoredVulns]]
+id = "GHSA-6xwr-q98w-rvg7" # CVE-2022-21803
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## qs
+[[IgnoredVulns]]
+id = "GHSA-gqgv-6jq5-jjj9" # CVE-2017-1000048
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## simple-get
+[[IgnoredVulns]]
+id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## socket.io-parser
+[[IgnoredVulns]]
+id = "GHSA-qm95-pgcg-qqfq" # CVE-2022-2421
+reason = "To be investigated."
+ignoreUntil = 2023-05-08
+
+## trim-newlines
+[[IgnoredVulns]]
+id = "GHSA-7p7h-4mm5-852v" # CVE-2021-33623
+reason = "To be investigated. False positive?"
+ignoreUntil = 2023-05-08
+
+## validator
+[[IgnoredVulns]]
+id = "GHSA-qgmg-gppg-76g5" # CVE-2021-3765
+reason = "ReDos. To be investigated."
+ignoreUntil = 2023-05-08

@@ -18,7 +18,7 @@ pipeline {
             agent {
                 dockerfile {
                     dir 'sources/tools/utils/nix/'
-                    filename 'build-tools.dockerfile'
+                    filename 'tools.dockerfile'
                     reuseNode true
                     args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only -v /nix -v /root'
                 }
@@ -56,7 +56,7 @@ pipeline {
             agent {
                 dockerfile {
                     dir 'sources/tools/utils/nix/'
-                    filename 'build-tools.dockerfile'
+                    filename 'tools.dockerfile'
                     reuseNode true
                     args '--network none --tmpfs /tmp/js_test_cache:rw,noexec,nosuid -e TMPDIR=/tmp/js_test_cache/'
                 }
