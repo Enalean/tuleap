@@ -83,6 +83,7 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -354,11 +355,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(WorkerEvent::NAME);
 
-        if (defined('STATISTICS_BASE_DIR')) {
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
-        }
-
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
@@ -456,21 +452,17 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $this->pluginInfo;
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
-     */
-    public function plugin_statistics_frequence_stat_entries($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequenciesLabels(\Tuleap\Statistics\FrequenciesLabels $event): void
     {
-        $params['entries'][self::$FREQUENCIES_GIT_READ] = 'Git read access';
+        $event->addLabel(self::$FREQUENCIES_GIT_READ, 'Git read access');
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
-     */
-    public function plugin_statistics_frequence_stat_sample($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequenciesSamples(\Tuleap\Statistics\FrequenciesSamples $event): void
     {
-        if ($params['character'] === self::$FREQUENCIES_GIT_READ) {
-            $params['sample'] = new Tuleap\Git\Statistics\FrequenciesSample();
+        if ($event->requested_sample === self::$FREQUENCIES_GIT_READ) {
+            $event->setSample(new Tuleap\Git\Statistics\FrequenciesSample());
         }
     }
 

@@ -197,7 +197,8 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         }
         $type_class = $type->getName();
         if (! class_exists($type_class)) {
-            throw new \LogicException('Callback parameter type cannot be found. Check ' . $method->getName() . ' usage in ' . static::class);
+            // When callback is hooked on an event sent by a plugin that is not active, skip
+            return;
         }
         $event_class   = new \ReflectionClass($type_class);
         $name_constant = $event_class->getConstant(Dispatchable::HOOK_CONST_NAME);

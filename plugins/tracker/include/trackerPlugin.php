@@ -46,6 +46,7 @@ use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Mail\Transport\MailTransportBuilder;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -388,10 +389,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
             $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN);
         }
-        if (defined('STATISTICS_BASE_DIR')) {
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
-        }
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
@@ -437,12 +434,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $file_manager->purgeOldTemporaryFiles();
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
-     */
-    public function plugin_statistics_frequence_stat_entries($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequencyLabels(\Tuleap\Statistics\FrequenciesLabels $event): void
     {
-        $params['entries'][$this->getServiceShortname()] = 'Opened artifacts';
+        $event->addLabel($this->getServiceShortname(), 'Opened artifacts');
     }
 
     public function getUriFromCrossReference(GetUriFromCrossReference $event): void
@@ -455,13 +450,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
-     */
-    public function plugin_statistics_frequence_stat_sample($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequenciesSamples(\Tuleap\Statistics\FrequenciesSamples $event): void
     {
-        if ($params['character'] === $this->getServiceShortname()) {
-            $params['sample'] = new Tracker_Sample();
+        if ($event->requested_sample === $this->getServiceShortname()) {
+            $event->setSample(new Tracker_Sample());
         }
     }
 

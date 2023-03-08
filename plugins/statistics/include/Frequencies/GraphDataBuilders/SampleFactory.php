@@ -21,12 +21,8 @@
 namespace Tuleap\Statistics\Frequencies\GraphDataBuilder;
 
 use EventManager;
-use Statistics_Event;
+use Tuleap\Statistics\FrequenciesSamples;
 
-/**
- * Design pattern factory
- *
- */
 class SampleFactory
 {
     /**
@@ -89,15 +85,7 @@ class SampleFactory
                 break;
 
             default:
-                $sample = new SessionSample();
-                EventManager::instance()->processEvent(
-                    Statistics_Event::FREQUENCE_STAT_SAMPLE,
-                    [
-                        'character' => $character,
-                        'sample'    => &$sample,
-                    ]
-                );
-                $this->sample = $sample;
+                $this->sample = EventManager::instance()->dispatch(new FrequenciesSamples($character))->getSample();
                 break;
         }
     }

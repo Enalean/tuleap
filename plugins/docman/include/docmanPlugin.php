@@ -141,6 +141,7 @@ use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\TooltipJSON;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -264,11 +265,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function getHooksAndCallbacks()
     {
-        if (defined('STATISTICS_BASE_DIR')) {
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
-            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
-        }
-
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
@@ -298,21 +294,17 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Docman\ServiceDocman::class;
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
-     */
-    public function plugin_statistics_frequence_stat_entries($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequencyLabels(\Tuleap\Statistics\FrequenciesLabels $event): void
     {
-        $params['entries'][$this->getServiceShortname()] = 'Documents viewed';
+        $event->addLabel($this->getServiceShortname(), 'Documents viewed');
     }
 
-    /**
-     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
-     */
-    public function plugin_statistics_frequence_stat_sample($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[ListeningToEventClass]
+    public function statisticsFrequenciesSamples(\Tuleap\Statistics\FrequenciesSamples $event): void
     {
-        if ($params['character'] === $this->getServiceShortname()) {
-            $params['sample'] = new Docman_Sample();
+        if ($event->requested_sample === $this->getServiceShortname()) {
+            $event->setSample(new Docman_Sample());
         }
     }
 

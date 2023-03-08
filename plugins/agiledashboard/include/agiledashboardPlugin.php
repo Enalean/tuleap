@@ -108,6 +108,7 @@ use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -293,11 +294,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         if (defined('CARDWALL_BASE_URL')) {
             $this->addHook(CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT, 'cardwall_event_use_standard_javascript');
-        }
-
-        if (defined('TESTMANAGEMENT_BASE_URL')) {
-            $this->addHook(\Tuleap\TestManagement\Event\GetMilestone::NAME);
-            $this->addHook(\Tuleap\TestManagement\Event\GetItemsFromMilestone::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -1178,14 +1174,16 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function testmanagementGetMilestone(\Tuleap\TestManagement\Event\GetMilestone $event)
+    #[ListeningToEventClass]
+    public function testmanagementGetMilestone(\Tuleap\TestManagement\Event\GetMilestone $event): void
     {
         $milestone_factory = $this->getMilestoneFactory();
         $milestone         = $milestone_factory->getBareMilestoneByArtifactId($event->getUser(), $event->getMilestoneId());
         $event->setMilestone($milestone);
     }
 
-    public function testmanagementGetItemsFromMilestone(\Tuleap\TestManagement\Event\GetItemsFromMilestone $event)
+    #[ListeningToEventClass]
+    public function testmanagementGetItemsFromMilestone(\Tuleap\TestManagement\Event\GetItemsFromMilestone $event): void
     {
         $milestone_factory               = $this->getMilestoneFactory();
         $backlog_factory                 = $this->getBacklogFactory();
