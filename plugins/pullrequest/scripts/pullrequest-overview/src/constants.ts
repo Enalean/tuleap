@@ -20,8 +20,10 @@
 import type { InjectionKey } from "vue";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
+import type { PullRequestCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 
 type DisplayErrorCallback = (fault: Fault) => void;
+type DisplayNewlyCreatedGlobalCommentCallback = (comment: PullRequestCommentPresenter) => void;
 
 export const OVERVIEW_APP_BASE_URL_KEY: InjectionKey<URL> = Symbol();
 export const PULL_REQUEST_ID_KEY: InjectionKey<string> = Symbol();
@@ -32,5 +34,7 @@ export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: InjectionKey<RelativeDat
 export const CURRENT_USER_ID: InjectionKey<number> = Symbol();
 export const CURRENT_USER_AVATAR_URL: InjectionKey<string> = Symbol();
 export const DISPLAY_TULEAP_API_ERROR: InjectionKey<DisplayErrorCallback> = Symbol();
+export const DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT: InjectionKey<DisplayNewlyCreatedGlobalCommentCallback> =
+    Symbol();
 
 export const VIEW_OVERVIEW_NAME = "overview";

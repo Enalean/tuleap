@@ -17,11 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InlineCommentContext } from "../../src/app/comments/new-comment-form/NewInlineCommentContext";
+import type { InlineCommentContext } from "@tuleap/plugin-pullrequest-comments";
 
 export const InlineCommentContextStub = {
     widthDefaultContext: (): InlineCommentContext => ({
-        pull_request_id: 10,
         file_path: "README.md",
         position: "right",
         unidiff_offset: 55,

@@ -19,13 +19,15 @@
 
 import type {
     PullRequestCommentPresenter,
-    PullRequestInlineCommentPresenter,
     ControlPullRequestComment,
     CurrentPullRequestUserPresenter,
     HelpRelativeDatesDisplay,
     PullRequestPresenter,
+    SaveNewComment,
+    NewCommentFormComponentConfig,
+    NewCommentFormAuthorPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
-import type { SaveNewInlineComment } from "../comments/new-comment-form/NewInlineCommentSaver";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export type GroupType = "unmoved" | "deleted" | "added";
 export const UNMOVED_GROUP: GroupType = "unmoved";
@@ -80,10 +82,12 @@ export interface InlineCommentWidget extends WidgetElement {
 
 export interface NewInlineCommentFormWidget extends WidgetElement {
     localName: "tuleap-pullrequest-new-comment-form";
-    comment_saver: SaveNewInlineComment;
+    comment_saver: SaveNewComment;
     post_rendering_callback: () => void;
-    post_submit_callback: (new_inline_comment: PullRequestInlineCommentPresenter) => void;
+    post_submit_callback: (inline_comment_payload: PullRequestComment) => void;
     on_cancel_callback: () => void;
+    config: NewCommentFormComponentConfig;
+    author_presenter: NewCommentFormAuthorPresenter;
 }
 
 export interface FileDiffPlaceholderWidget extends WidgetElement {

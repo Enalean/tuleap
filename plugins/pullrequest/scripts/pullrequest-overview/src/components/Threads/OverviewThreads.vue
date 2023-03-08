@@ -25,23 +25,24 @@
             v-if="is_loading_threads"
             data-test="pull-request-threads-spinner"
         />
-        <div v-if="!is_loading_threads && threads.length > 0" data-test="pull-request-threads">
+        <div v-if="!is_loading_threads && threads.list.length > 0" data-test="pull-request-threads">
             <tuleap-pullrequest-comment
                 data-test="pull-request-thread"
                 class="pull-request-overview-thread"
-                v-for="thread in threads"
-                v-bind:key="thread.id"
+                v-for="(thread, index) in threads.list"
+                v-bind:key="`${index}${thread.id}`"
                 v-bind:comment="thread"
                 v-bind:controller="comments_controller"
                 v-bind:relativeDateHelper="relative_date_helper"
             />
         </div>
-        <overview-threads-empty-state v-if="!is_loading_threads && threads.length === 0" />
+        <overview-threads-empty-state v-if="!is_loading_threads && threads.list.length === 0" />
+        <overview-new-comment-form v-if="!is_loading_threads" />
     </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive, provide } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { RelativeDatesHelper } from "../../helpers/relative-dates-helper";
@@ -55,10 +56,12 @@ import {
     USER_LOCALE_KEY,
     OVERVIEW_APP_BASE_URL_KEY,
     DISPLAY_TULEAP_API_ERROR,
+    DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
 import OverviewThreadsEmptyState from "./OverviewThreadsEmptyState.vue";
+import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 
 import "@tuleap/plugin-pullrequest-comments";
 
@@ -79,6 +82,7 @@ import {
 } from "@tuleap/plugin-pullrequest-comments";
 
 import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
+import type { StorePullRequestCommentReplies } from "@tuleap/plugin-pullrequest-comments";
 
 const { $gettext } = useGettext();
 
@@ -94,9 +98,10 @@ const relative_date_display: RelativeDatesDisplayPreference = strictInject(
 );
 
 const is_loading_threads = ref(true);
-const threads = ref<PullRequestCommentPresenter[]>([]);
+const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });
 const comments_presenters = ref<PullRequestCommentPresenter[]>([]);
 const comments_controller = ref<null | ControlPullRequestComment>(null);
+const replies_store = ref<null | StorePullRequestCommentReplies>(null);
 const current_user_presenter = ref<CurrentPullRequestUserPresenter>({ user_id, avatar_url });
 const current_pull_request_presenter = ref<PullRequestPresenter>({
     pull_request_id: Number.parseInt(pull_request_id, 10),
@@ -104,6 +109,8 @@ const current_pull_request_presenter = ref<PullRequestPresenter>({
 const relative_date_helper = ref<HelpRelativeDatesDisplay>(
     RelativeDatesHelper(date_time_format, relative_date_display, user_locale)
 );
+
+provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
 
 fetchPullRequestTimelineItems(pull_request_id)
     .match(
@@ -127,12 +134,12 @@ fetchPullRequestTimelineItems(pull_request_id)
         }
     )
     .then(() => {
-        const replies_store = PullRequestCommentRepliesStore(comments_presenters.value);
-        threads.value = replies_store.getAllRootComments();
+        replies_store.value = PullRequestCommentRepliesStore(comments_presenters.value);
+        threads.list = [...replies_store.value.getAllRootComments()];
 
         comments_controller.value = PullRequestCommentController(
             PullRequestCommentReplyFormFocusHelper(),
-            replies_store,
+            replies_store.value,
             PullRequestCommentNewReplySaver(),
             current_user_presenter.value,
             current_pull_request_presenter.value,
@@ -141,6 +148,15 @@ fetchPullRequestTimelineItems(pull_request_id)
 
         is_loading_threads.value = false;
     });
+
+function addNewRootComment(comment: PullRequestCommentPresenter): void {
+    if (!replies_store.value) {
+        return;
+    }
+
+    replies_store.value.addRootComment(comment);
+    threads.list.push(comment);
+}
 </script>
 
 <style lang="scss">
@@ -151,6 +167,8 @@ fetchPullRequestTimelineItems(pull_request_id)
 }
 
 .pull-request-threads-section {
-    height: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
 }
 </style>

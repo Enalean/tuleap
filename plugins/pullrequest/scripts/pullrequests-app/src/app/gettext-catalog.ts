@@ -33,9 +33,6 @@ export function setCatalog(catalog: GettextCatalog): void {
     gettextCatalog = catalog;
 }
 
-export const getCancelButtonText = (): string => gettextCatalog.getString("Cancel");
-export const getNewInlineCommentSubmitButtonText = (): string =>
-    gettextCatalog.getString("Comment");
 export const getUserUpdatePullRequest = (): string =>
     gettextCatalog.getString("Has updated the pull request.");
 export const getUserRebasePullRequest = (): string =>

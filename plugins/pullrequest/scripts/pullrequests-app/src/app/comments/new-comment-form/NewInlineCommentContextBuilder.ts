@@ -18,22 +18,14 @@
  */
 
 import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
+import type { InlineCommentContext } from "@tuleap/plugin-pullrequest-comments";
 
-export interface InlineCommentContext {
-    readonly pull_request_id: number;
-    readonly file_path: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-}
-
-export const NewInlineCommentContext = {
+export const NewInlineCommentContextBuilder = {
     fromContext: (
-        pull_request_id: number,
         file_path: string,
         unidiff_offset: number,
         position: InlineCommentPosition
     ): InlineCommentContext => ({
-        pull_request_id,
         file_path,
         unidiff_offset,
         position,

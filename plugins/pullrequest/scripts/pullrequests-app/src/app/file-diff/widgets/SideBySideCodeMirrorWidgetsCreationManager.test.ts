@@ -52,7 +52,7 @@ import {
     INLINE_COMMENT_POSITION_LEFT,
     INLINE_COMMENT_POSITION_RIGHT,
 } from "@tuleap/plugin-pullrequest-constants";
-import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
+import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/NewInlineCommentContextBuilder";
 
 describe("side-by-side-code-mirror-widgets-creation-manager", () => {
     let left_code_mirror: Editor,
@@ -544,6 +544,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
 
     describe("Management of new inline comment form widgets", () => {
         const pull_request_id = 10;
+        const user_id = 102;
+        const user_avatar_url = "url/to/user_avatar.png";
         const file_path = "README.md";
         const code_mirror_line_number = 15;
         const line = FileLineStub.buildUnMovedFileLine(
@@ -558,6 +560,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_LEFT,
                 pull_request_id,
+                user_id,
+                user_avatar_url,
                 file_path,
                 code_mirror_line_number
             );
@@ -565,6 +569,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_RIGHT,
                 pull_request_id,
+                user_id,
+                user_avatar_url,
                 file_path,
                 code_mirror_line_number
             );
@@ -581,6 +587,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );
@@ -591,8 +599,10 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).toStrictEqual({
                     code_mirror: left_code_mirror,
                     line_number: code_mirror_line_number,
-                    context: NewInlineCommentContext.fromContext(
-                        pull_request_id,
+                    pull_request_id,
+                    user_id,
+                    user_avatar_url,
+                    context: NewInlineCommentContextBuilder.fromContext(
                         file_path,
                         line.unidiff_offset,
                         INLINE_COMMENT_POSITION_LEFT
@@ -626,6 +636,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );
@@ -670,6 +682,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_LEFT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );
@@ -690,6 +704,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );
@@ -700,8 +716,10 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).toStrictEqual({
                     code_mirror: right_code_mirror,
                     line_number: code_mirror_line_number,
-                    context: NewInlineCommentContext.fromContext(
-                        pull_request_id,
+                    pull_request_id,
+                    user_id,
+                    user_avatar_url,
+                    context: NewInlineCommentContextBuilder.fromContext(
                         file_path,
                         line.unidiff_offset,
                         INLINE_COMMENT_POSITION_RIGHT
@@ -735,6 +753,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );
@@ -779,6 +799,8 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
                 ).displayNewInlineCommentForm(
                     INLINE_COMMENT_POSITION_RIGHT,
                     pull_request_id,
+                    user_id,
+                    user_avatar_url,
                     file_path,
                     code_mirror_line_number
                 );

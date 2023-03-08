@@ -31,8 +31,10 @@ import { RelativeDateHelperStub } from "../../../../tests/stubs/RelativeDateHelp
 import { SideBySideCodeMirrorWidgetCreator } from "./SideBySideCodeMirrorWidgetCreator";
 import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentContextStub";
 
-import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
-import { NEW_INLINE_COMMENT_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
+import {
+    PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
+    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+} from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 import type {
     ControlPullRequestComment,
@@ -41,6 +43,11 @@ import type {
 import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
 import type { HelpRelativeDatesDisplay } from "@tuleap/plugin-pullrequest-comments";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
+import {
+    INLINE_COMMENT_POSITION_LEFT,
+    TYPE_INLINE_COMMENT,
+} from "@tuleap/plugin-pullrequest-constants";
+import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
 
 type EditorThatCanHaveWidgets = Editor & {
     addLineWidget: jest.SpyInstance;
@@ -174,7 +181,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             const post_rendering_callback = jest.fn();
 
             const new_comment_form = document.createElement(
-                NEW_COMMENT_FORM_TAG_NAME
+                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME
             ) as NewInlineCommentFormWidget;
             const inline_comment_widget = document.createElement(
                 PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME
@@ -191,6 +198,9 @@ describe("side-by-side-code-mirror-widget-creator", () => {
 
             getWidgetCreator().displayNewInlineCommentFormWidget({
                 code_mirror,
+                pull_request_id: 1,
+                user_id: 102,
+                user_avatar_url: "url/to/user_avatar.png",
                 line_number: 15,
                 context,
                 post_rendering_callback,
@@ -200,6 +210,8 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             expect(new_comment_form.post_rendering_callback).toBeDefined();
             expect(new_comment_form.on_cancel_callback).toBeDefined();
             expect(new_comment_form.post_submit_callback).toBeDefined();
+            expect(new_comment_form.config).toBeDefined();
+            expect(new_comment_form.author_presenter).toBeDefined();
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(15, new_comment_form, {
                 coverGutter: true,
@@ -209,11 +221,30 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             expect(line_widget.changed).toHaveBeenCalledTimes(1);
             expect(post_rendering_callback).toHaveBeenCalledTimes(1);
 
-            const new_comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter();
-            new_comment_form.post_submit_callback(new_comment);
+            const new_comment_payload = {
+                type: TYPE_INLINE_COMMENT,
+                is_outdated: false,
+                color: "",
+                id: 12,
+                position: INLINE_COMMENT_POSITION_LEFT,
+                parent_id: 0,
+                content: "Please give more precisions",
+                file_path: "README.md",
+                user: {
+                    avatar_url: "url/to/user_avatar.png",
+                    user_url: "url/to/user_profile.html",
+                    display_name: "Joe l'Asticot",
+                },
+                post_date: "2023-03-07T16:15:00Z",
+                unidiff_offset: 15,
+            };
+
+            new_comment_form.post_submit_callback(new_comment_payload);
 
             expect(line_widget.clear).toHaveBeenCalledTimes(1);
-            expect(comments_store.getAllRootComments()).toStrictEqual([new_comment]);
+            expect(comments_store.getAllRootComments()).toStrictEqual([
+                PullRequestCommentPresenterBuilder.fromFileDiffComment(new_comment_payload),
+            ]);
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(15, inline_comment_widget, {
                 coverGutter: true,

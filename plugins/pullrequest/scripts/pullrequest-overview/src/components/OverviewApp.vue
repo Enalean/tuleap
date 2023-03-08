@@ -18,9 +18,23 @@
   -->
 
 <template>
-    <div>
+    <div class="pull-request-overview-app">
         <router-view />
     </div>
 </template>
 
 <script setup lang="ts"></script>
+
+<style lang="scss">
+#main-container > main[role="main"],
+.pull-request-overview-app {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.vue-overview-mount-point {
+    display: flex;
+    flex: 1 1 auto;
+}
+</style>
