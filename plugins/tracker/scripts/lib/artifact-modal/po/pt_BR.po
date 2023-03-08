@@ -144,9 +144,6 @@ msgstr ""
 msgid "Only comments are displayed"
 msgstr ""
 
-msgid "Open"
-msgstr ""
-
 msgid "Please refine your search if you did not find what you are looking for."
 msgstr ""
 
@@ -235,7 +232,4 @@ msgid "You can drag 'n drop or paste image directly in the editor."
 msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
 
 msgid "can only have one parent."
-msgstr ""
-
-msgid "to remove link"
 msgstr ""

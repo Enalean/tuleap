@@ -156,9 +156,6 @@ msgstr "Note : un artéfact ne peut avoir qu'un seul parent."
 msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
-msgid "Open"
-msgstr "Ouvrez"
-
 msgid "Please refine your search if you did not find what you are looking for."
 msgstr ""
 "Veuillez préciser votre recherche si vous n'avez pas trouvé ce que vous "
@@ -257,6 +254,3 @@ msgstr ""
 
 msgid "can only have one parent."
 msgstr "ne peut avoir qu'un seul parent."
-
-msgid "to remove link"
-msgstr "pour supprimer ce lien"
