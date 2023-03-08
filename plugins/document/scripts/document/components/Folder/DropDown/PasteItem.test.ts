@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { TestingPinia } from "@pinia/testing";
+import { createTestingPinia } from "@pinia/testing";
+
 const emitMock = jest.fn();
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -38,43 +41,51 @@ import {
 } from "../../../constants";
 import type { Folder, Item } from "../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { useClipboardStore } from "../../../stores/clipboard";
 
 describe("PasteItem", () => {
-    let store = {
-        commit: jest.fn(),
-        dispatch: jest.fn(),
-    };
-
     const destination = {
         user_can_write: true,
         type: TYPE_FOLDER,
     } as Item;
     const current_folder = {} as Folder;
+    let pinia: TestingPinia;
+    let store: ReturnType<typeof useClipboardStore>;
 
     function createWrapper(
         destination: Item,
         current_folder: Folder,
         operation_type: string | null,
         item_title: string | null,
-        pasting_in_progress: boolean
+        pasting_in_progress: boolean,
+        item_type: string = TYPE_FOLDER
     ): Wrapper<PasteItem> {
-        store = createStoreMock({
+        const root_store = createStoreMock({
             state: {
-                clipboard: {
-                    item_title,
-                    operation_type,
-                    pasting_in_progress,
-                    item_type: TYPE_FOLDER,
-                },
                 current_folder,
                 folder_content: [],
             },
         });
+
+        pinia = createTestingPinia({
+            initialState: {
+                clipboard: {
+                    operation_type,
+                    item_title,
+                    pasting_in_progress,
+                    item_type,
+                    item_id: 123,
+                },
+            },
+        });
+        store = useClipboardStore(pinia);
+
         return shallowMount(PasteItem, {
             mocks: {
-                $store: store,
+                $store: root_store,
             },
             localVue: localVue,
+            pinia,
             propsData: { destination },
         });
     }
@@ -100,7 +111,7 @@ describe("PasteItem", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", {
+        expect(store.pasteItem).toHaveBeenCalledWith({
             destination_folder: destination,
             current_folder,
         });
@@ -181,7 +192,8 @@ describe("PasteItem", () => {
             current_folder,
             CLIPBOARD_OPERATION_CUT,
             "My item",
-            true
+            true,
+            TYPE_EMPTY
         );
 
         expect(wrapper.html()).toBeFalsy();

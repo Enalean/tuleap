@@ -25,10 +25,12 @@ import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
+import { createPinia, PiniaVuePlugin } from "pinia";
 
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
+import { configurePinia } from "./pinia-configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -140,6 +142,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const store = createStore(user_id, project_id, configuration_state);
     const router = createRouter(store, project_name);
 
+    Vue.use(PiniaVuePlugin);
+    const pinia = createPinia();
+
+    configurePinia(pinia);
+
     new AppComponent({
         store,
         router,
@@ -152,6 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             should_display_source_column_for_versions,
             create_new_item_alternatives,
         },
+        pinia,
     }).$mount(vue_mount_point);
 
     const gettext_provider = {

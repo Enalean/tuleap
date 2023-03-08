@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { TestingPinia } from "@pinia/testing";
+import { createTestingPinia } from "@pinia/testing";
+
 const emitMock = jest.fn();
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -29,24 +32,26 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import CopyItem from "./CopyItem.vue";
 import type { Item } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { useClipboardStore } from "../../../stores/clipboard";
 
 describe("CopyItem", () => {
-    let store = {
-        commit: jest.fn(),
-    };
+    let pinia: TestingPinia;
+    let store: ReturnType<typeof useClipboardStore>;
+
     function createWrapper(item: Item, pasting_in_progress: boolean): Wrapper<CopyItem> {
-        store = createStoreMock({
-            state: {
-                clipboard: { pasting_in_progress },
+        pinia = createTestingPinia({
+            initialState: {
+                clipboard: {
+                    pasting_in_progress,
+                    item_id: 123,
+                },
             },
         });
+        store = useClipboardStore(pinia);
         return shallowMount(CopyItem, {
-            mocks: {
-                $store: store,
-            },
             localVue: localVue,
             propsData: { item },
+            pinia,
         });
     }
 
@@ -62,7 +67,7 @@ describe("CopyItem", () => {
 
         wrapper.trigger("click");
 
-        expect(store.commit).toHaveBeenCalledWith("clipboard/copyItem", item);
+        expect(store.copyItem).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 

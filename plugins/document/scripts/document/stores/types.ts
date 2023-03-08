@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ClipboardState } from "./module";
-
-export default (): ClipboardState => {
-    return {
-        item_id: null,
-        item_title: null,
-        item_type: null,
-        operation_type: null,
-        pasting_in_progress: false,
-    };
-};
+export interface ClipboardState {
+    item_id: null | number;
+    item_title: null | string;
+    item_type: null | string;
+    operation_type: null | string;
+    pasting_in_progress: boolean;
+}

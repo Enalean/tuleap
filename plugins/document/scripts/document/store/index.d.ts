@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./clipboard-mutations";
-import * as actions from "./clipboard-actions";
-import defaultState from "./clipboard-default-state";
+import type { Store } from "vuex";
+import type { State } from "../type";
+import type { ConfigurationState } from "./configuration";
 
-export interface ClipboardState {
-    item_id: null | number;
-    item_title: null | string;
-    item_type: null | string;
-    operation_type: null | string;
-    pasting_in_progress: boolean;
-}
+export let store: Store<State>;
 
-export default {
-    namespaced: true,
-    state: defaultState(),
-    mutations,
-    actions,
-};
+export function createStore(
+    user_id: number,
+    project_id: number,
+    configuration_state: ConfigurationState
+): Store<State>;

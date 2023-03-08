@@ -18,19 +18,24 @@
   -->
 
 <template>
-    <p class="tlp-text-info" v-if="item_title !== null && !pasting_in_progress">
+    <p class="tlp-text-info" v-if="clipboard.item_title !== null && !clipboard.pasting_in_progress">
         <i class="fa-solid fa-circle-info document-clipboard-content-information-icon"></i>
-        <template v-if="operation_type === CLIPBOARD_OPERATION_CUT">{{ moving_title }}</template>
-        <template v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+        <template v-if="clipboard.operation_type === CLIPBOARD_OPERATION_CUT"
+            >{{ moving_title }}
+        </template>
+        <template v-else-if="clipboard.operation_type === CLIPBOARD_OPERATION_COPY">
             {{ copying_title }}
         </template>
     </p>
-    <p class="tlp-text-info" v-else-if="item_title !== null && pasting_in_progress">
+    <p
+        class="tlp-text-info"
+        v-else-if="clipboard.item_title !== null && clipboard.pasting_in_progress"
+    >
         <i class="fa-solid fa-spin fa-circle-notch document-clipboard-content-information-icon"></i>
-        <template v-if="operation_type === CLIPBOARD_OPERATION_CUT">
+        <template v-if="clipboard.operation_type === CLIPBOARD_OPERATION_CUT">
             {{ item_being_moved_title }}
         </template>
-        <template v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+        <template v-else-if="clipboard.operation_type === CLIPBOARD_OPERATION_COPY">
             {{ item_being_copied_title }}
         </template>
     </p>
@@ -38,25 +43,21 @@
 
 <script setup lang="ts">
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
-import { useState } from "vuex-composition-helpers";
-import type { ClipboardState } from "../../../store/clipboard/module";
 import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const { interpolate, $gettext } = useGettext();
+import { useClipboardStore } from "../../../stores/clipboard";
 
-const { pasting_in_progress, item_title, operation_type } = useState<
-    Pick<ClipboardState, "pasting_in_progress" | "item_title" | "operation_type">
->("clipboard", ["pasting_in_progress", "item_title", "operation_type"]);
+const clipboard = useClipboardStore();
+
+const { interpolate, $gettext } = useGettext();
 
 const moving_title = computed((): string => {
     return interpolate(
         $gettext(
             'You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down. You also cannot move the item somewhere where the name is already used by another item.'
         ),
-        {
-            title: item_title.value,
-        }
+        { title: clipboard.item_title }
     );
 });
 
@@ -65,19 +66,17 @@ const copying_title = computed((): string => {
         $gettext(
             'You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action drop-down.'
         ),
-        {
-            title: item_title.value,
-        }
+        { title: clipboard.item_title }
     );
 });
 const item_being_moved_title = computed((): string => {
     return interpolate($gettext('"%{ title }" is being moved…'), {
-        title: item_title.value,
+        title: clipboard.item_title,
     });
 });
 const item_being_copied_title = computed((): string => {
     return interpolate($gettext('"%{ title }" is being copied…'), {
-        title: item_title.value,
+        title: clipboard.item_title,
     });
 });
 </script>

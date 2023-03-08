@@ -22,13 +22,24 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ClipboardState } from "../../../store/clipboard/module";
+import { useClipboardStore } from "../../../stores/clipboard";
+import type { ClipboardState } from "../../../stores/types";
+import type { TestingPinia } from "@pinia/testing";
+import { createTestingPinia } from "@pinia/testing";
+
+let pinia: TestingPinia;
 
 function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformation> {
+    pinia = createTestingPinia({
+        initialState: {
+            clipboard,
+        },
+    });
+    useClipboardStore(pinia);
+
     return shallowMount(ClipboardContentInformation, {
         localVue,
-        mocks: { $store: createStoreMock({}, { clipboard }) },
+        pinia,
     });
 }
 
@@ -59,24 +70,24 @@ describe("ClipboardContentInformation", () => {
         const result_copy = wrapper.html();
         expect(result_copy).toBeTruthy();
 
-        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
         await wrapper.vm.$nextTick();
         const result_cut = wrapper.html();
         expect(result_cut).toBeTruthy();
-        expect(result_cut).not.toEqual(result_copy);
+        expect(result_cut).not.toStrictEqual(result_copy);
 
-        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
-        wrapper.vm.$store.state.clipboard.pasting_in_progress = true;
+        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
+        pinia.state.value.clipboard.pasting_in_progress = true;
         await wrapper.vm.$nextTick();
         const result_copy_paste = wrapper.html();
         expect(result_copy_paste).toBeTruthy();
-        expect(result_copy_paste).not.toEqual(result_copy);
+        expect(result_copy_paste).not.toStrictEqual(result_copy);
 
-        wrapper.vm.$store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
         await wrapper.vm.$nextTick();
         const result_cut_paste = wrapper.html();
         expect(result_cut_paste).toBeTruthy();
-        expect(result_cut_paste).not.toEqual(result_cut);
-        expect(result_cut_paste).not.toEqual(result_copy_paste);
+        expect(result_cut_paste).not.toStrictEqual(result_cut);
+        expect(result_cut_paste).not.toStrictEqual(result_copy_paste);
     });
 });
