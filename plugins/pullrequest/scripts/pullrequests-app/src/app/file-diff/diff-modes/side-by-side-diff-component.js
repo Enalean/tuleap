@@ -29,12 +29,14 @@ import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullReque
 import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
 
 import {
-    INLINE_COMMENT_POSITION_RIGHT,
-    INLINE_COMMENT_POSITION_LEFT,
     PullRequestCommentController,
     PullRequestCommentReplyFormFocusHelper,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+} from "@tuleap/plugin-pullrequest-constants";
 
 import "../editors/modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";

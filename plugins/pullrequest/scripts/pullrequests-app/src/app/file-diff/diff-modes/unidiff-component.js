@@ -26,12 +26,15 @@ import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInli
 
 import "../editors/modes.ts";
 import {
-    INLINE_COMMENT_POSITION_RIGHT,
-    INLINE_COMMENT_POSITION_LEFT,
     PullRequestCommentController,
     PullRequestCommentReplyFormFocusHelper,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+} from "@tuleap/plugin-pullrequest-constants";
+
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
 import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
