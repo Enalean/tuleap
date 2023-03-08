@@ -29,7 +29,7 @@ import {
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import { getLinkedArtifactTemplate, LINKED_ARTIFACT_POPOVER_CLASS } from "./LinkedArtifactTemplate";
+import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
@@ -42,13 +42,11 @@ import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { LinkedArtifactPopoverElement } from "./LinkedArtifactsPopoversController";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
     readonly artifact_link_select: HTMLSelectElement;
-    linked_artifacts_popovers: LinkedArtifactPopoverElement[];
     link_selector: LinkSelector;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
@@ -213,27 +211,6 @@ export const LinkField = define<LinkField>({
 
         return select;
     },
-    linked_artifacts_popovers: ({ content }): LinkedArtifactPopoverElement[] => {
-        const triggers = content().querySelectorAll(`.${LINKED_ARTIFACT_POPOVER_CLASS}`);
-        if (triggers === null) {
-            return [];
-        }
-
-        return Array.from(triggers).map((popover_trigger) => {
-            if (!(popover_trigger instanceof HTMLElement)) {
-                throw new Error("Linked artifact popover trigger is invalid");
-            }
-
-            const popover_content = content().querySelector(`#${popover_trigger.id}-content`);
-            if (!(popover_content instanceof HTMLElement)) {
-                throw new Error(`Can't find popover content for trigger ${popover_trigger.id}`);
-            }
-            return {
-                popover_trigger,
-                popover_content,
-            };
-        });
-    },
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
@@ -276,9 +253,6 @@ export const LinkField = define<LinkField>({
     },
     linked_artifacts_presenter: {
         set: setLinkedArtifacts,
-        observe: (host) => {
-            host.controller.initPopovers(host.linked_artifacts_popovers);
-        },
     },
     new_links_presenter: {
         set: setNewLinks,

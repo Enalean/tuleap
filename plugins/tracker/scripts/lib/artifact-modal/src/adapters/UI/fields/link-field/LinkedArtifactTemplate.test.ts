@@ -45,7 +45,6 @@ import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasPar
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
@@ -201,7 +200,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 link_verifier,
                 VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
                 event_dispatcher,
-                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 457,
                     label: "Artifact link",
@@ -269,27 +267,6 @@ describe(`LinkedArtifactTemplate`, () => {
                     (artifact) => artifact.is_marked_for_removal
                 )
             ).toBe(false);
-        });
-
-        it(`When the link's direction is "reverse"
-            Then it will render a link to redirect the user to the artifact
-            and a popover`, () => {
-            const linked_artifact = LinkedArtifactStub.withIdAndType(
-                123,
-                LinkTypeStub.buildParentLinkType()
-            );
-            const host = getHost(linked_artifact);
-            render(host, linked_artifact, false);
-
-            const link = target.querySelector("[data-test=action-button]");
-            const popover = target.querySelector("[data-test=linked-artifact-popover]");
-            if (!(link instanceof HTMLAnchorElement) || !(popover instanceof HTMLElement)) {
-                throw new Error("The link has not been found");
-            }
-
-            expect(link.href).toBe("/plugins/tracker/?aid=123");
-            expect(link.id).toBe("link-field-linked-artifact-popover-123");
-            expect(popover.id).toBe("link-field-linked-artifact-popover-123-content");
         });
     });
 });

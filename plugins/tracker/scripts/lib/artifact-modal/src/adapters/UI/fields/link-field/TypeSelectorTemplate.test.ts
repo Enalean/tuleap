@@ -45,7 +45,6 @@ import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
@@ -122,7 +121,6 @@ describe("TypeSelectorTemplate", () => {
             link_verifier,
             VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
             event_dispatcher,
-            ControlLinkedArtifactsPopoversStub.build(),
             field,
             current_artifact_identifier,
             current_tracker_identifier,

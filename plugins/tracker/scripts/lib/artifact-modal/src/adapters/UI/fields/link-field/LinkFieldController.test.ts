@@ -59,7 +59,6 @@ import type { GroupOfItems } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
@@ -152,7 +151,6 @@ describe(`LinkFieldController`, () => {
             link_verifier,
             verify_is_tracker_in_a_hierarchy,
             event_dispatcher,
-            ControlLinkedArtifactsPopoversStub.build(),
             {
                 field_id: FIELD_ID,
                 type: "art_link",
