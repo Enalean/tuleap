@@ -131,7 +131,7 @@ If your browser cannot manage to reach
     `docker-compose logs web`.
 -   Check that apache serves files by executing a
     `wget -O - http://localhost/` once connected to the `web` container
-    (see `protips`{.interpreted-text role="ref"}). If you see a long
+    (see Pro-tips above). If you see a long
     html output that contains typical Tuleap homepage, then it means
     that there is an issue with the dns. (You may need to
     `yum install wget` first).

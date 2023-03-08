@@ -27,7 +27,7 @@ Interactions between Tuleap and the database should be done via
 rows from database wrap the result in a `DataAccessResult` (aka. dar)
 object (see `src/common/dao/include/DataAccessResult.class.php`)
 
-Tuleap provides a class [TestHelper]{.title-ref} class who will help you
+Tuleap provides a class `TestHelper.class` who will help you
 to ease interaction with database objects.
 
 ## Jest unit tests

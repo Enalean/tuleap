@@ -114,6 +114,19 @@ services:
       - JWT_SECRET=TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION
       - USE_UNAUTHORIZED_STORAGE=true
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    command:
+      - start-dev
+      - --import-realm
+      - --hostname-url https://tuleap-web.tuleap-aio-dev.docker/keycloak
+      - --hostname-strict=false
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./tools/docker/keycloak/data/import:/opt/keycloak/data/import
+
   db55:
     image: mysql:5.5
     env_file:
