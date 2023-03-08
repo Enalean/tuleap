@@ -24,13 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Service;
 
 use Tuleap\MediawikiStandalone\Instance\CreateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\InitializationLanguageCodeProvider;
 use Tuleap\MediawikiStandalone\Instance\SuspendInstanceTask;
 use Tuleap\Queue\EnqueueTaskInterface;
 
 final class ServiceActivationHandler
 {
-    public function __construct(private EnqueueTaskInterface $enqueue_task)
-    {
+    public function __construct(
+        private readonly EnqueueTaskInterface $enqueue_task,
+        private readonly InitializationLanguageCodeProvider $language_code_provider,
+    ) {
     }
 
     public function handle(ServiceActivationEvent $event): void
@@ -40,7 +43,7 @@ final class ServiceActivationHandler
         }
 
         match ($event->is_used) {
-            true =>  $this->enqueue_task->enqueue(new CreateInstanceTask($event->project)),
+            true =>  $this->enqueue_task->enqueue(new CreateInstanceTask($event->project, $this->language_code_provider)),
             false => $this->enqueue_task->enqueue(new SuspendInstanceTask($event->project)),
         };
     }

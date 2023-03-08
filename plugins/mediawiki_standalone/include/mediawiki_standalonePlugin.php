@@ -65,6 +65,7 @@ use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\Instance\ProjectRenameHandler;
 use Tuleap\MediawikiStandalone\Instance\ProjectStatusHandler;
+use Tuleap\MediawikiStandalone\Instance\ProvideSiteLevelInitializationLanguageCode;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
@@ -336,18 +337,18 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function serviceIsUsed(array $params): void
     {
-        (new ServiceActivationHandler(new EnqueueTask()))->handle(
+        (new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode()))->handle(
             ServiceActivationEvent::fromServiceIsUsedEvent(
                 $params,
                 ProjectManager::instance()
-            )
+            ),
         );
     }
 
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        (new ServiceActivationHandler(new EnqueueTask()))->handle(
-            ServiceActivationEvent::fromRegisterProjectCreationEvent($event)
+        (new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode()))->handle(
+            ServiceActivationEvent::fromRegisterProjectCreationEvent($event),
         );
         if ($event->shouldProjectInheritFromTemplate()) {
             (new MediawikiPermissionsDao())->duplicateProjectPermissions(
