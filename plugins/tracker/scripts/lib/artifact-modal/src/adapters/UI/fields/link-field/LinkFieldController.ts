@@ -47,7 +47,7 @@ import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTracker
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { LinkField } from "./LinkField";
-import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
+import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import type { DispatchEvents } from "../../../../domain/DispatchEvents";
 import { WillDisableSubmit } from "../../../../domain/submit/WillDisableSubmit";
@@ -107,7 +107,7 @@ export const LinkFieldController = (
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null,
-    allowed_links_types_collection: CollectAllowedLinksTypes
+    allowed_links_types_collection: LinkTypesCollection
 ): LinkFieldControllerType => ({
     displayField: () =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),

@@ -45,7 +45,6 @@ import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasPar
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
@@ -53,6 +52,7 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -209,7 +209,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72"),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations([])
+                LinkTypesCollectionStub.withParentPair()
             );
 
             return {

@@ -19,11 +19,7 @@
 
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
-import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
-import {
-    FORWARD_DIRECTION,
-    REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field/LinkType";
+import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 
 export type CollectionOfAllowedLinksTypesPresenters = {
     readonly is_parent_type_disabled: boolean;
@@ -35,24 +31,15 @@ export interface AllowedLinkTypesPresenterContainer {
     readonly reverse_type_presenter: LinkType;
 }
 
-const getTypeWithDirection = (two_ways_types: LinkType[], direction: string): LinkType => {
-    const type = two_ways_types.find((type) => type.direction === direction);
-    if (!type) {
-        throw new Error(`Cannot find type with direction ${direction}`);
-    }
-
-    return type;
-};
-
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
         parent_verifier: VerifyHasParentLink,
-        allowed_types: CollectAllowedLinksTypes
+        allowed_types: LinkTypesCollection
     ): CollectionOfAllowedLinksTypesPresenters => ({
         is_parent_type_disabled: parent_verifier.hasParentLink(),
-        types: allowed_types.getAll().map((allowed_type) => ({
-            forward_type_presenter: getTypeWithDirection(allowed_type, FORWARD_DIRECTION),
-            reverse_type_presenter: getTypeWithDirection(allowed_type, REVERSE_DIRECTION),
+        types: allowed_types.getAll().map((pair) => ({
+            forward_type_presenter: pair.forward_type,
+            reverse_type_presenter: pair.reverse_type,
         })),
     }),
 

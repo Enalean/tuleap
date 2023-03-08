@@ -23,7 +23,7 @@ import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
-import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { LinkFieldController } from "./LinkFieldController";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -44,13 +44,13 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { selectOrThrow } from "@tuleap/dom";
-import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -151,13 +151,6 @@ describe(`NewLinkTemplate`, () => {
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
             const event_dispatcher = DispatchEventsStub.buildNoOp();
-            const allowed_types = [
-                {
-                    shortname: IS_CHILD_LINK_TYPE,
-                    forward_label: "Child",
-                    reverse_label: "Parent",
-                },
-            ];
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -190,12 +183,12 @@ describe(`NewLinkTemplate`, () => {
                     field_id: 525,
                     label: "Artifact link",
                     type: "art_link",
-                    allowed_types,
+                    allowed_types: [],
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22"),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types)
+                LinkTypesCollectionStub.withParentPair()
             );
 
             return {
