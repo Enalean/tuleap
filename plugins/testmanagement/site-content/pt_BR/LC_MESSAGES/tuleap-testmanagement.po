@@ -15,12 +15,6 @@ msgstr ""
 msgid "Configuration incomplete"
 msgstr ""
 
-msgid "Covered by"
-msgstr ""
-
-msgid "Covers"
-msgstr ""
-
 msgid ""
 "Current campaign does not have any job configured to launch automated tests"
 msgstr ""
@@ -233,4 +227,10 @@ msgstr ""
 msgid ""
 "We tried to configure Test Management for you but an internal error "
 "prevented it."
+msgstr ""
+
+msgid "covers"
+msgstr ""
+
+msgid "is covered by"
 msgstr ""
