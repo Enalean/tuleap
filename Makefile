@@ -289,6 +289,10 @@ docker-pull-verify:
 	$(DOCKER) pull $(IMAGE_NAME)
 	cosign verify --key $(KEY_PATH) $(IMAGE_NAME)
 
+.PHONY:scan-vuln-deps ## Scan dependencies for known vulnerabilities
+scan-vuln-deps:
+	osv-scanner --recursive --config ./tools/utils/osv-scanner/config.toml .
+
 #
 # Dev setup
 #

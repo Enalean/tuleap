@@ -35,7 +35,7 @@ fi
 
 export DOCKER_BUILDKIT=1
 
-docker build -t tuleap-generated-files-builder -f "$SRC_DIR"/tools/utils/nix/build-tools.dockerfile "$SRC_DIR"/tools/utils/nix/
+docker build -t tuleap-generated-files-builder -f "$SRC_DIR"/tools/utils/nix/tools.dockerfile "$SRC_DIR"/tools/utils/nix/
 
 clean_tuleap_sources="$(mktemp -d)"
 

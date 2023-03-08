@@ -31,7 +31,7 @@ else
     exit 1
 fi
 
-docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/build-tools.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
+docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/tools.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
 
 docker run -i \
     -e "OS=${OS}" \
