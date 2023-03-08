@@ -21,16 +21,12 @@ import { TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { TextFieldValueModel } from "../text-field/text-field-value-formatter";
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
-
-interface TextFieldImage {
-    readonly id: number;
-    readonly download_href: string;
-}
+import type { UploadedImage } from "../../../../domain/fields/file-field/UploadedImage";
 
 export interface FileValueModel {
     readonly field_id: number;
     readonly value: ReadonlyArray<number>;
-    readonly images_added_by_text_fields: ReadonlyArray<TextFieldImage>;
+    readonly images_added_by_text_fields: ReadonlyArray<UploadedImage>;
 }
 
 export interface FollowupValueModel {
@@ -75,14 +71,14 @@ export function validateFileField(
 }
 
 function findFileThatWasAddedByATextField(
-    images_added_by_text_fields: ReadonlyArray<TextFieldImage>,
+    images_added_by_text_fields: ReadonlyArray<UploadedImage>,
     file_id: number
-): TextFieldImage | null {
+): UploadedImage | null {
     return images_added_by_text_fields.find(({ id }) => id === file_id) ?? null;
 }
 
 function isFileReferencedByAnyTextField(
-    file: TextFieldImage,
+    file: UploadedImage,
     text_field_value_models: ReadonlyArray<TextFieldValueModel>
 ): boolean {
     return text_field_value_models.some(({ value }) =>
@@ -91,7 +87,7 @@ function isFileReferencedByAnyTextField(
 }
 
 function isFileReferencedByAnEditor(
-    file: TextFieldImage,
+    file: UploadedImage,
     text_content: string,
     text_format: TextFieldFormat
 ): boolean {

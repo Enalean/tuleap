@@ -22,12 +22,13 @@ import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
 import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../submit/WillEnableSubmit";
+import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
 
 export type FormattedTextControllerType = {
     getFileUploadSetup(): FileUploadSetup | null;
     onFileUploadStart(event: WillDisableSubmit): void;
     onFileUploadError(): void;
-    onFileUploadSuccess(): void;
+    onFileUploadSuccess(event: DidUploadImage): void;
 };
 
 export const FormattedTextController = (
@@ -47,7 +48,7 @@ export const FormattedTextController = (
         event_dispatcher.dispatch(WillEnableSubmit());
     },
 
-    onFileUploadSuccess(): void {
-        event_dispatcher.dispatch(WillEnableSubmit());
+    onFileUploadSuccess(event): void {
+        event_dispatcher.dispatch(WillEnableSubmit(), event);
     },
 });

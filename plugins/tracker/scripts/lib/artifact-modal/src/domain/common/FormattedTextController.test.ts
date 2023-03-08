@@ -21,20 +21,22 @@ import { EventDispatcher } from "../EventDispatcher";
 import type { FormattedTextControllerType } from "./FormattedTextController";
 import { FormattedTextController } from "./FormattedTextController";
 import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
+import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
+import { DidUploadImage } from "../fields/file-field/DidUploadImage";
 
 describe(`FormattedTextController`, () => {
-    let dispatcher: EventDispatcher;
+    let dispatcher: EventDispatcher | DispatchEventsStub;
 
     beforeEach(() => {
-        dispatcher = EventDispatcher();
+        dispatcher = DispatchEventsStub.withRecordOfEventTypes();
     });
 
     const getController = (): FormattedTextControllerType => FormattedTextController(dispatcher);
 
     describe(`getFileUploadSetup()`, () => {
         it(`dispatches an event and returns the contents of that event`, () => {
+            dispatcher = EventDispatcher();
             const upload_setup: FileUploadSetup = {
-                file_field_id: 749,
                 max_size_upload: 7000,
                 file_creation_uri: "https://example.com/upload",
             };
@@ -47,6 +49,21 @@ describe(`FormattedTextController`, () => {
 
         it(`when nobody responds, it returns null`, () => {
             expect(getController().getFileUploadSetup()).toBeNull();
+        });
+    });
+
+    describe(`onFileUploadSuccess()`, () => {
+        it(`dispatches the event it receives and an Enable Submit event`, () => {
+            dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+            const event = DidUploadImage({
+                id: 18,
+                download_href: "https://example.com/download/18",
+            });
+            getController().onFileUploadSuccess(event);
+
+            const dispatched_events = dispatcher.getDispatchedEventTypes();
+            expect(dispatched_events).toContain("WillEnableSubmit");
+            expect(dispatched_events).toContain("DidUploadImage");
         });
     });
 });

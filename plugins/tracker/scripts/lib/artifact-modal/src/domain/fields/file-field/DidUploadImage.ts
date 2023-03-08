@@ -17,10 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Minimum data needed to allow and setup file upload capability
- */
-export type FileUploadSetup = {
-    readonly file_creation_uri: string;
-    readonly max_size_upload: number;
+import type { DomainEvent } from "../../DomainEvent";
+import type { UploadedImage } from "./UploadedImage";
+
+export type DidUploadImage = DomainEvent<"DidUploadImage"> & {
+    readonly image: UploadedImage;
+    handled: boolean;
 };
+
+export const DidUploadImage = (image: UploadedImage): DidUploadImage => ({
+    type: "DidUploadImage",
+    image,
+    handled: false,
+});

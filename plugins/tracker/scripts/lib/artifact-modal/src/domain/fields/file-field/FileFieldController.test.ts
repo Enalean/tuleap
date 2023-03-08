@@ -29,17 +29,32 @@ import type { FileFieldType } from "./FileFieldType";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 import { EventDispatcher } from "../../EventDispatcher";
 import { WillGetFileUploadSetup } from "./WillGetFileUploadSetup";
+import { DidUploadImage } from "./DidUploadImage";
+import type { UploadedImage } from "./UploadedImage";
 
 const FIELD_ID = 588;
 const MAX_SIZE_UPLOAD = 2500;
 const FILE_UPLOAD_URI = "https://example.com/upload";
+const IMAGE_ID = 42;
+const IMAGE_DOWNLOAD_URI = "https://example.com/download/42";
 
 describe(`FileFieldController`, () => {
     describe(`Events`, () => {
-        let event_dispatcher: EventDispatcher;
+        let event_dispatcher: EventDispatcher,
+            value_model: FileFieldValueModel,
+            uploaded_image: UploadedImage;
 
         beforeEach(() => {
             event_dispatcher = EventDispatcher();
+
+            value_model = {
+                images_added_by_text_fields: [],
+            } as unknown as FileFieldValueModel;
+
+            uploaded_image = {
+                id: IMAGE_ID,
+                download_href: IMAGE_DOWNLOAD_URI,
+            };
         });
 
         const getController = (): FileFieldControllerType => {
@@ -48,7 +63,6 @@ describe(`FileFieldController`, () => {
                 max_size_upload: MAX_SIZE_UPLOAD,
                 file_creation_uri: FILE_UPLOAD_URI,
             } as FileFieldType;
-            const value_model = {} as FileFieldValueModel;
             return FileFieldController(field, value_model, event_dispatcher);
         };
 
@@ -62,9 +76,29 @@ describe(`FileFieldController`, () => {
             if (setup === null) {
                 throw Error("Expected a file upload setup");
             }
-            expect(setup.file_field_id).toBe(FIELD_ID);
             expect(setup.max_size_upload).toBe(MAX_SIZE_UPLOAD);
             expect(setup.file_creation_uri).toBe(FILE_UPLOAD_URI);
+        });
+
+        it(`adds uploaded image to its value model so that it will be attached to the file field`, () => {
+            getController();
+
+            const event = DidUploadImage(uploaded_image);
+            event_dispatcher.dispatch(event);
+
+            expect(event.handled).toBe(true);
+            expect(value_model.images_added_by_text_fields).toContain(uploaded_image);
+            expect(value_model.value).toContain(uploaded_image.id);
+        });
+
+        it(`does not attach the same image twice (to two different file fields)`, () => {
+            getController();
+
+            const event = DidUploadImage(uploaded_image);
+            event.handled = true;
+            event_dispatcher.dispatch(event);
+
+            expect(value_model.images_added_by_text_fields).toHaveLength(0);
         });
     });
 
