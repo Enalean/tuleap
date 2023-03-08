@@ -53,7 +53,6 @@ import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/Che
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
-import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field/LinkedArtifactsPopoversController";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
@@ -191,7 +190,6 @@ function ArtifactModalController(
                 already_linked_verifier,
                 TrackerInAHierarchyVerifier(modal_model.tracker.parent),
                 event_dispatcher,
-                LinkedArtifactsPopoversController(),
                 field,
                 current_artifact_identifier,
                 current_tracker_identifier,

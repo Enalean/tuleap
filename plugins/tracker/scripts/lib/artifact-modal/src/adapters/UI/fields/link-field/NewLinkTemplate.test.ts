@@ -43,7 +43,6 @@ import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasPar
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
@@ -187,7 +186,6 @@ describe(`NewLinkTemplate`, () => {
                 link_verifier,
                 VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
                 event_dispatcher,
-                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 525,
                     label: "Artifact link",

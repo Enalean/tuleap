@@ -46,10 +46,6 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
-import type {
-    ControlLinkedArtifactsPopovers,
-    LinkedArtifactPopoverElement,
-} from "./LinkedArtifactsPopoversController";
 import type { LinkField } from "./LinkField";
 import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
@@ -69,7 +65,6 @@ export type LinkFieldControllerType = {
     autoComplete(host: LinkField, query: string): void;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
-    initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
     retrievePossibleParentsGroups(): PromiseLike<GroupOfItems>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
@@ -108,7 +103,6 @@ export const LinkFieldController = (
     link_verifier: VerifyIsAlreadyLinked,
     tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
     event_dispatcher: DispatchEvents,
-    control_popovers: ControlLinkedArtifactsPopovers,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
@@ -189,9 +183,5 @@ export const LinkFieldController = (
                 return PossibleParentsGroup.buildEmpty();
             }
         );
-    },
-
-    initPopovers(popover_elements: LinkedArtifactPopoverElement[]): void {
-        control_popovers.initPopovers(popover_elements);
     },
 });
