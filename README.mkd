@@ -19,26 +19,23 @@ bunch of [documentation](https://docs.tuleap.org/) and [tutorials](https://www.t
 
 Join the [chat](https://chat.tuleap.org) and ask your questions.
 
-
 # I want to contribute!
 
-You should find everything you need in the [developer guide](https://docs.tuleap.org/dev.html).
+You should find everything you need in the [developer guide](./doc/Readme.md).
 
-## Contributors
+## Developers
 
 Here are listed only the developers that are working on Tuleap sources. People helping with docs and promotion should also
 be added.
 
 ### Integrators
 
-* Benjamin Bouillot
 * Benjamin Dauton
 * Sandra Echinard
 * Marie Ange Garnier
 * Thomas Gerbet
 * Thomas Gorka
 * Martin Goyot
-* Romain Lorentz
 * Joris Masson
 * Clarck Robinson
 * Yannis Rossetto
@@ -47,16 +44,20 @@ be added.
 
 ### Contributors
 
-* Nouha Terzi
 * Thomas Cottier
-* Lydéric Dubut
 * Aurélien Tisné
-* Karim Beji
-* Seif Eddine Gamoudi
 * Fábio F. Silva
+* Florian Caillol
+* Thomas Piras
 
 ### Previous contributors (no longer active commiters)
 
+* Romain Lorentz
+* Benjamin Bouillot
+* Karim Beji
+* Seif Eddine Gamoudi
+* Lydéric Dubut
+* Nouha Terzi
 * Jonathan Palm
 * Matthieu Monnier
 * Christan Bayle
