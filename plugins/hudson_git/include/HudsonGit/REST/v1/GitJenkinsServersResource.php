@@ -23,7 +23,6 @@ use Git_PermissionsDao;
 use Git_SystemEventManager;
 use GitDao;
 use GitPermissionsManager;
-use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
@@ -70,14 +69,8 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
 
-        $repository_factory = new GitRepositoryFactory(
-            $git_dao,
-            $this->project_manager
-        );
-
         $git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
-            $repository_factory
         );
 
         $fine_grained_dao       = new FineGrainedDao();

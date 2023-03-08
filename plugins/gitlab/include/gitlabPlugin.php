@@ -992,10 +992,6 @@ class gitlabPlugin extends Plugin
                 new Git_PermissionsDao(),
                 new Git_SystemEventManager(
                     SystemEventManager::instance(),
-                    new GitRepositoryFactory(
-                        new GitDao(),
-                        ProjectManager::instance()
-                    )
                 ),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)

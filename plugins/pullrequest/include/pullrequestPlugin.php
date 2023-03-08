@@ -652,7 +652,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
             $repository_factory,
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
+                new Git_SystemEventManager(SystemEventManager::instance()),
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             )

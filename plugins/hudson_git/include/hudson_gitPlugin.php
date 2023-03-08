@@ -276,10 +276,6 @@ class hudson_gitPlugin extends Plugin
     {
         $git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            )
         );
 
         $fine_grained_dao       = new FineGrainedDao();

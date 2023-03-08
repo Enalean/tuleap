@@ -31,16 +31,8 @@ use Tuleap\Git\SystemEvents\ProjectIsSuspended;
  */
 class Git_SystemEventManager
 {
-    /** @var SystemEventManager */
-    private $system_event_manager;
-
-    /** @var GitRepositoryFactory */
-    private $repository_factory;
-
-    public function __construct(SystemEventManager $system_event_manager, GitRepositoryFactory $repository_factory)
+    public function __construct(private readonly SystemEventManager $system_event_manager)
     {
-        $this->system_event_manager = $system_event_manager;
-        $this->repository_factory   = $repository_factory;
     }
 
     public function queueProjectsConfigurationUpdate(array $project_ids)

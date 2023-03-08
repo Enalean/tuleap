@@ -264,12 +264,12 @@ final class GitProjectResource extends AuthenticatedResource
 
         $git_plugin = \PluginManager::instance()->getPluginByName('git');
         assert($git_plugin instanceof \GitPlugin);
-        $git_system_event_manager    = new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory);
+        $git_system_event_manager    = new Git_SystemEventManager(SystemEventManager::instance());
         $fine_grained_dao            = new FineGrainedDao();
         $repository_resource_builder = new RepositoryRepresentationBuilder(
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
-                new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
+                $git_system_event_manager,
                 $fine_grained_dao,
                 new FineGrainedRetriever($fine_grained_dao)
             ),
