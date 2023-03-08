@@ -27,28 +27,45 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset
 {
+    private int $calls_count             = 0;
     private ?NewChangeset $new_changeset = null;
 
     private function __construct(
-        private int $calls_count,
-        private ?\Tracker_Artifact_Changeset $changeset,
-        private ?\Throwable $exception,
+        private readonly ?\Tracker_Artifact_Changeset $changeset,
+        private readonly ?\Throwable $exception,
+        private readonly ?\Closure $callback,
     ) {
+    }
+
+    private function defaultCallback(): ?\Tracker_Artifact_Changeset
+    {
+        if ($this->exception) {
+            throw $this->exception;
+        }
+        return $this->changeset;
     }
 
     public static function withReturnChangeset(\Tracker_Artifact_Changeset $changeset): self
     {
-        return new self(0, $changeset, null);
+        return new self($changeset, null, null);
     }
 
     public static function withNullReturnChangeset(): self
     {
-        return new self(0, null, null);
+        return new self(null, null, null);
     }
 
     public static function withException(\Throwable $param): self
     {
-        return new self(0, null, $param);
+        return new self(null, $param, null);
+    }
+
+    /**
+     * @param callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset $callback
+     */
+    public static function withCallback(callable $callback): self
+    {
+        return new self(null, null, $callback);
     }
 
     public function getNewChangeset(): ?NewChangeset
@@ -59,12 +76,11 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
         $this->new_changeset = $changeset;
-
-        if ($this->exception) {
-            throw $this->exception;
-        }
         $this->calls_count++;
-        return $this->changeset;
+        if ($this->callback !== null) {
+            return ($this->callback)($changeset, $context);
+        }
+        return $this->defaultCallback();
     }
 
     public function getCallsCount(): int

@@ -90,37 +90,6 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
     }
 
     /**
-     * @throws FieldValidationException
-     * @throws Tracker_Exception
-     * @throws Tracker_NoChangeException
-     */
-    private function updateArtifactTypeLink(
-        Artifact $artifact_to_update,
-        PFUser $submitter,
-        array $formatted_value,
-        ?NewChangesetCommentRepresentation $comment = null,
-    ): void {
-        $comment_body   = '';
-        $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
-        if ($comment) {
-            $comment_body   = $comment->body;
-            $comment_format = $comment->format;
-        }
-
-        $new_changeset = NewChangeset::fromFieldsDataArray(
-            $artifact_to_update,
-            $formatted_value,
-            $comment_body,
-            CommentFormatIdentifier::fromFormatString($comment_format),
-            [],
-            $submitter,
-            (new \DateTimeImmutable())->getTimestamp(),
-            new CreatedFileURLMapping()
-        );
-        $this->changeset_creator->create($new_changeset, PostCreationContext::withNoConfig(true));
-    }
-
-    /**
      * @return Ok<null>|Err<Fault>
      * @throws Tracker_NoChangeException
      * @throws Tracker_Exception
@@ -165,7 +134,6 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
 
     /**
      * @return Ok<null>|Err<Fault>
-     * @throws Tracker_NoChangeException
      * @throws Tracker_Exception
      * @throws FieldValidationException
      */
@@ -189,7 +157,11 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                             $source_artifact_link_to_be_added
                         );
                         $container           = new ChangesetValuesContainer([], $new_changeset_value);
-                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        try {
+                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        } catch (Tracker_NoChangeException) {
+                            //Ignore, it should not stop the update
+                        }
                         return null;
                     },
                 )
