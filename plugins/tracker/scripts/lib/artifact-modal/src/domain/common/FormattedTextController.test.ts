@@ -23,6 +23,10 @@ import { FormattedTextController } from "./FormattedTextController";
 import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import { DidUploadImage } from "../fields/file-field/DidUploadImage";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
+
+const DEFAULT_TEXT_FORMAT: TextFieldFormat = TEXT_FORMAT_COMMONMARK;
 
 describe(`FormattedTextController`, () => {
     let dispatcher: EventDispatcher | DispatchEventsStub;
@@ -31,7 +35,14 @@ describe(`FormattedTextController`, () => {
         dispatcher = DispatchEventsStub.withRecordOfEventTypes();
     });
 
-    const getController = (): FormattedTextControllerType => FormattedTextController(dispatcher);
+    const getController = (): FormattedTextControllerType =>
+        FormattedTextController(dispatcher, DEFAULT_TEXT_FORMAT);
+
+    describe(`getDefaultTextFormat()`, () => {
+        it(`returns the default text format (text, html or commonmark)`, () => {
+            expect(getController().getDefaultTextFormat()).toBe(DEFAULT_TEXT_FORMAT);
+        });
+    });
 
     describe(`getFileUploadSetup()`, () => {
         it(`dispatches an event and returns the contents of that event`, () => {

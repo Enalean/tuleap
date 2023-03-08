@@ -228,7 +228,7 @@ function ArtifactModalController(
             );
         },
         getFormattedTextController: () => {
-            return FormattedTextController(event_dispatcher);
+            return FormattedTextController(event_dispatcher, modal_model.text_fields_format);
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
