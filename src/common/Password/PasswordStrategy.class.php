@@ -26,10 +26,16 @@ use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
 use Tuleap\Password\HaveIBeenPwned\PwnedPasswordRangeRetriever;
 use Tuleap\Password\PasswordCompromiseValidator;
 
-class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public $validators = [];
-    public $errors     = [];
+    /**
+     * @var \PasswordValidator[]
+     */
+    public array $validators = [];
+    /**
+     * @var string[]
+     */
+    public array $errors = [];
 
     public function __construct(PasswordConfiguration $password_configuration)
     {
@@ -45,12 +51,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         }
     }
 
-    /**
-    * validate
-    *
-    * validate a password with the help of validators
-    */
-    public function validate($pwd)
+    public function validate(string $pwd): bool
     {
         $valid = true;
         foreach ($this->validators as $key => $nop) {
@@ -62,7 +63,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         return $valid;
     }
 
-    public function add($v)
+    public function add(\PasswordValidator $v): void
     {
         $this->validators[] = $v;
     }

@@ -68,8 +68,10 @@ final class CreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->withId(102)->build();
 
         $this->hasher->shouldReceive('computeHash')->andReturns('random_hashed');
-        $this->dao->shouldReceive('create')->andReturns(null);
+        $this->dao->shouldReceive('create')->andThrow(RecentlyCreatedCodeException::class);
 
-        $this->assertNull($this->token_creator->create($user));
+        $this->expectException(RecentlyCreatedCodeException::class);
+
+        $this->token_creator->create($user);
     }
 }

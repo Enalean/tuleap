@@ -96,12 +96,10 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function isScriptAllowedForAnonymous($server)
     {
         // Defaults
-        $allowedAnonymous['/account/login.php']          = true;
-        $allowedAnonymous['/account/register.php']       = true;
-        $allowedAnonymous['/include/check_pw.php']       = true;
-        $allowedAnonymous['/account/lostpw.php']         = true;
-        $allowedAnonymous['/account/lostlogin.php']      = true;
-        $allowedAnonymous['/account/lostpw-confirm.php'] = true;
+        $allowedAnonymous['/account/login.php']     = true;
+        $allowedAnonymous['/account/register.php']  = true;
+        $allowedAnonymous['/include/check_pw.php']  = true;
+        $allowedAnonymous['/account/lostlogin.php'] = true;
         if (isset($allowedAnonymous[$server['SCRIPT_NAME']]) && $allowedAnonymous[$server['SCRIPT_NAME']] == true) {
             return true;
         }

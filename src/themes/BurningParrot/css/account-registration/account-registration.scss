@@ -50,8 +50,13 @@
     margin: var(--tlp-large-spacing) 0 0;
 }
 
+.account-registration-error {
+    width: 400px;
+    margin: 0;
+}
+
 .account-registration-form {
-    width: 360px;
+    width: 400px;
     padding: var(--tlp-large-spacing);
     border-radius: var(--tlp-x-large-radius);
 

@@ -60,7 +60,7 @@ class PasswordSanityChecker
     {
         $password_strategy = $this->getStrategy();
         $valid             = $password_strategy->validate($password->getString());
-        $this->errors      = $password_strategy->errors;
+        $this->errors      = array_values($password_strategy->errors);
         return $valid;
     }
 

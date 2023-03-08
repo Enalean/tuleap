@@ -1,0 +1,37 @@
+<section class="account-registration">
+    <svg width="259" height="145" viewBox="0 0 259 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_50_977)">
+            <path d="M234 105C234 162.99 186.99 210 129 210C71.0101 210 24 162.99 24 105C24 47.0101 71.0101 0 129 0C186.99 0 234 47.0101 234 105Z" fill="url(#paint0_linear_50_977)"/>
+            <line x1="68.0857" y1="76" x2="101" y2="76" stroke="var(--tlp-illustration-main-color)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="56" y1="81.3714" x2="78.1714" y2="81.3714" stroke="var(--tlp-illustration-main-color)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M72.4572 86.4H92.6" stroke="var(--tlp-illustration-main-color)" stroke-width="2" stroke-linecap="round"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M151.148 83.0216C149.313 84.5087 146.687 84.5087 144.852 83.0216L114.793 58.6634C115.426 58.2442 116.184 58 117 58H179C179.816 58 180.574 58.2442 181.207 58.6634L151.148 83.0216ZM113 62C113 61.3329 113.163 60.704 113.452 60.151L139.971 81.6403L113.452 103.13C113.163 102.577 113 101.948 113 101.281V62ZM114.793 104.617C115.426 105.037 116.184 105.281 117 105.281H179C179.816 105.281 180.574 105.037 181.207 104.617L154.441 82.9275L152.407 84.5755C149.838 86.6575 146.162 86.6575 143.593 84.5755L141.559 82.9275L114.793 104.617ZM156.029 81.6403L182.548 103.13C182.837 102.577 183 101.948 183 101.281V62C183 61.3329 182.837 60.704 182.548 60.151L156.029 81.6403Z" fill="var(--tlp-illustration-main-color)"/>
+        </g>
+        <defs>
+            <linearGradient id="paint0_linear_50_977" x1="129" y1="0" x2="129" y2="124.408" gradientUnits="userSpaceOnUse">
+                <stop offset="0.416" stop-color="var(--tlp-illustration-grey-on-background)"/>
+                <stop offset="1" stop-color="var(--tlp-illustration-grey-on-background)" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="clip0_50_977">
+                <rect width="259" height="145" fill="white"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div class="account-registration-content">
+        <h1 class="account-registration-content-title">{{# gettext }}Recovery link sent{{/ gettext }}</h1>
+
+        <p class="tlp-text-muted">
+            {{# gettext }}An email has been sent to the address we have on file,{{/ gettext }}<br>
+            {{# gettext }}check your email for the link to recover your password.{{/ gettext }}
+        </p>
+        <a href="/account/login.php" class="tlp-button-primary tlp-button-large account-registration-content-cta">
+            {{# gettext }}Go to login page{{/ gettext }}
+            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</section>
+
+<div class="account-registration-background">
+    {{> homepage-background }}
+</div>

@@ -431,7 +431,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
         class SpecialForgeRedirResetPass extends SpecialForgeRedir
         {
-            public $dst = '/account/lostpw.php';
+            public $dst = '/account/lostpw';
         }
 
         function DisableLogInOut(&$mList)
