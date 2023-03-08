@@ -111,7 +111,7 @@ class GitRepositoryHeaderDisplayerBuilder
 
     private function getGitSystemEventManager()
     {
-        return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
+        return new Git_SystemEventManager(SystemEventManager::instance());
     }
 
     private function getRepositoryFactory()

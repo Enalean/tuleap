@@ -56,7 +56,6 @@ $git_repository_factory = new GitRepositoryFactory(
 );
 $system_event_manager   = new Git_SystemEventManager(
     SystemEventManager::instance(),
-    $git_repository_factory
 );
 
 $git_plugin                 = PluginManager::instance()->getPluginByName('git');

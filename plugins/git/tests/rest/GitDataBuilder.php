@@ -84,10 +84,6 @@ class GitDataBuilder extends REST_TestDataBuilder
             new GitDao(),
             new Git_SystemEventManager(
                 SystemEventManager::instance(),
-                new GitRepositoryFactory(
-                    new GitDao(),
-                    $this->project_manager
-                )
             ),
             $this->project_manager
         );

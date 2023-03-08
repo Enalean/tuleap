@@ -31,7 +31,6 @@ use Git_RemoteServer_Dao;
 use GitDao;
 use ProjectManager;
 use SystemEventManager;
-use GitRepositoryFactory;
 use Git_SystemEventManager;
 use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
@@ -62,15 +61,11 @@ class GerritResource extends AuthenticatedResource
     {
         $git_dao               = new GitDao();
         $this->project_manager = ProjectManager::instance();
-        $repository_factory    = new GitRepositoryFactory(
-            $git_dao,
-            $this->project_manager
-        );
 
         $this->server_factory = new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $git_dao,
-            new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
+            new Git_SystemEventManager(SystemEventManager::instance()),
             $this->project_manager
         );
 

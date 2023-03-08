@@ -167,7 +167,6 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
-            $this->repository_factory
         );
 
         $this->gerrit_server_factory = new Git_RemoteServer_GerritServerFactory(

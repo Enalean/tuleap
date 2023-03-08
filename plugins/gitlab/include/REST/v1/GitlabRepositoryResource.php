@@ -24,9 +24,7 @@ namespace Tuleap\Gitlab\REST\v1;
 use BackendLogger;
 use Git_PermissionsDao;
 use Git_SystemEventManager;
-use GitDao;
 use GitPermissionsManager;
-use GitRepositoryFactory;
 use GitUserNotAdminException;
 use Luracast\Restler\RestException;
 use Project;
@@ -587,10 +585,6 @@ final class GitlabRepositoryResource
     {
         $git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            )
         );
 
         $fine_grained_dao       = new FineGrainedDao();

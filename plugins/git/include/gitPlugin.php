@@ -1901,7 +1901,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function getGitSystemEventManager()
     {
-        return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
+        return new Git_SystemEventManager(SystemEventManager::instance());
     }
 
     /**
