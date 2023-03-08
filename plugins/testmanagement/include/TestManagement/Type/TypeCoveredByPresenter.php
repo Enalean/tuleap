@@ -23,16 +23,16 @@ namespace Tuleap\TestManagement\Type;
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
-class TypeCoveredByPresenter extends TypePresenter
+final class TypeCoveredByPresenter extends TypePresenter
 {
-    public const TYPE_COVERED_BY = '_covered_by';
+    final public const TYPE_COVERED_BY = '_covered_by';
 
     public function __construct()
     {
         parent::__construct(
             self::TYPE_COVERED_BY,
-            dgettext('tuleap-testmanagement', 'Covered by'),
-            dgettext('tuleap-testmanagement', 'Covers'),
+            dgettext('tuleap-testmanagement', 'is covered by'),
+            dgettext('tuleap-testmanagement', 'covers'),
             true
         );
 
