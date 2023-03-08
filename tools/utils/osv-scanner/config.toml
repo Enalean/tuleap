@@ -227,13 +227,6 @@ id = "GHSA-qrmm-w75w-3wpx"
 reason = "Not exposed (CLI usage only). To be investigated/reported upstream/ignored."
 ignoreUntil = 2023-05-08
 
-# plugins/tracker_encryption/composer.lock
-## phpseclib/phpseclib
-[[IgnoredVulns]]
-id = "GHSA-hm7p-r324-hhf3" # CVE-2022-37599
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 # d3-color
 [[IgnoredVulns]]
 id = "GHSA-36jr-mh4h-2g58"

@@ -82,12 +82,11 @@ class Tracker_Key
         preg_match('/-----BEGIN PUBLIC KEY-----(.*)-----END PUBLIC KEY-----$/s', $key, $match);
         if (! empty($match)) {
             try {
-                $rsa = \phpseclib3\Crypt\RSA\PublicKey::load($key);
-                assert($rsa instanceof \phpseclib3\Crypt\RSA\PublicKey);
+                $public_key = \phpseclib3\Crypt\PublicKeyLoader::load($key);
             } catch (NoKeyLoadedException $exception) {
                 return false;
             }
-            if ($rsa->getLength() < 2048 || $rsa->getLength() > 8192) {
+            if (! ($public_key instanceof \phpseclib3\Crypt\RSA\PublicKey) || $public_key->getLength() < 2048 || $public_key->getLength() > 8192) {
                 return false;
             }
             return true;
@@ -113,7 +112,7 @@ class Tracker_Key
             return 0;
         }
         try {
-            $rsa = \phpseclib3\Crypt\RSA\PublicKey::load($key);
+            $rsa = \phpseclib3\Crypt\PublicKeyLoader::load($key);
             assert($rsa instanceof \phpseclib3\Crypt\RSA\PublicKey);
         } catch (NoKeyLoadedException $exception) {
             return 0;

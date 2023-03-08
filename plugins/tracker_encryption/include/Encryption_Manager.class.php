@@ -35,7 +35,7 @@ class Encryption_Manager
             self::throwException();
         }
         try {
-            $public_key = \phpseclib3\Crypt\RSA\PublicKey::load($tracker_key->getKey());
+            $public_key = \phpseclib3\Crypt\PublicKeyLoader::load($tracker_key->getKey());
             assert($public_key instanceof \phpseclib3\Crypt\RSA\PublicKey);
         } catch (NoKeyLoadedException $exception) {
             self::throwException();
