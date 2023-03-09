@@ -12,7 +12,7 @@
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.33",
+    "moment-timezone": "^0.5.41",
     "node-htmldiff": "^0.9.3",
     "sprintf-js": "^1.1.2",
     "vue": "^2.7.8",
