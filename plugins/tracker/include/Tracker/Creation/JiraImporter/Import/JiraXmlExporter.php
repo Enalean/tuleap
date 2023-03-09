@@ -338,7 +338,7 @@ class JiraXmlExporter
 
         $node_tracker = $this->getXMLNode($xml_tracker, $tracker_for_semantic_xml, $tracker_for_reports_xml);
 
-        $this->logger->debug("Export artifact");
+        $this->logger->debug("Export artifacts");
         $issue_representation_collection = new IssueAPIRepresentationCollection();
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,

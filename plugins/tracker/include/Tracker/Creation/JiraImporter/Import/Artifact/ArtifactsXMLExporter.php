@@ -99,7 +99,8 @@ class ArtifactsXMLExporter
             return;
         }
 
-        $artifacts_node = $tracker_node->addChild('artifacts');
+        $artifacts_node             = $tracker_node->addChild('artifacts');
+        $already_seen_artifacts_ids = [];
 
         $iterator = JiraCollectionBuilder::iterateUntilTotal(
             $this->jira_client,
@@ -114,7 +115,8 @@ class ArtifactsXMLExporter
                 $jira_base_url,
                 $jira_field_mapping_collection,
                 $issue_representation_collection,
-                $linked_issues_collection
+                $linked_issues_collection,
+                $already_seen_artifacts_ids,
             );
         }
     }
@@ -133,6 +135,8 @@ class ArtifactsXMLExporter
     }
 
     /**
+     * @param array<int, true> $already_seen_artifacts_ids
+     *
      * @throws JiraConnectionException
      */
     private function exportBatchOfIssuesInArtifactXMLFormat(
@@ -142,12 +146,19 @@ class ArtifactsXMLExporter
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentationCollection $issue_representation_collection,
         LinkedIssuesCollection $linked_issues_collection,
+        array &$already_seen_artifacts_ids,
     ): void {
         $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
         $issue_representation_collection->addIssueRepresentationInCollection($issue_api_representation);
 
         $issue_id  = $issue_api_representation->getId();
         $issue_key = $issue_api_representation->getKey();
+
+        if (isset($already_seen_artifacts_ids[$issue_id])) {
+            $this->logger->debug("$issue_key (id: $issue_id) has already be exported, no need to export it again");
+            return;
+        }
+        $already_seen_artifacts_ids[$issue_id] = true;
 
         $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
 
