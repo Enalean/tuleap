@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class BurnupDataDAO extends DataAccessObject
@@ -175,6 +176,11 @@ class BurnupDataDAO extends DataAccessObject
 
     public function searchLinkedArtifactsAtGivenTimestamp(int $artifact_id, int $timestamp, array $backlog_trackers_ids): array
     {
+        $in_statement = EasyStatement::open()->in(
+            "linked_art.tracker_id IN ( ?* )",
+            $backlog_trackers_ids
+        );
+
         $sql = "SELECT linked_art.id AS id
                 FROM tracker_artifact AS parent_art
                     INNER JOIN tracker ON parent_art.tracker_id = tracker.id
@@ -197,9 +203,9 @@ class BurnupDataDAO extends DataAccessObject
                     AND tracker.deletion_date IS NULL
                     AND changeset2.id IS NULL
                     AND changeset1.submitted_on <= ?
-                    AND linked_art.tracker_id IN ( ? )";
+                    AND $in_statement";
 
 
-        return $this->getDB()->run($sql, $timestamp, $artifact_id, $timestamp, implode(',', $backlog_trackers_ids));
+        return $this->getDB()->run($sql, $timestamp, $artifact_id, $timestamp, ...$in_statement->values());
     }
 }
