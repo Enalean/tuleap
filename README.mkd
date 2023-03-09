@@ -54,10 +54,13 @@ be added.
 
 * Romain Lorentz
 * Benjamin Bouillot
-* Karim Beji
-* Seif Eddine Gamoudi
 * Lydéric Dubut
+* Seif Eddine Gamoudi
 * Nouha Terzi
+* Houssem Eddine Azzouz
+* Karim Beji
+* Mohamed Hajji
+* BEN MANSOUR Med Rafik
 * Jonathan Palm
 * Matthieu Monnier
 * Christan Bayle
