@@ -17,30 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync, errAsync } from "neverthrow";
+import { errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { SaveNewInlineComment } from "../../src/app/comments/new-comment-form/NewInlineCommentSaver";
-
-export type SaveNewInlineCommentStub = SaveNewInlineComment & {
-    getLastCallParams: () => string | undefined;
-};
+import type { SaveNewComment } from "@tuleap/plugin-pullrequest-comments";
 
 export const SaveNewInlineCommentStub = {
-    withResponsePayload: (payload: CommentOnFile): SaveNewInlineCommentStub => {
-        let last_call_params: string | undefined = undefined;
-
-        return {
-            getLastCallParams: () => last_call_params,
-            postComment: (content: string): ResultAsync<CommentOnFile, Fault> => {
-                last_call_params = content;
-
-                return okAsync(payload);
-            },
-        };
-    },
-    withDefault: (): SaveNewInlineComment => ({
+    withDefault: (): SaveNewComment => ({
         postComment: (): ResultAsync<CommentOnFile, Fault> => {
             return errAsync(
                 Fault.fromMessage(

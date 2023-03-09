@@ -32,7 +32,7 @@ import { PullRequestCommentController } from "./PullRequestCommentController";
 import { FocusTextReplyToCommentAreaStub } from "../../tests/stubs/FocusTextReplyToCommentAreaStub";
 import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
-import { SaveNewCommentStub } from "../../tests/stubs/SaveNewCommentStub";
+import { SaveNewReplyToCommentStub } from "../../tests/stubs/SaveNewReplyToCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { ReplyCommentFormPresenterStub } from "../../tests/stubs/ReplyCommentFormPresenterStub";
@@ -40,12 +40,12 @@ import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestComme
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
-import type { SaveNewComment } from "./PullRequestCommentReplySaver";
+import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusReplyToCommentTextArea,
         replies_store: StorePullRequestCommentReplies,
-        new_comment_saver: SaveNewCommentStub,
+        new_comment_saver: SaveNewReplyToCommentStub,
         new_comment_reply_payload: PullRequestComment,
         on_error_callback: PullRequestCommentErrorCallback;
 
@@ -58,11 +58,12 @@ describe("PullRequestCommentController", () => {
 
         focus_helper = FocusTextReplyToCommentAreaStub();
         replies_store = PullRequestCommentRepliesStore([]);
-        new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
+        new_comment_saver =
+            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
         on_error_callback = vi.fn();
     });
 
-    const getController = (save_new_comment: SaveNewComment): ControlPullRequestComment =>
+    const getController = (save_new_comment: SaveNewReplyToComment): ControlPullRequestComment =>
         PullRequestCommentController(
             focus_helper,
             replies_store,
@@ -84,7 +85,8 @@ describe("PullRequestCommentController", () => {
     });
 
     it("should hide the reply to comment form", () => {
-        new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
+        new_comment_saver =
+            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestCommentComponentType;
@@ -133,7 +135,8 @@ describe("PullRequestCommentController", () => {
             content: "Please don't",
             color: "flamingo-pink",
         } as PullRequestComment;
-        new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
+        new_comment_saver =
+            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
 
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
@@ -179,7 +182,7 @@ describe("PullRequestCommentController", () => {
 
     it("should trigger the on_error_callback when it is defined and an error occurred while saving a reply", async () => {
         const tuleap_api_fault = Fault.fromMessage("You cannot");
-        const save_new_comment = SaveNewCommentStub.withFault(tuleap_api_fault);
+        const save_new_comment = SaveNewReplyToCommentStub.withFault(tuleap_api_fault);
 
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {

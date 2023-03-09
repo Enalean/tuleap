@@ -19,8 +19,10 @@
 
 import type { LineHandle, LineWidget, Editor } from "codemirror";
 import type { FileDiffWidget } from "./types";
-import type { PullRequestInlineCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
-import type { InlineCommentContext } from "../comments/new-comment-form/NewInlineCommentContext";
+import type {
+    PullRequestInlineCommentPresenter,
+    InlineCommentContext,
+} from "@tuleap/plugin-pullrequest-comments";
 
 /**
  * @types/codemirror's type definition for LineHandle is too minimalist
@@ -28,7 +30,7 @@ import type { InlineCommentContext } from "../comments/new-comment-form/NewInlin
  * be able to compute code placeholders heights.
  */
 export interface LineHandleWithAHeight extends LineHandle {
-    height: number;
+    readonly height: number;
 }
 
 /**
@@ -37,7 +39,7 @@ export interface LineHandleWithAHeight extends LineHandle {
  * able to retrieve and filter widgets by their types.
  */
 export interface LineWidgetWithNode extends LineWidget {
-    node: FileDiffWidget;
+    readonly node: FileDiffWidget;
 }
 
 /**
@@ -46,29 +48,32 @@ export interface LineWidgetWithNode extends LineWidget {
  * be able to retrieve the list of widgets given a LineHandle.
  */
 export interface LineHandleWithWidgets extends LineHandleWithAHeight {
-    widgets: LineWidgetWithNode[];
+    readonly widgets: LineWidgetWithNode[];
 }
 
 export type FileLineHandle = LineHandleWithWidgets | LineHandleWithAHeight | LineHandle;
 
 export interface PlaceholderCreationParams {
-    code_mirror: Editor;
-    handle: FileLineHandle;
-    widget_height: number;
-    display_above_line: boolean;
-    is_comment_placeholder: boolean;
+    readonly code_mirror: Editor;
+    readonly handle: FileLineHandle;
+    readonly widget_height: number;
+    readonly display_above_line: boolean;
+    readonly is_comment_placeholder: boolean;
 }
 
 export interface CommentWidgetCreationParams {
-    code_mirror: Editor;
-    line_number: number;
-    post_rendering_callback: () => void;
+    readonly code_mirror: Editor;
+    readonly line_number: number;
+    readonly post_rendering_callback: () => void;
 }
 
 export interface InlineCommentWidgetCreationParams extends CommentWidgetCreationParams {
-    comment: PullRequestInlineCommentPresenter;
+    readonly comment: PullRequestInlineCommentPresenter;
 }
 
 export interface NewInlineCommentFormWidgetCreationParams extends CommentWidgetCreationParams {
-    context: InlineCommentContext;
+    readonly pull_request_id: number;
+    readonly user_id: number;
+    readonly user_avatar_url: string;
+    readonly context: InlineCommentContext;
 }

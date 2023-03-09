@@ -24,7 +24,7 @@ import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-typ
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
-export interface SaveNewComment {
+export interface SaveNewReplyToComment {
     saveReply(
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter
@@ -76,7 +76,7 @@ const saveReplyToInlineComment = (
     );
 };
 
-export const PullRequestCommentNewReplySaver = (): SaveNewComment => ({
+export const PullRequestCommentNewReplySaver = (): SaveNewReplyToComment => ({
     saveReply: (
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter

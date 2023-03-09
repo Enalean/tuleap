@@ -24,3 +24,4 @@ export const _z = "";
 
 export * from "./pull-request";
 export * from "./timeline";
+export * from "./post-comments";

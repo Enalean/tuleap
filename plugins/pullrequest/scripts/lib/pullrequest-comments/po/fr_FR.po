@@ -15,6 +15,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Comment"
+msgstr "Commenter"
+
 msgid "Outdated"
 msgstr "Obsolète"
 

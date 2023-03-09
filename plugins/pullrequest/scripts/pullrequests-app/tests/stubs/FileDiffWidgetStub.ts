@@ -76,6 +76,13 @@ export const FileDiffWidgetStub = {
         localName: "tuleap-pullrequest-new-comment-form",
         getBoundingClientRect: stubBounding(height),
         comment_saver: SaveNewInlineCommentStub.withDefault(),
+        author_presenter: {
+            avatar_url: "url/to_user_avatar.png",
+        },
+        config: {
+            is_cancel_allowed: true,
+            is_autofocus_enabled: true,
+        },
         post_rendering_callback: noop,
         post_submit_callback: noop,
         on_cancel_callback: noop,

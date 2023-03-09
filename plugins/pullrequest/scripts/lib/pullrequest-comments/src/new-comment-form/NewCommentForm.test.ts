@@ -17,24 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { Fault } from "@tuleap/fault";
 import { selectOrThrow } from "@tuleap/dom";
-import { setCatalog } from "../../gettext-catalog";
-import type { HostElement } from "./NewInlineCommentForm";
-import { form_height_descriptor, getCancelButton, getSubmitButton } from "./NewInlineCommentForm";
+import type { HostElement } from "./NewCommentForm";
+import { form_height_descriptor, getCancelButton, getSubmitButton } from "./NewCommentForm";
 import {
     INLINE_COMMENT_POSITION_RIGHT,
     TYPE_INLINE_COMMENT,
 } from "@tuleap/plugin-pullrequest-constants";
-import { SaveNewInlineCommentStub } from "../../../../tests/stubs/SaveNewInlineCommentStub";
-import { PullRequestCommentPresenterBuilder } from "../PullRequestCommentPresenterBuilder";
+import { SaveNewCommentStub } from "../../tests/stubs/SaveNewCommentStub";
 import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-describe("NewInlineCommentForm", () => {
+describe("NewCommentForm", () => {
     let target: ShadowRoot;
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
-
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
@@ -97,22 +95,20 @@ describe("NewInlineCommentForm", () => {
                 type: TYPE_INLINE_COMMENT,
             };
 
-            const comment_saver = SaveNewInlineCommentStub.withResponsePayload(
+            const comment_saver = SaveNewCommentStub.withResponsePayload(
                 new_inline_comment_payload
             );
 
             const host = {
                 comment: "Please remove this line",
-                post_submit_callback: jest.fn(),
+                post_submit_callback: vi.fn(),
                 comment_saver,
             } as unknown as HostElement;
 
             await renderSubmitButton(host).click();
 
             expect(comment_saver.getLastCallParams()).toBe("Please remove this line");
-            expect(host.post_submit_callback).toHaveBeenCalledWith(
-                PullRequestCommentPresenterBuilder.fromFileDiffComment(new_inline_comment_payload)
-            );
+            expect(host.post_submit_callback).toHaveBeenCalledWith(new_inline_comment_payload);
         });
 
         it("When the comment is being saved, then the submit button should display a spinner", () => {
@@ -121,13 +117,9 @@ describe("NewInlineCommentForm", () => {
                 is_saving_comment: true,
             } as HostElement);
 
-            const button_icon = selectOrThrow(submit_button, "[data-test=submit-button-icon]");
-            expect(Array.from(button_icon.classList)).toStrictEqual([
-                "tlp-button-icon",
-                "fa-solid",
-                "fa-spin",
-                "fa-circle-notch",
-            ]);
+            expect(
+                selectOrThrow(submit_button, "[data-test=comment-being-saved-spinner]")
+            ).toBeDefined();
         });
 
         it("When the comment is being written, then the submit button should NOT display a spinner", () => {
@@ -136,10 +128,9 @@ describe("NewInlineCommentForm", () => {
                 is_saving_comment: false,
             } as HostElement);
 
-            const button_icon = selectOrThrow(submit_button, "[data-test=submit-button-icon]");
-            expect(Array.from(button_icon.classList)).not.toContain("fa-solid");
-            expect(Array.from(button_icon.classList)).not.toContain("fa-spin");
-            expect(Array.from(button_icon.classList)).not.toContain("fa-circle-notch");
+            expect(
+                submit_button.querySelector("[data-test=comment-being-saved-spinner]")
+            ).toBeNull();
         });
     });
 
@@ -147,7 +138,10 @@ describe("NewInlineCommentForm", () => {
         it(`When the cancel button is clicked
             Then it should trigger the on_cancel_callback`, () => {
             const host = {
-                on_cancel_callback: jest.fn(),
+                on_cancel_callback: vi.fn(),
+                config: {
+                    is_cancel_allowed: true,
+                },
             } as unknown as HostElement;
 
             const renderButton = getCancelButton(host);
@@ -163,16 +157,33 @@ describe("NewInlineCommentForm", () => {
             expect(
                 renderCancelButton({
                     is_saving_comment: true,
+                    config: {
+                        is_cancel_allowed: true,
+                    },
                 } as unknown as HostElement).disabled
             ).toBe(true);
         });
     });
 
     it("should execute the post_rendering_callback each time the component height changes", () => {
-        const host = { post_rendering_callback: jest.fn() } as unknown as HostElement;
+        const host = { post_rendering_callback: vi.fn() } as unknown as HostElement;
 
         form_height_descriptor.observe(host);
 
         expect(host.post_rendering_callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("should trigger the error_callback when it is defined and an error occurred while saving a new comment", async () => {
+        const tuleap_api_fault = Fault.fromMessage("You cannot");
+        const host = {
+            error_callback: vi.fn(),
+            comment: "Please rebase",
+            is_saving_comment: false,
+            comment_saver: SaveNewCommentStub.withFault(tuleap_api_fault),
+        } as unknown as HostElement;
+
+        await renderSubmitButton(host).click();
+
+        expect(host.error_callback).toHaveBeenCalledWith(tuleap_api_fault);
     });
 });

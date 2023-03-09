@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-framed">
+    <div class="tlp-framed pull-request-overview-pane">
         <overview-app-header v-bind:pull_request="pull_request_info" />
 
         <div class="tlp-pane pullrequest-overview-content-pane">
@@ -79,6 +79,12 @@ function handleAPIFault(fault: Fault) {
 </script>
 
 <style lang="scss">
+.pull-request-overview-pane {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
 .pullrequest-overview-header {
     margin-bottom: 0;
     border-bottom: 0;
@@ -87,6 +93,8 @@ function handleAPIFault(fault: Fault) {
 }
 
 .pullrequest-overview-content-pane {
+    flex: 1 1 auto;
+    margin-bottom: 0;
     border-top: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;

@@ -31,13 +31,15 @@ import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants
 
 import { isAnAddedLine, isARemovedLine } from "../file-lines/file-line-helper";
 import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-constants";
-import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
+import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/NewInlineCommentContextBuilder";
 
 export interface ManageCodeMirrorWidgetsCreation {
     displayInlineComment: (comment: PullRequestInlineCommentPresenter) => void;
     displayNewInlineCommentForm: (
         position: InlineCommentPosition,
         pull_request_id: number,
+        user_id: number,
+        user_avatar_url: string,
         file_path: string,
         line_number: number
     ) => void;
@@ -129,6 +131,8 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
         displayNewInlineCommentForm: (
             position: InlineCommentPosition,
             pull_request_id: number,
+            user_id: number,
+            user_avatar_url: string,
             file_path: string,
             code_mirror_line_number: number
         ): void => {
@@ -151,8 +155,10 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
             new_inline_comment_form_widget_creator.displayNewInlineCommentFormWidget({
                 code_mirror,
                 line_number: code_mirror_line_number,
-                context: NewInlineCommentContext.fromContext(
-                    pull_request_id,
+                pull_request_id,
+                user_id,
+                user_avatar_url,
+                context: NewInlineCommentContextBuilder.fromContext(
                     file_path,
                     line.unidiff_offset,
                     position

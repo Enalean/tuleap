@@ -22,7 +22,7 @@ import { getStore } from "../editors/comments-store.ts";
 import { getCollapsibleCodeSections } from "../code-collapse/collaspible-code-sections-builder.ts";
 import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
 import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
-import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
+import { NewInlineCommentContextBuilder } from "../../comments/new-comment-form/NewInlineCommentContextBuilder";
 
 import "../editors/modes.ts";
 import {
@@ -30,6 +30,7 @@ import {
     PullRequestCommentReplyFormFocusHelper,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
+
 import {
     INLINE_COMMENT_POSITION_RIGHT,
     INLINE_COMMENT_POSITION_LEFT,
@@ -150,8 +151,10 @@ function controller($element, $scope, SharedPropertiesService) {
         self.widget_creator.displayNewInlineCommentFormWidget({
             code_mirror,
             line_number,
-            context: NewInlineCommentContext.fromContext(
-                self.pullRequestId,
+            pull_request_id: self.pullRequestId,
+            user_id: SharedPropertiesService.getUserId(),
+            user_avatar_url: SharedPropertiesService.getUserAvatarUrl(),
+            context: NewInlineCommentContextBuilder.fromContext(
                 self.filePath,
                 Number(line_number) + 1,
                 comment_position

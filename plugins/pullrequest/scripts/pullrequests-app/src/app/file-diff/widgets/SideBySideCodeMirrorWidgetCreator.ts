@@ -28,18 +28,22 @@ import type {
     InlineCommentWidgetCreationParams,
     NewInlineCommentFormWidgetCreationParams,
 } from "../types-codemirror-overriden";
-
 import { getWidgetPlacementOptions } from "./file-line-widget-placement-helper";
 import {
     isANewInlineCommentWidget,
     isPlaceholderWidget,
     isPullRequestCommentWidget,
 } from "./side-by-side-line-widgets-helper";
-import { NewInlineCommentSaver } from "../../comments/new-comment-form/NewInlineCommentSaver";
 
-import { NEW_INLINE_COMMENT_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
-import { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
+import {
+    PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
+    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+    NewCommentSaver,
+} from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
+import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 export interface CreatePlaceholderWidget {
     displayPlaceholderWidget: (widget_params: PlaceholderCreationParams) => void;
@@ -117,12 +121,20 @@ export const SideBySideCodeMirrorWidgetCreator = (
         displayNewInlineCommentFormWidget: (
             widget_params: NewInlineCommentFormWidgetCreationParams
         ): void => {
-            const new_comment_element = doc.createElement(NEW_COMMENT_FORM_TAG_NAME);
+            const new_comment_element = doc.createElement(
+                PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME
+            );
             if (!isANewInlineCommentWidget(new_comment_element)) {
                 return;
             }
 
-            new_comment_element.comment_saver = NewInlineCommentSaver(widget_params.context);
+            new_comment_element.setAttribute("class", "inline-comment-element");
+            new_comment_element.comment_saver = NewCommentSaver({
+                type: TYPE_INLINE_COMMENT,
+                pull_request_id: widget_params.pull_request_id,
+                user_id: widget_params.user_id,
+                comment_context: widget_params.context,
+            });
             const widget = widget_params.code_mirror.addLineWidget(
                 widget_params.line_number,
                 new_comment_element,
@@ -134,8 +146,17 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 widget.changed();
             };
 
-            new_comment_element.post_submit_callback = (comment_presenter): void => {
+            new_comment_element.post_submit_callback = (
+                comment_payload: PullRequestComment
+            ): void => {
                 widget.clear();
+
+                if (comment_payload.type !== TYPE_INLINE_COMMENT) {
+                    return;
+                }
+
+                const comment_presenter =
+                    PullRequestCommentPresenterBuilder.fromFileDiffComment(comment_payload);
                 comments_store.addRootComment(comment_presenter);
 
                 displayInlineCommentWidget({
@@ -149,6 +170,15 @@ export const SideBySideCodeMirrorWidgetCreator = (
             new_comment_element.on_cancel_callback = (): void => {
                 widget.clear();
                 widget_params.post_rendering_callback();
+            };
+
+            new_comment_element.config = {
+                is_cancel_allowed: true,
+                is_autofocus_enabled: true,
+            };
+
+            new_comment_element.author_presenter = {
+                avatar_url: widget_params.user_avatar_url,
             };
         },
     };

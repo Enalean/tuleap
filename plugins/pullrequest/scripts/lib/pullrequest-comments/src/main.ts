@@ -46,3 +46,14 @@ export {
     PullRequestCommentSkeletonComponent,
     PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
 } from "./skeleton/PullRequestCommentSkeleton";
+
+export {
+    NewInlineCommentFormComponent,
+    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+} from "./new-comment-form/NewCommentForm";
+export type {
+    NewCommentFormComponentConfig,
+    NewCommentFormAuthorPresenter,
+} from "./new-comment-form/NewCommentForm";
+export { NewCommentSaver } from "./new-comment-form/NewCommentSaver";
+export type { InlineCommentContext, SaveNewComment } from "./new-comment-form/NewCommentSaver";

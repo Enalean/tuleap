@@ -232,9 +232,9 @@ const { $gettext } = useGettext();
 <style lang="scss">
 .pull-request-overview-threads-empty-state {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
 }
 </style>

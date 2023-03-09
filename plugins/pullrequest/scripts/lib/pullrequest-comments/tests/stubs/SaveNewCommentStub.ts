@@ -17,41 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { errAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { SaveNewComment } from "../../src/comment/PullRequestCommentReplySaver";
-import type { ReplyCommentFormPresenter } from "../../src/comment/ReplyCommentFormPresenter";
-import type { PullRequestCommentPresenter } from "../../src/comment/PullRequestCommentPresenter";
+import type { SaveNewComment } from "../../src/new-comment-form/NewCommentSaver";
 
 export type SaveNewCommentStub = SaveNewComment & {
-    getNbCalls: () => number;
-    getLastCallParams: () => ReplyCommentFormPresenter | undefined;
+    getLastCallParams: () => string | undefined;
 };
 
 export const SaveNewCommentStub = {
     withResponsePayload: (payload: PullRequestComment): SaveNewCommentStub => {
-        let nb_calls = 0;
-        let last_call_params: ReplyCommentFormPresenter | undefined = undefined;
+        let last_call_params: string | undefined = undefined;
 
         return {
-            getNbCalls: () => nb_calls,
             getLastCallParams: () => last_call_params,
-            saveReply: (
-                comment: PullRequestCommentPresenter,
-                new_reply: ReplyCommentFormPresenter
-            ): ResultAsync<PullRequestComment, Fault> => {
-                nb_calls++;
-                last_call_params = new_reply;
+            postComment: (content: string): ResultAsync<PullRequestComment, Fault> => {
+                last_call_params = content;
 
                 return okAsync(payload);
             },
         };
     },
-
     withFault: (fault: Fault): SaveNewComment => ({
-        saveReply: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),
+        postComment: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),
     }),
 };
