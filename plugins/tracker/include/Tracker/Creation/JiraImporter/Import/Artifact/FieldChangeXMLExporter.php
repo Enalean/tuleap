@@ -178,7 +178,6 @@ class FieldChangeXMLExporter
                 $value_ids
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE) {
-            $this->logger->info("Checking TBL field " . $mapping->getFieldName());
             if (! $mapping instanceof ListFieldMapping) {
                 throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);
             }
