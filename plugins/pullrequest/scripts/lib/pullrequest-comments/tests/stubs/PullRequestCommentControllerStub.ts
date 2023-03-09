@@ -19,6 +19,7 @@
 
 import { vi } from "vitest";
 import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
+import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
 
 export const PullRequestCommentControllerStub = (): ControlPullRequestComment => ({
     hideReplyForm: vi.fn(),
@@ -26,4 +27,5 @@ export const PullRequestCommentControllerStub = (): ControlPullRequestComment =>
     displayReplies: vi.fn(),
     updateCurrentReply: vi.fn(),
     saveReply: vi.fn(),
+    getRelativeDateHelper: () => RelativeDateHelperStub,
 });

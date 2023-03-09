@@ -25,13 +25,6 @@ import type {
     GlobalComment,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export interface HelpRelativeDatesDisplay {
-    getRelativeDatePreference: () => string;
-    getRelativeDatePlacement: () => string;
-    getUserLocale: () => string;
-    getFormatDateUsingPreferredUserFormat: (date: string) => string;
-}
-
 export type SupportedTimelineItemTypes =
     | CommentType
     | Extract<PullRequestEventType, typeof TYPE_EVENT_PULLREQUEST_ACTION>;

@@ -18,15 +18,13 @@
  */
 
 import type { ReplyCommentFormPresenter } from "../../src/comment/ReplyCommentFormPresenter";
+import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
 
 const presenter_base = {
-    parent_comment_id: 12,
     pull_request_id: 144,
-    comment_author: {
-        user_id: 104,
-        avatar_url: "url/to/avatar.png",
-    },
+    comment_author: CurrentPullRequestUserPresenterStub.withDefault(),
 };
+
 export const ReplyCommentFormPresenterStub = {
     buildEmpty: (): ReplyCommentFormPresenter => ({
         ...presenter_base,

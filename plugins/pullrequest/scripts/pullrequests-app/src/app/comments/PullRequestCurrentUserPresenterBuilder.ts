@@ -18,10 +18,20 @@
  */
 
 import type { CurrentPullRequestUserPresenter } from "@tuleap/plugin-pullrequest-comments";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export const PullRequestCurrentUserPresenterBuilder = {
-    fromUserInfo: (user_id: number, avatar_url: string): CurrentPullRequestUserPresenter => ({
+    fromUserInfo: (
+        user_id: number,
+        avatar_url: string,
+        user_locale: string,
+        preferred_date_format: string,
+        preferred_relative_date_display: RelativeDatesDisplayPreference
+    ): CurrentPullRequestUserPresenter => ({
         user_id,
         avatar_url,
+        user_locale,
+        preferred_date_format,
+        preferred_relative_date_display,
     }),
 };

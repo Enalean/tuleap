@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+
 export interface CurrentPullRequestUserPresenter {
     readonly user_id: number;
     readonly avatar_url: string;
+    readonly preferred_date_format: string;
+    readonly preferred_relative_date_display: RelativeDatesDisplayPreference;
+    readonly user_locale: string;
 }

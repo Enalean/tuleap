@@ -20,9 +20,6 @@
 import type {
     PullRequestCommentPresenter,
     ControlPullRequestComment,
-    CurrentPullRequestUserPresenter,
-    HelpRelativeDatesDisplay,
-    PullRequestPresenter,
     SaveNewComment,
     NewCommentFormComponentConfig,
     NewCommentFormAuthorPresenter,
@@ -73,10 +70,7 @@ interface WidgetElement extends HTMLElement {
 export interface InlineCommentWidget extends WidgetElement {
     localName: "tuleap-pullrequest-comment";
     comment: PullRequestCommentPresenter;
-    relativeDateHelper: HelpRelativeDatesDisplay;
     controller: ControlPullRequestComment;
-    currentUser: CurrentPullRequestUserPresenter;
-    currentPullRequest: PullRequestPresenter;
     post_rendering_callback: () => void;
 }
 

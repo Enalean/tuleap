@@ -27,7 +27,6 @@ import type {
 } from "../types";
 
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
-import { RelativeDateHelperStub } from "../../../../tests/stubs/RelativeDateHelperStub";
 import { SideBySideCodeMirrorWidgetCreator } from "./SideBySideCodeMirrorWidgetCreator";
 import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentContextStub";
 
@@ -41,7 +40,6 @@ import type {
     StorePullRequestCommentReplies,
 } from "@tuleap/plugin-pullrequest-comments";
 import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
-import type { HelpRelativeDatesDisplay } from "@tuleap/plugin-pullrequest-comments";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import {
     INLINE_COMMENT_POSITION_LEFT,
@@ -58,14 +56,12 @@ describe("side-by-side-code-mirror-widget-creator", () => {
     let doc: Document,
         createElement: jest.SpyInstance,
         code_mirror: EditorThatCanHaveWidgets,
-        relative_date_helper: HelpRelativeDatesDisplay,
         controller: ControlPullRequestComment,
         comments_store: StorePullRequestCommentReplies;
 
     const getWidgetCreator = (): CreateFileDiffWidget =>
         SideBySideCodeMirrorWidgetCreator(
             doc,
-            relative_date_helper,
             controller,
             comments_store,
             FileDiffCommentWidgetsMap()
@@ -80,9 +76,11 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             getLineHandle: () => ({ widgets: [] }),
         } as unknown as EditorThatCanHaveWidgets;
 
-        relative_date_helper = RelativeDateHelperStub;
         controller = {
             displayReplies: (): void => {
+                // do nothing
+            },
+            getRelativeDateHelper: (): void => {
                 // do nothing
             },
         } as unknown as ControlPullRequestComment;
@@ -157,7 +155,6 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             });
 
             expect(inline_comment_widget.comment).toStrictEqual(comment);
-            expect(inline_comment_widget.relativeDateHelper).toStrictEqual(relative_date_helper);
             expect(inline_comment_widget.controller).toStrictEqual(controller);
             expect(inline_comment_widget.post_rendering_callback).toBeDefined();
 

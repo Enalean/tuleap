@@ -27,6 +27,8 @@ import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
+import { RelativeDatesHelper } from "./relative-dates-helper";
+import type { HelpRelativeDatesDisplay } from "./relative-dates-helper";
 
 export interface ControlPullRequestComment {
     showReplyForm: (host: PullRequestCommentComponentType) => void;
@@ -34,6 +36,7 @@ export interface ControlPullRequestComment {
     displayReplies: (host: PullRequestCommentComponentType) => void;
     updateCurrentReply: (host: PullRequestCommentComponentType, reply_content: string) => void;
     saveReply: (host: PullRequestCommentComponentType) => void;
+    getRelativeDateHelper: () => HelpRelativeDatesDisplay;
 }
 
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;
@@ -94,6 +97,12 @@ export const PullRequestCommentController = (
     displayReplies: (host: PullRequestCommentComponentType): void => {
         host.replies = replies_store.getCommentReplies(host.comment);
     },
+    getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
+        RelativeDatesHelper(
+            current_user.preferred_date_format,
+            current_user.preferred_relative_date_display,
+            current_user.user_locale
+        ),
 });
 
 function getExistingCommentReplyPresenter(

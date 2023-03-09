@@ -23,8 +23,23 @@ describe("PullRequestCurrentUserPresenterBuilder", () => {
     it("should build the current user presenter", () => {
         const user_id = 104;
         const avatar_url = "url/to/current/user/avatar.png";
-        const presenter = PullRequestCurrentUserPresenterBuilder.fromUserInfo(user_id, avatar_url);
+        const user_locale = "fr_FR";
+        const preferred_date_format = "Y/M/D H:m";
+        const preferred_relative_date_display = "absolute_first-relative_tooltip";
+        const presenter = PullRequestCurrentUserPresenterBuilder.fromUserInfo(
+            user_id,
+            avatar_url,
+            user_locale,
+            preferred_date_format,
+            preferred_relative_date_display
+        );
 
-        expect(presenter).toStrictEqual({ user_id, avatar_url });
+        expect(presenter).toStrictEqual({
+            user_id,
+            avatar_url,
+            user_locale,
+            preferred_date_format,
+            preferred_relative_date_display,
+        });
     });
 });

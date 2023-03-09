@@ -55,7 +55,7 @@ describe("PullRequestComment", () => {
         it(`Given a not outdated inline comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildInlineComment(),
-                relativeDateHelper: RelativeDateHelperStub,
+                relative_date_helper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
             const update = PullRequestCommentComponent.content(host);
@@ -71,7 +71,7 @@ describe("PullRequestComment", () => {
         it(`Given an outdated inline comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
-                relativeDateHelper: RelativeDateHelperStub,
+                relative_date_helper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
             const update = PullRequestCommentComponent.content(host);
@@ -88,7 +88,7 @@ describe("PullRequestComment", () => {
         it(`Given a global comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-                relativeDateHelper: RelativeDateHelperStub,
+                relative_date_helper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
             const update = PullRequestCommentComponent.content(host);
@@ -105,7 +105,7 @@ describe("PullRequestComment", () => {
         it(`Given a pull-request event comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-                relativeDateHelper: RelativeDateHelperStub,
+                relative_date_helper: RelativeDateHelperStub,
                 replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
             } as unknown as HostElement;
             const update = PullRequestCommentComponent.content(host);

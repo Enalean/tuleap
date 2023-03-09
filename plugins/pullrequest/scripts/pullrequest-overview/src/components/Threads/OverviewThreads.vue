@@ -18,8 +18,6 @@
   -->
 
 <template>
-    <!-- Prevent eslint-plugin-vue to mess up with the relativeDateHelper attribute of our custom element -->
-    <!-- eslint-disable vue/attribute-hyphenation -->
     <section class="tlp-pane-section pull-request-threads-section">
         <tuleap-pullrequest-comment-skeleton
             v-if="is_loading_threads"
@@ -33,7 +31,6 @@
                 v-bind:key="`${index}${thread.id}`"
                 v-bind:comment="thread"
                 v-bind:controller="comments_controller"
-                v-bind:relativeDateHelper="relative_date_helper"
             />
         </div>
         <overview-threads-empty-state v-if="!is_loading_threads && threads.list.length === 0" />
@@ -45,7 +42,6 @@
 import { ref, reactive, provide } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
-import { RelativeDatesHelper } from "../../helpers/relative-dates-helper";
 import { strictInject } from "../../helpers/strict-inject";
 import {
     PULL_REQUEST_ID_KEY,
@@ -70,7 +66,6 @@ import type {
     ControlPullRequestComment,
     CurrentPullRequestUserPresenter,
     PullRequestPresenter,
-    HelpRelativeDatesDisplay,
     SupportedTimelineItem,
 } from "@tuleap/plugin-pullrequest-comments";
 
@@ -102,13 +97,16 @@ const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });
 const comments_presenters = ref<PullRequestCommentPresenter[]>([]);
 const comments_controller = ref<null | ControlPullRequestComment>(null);
 const replies_store = ref<null | StorePullRequestCommentReplies>(null);
-const current_user_presenter = ref<CurrentPullRequestUserPresenter>({ user_id, avatar_url });
+const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
+    user_id,
+    avatar_url,
+    user_locale,
+    preferred_date_format: date_time_format,
+    preferred_relative_date_display: relative_date_display,
+});
 const current_pull_request_presenter = ref<PullRequestPresenter>({
     pull_request_id: Number.parseInt(pull_request_id, 10),
 });
-const relative_date_helper = ref<HelpRelativeDatesDisplay>(
-    RelativeDatesHelper(date_time_format, relative_date_display, user_locale)
-);
 
 provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
 

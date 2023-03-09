@@ -99,7 +99,6 @@ describe("OverviewThreads", () => {
 
         expect(displayed_thread.attributes("comment")).toBeDefined();
         expect(displayed_thread.attributes("controller")).toBeDefined();
-        expect(displayed_thread.attributes("relativedatehelper")).toBeDefined();
     });
 
     it("When an error occurs while retrieving the comments, Then it should call the display_error_callback with the fault", async () => {

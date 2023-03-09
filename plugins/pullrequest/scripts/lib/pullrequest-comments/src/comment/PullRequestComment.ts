@@ -28,7 +28,7 @@ import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter"
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { gettext_provider } from "../gettext-provider";
-import type { HelpRelativeDatesDisplay } from "../types";
+import type { HelpRelativeDatesDisplay } from "./relative-dates-helper";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestCommentComponentType & HTMLElement;
@@ -41,8 +41,8 @@ export interface PullRequestCommentComponentType {
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
-    readonly relativeDateHelper: HelpRelativeDatesDisplay;
     readonly controller: ControlPullRequestComment;
+    relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
 }
@@ -111,11 +111,12 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     comment: undefined,
     post_rendering_callback: undefined,
-    relativeDateHelper: undefined,
+    relative_date_helper: undefined,
     after_render_once: after_render_once_descriptor,
     element_height: element_height_descriptor,
     controller: {
         set: (host, controller: ControlPullRequestComment) => {
+            host.relative_date_helper = controller.getRelativeDateHelper();
             if (host.comment) {
                 controller.displayReplies(host);
             }
