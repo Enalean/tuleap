@@ -31,11 +31,13 @@ use Tuleap\Queue\QueueTask;
  */
 final class CreateInstanceTask implements QueueTask
 {
-    private int $project_id;
+    private readonly int $project_id;
+    private readonly string $short_language_code;
 
-    public function __construct(\Project $project)
+    public function __construct(\Project $project, private readonly InitializationLanguageCodeProvider $language_code_provider)
     {
-        $this->project_id = (int) $project->getID();
+        $this->project_id          = (int) $project->getID();
+        $this->short_language_code = $this->language_code_provider->getLanguageCode();
     }
 
     public function getTopic(): string
@@ -45,7 +47,7 @@ final class CreateInstanceTask implements QueueTask
 
     public function getPayload(): array
     {
-        return ['project_id' => $this->project_id];
+        return ['project_id' => $this->project_id, 'language_code' => $this->short_language_code];
     }
 
     public function getPreEnqueueMessage(): string

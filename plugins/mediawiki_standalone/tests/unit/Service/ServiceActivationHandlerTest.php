@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Service;
 
 use Tuleap\MediawikiStandalone\Instance\CreateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\ProvideInitializationLanguageCodeStub;
 use Tuleap\MediawikiStandalone\Instance\SuspendInstanceTask;
 use Tuleap\Queue\QueueTask;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -44,12 +45,12 @@ final class ServiceActivationHandlerTest extends TestCase
 
         $enqueue_task = new EnqueueTaskStub();
 
-        $handler = new ServiceActivationHandler($enqueue_task);
+        $handler = new ServiceActivationHandler($enqueue_task, new ProvideInitializationLanguageCodeStub());
         $handler->handle(
             ServiceActivationEvent::fromServiceIsUsedEvent(
                 $payload,
                 $factory,
-            )
+            ),
         );
 
         self::assertEquals($expected_task, $enqueue_task->queue_task);
@@ -59,7 +60,7 @@ final class ServiceActivationHandlerTest extends TestCase
     {
         return [
             'It sends the activation is the service is mediawiki standalone' => [
-                'expected_task' => new CreateInstanceTask(ProjectTestBuilder::aProject()->withId(112)->build()),
+                'expected_task' => new CreateInstanceTask(ProjectTestBuilder::aProject()->withId(112)->build(), new ProvideInitializationLanguageCodeStub()),
                 'payload' => ['shortname' => MediawikiStandaloneService::SERVICE_SHORTNAME, 'is_used' => true, 'group_id' => '112'],
             ],
             'It sends the suspend event for mediawiki standalone' => [

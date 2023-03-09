@@ -106,7 +106,7 @@ final class InstanceManagementTest extends TestCase
                 function (RequestInterface $request): bool {
                     return $request->getMethod() === 'PUT' &&
                         $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/gpig' &&
-                        $request->getBody()->getContents() === '{"project_id":120}';
+                        $request->getBody()->getContents() === '{"project_id":120,"lang":"en"}';
                 }
             ),
             function () {
@@ -136,7 +136,7 @@ final class InstanceManagementTest extends TestCase
                 function (RequestInterface $request): bool {
                     return $request->getMethod() === 'PUT' &&
                         $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/gpig' &&
-                        $request->getBody()->getContents() === '{"project_id":120,"dbprefix":"mw_120_"}';
+                        $request->getBody()->getContents() === '{"project_id":120,"lang":"en","dbprefix":"mw_120_"}';
                 }
             ),
             function () {

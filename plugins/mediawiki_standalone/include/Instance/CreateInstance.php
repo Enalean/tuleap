@@ -43,8 +43,11 @@ final class CreateInstance
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
 
-    private function __construct(private \Project $project, private bool $use_central_database)
-    {
+    private function __construct(
+        private readonly \Project $project,
+        private readonly bool $use_central_database,
+        private readonly string $short_language_code,
+    ) {
     }
 
     public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory, MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator): ?self
@@ -60,6 +63,7 @@ final class CreateInstance
         return new self(
             $project_factory->getValidProjectById($payload['project_id']),
             $central_database_parameter_generator->getCentralDatabase() !== null,
+            (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT)
         );
     }
 
@@ -115,7 +119,7 @@ final class CreateInstance
      */
     private function createInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $payload = ['project_id' => (int) $this->project->getID()];
+        $payload = ['project_id' => (int) $this->project->getID(), 'lang' => $this->short_language_code];
         if ($this->use_central_database) {
             $payload['dbprefix'] = 'mw_' . $this->project->getID() . '_';
         }
