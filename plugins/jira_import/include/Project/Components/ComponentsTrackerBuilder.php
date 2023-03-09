@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\Components;
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringField;
 use Tuleap\Tracker\FormElement\Field\XML\ReadPermission;
 use Tuleap\Tracker\FormElement\Field\XML\SubmitPermission;
@@ -40,8 +41,9 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 final class ComponentsTrackerBuilder
 {
-    public const NAME_FIELD_NAME        = 'name';
-    public const DESCRIPTION_FIELD_NAME = 'description';
+    public const NAME_FIELD_NAME          = 'name';
+    public const DESCRIPTION_FIELD_NAME   = 'description';
+    public const ARTIFACT_LINK_FIELD_NAME = 'linked_issues';
 
     public function get(IDGenerator $id_generator): XMLTracker
     {
@@ -62,6 +64,10 @@ final class ComponentsTrackerBuilder
                 (new XMLStringField($id_generator, self::DESCRIPTION_FIELD_NAME))
                     ->withLabel('Description')
                     ->withRank(2)
+                    ->withPermissions(...$default_permissions),
+                (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
+                    ->withRank(3)
+                    ->withLabel('Links')
                     ->withPermissions(...$default_permissions),
             )
             ->withSemantics(

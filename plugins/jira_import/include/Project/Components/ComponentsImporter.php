@@ -27,7 +27,9 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
+use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\XML\XMLUser;
 
@@ -35,6 +37,7 @@ final class ComponentsImporter
 {
     public function __construct(
         private readonly ComponentsRetriever $components_retriever,
+        private readonly ComponentIssuesRetriever $component_issues_retriever,
         private readonly ComponentsTrackerBuilder $components_tracker_builder,
         private readonly LoggerInterface $logger,
     ) {
@@ -47,7 +50,7 @@ final class ComponentsImporter
         PFUser $import_user,
     ): void {
         $project_components = $this->components_retriever->getProjectComponents($jira_project_key);
-        if (count($project_components) === 0) {
+        if (empty($project_components)) {
             $this->logger->info("No components found in project.");
             return;
         }
@@ -65,6 +68,27 @@ final class ComponentsImporter
             if ($component->description !== '') {
                 $changeset = $changeset->withFieldChange(
                     new XMLStringChangesetValue(ComponentsTrackerBuilder::DESCRIPTION_FIELD_NAME, $component->description)
+                );
+            }
+
+            $component_issues = $this->component_issues_retriever->getComponentIssues(
+                $component,
+                $jira_project_key,
+            );
+
+            if (! empty($component_issues)) {
+                $this->logger->info("Adding links between component and issues");
+
+                $linked_issued_ids = [];
+                foreach ($component_issues as $component_issue) {
+                    $linked_issued_ids[] = new ArtifactLinkChange($component_issue->id);
+                }
+
+                $changeset = $changeset->withFieldChange(
+                    new XMLArtifactLinkChangesetValue(
+                        ComponentsTrackerBuilder::ARTIFACT_LINK_FIELD_NAME,
+                        $linked_issued_ids,
+                    )
                 );
             }
 

@@ -39,9 +39,10 @@ final class ComponentsImporterTest extends TestCase
 
     public function testItHasAComponentsTracker(): void
     {
-        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents([
-            JiraComponent::build("Component 01", ""),
-        ]));
+        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
+            [JiraComponent::build("Component 01", "")],
+            [],
+        ));
 
         self::assertCount(1, $xml->trackers->tracker);
         self::assertEquals('T1', (string) $xml->trackers->tracker[0]['id']);
@@ -52,9 +53,10 @@ final class ComponentsImporterTest extends TestCase
 
     public function testSprintTrackerHasNameStringFieldInFormElementsWithPermissions(): void
     {
-        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents([
-            JiraComponent::build("Component 01", ""),
-        ]));
+        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
+            [JiraComponent::build("Component 01", "")],
+            [],
+        ));
 
         self::assertEquals(\Tracker_FormElementFactory::FIELD_STRING_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
 
@@ -73,9 +75,10 @@ final class ComponentsImporterTest extends TestCase
 
     public function testSprintTrackerHasNameForTitleSemantic(): void
     {
-        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents([
-            JiraComponent::build("Component 01", ""),
-        ]));
+        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
+            [JiraComponent::build("Component 01", "")],
+            [],
+        ));
 
         $name_field = $xml->xpath('/project/trackers/tracker/formElements//formElement[name="name"]');
 
@@ -84,11 +87,12 @@ final class ComponentsImporterTest extends TestCase
         self::assertEquals($name_field[0]['ID'], $title_semantic[0]->field['REF']);
     }
 
-    public function testItCreatesOneSprintArtifact(): void
+    public function testItCreatesOneComponentArtifact(): void
     {
-        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents([
-            JiraComponent::build("Component 01", ""),
-        ]));
+        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
+            [JiraComponent::build("Component 01", "")],
+            [JiraComponentLinkedIssue::build(10256)],
+        ));
 
         self::assertCount(1, $xml->trackers->tracker[0]->artifacts->artifact);
         $xml_artifact_node = $xml->trackers->tracker[0]->artifacts->artifact[0];
@@ -106,12 +110,19 @@ final class ComponentsImporterTest extends TestCase
         self::assertCount(1, $name_field_change);
         self::assertEquals('string', $name_field_change[0]['type']);
         self::assertEquals('Component 01', $name_field_change[0]->value);
+
+        $linked_issues_field_change = $xml_artifact_node->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="linked_issues"]');
+        self::assertCount(1, $linked_issues_field_change);
+        self::assertEquals('art_link', $linked_issues_field_change[0]['type']);
+        self::assertCount(1, $linked_issues_field_change[0]->value);
+        self::assertEquals('10256', (string) $linked_issues_field_change[0]->value[0]);
     }
 
     private function getComponentsImporterWithoutComponents(): ComponentsImporter
     {
         return new ComponentsImporter(
             $this->getJiraComponentsRetrieverWithoutComponents(),
+            $this->getJiraComponentLinkedIssuesRetrieverWithoutIssues(),
             new ComponentsTrackerBuilder(),
             new NullLogger(),
         );
@@ -119,11 +130,13 @@ final class ComponentsImporterTest extends TestCase
 
     /**
      * @param JiraComponent[] $components
+     * @param JiraComponentLinkedIssue[] $linked_issues
      */
-    private function getComponentsImporterWithComponents(array $components): ComponentsImporter
+    private function getComponentsImporterWithComponents(array $components, array $linked_issues): ComponentsImporter
     {
         return new ComponentsImporter(
             $this->getJiraComponentsRetrieverWithComponents($components),
+            $this->getJiraComponentLinkedIssuesRetrieverWithIssues($linked_issues),
             new ComponentsTrackerBuilder(),
             new NullLogger(),
         );
@@ -154,6 +167,35 @@ final class ComponentsImporterTest extends TestCase
             public function getProjectComponents(string $jira_project_id): array
             {
                 return $this->components;
+            }
+        };
+    }
+
+    private function getJiraComponentLinkedIssuesRetrieverWithoutIssues(): ComponentIssuesRetriever
+    {
+        return $this->getJiraComponentLinkedIssuesRetrieverWithIssues([]);
+    }
+
+    /**
+     * @param JiraComponentLinkedIssue[] $linked_issues
+     */
+    private function getJiraComponentLinkedIssuesRetrieverWithIssues(array $linked_issues): ComponentIssuesRetriever
+    {
+        return new class ($linked_issues) implements ComponentIssuesRetriever
+        {
+            /**
+             * @var JiraComponentLinkedIssue[]
+             */
+            private $linked_issues;
+
+            public function __construct(array $linked_issues)
+            {
+                $this->linked_issues = $linked_issues;
+            }
+
+            public function getComponentIssues(JiraComponent $component, string $jira_project_key): array
+            {
+                return $this->linked_issues;
             }
         };
     }
