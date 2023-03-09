@@ -10,6 +10,7 @@ specifiers:
   '@tuleap/plugin-pullrequest-constants': workspace:*
   '@tuleap/plugin-pullrequest-rest-api-types': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-modal': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
@@ -28,6 +29,7 @@ dependencies:
   '@tuleap/plugin-pullrequest-comments': link:../lib/pullrequest-comments
   '@tuleap/plugin-pullrequest-constants': link:../lib/constants
   '@tuleap/plugin-pullrequest-rest-api-types': link:../lib/rest-api-types
+  '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
