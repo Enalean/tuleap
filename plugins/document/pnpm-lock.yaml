@@ -28,7 +28,7 @@ specifiers:
   fast-deep-equal: ^3.1.3
   mitt: ^3.0.0
   moment: ^2.29.4
-  moment-timezone: ^0.5.34
+  moment-timezone: ^0.5.41
   moment-timezone-data-webpack-plugin: ^1.5.1
   neverthrow: 6.0.0
   pretty-kibibytes: ^4.0.4
@@ -69,7 +69,7 @@ dependencies:
   fast-deep-equal: 3.1.3
   mitt: 3.0.0
   moment: 2.29.4
-  moment-timezone: 0.5.34
+  moment-timezone: 0.5.41
   pretty-kibibytes: 4.0.4
   sprintf-js: 1.1.2
   tus-js-client: 2.3.1
@@ -89,7 +89,7 @@ devDependencies:
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.7.8
-  moment-timezone-data-webpack-plugin: 1.5.1_moment-timezone@0.5.34
+  moment-timezone-data-webpack-plugin: 1.5.1_moment-timezone@0.5.41
   neverthrow: 6.0.0
   vue-class-component: 7.2.6_vue@2.7.8
   vue-frag: 1.4.1_vue@2.7.8
@@ -403,7 +403,7 @@ packages:
     resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
     dev: false
 
-  /moment-timezone-data-webpack-plugin/1.5.1_moment-timezone@0.5.34:
+  /moment-timezone-data-webpack-plugin/1.5.1_moment-timezone@0.5.41:
     resolution: {integrity: sha512-1le6a35GgYdWMVYFzrfpE/F6Pk4bj0M3QKD6Iv6ba9LqWGoVqHQRHyCTLvLis5E1J98Sz40ET6yhZzMVakwpjg==}
     peerDependencies:
       moment-timezone: '>= 0.1.0'
@@ -411,11 +411,11 @@ packages:
     dependencies:
       find-cache-dir: 3.3.1
       make-dir: 3.1.0
-      moment-timezone: 0.5.34
+      moment-timezone: 0.5.41
     dev: true
 
-  /moment-timezone/0.5.34:
-    resolution: {integrity: sha512-3zAEHh2hKUs3EXLESx/wsgw6IQdusOT8Bxm3D9UrHPQR7zlMmzwybC8zHEM1tQ4LJwP7fcxrWr8tuBg05fFCbg==}
+  /moment-timezone/0.5.41:
+    resolution: {integrity: sha512-e0jGNZDOHfBXJGz8vR/sIMXvBIGJJcqFjmlg9lmE+5KX1U7/RZNMswfD8nKnNCnQdKTIj50IaRKwl1fvMLyyRg==}
     dependencies:
       moment: 2.29.4
 

@@ -84,17 +84,6 @@ id = "GHSA-f8q6-p94x-37v3" # CVE-2022-3517
 reason = "ReDoS. Only used as a dev tool."
 ignoreUntil = 2023-05-08
 
-## moment-timezone
-[[IgnoredVulns]]
-id = "GHSA-56x4-j7p9-fcf9"
-reason = "Not exploitable. Command injection at build time."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-v78c-4p63-2j6c"
-reason = "Not exploitable. Command injection at build time."
-ignoreUntil = 2023-05-08
-
 ## json5
 [[IgnoredVulns]]
 id = "GHSA-9c47-m6qq-7p4h" # CVE-2022-46175
