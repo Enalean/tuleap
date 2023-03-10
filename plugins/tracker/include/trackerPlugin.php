@@ -271,6 +271,7 @@ use Tuleap\User\Account\NotificationsOnOwnActionsUpdate;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
+use Tuleap\User\Preferences\UserPreferencesGetDefaultValue;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -2702,6 +2703,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $something_changed = NotificationOnOwnActionPreference::updatePreference($event->request, $event->user);
         if ($something_changed) {
             $event->something_has_changed = true;
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function setDefaultCommentOrderUserPreference(UserPreferencesGetDefaultValue $event): void
+    {
+        if ($event->value === false && str_starts_with($event->key, 'tracker_comment_invertorder_')) {
+            $event->setDefaultValue('0');
         }
     }
 }

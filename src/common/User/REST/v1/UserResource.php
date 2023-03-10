@@ -42,6 +42,7 @@ use Tuleap\User\Admin\UserStatusChecker;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
+use Tuleap\User\Preferences\UserPreferencesGetDefaultValue;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
@@ -456,6 +457,14 @@ class UserResource extends AuthenticatedResource
 
         if (! $value && $key === DefaultRelativeDatesDisplayPreferenceRetriever::DEFAULT_RELATIVE_DATES_DISPLAY) {
             $value = DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
+        } elseif (! $value) {
+            $event = \EventManager::instance()->dispatch(
+                new UserPreferencesGetDefaultValue($key, $value)
+            );
+
+            if ($event->hasDefaultValue()) {
+                $value = $event->getDefaultValue();
+            }
         }
 
         return UserPreferenceRepresentation::build($key, $value);
