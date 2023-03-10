@@ -314,19 +314,21 @@ final class CreateProjectFromJira
                         }
                     }
 
+                    $jira_user_retriever = new JiraUserRetriever(
+                        $logger,
+                        $this->user_manager,
+                        $jira_user_on_tuleap_cache,
+                        new JiraUserInfoQuerier(
+                            $jira_client,
+                            $logger
+                        ),
+                        $import_user
+                    );
+
                     $group_members_importer = new GroupMembersImporter(
                         $jira_client,
                         $logger,
-                        new JiraUserRetriever(
-                            $logger,
-                            $this->user_manager,
-                            $jira_user_on_tuleap_cache,
-                            new JiraUserInfoQuerier(
-                                $jira_client,
-                                $logger
-                            ),
-                            $import_user
-                        ),
+                        $jira_user_retriever,
                         $import_user
                     );
                     $xml_user_groups        = $group_members_importer->getUserGroups($jira_project);
@@ -375,6 +377,7 @@ final class CreateProjectFromJira
                             $logger,
                         ),
                         new ComponentsTrackerBuilder(),
+                        $jira_user_retriever,
                         $logger,
                     ))->importProjectComponents(
                         $trackers_xml,

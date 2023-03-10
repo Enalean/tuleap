@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -28,4 +28,6 @@ use PFUser;
 interface GetTuleapUserFromJiraUser
 {
     public function getAssignedTuleapUser(string $unique_account_identifier): PFUser;
+
+    public function retrieveJiraAuthor(JiraUser $update_author): PFUser;
 }

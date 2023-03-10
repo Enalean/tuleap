@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\Components;
 
+use PFUser;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\GetTuleapUserFromJiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 final class ComponentsImporterTest extends TestCase
 {
@@ -40,7 +43,7 @@ final class ComponentsImporterTest extends TestCase
     public function testItHasAComponentsTracker(): void
     {
         $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
-            [JiraComponent::build("Component 01", "")],
+            [JiraComponent::build("Component 01", "", null)],
             [],
         ));
 
@@ -54,7 +57,7 @@ final class ComponentsImporterTest extends TestCase
     public function testSprintTrackerHasNameStringFieldInFormElementsWithPermissions(): void
     {
         $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
-            [JiraComponent::build("Component 01", "")],
+            [JiraComponent::build("Component 01", "", null)],
             [],
         ));
 
@@ -76,7 +79,7 @@ final class ComponentsImporterTest extends TestCase
     public function testSprintTrackerHasNameForTitleSemantic(): void
     {
         $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
-            [JiraComponent::build("Component 01", "")],
+            [JiraComponent::build("Component 01", "", null)],
             [],
         ));
 
@@ -89,8 +92,25 @@ final class ComponentsImporterTest extends TestCase
 
     public function testItCreatesOneComponentArtifact(): void
     {
+        $jira_user = new /** @psalm-immutable */ class implements JiraUser {
+            public function getDisplayName(): string
+            {
+                return '';
+            }
+
+            public function getEmailAddress(): string
+            {
+                return '';
+            }
+
+            public function getUniqueIdentifier(): string
+            {
+                return 'user01';
+            }
+        };
+
         $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
-            [JiraComponent::build("Component 01", "")],
+            [JiraComponent::build("Component 01", "", $jira_user)],
             [JiraComponentLinkedIssue::build(10256)],
         ));
 
@@ -116,6 +136,13 @@ final class ComponentsImporterTest extends TestCase
         self::assertEquals('art_link', $linked_issues_field_change[0]['type']);
         self::assertCount(1, $linked_issues_field_change[0]->value);
         self::assertEquals('10256', (string) $linked_issues_field_change[0]->value[0]);
+
+        $linked_issues_field_change = $xml_artifact_node->xpath('/project/trackers/tracker/artifacts/artifact/changeset/field_change[@field_name="component_lead"]');
+        self::assertCount(1, $linked_issues_field_change);
+        self::assertEquals('list', (string) $linked_issues_field_change[0]['type']);
+        self::assertCount(1, $linked_issues_field_change[0]->value);
+        self::assertEquals('username', (string) $linked_issues_field_change[0]->value['format']);
+        self::assertEquals('user01', (string) $linked_issues_field_change[0]->value);
     }
 
     private function getComponentsImporterWithoutComponents(): ComponentsImporter
@@ -124,6 +151,7 @@ final class ComponentsImporterTest extends TestCase
             $this->getJiraComponentsRetrieverWithoutComponents(),
             $this->getJiraComponentLinkedIssuesRetrieverWithoutIssues(),
             new ComponentsTrackerBuilder(),
+            $this->getJiraUserRetriever(),
             new NullLogger(),
         );
     }
@@ -138,8 +166,24 @@ final class ComponentsImporterTest extends TestCase
             $this->getJiraComponentsRetrieverWithComponents($components),
             $this->getJiraComponentLinkedIssuesRetrieverWithIssues($linked_issues),
             new ComponentsTrackerBuilder(),
+            $this->getJiraUserRetriever(),
             new NullLogger(),
         );
+    }
+
+    private function getJiraUserRetriever(): GetTuleapUserFromJiraUser
+    {
+        return new class implements GetTuleapUserFromJiraUser {
+            public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
+            {
+                return UserTestBuilder::aUser()->build();
+            }
+
+            public function retrieveJiraAuthor(JiraUser $jira_user): PFUser
+            {
+                return UserTestBuilder::aUser()->withUserName('user01')->build();
+            }
+        };
     }
 
     private function getJiraComponentsRetrieverWithoutComponents(): ComponentsRetriever

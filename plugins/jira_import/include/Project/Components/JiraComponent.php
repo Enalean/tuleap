@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\Components;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserBuilder;
+
 /**
  * @psalm-immutable
  */
@@ -31,6 +34,7 @@ final class JiraComponent
     private function __construct(
         public readonly string $name,
         public readonly string $description,
+        public readonly ?JiraUser $lead,
     ) {
     }
 
@@ -43,17 +47,24 @@ final class JiraComponent
             throw new ComponentAPIResponseNotWellFormedException();
         }
 
+        $lead = null;
+        if (isset($response['lead'])) {
+            $lead = JiraUserBuilder::getUserFromPayload($response['lead']);
+        }
+
         return new self(
             $response['name'],
             $response['description'] ?? '',
+            $lead,
         );
     }
 
-    public static function build(string $name, string $description): self
+    public static function build(string $name, string $description, ?JiraUser $jira_user): self
     {
         return new self(
             $name,
             $description,
+            $jira_user,
         );
     }
 }
