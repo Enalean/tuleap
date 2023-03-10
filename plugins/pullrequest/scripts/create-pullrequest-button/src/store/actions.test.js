@@ -182,7 +182,7 @@ describe("Store actions", () => {
             await actions.create(context, { source_branch, destination_branch });
 
             expect(redirectTo).toHaveBeenCalledWith(
-                "/plugins/git/?action=pull-requests&repo_id=101&group_id=42#/pull-requests/1/overview"
+                "/plugins/git/?action=pull-requests&tab=overview&repo_id=101&group_id=42#/pull-requests/1/overview"
             );
         });
 

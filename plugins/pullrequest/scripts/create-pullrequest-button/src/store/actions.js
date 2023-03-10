@@ -77,7 +77,7 @@ export async function create(context, { source_branch, destination_branch }) {
             destination_branch.name
         );
         redirectTo(
-            `/plugins/git/?action=pull-requests&repo_id=${destination_branch.repository_id}&group_id=${destination_branch.project_id}#/pull-requests/${pullrequest.id}/overview`
+            `/plugins/git/?action=pull-requests&tab=overview&repo_id=${destination_branch.repository_id}&group_id=${destination_branch.project_id}#/pull-requests/${pullrequest.id}/overview`
         );
     } catch (e) {
         const { error } = await e.response.json();
