@@ -59,9 +59,7 @@ import type { GroupOfItems } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
-import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
@@ -70,6 +68,7 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -86,7 +85,6 @@ describe(`LinkFieldController`, () => {
         new_links_retriever: RetrieveNewLinks,
         new_link_remover: DeleteNewLinkStub,
         parents_retriever: RetrievePossibleParents,
-        allowed_link_types: AllowedLinkTypeRepresentation[],
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
         event_dispatcher: DispatchEventsStub;
@@ -107,15 +105,6 @@ describe(`LinkFieldController`, () => {
         parent_identifier = null;
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
-
-        allowed_link_types = [
-            { shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" },
-            {
-                shortname: "custom",
-                forward_label: "Custom Forward",
-                reverse_label: "Custom Reverse",
-            },
-        ];
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -155,12 +144,12 @@ describe(`LinkFieldController`, () => {
                 field_id: FIELD_ID,
                 type: "art_link",
                 label: "Artifact link",
-                allowed_types: allowed_link_types,
+                allowed_types: [],
             },
             current_artifact_identifier,
             current_tracker_identifier,
             cross_reference,
-            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types)
+            LinkTypesCollectionStub.withParentPair()
         );
     };
 

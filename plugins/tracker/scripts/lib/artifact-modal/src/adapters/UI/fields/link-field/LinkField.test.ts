@@ -40,18 +40,17 @@ import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
-import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { selectOrThrow } from "@tuleap/dom";
-import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { MatchingArtifactsGroup } from "./dropdown/MatchingArtifactsGroup";
 import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGroup";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
+import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -267,17 +266,11 @@ describe("LinkField", () => {
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                         VerifyHasParentLinkStub.withParentLink(),
-                        AllowedLinksTypesCollection.buildFromTypesRepresentations([
-                            {
-                                shortname: IS_CHILD_LINK_TYPE,
-                                forward_label: "Child",
-                                reverse_label: "Parent",
-                            },
-                        ])
+                        LinkTypesCollectionStub.withParentPair()
                     )
                 );
 
-                expect(host.current_link_type.shortname).toBe(UNTYPED_LINK);
+                expect(LinkType.isUntypedLink(host.current_link_type)).toBe(true);
             });
         });
 
@@ -293,13 +286,7 @@ describe("LinkField", () => {
                         displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
                             return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                                 VerifyHasParentLinkStub.withNoParentLink(),
-                                AllowedLinksTypesCollection.buildFromTypesRepresentations([
-                                    {
-                                        shortname: IS_CHILD_LINK_TYPE,
-                                        forward_label: "Child",
-                                        reverse_label: "Parent",
-                                    },
-                                ])
+                                LinkTypesCollectionStub.withParentPair()
                             );
                         },
                     } as LinkFieldControllerType,

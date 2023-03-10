@@ -21,6 +21,7 @@ import type { LinkType } from "../../src/domain/fields/link-field/LinkType";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../src/domain/fields/link-field/LinkType";
 
+const CUSTOM_TYPE = "custom";
 export const LinkTypeStub = {
     buildUntyped: (): LinkType => ({
         shortname: UNTYPED_LINK,
@@ -37,8 +38,13 @@ export const LinkTypeStub = {
         direction: REVERSE_DIRECTION,
         label: "Parent",
     }),
+    buildForwardCustom: (): LinkType => ({
+        shortname: CUSTOM_TYPE,
+        direction: FORWARD_DIRECTION,
+        label: "Custom Forward",
+    }),
     buildReverseCustom: (): LinkType => ({
-        shortname: "custom",
+        shortname: CUSTOM_TYPE,
         direction: REVERSE_DIRECTION,
         label: "Custom Reverse",
     }),

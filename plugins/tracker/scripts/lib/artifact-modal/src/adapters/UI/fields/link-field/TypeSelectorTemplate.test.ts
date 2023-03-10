@@ -46,13 +46,13 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { selectOrThrow } from "@tuleap/dom";
-import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -67,13 +67,7 @@ describe("TypeSelectorTemplate", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 VerifyHasParentLinkStub.withNoParentLink(),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations([
-                    {
-                        shortname: IS_CHILD_LINK_TYPE,
-                        forward_label: "Child",
-                        reverse_label: "Parent",
-                    },
-                ])
+                LinkTypesCollectionStub.withParentPair()
             );
         cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
     });
@@ -125,7 +119,7 @@ describe("TypeSelectorTemplate", () => {
             current_artifact_identifier,
             current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("bug #22"),
-            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
+            LinkTypesCollectionStub.withParentPair()
         );
         host = {
             controller,
@@ -166,13 +160,7 @@ describe("TypeSelectorTemplate", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 VerifyHasParentLinkStub.withParentLink(),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations([
-                    {
-                        shortname: IS_CHILD_LINK_TYPE,
-                        forward_label: "Child",
-                        reverse_label: "Parent",
-                    },
-                ])
+                LinkTypesCollectionStub.withParentPair()
             );
         const select = render();
 

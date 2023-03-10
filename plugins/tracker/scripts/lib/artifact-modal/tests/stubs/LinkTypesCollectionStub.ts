@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "./LinkType";
+import { LinkTypesCollection } from "../../src/domain/fields/link-field/LinkTypesCollection";
+import { LinkTypesPairStub } from "./LinkTypesPairStub";
 
-export interface CollectAllowedLinksTypes {
-    getAll: () => readonly LinkType[][];
-    getReverseChildType: () => LinkType | undefined;
-}
+export const LinkTypesCollectionStub = {
+    withParentPair: (): LinkTypesCollection =>
+        LinkTypesCollection([LinkTypesPairStub.buildParent()]),
+};

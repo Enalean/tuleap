@@ -56,7 +56,7 @@ import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedV
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
-import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
+import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesCollector";
 import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
@@ -198,7 +198,7 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
+                LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types)
             );
         },
         getFileFieldController: (field) => {
