@@ -310,7 +310,9 @@ context("Restricted users", function () {
         cy.clearSessionCookie();
 
         // enable restricted users
+        cy.platformAdminLogin();
         cy.updatePlatformVisibilityAndAllowRestricted();
+        cy.userLogout();
 
         // check restricted user can NOT create a project
         cy.restrictedRegularUserLogin();
@@ -353,6 +355,7 @@ context("Restricted users", function () {
         cy.userLogout();
 
         // make platform accessible to anonymous again
+        cy.platformAdminLogin();
         cy.updatePlatformVisibilityForAnonymous();
     });
 });

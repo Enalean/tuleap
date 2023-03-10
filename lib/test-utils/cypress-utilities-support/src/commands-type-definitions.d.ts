@@ -41,6 +41,9 @@ declare global {
             projectAdministratorSession(): void;
 
             projectMemberSession(): void;
+            siteAdministratorSession(): void;
+            anonymousSession(): void;
+            regularUserSession(): void;
 
             secondProjectAdministratorLogin(): void;
 
@@ -50,9 +53,10 @@ declare global {
 
             platformAdminLogin(): void;
 
-            restrictedMemberLogin(): void;
+            restrictedMemberSession(): void;
 
             restrictedRegularUserLogin(): void;
+            restrictedRegularUserSession(): void;
 
             regularUserLogin(): void;
 

@@ -18,12 +18,8 @@
  */
 
 describe("Mediawiki", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     it("project is imported", function () {
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
 
         cy.visit("/plugins/mediawiki/wiki/mediawiki-project/");
 

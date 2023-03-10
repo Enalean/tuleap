@@ -19,15 +19,10 @@
  */
 
 describe("Permission delegation", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     it("mediwiki can have a delegated permission", function () {
         cy.log("site admin can delegate delegation permission");
-        cy.platformAdminLogin();
-
-        cy.get("[data-test=platform-administration-link]").click();
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
         cy.get("[data-test=permission-delegation]").click();
 
         cy.get("[data-test=permission-delegation-page]").then(($permissions) => {
@@ -61,10 +56,9 @@ describe("Permission delegation", function () {
                 cy.get("[data-test=add-user-permission-button").click();
             }
         });
-        cy.userLogout();
 
         cy.log("user can write in public and private project he's not member of");
-        cy.regularUserLogin();
+        cy.regularUserSession();
 
         cy.log("Check for private project");
         cy.visit("/plugins/mediawiki/wiki/mediawiki-private-project/");
@@ -79,12 +73,10 @@ describe("Permission delegation", function () {
         cy.get("[data-test=mediawiki-content]").contains("My custom content");
         cy.get("[data-test=mediawiki-content]").contains("Edit");
         cy.get("[data-test=mediawiki-content]").contains("Delete");
-        cy.userLogout();
-        cy.platformAdminLogin();
 
         cy.log("site admin can remove the delegation");
-
-        cy.get("[data-test=platform-administration-link]").click();
+        cy.siteAdministratorSession();
+        cy.visit("/admin/");
         cy.get("[data-test=permission-delegation]").click();
 
         cy.get("[data-test=permission-delegation-page]").then(($permissions) => {
