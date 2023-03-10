@@ -90,12 +90,6 @@ id = "GHSA-9c47-m6qq-7p4h" # CVE-2022-46175
 reason = "Not exploitable. Only used as a dev tool."
 ignoreUntil = 2023-05-08
 
-## terser
-[[IgnoredVulns]]
-id = "GHSA-4wf5-vphf-c2xc" # CVE-2022-25858
-reason = "Not exploitable. Only used as a dev tool."
-ignoreUntil = 2023-05-08
-
 ## loader-utils
 [[IgnoredVulns]]
 id = "GHSA-76p3-8jx3-jpfq" # CVE-2022-37601
