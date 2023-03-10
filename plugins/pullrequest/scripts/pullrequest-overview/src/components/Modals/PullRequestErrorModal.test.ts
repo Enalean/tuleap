@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import PullRequestErrorModal from "./PullRequestErrorModal.vue";
@@ -28,6 +28,7 @@ import { Fault } from "@tuleap/fault";
 
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
+    EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
 }));
 
 const getWrapper = (fault: Fault | null): VueWrapper => {
@@ -42,17 +43,26 @@ const getWrapper = (fault: Fault | null): VueWrapper => {
 };
 
 describe("PullRequestErrorModal", () => {
-    it("When a fault has been detected, it shows the modal", async () => {
-        const modal_instance = {
+    let modal_instance: Modal;
+
+    beforeEach(() => {
+        modal_instance = {
             show: vi.fn(),
+            addEventListener: vi.fn(),
         } as unknown as Modal;
 
         vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
+    });
 
+    it("When a fault has been detected, it shows the modal", async () => {
         const wrapper = getWrapper(null);
 
         expect(tlp_modal.createModal).toHaveBeenCalledOnce();
         expect(modal_instance.show).not.toHaveBeenCalled();
+        expect(modal_instance.addEventListener).toHaveBeenCalledWith(
+            "tlp-modal-hidden",
+            expect.any(Function)
+        );
 
         wrapper.setProps({
             fault: Fault.fromMessage("Something wrong has occurred."),

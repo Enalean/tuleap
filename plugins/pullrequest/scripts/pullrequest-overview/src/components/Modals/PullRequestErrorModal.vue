@@ -66,7 +66,7 @@
 import { watch, ref, onMounted } from "vue";
 import type { Fault } from "@tuleap/fault";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
@@ -78,12 +78,18 @@ const modal_element = ref<InstanceType<typeof Element>>();
 const modal_instance = ref<Modal | null>(null);
 const are_error_details_shown = ref(false);
 
+function hideErrorDetails(): void {
+    are_error_details_shown.value = false;
+}
+
 onMounted(() => {
     if (modal_element.value) {
         modal_instance.value = createModal(modal_element.value, {
-            destroy_on_hide: true,
+            destroy_on_hide: false,
             keyboard: false,
         });
+
+        modal_instance.value.addEventListener(EVENT_TLP_MODAL_HIDDEN, hideErrorDetails);
     }
 });
 
