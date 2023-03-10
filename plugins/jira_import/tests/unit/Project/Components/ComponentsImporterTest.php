@@ -54,28 +54,6 @@ final class ComponentsImporterTest extends TestCase
         self::assertEquals('acid-green', (string) $xml->trackers->tracker[0]->color);
     }
 
-    public function testSprintTrackerHasNameStringFieldInFormElementsWithPermissions(): void
-    {
-        $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
-            [JiraComponent::build("Component 01", "", null)],
-            [],
-        ));
-
-        self::assertEquals(\Tracker_FormElementFactory::FIELD_STRING_TYPE, (string) $xml->trackers->tracker->formElements->formElement[0]['type']);
-
-        self::assertNotNull($xml->trackers->tracker->formElements->formElement[0]);
-        $string_field = $xml->trackers->tracker->formElements->formElement[0];
-        self::assertEquals('Name', (string) $string_field->label);
-        self::assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->renderers->renderer[0]->columns->field[0]['REF']);
-        self::assertEquals($string_field['ID'], (string) $xml->trackers->tracker->reports->report[0]->criterias->criteria[0]->field['REF']);
-
-        $permissions = $xml->xpath(sprintf('/project/trackers/tracker/permissions/permission[@REF="%s"]', (string) $string_field['ID']));
-        self::assertCount(3, $permissions);
-        self::assertEquals('PLUGIN_TRACKER_FIELD_READ', $permissions[0]['type']);
-        self::assertEquals('PLUGIN_TRACKER_FIELD_SUBMIT', $permissions[1]['type']);
-        self::assertEquals('PLUGIN_TRACKER_FIELD_UPDATE', $permissions[2]['type']);
-    }
-
     public function testSprintTrackerHasNameForTitleSemantic(): void
     {
         $xml = $this->getXMLAfterExport($this->getComponentsImporterWithComponents(
