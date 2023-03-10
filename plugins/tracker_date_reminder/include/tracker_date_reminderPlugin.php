@@ -25,6 +25,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class tracker_date_reminderPlugin extends Plugin
 {
     public function __construct($id)
@@ -33,24 +34,24 @@ class tracker_date_reminderPlugin extends Plugin
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-tracker_date_reminder', __DIR__ . '/../site-content');
 
-        $this->addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
+        $this->addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form');
         // Tracker admin "controller"
-        $this->addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
+        $this->addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin');
         // Field deletion
-        $this->addHook('tracker_admin_field_delete', 'tracker_admin_field_delete', false);
+        $this->addHook('tracker_admin_field_delete', 'tracker_admin_field_delete');
         // Codendi daily actions
-        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start');
         // Tracker deletion
-        $this->addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
+        $this->addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type');
 
         // CSV artifact import
-        $this->addHook('artifact_import_insert_artifact', 'tracker_create_artifact', false);
+        $this->addHook('artifact_import_insert_artifact', 'tracker_create_artifact');
         // Create new artifact
-        $this->addHook('tracker_postadd', 'tracker_create_artifact', false);
+        $this->addHook('tracker_postadd', 'tracker_create_artifact');
         // Copy an artifact
-        $this->addHook('tracker_postcopy', 'tracker_create_artifact', false);
+        $this->addHook('tracker_postcopy', 'tracker_create_artifact');
         // Modification of an artifact
-        $this->addHook('tracker_postmod', 'tracker_update_artifact', false);
+        $this->addHook('tracker_postmod', 'tracker_update_artifact');
     }
 
     public function getPluginInfo()
@@ -67,7 +68,7 @@ class tracker_date_reminderPlugin extends Plugin
         return $this->getPluginInfo()->getPropertyValueForName('enable_log');
     }
 
-    public function codendi_daily_start($params)
+    public function codendi_daily_start($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         include_once 'ArtifactDateReminder.class.php';
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
@@ -84,7 +85,7 @@ class tracker_date_reminderPlugin extends Plugin
         $artifactDateReminder->codexDaily();
     }
 
-    public function artifact_type_factory_delete_artifact_type($params)
+    public function artifact_type_factory_delete_artifact_type($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Delete artifact_date_reminder_settings
         $sql = sprintf(
@@ -103,7 +104,7 @@ class tracker_date_reminderPlugin extends Plugin
         db_query($sql);
     }
 
-    public function artifact_type_html_display_notification_form($params)
+    public function artifact_type_html_display_notification_form($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['at']->userIsAdmin()) {
             echo '<br><h3>' . dgettext('tuleap-tracker_date_reminder', 'Date Fields Email Notification') . ' </h3>';
@@ -155,7 +156,7 @@ class tracker_date_reminderPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_graphic_report_admin($params)
+    public function tracker_graphic_report_admin($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
         if ($request->getValidated('func', 'string') != 'date_field_notification') {
@@ -247,7 +248,7 @@ class tracker_date_reminderPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_admin_field_delete($params)
+    public function tracker_admin_field_delete($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
         $tdrArtifactField->deleteFieldReminderSettings($params['field']->getID(), $params['ath']->getID());
@@ -262,7 +263,7 @@ class tracker_date_reminderPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_create_artifact($params)
+    public function tracker_create_artifact($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['ah']->getStatusID() == 1) {
             $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
@@ -277,7 +278,7 @@ class tracker_date_reminderPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_update_artifact($params)
+    public function tracker_update_artifact($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['ah']->getStatusID() == 1) {
             $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);

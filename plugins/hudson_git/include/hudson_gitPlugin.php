@@ -85,7 +85,7 @@ class hudson_gitPlugin extends Plugin
         bindtextdomain('tuleap-hudson_git', __DIR__ . '/../site-content');
 
         $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('cssfile', 'cssFile');
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);

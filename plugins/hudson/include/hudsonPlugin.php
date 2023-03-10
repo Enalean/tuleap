@@ -50,8 +50,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
 
         bindtextdomain('tuleap-hudson', __DIR__ . '/../site-content');
 
-        $this->addHook('javascript_file', 'jsFile', false);
-        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('javascript_file', 'jsFile');
+        $this->addHook('cssfile', 'cssFile');
 
         $this->addHook(ProjectStatusUpdate::NAME);
 
@@ -61,8 +61,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
 
         $this->addHook(NatureCollection::NAME);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
-        $this->addHook('statistics_collector', 'statistics_collector', false);
+        $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline');
+        $this->addHook('statistics_collector', 'statistics_collector');
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         $this->listenToCollectRouteEventWithDefaultController();

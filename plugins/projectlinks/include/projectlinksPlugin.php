@@ -45,7 +45,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         bindtextdomain('tuleap-projectlinks', __DIR__ . '/../site-content');
 
         // add link - only visible when confirgured by a user from an allowed project
-        $this->addHook('project_summary_title', 'projectSummaryTitle', false);
+        $this->addHook('project_summary_title', 'projectSummaryTitle');
 
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);

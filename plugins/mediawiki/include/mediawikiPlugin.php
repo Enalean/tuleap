@@ -115,7 +115,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
-        $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+        $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject');
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(UserBecomesProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');

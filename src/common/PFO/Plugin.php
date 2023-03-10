@@ -25,10 +25,9 @@ interface PFO_Plugin
      *
      * @param String  $hook       Event name
      * @param String  $callback   Callback method name (method of the current object)
-     * @param bool $recallHook If set to true, event name is passed as parameter
      *
      * @return void
      * @deprecated Use ListeningToEventClass attribute instead (adr/0021-attributes-based-events.md)
      */
-    public function addHook($hook, $callback = null, $recallHook = false);
+    public function addHook($hook, $callback = null);
 }

@@ -248,22 +248,22 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook('javascript_file', 'jsFile', false);
-        $this->addHook(Event::JAVASCRIPT, 'javascript', false);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
+        $this->addHook('cssfile', 'cssFile');
+        $this->addHook('javascript_file', 'jsFile');
+        $this->addHook(Event::JAVASCRIPT, 'javascript');
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords');
         $this->addHook(NatureCollection::NAME);
         $this->addHook(GetReferenceEvent::NAME);
-        $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
-        $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
+        $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess');
+        $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename');
         $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
+        $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir');
 
         // Stats plugin
-        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label', false);
-        $this->addHook('plugin_statistics_color', 'plugin_statistics_color', false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project');
+        $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label');
+        $this->addHook('plugin_statistics_color', 'plugin_statistics_color');
 
         $this->addHook(Event::DUMP_SSH_KEYS);
         $this->addHook(Event::EDIT_SSH_KEYS);
@@ -272,19 +272,19 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(GetSystemEventQueuesEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
-        $this->addHook('permission_get_name', 'permission_get_name', false);
-        $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
-        $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
-        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->addHook('permission_get_name', 'permission_get_name');
+        $this->addHook('permission_get_object_type', 'permission_get_object_type');
+        $this->addHook('permission_get_object_name', 'permission_get_object_name');
+        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change');
 
-        $this->addHook('statistics_collector', 'statistics_collector', false);
+        $this->addHook('statistics_collector', 'statistics_collector');
 
-        $this->addHook('collect_ci_triggers', 'collect_ci_triggers', false);
-        $this->addHook('save_ci_triggers', 'save_ci_triggers', false);
-        $this->addHook('update_ci_triggers', 'update_ci_triggers', false);
-        $this->addHook('delete_ci_triggers', 'delete_ci_triggers', false);
+        $this->addHook('collect_ci_triggers', 'collect_ci_triggers');
+        $this->addHook('save_ci_triggers', 'save_ci_triggers');
+        $this->addHook('update_ci_triggers', 'update_ci_triggers');
+        $this->addHook('delete_ci_triggers', 'delete_ci_triggers');
 
-        $this->addHook('logs_daily', 'logsDaily', false);
+        $this->addHook('logs_daily', 'logsDaily');
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
@@ -320,7 +320,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(ExportXmlProject::NAME);
-        $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+        $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject');
 
         // Gerrit user suspension
         if (defined('LDAP_DAILY_SYNCHRO_UPDATE_USER')) {

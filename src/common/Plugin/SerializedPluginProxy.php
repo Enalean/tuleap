@@ -83,7 +83,6 @@ class SerializedPluginProxy implements ConfigClassProvider
             $plugin->getId(),
             $hook['hook'],
             $hook['callback'],
-            $hook['recallHook']
         );
     }
 

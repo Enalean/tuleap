@@ -76,7 +76,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(GetHistoryKeyLabel::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
 

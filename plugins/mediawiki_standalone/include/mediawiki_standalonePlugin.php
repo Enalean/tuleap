@@ -191,7 +191,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(GetHistoryKeyLabel::NAME);
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
