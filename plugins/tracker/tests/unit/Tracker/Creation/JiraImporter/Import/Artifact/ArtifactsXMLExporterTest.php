@@ -25,8 +25,8 @@ namespace Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Psr\Log\Test\TestLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -69,7 +69,7 @@ use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
-class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -88,10 +88,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_manager;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private TestLogger $logger;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AttachmentDownloader
@@ -106,7 +103,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $this->attachment_downloader = Mockery::mock(AttachmentDownloader::class);
         $this->user_manager          = Mockery::mock(UserManager::class);
-        $this->logger                = new NullLogger();
+        $this->logger                = new TestLogger();
 
         $forge_user = \Mockery::mock(\PFUser::class);
         $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
@@ -437,6 +434,145 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertXMLArtifactsContent($tracker_node);
 
         $this->assertCount(2, $issue_collection->getIssueRepresentationCollection());
+    }
+
+    public function testItIgnoresArtifactsThatHaveBeenAlreadyExported(): void
+    {
+        $user = Mockery::mock(TrackerImporterUser::class);
+        $user->shouldReceive('getUserName')->andReturn('forge__user01');
+        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+
+        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
+
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
+        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                'summary',
+                'Summary',
+                'Fsummary',
+                'summary',
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            )
+        );
+        $mapping_collection->addMapping(
+            new ScalarFieldMapping(
+                "jira_issue_url",
+                "Link to original issue",
+                "Fjira_issue_url",
+                "jira_issue_url",
+                "string",
+            ),
+        );
+        $jira_project_id = 'project';
+        $jira_base_url   = 'URLinstance';
+        $jira_issue_name = 'Story';
+
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+            'startAt'    => 0,
+            'maxResults' => 1,
+            'total'      => 2,
+            'issues'     => [
+                [
+                    'id'     => '10042',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'    => 'key01',
+                    'fields' => [
+                        'summary'   => 'summary01',
+                        'issuetype' =>
+                                    [
+                                        'id' => '10004',
+                                    ],
+                        'created' => '2020-03-25T14:10:10.823+0100',
+                        'updated' => '2020-04-25T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'John Doe',
+                            'emailAddress' => 'johndoe@example.com',
+                            'accountId' => 'e8d4s2c53z',
+                        ],
+                    ],
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
+
+        $john_doe = Mockery::mock(\PFUser::class);
+        $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
+        $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
+        $john_doe->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
+        $john_doe->shouldReceive('getId')->andReturn('105');
+
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
+            ->with('johndoe@example.com')
+            ->andReturn([$john_doe]);
+
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+            'startAt'    => 1,
+            'maxResults' => 1,
+            'total'      => 2,
+            'issues'     => [
+                [
+                    'id'     => '10042',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'    => 'key01',
+                    'fields' => [
+                        'summary'   => 'summary01',
+                        'issuetype' =>
+                            [
+                                'id' => '10004',
+                            ],
+                        'created' => '2020-03-25T14:10:10.823+0100',
+                        'updated' => '2020-04-25T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'John Doe',
+                            'emailAddress' => 'johndoe@example.com',
+                            'accountId' => 'e8d4s2c53z',
+                        ],
+                    ],
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
+
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
+
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
+
+        $issue_collection = new IssueAPIRepresentationCollection();
+        $this->exporter->exportArtifacts(
+            $tracker_node,
+            $mapping_collection,
+            $issue_collection,
+            new LinkedIssuesCollection(),
+            $jira_base_url,
+            $jira_project_id,
+            $jira_issue_name
+        );
+
+        $artifacts_node = $tracker_node->artifacts;
+        $this->assertNotNull($artifacts_node);
+        $this->assertCount(1, $artifacts_node->children());
+
+        $artifact_node_01 = $artifacts_node->artifact[0];
+        $this->assertSame("10042", (string) $artifact_node_01['id']);
+        $this->assertNotNull($artifact_node_01->submitted_on);
+        $this->assertNotNull($artifact_node_01->submitted_by);
+        $this->assertNotNull($artifact_node_01->comments);
+        $this->assertCount(1, $artifact_node_01->changeset);
+
+        $this->assertCount(1, $issue_collection->getIssueRepresentationCollection());
+
+        self::assertTrue($this->logger->hasDebugThatMatches("/has already be exported, no need to export it again/"));
     }
 
     private function mockChangelogForKey01(): void
