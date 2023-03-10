@@ -93,7 +93,7 @@ msgstr "Título"
 msgid "Tracker"
 msgstr ""
 
-msgid "Tracker selection is limited to 10 trackers"
+msgid "Tracker selection is limited to 25 trackers"
 msgstr ""
 
 msgid ""

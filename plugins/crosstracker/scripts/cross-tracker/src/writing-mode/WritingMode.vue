@@ -103,7 +103,7 @@ export default class WritingMode extends Vue {
             if (error instanceof TooManyTrackersSelectedError) {
                 this.$store.commit(
                     "setErrorMessage",
-                    this.$gettext("Tracker selection is limited to 10 trackers")
+                    this.$gettext("Tracker selection is limited to 25 trackers")
                 );
             } else {
                 throw error;

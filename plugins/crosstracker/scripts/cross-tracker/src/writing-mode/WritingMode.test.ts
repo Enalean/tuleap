@@ -172,7 +172,7 @@ describe("WritingMode", () => {
             ]);
         });
 
-        it("Given I had already added 10 trackers, when I try to add another, then an error will be shown", async () => {
+        it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", async () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             jest.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
                 throw new TooManyTrackersSelectedError();

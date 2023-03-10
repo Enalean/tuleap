@@ -32,7 +32,7 @@ export default class WritingCrossTrackerReport {
     }
 
     addTracker(project: Project, tracker: Tracker): void {
-        if (this.trackers.size === 10) {
+        if (this.trackers.size === 25) {
             throw new TooManyTrackersSelectedError();
         }
         if (this.trackers.has(tracker.id)) {

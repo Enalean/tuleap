@@ -31,10 +31,10 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testItThrowsAnExceptionWhenMoreThan10Trackers()
+    public function testItThrowsAnExceptionWhenMoreThan25Trackers(): void
     {
         $params   = [
-            "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 

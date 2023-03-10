@@ -505,7 +505,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @url PUT {id}
      *
      * @param int $id Id of the report
-     * @param array {@max 10}  $trackers_id  Tracker id to link to report
+     * @param array {@max 25}  $trackers_id  Tracker id to link to report
      * @param string           $expert_query The TQL query saved with the report
      *
      * @status 201
