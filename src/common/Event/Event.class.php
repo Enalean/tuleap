@@ -762,7 +762,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * CSS stylesheets that will be added to the page's <head>
      *
      * Parameters:
-     *    - variant: ThemeVariantColor Theme variant color
      *    - stylesheets: String[] css paths to be added
      *    - theme_variation: \Tuleap\Layout\ThemeVariation
      *

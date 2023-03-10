@@ -22,25 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Appearance;
 
+use Tuleap\Layout\ThemeVariantColor;
+
 class ThemeColorPresenter
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $text;
-    /**
-     * @var bool
-     */
-    public $selected;
+    public string $id;
+    public string $text;
 
-    public function __construct(\ThemeVariantColor $color, bool $is_selected)
+    public function __construct(ThemeVariantColor $color, public bool $selected)
     {
-        $this->id       = $color->getName();
-        $this->text     = $color->getLabel();
-        $this->selected = $is_selected;
+        $this->id   = $color->getName();
+        $this->text = $color->getLabel();
     }
 }

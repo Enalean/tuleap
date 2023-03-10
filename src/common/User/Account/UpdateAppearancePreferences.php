@@ -29,9 +29,9 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use ThemeVariant;
-use ThemeVariantColor;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use UserHelper;
@@ -198,21 +198,21 @@ class UpdateAppearancePreferences implements DispatchableWithRequest
             return false;
         }
 
-        $current_theme_variant = $this->variant->getVariantForUser($user);
-        $current_color         = ThemeVariantColor::buildFromVariant($current_theme_variant);
+        $current_color = $this->variant->getVariantColorForUser($user);
 
         if ($current_color->getName() === $color) {
             return false;
         }
 
-        $new_variant = ThemeVariantColor::buildFromName($color)->getVariant();
-        if (! in_array($new_variant, $this->variant->getAllowedVariants(), true)) {
+        $variant_color = ThemeVariantColor::buildFromName($color);
+        $haystack      = $this->variant->getAllowedVariantColors();
+        if (! in_array($variant_color, $haystack, true)) {
             $layout->addFeedback(Feedback::ERROR, _('The chosen color is not allowed.'));
 
             return false;
         }
 
-        $user->setPreference(ThemeVariant::PREFERENCE_NAME, $new_variant);
+        $user->setPreference(ThemeVariant::PREFERENCE_NAME, $variant_color->getName());
 
         return true;
     }

@@ -22,35 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Appearance;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Layout\ThemeVariantColor;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ThemeColorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ThemeColorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetColorPresenterCollection()
+    public function testGetColorPresenterCollection(): void
     {
-        $user          = Mockery::mock(\PFUser::class);
-        $theme_variant = Mockery::mock(\ThemeVariant::class);
+        $user          = UserTestBuilder::buildWithDefaults();
+        $theme_variant = $this->createMock(\ThemeVariant::class);
 
         $theme_variant
-            ->shouldReceive('getAllowedVariants')
-            ->once()
-            ->andReturn(['FlamingParrot_Purple', 'FlamingParrot_Green', 'FlamingParrot_Blue']);
+            ->method('getAllowedVariantColors')
+            ->willReturn([ThemeVariantColor::Purple, ThemeVariantColor::Green, ThemeVariantColor::Blue]);
 
         $theme_variant
-            ->shouldReceive('getVariantForUser')
+            ->method('getVariantColorForUser')
             ->with($user)
-            ->once()
-            ->andReturn('FlamingParrot_Green');
+            ->willReturn(ThemeVariantColor::Green);
 
         $builder = new ThemeColorPresenterBuilder($theme_variant);
         $this->assertEquals(
             [
-                new ThemeColorPresenter(\ThemeVariantColor::buildFromName('blue'), false),
-                new ThemeColorPresenter(\ThemeVariantColor::buildFromName('green'), true),
-                new ThemeColorPresenter(\ThemeVariantColor::buildFromName('purple'), false),
+                new ThemeColorPresenter(ThemeVariantColor::buildFromName('blue'), false),
+                new ThemeColorPresenter(ThemeVariantColor::buildFromName('green'), true),
+                new ThemeColorPresenter(ThemeVariantColor::buildFromName('purple'), false),
             ],
             $builder->getColorPresenterCollection($user)
         );

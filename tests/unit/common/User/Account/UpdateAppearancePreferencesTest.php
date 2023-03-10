@@ -27,12 +27,13 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ThemeVariant;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 
-class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -65,7 +66,7 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->theme_variant = Mockery::mock(ThemeVariant::class);
 
         $this->theme_variant->shouldReceive('getAllowedVariants')->andReturn(
-            ['FlamingParrot_Orange', 'FlamingParrot_Green']
+            ['orange', 'green']
         );
 
         $this->language->shouldReceive('isLanguageSupported')->with('fr_FR')->andReturnTrue();
@@ -254,7 +255,8 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->csrf_token->shouldReceive('check')->once();
 
-        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->shouldReceive('getAllowedVariantColors')->once()->andReturn([ThemeVariantColor::Orange]);
 
         $this->user_manager->shouldReceive('updateDB')->never();
         $user->shouldReceive('setPreference')->never();
@@ -299,7 +301,7 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->csrf_token->shouldReceive('check')->once();
 
-        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
 
         $this->user_manager->shouldReceive('updateDB')->never();
         $user->shouldReceive('setPreference')->never();
@@ -730,10 +732,11 @@ class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldReceive('updateDB')->once()->andReturnTrue();
 
-        $this->theme_variant->shouldReceive('getVariantForUser')->once()->andReturn('FlamingParrot_Orange');
+        $this->theme_variant->shouldReceive('getVariantColorForUser')->once()->andReturn(ThemeVariantColor::Orange);
+        $this->theme_variant->shouldReceive('getAllowedVariantColors')->once()->andReturn([ThemeVariantColor::Orange, ThemeVariantColor::Green]);
         $user
             ->shouldReceive('setPreference')
-            ->with('theme_variant', 'FlamingParrot_Green')
+            ->with('theme_variant', 'green')
             ->once()
             ->andReturnTrue();
         $user

@@ -350,17 +350,17 @@ $sys_max_number_of_emailed_people = 100;
 $sys_allow_empty_svn_commit_message = 1;
 
 // Default theme variant in forge
-$sys_default_theme_variant = 'FlamingParrot_Orange';
+$sys_default_theme_variant = 'orange';
 
 // List of available theme variant in forge
 // Available variants:
-// * FlamingParrot_Orange
-// * FlamingParrot_Blue
-// * FlamingParrot_Green
-// * FlamingParrot_BlueGrey
-// * FlamingParrot_Purple
-// * FlamingParrot_Red
-$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,FlamingParrot_Green,FlamingParrot_BlueGrey,FlamingParrot_Purple,FlamingParrot_Red';
+// * orange
+// * blue
+// * green
+// * grey
+// * purple
+// * red
+$sys_available_theme_variants = 'orange,blue,green,grey,purple,red';
 
 // Set the reporting level for logging
 //
