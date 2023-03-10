@@ -38,7 +38,6 @@ import {
 
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
 import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
-import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { FileDiffCommentScroller } from "../scroll-to-comment/FileDiffCommentScroller";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import { collapseCommonSectionsUnidiff } from "../code-collapse/code-mirror-common-sections-collapse";
@@ -68,18 +67,16 @@ function controller($element, $scope, SharedPropertiesService) {
         $onInit,
         widget_creator: SideBySideCodeMirrorWidgetCreator(
             document,
-            RelativeDateHelper(
-                SharedPropertiesService.getDateTimeFormat(),
-                SharedPropertiesService.getRelativeDateDisplay(),
-                SharedPropertiesService.getUserLocale()
-            ),
             PullRequestCommentController(
                 PullRequestCommentReplyFormFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
-                    SharedPropertiesService.getUserAvatarUrl()
+                    SharedPropertiesService.getUserAvatarUrl(),
+                    SharedPropertiesService.getUserLocale(),
+                    SharedPropertiesService.getDateTimeFormat(),
+                    SharedPropertiesService.getRelativeDateDisplay()
                 ),
                 PullRequestPresenterBuilder.fromPullRequest(
                     SharedPropertiesService.getPullRequest()

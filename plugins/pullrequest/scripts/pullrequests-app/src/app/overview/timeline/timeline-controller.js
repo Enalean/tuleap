@@ -1,4 +1,3 @@
-import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullRequestCurrentUserPresenterBuilder";
 import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
 import {
@@ -17,22 +16,12 @@ function TimelineController(SharedPropertiesService, TimelineService) {
 
     Object.assign(self, {
         pull_request: {},
-        pull_request_presenter: {},
         timeline: [],
         loading_timeline: true,
         new_comment: {
             content: "",
             user_id: SharedPropertiesService.getUserId(),
         },
-        relative_date_helper: RelativeDateHelper(
-            SharedPropertiesService.getDateTimeFormat(),
-            SharedPropertiesService.getRelativeDateDisplay(),
-            SharedPropertiesService.getUserLocale()
-        ),
-        current_user: PullRequestCurrentUserPresenterBuilder.fromUserInfo(
-            SharedPropertiesService.getUserId(),
-            SharedPropertiesService.getUserAvatarUrl()
-        ),
         comment_controller: {},
         comment_replies_store: {},
         addComment,
@@ -42,9 +31,6 @@ function TimelineController(SharedPropertiesService, TimelineService) {
     function init() {
         SharedPropertiesService.whenReady().then(function () {
             self.pull_request = SharedPropertiesService.getPullRequest();
-            self.pull_request_presenter = PullRequestPresenterBuilder.fromPullRequest(
-                self.pull_request
-            );
             TimelineService.getTimeline(
                 self.pull_request,
                 TimelineService.timeline_pagination.limit,
@@ -57,7 +43,13 @@ function TimelineController(SharedPropertiesService, TimelineService) {
                         PullRequestCommentReplyFormFocusHelper(),
                         self.comment_replies_store,
                         PullRequestCommentNewReplySaver(),
-                        self.current_user,
+                        PullRequestCurrentUserPresenterBuilder.fromUserInfo(
+                            SharedPropertiesService.getUserId(),
+                            SharedPropertiesService.getUserAvatarUrl(),
+                            SharedPropertiesService.getUserLocale(),
+                            SharedPropertiesService.getDateTimeFormat(),
+                            SharedPropertiesService.getRelativeDateDisplay()
+                        ),
                         PullRequestPresenterBuilder.fromPullRequest(self.pull_request)
                     );
                 })

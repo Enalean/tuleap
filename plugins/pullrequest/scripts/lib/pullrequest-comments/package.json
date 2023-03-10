@@ -10,17 +10,19 @@
   "types": "dist/index.d.ts",
   "style": "dist/style.css",
   "dependencies": {
+    "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
-    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
-    "@tuleap/plugin-pullrequest-constants": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/plugin-pullrequest-constants": "workspace:*",
+    "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "dompurify": "^2.3.6",
     "hybrids": "^8.1.8",
+    "moment": "^2.29.4",
     "neverthrow": "6.0.0"
   },
   "devDependencies": {

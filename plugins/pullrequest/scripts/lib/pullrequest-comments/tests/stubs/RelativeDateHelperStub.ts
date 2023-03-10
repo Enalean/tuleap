@@ -23,5 +23,5 @@ export const RelativeDateHelperStub = {
     getRelativeDatePreference: vi.fn(),
     getRelativeDatePlacement: vi.fn(),
     getUserLocale: vi.fn(),
-    getFormatDateUsingPreferredUserFormat: vi.fn(),
+    getFormattedDateUsingPreferredUserFormat: vi.fn(),
 };

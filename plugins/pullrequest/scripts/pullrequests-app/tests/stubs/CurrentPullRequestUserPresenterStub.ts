@@ -23,5 +23,8 @@ export const CurrentPullRequestUserPresenterStub = {
     withDefault: (): CurrentPullRequestUserPresenter => ({
         user_id: 104,
         avatar_url: "url/to/current/user/avatar.png",
+        user_locale: "en_US",
+        preferred_relative_date_display: "absolute_first-relative_shown",
+        preferred_date_format: "Y-m-d H:i",
     }),
 };

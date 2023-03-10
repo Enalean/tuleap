@@ -19,10 +19,7 @@
 
 import type { PlaceholderCreationParams } from "../types-codemirror-overriden";
 import type { ControlPullRequestComment } from "@tuleap/plugin-pullrequest-comments";
-import type {
-    StorePullRequestCommentReplies,
-    HelpRelativeDatesDisplay,
-} from "@tuleap/plugin-pullrequest-comments";
+import type { StorePullRequestCommentReplies } from "@tuleap/plugin-pullrequest-comments";
 import type { MapCommentWidgets } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import type {
     InlineCommentWidgetCreationParams,
@@ -65,7 +62,6 @@ export type CreateFileDiffWidget = CreatePlaceholderWidget &
 
 export const SideBySideCodeMirrorWidgetCreator = (
     doc: Document,
-    relative_dates_helper: HelpRelativeDatesDisplay,
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
     comments_widgets_map: MapCommentWidgets
@@ -78,7 +74,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
 
         inline_comment_element.setAttribute("class", "inline-comment-element");
         inline_comment_element.comment = widget_params.comment;
-        inline_comment_element.relativeDateHelper = relative_dates_helper;
         inline_comment_element.controller = controller;
 
         const widget = widget_params.code_mirror.addLineWidget(

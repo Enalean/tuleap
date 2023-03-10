@@ -22,9 +22,6 @@ import type {
     FileDiffPlaceholderWidget,
 } from "../../src/app/file-diff/types";
 import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
-import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
-import { CurrentPullRequestPresenterStub } from "./CurrentPullRequestPresenterStub";
 import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
 import type { InlineCommentWidget } from "../../src/app/file-diff/types";
 
@@ -57,16 +54,14 @@ export const FileDiffWidgetStub = {
         localName: "tuleap-pullrequest-comment",
         getBoundingClientRect: stubBounding(height),
         comment: PullRequestCommentPresenterStub.buildInlineComment(),
-        relativeDateHelper: RelativeDateHelperStub,
         controller: {
             displayReplies: jest.fn(),
             hideReplyForm: jest.fn(),
             saveReply: jest.fn(),
             showReplyForm: jest.fn(),
             updateCurrentReply: jest.fn(),
+            getRelativeDateHelper: jest.fn(),
         },
-        currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-        currentPullRequest: CurrentPullRequestPresenterStub.withDefault(),
         post_rendering_callback: noop,
         ...data,
     }),

@@ -96,14 +96,14 @@ export const buildBodyForComment = (
                 <tlp-relative-date
                     class="pull-request-comment-date"
                     date="${comment.post_date}"
-                    absolute-date="${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                    absolute-date="${host.relative_date_helper.getFormattedDateUsingPreferredUserFormat(
                         comment.post_date
                     )}"
-                    preference="${host.relativeDateHelper.getRelativeDatePreference()}"
-                    locale="${host.relativeDateHelper.getUserLocale()}"
-                    placement="${host.relativeDateHelper.getRelativeDatePlacement()}"
+                    preference="${host.relative_date_helper.getRelativeDatePreference()}"
+                    locale="${host.relative_date_helper.getUserLocale()}"
+                    placement="${host.relative_date_helper.getRelativeDatePlacement()}"
                 >
-                    ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                    ${host.relative_date_helper.getFormattedDateUsingPreferredUserFormat(
                         comment.post_date
                     )}
                 </tlp-relative-date>

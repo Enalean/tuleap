@@ -45,7 +45,6 @@ import { SideBySideLineMapper } from "../file-lines/SideBySideLineMapper";
 import { SideBySideCodeMirrorsContentManager } from "../editors/SideBySideCodeMirrorsContentManager";
 import { SideBySidePlaceholderPositioner } from "../widgets/placeholders/SideBySidePlaceholderPositioner";
 import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
-import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { SideBySideCodeMirrorWidgetsCreationManager } from "../widgets/SideBySideCodeMirrorWidgetsCreationManager";
 import { FileDiffCommentScroller } from "../scroll-to-comment/FileDiffCommentScroller";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
@@ -120,18 +119,16 @@ function controller($element, $scope, SharedPropertiesService) {
         const comment_widgets_map = FileDiffCommentWidgetsMap();
         const widget_creator = SideBySideCodeMirrorWidgetCreator(
             document,
-            RelativeDateHelper(
-                SharedPropertiesService.getDateTimeFormat(),
-                SharedPropertiesService.getRelativeDateDisplay(),
-                SharedPropertiesService.getUserLocale()
-            ),
             PullRequestCommentController(
                 PullRequestCommentReplyFormFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(
                     SharedPropertiesService.getUserId(),
-                    SharedPropertiesService.getUserAvatarUrl()
+                    SharedPropertiesService.getUserAvatarUrl(),
+                    SharedPropertiesService.getUserLocale(),
+                    SharedPropertiesService.getDateTimeFormat(),
+                    SharedPropertiesService.getRelativeDateDisplay()
                 ),
                 PullRequestPresenterBuilder.fromPullRequest(
                     SharedPropertiesService.getPullRequest()

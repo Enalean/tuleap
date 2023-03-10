@@ -40,7 +40,7 @@ describe("PullRequestCommentBodyTemplate", () => {
         Then it should display the file name on which the comment has been written with a link to it.`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildInlineComment(),
-            relativeDateHelper: RelativeDateHelperStub,
+            relative_date_helper: RelativeDateHelperStub,
         } as unknown as HostElement;
         const render = getCommentBody(host, GettextProviderStub);
 
@@ -61,7 +61,7 @@ describe("PullRequestCommentBodyTemplate", () => {
         And a badge flagging it as outdated`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
-            relativeDateHelper: RelativeDateHelperStub,
+            relative_date_helper: RelativeDateHelperStub,
         } as unknown as HostElement;
         const render = getCommentBody(host, GettextProviderStub);
 
@@ -104,7 +104,7 @@ describe("PullRequestCommentBodyTemplate", () => {
     ])(`Given %s, Then it should not display a file name`, (expectation, comment) => {
         const host = {
             comment,
-            relativeDateHelper: RelativeDateHelperStub,
+            relative_date_helper: RelativeDateHelperStub,
         } as unknown as HostElement;
         const render = getCommentBody(host, GettextProviderStub);
 
