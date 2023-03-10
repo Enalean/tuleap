@@ -55,6 +55,8 @@ be added.
 * Romain Lorentz
 * Benjamin Bouillot
 * Lydéric Dubut
+* Camille Croquet
+* Camille Simiand
 * Seif Eddine Gamoudi
 * Nouha Terzi
 * Houssem Eddine Azzouz
