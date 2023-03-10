@@ -26,7 +26,7 @@ const IS_CHILD_REPRESENTATION = {
 };
 
 describe("LinkTypesCollector", () => {
-    it(`builds from Link Type representations and keeps only the _is_child type`, () => {
+    it(`builds from Link Type representations`, () => {
         const types = [
             {
                 shortname: "fixed_in",
@@ -39,6 +39,10 @@ describe("LinkTypesCollector", () => {
         const collection = LinkTypesCollector.buildFromTypesRepresentations(types);
 
         expect(collection.getAll()).toStrictEqual([
+            {
+                forward_type: { direction: "forward", label: "Fixed in", shortname: "fixed_in" },
+                reverse_type: { direction: "reverse", label: "Fixes", shortname: "fixed_in" },
+            },
             {
                 forward_type: { shortname: "_is_child", direction: "forward", label: "Child" },
                 reverse_type: { shortname: "_is_child", direction: "reverse", label: "Parent" },

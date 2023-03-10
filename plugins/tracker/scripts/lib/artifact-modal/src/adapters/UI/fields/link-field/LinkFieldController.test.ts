@@ -205,7 +205,7 @@ describe(`LinkFieldController`, () => {
         const display = (): CollectionOfAllowedLinksTypesPresenters =>
             getController().displayAllowedTypes();
 
-        it(`returns a presenter for the allowed link types and keeps only _is_child type`, () => {
+        it(`returns a presenter for the allowed link types`, () => {
             const types = display();
             expect(types.types).toHaveLength(1);
             expect(types.types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
