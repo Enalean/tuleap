@@ -38,7 +38,7 @@ describe("download-docx", () => {
         });
         vi.spyOn(image_loader, "loadImage").mockResolvedValue(
             new ImageRun({
-                data: "image_data",
+                data: "data:image/gif;base64,R0lGODlhAQABAAAAACw=",
                 transformation: {
                     width: 100,
                     height: 100,

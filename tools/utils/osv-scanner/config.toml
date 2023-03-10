@@ -229,19 +229,6 @@ id = "GHSA-q8gg-vj6m-hgmj" # CVE-2022-48345
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
-# docx related
-## jszip
-[[IgnoredVulns]]
-id = "GHSA-36fh-84j7-cv5h" # CVE-2022-48285
-reason = "Not exploitable in our context (building docx files)."
-ignoreUntil = 2023-05-08
-
-## nanoid
-[[IgnoredVulns]]
-id = "GHSA-qrpm-p2h7-hrv2" # CVE-2021-23566
-reason = "Not exploitable in our context (building docx files)."
-ignoreUntil = 2023-05-08
-
 # src/additional-packages/tuleap-realtime/pnpm-lock.yaml
 ## convict
 [[IgnoredVulns]]
