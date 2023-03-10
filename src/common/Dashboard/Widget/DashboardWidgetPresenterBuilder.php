@@ -55,15 +55,16 @@ class DashboardWidgetPresenterBuilder
         OwnerInfo $owner_info,
         array $widgets_lines,
         $can_update_dashboards,
+        \PFUser $user,
     ) {
         $lines_presenter = [];
 
         foreach ($widgets_lines as $line) {
-            $columns_presenter = $this->getColumnsPresenterByLine($dashboard, $owner_info, $line, $can_update_dashboards);
+            $columns_presenter = $this->getColumnsPresenterByLine($dashboard, $owner_info, $line, $can_update_dashboards, $user);
             $lines_presenter[] = new DashboardWidgetLinePresenter(
                 $line->getId(),
                 $line->getLayout(),
-                $columns_presenter
+                $columns_presenter,
             );
         }
 
@@ -78,10 +79,11 @@ class DashboardWidgetPresenterBuilder
         OwnerInfo $owner_info,
         DashboardWidgetLine $line,
         $can_update_dashboards,
+        \PFUser $user,
     ) {
         $columns_presenter = [];
         foreach ($line->getWidgetColumns() as $column) {
-            $widgets_presenter   = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards);
+            $widgets_presenter   = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards, $user);
             $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
         }
         return $columns_presenter;
@@ -95,6 +97,7 @@ class DashboardWidgetPresenterBuilder
         OwnerInfo $owner_info,
         DashboardWidgetColumn $column,
         $can_update_dashboards,
+        \PFUser $user,
     ) {
         $widgets_presenter = [];
         foreach ($column->getWidgets() as $dashboard_widget) {
@@ -111,7 +114,8 @@ class DashboardWidgetPresenterBuilder
                     $dashboard,
                     $dashboard_widget,
                     $widget,
-                    $can_update_dashboards
+                    $can_update_dashboards,
+                    $user,
                 );
             }
         }

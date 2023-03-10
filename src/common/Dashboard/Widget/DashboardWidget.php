@@ -22,12 +22,13 @@ namespace Tuleap\Dashboard\Widget;
 
 class DashboardWidget
 {
+    public const USER_PREF_IS_MINIMIZED_PREFIX = 'dashboard_widget_is_minimized_';
+
     private $id;
     private $name;
     private $content_id;
     private $column_id;
     private $rank;
-    private $is_minimized;
 
     public function __construct(
         $id,
@@ -35,14 +36,12 @@ class DashboardWidget
         $content_id,
         $column_id,
         $rank,
-        $is_minimized,
     ) {
-        $this->id           = $id;
-        $this->name         = $name;
-        $this->content_id   = $content_id;
-        $this->column_id    = $column_id;
-        $this->rank         = $rank;
-        $this->is_minimized = $is_minimized;
+        $this->id         = $id;
+        $this->name       = $name;
+        $this->content_id = $content_id;
+        $this->column_id  = $column_id;
+        $this->rank       = $rank;
     }
 
     /**
@@ -85,8 +84,8 @@ class DashboardWidget
         return $this->rank;
     }
 
-    public function isMinimized()
+    public static function getMinimizedPreferenceName(int $widget_id): string
     {
-        return $this->is_minimized;
+        return self::USER_PREF_IS_MINIMIZED_PREFIX . $widget_id;
     }
 }

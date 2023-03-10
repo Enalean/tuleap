@@ -857,12 +857,6 @@ msgstr "Impossible de supprimer le tableau de bord demandé."
 msgid "Cannot delete the widget."
 msgstr "Impossible de supprimer le widget."
 
-msgid "Cannot maximize the widget."
-msgstr "Impossible d'agrandir le widget."
-
-msgid "Cannot minimize the widget."
-msgstr "Impossible de réduire le widget."
-
 msgid ""
 "Cannot remove project admin from project. Must be removed from project "
 "administration first"

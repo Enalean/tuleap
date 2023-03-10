@@ -38,6 +38,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -392,7 +393,8 @@ class ProjectDashboardController
                         $dashboard,
                         OwnerInfo::createForProject($project),
                         $widgets_lines,
-                        $this->canUpdateDashboards($user, $project)
+                        $this->canUpdateDashboards($user, $project),
+                        $user,
                     );
                 }
             }
@@ -475,21 +477,10 @@ class ProjectDashboardController
         $this->csrf->check();
 
         $user         = $request->getCurrentUser();
-        $project      = $request->getProject();
         $dashboard_id = $request->get('dashboard-id');
         $widget_id    = $request->get('widget-id');
 
-        try {
-            $this->widget_minimizor->minimize($user, $project, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
-        } catch (Exception $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext(
-                    'tuleap-core',
-                    'Cannot minimize the widget.'
-                )
-            );
-        }
+        $this->widget_minimizor->minimize($user, (int) $widget_id);
 
         $this->redirectToDashboard($dashboard_id);
     }
@@ -499,21 +490,10 @@ class ProjectDashboardController
         $this->csrf->check();
 
         $user         = $request->getCurrentUser();
-        $project      = $request->getProject();
         $dashboard_id = $request->get('dashboard-id');
         $widget_id    = $request->get('widget-id');
 
-        try {
-            $this->widget_minimizor->maximize($user, $project, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
-        } catch (Exception $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext(
-                    'tuleap-core',
-                    'Cannot maximize the widget.'
-                )
-            );
-        }
+        $this->widget_minimizor->maximize($user, (int) $widget_id);
 
         $this->redirectToDashboard($dashboard_id);
     }

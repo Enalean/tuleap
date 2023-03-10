@@ -30,7 +30,6 @@ use Tuleap\Dashboard\User\UserDashboardRouter;
 use Tuleap\Dashboard\User\UserDashboardSaver;
 use Tuleap\Dashboard\User\UserDashboardUpdator;
 use Tuleap\Dashboard\User\WidgetDeletor;
-use Tuleap\Dashboard\User\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetChecker;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDeletor;
@@ -41,6 +40,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Widget\WidgetFactory;
 
@@ -74,7 +74,7 @@ $router                     = new UserDashboardRouter(
             new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
         ),
         new WidgetDeletor($dashboard_widget_dao),
-        new WidgetMinimizor($dashboard_widget_dao),
+        new WidgetMinimizor(),
         new AssetsIncluder(
             $GLOBALS['Response'],
             $core_assets,

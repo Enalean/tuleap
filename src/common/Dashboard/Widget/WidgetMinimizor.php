@@ -18,30 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Widget;
 
 use PFUser;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
-class WidgetMinimizor
+final class WidgetMinimizor
 {
-    /**
-     * @var DashboardWidgetDao
-     */
-    private $dao;
-
-    public function __construct(DashboardWidgetDao $dao)
+    public function minimize(PFUser $user, int $widget_id): void
     {
-        $this->dao = $dao;
+        $user->setPreference(DashboardWidget::getMinimizedPreferenceName($widget_id), '1');
     }
 
-    public function minimize(PFUser $user, $dashboard_id, $dashboard_type, $widget_id)
+    public function maximize(PFUser $user, int $widget_id): void
     {
-        $this->dao->minimizeWidget($user->getId(), $dashboard_id, $dashboard_type, $widget_id);
-    }
-
-    public function maximize(PFUser $user, $dashboard_id, $dashboard_type, $widget_id)
-    {
-        $this->dao->maximizeWidget($user->getId(), $dashboard_id, $dashboard_type, $widget_id);
+        $user->delPreference(DashboardWidget::getMinimizedPreferenceName($widget_id));
     }
 }

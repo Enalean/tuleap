@@ -853,12 +853,6 @@ msgstr "Não é possível excluir o painel solicitado."
 msgid "Cannot delete the widget."
 msgstr "Não é possível excluir o widget."
 
-msgid "Cannot maximize the widget."
-msgstr "Não é possível maximizar o widget."
-
-msgid "Cannot minimize the widget."
-msgstr "Não é possível minimizar o widget."
-
 msgid ""
 "Cannot remove project admin from project. Must be removed from project "
 "administration first"

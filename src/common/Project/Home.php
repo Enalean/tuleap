@@ -38,7 +38,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardRouter;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\WidgetDeletor;
-use Tuleap\Dashboard\Project\WidgetMinimizor;
+use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetChecker;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDeletor;
@@ -117,7 +117,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                         new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
                     ),
                     new WidgetDeletor($dashboard_widget_dao),
-                    new WidgetMinimizor($dashboard_widget_dao),
+                    new WidgetMinimizor(),
                     new AssetsIncluder(
                         $layout,
                         $core_assets,

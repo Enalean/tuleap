@@ -47,7 +47,7 @@
                                         {{/ has_custom_title }}
                                     </h1>
                                     <div class="dashboard-widget-icons">
-                                        {{# can_update_dashboards }}
+                                        {{# can_be_minimized }}
                                             <form method="post" action="{{ url }}">
                                                 {{# csrf_token }}
                                                     {{> csrf_token_input }}
@@ -57,7 +57,7 @@
                                                 <input type="hidden" name="action" value="{{# is_minimized }}maximize-widget{{/ is_minimized }}{{^ is_minimized }}minimize-widget{{/ is_minimized }}">
                                                 <i class="dashboard-widget-icons-minimize fa fa-fw fa-caret-{{# is_minimized }}right{{/ is_minimized }}{{^ is_minimized }}down{{/ is_minimized }}"></i>
                                             </form>
-                                        {{/ can_update_dashboards }}
+                                        {{/ can_be_minimized }}
                                         {{# has_actions }}
                                             <div class="tlp-dropdown">
                                                 <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>

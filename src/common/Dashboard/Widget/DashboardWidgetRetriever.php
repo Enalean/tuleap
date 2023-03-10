@@ -133,7 +133,6 @@ class DashboardWidgetRetriever implements IRetrieveDashboardWidgets
             $row['content_id'],
             $row['column_id'],
             $row['rank'],
-            $row['is_minimized']
         );
     }
 }
