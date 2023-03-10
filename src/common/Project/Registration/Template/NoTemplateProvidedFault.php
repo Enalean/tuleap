@@ -23,15 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-final class NoTemplateProvidedException extends \RuntimeException implements InvalidTemplateException
-{
-    public function __construct()
-    {
-        parent::__construct('No template information have been provided to create the project');
-    }
+use Tuleap\NeverThrow\Fault;
 
-    public function getI18NMessage(): string
+/**
+ * @psalm-immutable
+ */
+final class NoTemplateProvidedFault extends Fault
+{
+    public static function build(): \Tuleap\NeverThrow\Fault
     {
-        return _('No template information have been provided to create the project');
+        return new self(_('No template information have been provided to create the project'));
     }
 }

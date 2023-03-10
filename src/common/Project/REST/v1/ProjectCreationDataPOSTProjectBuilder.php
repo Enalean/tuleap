@@ -111,38 +111,45 @@ class ProjectCreationDataPOSTProjectBuilder
         }
 
         if ($post_representation->xml_template_name !== null) {
-            $template    = $this->template_factory->getTemplate($post_representation->xml_template_name);
-            $xml_path    = $template->getXMLPath();
-            $xml_element = $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path);
+            $template = $this->template_factory->getTemplate($post_representation->xml_template_name);
+            $xml_path = $template->getXMLPath();
 
-            $creation_data = ProjectCreationData::buildFromXML(
-                $xml_element,
-                new XML_RNGValidator(),
-                $this->service_manager,
-                $this->logger,
-                null,
-                null,
-                $this->from_xml_inheritor
-            );
+            return $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path)
+                ->match(
+                    function (\SimpleXMLElement $xml_element) use ($post_representation): ProjectCreationData {
+                        $creation_data = ProjectCreationData::buildFromXML(
+                            $xml_element,
+                            new XML_RNGValidator(),
+                            $this->service_manager,
+                            $this->logger,
+                            null,
+                            null,
+                            $this->from_xml_inheritor
+                        );
 
-            $creation_data->setUnixName($post_representation->shortname);
-            $creation_data->setFullName($post_representation->label);
-            $creation_data->setShortDescription($post_representation->description);
-            $creation_data->setAccessFromProjectData(
-                [
-                    'is_public'        => $post_representation->is_public,
-                    'allow_restricted' => $post_representation->allow_restricted,
-                ]
-            );
-            $creation_data->setTroveData(
-                CategoryCollection::buildFromRESTProjectCreation($post_representation)
-            );
+                        $creation_data->setUnixName($post_representation->shortname);
+                        $creation_data->setFullName($post_representation->label);
+                        $creation_data->setShortDescription($post_representation->description);
+                        $creation_data->setAccessFromProjectData(
+                            [
+                                'is_public'        => $post_representation->is_public,
+                                'allow_restricted' => $post_representation->allow_restricted,
+                            ]
+                        );
+                        $creation_data->setTroveData(
+                            CategoryCollection::buildFromRESTProjectCreation($post_representation)
+                        );
 
-            $creation_data->setDataFields(
-                ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
-            );
+                        $creation_data->setDataFields(
+                            ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
+                        );
 
-            return $creation_data;
+                        return $creation_data;
+                    },
+                    function () {
+                        return null;
+                    }
+                );
         }
 
         return null;

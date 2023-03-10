@@ -46,6 +46,7 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\ProjectSidebar\ProjectSidebarConfigRepresentation;
 use Tuleap\Layout\ProjectSidebarToolsBuilder;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
@@ -84,11 +85,13 @@ use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
+use Tuleap\Project\XML\InvalidXMLContentFault;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Reference\REST\ReferenceRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
@@ -349,7 +352,21 @@ class ProjectResource extends AuthenticatedResource
         }
 
         try {
-            $project = $this->getRestProjectCreator()->create($post_representation, $creation_data);
+            return $this->getRestProjectCreator()->create($post_representation, $creation_data)
+                ->match(
+                    function (Project $project) use ($user): ProjectRepresentation {
+                        $this->getProjectCreationNotifier()->notifySiteAdmin($project);
+
+                        return $this->getProjectRepresentation($project, $user);
+                    },
+                    function (Fault $fault): void {
+                        if ($fault instanceof InvalidXMLContentFault || $fault instanceof NoTemplateProvidedFault) {
+                            throw new RestException(400, (string) $fault);
+                        }
+
+                        throw new RestException(500, (string) $fault);
+                    }
+                );
         } catch (ProjectInvalidShortNameException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (ProjectInvalidFullNameException $exception) {
@@ -357,10 +374,6 @@ class ProjectResource extends AuthenticatedResource
         } catch (ProjectDescriptionMandatoryException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-
-        $this->getProjectCreationNotifier()->notifySiteAdmin($project);
-
-        return $this->getProjectRepresentation($project, $user);
     }
 
     private function getProjectCreationNotifier(): ProjectCreationNotifier

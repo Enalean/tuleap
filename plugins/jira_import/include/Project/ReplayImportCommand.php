@@ -35,6 +35,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
@@ -125,7 +128,14 @@ final class ReplayImportCommand extends Command
 
                 $output->writeln("Import successful");
             } else {
-                $this->createProject($generated_xml, $logger);
+                return $this->createProject($generated_xml, $logger)
+                    ->match(
+                        static fn() => Command::SUCCESS,
+                        function (Fault $fault) use ($logger): int {
+                            Fault::writeToLogger($fault, $logger);
+                            return Command::FAILURE;
+                        }
+                    );
             }
 
             return Command::SUCCESS;
@@ -135,7 +145,7 @@ final class ReplayImportCommand extends Command
                 $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
                 $logger->error('Error L' . $error->getLine() . ': ' . $exception->getSourceXMLForError($error));
             }
-            return 1;
+            return Command::FAILURE;
         }
     }
 
@@ -174,7 +184,10 @@ final class ReplayImportCommand extends Command
         );
     }
 
-    private function createProject(SimpleXMLElement $generated_xml, LoggerInterface $logger): \Project
+    /**
+     * @return Ok<\Project>|Err<Fault>
+     */
+    private function createProject(SimpleXMLElement $generated_xml, LoggerInterface $logger): Ok|Err
     {
         $archive = new JiraProjectArchive($generated_xml);
 

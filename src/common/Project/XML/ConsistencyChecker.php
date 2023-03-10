@@ -43,31 +43,37 @@ class ConsistencyChecker
         if (! is_file($file_path)) {
             throw new \RuntimeException('Invalid file path provided');
         }
-        $xml = $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($file_path);
+        return $this->xml_file_content_retriever->getSimpleXMLElementFromFilePath($file_path)
+            ->match(
+                function (\SimpleXMLElement $xml) use ($needed_extra_plugins) {
+                    $this->event->addServiceByName('file');
+                    $this->event->addServiceByName('summary');
+                    $this->event->addServiceByName('admin');
+                    $this->event_manager->processEvent($this->event);
 
-        $this->event->addServiceByName('file');
-        $this->event->addServiceByName('summary');
-        $this->event->addServiceByName('admin');
-        $this->event_manager->processEvent($this->event);
+                    $available_services = $this->event->getAvailableServices();
 
-        $available_services = $this->event->getAvailableServices();
+                    foreach ($xml->services->service as $service) {
+                        if (PHPCast::toBoolean($service['enabled']) === true) {
+                            $service_name = (string) $service['shortname'];
+                            if (! isset($available_services[$service_name])) {
+                                return false;
+                            }
+                        }
+                    }
 
-        foreach ($xml->services->service as $service) {
-            if (PHPCast::toBoolean($service['enabled']) === true) {
-                $service_name = (string) $service['shortname'];
-                if (! isset($available_services[$service_name])) {
+                    foreach ($needed_extra_plugins as $plugin_name) {
+                        $plugin = $this->plugin_factory->getPluginByName($plugin_name);
+                        if (! $plugin || ! $this->plugin_factory->isPluginEnabled($plugin)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                },
+                function () {
                     return false;
                 }
-            }
-        }
-
-        foreach ($needed_extra_plugins as $plugin_name) {
-            $plugin = $this->plugin_factory->getPluginByName($plugin_name);
-            if (! $plugin || ! $this->plugin_factory->isPluginEnabled($plugin)) {
-                return false;
-            }
-        }
-
-        return true;
+            );
     }
 }

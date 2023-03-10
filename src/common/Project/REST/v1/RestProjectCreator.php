@@ -26,6 +26,10 @@ namespace Tuleap\Project\REST\v1;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectCreationData;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
@@ -37,7 +41,7 @@ use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
-use Tuleap\Project\Registration\Template\NoTemplateProvidedException;
+use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
@@ -76,11 +80,13 @@ class RestProjectCreator
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
      * @throws InvalidTemplateException
+     *
+     * @return Ok<Project>|Err<Fault>
      */
     public function create(
         ProjectPostRepresentation $post_representation,
         ProjectCreationData $creation_data,
-    ): Project {
+    ): Ok|Err {
         try {
             return $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
         } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
@@ -105,15 +111,17 @@ class RestProjectCreator
      * @throws ProjectInvalidFullNameException
      * @throws ProjectInvalidShortNameException
      * @throws ProjectDescriptionMandatoryException
+     *
+     * @return Ok<Project>|Err<Fault>
      */
     private function createProjectWithSelectedTemplate(
         ProjectPostRepresentation $post_representation,
         ProjectCreationData $creation_data,
-    ): Project {
+    ): Ok|Err {
         if ($post_representation->template_id !== null) {
-            return $this->project_creator->processProjectCreation(
+            return Result::ok($this->project_creator->processProjectCreation(
                 $creation_data
-            );
+            ));
         }
 
         if ($post_representation->xml_template_name !== null) {
@@ -122,17 +130,16 @@ class RestProjectCreator
 
             $archive = new DirectoryArchive(dirname($xml_path));
 
-            return $this->template_factory->recordUsedTemplate(
-                $this->project_XML_importer->importWithProjectData(
-                    new ImportConfig(),
-                    $archive,
-                    new SystemEventRunnerForProjectCreationFromXMLTemplate(),
-                    $creation_data
-                ),
-                $template,
-            );
+            return $this->project_XML_importer->importWithProjectData(
+                new ImportConfig(),
+                $archive,
+                new SystemEventRunnerForProjectCreationFromXMLTemplate(),
+                $creation_data
+            )->andThen(function (Project $project) use ($template) {
+                    return Result::ok($this->template_factory->recordUsedTemplate($project, $template));
+            });
         }
 
-        throw new NoTemplateProvidedException();
+        return Result::err(NoTemplateProvidedFault::build());
     }
 }

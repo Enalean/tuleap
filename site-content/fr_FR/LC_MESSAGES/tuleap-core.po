@@ -4635,6 +4635,12 @@ msgstr ""
 "s'inscrire. Choisissez une accroche attirante qui décrit ce qu'est Tuleap "
 "dans votre environnement. Ne soyez pas trop verbeux cependant ;)"
 
+msgid "XML content is empty"
+msgstr "Le contenu XML est vide"
+
+msgid "XML content is not valid"
+msgstr "Le contenu XML n'est pas valide"
+
 msgid "Year"
 msgstr "Année"
 

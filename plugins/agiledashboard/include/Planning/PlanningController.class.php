@@ -43,6 +43,8 @@ use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundEx
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -439,21 +441,23 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $xml_importer = ProjectXMLImporter::build(new XMLImportHelper(UserManager::instance()), \ProjectCreator::buildSelfByPassValidation());
 
         try {
-            $errors = $xml_importer->collectBlockingErrorsWithoutImporting(
-                $this->group_id,
-                $_FILES["template_file"]["tmp_name"]
-            );
-            if ($errors === '') {
-                $config = new ImportConfig();
-                $xml_importer->import($config, $this->group_id, $_FILES["template_file"]["tmp_name"]);
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    dgettext('tuleap-agiledashboard', 'The configuration has been successfully imported!')
+            $xml_importer->collectBlockingErrorsWithoutImporting($this->group_id, $_FILES["template_file"]["tmp_name"])
+                ->andThen(function () use ($xml_importer): Ok|Err {
+                    $config = new ImportConfig();
+                    return $xml_importer->import($config, $this->group_id, $_FILES["template_file"]["tmp_name"]);
+                })
+                ->match(
+                    function (): void {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::INFO,
+                            dgettext('tuleap-agiledashboard', 'The configuration has been successfully imported!')
+                        );
+                    },
+                    function (\Tuleap\NeverThrow\Fault $fault): void {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, (string) $fault);
+                    }
                 );
-            } else {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $errors);
-            }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to import the configuration!'));
         }
     }

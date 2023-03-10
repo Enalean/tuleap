@@ -30,6 +30,10 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
@@ -218,6 +222,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     }
 
     /**
+     * @return Ok<Project>|Err<Fault>
      * @throws ImportNotValidException
      */
     public function importWithProjectData(
@@ -225,20 +230,23 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         ArchiveInterface $archive,
         SystemEventRunnerInterface $event_runner,
         ProjectCreationData $project_creation_data,
-    ): Project {
+    ): Ok|Err {
         $this->logger->info('Start creating new project from archive ' . $archive->getExtractionPath());
 
-        $xml_element = $this->getProjectXMLFromArchive($archive);
-        $this->assertXMLisValid($xml_element);
+        return $this->getProjectXMLFromArchive($archive)
+            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $archive, $event_runner, $project_creation_data) {
+                $this->assertXMLisValid($xml_element);
 
-        $project = $this->createProject($event_runner, $project_creation_data);
+                $project = $this->createProject($event_runner, $project_creation_data);
 
-        $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
+                $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
 
-        return $project;
+                return Result::ok($project);
+            });
     }
 
     /**
+     * @return Ok<true>|Err<Fault>
      * @throws ImportNotValidException
      */
     public function importNewFromArchive(
@@ -247,18 +255,21 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         Tuleap\Project\SystemEventRunnerInterface $event_runner,
         $is_template,
         $project_name_override = null,
-    ) {
+    ): Ok|Err {
         $this->logger->info('Start importing new project from archive ' . $archive->getExtractionPath());
 
-        $xml_element = $this->getProjectXMLFromArchive($archive);
+        return $this->getProjectXMLFromArchive($archive)
+            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $archive, $event_runner, $is_template, $project_name_override) {
+                $this->assertXMLisValid($xml_element);
 
-        $this->assertXMLisValid($xml_element);
+                $project_creation_data = $this->getProjectCreationDataFromXml($xml_element, $is_template, $project_name_override);
 
-        $project_creation_data = $this->getProjectCreationDataFromXml($xml_element, $is_template, $project_name_override);
+                $project = $this->createProject($event_runner, $project_creation_data);
 
-        $project = $this->createProject($event_runner, $project_creation_data);
+                $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
 
-        $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
+                return Result::ok(true);
+            });
     }
 
     private function getProjectCreationDataFromXml(SimpleXMLElement $xml, bool $is_template, ?string $project_name_override): ProjectCreationData
@@ -311,26 +322,36 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     }
 
     /**
+     * @return Ok<true>|Err<Fault>
      * @throws ImportNotValidException
      */
-    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive)
+    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive): Ok|Err
     {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
-        $xml_element = $this->getProjectXMLFromArchive($archive);
+        return $this->getProjectXMLFromArchive($archive)
+            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $project_id, $archive) {
+                $this->assertXMLisValid($xml_element);
 
-        $this->assertXMLisValid($xml_element);
+                $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
 
-        $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
+                return Result::ok(true);
+            });
     }
 
-    public function import(ImportConfig $configuration, $project_id, $xml_file_path)
+    /**
+     * @return Ok<true>|Err<Fault>
+     */
+    public function import(ImportConfig $configuration, $project_id, $xml_file_path): Ok|Err
     {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path);
+        return $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path)
+            ->andThen(function (SimpleXMLElement $xml_element) use ($configuration, $project_id) {
+                $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, '');
 
-        $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, '');
+                return Result::ok(true);
+            });
     }
 
     private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path)
@@ -353,16 +374,23 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     }
 
     /**
-     * @return string
+     * @return Ok<true>|Err<Fault>
      */
     public function collectBlockingErrorsWithoutImporting($project_id, $xml_file_path)
     {
         $this->logger->info('Start collecting errors from file ' . $xml_file_path);
 
-        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path);
-        $project     = $this->project_manager->getValidProjectByShortNameOrId($project_id);
+        return $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path)
+            ->andThen(function (SimpleXMLElement $xml_element) use ($project_id) {
+                $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
-        return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
+                $errors = $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
+                if ($errors) {
+                    return Result::err(Fault::fromMessage($errors));
+                }
+
+                return Result::ok(true);
+            });
     }
 
     private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path)
@@ -562,12 +590,15 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         return $ugroup_members;
     }
 
-    private function getProjectXMLFromArchive(ArchiveInterface $archive)
+    /**
+     * @return Ok<SimpleXMLElement>|Err<Fault>
+     */
+    private function getProjectXMLFromArchive(ArchiveInterface $archive): Ok|Err
     {
         $xml_contents = $archive->getProjectXML();
 
         if (! $xml_contents) {
-            throw new RuntimeException('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE);
+            return Result::err(Fault::fromMessage('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE));
         }
 
         return $this->XML_file_content_retriever->getSimpleXMLElementFromString($xml_contents);

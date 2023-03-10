@@ -29,6 +29,7 @@ use Psr\Log\NullLogger;
 use ServiceManager;
 use SimpleXMLElement;
 use Tuleap\Glyph\Glyph;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -192,7 +193,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             ->expects(self::once())
             ->method('getSimpleXMLElementFromFilePath')
             ->with('path/to/xml/template')
-            ->willReturn($xml_content);
+            ->willReturn(Result::ok($xml_content));
 
         $this->from_xml_inheritor
             ->expects(self::once())

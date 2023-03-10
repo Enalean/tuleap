@@ -38,8 +38,11 @@ use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\Template\NoTemplateProvidedFault;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -161,12 +164,10 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided(): void
+    public function testFaultWhenNeitherTemplateIdNorTemplateNameIsProvided(): void
     {
         $this->project_post_representation->template_id       = null;
         $this->project_post_representation->xml_template_name = null;
-
-        $this->expectException(RestException::class);
 
         $this->creator->create(
             $this->project_post_representation,
@@ -174,6 +175,13 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 new DefaultProjectVisibilityRetriever(),
                 new NullLogger()
             )
+        )->match(
+            function () {
+                self::fail("No project should be created if no template");
+            },
+            function (Fault $fault) {
+                self::assertInstanceOf(NoTemplateProvidedFault::class, $fault);
+            }
         );
     }
 
@@ -285,16 +293,20 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             }),
             \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
             $project_creation_data
-        )->andReturn($new_project);
+        )->andReturn(Result::ok($new_project));
 
         $this->template_dao->shouldReceive('saveTemplate')->with($new_project, ScrumTemplate::NAME)->once();
 
-        $this->assertSame(
-            $new_project,
-            $this->creator->create(
-                $this->project_post_representation,
-                $project_creation_data
-            )
+        $this->creator->create(
+            $this->project_post_representation,
+            $project_creation_data
+        )->match(
+            function (Project $project) use ($new_project) {
+                self::assertSame($new_project, $project);
+            },
+            function () {
+                self::fail("Unexpected fault");
+            }
         );
     }
 }
