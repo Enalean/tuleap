@@ -257,12 +257,6 @@ id = "GHSA-gxpj-cx7g-858c" # CVE-2017-16137
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
-## engine.io
-[[IgnoredVulns]]
-id = "GHSA-r7qp-cfhv-p84w" # CVE-2022-41940
-reason = "DoS. To be investigated."
-ignoreUntil = 2023-05-08
-
 ## merge
 [[IgnoredVulns]]
 id = "GHSA-7wpw-2hjm-89gp" # CVE-2020-28499
@@ -306,12 +300,6 @@ ignoreUntil = 2023-05-08
 ## simple-get
 [[IgnoredVulns]]
 id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-## socket.io-parser
-[[IgnoredVulns]]
-id = "GHSA-qm95-pgcg-qqfq" # CVE-2022-2421
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
