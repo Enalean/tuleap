@@ -306,6 +306,15 @@ Cypress.Commands.add("createArtifact", (payload: ArtifactCreationPayload): void 
     });
 });
 
+Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
+    const payload = {
+        project_id: project_id,
+        label: package_name,
+    };
+
+    cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
+});
+
 const MAX_ATTEMPTS = 10;
 
 Cypress.Commands.add(

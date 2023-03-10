@@ -17,15 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function createFRSPackage(project_id: number, package_name: string): void {
-    const payload = {
-        project_id: project_id,
-        label: package_name,
-    };
-
-    cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
-}
-
 describe("Frs", function () {
     let now: number;
 
@@ -74,7 +65,7 @@ describe("Frs", function () {
         context("Frs CRUD releases", function () {
             it("can create a new release", function () {
                 cy.visitProjectService(`frs-${now}`, "Files");
-                createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
+                cy.createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
                 cy.visitProjectService(`frs-${now}`, "Files");
 
                 cy.intercept({

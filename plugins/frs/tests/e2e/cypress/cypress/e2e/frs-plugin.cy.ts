@@ -33,11 +33,8 @@ describe("FRS plugin", () => {
                 .then(function () {
                     cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
 
-                    cy.get("[data-test=create-new-package]").click();
-                    cy.get("[data-test=frs-create-package]").type("My first package " + now);
-                    cy.get("[data-test=frs-create-package-button]").click({
-                        timeout: 60000,
-                    });
+                    cy.createFRSPackage(frs_project_id, "My first package " + now);
+                    cy.visit(`/file/showfiles.php?group_id=${frs_project_id}`);
 
                     cy.intercept({
                         url: /file\/admin\/frsajax\.php/,
