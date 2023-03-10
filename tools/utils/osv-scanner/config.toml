@@ -222,13 +222,6 @@ id = "GHSA-36jr-mh4h-2g58"
 reason = "ReDos. To be investigated."
 ignoreUntil = 2023-05-08
 
-# plugins/api_explorer/pnpm-lock.yaml
-## @braintree/sanitize-url
-[[IgnoredVulns]]
-id = "GHSA-q8gg-vj6m-hgmj" # CVE-2022-48345
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 # src/additional-packages/tuleap-realtime/pnpm-lock.yaml
 ## convict
 [[IgnoredVulns]]
