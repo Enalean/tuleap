@@ -145,7 +145,7 @@ describe(`TuleapAPIClient`, () => {
         let link_type: LinkType;
 
         beforeEach(() => {
-            link_type = LinkTypeStub.buildChildLinkType();
+            link_type = LinkTypeStub.buildParentLinkType();
         });
 
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {

@@ -102,9 +102,6 @@ msgstr ""
 msgid "Linked artifacts are loading"
 msgstr ""
 
-msgid "Linked to"
-msgstr ""
-
 msgid "Mark for removal"
 msgstr ""
 
@@ -232,4 +229,13 @@ msgid "You can drag 'n drop or paste image directly in the editor."
 msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
 
 msgid "can only have one parent."
+msgstr ""
+
+msgid "is Child of"
+msgstr ""
+
+msgid "is Linked to"
+msgstr ""
+
+msgid "is Parent of"
 msgstr ""

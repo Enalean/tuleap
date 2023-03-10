@@ -147,11 +147,11 @@ describe("TypeSelectorTemplate", () => {
         expect(separators).toHaveLength(1);
         expect(options_with_label).toHaveLength(3);
 
-        const [untyped_option, child_option, parent_option] = options_with_label;
+        const [untyped_option, parent_option, child_option] = options_with_label;
         expect(untyped_option.selected).toBe(true);
-        expect(untyped_option.label).toBe("Linked to");
-        expect(child_option.label).toBe("Child");
-        expect(parent_option.label).toBe("Parent");
+        expect(untyped_option.label).toBe("is Linked to");
+        expect(parent_option.label).toBe("is Parent of");
+        expect(child_option.label).toBe("is Child of");
 
         expect(options_with_label.every((option) => !option.disabled)).toBe(true);
     });
@@ -164,10 +164,10 @@ describe("TypeSelectorTemplate", () => {
             );
         const select = render();
 
-        const parent_is_disabled = Array.from(select.options).some(
-            (option) => option.label === "Parent" && option.disabled
+        const child_of_is_disabled = Array.from(select.options).some(
+            (option) => option.label === "is Child of" && option.disabled
         );
-        expect(parent_is_disabled).toBe(true);
+        expect(child_of_is_disabled).toBe(true);
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {

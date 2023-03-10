@@ -22,8 +22,8 @@ import { LinkTypeStub } from "./LinkTypeStub";
 
 export const LinkTypesPairStub = {
     buildParent: (): LinkTypesPair => ({
-        forward_type: LinkTypeStub.buildChildLinkType(),
-        reverse_type: LinkTypeStub.buildParentLinkType(),
+        forward_type: LinkTypeStub.buildParentLinkType(),
+        reverse_type: LinkTypeStub.buildChildLinkType(),
     }),
 
     buildCustom: (): LinkTypesPair => ({

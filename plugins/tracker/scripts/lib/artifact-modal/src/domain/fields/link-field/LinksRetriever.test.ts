@@ -35,10 +35,10 @@ const isCreationMode = (fault: Fault): boolean =>
     "isCreationMode" in fault && fault.isCreationMode() === true;
 
 describe(`LinksRetriever`, () => {
-    let first_parent: LinkedArtifact,
-        second_parent: LinkedArtifact,
-        first_child: LinkedArtifact,
+    let first_child: LinkedArtifact,
         second_child: LinkedArtifact,
+        first_parent: LinkedArtifact,
+        second_parent: LinkedArtifact,
         artifact_identifier: CurrentArtifactIdentifier | null,
         types_retriever: RetrieveLinkTypes,
         linked_artifacts_retriever: RetrieveLinkedArtifactsByType,
@@ -47,27 +47,27 @@ describe(`LinksRetriever`, () => {
     beforeEach(() => {
         artifact_identifier = CurrentArtifactIdentifierStub.withId(64);
 
-        const parent_type = LinkTypeStub.buildParentLinkType();
         const child_type = LinkTypeStub.buildChildLinkType();
-        types_retriever = RetrieveLinkTypesStub.withTypes(parent_type, child_type);
+        const parent_type = LinkTypeStub.buildParentLinkType();
+        types_retriever = RetrieveLinkTypesStub.withTypes(child_type, parent_type);
 
-        first_parent = LinkedArtifactStub.withDefaults({
+        first_child = LinkedArtifactStub.withDefaults({
             title: "A parent",
-            link_type: child_type,
-        });
-        second_parent = LinkedArtifactStub.withDefaults({
-            title: "Another parent",
-            link_type: child_type,
-        });
-        first_child = LinkedArtifactStub.withDefaults({ title: "A child", link_type: parent_type });
-        second_child = LinkedArtifactStub.withDefaults({
-            title: "Another child",
             link_type: parent_type,
+        });
+        second_child = LinkedArtifactStub.withDefaults({
+            title: "Another parent",
+            link_type: parent_type,
+        });
+        first_parent = LinkedArtifactStub.withDefaults({ title: "A child", link_type: child_type });
+        second_parent = LinkedArtifactStub.withDefaults({
+            title: "Another child",
+            link_type: child_type,
         });
         linked_artifacts_retriever =
             RetrieveLinkedArtifactsByTypeStub.withSuccessiveLinkedArtifacts(
-                [first_child, second_child],
-                [first_parent, second_parent]
+                [first_parent, second_parent],
+                [first_child, second_child]
             );
 
         links_adder = AddLinkedArtifactCollectionStub.withCount();
@@ -87,10 +87,10 @@ describe(`LinksRetriever`, () => {
         }
         const artifacts = result.value;
         expect(artifacts).toHaveLength(4);
-        expect(artifacts).toContain(first_child);
-        expect(artifacts).toContain(second_child);
         expect(artifacts).toContain(first_parent);
         expect(artifacts).toContain(second_parent);
+        expect(artifacts).toContain(first_child);
+        expect(artifacts).toContain(second_child);
         expect(links_adder.getCallCount()).toBe(1);
     });
 

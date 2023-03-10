@@ -30,13 +30,24 @@ describe(`LinkType`, () => {
     });
 
     it.each([
-        [true, "reverse _is_child", LinkTypeStub.buildParentLinkType()],
-        [false, "forward _is_child", LinkTypeStub.buildChildLinkType()],
+        [true, "reverse _is_child", LinkTypeStub.buildChildLinkType()],
+        [false, "forward _is_child", LinkTypeStub.buildParentLinkType()],
         [false, "untyped", LinkTypeStub.buildUntyped()],
     ])(
         `isReverseChild() returns %s when given a %s link type`,
         (expected_return, link_type_string, link_type) => {
             expect(LinkType.isReverseChild(link_type)).toBe(expected_return);
+        }
+    );
+
+    it.each([
+        [true, "forward _is_child", LinkTypeStub.buildParentLinkType()],
+        [false, "reverse _is_child", LinkTypeStub.buildChildLinkType()],
+        [false, "untyped", LinkTypeStub.buildUntyped()],
+    ])(
+        `isForwardChild() returns %s when given a %s link type`,
+        (expected_return, link_type_string, link_type) => {
+            expect(LinkType.isForwardChild(link_type)).toBe(expected_return);
         }
     );
 });

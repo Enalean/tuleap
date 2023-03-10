@@ -20,25 +20,54 @@
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
+import { setCatalog } from "../../../../gettext-catalog";
 
 describe("CollectionOfAllowedLinksTypesPresenters", () => {
+    beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid });
+    });
+
     it(`Given a collection of allowed links types,
         then it should build a collection of presenters for each type and each direction`, () => {
+        const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            VerifyHasParentLinkStub.withNoParentLink(),
+            LinkTypesCollectionStub.withCustomPair()
+        );
+
+        expect(presenter.is_parent_type_disabled).toBe(false);
+        expect(presenter.types).toHaveLength(1);
+        expect(presenter.types).toStrictEqual([
+            {
+                forward_type_presenter: {
+                    label: "Custom Forward",
+                    shortname: "custom",
+                    direction: "forward",
+                },
+                reverse_type_presenter: {
+                    label: "Custom Reverse",
+                    shortname: "custom",
+                    direction: "reverse",
+                },
+            },
+        ]);
+    });
+
+    it(`will rename the labels of _is_child types
+        A -> _is_child -> B actually means B is child of A and A is parent of B`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             VerifyHasParentLinkStub.withNoParentLink(),
             LinkTypesCollectionStub.withParentPair()
         );
 
-        expect(presenter.is_parent_type_disabled).toBe(false);
         expect(presenter.types).toStrictEqual([
             {
                 forward_type_presenter: {
-                    label: "Child",
+                    label: "is Parent of",
                     shortname: "_is_child",
                     direction: "forward",
                 },
                 reverse_type_presenter: {
-                    label: "Parent",
+                    label: "is Child of",
                     shortname: "_is_child",
                     direction: "reverse",
                 },

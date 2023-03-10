@@ -69,7 +69,9 @@ export const getFieldDateRequiredAndEmptyMessage = (): string =>
     gettextCatalog.getString("Please select a date");
 export const getEmptyCrossReferencesCollectionText = (): string =>
     gettextCatalog.getString("References list is empty.");
-export const getDefaultLinkTypeLabel = (): string => gettextCatalog.getString("Linked to");
+export const getDefaultLinkTypeLabel = (): string => gettextCatalog.getString("is Linked to");
+export const getChildTypeLabel = (): string => gettextCatalog.getString("is Child of");
+export const getParentTypeLabel = (): string => gettextCatalog.getString("is Parent of");
 export const getMaxAllowedUploadSizeText = (): string =>
     gettextCatalog.getString("Max allowed upload size: %s");
 export const getFileSubmittedByText = (): string => gettextCatalog.getString("By: %s");

@@ -260,9 +260,9 @@ describe("LinkField", () => {
                 expect(allowed_types.is_parent_type_disabled).toBe(false);
             });
 
-            it(`When the current link is a reverse child and the parent link type is disabled,
+            it(`When the current link is a reverse child and the child link type is disabled,
                 then it should default to Untyped link`, () => {
-                host.current_link_type = LinkTypeStub.buildParentLinkType();
+                host.current_link_type = LinkTypeStub.buildChildLinkType();
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                         VerifyHasParentLinkStub.withParentLink(),

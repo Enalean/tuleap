@@ -22,8 +22,13 @@ import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import type { LinkField } from "./LinkField";
-import { getDefaultLinkTypeLabel, getRemoveLabel } from "../../../../gettext-catalog";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import {
+    getChildTypeLabel,
+    getDefaultLinkTypeLabel,
+    getParentTypeLabel,
+    getRemoveLabel,
+} from "../../../../gettext-catalog";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -52,11 +57,16 @@ export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink):
 };
 
 export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter | NewLink): string => {
-    if (artifact.link_type.shortname !== UNTYPED_LINK) {
-        return artifact.link_type.label;
+    if (LinkType.isForwardChild(artifact.link_type)) {
+        return getParentTypeLabel();
     }
-
-    return getDefaultLinkTypeLabel();
+    if (LinkType.isReverseChild(artifact.link_type)) {
+        return getChildTypeLabel();
+    }
+    if (LinkType.isUntypedLink(artifact.link_type)) {
+        return getDefaultLinkTypeLabel();
+    }
+    return artifact.link_type.label;
 };
 
 export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => {
