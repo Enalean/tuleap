@@ -41,6 +41,7 @@ use Tuleap\JiraImport\JiraAgile\JiraEpicFromBoardRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
+use Tuleap\JiraImport\Project\Components\ComponentIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\Project\Components\ComponentsImporter;
 use Tuleap\JiraImport\Project\Components\ComponentsRetrieverFromAPI;
 use Tuleap\JiraImport\Project\Components\ComponentsTrackerBuilder;
@@ -331,6 +332,10 @@ final class CreateProjectFromJira
         $logger->info("Import project components");
         (new ComponentsImporter(
             new ComponentsRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
+            new ComponentIssuesRetrieverFromAPI(
                 $jira_client,
                 $logger,
             ),
