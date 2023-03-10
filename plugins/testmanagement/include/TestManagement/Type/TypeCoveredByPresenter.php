@@ -31,8 +31,8 @@ final class TypeCoveredByPresenter extends TypePresenter
     {
         parent::__construct(
             self::TYPE_COVERED_BY,
-            dgettext('tuleap-testmanagement', 'is covered by'),
-            dgettext('tuleap-testmanagement', 'covers'),
+            dgettext('tuleap-testmanagement', 'is Covered by'),
+            dgettext('tuleap-testmanagement', 'Covers'),
             true
         );
 

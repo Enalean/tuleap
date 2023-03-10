@@ -15,6 +15,9 @@ msgstr ""
 msgid "Configuration incomplete"
 msgstr ""
 
+msgid "Covers"
+msgstr ""
+
 msgid ""
 "Current campaign does not have any job configured to launch automated tests"
 msgstr ""
@@ -229,8 +232,5 @@ msgid ""
 "prevented it."
 msgstr ""
 
-msgid "covers"
-msgstr ""
-
-msgid "is covered by"
+msgid "is Covered by"
 msgstr ""
