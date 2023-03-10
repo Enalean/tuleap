@@ -107,6 +107,8 @@ declare global {
             ): Cypress.Chainable<number>;
 
             createArtifact(payload: ArtifactCreationPayload): void;
+
+            createFRSPackage(project_id: number, package_name: string): void;
         }
     }
 }
