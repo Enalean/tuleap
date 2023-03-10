@@ -31,6 +31,7 @@ use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Webhook\Emitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -51,10 +52,6 @@ class enalean_licensemanagerPlugin extends Plugin
         $this->addHook(Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS);
         $this->addHook(Event::GET_SITEADMIN_WARNINGS);
 
-        $this->addHook('project_admin_activate_user', 'userStatusActivity', true);
-        $this->addHook('project_admin_delete_user', 'userStatusActivity', true);
-        $this->addHook('project_admin_suspend_user', 'userStatusActivity', true);
-
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(CLICommandsCollector::NAME);
 
@@ -73,7 +70,25 @@ class enalean_licensemanagerPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function userStatusActivity($event, array $params)
+    #[ListeningToEventName('project_admin_activate_user')]
+    public function projectAdminActivateUser(array $params): void
+    {
+        $this->userStatusActivity('project_admin_activate_user', $params);
+    }
+
+    #[ListeningToEventName('project_admin_delete_user')]
+    public function projectAdminDeleteUser(array $params): void
+    {
+        $this->userStatusActivity('project_admin_delete_user', $params);
+    }
+
+    #[ListeningToEventName('project_admin_suspend_user')]
+    public function projectAdminSuspendUser(array $params): void
+    {
+        $this->userStatusActivity('project_admin_suspend_user', $params);
+    }
+
+    private function userStatusActivity($event, array $params)
     {
         $nb_max_users = $this->getMaxUsers();
         if (! $nb_max_users) {
