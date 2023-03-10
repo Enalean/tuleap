@@ -108,22 +108,22 @@ class LdapPlugin extends Plugin
 
         // Login
         $this->addHook('login_presenter');
-        $this->addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
+        $this->addHook('display_lostpw_createaccount', 'forbidIfLdapAuth');
         $this->addHook(RedirectAfterLogin::NAME);
 
         // User finder
-        $this->addHook('user_manager_find_user', 'user_manager_find_user', false);
-        $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
+        $this->addHook('user_manager_find_user', 'user_manager_find_user');
+        $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier');
         $this->addHook(UserRetrieverByLoginNameEvent::NAME);
         $this->addHook(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent::NAME);
         $this->addHook(FindUserByEmailEvent::NAME);
 
         // User Home
-        $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
+        $this->addHook('user_home_pi_entry', 'personalInformationEntry');
 
         // User account
-        $this->addHook('before_lostpw-confirm', 'cancelChange', false);
-        $this->addHook('before_lostpw', 'cancelChange', false);
+        $this->addHook('before_lostpw-confirm', 'cancelChange');
+        $this->addHook('before_lostpw', 'cancelChange');
         $this->addHook(PasswordPreUpdateEvent::NAME);
         $this->addHook(AccountInformationCollection::NAME);
 
@@ -131,35 +131,35 @@ class LdapPlugin extends Plugin
         $this->addHook('project_admin_ugroup_deletion');
 
         // Site Admin
-        $this->addHook('before_admin_change_pw', 'warnNoPwChange', false);
-        $this->addHook('usergroup_update_form', 'addLdapInput', false);
-        $this->addHook('usergroup_update', 'updateLdapID', false);
+        $this->addHook('before_admin_change_pw', 'warnNoPwChange');
+        $this->addHook('usergroup_update_form', 'addLdapInput');
+        $this->addHook('usergroup_update', 'updateLdapID');
 
         // Project admin
         $this->addHook(ProjectMembersAdditionalModalCollectionPresenter::NAME);
-        $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
+        $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed');
 
         // Svn intro
         $this->addHook(Event::SVN_INTRO);
-        $this->addHook('svn_check_access_username', 'svn_check_access_username', false);
+        $this->addHook('svn_check_access_username', 'svn_check_access_username');
 
         // Search as you type user
-        $this->addHook('ajax_search_user', 'ajax_search_user', false);
+        $this->addHook('ajax_search_user', 'ajax_search_user');
 
         // Project creation
         $this->addHook(RegisterProjectCreationEvent::NAME);
 
         // Backend SVN
-        $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
+        $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn');
         $this->addHook(GetSVNLoginNameEvent::NAME);
 
         // Daily codendi job
-        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start');
         $this->addHook(RootDailyStartEvent::NAME);
 
         // SystemEvent
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class');
 
         // Ask for LDAP Username of a User
         $this->addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);

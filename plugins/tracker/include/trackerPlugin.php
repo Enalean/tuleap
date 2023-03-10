@@ -295,24 +295,24 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         bindtextdomain('tuleap-tracker', __DIR__ . '/../site-content');
 
         $this->addHook('javascript_file');
-        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('cssfile', 'cssFile');
         $this->addHook(NatureCollection::NAME);
-        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id', false);
+        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id');
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
-        $this->addHook(Event::BUILD_REFERENCE, 'build_reference', false);
+        $this->addHook(Event::BUILD_REFERENCE, 'build_reference');
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(Event::JAVASCRIPT, 'javascript', false);
-        $this->addHook(Event::TOGGLE, 'toggle', false);
+        $this->addHook(Event::JAVASCRIPT, 'javascript');
+        $this->addHook(Event::TOGGLE, 'toggle');
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook('permission_get_name', 'permission_get_name', false);
-        $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
-        $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
-        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->addHook('permission_get_name', 'permission_get_name');
+        $this->addHook('permission_get_object_type', 'permission_get_object_type');
+        $this->addHook('permission_get_object_name', 'permission_get_object_name');
+        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change');
         $this->addHook(GetSystemEventQueuesEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
 
-        $this->addHook('url_verification_instance', 'url_verification_instance', false);
+        $this->addHook('url_verification_instance', 'url_verification_instance');
 
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -324,8 +324,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start');
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(ProjectXMLImportPreChecksEvent::NAME);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);

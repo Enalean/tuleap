@@ -52,14 +52,14 @@ class StatisticsPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('cssfile', 'cssFile');
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook('usergroup_data', 'usergroup_data', false);
-        $this->addHook('groupedit_data', 'groupedit_data', false);
-        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types', false);
+        $this->addHook('usergroup_data', 'usergroup_data');
+        $this->addHook('groupedit_data', 'groupedit_data');
+        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types');
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(GetSystemEventQueuesEvent::NAME);

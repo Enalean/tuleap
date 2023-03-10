@@ -26,14 +26,12 @@ class EventPluginCacheInfo
     public $plugin_id;
     public $event;
     public $callback;
-    public $recall_event;
 
-    public function __construct($plugin_id, $event, $callback, $recall_event)
+    public function __construct($plugin_id, $event, $callback)
     {
-        $this->plugin_id    = $plugin_id;
-        $this->event        = $event;
-        $this->callback     = $callback;
-        $this->recall_event = $recall_event;
+        $this->plugin_id = $plugin_id;
+        $this->event     = $event;
+        $this->callback  = $callback;
     }
 
     public static function __set_state($an_array)
@@ -42,7 +40,6 @@ class EventPluginCacheInfo
             $an_array['plugin_id'],
             $an_array['event'],
             $an_array['callback'],
-            $an_array['recall_event']
         );
     }
 }

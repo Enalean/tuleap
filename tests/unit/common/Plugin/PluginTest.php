@@ -60,7 +60,6 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals('anEvent', $current_hook['callback']);
-        $this->assertFalse($current_hook['recallHook']);
     }
 
     public function testSpecialCallback(): void
@@ -75,7 +74,6 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals($callback, $current_hook['callback']);
-        $this->assertFalse($current_hook['recallHook']);
     }
 
     public function testAnotherSpecialCallback(): void
@@ -84,14 +82,12 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
-        $recall   = true;
-        $p->addHook($hook, $callback, $recall);
+        $p->addHook($hook, $callback);
         $col          = $p->getHooksAndCallbacks();
         $it           = $col->iterator();
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals($callback, $current_hook['callback']);
-        $this->assertEquals($recall, $current_hook['recallHook']);
     }
 
     public function testRaisesAnExceptionWhenThereIsAConflictInAvailableCallbacks(): void

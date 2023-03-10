@@ -62,22 +62,22 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile', 'cssFile', false);
+            $this->addHook('cssfile', 'cssFile');
 
             //Tracker report renderer
-            $this->addHook('tracker_report_renderer_instance', 'tracker_report_renderer_instance', false);
+            $this->addHook('tracker_report_renderer_instance', 'tracker_report_renderer_instance');
             $this->addHook(ImportRendererFromXmlEvent::NAME);
-            $this->addHook('tracker_report_add_renderer', 'tracker_report_add_renderer', false);
-            $this->addHook('tracker_report_create_renderer', 'tracker_report_create_renderer', false);
-            $this->addHook('tracker_report_renderer_types', 'tracker_report_renderer_types', false);
-            $this->addHook('trackers_get_renderers', 'trackers_get_renderers', false);
+            $this->addHook('tracker_report_add_renderer', 'tracker_report_add_renderer');
+            $this->addHook('tracker_report_create_renderer', 'tracker_report_create_renderer');
+            $this->addHook('tracker_report_renderer_types', 'tracker_report_renderer_types');
+            $this->addHook('trackers_get_renderers', 'trackers_get_renderers');
 
             //Widgets
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
 
-            $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+            $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories');
 
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);

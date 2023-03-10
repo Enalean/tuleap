@@ -209,18 +209,18 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile', 'cssfile', false);
+            $this->addHook('cssfile', 'cssfile');
             $this->addHook('javascript_file');
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
             $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
-            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
+            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated');
             $this->addHook(BuildArtifactFormActionEvent::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited');
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
+            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->addHook(TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);

@@ -230,20 +230,19 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
     /**
      * @deprecated Use ListeningToEventClass attribute instead (adr/0021-attributes-based-events.md)
      */
-    public function addHook($hook, $callback = null, $recallHook = false)
+    public function addHook($hook, $callback = null)
     {
-        $this->listenToHook($hook, $callback, $recallHook);
+        $this->listenToHook($hook, $callback);
     }
 
-    private function listenToHook(string $hook, ?string $callback = null, bool $recall_hook = false): void
+    private function listenToHook(string $hook, ?string $callback = null): void
     {
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check ' . $hook);
         }
-        $value               = [];
-        $value['hook']       = $hook;
-        $value['callback']   = $callback ?: $this->deduceCallbackFromHook($hook);
-        $value['recallHook'] = $recall_hook;
+        $value             = [];
+        $value['hook']     = $hook;
+        $value['callback'] = $callback ?: $this->deduceCallbackFromHook($hook);
         $this->hooks->put($hook, $value);
     }
 
