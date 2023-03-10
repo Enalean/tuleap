@@ -57,7 +57,7 @@ class ComponentIssuesRetrieverFromAPI implements ComponentIssuesRetriever
     private function getJQLComponentIssuesURL(string $component_name, string $jira_project_key): string
     {
         $params = [
-            'jql'     => 'project="' . $jira_project_key . '" AND component=' . $component_name,
+            'jql'     => 'project="' . $jira_project_key . '" AND component="' . $component_name . '"',
             'startAt' => 0,
         ];
 
