@@ -82,7 +82,7 @@ export const SideBySideLineState = (
         },
 
         getCommentLine: (comment: PullRequestInlineCommentPresenter): FileLine | null => {
-            return file_lines[comment.unidiff_offset - 1] ?? null;
+            return file_lines[comment.file.unidiff_offset - 1] ?? null;
         },
 
         isFirstLineOfGroup: (line: FileLine): boolean => {

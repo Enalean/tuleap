@@ -37,6 +37,7 @@ type ScrollableEditor = Editor & {
     scrollIntoView: jest.SpyInstance;
 };
 
+const target_comment_id = 105;
 const buildCommentWidget = (comment: PullRequestInlineCommentPresenter): InlineCommentWidget => {
     return FileDiffWidgetStub.buildInlineCommentWidget(160, {
         comment,
@@ -79,19 +80,19 @@ describe("file-diff-comment-scroller", () => {
 
     describe("scrollToUnifiedDiffComment()", () => {
         it("Given a comment id and an editor, then it should scroll the widget displaying it into view", () => {
-            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
-                id: 105,
-                unidiff_offset: 1,
-            });
+            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter(
+                { unidiff_offset: 1 },
+                target_comment_id
+            );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
 
-            scroller.scrollToUnifiedDiffComment("105", right_code_mirror);
+            scroller.scrollToUnifiedDiffComment(target_comment_id, right_code_mirror);
 
             jest.advanceTimersByTime(1);
 
             expect(right_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: comment.unidiff_offset - 1,
+                line: comment.file.unidiff_offset - 1,
                 ch: 0,
             });
             expect(right_code_mirror.refresh).toHaveBeenCalledTimes(1);
@@ -102,20 +103,26 @@ describe("file-diff-comment-scroller", () => {
     describe("scrollToSideBySideDiffComment()", () => {
         it(`Given a comment placed on the left side
             Then it should scroll the widget in the left codemirror into view`, () => {
-            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
-                id: 105,
-                unidiff_offset: 1,
-                position: INLINE_COMMENT_POSITION_LEFT,
-            });
+            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter(
+                {
+                    unidiff_offset: 1,
+                    position: INLINE_COMMENT_POSITION_LEFT,
+                },
+                target_comment_id
+            );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
 
-            scroller.scrollToSideBySideDiffComment("105", left_code_mirror, right_code_mirror);
+            scroller.scrollToSideBySideDiffComment(
+                target_comment_id,
+                left_code_mirror,
+                right_code_mirror
+            );
 
             jest.advanceTimersByTime(1);
 
             expect(left_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: comment.unidiff_offset - 1,
+                line: comment.file.unidiff_offset - 1,
                 ch: 0,
             });
             expect(left_code_mirror.refresh).toHaveBeenCalledTimes(1);
@@ -124,20 +131,26 @@ describe("file-diff-comment-scroller", () => {
 
         it(`Given a comment placed on the right side
             Then it should scroll the widget in the right codemirror into view`, () => {
-            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
-                id: 105,
-                unidiff_offset: 1,
-                position: INLINE_COMMENT_POSITION_RIGHT,
-            });
+            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter(
+                {
+                    unidiff_offset: 1,
+                    position: INLINE_COMMENT_POSITION_RIGHT,
+                },
+                target_comment_id
+            );
             const comment_widget = buildCommentWidget(comment);
             const scroller = buildScroller(comment, comment_widget);
 
-            scroller.scrollToSideBySideDiffComment("105", left_code_mirror, right_code_mirror);
+            scroller.scrollToSideBySideDiffComment(
+                target_comment_id,
+                left_code_mirror,
+                right_code_mirror
+            );
 
             jest.advanceTimersByTime(1);
 
             expect(right_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: comment.unidiff_offset - 1,
+                line: comment.file.unidiff_offset - 1,
                 ch: 0,
             });
             expect(right_code_mirror.refresh).toHaveBeenCalledTimes(1);

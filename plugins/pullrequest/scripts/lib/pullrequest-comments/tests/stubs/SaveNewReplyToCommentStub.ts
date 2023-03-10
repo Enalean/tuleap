@@ -18,7 +18,7 @@
  */
 
 import { okAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
+import { Fault } from "@tuleap/fault";
 import { errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -50,6 +50,15 @@ export const SaveNewReplyToCommentStub = {
             },
         };
     },
+
+    withDefault: (): SaveNewReplyToComment => ({
+        saveReply: (): ResultAsync<PullRequestComment, Fault> =>
+            errAsync(
+                Fault.fromMessage(
+                    "SaveNewReplyToCommentStub::saveReply was called while it's not configured"
+                )
+            ),
+    }),
 
     withFault: (fault: Fault): SaveNewReplyToComment => ({
         saveReply: (): ResultAsync<PullRequestComment, Fault> => errAsync(fault),

@@ -74,12 +74,9 @@ describe("CommentPresenterBuilder", () => {
             user,
             content: "This<br/>is<br/>awesome",
             type: TYPE_GLOBAL_COMMENT,
-            is_outdated: false,
-            is_inline_comment: false,
             post_date: "2023-03-03T10:50:00Z",
             parent_id: 0,
             color: "deep-purple",
-            is_file_diff_comment: false,
         });
     });
 
@@ -111,16 +108,15 @@ describe("CommentPresenterBuilder", () => {
             content: "This<br/>is<br/>NOT<br/>awesome",
             type: TYPE_INLINE_COMMENT,
             is_outdated: true,
-            is_inline_comment: true,
             post_date: "2023-03-03T10:50:00Z",
             parent_id: 0,
             color: "deep-purple",
-            is_file_diff_comment: false,
             file: {
                 file_url: "https://example.com/#/pull-requests/15/files/diff-README.md/12",
                 file_path: "README.md",
                 unidiff_offset: 150,
                 position: INLINE_COMMENT_POSITION_LEFT,
+                is_displayed: true,
             },
         });
     });
@@ -153,12 +149,9 @@ describe("CommentPresenterBuilder", () => {
                 user,
                 content: expected_content,
                 type: TYPE_EVENT_PULLREQUEST_ACTION,
-                is_outdated: false,
-                is_inline_comment: false,
                 post_date: "2023-03-03T10:50:00Z",
                 parent_id: 0,
                 color: "",
-                is_file_diff_comment: false,
             });
         }
     );

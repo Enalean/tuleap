@@ -24,16 +24,19 @@ import type {
 } from "@tuleap/plugin-pullrequest-comments";
 import type { FileLine } from "../types";
 import type { MapCommentWidgets } from "./FileDiffCommentWidgetsMap";
-import { INLINE_COMMENT_POSITION_LEFT } from "@tuleap/plugin-pullrequest-constants";
+import {
+    INLINE_COMMENT_POSITION_LEFT,
+    TYPE_INLINE_COMMENT,
+} from "@tuleap/plugin-pullrequest-constants";
 import { isAnAddedLine, isAnUnmovedLine } from "../file-lines/file-line-helper";
 
 export interface ScrollToFileDiffComment {
     scrollToUnifiedDiffComment: (
-        comment_id_param: string | null,
+        comment_id_param: number | null,
         unidiff_codemirror: Editor
     ) => void;
     scrollToSideBySideDiffComment: (
-        comment_id_param: string | null,
+        comment_id_param: number | null,
         left_codemirror: Editor,
         right_codemirror: Editor
     ) => void;
@@ -43,27 +46,28 @@ const getComment = (
     comments_store: StorePullRequestCommentReplies,
     comment_id: number
 ): PullRequestInlineCommentPresenter | null => {
-    const comment =
-        comments_store.getAllRootComments().find((comment) => comment.id === comment_id) ?? null;
-
-    if (!comment || comment?.is_file_diff_comment === false) {
-        return null;
-    }
-
-    return comment;
+    return (
+        comments_store
+            .getAllRootComments()
+            .filter(
+                (comment): comment is PullRequestInlineCommentPresenter =>
+                    comment.type === TYPE_INLINE_COMMENT
+            )
+            .find((comment) => comment.id === comment_id) ?? null
+    );
 };
 
 export const getLineNumberFromComment = (
     comment: PullRequestInlineCommentPresenter,
     file_lines: readonly FileLine[]
 ): number => {
-    const line = file_lines[comment.unidiff_offset - 1];
+    const line = file_lines[comment.file.unidiff_offset - 1];
     if (!line) {
         return 0;
     }
 
     if (isAnUnmovedLine(line)) {
-        return comment.position === INLINE_COMMENT_POSITION_LEFT
+        return comment.file.position === INLINE_COMMENT_POSITION_LEFT
             ? line.old_offset
             : line.new_offset;
     }
@@ -94,15 +98,11 @@ export const FileDiffCommentScroller = (
     file_lines: readonly FileLine[],
     comment_widgets_map: MapCommentWidgets
 ): ScrollToFileDiffComment => ({
-    scrollToUnifiedDiffComment: (
-        comment_id_param: string | null,
-        unidiff_codemirror: Editor
-    ): void => {
-        if (comment_id_param === null) {
+    scrollToUnifiedDiffComment: (comment_id: number | null, unidiff_codemirror: Editor): void => {
+        if (comment_id === null) {
             return;
         }
 
-        const comment_id = Number.parseInt(comment_id_param, 10);
         const comment = getComment(comments_store, comment_id);
         if (!comment) {
             return;
@@ -112,19 +112,18 @@ export const FileDiffCommentScroller = (
             comment_widgets_map,
             unidiff_codemirror,
             comment_id,
-            comment.unidiff_offset
+            comment.file.unidiff_offset
         );
     },
     scrollToSideBySideDiffComment: (
-        comment_id_param: string | null,
+        comment_id: number | null,
         left_codemirror: Editor,
         right_codemirror: Editor
     ): void => {
-        if (comment_id_param === null) {
+        if (comment_id === null) {
             return;
         }
 
-        const comment_id = Number.parseInt(comment_id_param, 10);
         const comment = getComment(comments_store, comment_id);
         if (!comment) {
             return;
@@ -132,7 +131,9 @@ export const FileDiffCommentScroller = (
 
         scrollToCommentWidget(
             comment_widgets_map,
-            comment.position === INLINE_COMMENT_POSITION_LEFT ? left_codemirror : right_codemirror,
+            comment.file.position === INLINE_COMMENT_POSITION_LEFT
+                ? left_codemirror
+                : right_codemirror,
             comment_id,
             getLineNumberFromComment(comment, file_lines)
         );

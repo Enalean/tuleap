@@ -43,25 +43,26 @@ export const CommentPresenterBuilder = {
         pull_request_id: string,
         $gettext: (msgid: string) => string
     ): PullRequestCommentPresenter => {
-        const is_inline_comment = payload.type === TYPE_INLINE_COMMENT;
-        const is_outdated = is_inline_comment ? payload.is_outdated : false;
-        const file = is_inline_comment
-            ? buildFilePresenter(payload, base_url, pull_request_id)
-            : {};
-        const thread_data = getThreadData(payload);
-        const id = payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id;
-
-        return {
-            id,
+        const common = {
+            id: payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id,
             user: payload.user,
             content: getContentMessage(payload, $gettext),
-            type: payload.type,
-            is_outdated,
-            is_inline_comment,
-            is_file_diff_comment: false,
             post_date: payload.post_date,
-            ...file,
-            ...thread_data,
+            ...getThreadData(payload),
+        };
+
+        if (payload.type === TYPE_INLINE_COMMENT) {
+            return {
+                ...common,
+                type: TYPE_INLINE_COMMENT,
+                is_outdated: payload.is_outdated,
+                file: buildFilePresenter(payload, base_url, pull_request_id),
+            };
+        }
+
+        return {
+            ...common,
+            type: payload.type,
         };
     },
 };
@@ -87,19 +88,18 @@ function buildFilePresenter(
     payload: CommentOnFile,
     base_url: URL,
     pull_request_id: string
-): { file: PullRequestCommentFile } {
+): PullRequestCommentFile {
     const file_url = new URL(base_url);
     file_url.hash = `#/pull-requests/${encodeURIComponent(
         pull_request_id
     )}/files/diff-${encodeURIComponent(payload.file_path)}/${encodeURIComponent(payload.id)}`;
 
     return {
-        file: {
-            file_url: file_url.toString(),
-            file_path: payload.file_path,
-            unidiff_offset: payload.unidiff_offset,
-            position: payload.position,
-        },
+        file_url: file_url.toString(),
+        file_path: payload.file_path,
+        unidiff_offset: payload.unidiff_offset,
+        position: payload.position,
+        is_displayed: true,
     };
 }
 

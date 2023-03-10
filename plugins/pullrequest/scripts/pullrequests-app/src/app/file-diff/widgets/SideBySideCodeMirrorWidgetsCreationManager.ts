@@ -107,11 +107,11 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
             }
 
             const target_code_mirror =
-                comment.position === INLINE_COMMENT_POSITION_LEFT
+                comment.file.position === INLINE_COMMENT_POSITION_LEFT
                     ? code_mirrors_content_manager.getLeftCodeMirrorEditor()
                     : code_mirrors_content_manager.getRightCodeMirrorEditor();
             const line_number =
-                comment.position === INLINE_COMMENT_POSITION_LEFT
+                comment.file.position === INLINE_COMMENT_POSITION_LEFT
                     ? comment_line.old_offset - 1
                     : comment_line.new_offset - 1;
 
@@ -121,7 +121,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                 line_number,
                 post_rendering_callback: () => {
                     recomputeCommentPlaceholderHeight(
-                        comment.position === INLINE_COMMENT_POSITION_LEFT
+                        comment.file.position === INLINE_COMMENT_POSITION_LEFT
                             ? code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
                             : code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
                     );

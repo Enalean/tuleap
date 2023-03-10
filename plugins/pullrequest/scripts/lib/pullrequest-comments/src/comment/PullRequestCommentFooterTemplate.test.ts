@@ -39,10 +39,10 @@ describe("PullRequestCommentFooterTemplate", () => {
         ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment(), []],
         [
             "the latest reply of a comment",
-            PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
             [
-                PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
-                PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
+                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
             ],
         ],
     ])(`Given %s, Then it should display a footer`, (expectation, comment, replies) => {
@@ -72,10 +72,10 @@ describe("PullRequestCommentFooterTemplate", () => {
         ],
         [
             "that the current comment is not the latest reply",
-            PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
             [
-                PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
-                PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 10 }),
+                PullRequestCommentPresenterStub.buildInlineCommentWithData({ id: 11 }),
             ],
         ],
     ])(`Given %s, Then it should not display a footer`, (expectation_string, comment, replies) => {

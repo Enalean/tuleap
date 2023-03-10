@@ -21,7 +21,7 @@ import { describe, beforeEach, expect, it, vi } from "vitest";
 
 import { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
+import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 import type { HostElement, PullRequestCommentComponentType } from "./PullRequestComment";
 import type {
@@ -45,21 +45,11 @@ import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusReplyToCommentTextArea,
         replies_store: StorePullRequestCommentReplies,
-        new_comment_saver: SaveNewReplyToCommentStub,
-        new_comment_reply_payload: PullRequestComment,
         on_error_callback: PullRequestCommentErrorCallback;
 
     beforeEach(() => {
-        new_comment_reply_payload = {
-            id: 13,
-            content: "Please don't",
-            color: "",
-        } as PullRequestComment;
-
         focus_helper = FocusTextReplyToCommentAreaStub();
         replies_store = PullRequestCommentRepliesStore([]);
-        new_comment_saver =
-            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
         on_error_callback = vi.fn();
     });
 
@@ -78,20 +68,18 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as HostElement;
 
-        getController(new_comment_saver).showReplyForm(host);
+        getController(SaveNewReplyToCommentStub.withDefault()).showReplyForm(host);
 
         expect(host.reply_comment_presenter).not.toBeNull();
         expect(focus_helper.focusFormReplyToCommentTextArea).toHaveBeenCalledTimes(1);
     });
 
     it("should hide the reply to comment form", () => {
-        new_comment_saver =
-            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestCommentComponentType;
 
-        getController(new_comment_saver).hideReplyForm(host);
+        getController(SaveNewReplyToCommentStub.withDefault()).hideReplyForm(host);
 
         expect(host.reply_comment_presenter).toBeNull();
     });
@@ -102,7 +90,10 @@ describe("PullRequestCommentController", () => {
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
         } as unknown as HostElement;
 
-        getController(new_comment_saver).updateCurrentReply(host, "Please rebase");
+        getController(SaveNewReplyToCommentStub.withDefault()).updateCurrentReply(
+            host,
+            "Please rebase"
+        );
 
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
     });
@@ -114,6 +105,14 @@ describe("PullRequestCommentController", () => {
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
+
+        const new_comment_reply_payload = {
+            id: 12,
+            type: TYPE_GLOBAL_COMMENT,
+            content: "Please don't",
+        } as PullRequestComment;
+        const new_comment_saver =
+            SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
 
         await getController(new_comment_saver).saveReply(host);
 
@@ -132,15 +131,15 @@ describe("PullRequestCommentController", () => {
         Then the root comment is assigned the color provided in the response payload`, async () => {
         const new_comment_reply_payload = {
             id: 13,
+            type: TYPE_GLOBAL_COMMENT,
             content: "Please don't",
             color: "flamingo-pink",
         } as PullRequestComment;
-        new_comment_saver =
+        const new_comment_saver =
             SaveNewReplyToCommentStub.withResponsePayload(new_comment_reply_payload);
 
-        const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
-            comment,
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
@@ -154,28 +153,24 @@ describe("PullRequestCommentController", () => {
     it(`should display the replies associated to the comment`, () => {
         const host = {
             replies: [],
-            comment: PullRequestCommentPresenterStub.buildWithData({
+            comment: PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 id: 12,
-                type: TYPE_INLINE_COMMENT,
             }),
         } as unknown as PullRequestCommentComponentType;
 
         replies_store = PullRequestCommentRepliesStore([
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 parent_id: 12,
-                type: TYPE_INLINE_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 parent_id: 12,
-                type: TYPE_INLINE_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 parent_id: 12,
-                type: TYPE_INLINE_COMMENT,
             }),
         ]);
 
-        getController(new_comment_saver).displayReplies(host);
+        getController(SaveNewReplyToCommentStub.withDefault()).displayReplies(host);
 
         expect(host.replies).toHaveLength(3);
     });

@@ -60,18 +60,14 @@ function TimelineService(TimelineRestService, gettextCatalog, $state) {
             return timeline
                 .filter((event) => event.type !== "reviewer-change")
                 .map((event) =>
-                    PullRequestCommentPresenterBuilder.fromTimelineEvent(
-                        $state,
-                        event,
-                        pull_request
-                    )
+                    PullRequestCommentPresenterBuilder.fromTimelineItem($state, event, pull_request)
                 );
         });
     }
 
     function addComment(pullRequest, timeline, comment_replies_store, newComment) {
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
-            const comment_presenter = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+            const comment_presenter = PullRequestCommentPresenterBuilder.fromTimelineItem(
                 $state,
                 event,
                 pullRequest

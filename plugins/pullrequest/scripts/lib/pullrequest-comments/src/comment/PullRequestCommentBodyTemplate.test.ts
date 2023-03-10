@@ -89,15 +89,15 @@ describe("PullRequestCommentBodyTemplate", () => {
         ],
         [
             "an inline-comment which is a reply to another inline-comment",
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 parent_id: 12,
-                is_inline_comment: true,
                 type: TYPE_INLINE_COMMENT,
                 file: {
                     file_url: "an/url/to/README.md",
                     file_path: "README.md",
                     unidiff_offset: 8,
                     position: "right",
+                    is_displayed: true,
                 },
             }),
         ],

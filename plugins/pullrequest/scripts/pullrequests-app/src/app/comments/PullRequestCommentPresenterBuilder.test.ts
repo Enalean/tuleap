@@ -50,8 +50,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
         $state = { href: jest.fn().mockReturnValue("url/to/file") };
     });
 
-    it("Builds a presenter from timeline payload for comment", () => {
-        const event: GlobalComment = {
+    it("Builds a presenter from a timeline item of type TYPE_GLOBAL_COMMENT", () => {
+        const timeline_item: GlobalComment = {
             id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment\nwith line return",
@@ -61,20 +61,18 @@ describe("PullRequestCommentPresenterBuilder", () => {
             user,
         };
         const pullRequest = { id: 1 } as PullRequest;
-        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+        const result = PullRequestCommentPresenterBuilder.fromTimelineItem(
             $state,
-            event,
+            timeline_item,
             pullRequest
         );
 
         expect(result.content).toBe("my comment<br/>with line return");
-        expect(result.is_inline_comment).toBe(false);
         expect(result.post_date).toBe("2020/07/13 16:16");
-        expect(result.file).toBeUndefined();
     });
 
-    it("Builds a presenter from timeline payload for inline comments", () => {
-        const event: CommentOnFile = {
+    it("Builds a presenter from a timeline item of type TYPE_INLINE_COMMENT", () => {
+        const timeline_item: CommentOnFile = {
             id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment\nwith line return",
@@ -88,45 +86,47 @@ describe("PullRequestCommentPresenterBuilder", () => {
             color: "waffle-blue",
         };
         const pullRequest = { id: 1 } as PullRequest;
-        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+        const result = PullRequestCommentPresenterBuilder.fromTimelineItem(
             $state,
-            event,
+            timeline_item,
             pullRequest
         );
 
+        if (result.type !== TYPE_INLINE_COMMENT) {
+            throw new Error("Expected a PullRequestInlineCommentPresenter");
+        }
+
         expect(result.content).toBe("my comment<br/>with line return");
-        expect(result.is_inline_comment).toBe(true);
         expect(result.post_date).toBe("2020/07/13 16:16");
         expect(result.file).toStrictEqual({
             file_url: "url/to/file",
             file_path: "README.md",
             unidiff_offset: 8,
             position: INLINE_COMMENT_POSITION_RIGHT,
+            is_displayed: true,
         });
     });
 
-    it("Builds a presenter from timeline payload for timeline events", () => {
-        const event: ActionOnPullRequestEvent = {
+    it("Builds a presenter from a timeline item of type TYPE_EVENT_PULLREQUEST_ACTION", () => {
+        const timeline_item: ActionOnPullRequestEvent = {
             post_date: "2020/07/13 16:16",
             type: TYPE_EVENT_PULLREQUEST_ACTION,
             event_type: EVENT_TYPE_UPDATE,
             user,
         };
         const pullRequest = { id: 1 } as PullRequest;
-        const result = PullRequestCommentPresenterBuilder.fromTimelineEvent(
+        const result = PullRequestCommentPresenterBuilder.fromTimelineItem(
             $state,
-            event,
+            timeline_item,
             pullRequest
         );
 
         expect(result.content).toBe("Has updated the pull request.");
-        expect(result.is_inline_comment).toBe(false);
         expect(result.post_date).toBe("2020/07/13 16:16");
-        expect(result.file).toBeUndefined();
     });
 
-    it("Builds a presenter from comment payload", () => {
-        const event: CommentOnFile = {
+    it("Builds a presenter from a file-diff comment payload", () => {
+        const file_diff_comment: CommentOnFile = {
             id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment",
@@ -139,12 +139,15 @@ describe("PullRequestCommentPresenterBuilder", () => {
             type: TYPE_INLINE_COMMENT,
             is_outdated: false,
         };
-        const result = PullRequestCommentPresenterBuilder.fromFileDiffComment(event);
+        const result = PullRequestCommentPresenterBuilder.fromFileDiffComment(file_diff_comment);
         expect(result.type).toBe(TYPE_INLINE_COMMENT);
         expect(result.is_outdated).toBe(false);
-        expect(result.is_inline_comment).toBe(true);
-        expect(result.unidiff_offset).toBe(8);
-        expect(result.position).toBe(INLINE_COMMENT_POSITION_RIGHT);
-        expect(result.file_path).toBe("README.md");
+        expect(result.file).toStrictEqual({
+            file_url: "",
+            position: file_diff_comment.position,
+            file_path: file_diff_comment.file_path,
+            unidiff_offset: file_diff_comment.unidiff_offset,
+            is_displayed: false,
+        });
     });
 });

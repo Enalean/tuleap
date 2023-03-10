@@ -21,6 +21,7 @@ import DOMPurify from "dompurify";
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 
@@ -29,7 +30,11 @@ type MapOfClasses = Record<string, boolean>;
 const displayFileNameIfNeeded = (
     comment: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestCommentComponentType> => {
-    if (!comment.file || comment.parent_id !== 0) {
+    if (
+        comment.type !== TYPE_INLINE_COMMENT ||
+        !comment.file.is_displayed ||
+        comment.parent_id !== 0
+    ) {
         return html``;
     }
 
@@ -66,6 +71,10 @@ const displayOutdatedBadgeIfNeeded = (
     comment: PullRequestCommentPresenter,
     gettext_provider: GettextProvider
 ): UpdateFunction<PullRequestCommentComponentType> => {
+    if (comment.type !== TYPE_INLINE_COMMENT) {
+        return html``;
+    }
+
     if (host.comment.id !== comment.id || !comment.is_outdated) {
         return html``;
     }
@@ -79,7 +88,8 @@ const displayOutdatedBadgeIfNeeded = (
 };
 
 const getBodyClasses = (host: PullRequestCommentComponentType): MapOfClasses => ({
-    "pull-request-comment-outdated": host.comment.is_outdated,
+    "pull-request-comment-outdated":
+        host.comment.type === TYPE_INLINE_COMMENT && host.comment.is_outdated,
 });
 
 export const buildBodyForComment = (

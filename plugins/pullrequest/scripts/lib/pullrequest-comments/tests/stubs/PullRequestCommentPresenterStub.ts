@@ -18,7 +18,6 @@
  */
 
 import type {
-    PullRequestCommentPresenter,
     PullRequestInlineCommentPresenter,
     PullRequestGlobalCommentPresenter,
 } from "../../src/comment/PullRequestCommentPresenter";
@@ -38,11 +37,8 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     },
     post_date: "a moment ago",
     content: "Please rebase",
-    is_inline_comment: false,
-    is_outdated: false,
     parent_id: 0,
     type: TYPE_GLOBAL_COMMENT,
-    is_file_diff_comment: false,
     color: "",
 };
 
@@ -51,53 +47,49 @@ const file = {
     file_url: "url/to/readme.md",
     unidiff_offset: 8,
     position: INLINE_COMMENT_POSITION_RIGHT,
+    is_displayed: true,
 };
 
 export const PullRequestCommentPresenterStub = {
-    buildInlineCommentOutdated: (): PullRequestCommentPresenter => ({
+    buildInlineCommentOutdated: (): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         file: { ...file },
         is_outdated: true,
         type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
     }),
 
-    buildInlineComment: (): PullRequestCommentPresenter => ({
+    buildInlineComment: (): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         file: { ...file },
+        is_outdated: false,
         type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
     }),
 
-    buildGlobalComment: (): PullRequestCommentPresenter => ({
+    buildInlineCommentWithData: (
+        data: Partial<PullRequestInlineCommentPresenter>
+    ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
-        is_inline_comment: false,
+        file: { ...file },
+        is_outdated: false,
+        type: TYPE_INLINE_COMMENT,
+        ...data,
+    }),
+
+    buildGlobalComment: (): PullRequestGlobalCommentPresenter => ({
+        ...comment_presenter_base,
         type: TYPE_GLOBAL_COMMENT,
     }),
 
-    buildPullRequestEventComment: (): PullRequestCommentPresenter => ({
-        ...comment_presenter_base,
-        is_inline_comment: false,
-        type: TYPE_EVENT_PULLREQUEST_ACTION,
-    }),
-
-    buildWithData: (
+    buildGlobalCommentWithData: (
         data: Partial<PullRequestGlobalCommentPresenter>
-    ): PullRequestCommentPresenter => ({
+    ): PullRequestGlobalCommentPresenter => ({
         ...comment_presenter_base,
+        type: TYPE_GLOBAL_COMMENT,
         ...data,
     }),
 
-    buildFileDiffCommentPresenter: (
-        data: Partial<PullRequestInlineCommentPresenter> = {}
-    ): PullRequestInlineCommentPresenter => ({
+    buildPullRequestEventComment: (): PullRequestGlobalCommentPresenter => ({
         ...comment_presenter_base,
-        type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
-        unidiff_offset: 8,
-        file_path: "README.md",
-        position: INLINE_COMMENT_POSITION_RIGHT,
-        is_file_diff_comment: true,
-        ...data,
+        type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 };

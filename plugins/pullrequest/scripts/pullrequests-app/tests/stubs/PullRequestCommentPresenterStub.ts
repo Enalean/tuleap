@@ -29,6 +29,7 @@ import type {
     PullRequestInlineCommentPresenter,
     PullRequestGlobalCommentPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
+import type { PullRequestCommentFile } from "@tuleap/plugin-pullrequest-comments/src/comment/PullRequestCommentPresenter";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
@@ -39,11 +40,8 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     },
     post_date: "a moment ago",
     content: "Please rebase",
-    is_inline_comment: false,
-    is_outdated: false,
     parent_id: 0,
     type: TYPE_GLOBAL_COMMENT,
-    is_file_diff_comment: false,
     color: "",
 };
 
@@ -52,6 +50,7 @@ const file = {
     file_url: "url/to/readme.md",
     unidiff_offset: 8,
     position: INLINE_COMMENT_POSITION_RIGHT,
+    is_displayed: false,
 };
 
 export const PullRequestCommentPresenterStub = {
@@ -60,45 +59,36 @@ export const PullRequestCommentPresenterStub = {
         file: { ...file },
         is_outdated: true,
         type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
     }),
 
     buildInlineComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
         file: { ...file },
+        is_outdated: false,
         type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
     }),
 
     buildGlobalComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
-        is_inline_comment: false,
         type: TYPE_GLOBAL_COMMENT,
     }),
 
     buildPullRequestEventComment: (): PullRequestCommentPresenter => ({
         ...comment_presenter_base,
-        is_inline_comment: false,
         type: TYPE_EVENT_PULLREQUEST_ACTION,
     }),
 
-    buildWithData: (
-        data: Partial<PullRequestGlobalCommentPresenter>
-    ): PullRequestCommentPresenter => ({
-        ...comment_presenter_base,
-        ...data,
-    }),
-
     buildFileDiffCommentPresenter: (
-        data: Partial<PullRequestInlineCommentPresenter> = {}
+        file_data: Partial<PullRequestCommentFile> = {},
+        comment_id: number = comment_presenter_base.id
     ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
+        id: comment_id,
         type: TYPE_INLINE_COMMENT,
-        is_inline_comment: true,
-        unidiff_offset: 8,
-        file_path: "README.md",
-        position: INLINE_COMMENT_POSITION_RIGHT,
-        is_file_diff_comment: true,
-        ...data,
+        is_outdated: false,
+        file: {
+            ...file,
+            ...file_data,
+        },
     }),
 };
