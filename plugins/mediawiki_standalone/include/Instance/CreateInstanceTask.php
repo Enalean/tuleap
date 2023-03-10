@@ -34,10 +34,10 @@ final class CreateInstanceTask implements QueueTask
     private readonly int $project_id;
     private readonly string $short_language_code;
 
-    public function __construct(\Project $project, private readonly InitializationLanguageCodeProvider $language_code_provider)
+    public function __construct(\Project $project, InitializationLanguageCodeProvider $language_code_provider)
     {
         $this->project_id          = (int) $project->getID();
-        $this->short_language_code = $this->language_code_provider->getLanguageCode();
+        $this->short_language_code = $language_code_provider->getLanguageCode();
     }
 
     public function getTopic(): string
