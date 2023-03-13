@@ -31,6 +31,7 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\Board\Projects\JiraBoardProjectsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\IssuesLinkedToEpicsRetriever;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
@@ -204,6 +205,10 @@ final class CreateProjectFromJira
         $board_retriever = new JiraBoardsRetrieverFromAPI(
             $jira_client,
             $logger,
+            new JiraBoardProjectsRetrieverFromAPI(
+                $jira_client,
+                $logger,
+            ),
         );
 
         $board = null;
