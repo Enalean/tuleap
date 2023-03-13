@@ -23,16 +23,12 @@ function visitProjectAdmin(project_id: string): void {
 
 describe("OIDC flow", function () {
     before(function () {
-        cy.clearSessionCookie();
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
         cy.getProjectId("oidc-flow").as("project_id");
     });
 
-    beforeEach(() => {
-        cy.preserveSessionCookies();
-    });
-
     it("setup a OAuth2 app to sign in on a third party service", function () {
+        cy.projectAdministratorSession();
         visitProjectAdmin(this.project_id);
         cy.get("[data-test=oauth2-create-app-button]").click();
 
@@ -65,6 +61,7 @@ describe("OIDC flow", function () {
     });
 
     it(`Project Administrator can manage OAuth2 Apps`, function () {
+        cy.projectAdministratorSession();
         visitProjectAdmin(this.project_id);
         // Create an app
         cy.get("[data-test=oauth2-create-app-button]").click();
