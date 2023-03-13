@@ -57,35 +57,42 @@ export const PullRequestCommentPresenterBuilder = {
         content: replaceLineReturns(comment.content),
         type: TYPE_INLINE_COMMENT,
         is_outdated: false,
-        is_inline_comment: true,
-        unidiff_offset: comment.unidiff_offset,
-        position: comment.position,
-        file_path: comment.file_path,
         parent_id: comment.parent_id,
-        is_file_diff_comment: true,
         color: comment.color,
+        file: {
+            file_url: "",
+            file_path: comment.file_path,
+            unidiff_offset: comment.unidiff_offset,
+            position: comment.position,
+            is_displayed: false,
+        },
     }),
-    fromTimelineEvent: (
+    fromTimelineItem: (
         $state: AngularUIRouterState,
-        payload: SupportedTimelineItem,
+        timeline_item: SupportedTimelineItem,
         pull_request: PullRequest
     ): PullRequestCommentPresenter => {
-        const id = payload.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : payload.id;
-        const is_inline_comment = payload.type === TYPE_INLINE_COMMENT;
-        const is_outdated = is_inline_comment ? payload.is_outdated : false;
-        const file = is_inline_comment ? buildFilePresenter(payload, $state, pull_request) : {};
+        const id = timeline_item.type === TYPE_EVENT_PULLREQUEST_ACTION ? 0 : timeline_item.id;
+        const base = {
+            id,
+            user: timeline_item.user,
+            content: getContentMessage(timeline_item),
+            post_date: timeline_item.post_date,
+            ...buildThreadPresenter(timeline_item),
+        };
+
+        if (timeline_item.type === TYPE_INLINE_COMMENT) {
+            return {
+                ...base,
+                type: TYPE_INLINE_COMMENT,
+                is_outdated: timeline_item.is_outdated,
+                file: buildPresenterForFileToBeDisplayed(timeline_item, $state, pull_request),
+            };
+        }
 
         return {
-            id,
-            user: payload.user,
-            content: getContentMessage(payload),
-            type: payload.type,
-            is_outdated,
-            is_inline_comment,
-            is_file_diff_comment: false,
-            post_date: payload.post_date,
-            ...file,
-            ...buildThreadPresenter(payload),
+            ...base,
+            type: timeline_item.type,
         };
     },
 };
@@ -105,22 +112,21 @@ function buildThreadPresenter(payload: SupportedTimelineItem): {
         color: payload.color,
     };
 }
-function buildFilePresenter(
+function buildPresenterForFileToBeDisplayed(
     payload: CommentOnFile,
     $state: AngularUIRouterState,
     pull_request: PullRequest
-): { file: PullRequestCommentFile } {
+): PullRequestCommentFile {
     return {
-        file: {
-            file_url: $state.href("diff", {
-                id: pull_request.id,
-                file_path: payload.file_path,
-                comment_id: payload.id,
-            }),
+        file_url: $state.href("diff", {
+            id: pull_request.id,
             file_path: payload.file_path,
-            unidiff_offset: payload.unidiff_offset,
-            position: payload.position,
-        },
+            comment_id: payload.id,
+        }),
+        file_path: payload.file_path,
+        unidiff_offset: payload.unidiff_offset,
+        position: payload.position,
+        is_displayed: true,
     };
 }
 

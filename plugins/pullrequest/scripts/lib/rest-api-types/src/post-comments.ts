@@ -21,7 +21,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
 import type { GlobalCommentType } from "@tuleap/plugin-pullrequest-constants/src/constants";
 
-interface CommentNewComment {
+interface CommonNewComment {
     readonly id: number;
     readonly post_date: string;
     readonly content: string;
@@ -30,13 +30,13 @@ interface CommentNewComment {
     readonly color: string;
 }
 
-export interface NewCommentOnFile extends CommentNewComment {
+export interface NewCommentOnFile extends CommonNewComment {
     readonly unidiff_offset: number;
     readonly position: InlineCommentPosition;
     readonly file_path: string;
 }
 
-export interface NewGlobalComment extends CommentNewComment {
+export interface NewGlobalComment extends CommonNewComment {
     readonly type: GlobalCommentType;
 }
 

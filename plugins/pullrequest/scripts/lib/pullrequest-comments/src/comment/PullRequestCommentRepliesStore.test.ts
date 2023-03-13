@@ -21,7 +21,6 @@ import { describe, beforeEach, expect, it } from "vitest";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 describe("PullRequestCommentRepliesStore", () => {
     let comment_1: PullRequestCommentPresenter,
@@ -30,57 +29,48 @@ describe("PullRequestCommentRepliesStore", () => {
         comments: PullRequestCommentPresenter[];
 
     beforeEach(() => {
-        comment_1 = PullRequestCommentPresenterStub.buildWithData({
+        comment_1 = PullRequestCommentPresenterStub.buildInlineCommentWithData({
             id: 8,
-            type: TYPE_INLINE_COMMENT,
         });
-        comment_2 = PullRequestCommentPresenterStub.buildWithData({
+        comment_2 = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
             id: 9,
-            type: TYPE_GLOBAL_COMMENT,
         });
-        comment_3 = PullRequestCommentPresenterStub.buildWithData({
+        comment_3 = PullRequestCommentPresenterStub.buildInlineCommentWithData({
             id: 10,
-            type: TYPE_INLINE_COMMENT,
         });
         comments = [
             comment_1,
             comment_2,
             comment_3,
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 id: 1,
                 parent_id: comment_1.id,
                 post_date: "2022-11-03T14:00:57+01:00",
-                type: TYPE_INLINE_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 id: 2,
                 parent_id: comment_1.id,
                 post_date: "2022-11-03T14:50:57+01:00",
-                type: TYPE_INLINE_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildInlineCommentWithData({
                 id: 3,
                 parent_id: comment_1.id,
                 post_date: "2022-11-03T14:30:57+01:00",
-                type: TYPE_INLINE_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildGlobalCommentWithData({
                 id: 1,
                 parent_id: comment_2.id,
-                type: TYPE_GLOBAL_COMMENT,
                 post_date: "2022-11-03T14:30:57+01:00",
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildGlobalCommentWithData({
                 id: 2,
                 parent_id: comment_2.id,
                 post_date: "2022-11-03T15:30:57+01:00",
-                type: TYPE_GLOBAL_COMMENT,
             }),
-            PullRequestCommentPresenterStub.buildWithData({
+            PullRequestCommentPresenterStub.buildGlobalCommentWithData({
                 id: 3,
                 parent_id: comment_2.id,
                 post_date: "2022-11-03T14:15:57+01:00",
-                type: TYPE_GLOBAL_COMMENT,
             }),
         ];
     });
@@ -124,11 +114,10 @@ describe("PullRequestCommentRepliesStore", () => {
 
     it("should add a reply to a global comment", () => {
         const store = PullRequestCommentRepliesStore(comments);
-        const new_comment = PullRequestCommentPresenterStub.buildWithData({
+        const new_comment = PullRequestCommentPresenterStub.buildGlobalCommentWithData({
             id: 1,
             parent_id: comment_2.id,
             post_date: "2022-11-03T14:00:57+01:00",
-            type: TYPE_GLOBAL_COMMENT,
         });
 
         store.addReplyToComment(comment_2, new_comment);
@@ -138,11 +127,10 @@ describe("PullRequestCommentRepliesStore", () => {
 
     it("should add a reply to an inline-comment", () => {
         const store = PullRequestCommentRepliesStore(comments);
-        const new_comment = PullRequestCommentPresenterStub.buildWithData({
+        const new_comment = PullRequestCommentPresenterStub.buildInlineCommentWithData({
             id: 1,
             parent_id: comment_3.id,
             post_date: "2022-11-03T14:00:57+01:00",
-            type: TYPE_INLINE_COMMENT,
         });
 
         store.addReplyToComment(comment_3, new_comment);

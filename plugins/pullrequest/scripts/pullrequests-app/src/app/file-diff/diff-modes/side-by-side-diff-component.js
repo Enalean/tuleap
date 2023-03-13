@@ -192,11 +192,13 @@ function controller($element, $scope, SharedPropertiesService) {
             );
         });
 
+        const comment_id = self.commentId ? Number.parseInt(self.commentId, 10) : null;
+
         FileDiffCommentScroller(
             getStore(),
             file_lines,
             comment_widgets_map
-        ).scrollToSideBySideDiffComment(self.commentId, left_code_mirror, right_code_mirror);
+        ).scrollToSideBySideDiffComment(comment_id, left_code_mirror, right_code_mirror);
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

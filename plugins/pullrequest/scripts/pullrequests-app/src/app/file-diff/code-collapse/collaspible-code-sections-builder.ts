@@ -38,7 +38,7 @@ export function isThereACommentOnThisLine(
     inline_comments: readonly PullRequestInlineCommentPresenter[]
 ): boolean {
     return Boolean(
-        inline_comments.find((comment) => comment.unidiff_offset === file_line.unidiff_offset)
+        inline_comments.find((comment) => comment.file.unidiff_offset === file_line.unidiff_offset)
     );
 }
 

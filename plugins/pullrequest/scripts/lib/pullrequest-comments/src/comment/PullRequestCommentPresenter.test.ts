@@ -18,31 +18,62 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { CommentOnFile, GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
+import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 describe("PullRequestCommentPresenterBuilder", () => {
-    it("should build a CommentReplyPresenter from a new comment payload", () => {
+    it("should build a CommentReplyPresenter from a GlobalComment", () => {
         const parent_comment = PullRequestCommentPresenterStub.buildGlobalComment();
-        const new_comment_payload: PullRequestComment = {
+        const new_comment_payload: GlobalComment = {
             id: 13,
+            type: TYPE_GLOBAL_COMMENT,
             post_date: "2020/07/13 16:16",
             content: "",
             user: {} as User,
             parent_id: 12,
             color: "",
-        } as PullRequestComment;
+        };
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(
             parent_comment,
             new_comment_payload
         );
 
-        expect(presenter.type).toBe("comment");
-        expect(presenter.is_outdated).toBe(false);
-        expect(presenter.is_inline_comment).toBe(false);
-        expect(presenter.parent_id).toBe(12);
+        expect(presenter).toStrictEqual({
+            ...new_comment_payload,
+        });
+    });
+
+    it("should build a CommentReplyPresenter from a CommentOnFile", () => {
+        const parent_comment = PullRequestCommentPresenterStub.buildInlineComment();
+        const base_comment = {
+            id: 13,
+            type: TYPE_INLINE_COMMENT,
+            post_date: "2020/07/13 16:16",
+            content: "",
+            user: {} as User,
+            parent_id: 12,
+            color: "",
+            is_outdated: false,
+        };
+        const new_comment_on_file_payload: CommentOnFile = {
+            ...base_comment,
+            file_path: parent_comment.file.file_path,
+            position: parent_comment.file.position,
+            unidiff_offset: parent_comment.file.unidiff_offset,
+        };
+
+        const presenter = PullRequestCommentPresenter.fromCommentReply(
+            parent_comment,
+            new_comment_on_file_payload
+        );
+
+        expect(presenter).toStrictEqual({
+            ...base_comment,
+            file: parent_comment.file,
+        });
     });
 });

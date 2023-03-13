@@ -24,9 +24,7 @@ import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullReq
 describe("file-diff-comment-widgets-map", () => {
     it("should return the widget associated to a comment id", () => {
         const widget_mapper = FileDiffCommentWidgetsMap();
-        const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
-            id: 105,
-        });
+        const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter();
         const comment_widget = FileDiffWidgetStub.buildInlineCommentWidget(20, {
             comment,
         });

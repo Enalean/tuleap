@@ -17,15 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InlineCommentPosition } from "@tuleap/plugin-pullrequest-constants";
+import type {
+    GlobalCommentType,
+    InlineCommentPosition,
+    InlineCommentType,
+    PullRequestActionEventType,
+} from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SupportedTimelineItemTypes } from "../types";
+import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface PullRequestCommentFile {
     readonly file_path: string;
     readonly file_url: string;
     readonly position: InlineCommentPosition;
     readonly unidiff_offset: number;
+    readonly is_displayed: boolean;
 }
 
 interface CommonComment {
@@ -33,23 +40,19 @@ interface CommonComment {
     readonly user: User;
     readonly content: string;
     readonly type: SupportedTimelineItemTypes;
-    readonly is_outdated: boolean;
-    readonly is_inline_comment: boolean;
     readonly post_date: string;
-    readonly file?: PullRequestCommentFile;
     readonly parent_id: number;
     color: string;
 }
 
 export interface PullRequestGlobalCommentPresenter extends CommonComment {
-    readonly is_file_diff_comment: false;
+    readonly type: GlobalCommentType | PullRequestActionEventType;
 }
 
 export interface PullRequestInlineCommentPresenter extends CommonComment {
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly is_file_diff_comment: true;
+    readonly type: InlineCommentType;
+    readonly file: PullRequestCommentFile;
+    readonly is_outdated: boolean;
 }
 
 export type PullRequestCommentPresenter =
@@ -60,18 +63,34 @@ export const PullRequestCommentPresenter = {
     fromCommentReply: (
         parent_comment: PullRequestCommentPresenter,
         reply: PullRequestComment
-    ): PullRequestCommentPresenter => ({
-        id: reply.id,
-        user: reply.user,
-        post_date: reply.post_date,
-        content: replaceLineReturns(reply.content),
-        type: parent_comment.type,
-        is_outdated: false,
-        is_inline_comment: parent_comment.is_inline_comment,
-        parent_id: reply.parent_id,
-        is_file_diff_comment: false,
-        color: "",
-    }),
+    ): PullRequestCommentPresenter => {
+        const common = {
+            id: reply.id,
+            user: reply.user,
+            post_date: reply.post_date,
+            content: replaceLineReturns(reply.content),
+            parent_id: reply.parent_id,
+            color: "",
+        };
+
+        if (parent_comment.type === TYPE_GLOBAL_COMMENT && reply.type === TYPE_GLOBAL_COMMENT) {
+            return {
+                ...common,
+                type: TYPE_GLOBAL_COMMENT,
+            };
+        }
+
+        if (parent_comment.type === TYPE_INLINE_COMMENT && reply.type === TYPE_INLINE_COMMENT) {
+            return {
+                ...common,
+                type: TYPE_INLINE_COMMENT,
+                is_outdated: false,
+                file: parent_comment.file,
+            };
+        }
+
+        throw new Error("Expected the root comment and the reply to have the same type.");
+    },
 };
 
 function replaceLineReturns(content: string): string {

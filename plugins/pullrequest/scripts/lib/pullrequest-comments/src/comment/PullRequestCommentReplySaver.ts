@@ -20,9 +20,18 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { postJSON, uri } from "@tuleap/fetch-result";
-import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    PullRequestComment,
+    NewCommentOnFile,
+    NewGlobalComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
-import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type {
+    PullRequestCommentPresenter,
+    PullRequestGlobalCommentPresenter,
+    PullRequestInlineCommentPresenter,
+} from "./PullRequestCommentPresenter";
+import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface SaveNewReplyToComment {
     saveReply(
@@ -32,48 +41,34 @@ export interface SaveNewReplyToComment {
 }
 
 const saveReplyToComment = (
-    root_comment: PullRequestCommentPresenter,
+    root_comment: PullRequestGlobalCommentPresenter,
     new_reply: ReplyCommentFormPresenter
 ): ResultAsync<PullRequestComment, Fault> =>
-    postJSON<PullRequestComment>(uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
+    postJSON<NewGlobalComment>(uri`/api/v1/pull_requests/${new_reply.pull_request_id}/comments`, {
         user_id: new_reply.comment_author.user_id,
         parent_id: root_comment.id,
         content: new_reply.comment_content,
-    });
+    }).map((new_comment) => ({ ...new_comment }));
 
 const saveReplyToInlineComment = (
-    root_comment: PullRequestCommentPresenter,
+    root_comment: PullRequestInlineCommentPresenter,
     new_reply: ReplyCommentFormPresenter
 ): ResultAsync<PullRequestComment, Fault> => {
-    let file_info;
-
-    if (root_comment.is_file_diff_comment) {
-        file_info = {
-            file_path: root_comment.file_path,
-            position: root_comment.position,
-            unidiff_offset: root_comment.unidiff_offset,
-        };
-    } else if (root_comment.file) {
-        file_info = {
-            file_path: root_comment.file.file_path,
-            position: root_comment.file.position,
-            unidiff_offset: root_comment.file.unidiff_offset,
-        };
-    } else {
-        throw new Error(
-            "Tried to save new comment as inline-comment while the root comment is not an inline-comment"
-        );
-    }
-
-    return postJSON<PullRequestComment>(
+    return postJSON<NewCommentOnFile>(
         uri`/api/v1/pull_requests/${new_reply.pull_request_id}/inline-comments`,
         {
             user_id: new_reply.comment_author.user_id,
             parent_id: root_comment.id,
             content: new_reply.comment_content,
-            ...file_info,
+            file_path: root_comment.file.file_path,
+            position: root_comment.file.position,
+            unidiff_offset: root_comment.file.unidiff_offset,
         }
-    );
+    ).map((new_inline_comment) => ({
+        type: TYPE_INLINE_COMMENT,
+        is_outdated: false,
+        ...new_inline_comment,
+    }));
 };
 
 export const PullRequestCommentNewReplySaver = (): SaveNewReplyToComment => ({
@@ -81,7 +76,7 @@ export const PullRequestCommentNewReplySaver = (): SaveNewReplyToComment => ({
         root_comment: PullRequestCommentPresenter,
         new_reply: ReplyCommentFormPresenter
     ): ResultAsync<PullRequestComment, Fault> =>
-        root_comment.is_inline_comment
+        root_comment.type === TYPE_INLINE_COMMENT
             ? saveReplyToInlineComment(root_comment, new_reply)
             : saveReplyToComment(root_comment, new_reply),
 });

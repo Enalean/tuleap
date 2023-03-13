@@ -17,11 +17,15 @@ describe("collapsible-code-sections-builder", () => {
 
             const inline_comments = [
                 {
-                    unidiff_offset: 666,
+                    file: {
+                        unidiff_offset: 666,
+                    },
                     content: "Hail to the lord of darkness!",
                 } as PullRequestInlineCommentPresenter,
                 {
-                    unidiff_offset: 777,
+                    file: {
+                        unidiff_offset: 777,
+                    },
                     content: "Wow, much luck!",
                 } as PullRequestInlineCommentPresenter,
             ];
@@ -52,7 +56,9 @@ describe("collapsible-code-sections-builder", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, [
                 {
                     content: "A wild inline commment",
-                    unidiff_offset: 20,
+                    file: {
+                        unidiff_offset: 20,
+                    },
                 } as PullRequestInlineCommentPresenter,
             ]);
 
@@ -72,7 +78,9 @@ describe("collapsible-code-sections-builder", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, [
                 {
                     content: "A wild inline commment",
-                    unidiff_offset: 23,
+                    file: {
+                        unidiff_offset: 23,
+                    },
                 } as PullRequestInlineCommentPresenter,
             ]);
 

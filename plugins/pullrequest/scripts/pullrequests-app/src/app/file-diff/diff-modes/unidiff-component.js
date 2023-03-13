@@ -114,7 +114,7 @@ function controller($element, $scope, SharedPropertiesService) {
                 self.widget_creator.displayInlineCommentWidget({
                     code_mirror: unidiff_codemirror,
                     comment,
-                    line_number: comment.unidiff_offset - 1,
+                    line_number: comment.file.unidiff_offset - 1,
                     post_rendering_callback: () => {
                         // Do nothing
                     },
@@ -123,11 +123,13 @@ function controller($element, $scope, SharedPropertiesService) {
 
         unidiff_codemirror.on("gutterClick", addNewComment);
 
+        const comment_id = self.commentId ? Number.parseInt(self.commentId, 10) : null;
+
         FileDiffCommentScroller(
             getStore(),
             self.diff.lines,
             comment_widgets_map
-        ).scrollToUnifiedDiffComment(self.commentId, unidiff_codemirror);
+        ).scrollToUnifiedDiffComment(comment_id, unidiff_codemirror);
     }
 
     function getCommentPosition(line_number, gutter) {
