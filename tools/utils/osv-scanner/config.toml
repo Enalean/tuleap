@@ -141,44 +141,6 @@ id = "GHSA-mc8h-8q98-g5hr" # RUSTSEC-2023-0018
 reason = "Only used at build time."
 ignoreUntil = 2023-05-08
 
-# src/additional-packages/tuleap-mercure/go.mod
-## golang.org/x/net
-[[IgnoredVulns]]
-id = "GO-2023-1495" # CVE-2022-41721
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-fxg5-wq6x-vr4w" # CVE-2022-41721
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GO-2022-1144" # CVE-2022-41717
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GO-2023-1571" # CVE-2022-41723
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-vvpx-j8f3-3w6h" # CVE-2022-41723
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-## golang.org/x/text
-[[IgnoredVulns]]
-id = "GO-2022-1059" # CVE-2022-32149
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-69ch-w2m2-3vjp" # CVE-2022-32149
-reason = "Not used in production yet."
-ignoreUntil = 2023-05-08
-
 # plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
 ## jsdom
 [[IgnoredVulns]]
