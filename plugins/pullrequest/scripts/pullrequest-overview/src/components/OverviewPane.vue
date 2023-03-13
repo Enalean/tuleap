@@ -26,6 +26,9 @@
                 <overview-threads />
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
+                <section>
+                    <pull-request-checkout-button v-bind:pull_request_info="pull_request_info" />
+                </section>
                 <section class="tlp-pane-section">
                     <pull-request-author v-bind:pull_request_info="pull_request_info" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
@@ -55,6 +58,7 @@ import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
 import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
+import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);

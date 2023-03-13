@@ -21,6 +21,12 @@ msgstr "Auteur"
 msgid "Changes"
 msgstr "Changements"
 
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Checkout with"
+msgstr "Checkout avec"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -35,6 +41,9 @@ msgstr "Échec"
 
 msgid "Failure on"
 msgstr "Échec le"
+
+msgid "HTTP"
+msgstr "HTTP"
 
 msgid "Has abandoned the pull request."
 msgstr "A abandonné la pull request."
@@ -71,6 +80,9 @@ msgstr "Date de la pull request"
 
 msgid "References"
 msgstr "Références"
+
+msgid "SSH"
+msgstr "SSH"
 
 msgid "Show details"
 msgstr "Voir les détails"

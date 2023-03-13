@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/plugin-pullrequest-rest-api-types": "workspace:*",
