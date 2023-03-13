@@ -32,7 +32,7 @@
     "lodash": "^2.4.0",
     "moment": "^2.29.4",
     "ng-scrollbar": "0.0.7",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
