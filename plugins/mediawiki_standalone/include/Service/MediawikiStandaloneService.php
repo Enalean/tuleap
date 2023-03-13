@@ -91,7 +91,7 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
         return false;
     }
 
-    public function displayAdministrationHeader(): void
+    private function getBreadCrumbs(\PFUser $user): BreadCrumbCollection
     {
         $crumb = new BreadCrumb(
             new BreadCrumbLink(
@@ -100,27 +100,43 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
             )
         );
 
-        $sub_items = new BreadCrumbSubItems();
-        $sub_items->addSection(
-            new SubItemsUnlabelledSection(
-                new BreadCrumbLinkCollection(
-                    [
-                        new BreadCrumbLink(
-                            dgettext('tuleap-mediawiki_standalone', 'Administration'),
-                            AdminPermissionsController::getAdminUrl($this->project)
-                        ),
-                    ]
+        if ($user->isAdmin((int) $this->project->getID())) {
+            $sub_items = new BreadCrumbSubItems();
+            $sub_items->addSection(
+                new SubItemsUnlabelledSection(
+                    new BreadCrumbLinkCollection(
+                        [
+                            new BreadCrumbLink(
+                                dgettext('tuleap-mediawiki_standalone', 'Administration'),
+                                AdminPermissionsController::getAdminUrl($this->project)
+                            ),
+                        ]
+                    )
                 )
-            )
-        );
-        $crumb->setSubItems($sub_items);
+            );
+            $crumb->setSubItems($sub_items);
+        }
 
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb($crumb);
 
+        return $breadcrumbs;
+    }
+
+    public function displayAdministrationHeader(\PFUser $user): void
+    {
         $this->displayHeader(
             dgettext('tuleap-mediawiki_standalone', 'MediaWiki administration'),
-            $breadcrumbs,
+            $this->getBreadCrumbs($user),
+            []
+        );
+    }
+
+    public function displayMediawikiHeader(\PFUser $user): void
+    {
+        $this->displayHeader(
+            dgettext('tuleap-mediawiki_standalone', 'MediaWiki'),
+            $this->getBreadCrumbs($user),
             []
         );
     }

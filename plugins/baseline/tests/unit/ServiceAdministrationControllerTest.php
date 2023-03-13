@@ -43,7 +43,7 @@ class ServiceAdministrationControllerTest extends TestCase
         $controller = new ServiceAdministrationController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdminPermissionsPresenterBuilder(
                 $this->createStub(\User_ForgeUserGroupFactory::class),
@@ -65,7 +65,7 @@ class ServiceAdministrationControllerTest extends TestCase
         $controller = new ServiceAdministrationController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdminPermissionsPresenterBuilder(
                 $this->createStub(\User_ForgeUserGroupFactory::class),
@@ -101,7 +101,7 @@ class ServiceAdministrationControllerTest extends TestCase
         $controller = new ServiceAdministrationController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             new AdminPermissionsPresenterBuilder(
                 $user_group_factory,

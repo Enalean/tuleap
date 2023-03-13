@@ -57,6 +57,9 @@ final class AdminPermissionsController extends DispatchablePSR15Compatible imple
         $project = $request->getAttribute(\Project::class);
         assert($project instanceof \Project);
 
+        $user = $request->getAttribute(\PFUser::class);
+        assert($user instanceof \PFUser);
+
         if (! $this->plugin->isAllowed($project->getID())) {
             throw new ForbiddenException();
         }
@@ -71,7 +74,7 @@ final class AdminPermissionsController extends DispatchablePSR15Compatible imple
 
         try {
             \ob_start();
-            $service->displayAdministrationHeader();
+            $service->displayAdministrationHeader($user);
             $this->renderer_factory
                 ->getRenderer(__DIR__ . '/../../../templates')
                 ->renderToPage(

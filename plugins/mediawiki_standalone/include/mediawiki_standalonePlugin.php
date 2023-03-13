@@ -91,6 +91,7 @@ use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityProjectServiceBeforeAvailabilityEvent;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityServiceDisabledCollectorEvent;
+use Tuleap\MediawikiStandalone\Service\UnderConstructionController;
 use Tuleap\MediawikiStandalone\XML\XMLMediaWikiExporter;
 use Tuleap\MediawikiStandalone\XML\XMLMediaWikiImporter;
 use Tuleap\OAuth2ServerCore\App\AppDao;
@@ -512,6 +513,20 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             'POST',
             '/mediawiki_standalone/admin/{' . AdminPermissionsController::PROJECT_NAME_VARIABLE_NAME . '}/permissions',
             $this->getRouteHandler('routeAdminSaveProjectPermissions')
+        );
+        $route_collector->addRoute(
+            'GET',
+            '/mediawiki_standalone/under-construction/{' . UnderConstructionController::PROJECT_NAME_VARIABLE_NAME . '}',
+            $this->getRouteHandler('routeUnderConstruction')
+        );
+    }
+
+    public function routeUnderConstruction(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new UnderConstructionController(
+            ProjectManager::instance(),
+            $this,
+            TemplateRendererFactory::build(),
         );
     }
 

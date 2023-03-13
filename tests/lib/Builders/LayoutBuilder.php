@@ -23,16 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
-use Tuleap\Layout\BaseLayout;
 
-class LayoutBuilder
+final class LayoutBuilder
 {
-    public static function build(): BaseLayout
+    public static function build(): TestLayout
     {
         return new TestLayout(new LayoutInspector());
     }
 
-    public static function buildWithInspector(LayoutInspector $inspector): BaseLayout
+    public static function buildWithInspector(LayoutInspector $inspector): TestLayout
     {
         return new TestLayout($inspector);
     }
