@@ -39,6 +39,11 @@ reason = "No usage of smarty_function_mailto."
 id = "RUSTSEC-2021-0145"
 reason = "Windows only."
 
+## mach
+[[IgnoredVulns]]
+id = "RUSTSEC-2020-0168"
+reason = "Only used when targetting macOS."
+
 ### TO BE FIXED
 
 # Lodash
