@@ -31,7 +31,7 @@ export const LinkedArtifactStub = {
         is_open: true,
         uri: "/plugins/tracker/?aid=8",
         xref: ArtifactCrossReferenceStub.withRefAndColor("tasks #8", "clockwork-orange"),
-        link_type: LinkTypeStub.buildChildLinkType(),
+        link_type: LinkTypeStub.buildParentLinkType(),
         ...data,
     }),
 

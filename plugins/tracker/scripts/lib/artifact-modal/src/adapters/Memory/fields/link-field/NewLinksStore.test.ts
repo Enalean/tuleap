@@ -26,7 +26,7 @@ describe(`NewLinksStore`, () => {
         const store = NewLinksStore();
 
         const first_link = NewLinkStub.withIdAndType(48, LinkTypeStub.buildUntyped());
-        const second_link = NewLinkStub.withIdAndType(58, LinkTypeStub.buildChildLinkType());
+        const second_link = NewLinkStub.withIdAndType(58, LinkTypeStub.buildParentLinkType());
 
         store.addNewLink(first_link);
         store.addNewLink(second_link);

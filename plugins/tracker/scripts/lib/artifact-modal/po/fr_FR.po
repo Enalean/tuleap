@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-02 11:29+0100\n"
+"PO-Revision-Date: 2023-03-10 11:06+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -113,9 +113,6 @@ msgstr "Garder le fichier"
 
 msgid "Linked artifacts are loading"
 msgstr "Les artéfacts liés sont en chargement"
-
-msgid "Linked to"
-msgstr "Lié à"
 
 msgid "Mark for removal"
 msgstr "Marquer pour suppression"
@@ -254,3 +251,12 @@ msgstr ""
 
 msgid "can only have one parent."
 msgstr "ne peut avoir qu'un seul parent."
+
+msgid "is Child of"
+msgstr "est Enfant de"
+
+msgid "is Linked to"
+msgstr "est Lié à"
+
+msgid "is Parent of"
+msgstr "est Parent de"

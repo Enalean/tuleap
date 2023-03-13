@@ -50,11 +50,11 @@ describe("LinkFieldValueFormatter", () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
             LinkedArtifactStub.withIdAndType(
                 FIRST_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildChildLinkType()
+                LinkTypeStub.buildParentLinkType()
             ),
             LinkedArtifactStub.withIdAndType(
                 SECOND_LINKED_ARTIFACT_ID,
-                LinkTypeStub.buildChildLinkType()
+                LinkTypeStub.buildParentLinkType()
             ),
             LinkedArtifactStub.withIdAndType(THIRD_LINKED_ARTIFACT_ID, LinkTypeStub.buildUntyped())
         );
@@ -74,7 +74,7 @@ describe("LinkFieldValueFormatter", () => {
     it("should remove the links to be deleted from the list", () => {
         const artifact_link_to_delete = LinkedArtifactStub.withIdAndType(
             666,
-            LinkTypeStub.buildChildLinkType()
+            LinkTypeStub.buildParentLinkType()
         );
         links_retriever =
             RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(artifact_link_to_delete);
@@ -101,7 +101,7 @@ describe("LinkFieldValueFormatter", () => {
                 },
                 { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
                 { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
-                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: FORWARD_DIRECTION },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: REVERSE_DIRECTION },
             ],
         });
     });
@@ -113,7 +113,7 @@ describe("LinkFieldValueFormatter", () => {
             field_id: FIELD_ID,
             all_links: [
                 { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
-                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: FORWARD_DIRECTION },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE, direction: REVERSE_DIRECTION },
             ],
         });
     });
@@ -135,26 +135,6 @@ describe("LinkFieldValueFormatter", () => {
                     direction: FORWARD_DIRECTION,
                 },
                 { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
-            ],
-        });
-    });
-
-    it(`sets the "all_links" with the "reverse" direction in the payload when there is a new parent link`, () => {
-        links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
-        new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildParentLinkType()),
-            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildUntyped())
-        );
-
-        expect(format()).toStrictEqual({
-            field_id: FIELD_ID,
-            all_links: [
-                {
-                    id: FIRST_NEW_LINK_ID,
-                    type: IS_CHILD_LINK_TYPE,
-                    direction: REVERSE_DIRECTION,
-                },
-                { id: SECOND_NEW_LINK_ID, type: UNTYPED_LINK, direction: FORWARD_DIRECTION },
             ],
         });
     });

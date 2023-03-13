@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
+import { getChildTypeLabel, getParentTypeLabel } from "../../../../gettext-catalog";
 
 export type CollectionOfAllowedLinksTypesPresenters = {
     readonly is_parent_type_disabled: boolean;
@@ -37,10 +38,18 @@ export const CollectionOfAllowedLinksTypesPresenters = {
         allowed_types: LinkTypesCollection
     ): CollectionOfAllowedLinksTypesPresenters => ({
         is_parent_type_disabled: parent_verifier.hasParentLink(),
-        types: allowed_types.getAll().map((pair) => ({
-            forward_type_presenter: pair.forward_type,
-            reverse_type_presenter: pair.reverse_type,
-        })),
+        types: allowed_types.getAll().map((pair) => {
+            if (LinkType.isReverseChild(pair.reverse_type)) {
+                return {
+                    forward_type_presenter: { ...pair.forward_type, label: getParentTypeLabel() },
+                    reverse_type_presenter: { ...pair.reverse_type, label: getChildTypeLabel() },
+                };
+            }
+            return {
+                forward_type_presenter: pair.forward_type,
+                reverse_type_presenter: pair.reverse_type,
+            };
+        }),
     }),
 
     buildEmpty: (): CollectionOfAllowedLinksTypesPresenters => ({

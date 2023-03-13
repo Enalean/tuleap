@@ -309,7 +309,7 @@ describe(`LinkFieldController`, () => {
     describe(`addNewLink`, () => {
         let link_type: LinkType;
         beforeEach(() => {
-            link_type = LinkTypeStub.buildParentLinkType();
+            link_type = LinkTypeStub.buildChildLinkType();
         });
 
         const addNewLink = (): NewLinkCollectionPresenter => {

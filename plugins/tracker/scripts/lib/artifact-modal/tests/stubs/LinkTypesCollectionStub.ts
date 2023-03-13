@@ -23,4 +23,6 @@ import { LinkTypesPairStub } from "./LinkTypesPairStub";
 export const LinkTypesCollectionStub = {
     withParentPair: (): LinkTypesCollection =>
         LinkTypesCollection([LinkTypesPairStub.buildParent()]),
+    withCustomPair: (): LinkTypesCollection =>
+        LinkTypesCollection([LinkTypesPairStub.buildCustom()]),
 };

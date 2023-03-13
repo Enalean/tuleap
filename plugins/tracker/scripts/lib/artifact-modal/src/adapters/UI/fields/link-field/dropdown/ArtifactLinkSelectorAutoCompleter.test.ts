@@ -295,7 +295,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     describe(`given the selected type is reverse _is_child`, () => {
         let parent_retriever_async: ResultAsync<readonly LinkableArtifact[], never>;
         beforeEach(() => {
-            host.current_link_type = LinkTypeStub.buildParentLinkType();
+            host.current_link_type = LinkTypeStub.buildChildLinkType();
             parent_retriever_async = okAsync([
                 LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID, title: FIRST_TITLE }),
                 LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID, title: SECOND_TITLE }),

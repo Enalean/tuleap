@@ -35,6 +35,9 @@ export const LinkType = {
         label: "",
     }),
 
+    isForwardChild: (type: LinkType): boolean =>
+        type.shortname === IS_CHILD_LINK_TYPE && type.direction === FORWARD_DIRECTION,
+
     isReverseChild: (type: LinkType): boolean =>
         type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
 

@@ -53,6 +53,7 @@ import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsS
 import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -81,7 +82,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     uri: "/url/to/artifact/123",
                     status: { value: "Open", color: "flamingo-pink" },
                     is_open: true,
-                    link_type: LinkTypeStub.buildParentLinkType(),
+                    link_type: LinkTypeStub.buildChildLinkType(),
                 }),
                 false
             ),
@@ -110,8 +111,9 @@ describe(`LinkedArtifactTemplate`, () => {
         const title = selectOrThrow(target, "[data-test=artifact-title]");
         const status = selectOrThrow(target, "[data-test=artifact-status]");
         const type = selectOrThrow(target, "[data-test=artifact-link-type]");
-        const expected_type =
-            presenter.link_type.shortname === "" ? "Linked to" : presenter.link_type.label;
+        const expected_type = LinkType.isUntypedLink(presenter.link_type)
+            ? "is Linked to"
+            : presenter.link_type.label;
 
         expect(link.href).toBe(presenter.uri);
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
@@ -134,7 +136,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 uri: "/url/to/artifact/123",
                 status: { value: "Open", color: null },
                 is_open: true,
-                link_type: LinkTypeStub.buildParentLinkType(),
+                link_type: LinkTypeStub.buildChildLinkType(),
             }),
             false
         );

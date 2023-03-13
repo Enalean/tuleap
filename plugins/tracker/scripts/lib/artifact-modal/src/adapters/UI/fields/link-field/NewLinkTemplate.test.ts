@@ -19,11 +19,10 @@
 
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./LinkField";
-import { getNewLinkTemplate } from "./NewLinkTemplate";
+import { getArtifactLinkTypeLabel, getNewLinkTemplate } from "./NewLinkTemplate";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { LinkFieldController } from "./LinkFieldController";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -51,6 +50,9 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -88,7 +90,7 @@ describe(`NewLinkTemplate`, () => {
                 uri: "/plugins/tracker/?aid=246",
                 status: { value: "Delivered", color: "daphne-blue" },
                 is_open: false,
-                link_type: LinkTypeStub.buildParentLinkType(),
+                link_type: LinkTypeStub.buildChildLinkType(),
             }),
         ],
     ])(`will render an artifact about to be linked (a new link)`, (_type_of_link, new_link) => {
@@ -100,8 +102,9 @@ describe(`NewLinkTemplate`, () => {
         const title = selectOrThrow(target, "[data-test=link-title]");
         const status = selectOrThrow(target, "[data-test=link-status]");
         const type = selectOrThrow(target, "[data-test=link-type]");
-        const expected_type =
-            new_link.link_type.shortname === UNTYPED_LINK ? "Linked to" : new_link.link_type.label;
+        const expected_type = LinkType.isUntypedLink(new_link.link_type)
+            ? "is Linked to"
+            : new_link.link_type.label;
 
         expect(link.href).toBe(new_link.uri);
         expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
@@ -122,7 +125,7 @@ describe(`NewLinkTemplate`, () => {
             uri: "/plugins/tracker/?aid=246",
             status: { value: "Delivered", color: null },
             is_open: false,
-            link_type: LinkTypeStub.buildParentLinkType(),
+            link_type: LinkTypeStub.buildChildLinkType(),
         });
         render(new_link);
 
@@ -211,5 +214,26 @@ describe(`NewLinkTemplate`, () => {
 
             expect(host.new_links_presenter).toHaveLength(0);
         });
+    });
+
+    describe(`getArtifactLinkTypeLabel()`, () => {
+        it.each([
+            [NewLinkStub.withIdAndType(303, LinkTypeStub.buildChildLinkType()), "is Child of"],
+            [NewLinkStub.withIdAndType(558, LinkTypeStub.buildParentLinkType()), "is Parent of"],
+            [
+                LinkedArtifactPresenter.fromLinkedArtifact(
+                    LinkedArtifactStub.withIdAndType(959, LinkTypeStub.buildUntyped()),
+                    false
+                ),
+                "is Linked to",
+            ],
+            [NewLinkStub.withIdAndType(961, LinkTypeStub.buildForwardCustom()), "Custom Forward"],
+        ])(
+            `will rename the labels of _is_child types
+            A -> _is_child -> B actually means B is child of A and A is parent of B`,
+            (linked_artifact, expected_type_label) => {
+                expect(getArtifactLinkTypeLabel(linked_artifact)).toBe(expected_type_label);
+            }
+        );
     });
 });

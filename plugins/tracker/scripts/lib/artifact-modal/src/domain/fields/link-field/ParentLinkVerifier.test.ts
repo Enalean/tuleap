@@ -74,14 +74,14 @@ describe(`ParentLinkVerifier`, () => {
 
     it(`returns true when a new reverse _is_child link exists`, () => {
         new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-            NewLinkStub.withIdAndType(162, LinkTypeStub.buildParentLinkType())
+            NewLinkStub.withIdAndType(162, LinkTypeStub.buildChildLinkType())
         );
         expect(hasParentLink()).toBe(true);
     });
 
     it(`returns true when an existing reverse _is_child link exists`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildParentLinkType())
+            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildChildLinkType())
         );
         expect(hasParentLink()).toBe(true);
     });

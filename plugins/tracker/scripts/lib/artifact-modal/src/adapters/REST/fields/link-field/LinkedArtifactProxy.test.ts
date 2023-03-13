@@ -44,7 +44,7 @@ describe(`LinkedArtifactProxy`, () => {
                 project: { id: 174, label: "Guinea Pig", icon: "🐹" },
             },
         };
-        const link_type = LinkTypeStub.buildChildLinkType();
+        const link_type = LinkTypeStub.buildParentLinkType();
 
         const linked_artifact = LinkedArtifactProxy.fromAPIArtifactAndType(api_artifact, link_type);
 
