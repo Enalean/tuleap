@@ -22,14 +22,7 @@ import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
 describe("Program management", () => {
     let program_project_name: string, team_project_name: string, other_team_project_name: string;
 
-    before(() => {
-        cy.clearSessionCookie();
-        cy.projectAdministratorLogin();
-    });
-
     beforeEach(function () {
-        cy.preserveSessionCookies();
-
         const now = Date.now();
         program_project_name = "program-" + now;
         team_project_name = "team-" + now;
@@ -37,6 +30,7 @@ describe("Program management", () => {
     });
 
     it("SAFe usage", () => {
+        cy.projectAdministratorSession();
         createProjects(program_project_name, team_project_name, other_team_project_name);
         configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
