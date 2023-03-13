@@ -81,6 +81,7 @@ describe("NewCommentForm", () => {
                 id: 13,
                 content: "Please don't",
                 user: {
+                    id: 102,
                     avatar_url: "avatar.png",
                     display_name: "John Doe",
                     user_url: "user-url",

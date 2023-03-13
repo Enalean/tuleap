@@ -228,6 +228,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 content: "Please give more precisions",
                 file_path: "README.md",
                 user: {
+                    id: 102,
                     avatar_url: "url/to/user_avatar.png",
                     user_url: "url/to/user_profile.html",
                     display_name: "Joe l'Asticot",

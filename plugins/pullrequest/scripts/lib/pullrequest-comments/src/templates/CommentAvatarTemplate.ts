@@ -17,14 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentPullRequestUserPresenter } from "@tuleap/plugin-pullrequest-comments";
+import { html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export const CurrentPullRequestUserPresenterStub = {
-    withDefault: (): CurrentPullRequestUserPresenter => ({
-        user_id: 104,
-        avatar_url: "url/to/current/user/avatar.png",
-        user_locale: "en_US",
-        preferred_relative_date_display: "absolute_first-relative_shown",
-        preferred_date_format: "Y-m-d H:i",
-    }),
-};
+type UserWithAvatar = Pick<User, "avatar_url">;
+
+export const getCommentAvatarTemplate = (user: UserWithAvatar): UpdateFunction<HTMLElement> => html`
+    <div class="tlp-avatar-medium" data-test="comment-author-avatar">
+        <img
+            src="${user.avatar_url}"
+            class="media-object"
+            aria-hidden="true"
+            data-test="comment-author-avatar-img"
+        />
+    </div>
+`;

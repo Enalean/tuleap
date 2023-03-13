@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestPresenter } from "@tuleap/plugin-pullrequest-comments";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export const CurrentPullRequestPresenterStub = {
-    withDefault: (): PullRequestPresenter => ({
-        pull_request_id: 444,
-    }),
-};
+export interface PullRequestDescriptionCommentPresenter {
+    readonly author: User;
+    readonly post_date: string;
+    readonly content: string;
+    readonly can_user_update_description: boolean;
+}

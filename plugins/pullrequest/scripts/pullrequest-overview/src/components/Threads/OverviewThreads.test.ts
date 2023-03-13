@@ -27,6 +27,7 @@ import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-d
 import {
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
+    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
 } from "@tuleap/plugin-pullrequest-comments";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
@@ -41,8 +42,20 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
-import OverviewThreadsEmptyState from "./OverviewThreadsEmptyState.vue";
 import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
+
+async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
+    wrapper.setProps({
+        pull_request_info: {
+            user_id: 102,
+        },
+        pull_request_author: {
+            id: 102,
+        },
+    });
+
+    await wrapper.vm.$nextTick();
+}
 
 describe("OverviewThreads", () => {
     let display_error_callback: SpyInstance;
@@ -69,12 +82,19 @@ describe("OverviewThreads", () => {
                 stubs: {
                     [PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME]: true,
                     [PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME]: true,
+                    [PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME]: true,
                 },
+            },
+            props: {
+                pull_request_info: null,
+                pull_request_author: null,
             },
         });
     };
 
-    it("should fetch all the comments and display them as threads (only root comments)", async () => {
+    it(`When the pull-request and the pull-request author have loaded
+        Then it should fetch the comments
+        And display the description comment + the root comments as threads`, async () => {
         vi.spyOn(tuleap_api, "fetchPullRequestTimelineItems").mockReturnValue(
             okAsync([
                 { id: 102, parent_id: 0, content: "What do you think?" } as TimelineItem,
@@ -84,8 +104,9 @@ describe("OverviewThreads", () => {
 
         const wrapper = getWrapper();
         expect(wrapper.find("[data-test=pull-request-threads]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=pull-request-threads-spinner]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=pull-request-threads-skeleton]").exists()).toBe(true);
 
+        await setWrapperProps(wrapper);
         await flushPromises();
 
         expect(display_error_callback).not.toHaveBeenCalled();
@@ -93,12 +114,15 @@ describe("OverviewThreads", () => {
 
         const threads = wrapper.find("[data-test=pull-request-threads]");
         expect(threads.exists()).toBe(true);
-        expect(threads.element.childElementCount).toBe(1);
+        expect(threads.element.childElementCount).toBe(2);
 
         const displayed_thread = wrapper.find("[data-test=pull-request-thread]");
-
         expect(displayed_thread.attributes("comment")).toBeDefined();
         expect(displayed_thread.attributes("controller")).toBeDefined();
+
+        const displayed_description = wrapper.find("[data-test=pull-request-overview-description]");
+        expect(displayed_description.attributes("description")).toBeDefined();
+        expect(displayed_description.attributes("current_user")).toBeDefined();
     });
 
     it("When an error occurs while retrieving the comments, Then it should call the display_error_callback with the fault", async () => {
@@ -106,18 +130,9 @@ describe("OverviewThreads", () => {
 
         vi.spyOn(tuleap_api, "fetchPullRequestTimelineItems").mockReturnValue(errAsync(api_fault));
 
-        getWrapper();
+        await setWrapperProps(getWrapper());
         await flushPromises();
 
         expect(display_error_callback).toHaveBeenCalledWith(api_fault);
-    });
-
-    it("should display a placeholder when there is no thread to display", async () => {
-        vi.spyOn(tuleap_api, "fetchPullRequestTimelineItems").mockReturnValue(okAsync([]));
-
-        const wrapper = getWrapper();
-        await flushPromises();
-
-        expect(wrapper.findComponent(OverviewThreadsEmptyState).exists()).toBe(true);
     });
 });

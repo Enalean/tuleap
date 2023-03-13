@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentPullRequestUserPresenter } from "../../src/comment/PullRequestCurrentUserPresenter";
+import type { CurrentPullRequestUserPresenter } from "../../src/types";
 import { PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN } from "@tuleap/tlp-relative-date";
 
 export const CurrentPullRequestUserPresenterStub = {

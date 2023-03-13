@@ -23,14 +23,17 @@
 
         <div class="tlp-pane pullrequest-overview-content-pane">
             <div class="tlp-pane-container pullrequest-overview-threads">
-                <overview-threads />
+                <overview-threads
+                    v-bind:pull_request_info="pull_request_info"
+                    v-bind:pull_request_author="pull_request_author"
+                />
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
                 <section>
                     <pull-request-checkout-button v-bind:pull_request_info="pull_request_info" />
                 </section>
                 <section class="tlp-pane-section">
-                    <pull-request-author v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-author v-bind:pull_request_author="pull_request_author" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
@@ -45,8 +48,8 @@
 <script setup lang="ts">
 import { provide, ref } from "vue";
 import { useRoute } from "vue-router";
-import { fetchPullRequestInfo } from "../api/tuleap-rest-querier";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { fetchPullRequestInfo, fetchUserInfo } from "../api/tuleap-rest-querier";
+import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import { PULL_REQUEST_ID_KEY, DISPLAY_TULEAP_API_ERROR } from "../constants";
 
@@ -63,19 +66,26 @@ import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.
 const route = useRoute();
 const pull_request_id = String(route.params.id);
 const pull_request_info = ref<PullRequest | null>(null);
+const pull_request_author = ref<User | null>(null);
 const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));
 
-fetchPullRequestInfo(pull_request_id).match(
-    (result) => {
-        pull_request_info.value = result;
-    },
-    (fault) => {
-        error.value = fault;
-    }
-);
+fetchPullRequestInfo(pull_request_id)
+    .andThen((pull_request) => {
+        pull_request_info.value = pull_request;
+
+        return fetchUserInfo(pull_request.user_id);
+    })
+    .match(
+        (author) => {
+            pull_request_author.value = author;
+        },
+        (fault) => {
+            error.value = fault;
+        }
+    );
 
 function handleAPIFault(fault: Fault) {
     error.value = fault;

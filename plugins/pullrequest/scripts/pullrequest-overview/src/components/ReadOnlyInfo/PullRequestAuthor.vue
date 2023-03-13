@@ -22,57 +22,35 @@
         <label class="tlp-label">
             {{ $gettext("Author") }}
         </label>
-        <div v-if="author" data-test="pullrequest-author-info">
+        <div v-if="props.pull_request_author" data-test="pullrequest-author-info">
             <div class="tlp-avatar-medium">
-                <img v-bind:src="author.avatar_url" data-test="pullrequest-author-avatar" />
+                <img
+                    v-bind:src="props.pull_request_author.avatar_url"
+                    data-test="pullrequest-author-avatar"
+                />
             </div>
             <a
                 class="pullrequest-author-name"
-                v-bind:href="author.user_url"
+                v-bind:href="props.pull_request_author.user_url"
                 data-test="pullrequest-author-name"
             >
-                {{ author.display_name }}
+                {{ props.pull_request_author.display_name }}
             </a>
         </div>
-        <property-skeleton v-if="!props.pull_request_info || !author" />
+        <property-skeleton v-if="!props.pull_request_author" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
-import { fetchUserInfo } from "../../api/tuleap-rest-querier";
-import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PropertySkeleton from "./PropertySkeleton.vue";
-import { strictInject } from "../../helpers/strict-inject";
-import { DISPLAY_TULEAP_API_ERROR } from "../../constants";
 
 const { $gettext } = useGettext();
 
-const author = ref<User | null>(null);
 const props = defineProps<{
-    pull_request_info: PullRequest | null;
+    pull_request_author: User | null;
 }>();
-
-const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
-
-watch(
-    () => props.pull_request_info,
-    (new_pull_request_info) => {
-        if (!new_pull_request_info) {
-            return;
-        }
-
-        fetchUserInfo(new_pull_request_info.user_id).match(
-            (result) => {
-                author.value = result;
-            },
-            (fault) => {
-                displayTuleapAPIFault(fault);
-            }
-        );
-    }
-);
 </script>
 
 <style lang="scss">

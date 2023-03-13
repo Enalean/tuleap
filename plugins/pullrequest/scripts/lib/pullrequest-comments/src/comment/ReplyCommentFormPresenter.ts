@@ -18,7 +18,7 @@
  */
 
 import type { PullRequestPresenter } from "./PullRequestPresenter";
-import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
+import type { CurrentPullRequestUserPresenter } from "../types";
 
 export interface ReplyCommentFormPresenter {
     pull_request_id: number;

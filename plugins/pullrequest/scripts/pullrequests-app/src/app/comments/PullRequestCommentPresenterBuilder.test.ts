@@ -36,6 +36,7 @@ import { PullRequestCommentPresenterBuilder } from "./PullRequestCommentPresente
 import { setCatalog } from "../gettext-catalog";
 
 const user: User = {
+    id: 102,
     user_url: "url/to/user_profile.html",
     avatar_url: "url/to/user_avatar.png",
     display_name: "Joe l'Asticot",
