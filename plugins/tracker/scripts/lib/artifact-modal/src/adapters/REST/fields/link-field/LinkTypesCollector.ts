@@ -18,7 +18,6 @@
  */
 
 import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 import type { LinkTypesPair } from "../../../../domain/fields/link-field/LinkTypesPair";
 
@@ -26,28 +25,21 @@ export const LinkTypesCollector = {
     buildFromTypesRepresentations: (
         allowed_types: readonly AllowedLinkTypeRepresentation[]
     ): LinkTypesCollection => {
-        const only_is_child_type = allowed_types.filter(
-            (type) => type.shortname === IS_CHILD_LINK_TYPE
-        );
-
-        const allowed_links_types = only_is_child_type.reduce<LinkTypesPair[]>(
-            (accumulator, type) => {
-                accumulator.push({
-                    forward_type: {
-                        shortname: type.shortname,
-                        direction: "forward",
-                        label: type.forward_label,
-                    },
-                    reverse_type: {
-                        shortname: type.shortname,
-                        direction: "reverse",
-                        label: type.reverse_label,
-                    },
-                });
-                return accumulator;
-            },
-            []
-        );
+        const allowed_links_types = allowed_types.reduce<LinkTypesPair[]>((accumulator, type) => {
+            accumulator.push({
+                forward_type: {
+                    shortname: type.shortname,
+                    direction: "forward",
+                    label: type.forward_label,
+                },
+                reverse_type: {
+                    shortname: type.shortname,
+                    direction: "reverse",
+                    label: type.reverse_label,
+                },
+            });
+            return accumulator;
+        }, []);
 
         return LinkTypesCollection(allowed_links_types);
     },
