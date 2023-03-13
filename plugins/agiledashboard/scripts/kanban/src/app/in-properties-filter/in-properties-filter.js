@@ -1,4 +1,4 @@
-import { escape, clone } from "lodash";
+import { escape, clone } from "lodash-es";
 
 export default InPropertiesFilter;
 

@@ -1,5 +1,5 @@
 import "../in-properties-filter/in-properties-filter.js";
-import { remove } from "lodash";
+import { remove } from "lodash-es";
 
 export default KanbanColumnService;
 

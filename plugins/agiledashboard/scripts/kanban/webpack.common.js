@@ -43,8 +43,6 @@ const webpack_config_for_kanban = {
             // deduplicate angular that is also used by artifact-modal and angular-async
             angular$: path.resolve(__dirname, "./node_modules/angular"),
             "angular-sanitize$": path.resolve(__dirname, "./node_modules/angular-sanitize"),
-            // deduplicate lodash that is also used by artifact-modal
-            lodash$: path.resolve(__dirname, "./node_modules/lodash"),
             // deduplicate moment that is also used by artifact-modal and card-fields
             moment$: path.resolve(__dirname, "./node_modules/moment"),
         },
