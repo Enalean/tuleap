@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
+import * as use_list_picker from "../Helpers/use-list-picker";
 import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("ArtifactLinkTypesSelector", () => {
+    beforeEach(() => {
+        vi.spyOn(use_list_picker, "useListPicker").mockImplementation(() => {
+            // Noop
+        });
+    });
+
     it("displays possible reports and select them all by default", async () => {
         vi.spyOn(rest_querier, "getTrackerCurrentlyUsedArtifactLinkTypes").mockResolvedValue([
             { shortname: "shortname_a", forward_label: "A" },

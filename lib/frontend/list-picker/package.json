@@ -10,6 +10,14 @@
   "module": "dist/list-picker.js",
   "main": "dist/list-picker.umd.cjs",
   "style": "dist/style.css",
+  "exports": {
+    ".": {
+      "import": "./dist/list-picker.js",
+      "require": "./dist/list-picker.umd.cjs",
+      "style": "./dist/style.css"
+    },
+    "./style": "./dist/style.css"
+  },
   "dependencies": {
     "@tuleap/gettext": "workspace:*",
     "@tuleap/tlp": "workspace:*",

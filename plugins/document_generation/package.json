@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/list-picker": "workspace:*",
     "@tuleap/plugin-docgen-docx": "workspace:*",
     "@tuleap/plugin-docgen-xlsx": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
@@ -15,7 +16,6 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "@vueform/multiselect": "^2.3.3",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.37",
