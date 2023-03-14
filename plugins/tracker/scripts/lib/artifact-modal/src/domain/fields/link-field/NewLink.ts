@@ -39,4 +39,9 @@ export const NewLink = {
         is_open: artifact.is_open,
         link_type: type,
     }),
+
+    fromNewLinkAndType: (link: NewLink, new_type: LinkType): NewLink => ({
+        ...link,
+        link_type: new_type,
+    }),
 };

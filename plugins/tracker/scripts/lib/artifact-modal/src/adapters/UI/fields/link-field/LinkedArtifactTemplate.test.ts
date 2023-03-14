@@ -54,6 +54,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -197,6 +198,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
+                ChangeNewLinkTypeStub.withCount(),
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,

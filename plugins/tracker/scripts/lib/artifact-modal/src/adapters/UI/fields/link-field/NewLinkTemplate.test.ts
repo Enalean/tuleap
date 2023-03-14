@@ -50,9 +50,9 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
+import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -64,9 +64,13 @@ describe(`NewLinkTemplate`, () => {
     });
 
     const render = (link: NewLink): void => {
-        const host = {} as HostElement;
+        const host = {
+            field_presenter: {
+                current_artifact_reference: ArtifactCrossReferenceStub.withRef("story #330"),
+            },
+        } as HostElement;
 
-        const updateFunction = getNewLinkTemplate(link);
+        const updateFunction = getNewLinkTemplate(host, link);
         updateFunction(host, target);
     };
 
@@ -101,17 +105,12 @@ describe(`NewLinkTemplate`, () => {
         const xref = selectOrThrow(target, "[data-test=link-xref]");
         const title = selectOrThrow(target, "[data-test=link-title]");
         const status = selectOrThrow(target, "[data-test=link-status]");
-        const type = selectOrThrow(target, "[data-test=link-type]");
-        const expected_type = LinkType.isUntypedLink(new_link.link_type)
-            ? "is Linked to"
-            : new_link.link_type.label;
 
         expect(link.href).toBe(new_link.uri);
         expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
         expect(title.textContent?.trim()).toBe(new_link.title);
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
-        expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("tlp-table-row-success")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
@@ -134,14 +133,12 @@ describe(`NewLinkTemplate`, () => {
         const xref = selectOrThrow(target, "[data-test=link-xref]");
         const title = selectOrThrow(target, "[data-test=link-title]");
         const status = selectOrThrow(target, "[data-test=link-status]");
-        const type = selectOrThrow(target, "[data-test=link-type]");
 
         expect(link.href).toBe(new_link.uri);
         expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
         expect(title.textContent?.trim()).toBe(new_link.title);
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
-        expect(type.textContent?.trim()).toBe(new_link.link_type.label);
 
         expect(row.classList.contains("tlp-table-row-success")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
@@ -177,6 +174,7 @@ describe(`NewLinkTemplate`, () => {
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
+                ChangeNewLinkTypeStub.withCount(),
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,
@@ -195,13 +193,16 @@ describe(`NewLinkTemplate`, () => {
             );
 
             return {
+                field_presenter: {
+                    current_artifact_reference: ArtifactCrossReferenceStub.withRef("story #330"),
+                },
                 new_links_presenter: NewLinkCollectionPresenter.fromLinks([new_link]),
                 controller,
             } as HostElement;
         };
 
         const render = (host: HostElement, new_link: NewLink): void => {
-            const update = getNewLinkTemplate(new_link);
+            const update = getNewLinkTemplate(host, new_link);
             update(host, target);
         };
 
@@ -218,8 +219,20 @@ describe(`NewLinkTemplate`, () => {
 
     describe(`getArtifactLinkTypeLabel()`, () => {
         it.each([
-            [NewLinkStub.withIdAndType(303, LinkTypeStub.buildChildLinkType()), "is Child of"],
-            [NewLinkStub.withIdAndType(558, LinkTypeStub.buildParentLinkType()), "is Parent of"],
+            [
+                LinkedArtifactPresenter.fromLinkedArtifact(
+                    LinkedArtifactStub.withIdAndType(303, LinkTypeStub.buildChildLinkType()),
+                    false
+                ),
+                "is Child of",
+            ],
+            [
+                LinkedArtifactPresenter.fromLinkedArtifact(
+                    LinkedArtifactStub.withIdAndType(558, LinkTypeStub.buildParentLinkType()),
+                    false
+                ),
+                "is Parent of",
+            ],
             [
                 LinkedArtifactPresenter.fromLinkedArtifact(
                     LinkedArtifactStub.withIdAndType(959, LinkTypeStub.buildUntyped()),
@@ -227,7 +240,13 @@ describe(`NewLinkTemplate`, () => {
                 ),
                 "is Linked to",
             ],
-            [NewLinkStub.withIdAndType(961, LinkTypeStub.buildForwardCustom()), "Custom Forward"],
+            [
+                LinkedArtifactPresenter.fromLinkedArtifact(
+                    LinkedArtifactStub.withIdAndType(961, LinkTypeStub.buildForwardCustom()),
+                    false
+                ),
+                "Custom Forward",
+            ],
         ])(
             `will rename the labels of _is_child types
             A -> _is_child -> B actually means B is child of A and A is parent of B`,

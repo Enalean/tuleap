@@ -30,7 +30,6 @@ import {
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
-import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
@@ -42,6 +41,8 @@ import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import "./LinkTypeSelectorElement";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -201,6 +202,10 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
     `;
 };
 
+export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
+    host.current_link_type = event.detail.new_link_type;
+};
+
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field",
     artifact_link_select: ({ content }) => {
@@ -273,14 +278,20 @@ export const LinkField = define<LinkField>({
                     ${host.linked_artifacts_presenter.linked_artifacts.map(
                         getLinkedArtifactTemplate
                     )}
-                    ${host.new_links_presenter.map(getNewLinkTemplate)}
+                    ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
                     ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
                     ${getEmptyStateIfNeeded(host)}
                 </tbody>
                 <tfoot class="link-field-table-footer">
                     <tr class="link-field-table-row">
                         <td class="link-field-table-footer-type">
-                            ${getTypeSelectorTemplate(host)}
+                            <tuleap-artifact-modal-link-type-selector
+                                value="${host.current_link_type}"
+                                current_artifact_reference="${host.field_presenter
+                                    .current_artifact_reference}"
+                                available_types="${host.allowed_link_types}"
+                                onvalue-changed="${onLinkTypeChanged}"
+                            ></tuleap-artifact-modal-link-type-selector>
                         </td>
                         <td class="link-field-table-footer-input" colspan="3">
                             <div class="link-field-selector-wrapper">

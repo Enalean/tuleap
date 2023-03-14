@@ -55,6 +55,7 @@ import { WillEnableSubmit } from "../../../../domain/submit/WillEnableSubmit";
 import { getSubmitDisabledForLinksReason } from "../../../../gettext-catalog";
 import { WillClearFaultNotification } from "../../../../domain/WillClearFaultNotification";
 import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
+import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/ChangeNewLinkType";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -65,6 +66,7 @@ export type LinkFieldControllerType = {
     autoComplete(host: LinkField, query: string): void;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
+    changeNewLinkType(link: NewLink, new_link_type: LinkType): NewLinkCollectionPresenter;
     retrievePossibleParentsGroups(): PromiseLike<GroupOfItems>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
@@ -98,6 +100,7 @@ export const LinkFieldController = (
     new_link_adder: AddNewLink,
     new_link_remover: DeleteNewLink,
     new_links_retriever: RetrieveNewLinks,
+    new_link_type_changer: ChangeNewLinkType,
     parent_verifier: VerifyHasParentLink,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
@@ -171,6 +174,11 @@ export const LinkFieldController = (
 
     removeNewLink(link): NewLinkCollectionPresenter {
         new_link_remover.deleteNewLink(link);
+        return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
+    },
+
+    changeNewLinkType(link, type): NewLinkCollectionPresenter {
+        new_link_type_changer.changeNewLinkType(link, type);
         return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
     },
 

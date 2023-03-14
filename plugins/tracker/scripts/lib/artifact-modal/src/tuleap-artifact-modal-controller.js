@@ -185,6 +185,7 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 new_links_store,
+                new_links_store,
                 ParentLinkVerifier(links_store, new_links_store, parent_identifier),
                 possible_parents_cache,
                 already_linked_verifier,

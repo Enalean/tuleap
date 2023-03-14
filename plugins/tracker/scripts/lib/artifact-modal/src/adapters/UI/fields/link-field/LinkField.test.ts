@@ -25,6 +25,7 @@ import {
     getEmptyStateIfNeeded,
     getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
+    onLinkTypeChanged,
     setAllowedTypes,
     setLinkedArtifacts,
     setNewLinks,
@@ -51,6 +52,7 @@ import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGr
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
+import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -327,6 +329,23 @@ describe("LinkField", () => {
                     expect(focus).toHaveBeenCalledTimes(1);
                 });
             });
+        });
+    });
+
+    describe(`events`, () => {
+        it(`when it receives a value-changed event from the link type selector element,
+            it will set the current link type`, () => {
+            const host = {
+                current_link_type: LinkTypeStub.buildUntyped(),
+            } as LinkField;
+
+            onLinkTypeChanged(
+                host,
+                new CustomEvent<ValueChangedEvent>("value-changed", {
+                    detail: { new_link_type: LinkTypeStub.buildChildLinkType() },
+                })
+            );
+            expect(LinkType.isReverseChild(host.current_link_type)).toBe(true);
         });
     });
 });
