@@ -18,19 +18,15 @@
  */
 
 describe("Mediawiki private projects", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     it("Project members can read", function () {
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.visit("/plugins/mediawiki/wiki/mediawiki-private-project/");
 
         cy.get("[data-test=mediawiki-content]").contains("My custom content");
     });
 
     it("Non project members can not access to mediawiki", function () {
-        cy.regularUserLogin();
+        cy.regularUserSession();
 
         //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
         cy.visit("/plugins/mediawiki/wiki/mediawiki-private-project/", {

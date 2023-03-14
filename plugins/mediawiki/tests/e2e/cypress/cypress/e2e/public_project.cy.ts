@@ -18,12 +18,8 @@
  */
 
 describe("Mediawiki public projects", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     it("platform administrator can choose mediawiki visibility", function () {
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
 
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");
 
@@ -38,7 +34,7 @@ describe("Mediawiki public projects", function () {
     });
 
     it("Registered users can read", function () {
-        cy.regularUserLogin();
+        cy.regularUserSession();
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");
 
         cy.get("[data-test=mediawiki-content]").contains("My custom content");
@@ -49,7 +45,7 @@ describe("Mediawiki public projects", function () {
     });
 
     it("Project member can read and write", function () {
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");
 
         cy.get("[data-test=mediawiki-content]").contains("My custom content");

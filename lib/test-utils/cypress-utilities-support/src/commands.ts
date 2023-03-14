@@ -35,6 +35,21 @@ Cypress.Commands.add("projectMemberSession", () => {
     sessionThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
 });
 
+Cypress.Commands.add("siteAdministratorSession", () => {
+    sessionThroughWebUI("admin", "welcome0");
+});
+
+Cypress.Commands.add("regularUserSession", () => {
+    sessionThroughWebUI("RegularUser", "Correct Horse Battery Staple");
+});
+
+Cypress.Commands.add("anonymousSession", () => {
+    cy.session(["WebUI", "/anonymous"], () => {
+        cy.visit("/");
+        // Do not log in
+    });
+});
+
 Cypress.Commands.add("projectAdministratorLogin", () => {
     loginThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
 });
@@ -47,8 +62,12 @@ Cypress.Commands.add("platformAdminLogin", () => {
     loginThroughWebUI("admin", "welcome0");
 });
 
-Cypress.Commands.add("restrictedMemberLogin", () => {
-    loginThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
+Cypress.Commands.add("restrictedMemberSession", () => {
+    sessionThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
+});
+
+Cypress.Commands.add("restrictedRegularUserSession", () => {
+    sessionThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("restrictedRegularUserLogin", () => {
@@ -141,9 +160,7 @@ function visitServiceInCurrentProject(
 }
 
 Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
-    cy.platformAdminLogin();
-
-    cy.get("[data-test=platform-administration-link]").click();
+    cy.visit("/admin/");
     cy.get("[data-test=global_access_right]").click({ force: true });
 
     cy.get("[data-test=access_mode-restricted]").check();
@@ -157,21 +174,15 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
     cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
     cy.get("[data-test=user-status]").select("Restricted");
     cy.get("[data-test=save-user]").click();
-
-    cy.userLogout();
 });
 
 Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
-    cy.platformAdminLogin();
-
-    cy.get("[data-test=platform-administration-link]").click();
+    cy.visit("/admin/");
     cy.get("[data-test=global_access_right]").click({ force: true });
 
     cy.get("[data-test=access_mode-anonymous]").check();
 
     cy.get("[data-test=update_forge_access_button]").click({ force: true });
-
-    cy.userLogout();
 });
 
 Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<number> => {
