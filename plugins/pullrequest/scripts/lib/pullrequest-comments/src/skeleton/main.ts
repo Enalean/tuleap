@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
-
-export * from "./types";
-export * from "./comment/main";
-export * from "./new-comment-form/main";
-export * from "./description-comment/main";
-export * from "./skeleton/main";
+export {
+    PullRequestCommentSkeletonComponent,
+    PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
+} from "./PullRequestCommentSkeleton";

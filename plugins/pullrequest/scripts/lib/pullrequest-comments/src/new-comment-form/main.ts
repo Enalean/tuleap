@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
-
-export * from "./types";
-export * from "./comment/main";
-export * from "./new-comment-form/main";
-export * from "./description-comment/main";
-export * from "./skeleton/main";
+export {
+    NewInlineCommentFormComponent,
+    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+} from "./NewCommentForm";
+export type {
+    NewCommentFormComponentConfig,
+    NewCommentFormAuthorPresenter,
+} from "./NewCommentForm";
+export { NewCommentSaver } from "./NewCommentSaver";
+export type { InlineCommentContext, SaveNewComment } from "./NewCommentSaver";
