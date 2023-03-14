@@ -28,7 +28,7 @@ specifiers:
   d3-shape: ^3.0.1
   dragular: 4.2.0
   jquery: ^3.6.0
-  lodash: ^2.4.0
+  lodash-es: ^4.17.21
   moment: ^2.29.4
   ng-scrollbar: 0.0.7
   socket.io-client: ^4.6.1
@@ -58,7 +58,7 @@ dependencies:
   d3-selection: 3.0.0
   d3-shape: 3.0.1
   dragular: 4.2.0
-  lodash: 2.4.0
+  lodash-es: 4.17.21
   moment: 2.29.4
   ng-scrollbar: 0.0.7
   socket.io-client: 4.6.1
@@ -229,9 +229,8 @@ packages:
     resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true
 
-  /lodash/2.4.0:
-    resolution: {integrity: sha512-nIjaweI+LHygGWjtPBi4E03eBE36hme8t0mgkl2tDJVOMBIH8P+m3FB/vdX1Tw5bmRqyRQzE0HBQ6uvlysC1xw==}
-    engines: {'0': node, '1': rhino}
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
   /moment/2.29.4:

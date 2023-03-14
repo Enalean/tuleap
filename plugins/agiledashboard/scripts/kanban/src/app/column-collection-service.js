@@ -1,4 +1,4 @@
-import { remove } from "lodash";
+import { remove } from "lodash-es";
 
 export default ColumnCollectionService;
 
