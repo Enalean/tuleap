@@ -24,11 +24,12 @@ import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
+import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { gettext_provider } from "../gettext-provider";
-import type { HelpRelativeDatesDisplay } from "./relative-dates-helper";
+import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 
 export const PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestCommentComponentType & HTMLElement;
@@ -133,13 +134,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     content: (host) => html`
         <div class="pull-request-comment-component">
             <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
-                <div class="tlp-avatar-medium">
-                    <img
-                        src="${host.comment.user.avatar_url}"
-                        class="media-object"
-                        aria-hidden="true"
-                    />
-                </div>
+                ${getCommentAvatarTemplate(host.comment.user)}
 
                 <div class="${getCommentContentClasses(host)}">
                     ${getCommentBody(host, gettext_provider)}

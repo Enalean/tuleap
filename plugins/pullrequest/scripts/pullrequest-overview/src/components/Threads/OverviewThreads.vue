@@ -21,9 +21,15 @@
     <section class="tlp-pane-section pull-request-threads-section">
         <tuleap-pullrequest-comment-skeleton
             v-if="is_loading_threads"
-            data-test="pull-request-threads-spinner"
+            data-test="pull-request-threads-skeleton"
         />
-        <div v-if="!is_loading_threads && threads.list.length > 0" data-test="pull-request-threads">
+        <div v-if="!is_loading_threads" data-test="pull-request-threads">
+            <tuleap-pullrequest-description-comment
+                data-test="pull-request-overview-description"
+                class="pull-request-description"
+                v-bind:description="description_comment_presenter"
+                v-bind:current_user="current_user_presenter"
+            />
             <tuleap-pullrequest-comment
                 data-test="pull-request-thread"
                 class="pull-request-overview-thread"
@@ -33,15 +39,15 @@
                 v-bind:controller="comments_controller"
             />
         </div>
-        <overview-threads-empty-state v-if="!is_loading_threads && threads.list.length === 0" />
         <overview-new-comment-form v-if="!is_loading_threads" />
     </section>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, provide } from "vue";
+import { ref, reactive, provide, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "../../helpers/strict-inject";
 import {
     PULL_REQUEST_ID_KEY,
@@ -56,7 +62,7 @@ import {
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
-import OverviewThreadsEmptyState from "./OverviewThreadsEmptyState.vue";
+
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 
 import "@tuleap/plugin-pullrequest-comments";
@@ -75,11 +81,19 @@ import {
     PullRequestCommentRepliesStore,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
-
 import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
-import type { StorePullRequestCommentReplies } from "@tuleap/plugin-pullrequest-comments";
+import type {
+    StorePullRequestCommentReplies,
+    PullRequestDescriptionCommentPresenter,
+} from "@tuleap/plugin-pullrequest-comments";
+import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresenterBuilder";
 
 const { $gettext } = useGettext();
+
+const props = defineProps<{
+    pull_request_info: PullRequest | null;
+    pull_request_author: User | null;
+}>();
 
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
@@ -107,45 +121,61 @@ const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
 const current_pull_request_presenter = ref<PullRequestPresenter>({
     pull_request_id: Number.parseInt(pull_request_id, 10),
 });
+const description_comment_presenter = ref<null | PullRequestDescriptionCommentPresenter>(null);
 
 provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
 
-fetchPullRequestTimelineItems(pull_request_id)
-    .match(
-        (result) => {
-            comments_presenters.value = result
-                .filter(
-                    (comment): comment is SupportedTimelineItem =>
-                        comment.type !== TYPE_EVENT_REVIEWER_CHANGE
-                )
-                .map((comment) =>
-                    CommentPresenterBuilder.fromPayload(
-                        comment,
-                        base_url,
-                        pull_request_id,
-                        $gettext
-                    )
-                );
-        },
-        (fault) => {
-            displayTuleapAPIFault(fault);
+watch(
+    () => props.pull_request_info && props.pull_request_author,
+    () => {
+        if (!props.pull_request_info || !props.pull_request_author) {
+            return;
         }
-    )
-    .then(() => {
-        replies_store.value = PullRequestCommentRepliesStore(comments_presenters.value);
-        threads.list = [...replies_store.value.getAllRootComments()];
 
-        comments_controller.value = PullRequestCommentController(
-            PullRequestCommentReplyFormFocusHelper(),
-            replies_store.value,
-            PullRequestCommentNewReplySaver(),
-            current_user_presenter.value,
-            current_pull_request_presenter.value,
-            displayTuleapAPIFault
-        );
+        description_comment_presenter.value =
+            DescriptionCommentPresenterBuilder.fromPullRequestAndItsAuthor(
+                props.pull_request_info,
+                props.pull_request_author
+            );
 
-        is_loading_threads.value = false;
-    });
+        fetchPullRequestTimelineItems(pull_request_id)
+            .match(
+                (result) => {
+                    comments_presenters.value = result
+                        .filter(
+                            (comment): comment is SupportedTimelineItem =>
+                                comment.type !== TYPE_EVENT_REVIEWER_CHANGE
+                        )
+                        .map((comment) =>
+                            CommentPresenterBuilder.fromPayload(
+                                comment,
+                                base_url,
+                                pull_request_id,
+                                $gettext
+                            )
+                        );
+                },
+                (fault) => {
+                    displayTuleapAPIFault(fault);
+                }
+            )
+            .then(() => {
+                replies_store.value = PullRequestCommentRepliesStore(comments_presenters.value);
+                threads.list = [...replies_store.value.getAllRootComments()];
+
+                comments_controller.value = PullRequestCommentController(
+                    PullRequestCommentReplyFormFocusHelper(),
+                    replies_store.value,
+                    PullRequestCommentNewReplySaver(),
+                    current_user_presenter.value,
+                    current_pull_request_presenter.value,
+                    displayTuleapAPIFault
+                );
+
+                is_loading_threads.value = false;
+            });
+    }
+);
 
 function addNewRootComment(comment: PullRequestCommentPresenter): void {
     if (!replies_store.value) {
@@ -160,7 +190,8 @@ function addNewRootComment(comment: PullRequestCommentPresenter): void {
 <style lang="scss">
 @use "@tuleap/plugin-pullrequest-comments";
 
-.pull-request-overview-thread > .pull-request-comment-component {
+.pull-request-overview-thread > .pull-request-comment-component,
+.pull-request-description > .pull-request-description-comment {
     margin: 0 0 var(--tlp-small-spacing);
 }
 

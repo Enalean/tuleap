@@ -34,6 +34,7 @@ import type { PullRequestCommentFile } from "@tuleap/plugin-pullrequest-comments
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
     user: {
+        id: 102,
         avatar_url: "https://example.com/John/Doe/avatar.png",
         display_name: "John Doe",
         user_url: "https://example.com/John/Doe/profile.html",

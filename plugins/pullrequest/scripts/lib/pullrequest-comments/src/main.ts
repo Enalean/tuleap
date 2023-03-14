@@ -39,7 +39,6 @@ export type {
 
 export type { ControlPullRequestComment } from "./comment/PullRequestCommentController";
 export type { StorePullRequestCommentReplies } from "./comment/PullRequestCommentRepliesStore";
-export type { CurrentPullRequestUserPresenter } from "./comment/PullRequestCurrentUserPresenter";
 export type { PullRequestPresenter } from "./comment/PullRequestPresenter";
 
 export {
@@ -57,3 +56,9 @@ export type {
 } from "./new-comment-form/NewCommentForm";
 export { NewCommentSaver } from "./new-comment-form/NewCommentSaver";
 export type { InlineCommentContext, SaveNewComment } from "./new-comment-form/NewCommentSaver";
+
+export {
+    PullRequestCommentDescriptionComponent,
+    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
+} from "./description-comment/PullRequestDescriptionComment";
+export type { PullRequestDescriptionCommentPresenter } from "./description-comment/PullRequestDescriptionCommentPresenter";

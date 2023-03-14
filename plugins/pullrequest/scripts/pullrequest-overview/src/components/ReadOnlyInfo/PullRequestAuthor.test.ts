@@ -17,69 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
-import { mount, flushPromises } from "@vue/test-utils";
+import { describe, it, expect } from "vitest";
+import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import { okAsync, errAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAuthor from "./PullRequestAuthor.vue";
-import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import { DISPLAY_TULEAP_API_ERROR } from "../../constants";
 
 describe("PullRequestAuthor", () => {
-    let display_error_callback: SpyInstance;
-
     const getWrapper = (): VueWrapper => {
         return mount(PullRequestAuthor, {
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [DISPLAY_TULEAP_API_ERROR as symbol]: display_error_callback,
-                },
             },
             props: {
-                pull_request_info: null,
+                pull_request_author: null,
             },
         });
     };
 
-    beforeEach(() => {
-        display_error_callback = vi.fn();
-    });
-
-    it(`Should display a skeleton when:
-        - The pull-request data is loading
-        - The author data is loading
+    it(`Should display a skeleton when the author data is loading
         And display the author data when finished`, async () => {
-        vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(
-            okAsync({
-                avatar_url: "/url/to/author_avatar.png",
-                user_url: "/url/to/author_profile_page.html",
-                display_name: "The Author",
-            })
-        );
-
         const wrapper = getWrapper();
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(false);
 
         wrapper.setProps({
-            pull_request_info: {
-                user_id: 102,
-            } as PullRequest,
+            pull_request_author: {
+                avatar_url: "/url/to/author_avatar.png",
+                user_url: "/url/to/author_profile_page.html",
+                display_name: "The Author",
+            } as User,
         });
 
         await wrapper.vm.$nextTick();
-
-        expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(false);
-
-        await flushPromises();
-
-        expect(tuleap_api.fetchUserInfo).toHaveBeenCalledWith(102);
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(true);
@@ -90,26 +61,5 @@ describe("PullRequestAuthor", () => {
         const author_name = wrapper.find("[data-test=pullrequest-author-name]");
         expect(author_name.attributes("href")).toBe("/url/to/author_profile_page.html");
         expect(author_name.text()).toBe("The Author");
-
-        expect(display_error_callback).not.toHaveBeenCalled();
-    });
-
-    it(`When an error occurres while loading the author info
-        Then it should call the display_error_callback with the fault`, async () => {
-        const api_fault = Fault.fromMessage("Forbidden");
-        vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(errAsync(api_fault));
-
-        const wrapper = getWrapper();
-
-        wrapper.setProps({
-            pull_request_info: {
-                user_id: 102,
-            } as PullRequest,
-        });
-
-        await wrapper.vm.$nextTick();
-        await flushPromises();
-
-        expect(display_error_callback).toHaveBeenCalledWith(api_fault);
     });
 });

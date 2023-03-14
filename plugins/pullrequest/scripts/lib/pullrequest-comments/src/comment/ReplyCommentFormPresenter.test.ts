@@ -20,7 +20,7 @@
 import { describe, beforeEach, it, expect } from "vitest";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
-import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
+import type { CurrentPullRequestUserPresenter } from "../types";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
 

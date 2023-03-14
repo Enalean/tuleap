@@ -25,10 +25,10 @@ import type { StorePullRequestCommentReplies } from "./PullRequestCommentReplies
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
+import type { CurrentPullRequestUserPresenter } from "../types";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
-import { RelativeDatesHelper } from "./relative-dates-helper";
-import type { HelpRelativeDatesDisplay } from "./relative-dates-helper";
+import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
+import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 
 export interface ControlPullRequestComment {
     showReplyForm: (host: PullRequestCommentComponentType) => void;

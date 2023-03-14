@@ -93,8 +93,5 @@ msgstr "Succès"
 msgid "Success on"
 msgstr "Succès le"
 
-msgid "The discussion has not started yet"
-msgstr "La discussion n'a pas encore commencé"
-
 msgid "Unknown"
 msgstr "Inconnu"

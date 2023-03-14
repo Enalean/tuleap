@@ -18,8 +18,14 @@ msgstr "Annuler"
 msgid "Comment"
 msgstr "Commenter"
 
+msgid "No commit description has been provided yet."
+msgstr "Aucune description de commit n'a encore été fournie."
+
 msgid "Outdated"
 msgstr "Obsolète"
+
+msgid "Please add one."
+msgstr "Veuillez en ajouter une."
 
 msgid "Reply"
 msgstr "Répondre"

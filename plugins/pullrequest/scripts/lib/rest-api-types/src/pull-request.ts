@@ -33,11 +33,11 @@ export interface PullRequest {
     readonly last_build_status: BuildStatus;
     readonly last_build_date: string;
     readonly user_id: number;
-
     readonly repository_dest: {
         readonly clone_http_url: string;
         readonly clone_ssh_url: string;
     };
-
     readonly head_reference: string;
+    readonly description: string;
+    readonly user_can_merge: boolean;
 }

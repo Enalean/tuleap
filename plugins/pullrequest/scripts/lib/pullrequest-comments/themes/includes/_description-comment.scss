@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+.pull-request-description-comment-empty-state {
+    color: var(--tlp-dimmed-color);
+    font-style: italic;
+}
 
-export interface CurrentPullRequestUserPresenter {
-    readonly user_id: number;
-    readonly avatar_url: string;
-    readonly preferred_date_format: string;
-    readonly preferred_relative_date_display: RelativeDatesDisplayPreference;
-    readonly user_locale: string;
+.pull-request-description-comment-empty-state-bold {
+    font-weight: 600;
 }

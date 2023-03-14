@@ -23,6 +23,7 @@ import type { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveNewComment } from "./NewCommentSaver";
 import { gettext_provider } from "../gettext-provider";
+import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 
 export const PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME = "tuleap-pullrequest-new-comment-form";
 export type HostElement = NewCommentForm & HTMLElement;
@@ -162,13 +163,7 @@ export const NewInlineCommentFormComponent = define<NewCommentForm>({
     author_presenter: undefined,
     content: (host) => html`
         <div class="pull-request-comment pull-request-new-comment-component">
-            <div class="tlp-avatar-medium">
-                <img
-                    src="${host.author_presenter.avatar_url}"
-                    class="media-object"
-                    aria-hidden="true"
-                />
-            </div>
+            ${getCommentAvatarTemplate(host.author_presenter)}
             <div class="pull-request-comment-content pull-request-new-comment-form">
                 <textarea
                     class="pull-request-comment-reply-textarea tlp-textarea pull-request-new-comment-textarea"

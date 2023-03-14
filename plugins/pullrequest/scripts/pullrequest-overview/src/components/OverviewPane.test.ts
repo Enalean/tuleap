@@ -17,40 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount, flushPromises } from "@vue/test-utils";
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import * as router from "vue-router";
+import { Fault } from "@tuleap/fault";
 import * as tuleap_api from "../api/tuleap-rest-querier";
 import OverviewPane from "./OverviewPane.vue";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 vi.mock("vue-router");
 
-describe("OverviewPane", () => {
-    it("Should fetch the pull request info using its id provided in th route parameters", async () => {
-        const PULLREQUEST_ID = "15";
+const pull_request_id = "15";
+const user_id = 102;
+const mockFetchPullRequestSuccess = (): void => {
+    vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
+        okAsync({
+            title: "My pull request title",
+            user_id,
+        } as PullRequest)
+    );
+};
 
+describe("OverviewPane", () => {
+    beforeEach(() => {
         vi.spyOn(router, "useRoute").mockImplementationOnce(
             () =>
                 ({
                     params: {
-                        id: PULLREQUEST_ID,
+                        id: pull_request_id,
                     },
                 } as unknown as RouteLocationNormalizedLoaded)
         );
+    });
+    it(`Should fetch the pull request info using its id provided in the route parameters
+        Then the pull request author using the id provided in the previous payload`, async () => {
+        mockFetchPullRequestSuccess();
 
-        vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
+        vi.spyOn(tuleap_api, "fetchUserInfo").mockReturnValue(
             okAsync({
-                title: "My pull request title",
-            } as PullRequest)
+                id: user_id,
+            } as User)
         );
 
         shallowMount(OverviewPane);
 
         await flushPromises();
 
-        expect(tuleap_api.fetchPullRequestInfo).toHaveBeenCalledWith(PULLREQUEST_ID);
+        expect(tuleap_api.fetchPullRequestInfo).toHaveBeenCalledWith(pull_request_id);
+        expect(tuleap_api.fetchUserInfo).toHaveBeenCalledWith(user_id);
+    });
+
+    it(`When an error occurres while retrieving the pull-request
+        Then should not try to retrieve the pull-request author`, async () => {
+        vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
+            errAsync(Fault.fromMessage("Forbidden"))
+        );
+
+        vi.spyOn(tuleap_api, "fetchUserInfo");
+
+        shallowMount(OverviewPane);
+        await flushPromises();
+
+        expect(tuleap_api.fetchUserInfo).not.toHaveBeenCalled();
     });
 });

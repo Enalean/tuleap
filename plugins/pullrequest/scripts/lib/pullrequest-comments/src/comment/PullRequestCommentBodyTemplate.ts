@@ -24,6 +24,7 @@ import type { GettextProvider } from "@tuleap/gettext";
 import { TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
+import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -99,25 +100,11 @@ export const buildBodyForComment = (
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
-            <div class="pull-request-comment-author-and-date">
-                <a class="pull-request-comment-author-name" href="${comment.user.user_url}"
-                    >${comment.user.display_name}</a
-                >,
-                <tlp-relative-date
-                    class="pull-request-comment-date"
-                    date="${comment.post_date}"
-                    absolute-date="${host.relative_date_helper.getFormattedDateUsingPreferredUserFormat(
-                        comment.post_date
-                    )}"
-                    preference="${host.relative_date_helper.getRelativeDatePreference()}"
-                    locale="${host.relative_date_helper.getUserLocale()}"
-                    placement="${host.relative_date_helper.getRelativeDatePlacement()}"
-                >
-                    ${host.relative_date_helper.getFormattedDateUsingPreferredUserFormat(
-                        comment.post_date
-                    )}
-                </tlp-relative-date>
-            </div>
+            ${getHeaderTemplate(
+                host.comment.user,
+                host.relative_date_helper,
+                host.comment.post_date
+            )}
             ${displayOutdatedBadgeIfNeeded(host, comment, gettext_provider)}
         </div>
 

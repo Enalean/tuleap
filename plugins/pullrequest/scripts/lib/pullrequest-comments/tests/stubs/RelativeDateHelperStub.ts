@@ -18,8 +18,9 @@
  */
 
 import { vi } from "vitest";
+import type { HelpRelativeDatesDisplay } from "../../src/helpers/relative-dates-helper";
 
-export const RelativeDateHelperStub = {
+export const RelativeDateHelperStub: HelpRelativeDatesDisplay = {
     getRelativeDatePreference: vi.fn(),
     getRelativeDatePlacement: vi.fn(),
     getUserLocale: vi.fn(),

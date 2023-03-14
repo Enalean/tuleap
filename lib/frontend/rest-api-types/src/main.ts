@@ -78,6 +78,7 @@ export type UserHistoryEntry = {
 };
 
 export type User = {
+    readonly id: number;
     readonly avatar_url: string;
     readonly user_url: string;
     readonly display_name: string;
