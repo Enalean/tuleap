@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\Components;
 
+use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField;
@@ -61,25 +62,33 @@ final class ComponentsTrackerBuilder
             ->withName('Components')
             ->withColor(TrackerColor::fromName('acid-green'))
             ->withFormElement(
-                (new XMLStringField($id_generator, self::NAME_FIELD_NAME))
-                    ->withLabel('Name')
-                    ->withRank(1)
-                    ->withPermissions(...$default_permissions),
-                (new XMLStringField($id_generator, self::DESCRIPTION_FIELD_NAME))
-                    ->withLabel('Description')
-                    ->withRank(2)
-                    ->withPermissions(...$default_permissions),
-                (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
-                    ->withRank(3)
-                    ->withLabel('Links')
-                    ->withPermissions(...$default_permissions),
-                (new XMLSelectBoxField($id_generator, self::COMPONENT_LEAD_FIELD_NAME))
-                    ->withRank(4)
-                    ->withLabel('Component Lead')
-                    ->withUsersValues(
-                        new XMLBindUsersValue('group_members')
-                    )
-                    ->withPermissions(...$default_permissions),
+                (new XMLFieldset($id_generator, 'details'))
+                    ->withLabel('Details')
+                    ->withFormElements(
+                        (new XMLStringField($id_generator, self::NAME_FIELD_NAME))
+                            ->withLabel('Name')
+                            ->withRank(1)
+                            ->withPermissions(...$default_permissions),
+                        (new XMLStringField($id_generator, self::DESCRIPTION_FIELD_NAME))
+                            ->withLabel('Description')
+                            ->withRank(2)
+                            ->withPermissions(...$default_permissions),
+                        (new XMLSelectBoxField($id_generator, self::COMPONENT_LEAD_FIELD_NAME))
+                            ->withRank(1)
+                            ->withLabel('Component Lead')
+                            ->withUsersValues(
+                                new XMLBindUsersValue('group_members')
+                            )
+                            ->withPermissions(...$default_permissions),
+                    ),
+                (new XMLFieldset($id_generator, 'links_fieldset'))
+                    ->withLabel('Linked artifacts')
+                    ->withFormElements(
+                        (new XMLArtifactLinkField($id_generator, self::ARTIFACT_LINK_FIELD_NAME))
+                            ->withRank(1)
+                            ->withLabel('Links')
+                            ->withPermissions(...$default_permissions),
+                    ),
             )
             ->withSemantics(
                 new XMLTitleSemantic(
