@@ -18,13 +18,9 @@
  */
 
 describe("Project Milestones Widget", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     context("Project Dashboard", function () {
         it("Add Project Milestones on a dashboard project", () => {
-            cy.projectAdministratorLogin();
+            cy.projectAdministratorSession();
             cy.visit("/projects/projectmilestones-dashboard");
 
             cy.get("[data-test=dashboard-configuration-button]").click();
@@ -43,7 +39,7 @@ describe("Project Milestones Widget", function () {
 
     context("User Dashboard", function () {
         it("Add Project Milestones on user dashboard", function () {
-            cy.projectMemberLogin();
+            cy.projectMemberSession();
             cy.visit("/my/");
 
             cy.get("[data-test=dashboard-configuration-button]").click();
