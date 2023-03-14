@@ -12,6 +12,7 @@ OverviewController.$inject = [
     "MergeModalService",
     "EditModalService",
     "TooltipService",
+    "$element",
 ];
 
 function OverviewController(
@@ -22,7 +23,8 @@ function OverviewController(
     UserRestService,
     MergeModalService,
     EditModalService,
-    TooltipService
+    TooltipService,
+    $element
 ) {
     const self = this;
 
@@ -85,7 +87,7 @@ function OverviewController(
                     self.author = user;
                 });
 
-                TooltipService.setupTooltips();
+                TooltipService.setupTooltips($element[0]);
             })
             .catch(function () {
                 $state.go("dashboard");

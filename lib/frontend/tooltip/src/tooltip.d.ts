@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-export function loadTooltips(): void;
+export function loadTooltips(element?: HTMLElement, at_cursor_position?: boolean): void;
