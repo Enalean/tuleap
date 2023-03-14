@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { pick } from "lodash";
+import { pick } from "lodash-es";
 import {
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,

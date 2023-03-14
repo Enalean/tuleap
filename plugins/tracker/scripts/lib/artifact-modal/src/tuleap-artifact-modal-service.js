@@ -20,7 +20,7 @@
 import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
-import _ from "lodash";
+import { has } from "lodash-es";
 import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
 import {
     getArtifactWithCompleteTrackerStructure,
@@ -37,6 +37,8 @@ import { addFieldValuesToTracker, transform } from "./model/tracker-transformer.
 export default ArtifactModalService;
 
 ArtifactModalService.$inject = ["$q", "TlpModalService", "TuleapArtifactModalLoading"];
+
+const noop = () => {};
 
 function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
     const self = this;
@@ -80,7 +82,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     parent_artifact_id,
                     prefill_values
                 ),
-                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
+                displayItemCallback: displayItemCallback ? displayItemCallback : noop,
             },
         });
     }
@@ -106,7 +108,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
                 modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
-                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
+                displayItemCallback: displayItemCallback ? displayItemCallback : noop,
             },
         });
     }
@@ -231,8 +233,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
 
     function hasWorkflowTransitions(tracker) {
         return (
-            _.has(tracker, "workflow") &&
-            _.has(tracker.workflow, "transitions") &&
+            has(tracker, "workflow") &&
+            has(tracker.workflow, "transitions") &&
             tracker.workflow.is_used === "1" &&
             tracker.workflow.field_id
         );

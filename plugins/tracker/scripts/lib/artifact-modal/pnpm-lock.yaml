@@ -26,7 +26,7 @@ specifiers:
   angular-mocks: ^1.8.2
   dompurify: ^3.0.0
   hybrids: ^8.1.8
-  lodash: 2.4.0
+  lodash-es: ^4.17.21
   moment: ^2.29.4
   neverthrow: ^6.0.0
   pretty-kibibytes: ^4.0.4
@@ -53,7 +53,7 @@ dependencies:
   angular-gettext: 2.4.2
   dompurify: 3.0.0
   hybrids: 8.1.8
-  lodash: 2.4.0
+  lodash-es: 4.17.21
   moment: 2.29.4
   neverthrow: 6.0.0
   pretty-kibibytes: 4.0.4
@@ -127,6 +127,10 @@ packages:
     resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
     dev: false
 
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash._baseiteratee/4.7.0:
     resolution: {integrity: sha512-nqB9M+wITz0BX/Q2xg6fQ8mLkyfF7MU7eE+MNBNjTHFKeKaZAPEzEg+E8LWxKWf1DQVflNEn9N49yAuqKh2mWQ==}
     dependencies:
@@ -167,11 +171,6 @@ packages:
     dependencies:
       lodash._baseiteratee: 4.7.0
       lodash._baseuniq: 4.6.0
-    dev: false
-
-  /lodash/2.4.0:
-    resolution: {integrity: sha1-VQdJgogzgba3E0t0KlkAu72rawk=}
-    engines: {'0': node, '1': rhino}
     dev: false
 
   /moment/2.29.4:
