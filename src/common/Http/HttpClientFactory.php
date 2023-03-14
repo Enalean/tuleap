@@ -26,17 +26,19 @@ use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
+use Http\Client\HttpAsyncClient;
+use Psr\Http\Client\ClientInterface;
 
 class HttpClientFactory
 {
     private const TIMEOUT = 5;
 
-    public static function createClient(Plugin ...$plugins): \Psr\Http\Client\ClientInterface
+    public static function createClient(Plugin ...$plugins): ClientInterface
     {
         return self::createClientWithStandardConfig(...$plugins);
     }
 
-    public static function createAsyncClient(Plugin ...$plugins): \Http\Client\HttpAsyncClient
+    public static function createAsyncClient(Plugin ...$plugins): HttpAsyncClient
     {
         return self::createClientWithStandardConfig(...$plugins);
     }
@@ -46,12 +48,17 @@ class HttpClientFactory
      * query internal resources. Queries requested by users (e.g. webhooks)
      * MUST NOT use it.
      */
-    public static function createClientForInternalTuleapUse(Plugin ...$plugins): \Psr\Http\Client\ClientInterface
+    public static function createClientForInternalTuleapUse(Plugin ...$plugins): ClientInterface
     {
-        return self::createClientWithConfigForInternalTuleapUse(...$plugins);
+        return self::createClientWithConfigForInternalTuleapUse(self::TIMEOUT, ...$plugins);
     }
 
-    public static function createClientWithCustomTimeout(int $timeout, Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    public static function createClientForInternalTuleapUseWithCustomTimeout(int $timeout, Plugin ...$plugins): HttpAsyncClient&ClientInterface
+    {
+        return self::createClientWithConfigForInternalTuleapUse($timeout, ...$plugins);
+    }
+
+    public static function createClientWithCustomTimeout(int $timeout, Plugin ...$plugins): HttpAsyncClient&ClientInterface
     {
         return self::createClientWithConfig(
             [
@@ -62,7 +69,7 @@ class HttpClientFactory
         );
     }
 
-    private static function createClientWithStandardConfig(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    private static function createClientWithStandardConfig(Plugin ...$plugins): HttpAsyncClient&ClientInterface
     {
         return self::createClientWithConfig(
             [
@@ -73,12 +80,12 @@ class HttpClientFactory
         );
     }
 
-    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
+    private static function createClientWithConfigForInternalTuleapUse(int $timeout, Plugin ...$plugins): HttpAsyncClient&ClientInterface
     {
-        return self::createClientWithConfig(['timeout' => self::TIMEOUT], ...$plugins);
+        return self::createClientWithConfig(['timeout' => $timeout], ...$plugins);
     }
 
-    private static function createClientWithConfig(array $config, Plugin ...$plugins): \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
+    private static function createClientWithConfig(array $config, Plugin ...$plugins): ClientInterface&HttpAsyncClient
     {
         $client = Client::createWithConfig($config);
 

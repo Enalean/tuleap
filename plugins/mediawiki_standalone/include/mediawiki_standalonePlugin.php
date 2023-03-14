@@ -21,6 +21,8 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tuleap\Admin\PermissionDelegation\ForgeUserGroupDeletedEvent;
 use Tuleap\admin\PermissionDelegation\PermissionDelegationsAddedToForgeUserGroupEvent;
 use Tuleap\Admin\PermissionDelegation\PermissionDelegationsRemovedForForgeUserGroupEvent;
@@ -50,8 +52,10 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsRepresentation;
+use Tuleap\MediawikiStandalone\Configuration\MainpageDeployer;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiAsyncUpdateProcessor;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameter;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandProcessFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
@@ -450,7 +454,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             ProjectManager::instance(),
-            new MediaWikiCentralDatabaseParameter($this->_getPluginManager())
+            new MediaWikiCentralDatabaseParameter($this->_getPluginManager()),
+            $this->getMediaWikiManagementCommandProcessFactory($logger),
         ))->process($event);
         (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }
@@ -700,7 +705,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $logger = new BrokerLogger(
             [
-                new TruncateLevelLogger($event->logger, \Psr\Log\LogLevel::INFO),
+                new TruncateLevelLogger($event->logger, LogLevel::INFO),
                 $this->getBackendLogger(),
             ]
         );
@@ -708,12 +713,16 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->buildUpdateScriptCaller($logger)->runInstallAndUpdate();
     }
 
-    private function buildUpdateScriptCaller(\Psr\Log\LoggerInterface $logger): MediaWikiInstallAndUpdateScriptCaller
+    private function getMediaWikiManagementCommandProcessFactory(LoggerInterface $logger): MediaWikiManagementCommandFactory
     {
-        $settings_directory_path = $this->buildSettingDirectoryPath();
+        return new MediaWikiManagementCommandProcessFactory($logger, $this->buildSettingDirectoryPath());
+    }
+
+    private function buildUpdateScriptCaller(LoggerInterface $logger): MediaWikiInstallAndUpdateScriptCaller
+    {
         return new MediaWikiInstallAndUpdateScriptCaller(
-            new MediaWikiManagementCommandProcessFactory($logger, $settings_directory_path),
-            new \Tuleap\MediawikiStandalone\Configuration\MainpageDeployer($settings_directory_path),
+            $this->getMediaWikiManagementCommandProcessFactory($logger),
+            new MainpageDeployer($this->buildSettingDirectoryPath()),
             $this->buildLocalSettingsInstantiator(),
             new ProjectMediaWikiServiceDAO(),
             $logger

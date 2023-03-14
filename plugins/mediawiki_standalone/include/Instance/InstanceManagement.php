@@ -28,6 +28,10 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 
@@ -40,6 +44,7 @@ final class InstanceManagement
         private StreamFactoryInterface $http_stream_factory,
         private ProjectByIDFactory $project_factory,
         private MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
+        private readonly MediaWikiManagementCommandFactory $command_factory,
     ) {
     }
 
@@ -50,6 +55,24 @@ final class InstanceManagement
                 $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_request_factory, $this->http_stream_factory, $this->logger);
                 return;
             }
+
+            MigrateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator)
+                ->apply(function (MigrateInstance $migrate_event): void {
+                    $migrate_event->process(
+                        $this->client_factory->getHTTPClient(),
+                        $this->http_request_factory,
+                        $this->http_stream_factory,
+                        $this->command_factory,
+                        $this->logger,
+                    )->mapErr(
+                        /** @psalm-return Err<null> */
+                        function (Fault $fault): Err {
+                            Fault::writeToLogger($fault, $this->logger);
+                            return Result::err(null);
+                        }
+                    );
+                });
+
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($suspension_event);
                 return;

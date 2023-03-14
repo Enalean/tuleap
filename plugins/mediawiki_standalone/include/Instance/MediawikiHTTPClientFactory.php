@@ -39,6 +39,8 @@ use Tuleap\Http\HttpClientFactory;
 #[ConfigKeyCategory('Mediawiki')]
 final class MediawikiHTTPClientFactory implements MediawikiClientFactory
 {
+    private const TIMEOUT = 30;
+
     #[ConfigKey('Pre-shared secret between Tuleap and Mediawiki')]
     #[ConfigKeySecret]
     #[ConfigCannotBeModified]
@@ -50,7 +52,8 @@ final class MediawikiHTTPClientFactory implements MediawikiClientFactory
     public function getHTTPClient(): ClientInterface
     {
         try {
-            return HttpClientFactory::createClientForInternalTuleapUse(
+            return HttpClientFactory::createClientForInternalTuleapUseWithCustomTimeout(
+                self::TIMEOUT,
                 new AuthenticationPlugin(
                     new Bearer(hash_hmac('sha256', \ForgeConfig::getSecretAsClearText(self::SHARED_SECRET)->getString(), (string) time())),
                 ),

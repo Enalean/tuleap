@@ -35,13 +35,6 @@ final class MediaWikiInstallAndUpdateHandlerException extends \RuntimeException
      */
     public static function fromCommandFailures(array $failures): self
     {
-        $error_messages = [];
-        foreach ($failures as $failure) {
-            $exit_code            = $failure->exit_code;
-            $process_command_line = $failure->process_command_line;
-            $process_output       = $failure->process_output;
-            $error_messages[]     = "Exit code: $exit_code\nProcess command line: $process_command_line\nProcess output: $process_output";
-        }
-        return new self(implode("\n------\n", $error_messages));
+        return new self(implode("\n------\n", $failures));
     }
 }

@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
+use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -116,38 +117,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
      */
     private function getHandler(MediaWikiManagementCommand $install_command, MediaWikiManagementCommand $update_farm_command, array $update_instance_commands): MediaWikiInstallAndUpdateScriptCaller
     {
-        $command_factory = new class ($install_command, $update_farm_command, $update_instance_commands) implements MediaWikiManagementCommandFactory
-        {
-            private \ArrayIterator $update_instance_commands_iterator;
-
-            /**
-             * @param MediaWikiManagementCommand[] $update_instance_commands
-             */
-            public function __construct(
-                private MediaWikiManagementCommand $install_command,
-                private MediaWikiManagementCommand $update_farm_command,
-                array $update_instance_commands,
-            ) {
-                $this->update_instance_commands_iterator = new \ArrayIterator($update_instance_commands);
-            }
-
-            public function buildInstallCommand(): MediaWikiManagementCommand
-            {
-                return $this->install_command;
-            }
-
-            public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand
-            {
-                return $this->update_farm_command;
-            }
-
-            public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
-            {
-                $command = $this->update_instance_commands_iterator->current();
-                $this->update_instance_commands_iterator->next();
-                return $command;
-            }
-        };
+        $command_factory = new MediaWikiManagementCommandFactoryStub($install_command, $update_farm_command, $update_instance_commands);
         $dao             = $this->createStub(ProjectMediaWikiServiceDAO::class);
         $dao->method('searchAllProjectsWithMediaWikiStandaloneServiceEnabled')->willReturn(
             array_fill(0, count($update_instance_commands), ['project_name' => 'some_project_name'])

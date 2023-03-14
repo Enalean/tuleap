@@ -37,6 +37,8 @@ final class OptionTest extends TestCase
         });
 
         self::assertSame($applied_value, $value);
+        self::assertTrue($optional->isValue());
+        self::assertFalse($optional->isNothing());
     }
 
     public function testDoNoApplyOnNothing(): void
@@ -50,6 +52,8 @@ final class OptionTest extends TestCase
         });
 
         self::assertFalse($has_called_apply_function);
+        self::assertFalse($optional->isValue());
+        self::assertTrue($optional->isNothing());
     }
 
     public function testCanMapOptionalValueWithADefault(): void

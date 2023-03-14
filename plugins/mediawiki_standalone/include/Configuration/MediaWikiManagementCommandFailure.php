@@ -26,12 +26,17 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 /**
  * @psalm-immutable
  */
-final class MediaWikiManagementCommandFailure
+final class MediaWikiManagementCommandFailure implements \Stringable
 {
     /**
      * @psalm-param positive-int $exit_code
      */
     public function __construct(public int $exit_code, public string $process_command_line, public string $process_output)
     {
+    }
+
+    public function __toString(): string
+    {
+        return "Exit code: $this->exit_code\nProcess command line: $this->process_command_line\nProcess output: $this->process_output";
     }
 }

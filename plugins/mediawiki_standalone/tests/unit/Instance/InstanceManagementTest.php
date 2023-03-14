@@ -33,6 +33,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -80,6 +81,7 @@ final class InstanceManagementTest extends TestCase
             HTTPFactoryBuilder::streamFactory(),
             ProjectByIDFactoryStub::buildWith($project_120, $project_130),
             $this->central_database_parameter_generator,
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([]),
         );
 
         parent::setUp();
