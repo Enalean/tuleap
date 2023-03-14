@@ -125,15 +125,15 @@ class DashboardXMLExporterTest extends TestCase
                                     3,
                                     1,
                                     [
-                                        new DashboardWidget(10, 'projectmembers', 0, 3, 0, false),
+                                        new DashboardWidget(10, 'projectmembers', 0, 3, 0),
                                     ]
                                 ),
                                 new DashboardWidgetColumn(
                                     4,
                                     1,
                                     [
-                                        new DashboardWidget(11, 'projectdescription', 0, 4, 0, false),
-                                        new DashboardWidget(12, 'unknownwidget', 0, 4, 0, false),
+                                        new DashboardWidget(11, 'projectdescription', 0, 4, 0),
+                                        new DashboardWidget(12, 'unknownwidget', 0, 4, 0),
                                     ]
                                 ),
                             ]
@@ -146,7 +146,7 @@ class DashboardXMLExporterTest extends TestCase
                                     5,
                                     3,
                                     [
-                                        new DashboardWidget(13, 'unknownwidget', 0, 5, 0, false),
+                                        new DashboardWidget(13, 'unknownwidget', 0, 5, 0),
                                     ]
                                 ),
                             ]

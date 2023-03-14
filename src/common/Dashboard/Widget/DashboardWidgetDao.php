@@ -37,6 +37,7 @@ class DashboardWidgetDao extends DataAccessObject
      * @var WidgetFactory
      */
     private $widget_factory;
+    private \UserPreferencesDao $preferences_dao;
 
     public function __construct(
         WidgetFactory $widget_factory,
@@ -45,7 +46,8 @@ class DashboardWidgetDao extends DataAccessObject
         parent::__construct($da);
         $this->enableExceptionsOnError();
 
-        $this->widget_factory = $widget_factory;
+        $this->widget_factory  = $widget_factory;
+        $this->preferences_dao = new \UserPreferencesDao();
     }
 
     public function searchAllLinesByDashboardIdOrderedByRank($dashboard_id, $dashboard_type)
@@ -112,40 +114,6 @@ class DashboardWidgetDao extends DataAccessObject
 
             $column_id = $this->getFirstColumnIdOfDashboard($dashboard_id, $dashboard_type);
             $this->insertWidgetInColumn($name, $content_id, $column_id);
-
-            $this->commit();
-        } catch (\Exception $exception) {
-            $this->rollBack();
-            throw $exception;
-        }
-    }
-
-    public function minimizeWidget($owner_id, $dashboard_id, $dashboard_type, $widget_id)
-    {
-        $is_minimized = 1;
-        $this->saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized);
-    }
-
-    public function maximizeWidget($owner_id, $dashboard_id, $dashboard_type, $widget_id)
-    {
-        $is_minimized = 0;
-        $this->saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized);
-    }
-
-    private function saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized)
-    {
-        $this->startTransaction();
-
-        try {
-            $this->checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id);
-
-            $widget_id    = $this->da->escapeInt($widget_id);
-            $is_minimized = $this->da->escapeInt($is_minimized);
-
-            $sql = "UPDATE dashboards_lines_columns_widgets
-                    SET is_minimized = $is_minimized
-                    WHERE id = $widget_id";
-            $this->update($sql);
 
             $this->commit();
         } catch (\Exception $exception) {
@@ -397,6 +365,7 @@ class DashboardWidgetDao extends DataAccessObject
 
         $this->update($sql);
         $this->removeWidgetContent($name, $content_id);
+        $this->preferences_dao->deletePreferenceForAllUsers(DashboardWidget::getMinimizedPreferenceName((int) $widget_id));
     }
 
     private function areThereAnyWidgetsLeftIfTheColumn($column_id)
@@ -717,8 +686,8 @@ class DashboardWidgetDao extends DataAccessObject
         $new_content_id     = $this->da->escapeInt($new_content_id);
         $template_widget_id = $this->da->escapeInt($template_widget_id);
 
-        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id, is_minimized)
-                SELECT $new_column_id, `rank`, name, $new_content_id, is_minimized
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, `rank`, name, content_id)
+                SELECT $new_column_id, `rank`, name, $new_content_id
                 FROM dashboards_lines_columns_widgets
                 WHERE id = $template_widget_id";
 

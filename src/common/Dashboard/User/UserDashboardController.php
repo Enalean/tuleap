@@ -34,6 +34,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 
@@ -238,7 +239,8 @@ class UserDashboardController
                         $dashboard,
                         OwnerInfo::createForUser($user),
                         $widgets_lines,
-                        true
+                        true,
+                        $user,
                     );
                 }
             }
@@ -391,17 +393,7 @@ class UserDashboardController
         $dashboard_id = $request->get('dashboard-id');
         $widget_id    = $request->get('widget-id');
 
-        try {
-            $this->widget_minimizor->minimize($current_user, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
-        } catch (Exception $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext(
-                    'tuleap-core',
-                    'Cannot minimize the widget.'
-                )
-            );
-        }
+        $this->widget_minimizor->minimize($current_user, (int) $widget_id);
 
         $this->redirectToDashboard($dashboard_id);
     }
@@ -414,17 +406,7 @@ class UserDashboardController
         $dashboard_id = $request->get('dashboard-id');
         $widget_id    = $request->get('widget-id');
 
-        try {
-            $this->widget_minimizor->maximize($current_user, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
-        } catch (Exception $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext(
-                    'tuleap-core',
-                    'Cannot maximize the widget.'
-                )
-            );
-        }
+        $this->widget_minimizor->maximize($current_user, (int) $widget_id);
 
         $this->redirectToDashboard($dashboard_id);
     }

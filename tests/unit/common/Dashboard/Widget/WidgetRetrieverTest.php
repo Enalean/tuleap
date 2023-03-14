@@ -47,15 +47,15 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['id' => 3, 'line_id' => 1, 'rank' => 2],
         ]));
         $dao->shouldReceive('searchAllWidgetByColumnId')->with(1)->andReturns(\TestHelper::argListToDar([
-            ['id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10, 'is_minimized' => 0],
-            ['id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12, 'is_minimized' => 0],
+            ['id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10],
+            ['id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12],
         ]));
         $dao->shouldReceive('searchAllWidgetByColumnId')->with(2)->andReturns(\TestHelper::argListToDar([
-            ['id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11, 'is_minimized' => 0],
-            ['id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13, 'is_minimized' => 0],
+            ['id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11],
+            ['id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13],
         ]));
         $dao->shouldReceive('searchAllWidgetByColumnId')->with(3)->andReturns(\TestHelper::argListToDar([
-            ['id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14, 'is_minimized' => 0],
+            ['id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14],
         ]));
 
         $lines                = $retriever->getAllWidgets(1, 'user');

@@ -52,16 +52,20 @@ class DashboardWidgetPresenter
     public $purified_custom_title;
     /** @var CssAssetCollection */
     public $stylesheet_dependencies;
+    public bool $can_be_minimized;
 
     public function __construct(
         Dashboard $dashboard,
         DashboardWidget $dashboard_widget,
         Widget $widget,
         $can_update_dashboards,
+        \PFUser $user,
     ) {
         $this->widget_id    = $dashboard_widget->getId();
         $this->widget_name  = $dashboard_widget->getName();
-        $this->is_minimized = $dashboard_widget->isMinimized();
+        $this->is_minimized = $user->getPreference(DashboardWidget::getMinimizedPreferenceName((int) $this->widget_id));
+
+        $this->can_be_minimized = ! $user->isAnonymous();
 
         $widget->setDashboardWidgetId($dashboard_widget->getId());
         $widget->setDashboardId($dashboard->getId());
