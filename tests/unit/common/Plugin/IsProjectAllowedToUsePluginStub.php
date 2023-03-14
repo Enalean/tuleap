@@ -20,11 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Support;
+namespace Tuleap\Plugin;
 
-use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
-
-class IsProjectAllowedToUsePluginStub implements IsProjectAllowedToUsePlugin
+final class IsProjectAllowedToUsePluginStub implements IsProjectAllowedToUsePlugin
 {
     private function __construct(private bool $is_allowed)
     {

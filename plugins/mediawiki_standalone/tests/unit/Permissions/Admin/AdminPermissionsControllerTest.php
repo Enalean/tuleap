@@ -30,6 +30,7 @@ use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
@@ -45,7 +46,7 @@ class AdminPermissionsControllerTest extends TestCase
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
@@ -56,7 +57,8 @@ class AdminPermissionsControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Project::class, ProjectTestBuilder::aProject()->build());
+            ->withAttribute(\Project::class, ProjectTestBuilder::aProject()->build())
+            ->withAttribute(\PFUser::class, UserTestBuilder::buildWithDefaults());
 
         $this->expectException(\Tuleap\Request\ForbiddenException::class);
         $controller->handle($request);
@@ -69,7 +71,7 @@ class AdminPermissionsControllerTest extends TestCase
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
@@ -83,7 +85,9 @@ class AdminPermissionsControllerTest extends TestCase
             ->withoutServices()
             ->build();
 
-        $request = (new NullServerRequest())->withAttribute(\Project::class, $project);
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $project)
+            ->withAttribute(\PFUser::class, UserTestBuilder::buildWithDefaults());
 
         $this->expectException(\Tuleap\Request\ForbiddenException::class);
         $controller->handle($request);
@@ -108,7 +112,7 @@ class AdminPermissionsControllerTest extends TestCase
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            \Tuleap\Plugin\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $token_provider,
             new AdminPermissionsPresenterBuilder(
@@ -127,6 +131,7 @@ class AdminPermissionsControllerTest extends TestCase
 
         $request = (new NullServerRequest())
             ->withAttribute(\Project::class, $project)
+            ->withAttribute(\PFUser::class, UserTestBuilder::buildWithDefaults())
             ->withAttribute(BaseLayout::class, LayoutBuilder::build());
 
         $response = $controller->handle($request);
