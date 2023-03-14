@@ -23,8 +23,8 @@
         type="button"
         role="menuitem"
         v-on:click="doCutItem(item)"
-        v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
-        v-bind:disabled="pasting_in_progress"
+        v-bind:class="{ 'tlp-dropdown-menu-item-disabled': clipboard.pasting_in_progress }"
+        v-bind:disabled="clipboard.pasting_in_progress"
         v-if="can_cut_item"
         data-shortcut-cut
     >
@@ -35,25 +35,20 @@
 <script setup lang="ts">
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
-import { useNamespacedMutations, useState } from "vuex-composition-helpers";
-import type { ClipboardState } from "../../../store/clipboard/module";
+import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
 
 const props = defineProps<{ item: Item }>();
-const { pasting_in_progress } = useState<Pick<ClipboardState, "pasting_in_progress">>("clipboard", [
-    "pasting_in_progress",
-]);
-
-const { cutItem } = useNamespacedMutations("clipboard", ["cutItem"]);
+const clipboard = useClipboardStore();
 
 const can_cut_item = computed((): boolean => {
     return props.item.user_can_write && props.item.parent_id !== 0;
 });
 
 function doCutItem(): void {
-    if (!pasting_in_progress.value) {
+    if (!clipboard.pasting_in_progress) {
         emitter.emit("hide-action-menu");
     }
-    cutItem(props.item);
+    clipboard.cutItem(props.item);
 }
 </script>

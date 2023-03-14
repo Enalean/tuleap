@@ -28,23 +28,27 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import CutItem from "./CutItem.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Item } from "../../../type";
+import { useClipboardStore } from "../../../stores/clipboard";
+import type { TestingPinia } from "@pinia/testing";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("CutItem", () => {
-    let store = {
-        commit: jest.fn(),
-    };
+    let pinia: TestingPinia;
+    let store: ReturnType<typeof useClipboardStore>;
+
     function createWrapper(item: Item, pasting_in_progress: boolean): Wrapper<CutItem> {
-        store = createStoreMock({
-            state: {
-                clipboard: { pasting_in_progress },
+        pinia = createTestingPinia({
+            initialState: {
+                clipboard: {
+                    pasting_in_progress,
+                    item_id: item.id,
+                },
             },
         });
+        store = useClipboardStore(pinia);
         return shallowMount(CutItem, {
-            mocks: {
-                $store: store,
-            },
+            pinia,
             localVue: localVue,
             propsData: { item },
         });
@@ -68,7 +72,7 @@ describe("CutItem", () => {
 
         wrapper.trigger("click");
 
-        expect(store.commit).toHaveBeenCalledWith("clipboard/cutItem", item);
+        expect(store.cutItem).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
 

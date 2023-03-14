@@ -20,17 +20,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import createMutationsSharer, {
-    BroadcastChannelStrategy,
-    LocalStorageStratery as LocalStorageStrategy,
-} from "vuex-shared-mutations";
 import { expiringLocalStorage } from "./store-persistence/storage";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters";
 import * as actions from "./actions";
 import state from "./state.js";
 import error from "./error/module";
-import clipboard from "./clipboard/module";
 import properties from "./properties/module";
 import lock from "./lock/module";
 import preferencies from "./preferencies/module";
@@ -39,17 +34,18 @@ import { createConfigurationModule } from "./configuration";
 
 Vue.use(Vuex);
 
+export let store;
+
 export function createStore(user_id, project_id, configuration_state) {
     const configuration = createConfigurationModule(configuration_state);
 
-    return new Vuex.Store({
+    store = new Vuex.Store({
         state,
         getters,
         mutations,
         actions,
         modules: {
             error,
-            clipboard,
             properties,
             lock,
             preferencies,
@@ -62,26 +58,8 @@ export function createStore(user_id, project_id, configuration_state) {
                 storage: expiringLocalStorage(900),
                 paths: ["clipboard"],
             }),
-            createMutationsSharer({
-                predicate: (mutation) => {
-                    return mutation.type.startsWith("clipboard/");
-                },
-                strategy: (() => {
-                    const SHARED_MUTATIONS_KEY = `document_clipboard_shared_mutations_${user_id}_${project_id}`;
-
-                    if (BroadcastChannelStrategy.available()) {
-                        return new BroadcastChannelStrategy({ key: SHARED_MUTATIONS_KEY });
-                    }
-
-                    if (LocalStorageStrategy.available()) {
-                        return new LocalStorageStrategy({ key: SHARED_MUTATIONS_KEY });
-                    }
-
-                    throw new Error(
-                        "No strategies available to share mutations, unsupported browser?"
-                    );
-                })(),
-            }),
         ],
     });
+
+    return store;
 }

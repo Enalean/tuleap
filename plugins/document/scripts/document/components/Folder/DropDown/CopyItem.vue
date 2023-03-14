@@ -23,8 +23,8 @@
         type="button"
         role="menuitem"
         v-on:click="doCopyItem(item)"
-        v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
-        v-bind:disabled="pasting_in_progress"
+        v-bind:class="{ 'tlp-dropdown-menu-item-disabled': clipboard.pasting_in_progress }"
+        v-bind:disabled="clipboard.pasting_in_progress"
         data-shortcut-copy
     >
         <i class="fa-solid fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
@@ -35,20 +35,16 @@
 <script setup lang="ts">
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
-import { useNamespacedMutations, useState } from "vuex-composition-helpers";
-import type { ClipboardState } from "../../../store/clipboard/module";
+import { useClipboardStore } from "../../../stores/clipboard";
 
 const props = defineProps<{ item: Item }>();
-const { pasting_in_progress } = useState<Pick<ClipboardState, "pasting_in_progress">>("clipboard", [
-    "pasting_in_progress",
-]);
 
-const { copyItem } = useNamespacedMutations("clipboard", ["copyItem"]);
+const clipboard = useClipboardStore();
 
 function doCopyItem(): void {
-    if (!pasting_in_progress.value) {
+    if (!clipboard.pasting_in_progress) {
         emitter.emit("hide-action-menu");
     }
-    copyItem(props.item);
+    clipboard.copyItem(props.item);
 }
 </script>
