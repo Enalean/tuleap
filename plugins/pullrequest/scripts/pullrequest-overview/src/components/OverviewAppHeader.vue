@@ -21,9 +21,12 @@
     <div class="tlp-pane pullrequest-overview-header">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header pull-request-header">
-                <h2 v-if="props.pull_request" data-test="pullrequest-title">
-                    {{ props.pull_request.title }}
-                </h2>
+                <h2
+                    v-if="props.pull_request"
+                    data-test="pullrequest-title"
+                    v-dompurify-html="props.pull_request.title"
+                    ref="pull_request_title"
+                ></h2>
                 <h2 v-if="props.pull_request === null">
                     <span class="tlp-skeleton-text" data-test="pullrequest-title-skeleton"></span>
                 </h2>
@@ -37,8 +40,25 @@
 <script setup lang="ts">
 import OverviewTabs from "./OverviewTabs.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { loadTooltips } from "@tuleap/tooltip";
+import { watch, ref } from "vue";
 
 const props = defineProps<{
     pull_request: PullRequest | null;
 }>();
+
+const pull_request_title = ref<HTMLElement | undefined>();
+
+watch(
+    () => (props.pull_request ? props.pull_request.title : ""),
+    () => {
+        if (props.pull_request === null) {
+            return;
+        }
+
+        setTimeout(() => {
+            loadTooltips(pull_request_title.value, false);
+        });
+    }
+);
 </script>

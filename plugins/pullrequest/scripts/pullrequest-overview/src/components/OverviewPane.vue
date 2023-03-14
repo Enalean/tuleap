@@ -29,8 +29,9 @@
                 />
             </div>
             <div class="tlp-pane-container pullrequest-overview-info">
-                <section>
+                <section class="pull-request-action-buttons">
                     <pull-request-checkout-button v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-edit-title-modal v-bind:pull_request_info="pull_request_info" />
                 </section>
                 <section class="tlp-pane-section">
                     <pull-request-author v-bind:pull_request_author="pull_request_author" />
@@ -51,7 +52,11 @@ import { useRoute } from "vue-router";
 import { fetchPullRequestInfo, fetchUserInfo } from "../api/tuleap-rest-querier";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
-import { PULL_REQUEST_ID_KEY, DISPLAY_TULEAP_API_ERROR } from "../constants";
+import {
+    PULL_REQUEST_ID_KEY,
+    DISPLAY_TULEAP_API_ERROR,
+    UPDATE_PULL_REQUEST_TITLE,
+} from "../constants";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
 import OverviewThreads from "./Threads/OverviewThreads.vue";
@@ -62,6 +67,7 @@ import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
+import PullRequestEditTitleModal from "./Modals/PullRequestEditTitleModal.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);
@@ -71,6 +77,9 @@ const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));
+provide(UPDATE_PULL_REQUEST_TITLE, (updated_title: PullRequest) =>
+    updatePullRequestTitle(updated_title)
+);
 
 fetchPullRequestInfo(pull_request_id)
     .andThen((pull_request) => {
@@ -86,6 +95,13 @@ fetchPullRequestInfo(pull_request_id)
             error.value = fault;
         }
     );
+
+function updatePullRequestTitle(updated_pull_request: PullRequest): void {
+    if (!pull_request_info.value) {
+        return;
+    }
+    pull_request_info.value = updated_pull_request;
+}
 
 function handleAPIFault(fault: Fault) {
     error.value = fault;
@@ -120,5 +136,9 @@ function handleAPIFault(fault: Fault) {
 
 .pullrequest-overview-info {
     flex: 0 1 50%;
+}
+
+.pull-request-action-buttons {
+    display: flex;
 }
 </style>

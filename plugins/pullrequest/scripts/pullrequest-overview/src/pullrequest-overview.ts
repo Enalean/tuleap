@@ -23,6 +23,7 @@ import { createGettext } from "vue3-gettext";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import OverviewApp from "./components/OverviewApp.vue";
 import {
     CURRENT_USER_AVATAR_URL,
@@ -59,5 +60,6 @@ export async function init(mount_point: HTMLElement): Promise<void> {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             })
         )
+        .use(VueDOMPurifyHTML)
         .mount(mount_point);
 }

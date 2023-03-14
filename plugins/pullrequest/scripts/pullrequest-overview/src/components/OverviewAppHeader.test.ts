@@ -17,16 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OverviewAppHeader from "./OverviewAppHeader.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
+
+vi.mock("@tuleap/tooltip", () => ({
+    loadTooltips: (): void => {
+        // do nothing
+    },
+}));
 
 describe("OverviewAppHeader", () => {
     it("should render a skeleton in place of the title when there is no pull request info yet", async () => {
         const wrapper = shallowMount(OverviewAppHeader, {
             props: {
                 pull_request: null,
+            },
+            global: {
+                directives: {
+                    "dompurify-html": buildVueDompurifyHTMLDirective(),
+                },
             },
         });
 

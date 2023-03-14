@@ -13,12 +13,14 @@ specifiers:
   '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-modal': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
+  '@tuleap/tooltip': workspace:*
   '@tuleap/vue-strict-inject': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.2.10
   moment: ^2.29.4
   neverthrow: ^6.0.0
   vue: ^3.2.37
+  vue-dompurify-html: ^4.0.0
   vue-router: ^4.1.4
   vue3-gettext: ^2.2.1
 
@@ -33,11 +35,13 @@ dependencies:
   '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip': link:../../../../lib/frontend/tooltip
   '@tuleap/vue-strict-inject': link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   moment: 2.29.4
   neverthrow: 6.0.0
   vue: 3.2.37
+  vue-dompurify-html: 4.0.0_vue@3.2.37
   vue-router: 4.1.5_vue@3.2.37
   vue3-gettext: 2.3.3_vue@3.2.37
 
@@ -322,6 +326,10 @@ packages:
 
   /csstype/2.6.20:
     resolution: {integrity: sha512-/WwNkdXfckNgw6S5R125rrW8ez139lBHWouiBvX8dfMFtcn6V81REDqnH7+CRpRipfYlyU1CmOnOxrmGcFOjeA==}
+
+  /dompurify/3.0.1:
+    resolution: {integrity: sha512-60tsgvPKwItxZZdfLmamp0MTcecCta3avOhsLgPZ0qcWt96OasFfhkeIRbJ6br5i0fQawT1/RBGB5L58/Jpwuw==}
+    dev: false
 
   /editorconfig/0.15.3:
     resolution: {integrity: sha512-M9wIMFx96vq0R4F+gRpY3o2exzb8hEj/n9S8unZtHSvYjibBp/iMufSzvmOcV/laG0ZtuTVGtiJggPOSW2r93g==}
@@ -625,6 +633,33 @@ packages:
   /typical/4.0.0:
     resolution: {integrity: sha512-VAH4IvQ7BDFYglMd7BPRDfLgxZZX4O4TFcRDA6EN5X7erNJJq+McIEp8np9aVtxrCJ6qx4GTYVfOWNjcqwZgRw==}
     engines: {node: '>=8'}
+    dev: false
+
+  /vue-demi/0.13.11_vue@3.2.37:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.37
+    dev: false
+
+  /vue-dompurify-html/4.0.0_vue@3.2.37:
+    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+    dependencies:
+      dompurify: 3.0.1
+      vue: 3.2.37
+      vue-demi: 0.13.11_vue@3.2.37
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: false
 
   /vue-router/4.1.5_vue@3.2.37:

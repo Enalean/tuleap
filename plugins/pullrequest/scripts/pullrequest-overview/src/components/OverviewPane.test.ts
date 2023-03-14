@@ -26,8 +26,15 @@ import { Fault } from "@tuleap/fault";
 import * as tuleap_api from "../api/tuleap-rest-querier";
 import OverviewPane from "./OverviewPane.vue";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import * as tooltip from "@tuleap/tooltip";
 
 vi.mock("vue-router");
+
+vi.mock("@tuleap/tooltip", () => ({
+    loadTooltips: (): void => {
+        // do nothing
+    },
+}));
 
 const pull_request_id = "15";
 const user_id = 102;
@@ -42,6 +49,10 @@ const mockFetchPullRequestSuccess = (): void => {
 
 describe("OverviewPane", () => {
     beforeEach(() => {
+        vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
+            // do nothing
+        });
+
         vi.spyOn(router, "useRoute").mockImplementationOnce(
             () =>
                 ({
