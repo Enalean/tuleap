@@ -150,10 +150,12 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 "./scripts/lib/**",
                 "**/js-test-results/**",
             ],
-            setupFiles: [
-                path.resolve(__dirname, "../../src/vitest/setup-snapshot-serializer.ts"),
-                path.resolve(__dirname, "../../src/vitest/fail-console-error-warning.ts"),
-            ],
+            setupFiles: [path.resolve(__dirname, "../../src/vitest/setup-snapshot-serializer.ts")],
+            onConsoleLog: (log: string, type: "stdout" | "stderr"): void => {
+                if (type === "stderr") {
+                    throw new Error(`Console warnings and errors are not allowed, got ${log}`);
+                }
+            },
             reporters: test_reporters,
             outputFile: {
                 junit: TEST_OUTPUT_DIRECTORY + "/junit.xml",
