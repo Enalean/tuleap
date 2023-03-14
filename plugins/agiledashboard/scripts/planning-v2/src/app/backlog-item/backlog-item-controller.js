@@ -1,5 +1,5 @@
 import angular from "angular";
-import _ from "lodash";
+import { extend, isBoolean } from "lodash-es";
 import { getAccessibilityMode } from "../user-accessibility-mode.js";
 export default BacklogItemController;
 
@@ -29,7 +29,7 @@ function BacklogItemController(
     BacklogItemSelectedService
 ) {
     var self = this;
-    _.extend(self, {
+    extend(self, {
         BACKLOG_ITEM_CHILDREN_PAGINATION: { limit: 50, offset: 0 },
         backlog_item:
             BacklogItemCollectionService.items[
@@ -261,7 +261,7 @@ function BacklogItemController(
         var target_element = angular.element(dragularService.shared.extra),
             source_list_element = angular.element(source_element);
 
-        if (_.isBoolean(target_element[0])) {
+        if (isBoolean(target_element[0])) {
             // dragular sets extra to true if we just drop the element at its original place
             BacklogItemSelectedService.deselectAllBacklogItems();
             $scope.$apply();
@@ -286,7 +286,7 @@ function BacklogItemController(
 
         if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
             dropped_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
-            dropped_item_ids = _.pluck(dropped_items, "id");
+            dropped_item_ids = dropped_items.map((dropped_item) => dropped_item.id);
         }
 
         // the dropped element must be removed for ngRepeat to apply correctly.
@@ -336,7 +336,7 @@ function BacklogItemController(
 
         if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
             dropped_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
-            dropped_item_ids = _.pluck(dropped_items, "id");
+            dropped_item_ids = dropped_items.map((dropped_item) => dropped_item.id);
         }
 
         var compared_to = DroppedService.defineComparedTo(
@@ -390,7 +390,7 @@ function BacklogItemController(
         );
 
         return DroppedService.reorderBacklogItemChildren(
-            _.pluck(children, "id"),
+            children.map((child) => child.id),
             compared_to,
             backlog_item_id
         )

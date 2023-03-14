@@ -1,5 +1,4 @@
 import angular from "angular";
-import { pluck } from "lodash";
 
 export default MilestoneController;
 
@@ -213,7 +212,7 @@ function MilestoneController(
 
         if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
             dropped_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
-            dropped_item_ids = pluck(dropped_items, "id");
+            dropped_item_ids = dropped_items.map((dropped_item) => dropped_item.id);
         }
 
         var compared_to = DroppedService.defineComparedTo(
@@ -294,7 +293,7 @@ function MilestoneController(
         );
 
         return DroppedService.reorderSubmilestone(
-            pluck(backlog_items, "id"),
+            backlog_items.map((backlog_item) => backlog_item.id),
             compared_to,
             milestone_id
         )

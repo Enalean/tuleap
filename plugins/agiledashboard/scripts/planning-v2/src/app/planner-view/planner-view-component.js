@@ -26,7 +26,7 @@ import {
     getOpenSubMilestones,
     getOpenTopMilestones,
 } from "../api/rest-querier";
-import _ from "lodash";
+import { isEmpty } from "lodash-es";
 import { isFunction } from "angular";
 
 export default {
@@ -294,7 +294,7 @@ function controller(
 
     function showAddItemToSubMilestoneModal(item_type, parent_item) {
         let compared_to;
-        if (!_.isEmpty(parent_item.content)) {
+        if (!isEmpty(parent_item.content)) {
             compared_to = {
                 direction: "before",
                 item_id: parent_item.content[0].id,

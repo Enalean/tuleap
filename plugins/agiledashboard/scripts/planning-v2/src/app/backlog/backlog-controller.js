@@ -18,7 +18,7 @@
  */
 
 import angular from "angular";
-import _ from "lodash";
+import { extend, keyBy, isEmpty } from "lodash-es";
 import { sprintf } from "sprintf-js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
 import { setSuccess } from "../success-state.js";
@@ -233,7 +233,7 @@ function BacklogController(
     }
 
     function appendBacklogItems(items) {
-        _.extend(self.all_backlog_items, _.indexBy(items, "id"));
+        extend(self.all_backlog_items, keyBy(items, "id"));
         BacklogService.appendBacklogItems(items);
         BacklogService.filterItems(self.filter.terms);
     }
@@ -262,7 +262,7 @@ function BacklogController(
         $event.preventDefault();
 
         var compared_to;
-        if (!_.isEmpty(self.backlog_items.content)) {
+        if (!isEmpty(self.backlog_items.content)) {
             compared_to = {
                 direction: "before",
                 item_id: self.backlog_items.content[0].id,
@@ -461,7 +461,7 @@ function BacklogController(
 
         if (BacklogItemSelectedService.areThereMultipleSelectedBaklogItems()) {
             dropped_items = BacklogItemSelectedService.getCompactedSelectedBacklogItem();
-            dropped_item_ids = _.pluck(dropped_items, "id");
+            dropped_item_ids = dropped_items.map((dropped_item) => dropped_item.id);
         }
 
         var compared_to = DroppedService.defineComparedTo(
@@ -509,7 +509,7 @@ function BacklogController(
         BacklogService.addOrReorderBacklogItemsInBacklog(backlog_items, compared_to);
 
         return DroppedService.reorderBacklog(
-            _.pluck(backlog_items, "id"),
+            backlog_items.map((backlog_item) => backlog_item.id),
             compared_to,
             BacklogService.backlog
         )

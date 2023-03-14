@@ -1,5 +1,5 @@
 import angular from "angular";
-import _ from "lodash";
+import { extend, compact } from "lodash-es";
 
 export default BacklogItemSelectedService;
 
@@ -9,7 +9,7 @@ function BacklogItemSelectedService() {
     var self = this,
         selected_backlog_items = [];
 
-    _.extend(self, {
+    extend(self, {
         getCompactedSelectedBacklogItem: getCompactedSelectedBacklogItem,
         getNumberOfSelectedBacklogItem: getNumberOfSelectedBacklogItem,
         addSelectedItem: addSelectedItem,
@@ -24,11 +24,11 @@ function BacklogItemSelectedService() {
     });
 
     function getCompactedSelectedBacklogItem() {
-        return _.compact(selected_backlog_items);
+        return compact(selected_backlog_items);
     }
 
     function getNumberOfSelectedBacklogItem() {
-        return _.compact(selected_backlog_items).length;
+        return compact(selected_backlog_items).length;
     }
 
     function addSelectedItem(backlog_item, index) {

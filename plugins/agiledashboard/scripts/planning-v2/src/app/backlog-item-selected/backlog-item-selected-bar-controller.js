@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { extend } from "lodash-es";
 
 export default BacklogItemSelectedBarController;
 
@@ -7,7 +7,7 @@ BacklogItemSelectedBarController.$inject = ["$scope", "BacklogItemSelectedServic
 function BacklogItemSelectedBarController($scope, BacklogItemSelectedService) {
     var self = this;
 
-    _.extend(self, {
+    extend(self, {
         nb_selected_backlog_items: BacklogItemSelectedService.getNumberOfSelectedBacklogItem(),
         init: init,
     });
