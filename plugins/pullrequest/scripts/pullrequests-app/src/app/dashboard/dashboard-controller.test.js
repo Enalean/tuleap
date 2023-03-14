@@ -44,6 +44,7 @@ describe("DashboardController", function () {
 
         DashboardController = $controller(dashboard_controller, {
             PullRequestCollectionService: PullRequestCollectionService,
+            $element: angular.element(),
         });
     });
 

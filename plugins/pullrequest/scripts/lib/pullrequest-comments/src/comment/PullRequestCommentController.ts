@@ -83,6 +83,7 @@ export const PullRequestCommentController = (
 
                 host.replies = replies_store.getCommentReplies(host.comment);
                 host.comment.color = comment_payload.color;
+                host.post_reply_save_callback();
             },
             (fault) => {
                 if (on_error_callback) {

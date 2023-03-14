@@ -104,6 +104,7 @@ describe("PullRequestCommentController", () => {
             comment,
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
+            post_reply_save_callback: vi.fn(),
         } as unknown as HostElement;
 
         const new_comment_reply_payload = {
@@ -124,6 +125,7 @@ describe("PullRequestCommentController", () => {
         expect(host.replies).toStrictEqual([
             PullRequestCommentPresenter.fromCommentReply(comment, new_comment_reply_payload),
         ]);
+        expect(host.post_reply_save_callback).toHaveBeenCalledTimes(1);
     });
 
     it(`Given a root comment with no answer yet
@@ -142,12 +144,14 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
+            post_reply_save_callback: vi.fn(),
         } as unknown as HostElement;
 
         await getController(new_comment_saver).saveReply(host);
 
         expect(host.reply_comment_presenter).toBeNull();
         expect(host.comment.color).toBe("flamingo-pink");
+        expect(host.post_reply_save_callback).toHaveBeenCalledTimes(1);
     });
 
     it(`should display the replies associated to the comment`, () => {

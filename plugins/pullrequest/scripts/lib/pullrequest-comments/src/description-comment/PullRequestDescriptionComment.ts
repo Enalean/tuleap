@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import { loadTooltips } from "@tuleap/tooltip";
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 import type { CurrentPullRequestUserPresenter } from "../types";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
@@ -35,13 +36,22 @@ export interface PullRequestDescriptionComment {
     readonly content: () => HTMLElement;
     readonly description: PullRequestDescriptionCommentPresenter;
     readonly current_user: CurrentPullRequestUserPresenter;
+    readonly after_render_once: unknown;
     relative_date_helper: HelpRelativeDatesDisplay;
 }
+
+export const after_render_once_descriptor = {
+    get: (host: PullRequestDescriptionComment): unknown => host.content(),
+    observe(host: HostElement): void {
+        loadTooltips(host, false);
+    },
+};
 
 export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     description: undefined,
     current_user: undefined,
+    after_render_once: after_render_once_descriptor,
     relative_date_helper: {
         get: (host) => {
             return RelativeDatesHelper(

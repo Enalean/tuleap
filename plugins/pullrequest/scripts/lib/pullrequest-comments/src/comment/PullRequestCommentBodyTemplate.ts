@@ -110,7 +110,11 @@ export const buildBodyForComment = (
 
         ${displayFileNameIfNeeded(comment)}
 
-        <p class="pull-request-comment-text" innerHTML="${DOMPurify.sanitize(comment.content)}"></p>
+        <p
+            class="pull-request-comment-text"
+            data-test="pull-request-comment-text"
+            innerHTML="${DOMPurify.sanitize(comment.content)}"
+        ></p>
     </div>
 `;
 

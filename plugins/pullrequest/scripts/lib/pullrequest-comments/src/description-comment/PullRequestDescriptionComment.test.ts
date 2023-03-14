@@ -17,22 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect } from "vitest";
+import { describe, it, beforeEach, expect, vi } from "vitest";
+import type { SpyInstance } from "vitest";
 import { PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN } from "@tuleap/tlp-relative-date";
 import type { HostElement } from "./PullRequestDescriptionComment";
 import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
-import { PullRequestCommentDescriptionComponent } from "./PullRequestDescriptionComment";
+import {
+    PullRequestCommentDescriptionComponent,
+    after_render_once_descriptor,
+} from "./PullRequestDescriptionComment";
 import { selectOrThrow } from "@tuleap/dom";
 
 import "@tuleap/tlp-relative-date";
+import * as tooltip from "@tuleap/tooltip";
+
+vi.mock("@tuleap/tooltip", () => ({
+    loadTooltips: (): void => {
+        // do nothing
+    },
+}));
 
 describe("PullRequestDescriptionComment", () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot, loadTooltips: SpyInstance;
 
     beforeEach(() => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
+
+        loadTooltips = vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {
+            // do nothing
+        });
     });
 
     it("should render the pull-request description comment", () => {
@@ -74,5 +89,13 @@ describe("PullRequestDescriptionComment", () => {
         expect(selectOrThrow(target, "[data-test=description-content]").textContent?.trim()).toBe(
             "This commit fixes an old bug."
         );
+    });
+
+    it("should load tooltips when the component has been rendered", () => {
+        const host = {} as HostElement;
+        after_render_once_descriptor.observe(host);
+
+        expect(loadTooltips).toHaveBeenCalledTimes(1);
+        expect(loadTooltips).toHaveBeenCalledWith(host, false);
     });
 });

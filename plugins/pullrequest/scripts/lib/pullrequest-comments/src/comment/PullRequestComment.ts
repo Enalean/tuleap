@@ -23,7 +23,10 @@ import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
-import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
+import {
+    getCommentReplyTemplate,
+    REPLY_ELEMENT_ROOT_CLASSNAME,
+} from "./PullRequestCommentReplyTemplate";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
@@ -42,6 +45,7 @@ export interface PullRequestCommentComponentType {
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
+    readonly post_reply_save_callback: () => void;
     readonly controller: ControlPullRequestComment;
     relative_date_helper: HelpRelativeDatesDisplay;
     replies: PullRequestCommentRepliesCollectionPresenter;
@@ -95,8 +99,8 @@ export const setNewCommentState = (
 
 export const after_render_once_descriptor = {
     get: (host: PullRequestCommentComponentType): unknown => host.content(),
-    observe(): void {
-        loadTooltips();
+    observe(host: HostElement): void {
+        loadTooltips(host, false);
     },
 };
 
@@ -105,6 +109,20 @@ export const element_height_descriptor = {
         host.content().getBoundingClientRect().height,
     observe(host: PullRequestCommentComponentType): void {
         host.post_rendering_callback?.();
+    },
+};
+
+export const post_reply_save_callback_descriptor = {
+    get: (host: PullRequestCommentComponentType) => (): void => {
+        const last_reply_element = host
+            .content()
+            .querySelector(`.${REPLY_ELEMENT_ROOT_CLASSNAME}:last-child`);
+
+        if (!(last_reply_element instanceof HTMLElement)) {
+            return;
+        }
+
+        loadTooltips(last_reply_element, false);
     },
 };
 
@@ -125,6 +143,7 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
             return controller;
         },
     },
+    post_reply_save_callback: post_reply_save_callback_descriptor,
     replies: {
         set: setReplies,
     },

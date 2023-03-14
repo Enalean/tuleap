@@ -4,9 +4,15 @@ DashboardController.$inject = [
     "PullRequestCollectionService",
     "PullRequestService",
     "TooltipService",
+    "$element",
 ];
 
-function DashboardController(PullRequestCollectionService, PullRequestService, TooltipService) {
+function DashboardController(
+    PullRequestCollectionService,
+    PullRequestService,
+    TooltipService,
+    $element
+) {
     const self = this;
 
     Object.assign(self, {
@@ -43,7 +49,7 @@ function DashboardController(PullRequestCollectionService, PullRequestService, T
 
         return promise
             .then(() => {
-                TooltipService.setupTooltips();
+                TooltipService.setupTooltips($element[0]);
             })
             .finally(() => {
                 self.loading_pull_requests = false;
@@ -60,7 +66,7 @@ function DashboardController(PullRequestCollectionService, PullRequestService, T
 
         return PullRequestCollectionService.loadClosedPullRequests()
             .then(() => {
-                TooltipService.setupTooltips();
+                TooltipService.setupTooltips($element[0]);
                 closed_pull_requests_hidden = false;
             })
             .finally(() => {

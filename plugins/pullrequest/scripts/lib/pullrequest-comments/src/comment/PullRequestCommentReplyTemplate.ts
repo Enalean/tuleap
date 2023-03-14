@@ -27,6 +27,8 @@ import type { GettextProvider } from "@tuleap/gettext";
 
 type MapOfClasses = Record<string, boolean>;
 
+export const REPLY_ELEMENT_ROOT_CLASSNAME = "pull-request-comment-follow-up";
+
 const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment-content": true,
@@ -42,7 +44,7 @@ const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfC
 
 const getFollowUpClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
     const classes: MapOfClasses = {
-        "pull-request-comment-follow-up": true,
+        [REPLY_ELEMENT_ROOT_CLASSNAME]: true,
     };
 
     if (host.comment.color) {

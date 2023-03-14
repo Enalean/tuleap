@@ -5,9 +5,16 @@ EditModalController.$inject = [
     "PullRequestService",
     "TooltipService",
     "pullrequest",
+    "$element",
 ];
 
-function EditModalController(modal_instance, PullRequestService, TooltipService, pullrequest) {
+function EditModalController(
+    modal_instance,
+    PullRequestService,
+    TooltipService,
+    pullrequest,
+    $element
+) {
     const self = this;
 
     Object.assign(self, {
@@ -26,7 +33,7 @@ function EditModalController(modal_instance, PullRequestService, TooltipService,
             self.raw_description
         )
             .then(() => {
-                TooltipService.setupTooltips();
+                TooltipService.setupTooltips($element[0]);
             })
             .catch(() => {
                 self.raw_title = pullrequest.raw_title;
