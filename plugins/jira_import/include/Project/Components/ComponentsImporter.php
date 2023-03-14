@@ -27,7 +27,9 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\GetTuleapUserFromJiraUser;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersChangesetValue;
 use Tuleap\Tracker\FormElement\Field\StringField\XML\XMLStringChangesetValue;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\XML\IDGenerator;
@@ -39,6 +41,7 @@ final class ComponentsImporter
         private readonly ComponentsRetriever $components_retriever,
         private readonly ComponentIssuesRetriever $component_issues_retriever,
         private readonly ComponentsTrackerBuilder $components_tracker_builder,
+        private readonly GetTuleapUserFromJiraUser $jira_user_retriever,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -68,6 +71,17 @@ final class ComponentsImporter
             if ($component->description !== '') {
                 $changeset = $changeset->withFieldChange(
                     new XMLStringChangesetValue(ComponentsTrackerBuilder::DESCRIPTION_FIELD_NAME, $component->description)
+                );
+            }
+
+            if ($component->lead !== null) {
+                $lead_user = $this->jira_user_retriever->retrieveJiraAuthor($component->lead);
+
+                $changeset = $changeset->withFieldChange(
+                    new XMLBindUsersChangesetValue(
+                        ComponentsTrackerBuilder::COMPONENT_LEAD_FIELD_NAME,
+                        [XMLUser::buildUsername($lead_user->getUserName())],
+                    )
                 );
             }
 

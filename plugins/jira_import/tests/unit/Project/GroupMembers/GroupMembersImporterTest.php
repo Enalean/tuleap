@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -30,6 +30,7 @@ use Tuleap\Project\XML\XMLUserGroups;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\GetTuleapUserFromJiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -58,6 +59,11 @@ final class GroupMembersImporterTest extends TestCase
             public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
             {
                 return $this->users[$unique_account_identifier] ?? $this->default_user;
+            }
+
+            public function retrieveJiraAuthor(JiraUser $update_author): PFUser
+            {
+                return UserTestBuilder::aUser()->build();
             }
         };
         $users_converter->users = $jira_to_tuleap_users;
@@ -237,6 +243,11 @@ final class GroupMembersImporterTest extends TestCase
             public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
             {
                 return $this->users[$unique_account_identifier] ?? $this->default_user;
+            }
+
+            public function retrieveJiraAuthor(JiraUser $update_author): PFUser
+            {
+                return UserTestBuilder::aUser()->build();
             }
         };
         $users_converter->users = $jira_to_tuleap_users;
