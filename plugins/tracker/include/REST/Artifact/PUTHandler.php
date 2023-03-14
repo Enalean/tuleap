@@ -33,6 +33,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
@@ -82,7 +83,7 @@ final class PUTHandler
                     }
                 }
             );
-        } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException $exception) {
+        } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException | CommentContentNotValidException | FieldValidationException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing

@@ -31,6 +31,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
@@ -87,6 +88,7 @@ final class PUTHandlerTest extends TestCase
     {
         yield 'Field is invalid' => [new \Tracker_FormElement_InvalidFieldException(), 400];
         yield 'Field value is invalid' => [new \Tracker_FormElement_InvalidFieldValueException(), 400];
+        yield 'Artifact links cannot be removed' => [new FieldValidationException([]), 400];
         yield 'Tracker exception' => [new \Tracker_Exception(), 500];
         $other_artifact = ArtifactTestBuilder::anArtifact(83)->build();
         yield 'Attachment is already linked' => [
