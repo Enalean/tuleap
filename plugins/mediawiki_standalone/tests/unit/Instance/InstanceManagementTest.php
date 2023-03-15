@@ -82,6 +82,8 @@ final class InstanceManagementTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project_120, $project_130),
             $this->central_database_parameter_generator,
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([]),
+            OngoingInitializationsStateStub::buildSelf(),
+            SwitchMediawikiServiceStub::buildSelf(),
         );
 
         parent::setUp();

@@ -25,6 +25,10 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_standalone_permissions (
     INDEX idx_ugroup(ugroup_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_mediawiki_standalone_ongoing_initializations (
+    project_id INT NOT NULL PRIMARY KEY
+);
+
 INSERT INTO service(`group_id`, `label`, `description`, `short_name`, `link`, `is_active`, `is_used`, `scope`, `rank`)
 SELECT DISTINCT service.group_id,'label','','plugin_mediawiki_standalone',NULL,1,0,'system',161
 FROM service

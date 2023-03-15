@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_mediawiki_standalone_permissions;
-DROP TABLE IF EXISTS plugin_mediawiki_standalone_ongoing_initializations;
+declare(strict_types=1);
 
-DELETE FROM service WHERE short_name = 'plugin_mediawiki_standalone';
+namespace Tuleap\MediawikiStandalone\Instance;
+
+final class SwitchMediawikiServiceStub implements SwitchMediawikiService
+{
+    private bool $is_switched = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self();
+    }
+
+    public function switchToStandalone(\Project $project): void
+    {
+        $this->is_switched = true;
+    }
+
+    public function isSwitchedToStandalone(): bool
+    {
+        return $this->is_switched;
+    }
+}
