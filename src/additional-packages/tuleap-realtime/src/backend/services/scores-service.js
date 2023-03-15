@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const moment = require("moment");
+const NB_DAYS_TO_CLEAR_SCORES = 2;
 
 module.exports = function (scores) {
     var self                  = this;
@@ -43,8 +43,9 @@ module.exports = function (scores) {
      * @returns {number}
      */
     function setScoresInterval() {
+        const delay_to_clear_scores_in_ms = NB_DAYS_TO_CLEAR_SCORES * 24 * 3600 * 1000;
         return setInterval(function () {
             self.scores.removeAll();
-        }, moment.duration(2, 'days').valueOf());
+        }, delay_to_clear_scores_in_ms);
     }
 };

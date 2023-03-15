@@ -272,11 +272,6 @@ id = "GHSA-8hfj-j24r-96c4" # CVE-2022-24785
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
-[[IgnoredVulns]]
-id = "GHSA-wc69-rhjr-hc9g" # CVE-2022-31129
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 ## nconf
 [[IgnoredVulns]]
 id = "GHSA-6xwr-q98w-rvg7" # CVE-2022-21803
