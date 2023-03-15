@@ -29,7 +29,9 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends T
     {
         switch ($request->getPermissionType(ProjectUGroup::REGISTERED)) {
             case Tracker_Permission_Command::PERMISSION_FULL:
-                $permissions_setter->grantAccess(Tracker::PERMISSION_FULL, ProjectUGroup::REGISTERED);
+                if (! $permissions_setter->groupHasPermission(Tracker::PERMISSION_FULL, ProjectUGroup::REGISTERED)) {
+                    $permissions_setter->grant(Tracker::PERMISSION_FULL, ProjectUGroup::REGISTERED);
+                }
                 foreach ($permissions_setter->getAllGroupIds() as $stored_ugroup_id) {
                     if ($stored_ugroup_id !== ProjectUGroup::ANONYMOUS && $stored_ugroup_id !== ProjectUGroup::REGISTERED) {
                         $this->revokeAllButAdmin($request, $permissions_setter, $stored_ugroup_id);
