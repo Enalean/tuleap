@@ -47,6 +47,7 @@ final class MigrateInstance
     final public const TOPIC = 'tuleap.mediawiki-standalone.instance-migration';
 
     private function __construct(
+        private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly \Project $project,
         private readonly bool $use_central_database,
         private readonly string $short_language_code,
@@ -60,6 +61,7 @@ final class MigrateInstance
         WorkerEvent $event,
         ProjectByIDFactory $project_factory,
         MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
+        MediaWikiManagementCommandFactory $command_factory,
     ): Option {
         if ($event->getEventName() !== self::TOPIC) {
             return Option::nothing(self::class);
@@ -71,30 +73,18 @@ final class MigrateInstance
 
         return Option::fromValue(
             new self(
+                $command_factory,
                 $project_factory->getValidProjectById($payload['project_id']),
                 $central_database_parameter_generator->getCentralDatabase() !== null,
-                (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT)
+                (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT),
             )
         );
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @psalm-return Ok<null>|Err<Fault>
      */
-    public function process(
-        ClientInterface $client,
-        RequestFactoryInterface $request_factory,
-        StreamFactoryInterface $stream_factory,
-        MediaWikiManagementCommandFactory $command_factory,
-        LoggerInterface $logger,
-    ): Ok|Err {
-        return $this->migrateInstance($client, $request_factory, $stream_factory, $command_factory, $logger);
-    }
-
-    /**
-     * @return Ok<null>|Err<Fault>
-     */
-    private function migrateInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, MediaWikiManagementCommandFactory $command_factory, LoggerInterface $logger): Ok|Err
+    public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
         $instance_name = $this->project->getUnixNameLowerCase();
@@ -105,9 +95,9 @@ final class MigrateInstance
         return self::processRequest($client, $request, $logger)
             ->andThen(
                 /** @return Ok<null>|Err<Fault> */
-                function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $command_factory, $logger, $instance_name) {
+                function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $logger, $instance_name) {
                     return match ($response->getStatusCode()) {
-                        404 => $this->registerInstance($client, $request_factory, $stream_factory, $command_factory, $logger),
+                        404 => $this->registerInstance($client, $request_factory, $stream_factory, $logger),
                         200 => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
                         default => Result::err(
                             Fault::fromMessage(
@@ -128,7 +118,7 @@ final class MigrateInstance
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function registerInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, MediaWikiManagementCommandFactory $command_factory, LoggerInterface $logger): Ok|Err
+    private function registerInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $payload = [
             'project_id' => (int) $this->project->getID(),
@@ -141,7 +131,7 @@ final class MigrateInstance
         return self::jsonEncoder($payload)
             ->andThen(
                 /** @return Ok<null>|Err<Fault> */
-                function (string $json_payload) use ($request_factory, $stream_factory, $command_factory, $logger, $client): Ok|Err {
+                function (string $json_payload) use ($request_factory, $stream_factory, $logger, $client): Ok|Err {
                     $request = $request_factory->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/register/' . urlencode($this->project->getUnixNameLowerCase()))
                         ->withBody(
                             $stream_factory->createStream($json_payload)
@@ -149,7 +139,7 @@ final class MigrateInstance
 
                     return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
                         /** @return Ok<null>|Err<Fault> */
-                        fn () => $this->performUpgrade($client, $request_factory, $stream_factory, $command_factory, $logger)
+                        fn () => $this->performUpgrade($client, $request_factory, $stream_factory, $logger)
                     );
                 }
             );
@@ -158,9 +148,9 @@ final class MigrateInstance
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function performUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, MediaWikiManagementCommandFactory $command_factory, LoggerInterface $logger): Ok|Err
+    private function performUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $command = $command_factory->buildUpdateProjectInstanceCommand($this->project->getUnixNameLowerCase());
+        $command = $this->command_factory->buildUpdateProjectInstanceCommand($this->project->getUnixNameLowerCase());
         return $command->wait()->match(
             /** @return Ok<null>|Err<Fault> */
             fn (): Ok|Err => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),

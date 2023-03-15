@@ -35,6 +35,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
@@ -50,39 +51,32 @@ final class CreateInstance
     ) {
     }
 
-    public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory, MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator): ?self
+     /**
+     * @psalm-return Option<self>
+     */
+    public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory, MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator): Option
     {
         if ($event->getEventName() !== self::TOPIC) {
-            return null;
+            return Option::nothing(self::class);
         }
         $payload = $event->getPayload();
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
             throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
         }
 
-        return new self(
-            $project_factory->getValidProjectById($payload['project_id']),
-            $central_database_parameter_generator->getCentralDatabase() !== null,
-            (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT)
+        return Option::fromValue(
+            new self(
+                $project_factory->getValidProjectById($payload['project_id']),
+                $central_database_parameter_generator->getCentralDatabase() !== null,
+                (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT)
+            )
         );
     }
 
-    public function sendRequest(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): void
-    {
-        $this->activateInstance($client, $request_factory, $stream_factory, $logger)
-            ->mapErr(
-                /** @return Err<null> */
-                function (Fault $fault) use ($logger): Err {
-                    Fault::writeToLogger($fault, $logger);
-                    return Result::err(null);
-                }
-            );
-    }
-
     /**
-     * @return Ok<null>|Err<Fault>
+     * @psalm-return Ok<null>|Err<Fault>
      */
-    private function activateInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
+    public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
         $instance_name = $this->project->getUnixNameLowerCase();
