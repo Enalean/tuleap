@@ -439,7 +439,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 ->withBody($this->stream_factory->createStream($put_body))
         );
 
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
         return $artifact_id;
     }
 
