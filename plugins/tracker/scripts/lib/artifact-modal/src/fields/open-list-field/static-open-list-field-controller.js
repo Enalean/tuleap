@@ -18,7 +18,7 @@
  */
 
 import { select2 } from "tlp";
-import { unique, union, remove } from "lodash";
+import { remove } from "lodash-es";
 import { initOpenListFieldLabelAndSelectIds } from "./open-list-field-ids-initializer";
 
 export default StaticOpenListFieldController;
@@ -67,8 +67,15 @@ function StaticOpenListFieldController($element) {
 
     function fieldValues() {
         if (self.merged_values.length === 0) {
-            var union_values = union(self.field.values, self.value_model.value.bind_value_objects);
-            self.merged_values = unique(union_values, "label");
+            const union_values = [
+                ...self.field.values,
+                ...self.value_model.value.bind_value_objects,
+            ];
+            self.merged_values = [
+                ...new Map(
+                    union_values.map((union_value) => [parseInt(union_value.id, 10), union_value])
+                ).values(),
+            ];
         }
         return self.merged_values;
     }
