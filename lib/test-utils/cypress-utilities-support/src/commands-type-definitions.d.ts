@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactCreationPayload } from "./commands";
+export { WEB_UI_SESSION } from "./commands";
 
 export type ReloadCallback = () => void;
 export type ConditionPredicate = (
@@ -45,20 +46,13 @@ declare global {
             anonymousSession(): void;
             regularUserSession(): void;
 
-            secondProjectAdministratorLogin(): void;
-
             projectMemberLogin(): void;
-
-            permissionDelegationLogin(): void;
 
             platformAdminLogin(): void;
 
             restrictedMemberSession(): void;
 
-            restrictedRegularUserLogin(): void;
             restrictedRegularUserSession(): void;
-
-            regularUserLogin(): void;
 
             userLogout(): void;
 

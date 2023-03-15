@@ -22,18 +22,14 @@ describe("Frs", function () {
 
     context("Project administrators", function () {
         before(() => {
-            cy.clearSessionCookie();
-            cy.projectAdministratorLogin();
+            cy.projectAdministratorSession();
             now = Date.now();
             cy.createNewPublicProject(`frs-${now}`, "agile_alm").as("project_id");
         });
 
-        beforeEach(() => {
-            cy.preserveSessionCookies();
-        });
-
         context("Frs packages", function () {
             it("can CRUD a new package", function () {
+                cy.projectAdministratorSession();
                 cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=create-new-package]").click();
                 cy.get("[data-test=frs-create-package]").type(`package${now}`);
@@ -64,6 +60,7 @@ describe("Frs", function () {
 
         context("Frs CRUD releases", function () {
             it("can create a new release", function () {
+                cy.projectAdministratorSession();
                 cy.visitProjectService(`frs-${now}`, "Files");
                 cy.createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
                 cy.visitProjectService(`frs-${now}`, "Files");
@@ -118,6 +115,7 @@ describe("Frs", function () {
 
         context("Hidden packages", function () {
             it("can create a new hidden package", function () {
+                cy.projectAdministratorSession();
                 cy.createNewPublicProject(`frs-hidden-${now}`, "agile_alm");
                 cy.visitProjectService(`frs-hidden-${now}`, "Files");
                 cy.get("[data-test=create-new-package]").click();
@@ -136,16 +134,8 @@ describe("Frs", function () {
     });
 
     context("Project members", function () {
-        before(() => {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-        });
-
-        beforeEach(function () {
-            cy.preserveSessionCookies();
-        });
-
         it("should not see hidden packages", function () {
+            cy.projectMemberSession();
             cy.visitProjectService(`frs-hidden-${now}`, "Files");
 
             cy.get("[data-test=main-content]").then(($body) => {

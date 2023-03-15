@@ -20,16 +20,9 @@
 
 describe("Site admin", function () {
     context("Platform administrator", function () {
-        before(() => {
-            cy.clearSessionCookie();
-            cy.platformAdminLogin();
-        });
-
-        beforeEach(function () {
-            cy.preserveSessionCookies();
-        });
-
         it("can search user on admin page", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
             cy.get("[data-test=platform-administration-link]").click();
             cy.get("[data-test=global-admin-search-user]").type("heisenberg{enter}");
             cy.get("[data-test=user-login]").should("have.value", "Heisenberg");

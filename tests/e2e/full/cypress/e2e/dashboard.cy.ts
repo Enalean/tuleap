@@ -18,12 +18,8 @@
  */
 
 describe("Hide widget", function () {
-    beforeEach(() => {
-        cy.clearSessionCookie();
-    });
-
     it("given widget is not available on platform, then it must never be displayed", function () {
-        cy.platformAdminLogin();
+        cy.siteAdministratorSession();
         cy.visit("/admin/project-creation/widgets");
 
         cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });
@@ -40,7 +36,7 @@ describe("Hide widget", function () {
     });
 
     it("User should be able to manipulate widgets", function () {
-        cy.platformAdminLogin();
+        cy.siteAdministratorSession();
         cy.visit("/my/");
 
         cy.get("[data-test=dashboard-configuration-button]").click();
@@ -59,7 +55,7 @@ describe("Hide widget", function () {
     });
 
     it("Project member should be able to manipulate widgets", function () {
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.visit("/my/");
 
         cy.get("[data-test=dashboard-configuration-button]").click();

@@ -17,48 +17,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function assertFeedbackContainsMessage(expected_feedback_message: string): void {
-    cy.get("[data-test=feedback]").contains(expected_feedback_message);
-}
+import { WEB_UI_SESSION } from "@tuleap/cypress-utilities-support";
 
 describe("User preferences", () => {
-    const now = Date.now();
-    const password = "pwd_" + now;
+    let username: string, password: string;
 
     before(() => {
-        cy.clearSessionCookie();
+        const now = Date.now();
+        username = "test_prefs_" + now;
+        password = "pwd_" + now;
+
+        cy.anonymousSession();
         cy.visit("/account/register.php");
-        const username = "test_prefs_" + now;
         cy.get("[data-test=user-login]").type(username);
-        cy.get("[data-test=user-email]").type(username + "@localhost");
+        cy.get("[data-test=user-email]").type(`${username}@localhost`);
         cy.get("[data-test=user-pw]").type(password);
         cy.get("[data-test=user-pw2]").type(password);
         cy.get("[data-test=user-prefs-site-updates]").click();
-        cy.get("[data-test=user-name]").type("Test Prefs " + now + "{enter}");
+        cy.get("[data-test=user-name]").type(`Test Prefs ${now}{enter}`);
 
-        cy.platformAdminLogin();
+        cy.siteAdministratorSession();
         cy.visit("/admin/approve_pending_users.php?page=pending");
         cy.contains(".siteadmin-pending-user", username)
             .find("[name=action_select][value=activate]")
             .click();
-
-        cy.clearSessionCookie();
-        cy.visit("/");
-        cy.get("[data-test=form_loginname]").type(username);
-        cy.get("[data-test=form_pw]").type(`${password}{enter}`);
     });
 
-    beforeEach(function () {
-        cy.preserveSessionCookies();
-    });
+    function newUserSession(): void {
+        cy.session([WEB_UI_SESSION, username], () => {
+            cy.visit("/");
+            cy.get("[data-test=form_loginname]").type(username);
+            cy.get("[data-test=form_pw]").type(`${password}{enter}`);
+        });
+    }
 
     describe("in the [account] Tab", () => {
-        beforeEach(() => {
-            cy.visit("/account/");
-        });
-
         describe("User is able to", () => {
             it("Change his data", () => {
+                newUserSession();
+                cy.visit("/account/");
                 cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
                 cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
                 cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
@@ -78,6 +75,8 @@ describe("User preferences", () => {
             });
 
             it("Change his avatar", () => {
+                newUserSession();
+                cy.visit("/account/");
                 cy.get("[data-test=account-information-avatar-button]").click();
                 cy.get("[data-test=account-information-avatar-modal-select-file]").selectFile(
                     "cypress/fixtures/heisenberg.jpg"
@@ -88,6 +87,8 @@ describe("User preferences", () => {
             });
 
             it("Change his current avatar for the default one", () => {
+                newUserSession();
+                cy.visit("/account/");
                 cy.get("[data-test=account-information-avatar-button]").click();
                 cy.get("[data-test=account-information-avatar-modal-use-default-button]").click();
                 cy.get("[data-test=user-prefs-save-avatar-button]").click();
@@ -104,30 +105,27 @@ describe("User preferences", () => {
             cy.get("[data-test=repeat_new_password]").type(new_password);
         }
 
-        beforeEach(() => {
-            cy.visit("/account/security");
-        });
-
         describe("change the password", () => {
-            const actual_password = password;
-            const temporary_password = "Blue-Meth-99-1%-pure";
-
-            afterEach(() => {
-                // Rollback old password, let's not break the tests
-                typePasswords(temporary_password, actual_password);
-                cy.get("[data-test=user-prefs-update-password]").click();
-            });
-
             it("is successful when it is a safe password", () => {
-                typePasswords(actual_password, temporary_password);
+                const temporary_password = "Blue-Meth-99-1%-pure";
+
+                newUserSession();
+                cy.visit("/account/security");
+                typePasswords(password, temporary_password);
 
                 cy.get("[data-test=user-prefs-update-password]").click();
 
                 assertFeedbackContainsMessage("Password successfully updated");
+
+                cy.log("Rollback to the old password to avoid breaking the other tests");
+                typePasswords(temporary_password, password);
+                cy.get("[data-test=user-prefs-update-password]").click();
             });
         });
 
         it("the user can activate the 'remember me' option", () => {
+            newUserSession();
+            cy.visit("/account/security");
             cy.get("[data-test=account-remember-me]").click({ force: true });
 
             assertFeedbackContainsMessage("User preferences successfully updated");
@@ -138,11 +136,9 @@ describe("User preferences", () => {
     });
 
     describe("[Notifications] tab", () => {
-        beforeEach(() => {
-            cy.visit("/account/notifications");
-        });
-
         it("allows user to receive emails about site updates and security notices", () => {
+            newUserSession();
+            cy.visit("/account/notifications");
             cy.get("[data-test=user-prefs-site-updates]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
 
@@ -152,6 +148,8 @@ describe("User preferences", () => {
         });
 
         it("allows user to receive community mailings", () => {
+            newUserSession();
+            cy.visit("/account/notifications");
             cy.get("[data-test=user-prefs-community-mailing]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
 
@@ -161,6 +159,8 @@ describe("User preferences", () => {
         });
 
         it("allows user to change the format of the tracker emails to text", () => {
+            newUserSession();
+            cy.visit("/account/notifications");
             cy.get("[data-test=user-prefs-text-format]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
 
@@ -170,12 +170,10 @@ describe("User preferences", () => {
     });
 
     describe("in the [Keys & Tokens] tab", () => {
-        beforeEach(() => {
-            cy.visit("/account/keys-tokens");
-        });
-
         describe("in the SSH keys section", () => {
             it("the user can manipulate his public SSH key", () => {
+                newUserSession();
+                cy.visit("/account/keys-tokens");
                 cy.get("[data-test=add-ssh-key-button]").click();
                 cy.get("[data-test=ssh-key]")
                     .type(".")
@@ -192,7 +190,7 @@ describe("User preferences", () => {
 
                 cy.get("[data-ssh_key_value]").should("have.length", 1);
 
-                // revoke it
+                cy.log("revoke the SSH key");
                 cy.get("[data-test=user-prefs-remove-ssh-key-checkbox]").click();
                 cy.get("[data-test=remove-ssh-keys-button]").click();
 
@@ -206,6 +204,8 @@ describe("User preferences", () => {
 
         describe("in the personal access key section", () => {
             it("the user can manipulate his personal access key", () => {
+                newUserSession();
+                cy.visit("/account/keys-tokens");
                 cy.get("[data-test=generate-access-key-button]").click();
                 cy.get("[data-test=access-key-description]").type("An access key for GIT and REST");
                 cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
@@ -222,7 +222,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-new-api-key]").should("exist");
                 cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 1);
 
-                // revoke it
+                cy.log("revoke the access key");
                 cy.get("[data-test=user-prefs-personal-access-key-checkbox]").click();
                 cy.get("[data-test=button-revoke-access-tokens]").click();
 
@@ -234,12 +234,10 @@ describe("User preferences", () => {
     });
 
     describe("in the [Appearance & Language] tab", () => {
-        beforeEach(() => {
-            cy.visit("/account/appearance");
-        });
-
         describe("in the language section", () => {
             it("the user can choose his his language", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-prefs-language-selector-fr_FR]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
 
@@ -248,7 +246,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-language-selector-fr_FR]").should("be.checked");
                 cy.get("[data-test=user-preferences-title]").contains("Préférences");
 
-                // rollback to English
+                cy.log("rollback to English");
                 cy.get("[data-test=user-prefs-language-selector-en_US]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
 
@@ -268,6 +266,8 @@ describe("User preferences", () => {
             }
 
             it("the user can change the theme color of Tuleap", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-preferences-color-selector]").select("blue", {
                     force: true,
                 });
@@ -282,6 +282,8 @@ describe("User preferences", () => {
 
         describe("the user can set the display density", () => {
             it("to the condensed/comfortable mode", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-prefs-display-density-condensed]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 assertFeedbackContainsMessage("User preferences successfully updated");
@@ -289,7 +291,7 @@ describe("User preferences", () => {
                 // eslint-disable-next-line cypress/require-data-selectors
                 cy.get("body").should("have.class", "theme-condensed");
 
-                //rollback to comfortable mode
+                cy.log("rollback to comfortable mode");
                 cy.get("[data-test=user-prefs-display-density-comfortable]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 assertFeedbackContainsMessage("User preferences successfully updated");
@@ -301,6 +303,8 @@ describe("User preferences", () => {
 
         describe("in the Enable accessibility mode", () => {
             it("the user can enable the option", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-preferences-accessibility-selector]").click();
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 cy.visit("/account/appearance");
@@ -314,6 +318,8 @@ describe("User preferences", () => {
 
         describe("in the username display section", () => {
             it("the user can choose the way usernames are displayed", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-prefs-username-display-format-select]").select("2");
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
                 cy.visit("/account/appearance");
@@ -327,6 +333,8 @@ describe("User preferences", () => {
 
         describe("in the relative dates display section", () => {
             it("the user can choose the way relative dates are displayed", () => {
+                newUserSession();
+                cy.visit("/account/appearance");
                 cy.get("[data-test=user-prefs-relative-dates-display-format-select]").select(
                     "absolute_first-relative_shown"
                 );
@@ -342,12 +350,10 @@ describe("User preferences", () => {
     });
 
     describe("in the [Edition & CSV] tab", () => {
-        beforeEach(() => {
-            cy.visit("/account/edition");
-        });
-
         describe("in the default tracker text fields format section", () => {
             it("the user can choose the HTML format", () => {
+                newUserSession();
+                cy.visit("/account/edition");
                 cy.get("[data-test=user-prefs-tracker-default-format-html]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
@@ -359,6 +365,8 @@ describe("User preferences", () => {
 
         describe("in the CSV separator section", () => {
             it("the user can choose separators to semicolon", () => {
+                newUserSession();
+                cy.visit("/account/edition");
                 cy.get("[data-test=user-prefs-csv-separator-semicolon]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
@@ -370,6 +378,8 @@ describe("User preferences", () => {
 
         describe("in the CSV date format section", () => {
             it("the user can choose the  date format to day/month/year", () => {
+                newUserSession();
+                cy.visit("/account/edition");
                 cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
@@ -380,3 +390,7 @@ describe("User preferences", () => {
         });
     });
 });
+
+function assertFeedbackContainsMessage(expected_feedback_message: string): void {
+    cy.get("[data-test=feedback]").contains(expected_feedback_message);
+}
