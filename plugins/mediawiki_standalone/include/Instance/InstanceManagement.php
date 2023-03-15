@@ -75,6 +75,11 @@ final class InstanceManagement
                 $this->sendRequest($log_users_out);
                 return;
             }
+        } catch (\Project_NotFoundException $exception) {
+            $this->logger->error(
+                sprintf("Payload %s does not reference an existing project", var_export($worker_event->getPayload(), true)),
+                ['exception' => $exception]
+            );
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
