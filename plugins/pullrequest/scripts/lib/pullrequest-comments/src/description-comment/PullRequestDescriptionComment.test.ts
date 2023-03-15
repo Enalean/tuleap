@@ -19,17 +19,17 @@
 
 import { describe, it, beforeEach, expect, vi } from "vitest";
 import type { SpyInstance } from "vitest";
-import { PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN } from "@tuleap/tlp-relative-date";
 import type { HostElement } from "./PullRequestDescriptionComment";
-import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
 import {
     PullRequestCommentDescriptionComponent,
     after_render_once_descriptor,
 } from "./PullRequestDescriptionComment";
 import { selectOrThrow } from "@tuleap/dom";
-
-import "@tuleap/tlp-relative-date";
 import * as tooltip from "@tuleap/tooltip";
+import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
+import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
+import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
+import { DescriptionAuthorStub } from "../../tests/stubs/DescriptionAuthorStub";
 
 vi.mock("@tuleap/tooltip", () => ({
     loadTooltips: (): void => {
@@ -50,45 +50,50 @@ describe("PullRequestDescriptionComment", () => {
         });
     });
 
-    it("should render the pull-request description comment", () => {
-        const user = {
-            id: 102,
-            user_locale: "fr_FR",
-            avatar_url: "url/to/user_avatar.png",
-            user_url: "url/to/user_profile.html",
-            display_name: "Joe l'Asticot",
-        };
+    describe("read-mode and write-mode", () => {
+        let host: HostElement;
 
-        const host = {
-            current_user: {
-                user_id: user.id,
-                avatar_url: user.avatar_url,
-                user_locale: user.user_locale,
-                preferred_date_format: "Y/M/D H:m",
-                preferred_relative_date_display: PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
-            },
-            description: {
-                author: {
-                    id: user.id,
-                    avatar_url: user.avatar_url,
-                    user_url: user.user_url,
-                    display_name: user.display_name,
+        beforeEach(() => {
+            host = {
+                description: {
+                    author: DescriptionAuthorStub.withDefault(),
+                    content: `This commit fixes <a class="cross-reference">bug #123</a>`,
+                    raw_content: `This commit fixes bug #123`,
+                    post_date: "2023-03-13T15:00:00Z",
+                    can_user_update_description: true,
                 },
-                content: "This commit fixes an old bug.",
-                post_date: "2023-03-13T15:00:00Z",
-                can_user_update_description: true,
-            },
-            relative_date_helper: RelativeDateHelperStub,
-        } as HostElement;
+                controller: {
+                    showEditionForm: vi.fn(),
+                    hideEditionForm: vi.fn(),
+                    getRelativeDateHelper: () => RelativeDateHelperStub,
+                } as ControlPullRequestDescriptionComment,
+            } as HostElement;
+        });
 
-        const update = PullRequestCommentDescriptionComponent.content(host);
-        update(host, target);
+        it("When the component is in read-mode, then it should render its content", () => {
+            host.edition_form_presenter = null;
 
-        expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
-        expect(selectOrThrow(target, "[data-test=comment-header]")).toBeDefined();
-        expect(selectOrThrow(target, "[data-test=description-content]").textContent?.trim()).toBe(
-            "This commit fixes an old bug."
-        );
+            const update = PullRequestCommentDescriptionComponent.content(host);
+            update(host, target);
+
+            expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
+            expect(
+                selectOrThrow(target, "[data-test=pull-request-description-read-mode]")
+            ).toBeDefined();
+        });
+
+        it("When the component is in write-mode, then it should render its content", () => {
+            host.edition_form_presenter =
+                PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description);
+
+            const update = PullRequestCommentDescriptionComponent.content(host);
+            update(host, target);
+
+            expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
+            expect(
+                selectOrThrow(target, "[data-test=pull-request-description-write-mode]")
+            ).toBeDefined();
+        });
     });
 
     it("should load tooltips when the component has been rendered", () => {

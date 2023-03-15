@@ -17,12 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-
-export interface PullRequestDescriptionCommentPresenter {
-    readonly author: User;
-    readonly post_date: string;
-    readonly content: string;
-    readonly raw_content: string;
-    readonly can_user_update_description: boolean;
+export interface FocusTextArea {
+    focusTextArea: (component_content: HTMLElement) => void;
 }
+
+export const FOCUSABLE_TEXTAREA_CLASSNAME = "pull-request-comment-textarea";
+
+export const PullRequestCommentTextareaFocusHelper = (): FocusTextArea => ({
+    focusTextArea: (component_content: HTMLElement): void => {
+        const target_textarea = component_content.querySelector<HTMLTextAreaElement>(
+            `.${FOCUSABLE_TEXTAREA_CLASSNAME}`
+        );
+
+        if (!target_textarea) {
+            return;
+        }
+
+        target_textarea.focus();
+        target_textarea.setSelectionRange(
+            target_textarea.value.length,
+            target_textarea.value.length
+        );
+    },
+});

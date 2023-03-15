@@ -22,6 +22,7 @@ import type { UpdateFunction } from "hybrids";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import { buildBodyForComment } from "./PullRequestCommentBodyTemplate";
 import { buildFooterForComment } from "./PullRequestCommentFooterTemplate";
+import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { GettextProvider } from "@tuleap/gettext";
 
@@ -62,9 +63,7 @@ export const getCommentReplyTemplate = (
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getFollowUpClasses(host)}">
         <div class="pull-request-comment pull-request-comment-follow-up-content">
-            <div class="tlp-avatar-medium">
-                <img src="${reply.user.avatar_url}" class="media-object" aria-hidden="true" />
-            </div>
+            ${getCommentAvatarTemplate(reply.user)}
             <div class="${getCommentContentClasses(host)}">
                 ${buildBodyForComment(host, reply, gettext_provider)}
                 ${buildFooterForComment(host, reply, gettext_provider)}

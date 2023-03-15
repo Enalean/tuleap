@@ -25,3 +25,15 @@
 .pull-request-description-comment-empty-state-bold {
     font-weight: 600;
 }
+
+.pull-request-description-comment-textarea {
+    width: 100%;
+    padding: var(--tlp-medium-spacing);
+    border: unset;
+    resize: none;
+
+    &:focus {
+        border-color: unset;
+        box-shadow: unset;
+    }
+}

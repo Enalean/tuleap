@@ -21,6 +21,8 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { GettextProvider } from "@tuleap/gettext";
+import { FOCUSABLE_TEXTAREA_CLASSNAME } from "../helpers/textarea-focus-helper";
+import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -65,16 +67,10 @@ export const getReplyFormTemplate = (
     return html`
         <div class="pull-request-comment-reply-form" data-test="pull-request-comment-reply-form">
             <div class="pull-request-comment pull-request-comment-follow-up-content">
-                <div class="tlp-avatar-medium">
-                    <img
-                        src="${host.reply_comment_presenter.comment_author.avatar_url}"
-                        class="media-object"
-                        aria-hidden="true"
-                    />
-                </div>
+                ${getCommentAvatarTemplate(host.comment.user)}
                 <div class="${getCommentContentClasses(host)}">
                     <textarea
-                        class="pull-request-comment-reply-textarea tlp-textarea"
+                        class="${FOCUSABLE_TEXTAREA_CLASSNAME} tlp-textarea"
                         rows="10"
                         placeholder="${gettext_provider.gettext("Say something…")}"
                         oninput="${onTextAreaInput}"

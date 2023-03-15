@@ -30,7 +30,7 @@ import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenter
 
 import {
     PullRequestCommentController,
-    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentTextareaFocusHelper,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
 import {
@@ -120,7 +120,7 @@ function controller($element, $scope, SharedPropertiesService) {
         const widget_creator = SideBySideCodeMirrorWidgetCreator(
             document,
             PullRequestCommentController(
-                PullRequestCommentReplyFormFocusHelper(),
+                PullRequestCommentTextareaFocusHelper(),
                 getStore(),
                 PullRequestCommentNewReplySaver(),
                 PullRequestCurrentUserPresenterBuilder.fromUserInfo(

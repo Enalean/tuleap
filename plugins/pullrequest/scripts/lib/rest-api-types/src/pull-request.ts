@@ -39,5 +39,6 @@ export interface PullRequest {
     };
     readonly head_reference: string;
     readonly description: string;
+    readonly raw_description: string;
     readonly user_can_merge: boolean;
 }

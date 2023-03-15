@@ -20,7 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
-import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
+import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
@@ -42,7 +42,7 @@ export interface ControlPullRequestComment {
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;
 
 export const PullRequestCommentController = (
-    focus_helper: FocusReplyToCommentTextArea,
+    focus_helper: FocusTextArea,
     replies_store: StorePullRequestCommentReplies,
     new_comment_saver: SaveNewReplyToComment,
     current_user: CurrentPullRequestUserPresenter,
@@ -55,7 +55,7 @@ export const PullRequestCommentController = (
             current_pull_request
         );
 
-        focus_helper.focusFormReplyToCommentTextArea(host);
+        focus_helper.focusTextArea(host.content());
     },
     hideReplyForm: (host: PullRequestCommentComponentType): void => {
         host.reply_comment_presenter = null;

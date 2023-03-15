@@ -17,12 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 
-export interface PullRequestDescriptionCommentPresenter {
-    readonly author: User;
-    readonly post_date: string;
-    readonly content: string;
-    readonly raw_content: string;
-    readonly can_user_update_description: boolean;
+export interface DescriptionCommentFormPresenter {
+    readonly description_content: string;
 }
+
+export const PullRequestDescriptionCommentFormPresenter = {
+    fromCurrentDescription: (
+        current_description: PullRequestDescriptionCommentPresenter
+    ): DescriptionCommentFormPresenter => ({
+        description_content: current_description.raw_content,
+    }),
+};

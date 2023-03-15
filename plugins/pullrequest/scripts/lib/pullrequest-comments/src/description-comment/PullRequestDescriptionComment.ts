@@ -19,14 +19,13 @@
 
 import { define, html } from "hybrids";
 import { loadTooltips } from "@tuleap/tooltip";
+import type { DescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
+import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
-import type { CurrentPullRequestUserPresenter } from "../types";
-import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
-import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
-import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
-import { gettext_provider } from "../gettext-provider";
 import { getDescriptionContentTemplate } from "./PullRequestDescriptionContentTemplate";
+import { getDescriptionCommentFormTemplate } from "./PullRequestDescriptionCommentFormTemplate";
+import { gettext_provider } from "../gettext-provider";
 
 export const PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME =
     "tuleap-pullrequest-description-comment";
@@ -34,10 +33,10 @@ export type HostElement = PullRequestDescriptionComment & HTMLElement;
 
 export interface PullRequestDescriptionComment {
     readonly content: () => HTMLElement;
-    readonly description: PullRequestDescriptionCommentPresenter;
-    readonly current_user: CurrentPullRequestUserPresenter;
     readonly after_render_once: unknown;
-    relative_date_helper: HelpRelativeDatesDisplay;
+    readonly controller: ControlPullRequestDescriptionComment;
+    readonly description: PullRequestDescriptionCommentPresenter;
+    edition_form_presenter: DescriptionCommentFormPresenter | null;
 }
 
 export const after_render_once_descriptor = {
@@ -50,32 +49,16 @@ export const after_render_once_descriptor = {
 export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     description: undefined,
-    current_user: undefined,
+    controller: undefined,
     after_render_once: after_render_once_descriptor,
-    relative_date_helper: {
-        get: (host) => {
-            return RelativeDatesHelper(
-                host.current_user.preferred_date_format,
-                host.current_user.preferred_relative_date_display,
-                host.current_user.user_locale
-            );
-        },
+    edition_form_presenter: {
+        set: (host, presenter: DescriptionCommentFormPresenter | undefined) => presenter ?? null,
     },
     content: (host) => html`
         <div class="pull-request-comment pull-request-description-comment">
             ${getCommentAvatarTemplate(host.description.author)}
-
-            <div class="pull-request-comment-content">
-                <div class="pull-request-comment-content-info">
-                    ${getHeaderTemplate(
-                        host.description.author,
-                        host.relative_date_helper,
-                        host.description.post_date
-                    )}
-                </div>
-
-                ${getDescriptionContentTemplate(host, gettext_provider)}
-            </div>
+            ${getDescriptionContentTemplate(host, gettext_provider)}
+            ${getDescriptionCommentFormTemplate(host, gettext_provider)}
         </div>
     `,
 });

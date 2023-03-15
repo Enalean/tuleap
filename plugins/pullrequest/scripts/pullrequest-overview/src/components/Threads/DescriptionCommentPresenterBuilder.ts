@@ -32,6 +32,7 @@ export const DescriptionCommentPresenterBuilder = {
             display_name: author.display_name,
         },
         content: pull_request.description,
+        raw_content: pull_request.raw_description,
         post_date: pull_request.creation_date,
         can_user_update_description: pull_request.user_can_merge,
     }),
