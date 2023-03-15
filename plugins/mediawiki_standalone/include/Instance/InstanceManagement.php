@@ -32,6 +32,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 
@@ -51,27 +52,8 @@ final class InstanceManagement
     public function process(WorkerEvent $worker_event): void
     {
         try {
-            if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator)) !== null) {
-                $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_request_factory, $this->http_stream_factory, $this->logger);
-                return;
-            }
-
-            MigrateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator)
-                ->apply(function (MigrateInstance $migrate_event): void {
-                    $migrate_event->process(
-                        $this->client_factory->getHTTPClient(),
-                        $this->http_request_factory,
-                        $this->http_stream_factory,
-                        $this->command_factory,
-                        $this->logger,
-                    )->mapErr(
-                        /** @psalm-return Err<null> */
-                        function (Fault $fault): Err {
-                            Fault::writeToLogger($fault, $this->logger);
-                            return Result::err(null);
-                        }
-                    );
-                });
+            $this->processInitializationEvent(CreateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator));
+            $this->processInitializationEvent(MigrateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator, $this->command_factory));
 
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($suspension_event);
@@ -96,6 +78,28 @@ final class InstanceManagement
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
+    }
+
+    /**
+     * @psalm-param Option<CreateInstance>|Option<MigrateInstance> $possible_operation_event
+     */
+    private function processInitializationEvent(Option $possible_operation_event): void
+    {
+        $possible_operation_event
+            ->apply(function (CreateInstance|MigrateInstance $operation): void {
+                $operation->process(
+                    $this->client_factory->getHTTPClient(),
+                    $this->http_request_factory,
+                    $this->http_stream_factory,
+                    $this->logger,
+                )->mapErr(
+                /** @psalm-return Err<null> */
+                    function (Fault $fault): Err {
+                        Fault::writeToLogger($fault, $this->logger);
+                        return Result::err(null);
+                    }
+                );
+            });
     }
 
     private function sendRequest(InstanceOperation $event): void

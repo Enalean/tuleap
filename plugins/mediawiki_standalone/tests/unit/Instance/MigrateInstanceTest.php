@@ -97,6 +97,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -106,7 +107,6 @@ final class MigrateInstanceTest extends TestCase
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory(),
-                    MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
@@ -140,6 +140,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()])
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -148,7 +149,6 @@ final class MigrateInstanceTest extends TestCase
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory(),
-                    MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
@@ -169,6 +169,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -177,7 +178,6 @@ final class MigrateInstanceTest extends TestCase
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory(),
-                    MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isErr($result));
@@ -211,6 +211,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -219,7 +220,6 @@ final class MigrateInstanceTest extends TestCase
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory(),
-                    MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
                     new NullLogger(),
                 );
 
@@ -255,6 +255,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -264,7 +265,6 @@ final class MigrateInstanceTest extends TestCase
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory(),
-                    MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isErr($result));
@@ -279,6 +279,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => 'something_else_that_is_not_a_migration', 'payload' => []]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
         );
 
         self::assertTrue($migrate_instance_option->isNothing());
