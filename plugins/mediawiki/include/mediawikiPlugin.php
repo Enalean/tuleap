@@ -298,6 +298,11 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
             exit;
         }
 
+        $service = $project->getService(self::SERVICE_SHORTNAME);
+        if (! $service) {
+            exit;
+        }
+
         if (
             (! $project->isPublic() || $user->isRestricted())
             && ! $project->userIsMember()
