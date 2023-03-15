@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { extend } from "lodash-es";
 
 export default RestErrorService;
 
@@ -6,7 +6,7 @@ RestErrorService.$inject = [];
 
 function RestErrorService() {
     var self = this;
-    _.extend(self, {
+    extend(self, {
         getError: getError,
         setError: setError,
     });

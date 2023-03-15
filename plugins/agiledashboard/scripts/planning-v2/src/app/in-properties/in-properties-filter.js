@@ -1,5 +1,5 @@
 import angular from "angular";
-import _ from "lodash";
+import { escape, isEmpty } from "lodash-es";
 import moment from "moment";
 
 export default InPropertiesFilter;
@@ -20,7 +20,7 @@ function InPropertiesFilter($filter) {
 
         keywords.forEach(function (keyword) {
             const regexp = new RegExp(keyword, "gi");
-            const encoded_regexp = new RegExp(_.escape(keyword), "gi");
+            const encoded_regexp = new RegExp(escape(keyword), "gi");
 
             filtered_list = $filter("filter")(filtered_list, function (item) {
                 if (
@@ -53,7 +53,7 @@ function InPropertiesFilter($filter) {
                         item.children.data,
                         terms
                     );
-                    return !_.isEmpty(filtered_children);
+                    return !isEmpty(filtered_children);
                 }
 
                 return false;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { remove } from "lodash";
+import { remove } from "lodash-es";
 
 export default BacklogItemCollectionService;
 
