@@ -24,10 +24,7 @@ import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-typ
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 import type { HostElement, PullRequestCommentComponentType } from "./PullRequestComment";
-import type {
-    ControlPullRequestComment,
-    PullRequestCommentErrorCallback,
-} from "./PullRequestCommentController";
+import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
 import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
 import type { FocusTextArea } from "../helpers/textarea-focus-helper";
@@ -41,6 +38,7 @@ import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
+import type { PullRequestCommentErrorCallback } from "../types";
 
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusTextArea,

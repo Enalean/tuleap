@@ -25,6 +25,7 @@ import type {
     GlobalComment,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import type { Fault } from "@tuleap/fault";
 
 export interface CurrentPullRequestUserPresenter {
     readonly user_id: number;
@@ -38,3 +39,4 @@ export type SupportedTimelineItemTypes =
     | CommentType
     | Extract<PullRequestEventType, typeof TYPE_EVENT_PULLREQUEST_ACTION>;
 export type SupportedTimelineItem = GlobalComment | CommentOnFile | ActionOnPullRequestEvent;
+export type PullRequestCommentErrorCallback = (fault: Fault) => void;

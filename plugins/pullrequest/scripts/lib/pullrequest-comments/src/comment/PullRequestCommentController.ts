@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Fault } from "@tuleap/fault";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { FocusTextArea } from "../helpers/textarea-focus-helper";
@@ -25,7 +24,7 @@ import type { StorePullRequestCommentReplies } from "./PullRequestCommentReplies
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { CurrentPullRequestUserPresenter } from "../types";
+import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
@@ -38,8 +37,6 @@ export interface ControlPullRequestComment {
     saveReply: (host: PullRequestCommentComponentType) => void;
     getRelativeDateHelper: () => HelpRelativeDatesDisplay;
 }
-
-export type PullRequestCommentErrorCallback = (fault: Fault) => void;
 
 export const PullRequestCommentController = (
     focus_helper: FocusTextArea,

@@ -81,6 +81,7 @@ import {
     PullRequestCommentTextareaFocusHelper,
     PullRequestCommentRepliesStore,
     PullRequestCommentNewReplySaver,
+    PullRequestDescriptionCommentSaver,
 } from "@tuleap/plugin-pullrequest-comments";
 import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
 import type {
@@ -127,8 +128,10 @@ const current_pull_request_presenter = ref<PullRequestPresenter>({
 const description_comment_presenter = ref<null | PullRequestDescriptionCommentPresenter>(null);
 const description_comment_controller = ref<ControlPullRequestDescriptionComment>(
     PullRequestDescriptionCommentController(
+        PullRequestDescriptionCommentSaver(),
         textarea_focus_helper.value,
-        current_user_presenter.value
+        current_user_presenter.value,
+        displayTuleapAPIFault
     )
 );
 

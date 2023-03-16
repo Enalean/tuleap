@@ -17,22 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
-import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
+import type { DescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import type { HelpRelativeDatesDisplay } from "../helpers/relative-dates-helper";
 import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
-import type { CurrentPullRequestUserPresenter } from "../types";
+import type { CurrentPullRequestUserPresenter, PullRequestCommentErrorCallback } from "../types";
+import type { SaveDescriptionComment } from "./PullRequestDescriptionCommentSaver";
+import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
+import { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
+import { RelativeDatesHelper } from "../helpers/relative-dates-helper";
 
 export interface ControlPullRequestDescriptionComment {
     showEditionForm: (host: PullRequestDescriptionComment) => void;
     hideEditionForm: (host: PullRequestDescriptionComment) => void;
+    updateCurrentlyEditedDescription: (
+        host: PullRequestDescriptionComment,
+        new_description: string
+    ) => void;
+    saveDescriptionComment: (host: PullRequestDescriptionComment) => void;
     getRelativeDateHelper: () => HelpRelativeDatesDisplay;
 }
 
 export const PullRequestDescriptionCommentController = (
+    description_saver: SaveDescriptionComment,
     focus_helper: FocusTextArea,
-    current_user: CurrentPullRequestUserPresenter
+    current_user: CurrentPullRequestUserPresenter,
+    on_error_callback: PullRequestCommentErrorCallback
 ): ControlPullRequestDescriptionComment => ({
     showEditionForm(host: PullRequestDescriptionComment): void {
         host.edition_form_presenter =
@@ -40,8 +50,32 @@ export const PullRequestDescriptionCommentController = (
 
         focus_helper.focusTextArea(host.content());
     },
-    hideEditionForm(host: PullRequestDescriptionComment): void {
-        host.edition_form_presenter = null;
+    hideEditionForm,
+    updateCurrentlyEditedDescription: (
+        host: PullRequestDescriptionComment,
+        new_description: string
+    ): void => {
+        host.edition_form_presenter =
+            PullRequestDescriptionCommentFormPresenter.updateDescriptionContent(
+                getExistingEditionFormPresenter(host),
+                new_description
+            );
+    },
+    saveDescriptionComment: (host: PullRequestDescriptionComment): void => {
+        host.edition_form_presenter = PullRequestDescriptionCommentFormPresenter.buildSubmitted(
+            getExistingEditionFormPresenter(host)
+        );
+
+        description_saver
+            .saveDescriptionComment(host.edition_form_presenter)
+            .match((pull_request) => {
+                host.description =
+                    PullRequestDescriptionCommentPresenter.fromPullRequestWithUpdatedDescription(
+                        host.description,
+                        pull_request
+                    );
+                hideEditionForm(host);
+            }, on_error_callback);
     },
     getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
         RelativeDatesHelper(
@@ -50,3 +84,20 @@ export const PullRequestDescriptionCommentController = (
             current_user.user_locale
         ),
 });
+
+function hideEditionForm(host: PullRequestDescriptionComment): void {
+    host.edition_form_presenter = null;
+    host.post_description_form_close_callback();
+}
+
+function getExistingEditionFormPresenter(
+    host: PullRequestDescriptionComment
+): DescriptionCommentFormPresenter {
+    const edition_form_presenter = host.edition_form_presenter;
+    if (edition_form_presenter === null) {
+        throw new Error(
+            "Attempting to get edition form state while component is not in edition mode."
+        );
+    }
+    return edition_form_presenter;
+}
