@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/**
+ * @covers Tracker_Permission_PermissionManager
+ */
 final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -102,6 +104,26 @@ final class PermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:
         $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->never();
 
         $this->permission_manager->save($request, $this->permission_setter);
+    }
+
+    public function testItGrantsRegisteredAllAccess(): void
+    {
+        $this->permissions[ProjectUGroup::REGISTERED]['permissions'] = [
+            Tracker::PERMISSION_SUBMITTER => 1,
+        ];
+
+        $request = new Tracker_Permission_PermissionRequest([
+            ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_NONE,
+            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
+        ]);
+
+        $this->permissions_manager->shouldReceive('addPermission')->with(Tracker::PERMISSION_FULL, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
+        $this->permissions_manager->shouldReceive('revokePermissionForUGroup')->with(Tracker::PERMISSION_SUBMITTER, $this->tracker_id, ProjectUGroup::REGISTERED)->once();
+
+        $this->permission_manager->save(
+            $request,
+            new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager)
+        );
     }
 
     public function testItCannotGrantRegisterSubmittedOnlyWhenAnonymousHasFullAccess(): void
