@@ -19,13 +19,14 @@
 
 describe("Invitations", () => {
     describe("In a project", () => {
-        const now = Date.now();
-        const project_name = "test-invitations-" + now;
-        const invitee_email = `email-${now}@example.com`;
+        let now: number, project_name: string, invitee_email: string;
 
         before(() => {
-            cy.clearSessionCookie();
-            cy.projectAdministratorLogin();
+            now = Date.now();
+            project_name = "test-invitations-" + now;
+            invitee_email = `email-${now}@example.com`;
+
+            cy.projectAdministratorSession();
             cy.createNewPublicProject(project_name, "issues");
             cy.visit(`/projects/${project_name}`);
             cy.addProjectMember("projectMember");
@@ -46,22 +47,14 @@ describe("Invitations", () => {
             cy.get(".select2-result-user").click();
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
-            // all membership pane is outside of viewport, need to force true evey action
+            // all membership pane is outside of viewport, need to force true every action
             cy.get("[data-test=membership-management]").check({ force: true });
             cy.get("[data-test=save-delegated-permissions]").click({ force: true });
         });
 
-        beforeEach(() => {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-            cy.visit(`/projects/${project_name}`);
-        });
-
-        after(() => {
-            cy.clearSessionCookie();
-        });
-
         it("should let delegated users manage invitations", () => {
+            cy.projectMemberSession();
+            cy.visit(`/projects/${project_name}`);
             invite(invitee_email);
             assertNumberOfEmailMessagesReceivedBy(invitee_email, 1);
 

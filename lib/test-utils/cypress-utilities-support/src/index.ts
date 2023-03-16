@@ -19,3 +19,4 @@
 
 import "./api-helper";
 import "./commands";
+export { WEB_UI_SESSION } from "./commands";

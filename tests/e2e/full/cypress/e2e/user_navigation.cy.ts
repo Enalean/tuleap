@@ -19,19 +19,8 @@
 
 describe("Navigation", function () {
     context("As a project member", function () {
-        before(() => {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-        });
-
-        beforeEach(function () {
-            cy.preserveSessionCookies();
-
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("body").as("body");
-        });
-
         it("User can access to its dashboard with mouse", function () {
+            cy.projectMemberSession();
             cy.visit("/");
 
             cy.get("[data-test=my-dashboard]").click();
@@ -42,23 +31,30 @@ describe("Navigation", function () {
         });
 
         it("User can access to its dashboard with keyboard", function () {
+            cy.projectMemberSession();
             cy.visit("/");
 
-            cy.get("@body").type("d");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("d");
 
             //user is directly redirected to its personal dashboard
             cy.get("[data-test=my-dashboard-title]").contains("My Dashboard");
         });
 
         it("User can create a project with keyboard navigation", function () {
+            cy.projectMemberSession();
             cy.visit("/");
 
-            cy.get("@body").type("c");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("c");
             cy.get("[data-test=create-new-item]").contains("Start a new project");
         });
         context(`switch-to`, function () {
             it(`can use the legacy filter`, function () {
-                cy.get("@body").type("{s}");
+                cy.projectMemberSession();
+                cy.visit("/");
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").type("{s}");
                 cy.get("[data-test=switch-to-modal]").should("be.visible");
 
                 cy.get("[data-test=switch-to-filter]").type("Backlog");
@@ -76,14 +72,11 @@ describe("Navigation", function () {
     });
     context("As project admin", function () {
         context("switch-to", function () {
-            before(function () {
-                cy.clearSessionCookie();
-                cy.projectAdministratorLogin();
-                // eslint-disable-next-line cypress/require-data-selectors
-                cy.get("body").as("body");
-            });
             it(`can access to the admin menu`, function () {
-                cy.get("@body").type("{s}");
+                cy.projectAdministratorSession();
+                cy.visit("/");
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").type("{s}");
 
                 cy.get("[data-test=switch-to-filter]").type("Explicit Backlog");
                 cy.get("[data-test=project-link]").should("exist");

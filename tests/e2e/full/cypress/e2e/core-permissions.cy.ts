@@ -18,31 +18,27 @@
  */
 
 describe("Core", function () {
-    let project_id: string;
-
     before(() => {
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
         cy.getProjectId("permissions-project-01").as("project_id");
     });
 
     it("Permissions are respected", function () {
-        project_id = this.project_id;
         cy.log("Project administrator can access core administration pages");
-        cy.visit("/forum/admin/?group_id=" + project_id);
-        cy.visit("/project/" + project_id + "/admin/mailing-lists");
-        cy.visit("/news/admin/?group_id=" + project_id);
-        cy.visit("/wiki/admin/index.php?group_id=" + this.project_id + "&view=wikiPerms");
-        cy.visit("/file/admin/?group_id=" + project_id + "&action=edit-permissions");
+        cy.visit("/forum/admin/?group_id=" + this.project_id);
+        cy.visit(`/project/${this.project_id}/admin/mailing-lists`);
+        cy.visit("/news/admin/?group_id=" + this.project_id);
+        cy.visit(`/wiki/admin/index.php?group_id=${this.project_id}&view=wikiPerms`);
+        cy.visit(`/file/admin/?group_id=${this.project_id}&action=edit-permissions`);
 
-        cy.userLogout();
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.log("Project members has never access to core administration pages");
-        checkForumPermissions(project_id);
-        checkMailingListPermissions(project_id);
-        checkNewsPermissions(project_id);
-        checkPhpWikiPermissions(project_id);
-        checkFrsPermissions(project_id);
-        checkProjectAdminPermissions(project_id);
+        checkForumPermissions(this.project_id);
+        checkMailingListPermissions(this.project_id);
+        checkNewsPermissions(this.project_id);
+        checkPhpWikiPermissions(this.project_id);
+        checkFrsPermissions(this.project_id);
+        checkProjectAdminPermissions(this.project_id);
     });
 });
 
@@ -55,7 +51,7 @@ function checkForumPermissions(project_id: string): void {
 
 function checkMailingListPermissions(project_id: string): void {
     //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
-    cy.visit("/project/" + project_id + "/admin/mailing-lists", {
+    cy.visit(`/project/${project_id}/admin/mailing-lists`, {
         failOnStatusCode: false,
     });
 
@@ -71,7 +67,7 @@ function checkNewsPermissions(project_id: string): void {
 }
 
 function checkPhpWikiPermissions(project_id: string): void {
-    cy.visit("/wiki/admin/index.php?group_id=" + project_id + "&view=wikiPerms");
+    cy.visit(`/wiki/admin/index.php?group_id=${project_id}&view=wikiPerms`);
 
     cy.get("[data-test=feedback]").contains(
         "You are not granted sufficient permission to perform this operation."
@@ -79,7 +75,7 @@ function checkPhpWikiPermissions(project_id: string): void {
 }
 
 function checkFrsPermissions(project_id: string): void {
-    cy.visit("/file/admin/?group_id=" + project_id + "&action=edit-permissions");
+    cy.visit(`/file/admin/?group_id=${project_id}&action=edit-permissions`);
     cy.get("[data-test=feedback]").contains(
         "You are not granted sufficient permission to perform this operation."
     );

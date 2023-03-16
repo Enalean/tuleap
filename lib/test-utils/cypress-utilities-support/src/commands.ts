@@ -19,6 +19,8 @@
 
 import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
 
+export const WEB_UI_SESSION = "WebUI";
+
 Cypress.Commands.add("clearSessionCookie", () => {
     cy.clearCookie("__Host-TULEAP_session_hash");
 });
@@ -44,7 +46,7 @@ Cypress.Commands.add("regularUserSession", () => {
 });
 
 Cypress.Commands.add("anonymousSession", () => {
-    cy.session(["WebUI", "/anonymous"], () => {
+    cy.session([WEB_UI_SESSION, "/anonymous"], () => {
         cy.visit("/");
         // Do not log in
     });
@@ -70,22 +72,6 @@ Cypress.Commands.add("restrictedRegularUserSession", () => {
     sessionThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
 });
 
-Cypress.Commands.add("restrictedRegularUserLogin", () => {
-    loginThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("permissionDelegationLogin", () => {
-    loginThroughWebUI("PermissionDelegation", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("regularUserLogin", () => {
-    loginThroughWebUI("RegularUser", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("secondProjectAdministratorLogin", () => {
-    loginThroughWebUI("SecondProjectAdministrator", "Correct Horse Battery Staple");
-});
-
 function loginThroughWebUI(username: string, password: string): void {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type(username);
@@ -93,7 +79,7 @@ function loginThroughWebUI(username: string, password: string): void {
 }
 
 function sessionThroughWebUI(username: string, password: string): void {
-    cy.session(["WebUI", username], () => {
+    cy.session([WEB_UI_SESSION, username], () => {
         loginThroughWebUI(username, password);
     });
 }
