@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { sortBy } from "lodash";
+import { sortBy } from "lodash-es";
 
 export default ExecutionPresencesCtrl;
 

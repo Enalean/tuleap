@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+// eslint-disable-next-line you-dont-need-lodash-underscore/map
+import { compact, map, intersection } from "lodash-es";
 
 export default ExecutionListFilter;
 
@@ -27,10 +28,9 @@ function ExecutionListFilter($filter) {
     return function (list, keywords, status) {
         setFocusableTestTab();
 
-        var keyword_list = _.compact(keywords.split(" ")),
-            status_list = _.compact(
-                //eslint-disable-next-line you-dont-need-lodash-underscore/map
-                _.map(status, function (value, key) {
+        var keyword_list = compact(keywords.split(" ")),
+            status_list = compact(
+                map(status, function (value, key) {
                     return value ? key : false;
                 })
             ),
@@ -44,19 +44,23 @@ function ExecutionListFilter($filter) {
             all_results.push(statusMatcher(status_list, list));
         }
 
-        all_results = _.intersection.apply(null, all_results);
+        all_results = intersection.apply(null, all_results);
 
-        //eslint-disable-next-line you-dont-need-lodash-underscore/uniq
-        return _.sortBy(_.uniq(all_results, getUniqKey), getSortByKey);
+        return [
+            ...new Map(all_results.map((execution) => [execution.id, execution])).values(),
+        ].sort((execution_a, execution_b) => {
+            const execution_a_def_id = execution_a.definition.id;
+            const execution_b_def_id = execution_b.definition.id;
+            if (execution_a_def_id > execution_b_def_id) {
+                return 1;
+            }
+            if (execution_a_def_id < execution_b_def_id) {
+                return -1;
+            }
+
+            return 0;
+        });
     };
-
-    function getUniqKey(execution) {
-        return execution.id;
-    }
-
-    function getSortByKey(execution) {
-        return execution.definition.id;
-    }
 
     function hasKeywords(keyword_list) {
         return keyword_list.length > 0;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { has, remove } from "lodash";
+import { has, remove } from "lodash-es";
 
 import "./execution-link-issue.tpl.html";
 import ExecutionLinkIssueCtrl from "./execution-link-issue-controller.js";

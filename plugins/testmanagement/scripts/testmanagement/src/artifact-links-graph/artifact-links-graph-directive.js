@@ -18,7 +18,7 @@
  */
 
 import angular from "angular";
-import _, { has, remove } from "lodash";
+import _, { has, remove } from "lodash-es";
 import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
 import { drag } from "d3-drag";
 import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
@@ -233,9 +233,8 @@ function Graph(
                                 return (
                                     "link " + d.type + " link_" + d.source.id + "_" + d.target.id
                                 );
-                            } else {
-                                return "link " + d.type;
                             }
+                            return "link " + d.type;
                         })
                 );
             };
@@ -609,8 +608,8 @@ function Graph(
             graphd3.remove = function (node_event) {
                 graphd3.nodeRemove(node_event);
 
-                delete node_event["clicked"];
-                delete node_event["has_children"];
+                delete node_event.clicked;
+                delete node_event.has_children;
                 graphd3.redraw();
             };
 
@@ -663,8 +662,8 @@ function Graph(
                         removeNode(node);
                         removeLinks(node);
 
-                        delete node["clicked"];
-                        delete node["has_children"];
+                        delete node.clicked;
+                        delete node.has_children;
                     }
                 }
 
@@ -674,9 +673,8 @@ function Graph(
                             selectAll(".circle_" + node.id).remove();
                             selectAll(".text_" + node.id).remove();
                             return true;
-                        } else {
-                            return false;
                         }
+                        return false;
                     });
                 }
 
@@ -707,9 +705,8 @@ function Graph(
                                     ) {
                                         selectAll(".link_" + link.id).remove();
                                         return true;
-                                    } else {
-                                        return false;
                                     }
+                                    return false;
                                 });
                             });
                     }
@@ -858,11 +855,10 @@ function Graph(
                     ArtifactLinksModelService.getGraphStructure(artifact);
                 return ArtifactLinksArtifactsList.artifacts[artifact_id];
             });
-        } else {
-            return $q(function (resolve) {
-                return resolve(ArtifactLinksArtifactsList.artifacts[artifact_id]);
-            });
         }
+        return $q(function (resolve) {
+            return resolve(ArtifactLinksArtifactsList.artifacts[artifact_id]);
+        });
     }
 
     function artifactExist(artifact_id) {
