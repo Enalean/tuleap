@@ -245,12 +245,16 @@ class Tracker_FileInfo
      * Create a thumbnail of the image
      *
      * All modifications to this script should be done in the migration script 125
-     *
-     * @return void
      */
-    private function createThumbnail()
+    private function createThumbnail(): void
     {
-        $size             = getimagesize($this->getPath());
+        $size = getimagesize($this->getPath());
+        if ($size === false) {
+            return;
+        }
+        if (! isset($size[0], $size[1], $size[2])) {
+            return;
+        }
         $thumbnail_width  = $size[0];
         $thumbnail_height = $size[1];
         if ($thumbnail_width > self::THUMBNAILS_MAX_WIDTH || $thumbnail_height > self::THUMBNAILS_MAX_HEIGHT) {
@@ -266,26 +270,56 @@ class Tracker_FileInfo
         }
         switch ($size[2]) {
             case IMAGETYPE_GIF:
-                $source      = imagecreatefromgif($this->getPath());
+                $source = imagecreatefromgif($this->getPath());
+                if ($source === false) {
+                    return;
+                }
                 $destination = imagecreate((int) $thumbnail_width, (int) $thumbnail_height);
+                if ($destination === false) {
+                    imagedestroy($source);
+                    return;
+                }
                 imagepalettecopy($destination, $source);
-                $store = 'imagegif';
+                $this->doResizeAndStore(imagegif(...), $destination, $source, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
                 break;
             case IMAGETYPE_JPEG:
-                $source      = imagecreatefromjpeg($this->getPath());
+                $source = imagecreatefromjpeg($this->getPath());
+                if ($source === false) {
+                    return;
+                }
                 $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
-                $store       = 'imagejpeg';
+                if ($destination === false) {
+                    imagedestroy($source);
+                    return;
+                }
+                $this->doResizeAndStore(imagejpeg(...), $destination, $source, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
                 break;
             case IMAGETYPE_PNG:
-                $source      = imagecreatefrompng($this->getPath());
+                $source = imagecreatefrompng($this->getPath());
+                if ($source === false) {
+                    return;
+                }
                 $destination = imagecreatetruecolor((int) $thumbnail_width, (int) $thumbnail_height);
-                $store       = 'imagepng';
+                if ($destination === false) {
+                    imagedestroy($source);
+                    return;
+                }
+                $this->doResizeAndStore(imagepng(...), $destination, $source, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
                 break;
             default:
                 // Not an image, exit;
-                return false;
+                return;
         }
-        imagecopyresized($destination, $source, 0, 0, 0, 0, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
+    }
+
+    private function doResizeAndStore(callable $store, GdImage $destination, GdImage $source, int $thumbnail_width, int $thumbnail_height, int $width, int $height): void
+    {
+        $resize_success = imagecopyresized($destination, $source, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $width, $height);
+        if ($resize_success === false) {
+            imagedestroy($source);
+            imagedestroy($destination);
+            return;
+        }
         $thumbnail_path = $this->getThumbnailPath();
         if ($thumbnail_path !== null) {
             $store($destination, $thumbnail_path);
