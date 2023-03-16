@@ -229,7 +229,3 @@ if (! IS_SCRIPT) {
         exit_error('Error', $e);
     }
 })();
-
-if ($request->isAjax()) {
-    header("Cache-Control: no-store, no-cache, must-revalidate");
-}

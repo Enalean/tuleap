@@ -150,7 +150,7 @@ class Response
     public function sendXMLAttachementFile($xml, $output_filename)
     {
         header('Content-Description: File Transfer');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: no-store');
         header('Content-Disposition: attachment; filename="' . $output_filename . '"');
         header('Content-Type: application/xml');
 

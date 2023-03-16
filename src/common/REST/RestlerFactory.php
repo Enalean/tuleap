@@ -59,8 +59,9 @@ final class RestlerFactory
         // Do not unescape unicode or it will break the api (see request #9162)
         JsonFormat::$unEscapedUnicode = false;
 
-        Defaults::$cacheDirectory = $this->restler_cache->getAndInitiateCacheDirectory($api_version);
-        $restler                  = new Restler(true, false);
+        Defaults::$cacheDirectory     = $this->restler_cache->getAndInitiateCacheDirectory($api_version);
+        Defaults::$headerCacheControl = ['no-store'];
+        $restler                      = new Restler(true, false);
         $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
         $restler->setAPIVersion($api_version);
 
