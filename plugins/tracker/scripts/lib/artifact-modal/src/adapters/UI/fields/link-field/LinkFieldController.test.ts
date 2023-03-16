@@ -69,6 +69,7 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
+import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -87,7 +88,8 @@ describe(`LinkFieldController`, () => {
         parents_retriever: RetrievePossibleParents,
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
-        event_dispatcher: DispatchEventsStub;
+        event_dispatcher: DispatchEventsStub,
+        new_link_type_changer: ChangeNewLinkTypeStub;
 
     beforeEach(() => {
         setCatalog({
@@ -105,6 +107,7 @@ describe(`LinkFieldController`, () => {
         parent_identifier = null;
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
+        new_link_type_changer = ChangeNewLinkTypeStub.withCount();
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -135,6 +138,7 @@ describe(`LinkFieldController`, () => {
             new_link_adder,
             new_link_remover,
             new_links_retriever,
+            new_link_type_changer,
             ParentLinkVerifier(links_retriever_sync, new_links_retriever, parent_identifier),
             parents_retriever,
             link_verifier,
@@ -344,6 +348,21 @@ describe(`LinkFieldController`, () => {
 
             expect(new_link_remover.getCallCount()).toBe(1);
             expect(links).toHaveLength(0);
+        });
+    });
+
+    describe(`changeNewLinkType()`, () => {
+        const changeNewLinkType = (): NewLinkCollectionPresenter => {
+            const new_link = NewLinkStub.withIdAndType(96, LinkTypeStub.buildUntyped());
+            const type = LinkTypeStub.buildForwardCustom();
+            new_links_retriever = RetrieveNewLinksStub.withNewLinks(new_link);
+            return getController().changeNewLinkType(new_link, type);
+        };
+
+        it(`changes the type of link for the new link and returns an updated presenter`, () => {
+            const links = changeNewLinkType();
+            expect(new_link_type_changer.getCallCount()).toBe(1);
+            expect(links).toHaveLength(1);
         });
     });
 

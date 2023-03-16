@@ -29,6 +29,8 @@ import {
     getRemoveLabel,
 } from "../../../../gettext-catalog";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import "./LinkTypeSelectorElement";
+import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -56,7 +58,7 @@ export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink):
     return classes;
 };
 
-export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter | NewLink): string => {
+export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter): string => {
     if (LinkType.isForwardChild(artifact.link_type)) {
         return getParentTypeLabel();
     }
@@ -69,20 +71,32 @@ export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter | New
     return artifact.link_type.label;
 };
 
-export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => {
-    const removeNewLink = (host: LinkField): void => {
+export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFunction<LinkField> => {
+    const removeNewLink = (): void => {
         host.new_links_presenter = host.controller.removeNewLink(link);
+    };
+
+    const onValueChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
+        host.new_links_presenter = host.controller.changeNewLinkType(
+            link,
+            event.detail.new_link_type
+        );
     };
 
     return html`
         <tr class="link-field-table-row tlp-table-row-success" data-test="link-row">
-            <td class="link-field-table-cell-type" data-test="link-type">
-                ${getArtifactLinkTypeLabel(link)}
+            <td class="link-field-table-cell-type">
+                <tuleap-artifact-modal-link-type-selector
+                    value="${link.link_type}"
+                    current_artifact_reference="${host.field_presenter.current_artifact_reference}"
+                    available_types="${host.allowed_link_types}"
+                    onvalue-changed="${onValueChanged}"
+                ></tuleap-artifact-modal-link-type-selector>
             </td>
             <td class="link-field-table-cell-xref">
                 <a
                     href="${link.uri}"
-                    class="link-field-artifact-link"
+                    class="link-field-new-artifact-link"
                     title="${link.title}"
                     data-test="link-link"
                 >

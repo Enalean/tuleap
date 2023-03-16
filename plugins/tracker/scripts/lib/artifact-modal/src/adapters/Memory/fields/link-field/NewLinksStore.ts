@@ -18,11 +18,12 @@
  */
 
 import type { AddNewLink } from "../../../../domain/fields/link-field/AddNewLink";
-import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
+import { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
 import type { DeleteNewLink } from "../../../../domain/fields/link-field/DeleteNewLink";
+import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/ChangeNewLinkType";
 
-type NewLinksStoreType = AddNewLink & RetrieveNewLinks & DeleteNewLink;
+type NewLinksStoreType = AddNewLink & RetrieveNewLinks & DeleteNewLink & ChangeNewLinkType;
 
 export const NewLinksStore = (): NewLinksStoreType => {
     let links: NewLink[] = [];
@@ -38,6 +39,17 @@ export const NewLinksStore = (): NewLinksStoreType => {
 
         deleteNewLink(link: NewLink): void {
             links = links.filter((stored_link) => link !== stored_link);
+        },
+
+        changeNewLinkType(link, type): void {
+            const updated_link = NewLink.fromNewLinkAndType(link, type);
+            const index = links.findIndex(
+                (stored_link) => stored_link.identifier.id === updated_link.identifier.id
+            );
+            if (index === -1) {
+                return;
+            }
+            links.splice(index, 1, updated_link);
         },
     };
 };
