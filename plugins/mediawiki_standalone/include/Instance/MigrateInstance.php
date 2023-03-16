@@ -137,11 +137,12 @@ final class MigrateInstance
      */
     private function registerInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $payload = [
+        $payload             = [
             'project_id' => (int) $this->project->getID(),
             'project_name' => $this->project->getUnixNameLowerCase(),
             'lang' => $this->short_language_code,
         ];
+        $payload['dbprefix'] = 'mw';
         if ($this->use_central_database) {
             $payload['dbprefix'] = 'mw_' . $this->project->getID() . '_';
         }
