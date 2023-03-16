@@ -28,7 +28,7 @@
                 data-test="pull-request-overview-description"
                 class="pull-request-description"
                 v-bind:description="description_comment_presenter"
-                v-bind:current_user="current_user_presenter"
+                v-bind:controller="description_comment_controller"
             />
             <tuleap-pullrequest-comment
                 data-test="pull-request-thread"
@@ -73,11 +73,12 @@ import type {
     CurrentPullRequestUserPresenter,
     PullRequestPresenter,
     SupportedTimelineItem,
+    ControlPullRequestDescriptionComment,
 } from "@tuleap/plugin-pullrequest-comments";
 
 import {
     PullRequestCommentController,
-    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentTextareaFocusHelper,
     PullRequestCommentRepliesStore,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
@@ -87,6 +88,7 @@ import type {
     PullRequestDescriptionCommentPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
 import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresenterBuilder";
+import { PullRequestDescriptionCommentController } from "@tuleap/plugin-pullrequest-comments";
 
 const { $gettext } = useGettext();
 
@@ -111,6 +113,7 @@ const threads = reactive<{ list: PullRequestCommentPresenter[] }>({ list: [] });
 const comments_presenters = ref<PullRequestCommentPresenter[]>([]);
 const comments_controller = ref<null | ControlPullRequestComment>(null);
 const replies_store = ref<null | StorePullRequestCommentReplies>(null);
+const textarea_focus_helper = ref(PullRequestCommentTextareaFocusHelper());
 const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
     user_id,
     avatar_url,
@@ -122,6 +125,12 @@ const current_pull_request_presenter = ref<PullRequestPresenter>({
     pull_request_id: Number.parseInt(pull_request_id, 10),
 });
 const description_comment_presenter = ref<null | PullRequestDescriptionCommentPresenter>(null);
+const description_comment_controller = ref<ControlPullRequestDescriptionComment>(
+    PullRequestDescriptionCommentController(
+        textarea_focus_helper.value,
+        current_user_presenter.value
+    )
+);
 
 provide(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT, addNewRootComment);
 
@@ -164,7 +173,7 @@ watch(
                 threads.list = [...replies_store.value.getAllRootComments()];
 
                 comments_controller.value = PullRequestCommentController(
-                    PullRequestCommentReplyFormFocusHelper(),
+                    textarea_focus_helper.value,
                     replies_store.value,
                     PullRequestCommentNewReplySaver(),
                     current_user_presenter.value,

@@ -24,7 +24,8 @@ import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresente
 describe("DescriptionCommentPresenterBuilder", () => {
     it("should build the presenter from the pull-request and its author", () => {
         const pull_request = {
-            description: "This commit fixes an old bud.",
+            description: `This commit fixes <a class="cross-reference">bug #123</a>`,
+            raw_description: "This commit fixes bug #123",
             creation_date: "2023-03-13T15:13:00Z",
             user_can_merge: true,
         } as PullRequest;
@@ -41,6 +42,7 @@ describe("DescriptionCommentPresenterBuilder", () => {
         ).toStrictEqual({
             author,
             content: pull_request.description,
+            raw_content: pull_request.raw_description,
             post_date: pull_request.creation_date,
             can_user_update_description: pull_request.user_can_merge,
         });

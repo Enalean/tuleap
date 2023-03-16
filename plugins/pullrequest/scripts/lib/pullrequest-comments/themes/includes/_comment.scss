@@ -129,8 +129,13 @@ $thread-border-width: 2px;
     line-height: 1.375rem;
 }
 
+.pull-request-comment-write-mode-header-tabs {
+    margin: 0;
+}
+
 .pull-request-comment-file-path,
-.pull-request-comment-footer {
+.pull-request-comment-footer,
+.pull-request-comment-write-mode-header {
     background: var(--tlp-fade-background-color);
 }
 
@@ -173,7 +178,7 @@ $thread-border-width: 2px;
     margin: var(--tlp-small-spacing) 0 0;
 }
 
-.pull-request-comment-reply-textarea {
+.pull-request-comment-textarea {
     width: 100%;
     padding: var(--tlp-medium-spacing);
     border: unset;
@@ -217,5 +222,15 @@ $thread-border-width: 2px;
 
     &::after {
         background: var(--primary-color);
+    }
+}
+
+.pull-request-comment-content-main-color {
+    &::before {
+        border-color: transparent var(--tlp-main-color) transparent transparent;
+    }
+
+    &::after {
+        background: var(--tlp-main-color);
     }
 }

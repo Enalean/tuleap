@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestCommentComponentType } from "./PullRequestComment";
+import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-export interface FocusReplyToCommentTextArea {
-    focusFormReplyToCommentTextArea: (host: PullRequestCommentComponentType) => void;
-}
-
-export const PullRequestCommentReplyFormFocusHelper = (): FocusReplyToCommentTextArea => ({
-    focusFormReplyToCommentTextArea: (host: PullRequestCommentComponentType): void => {
-        host.content()
-            .querySelector<HTMLInputElement>(".pull-request-comment-reply-textarea")
-            ?.focus();
-    },
-});
+export const DescriptionAuthorStub = {
+    withDefault: (): User => ({
+        id: 102,
+        avatar_url: "url/to/user_avatar.png",
+        user_url: "url/to/user_profile.html",
+        display_name: "Joe l'Asticot",
+    }),
+};

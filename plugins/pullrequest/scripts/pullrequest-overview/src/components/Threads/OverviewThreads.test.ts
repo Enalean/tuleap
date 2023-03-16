@@ -122,7 +122,7 @@ describe("OverviewThreads", () => {
 
         const displayed_description = wrapper.find("[data-test=pull-request-overview-description]");
         expect(displayed_description.attributes("description")).toBeDefined();
-        expect(displayed_description.attributes("current_user")).toBeDefined();
+        expect(displayed_description.attributes("controller")).toBeDefined();
     });
 
     it("When an error occurs while retrieving the comments, Then it should call the display_error_callback with the fault", async () => {

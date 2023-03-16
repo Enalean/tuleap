@@ -21,4 +21,8 @@ export {
     PullRequestCommentDescriptionComponent,
     PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
 } from "./PullRequestDescriptionComment";
+
 export type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
+
+export { PullRequestDescriptionCommentController } from "./PullRequestDescriptionCommentController";
+export type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";

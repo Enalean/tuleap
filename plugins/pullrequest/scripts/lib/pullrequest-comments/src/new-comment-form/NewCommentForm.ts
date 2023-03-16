@@ -24,6 +24,10 @@ import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-typ
 import type { SaveNewComment } from "./NewCommentSaver";
 import { gettext_provider } from "../gettext-provider";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
+import {
+    FOCUSABLE_TEXTAREA_CLASSNAME,
+    PullRequestCommentTextareaFocusHelper,
+} from "../helpers/textarea-focus-helper";
 
 export const PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME = "tuleap-pullrequest-new-comment-form";
 export type HostElement = NewCommentForm & HTMLElement;
@@ -142,9 +146,7 @@ const form_first_render_descriptor = {
             return;
         }
 
-        host.content()
-            .querySelector<HTMLInputElement>(".pull-request-new-comment-textarea")
-            ?.focus();
+        PullRequestCommentTextareaFocusHelper().focusTextArea(host.content());
     },
 };
 
@@ -166,7 +168,7 @@ export const NewInlineCommentFormComponent = define<NewCommentForm>({
             ${getCommentAvatarTemplate(host.author_presenter)}
             <div class="pull-request-comment-content pull-request-new-comment-form">
                 <textarea
-                    class="pull-request-comment-reply-textarea tlp-textarea pull-request-new-comment-textarea"
+                    class="${FOCUSABLE_TEXTAREA_CLASSNAME} tlp-textarea pull-request-new-comment-textarea"
                     rows="10"
                     value="${host.comment}"
                     oninput="${onTextAreaInput}"

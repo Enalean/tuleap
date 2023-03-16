@@ -20,10 +20,11 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import DOMPurify from "dompurify";
-import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
 import type { GettextProvider } from "@tuleap/gettext";
+import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
+import { getHeaderTemplate } from "../templates/CommentHeaderTemplate";
 
-export const getDescriptionContentTemplate = (
+const getContent = (
     host: PullRequestDescriptionComment,
     gettext_provider: GettextProvider
 ): UpdateFunction<PullRequestDescriptionComment> => {
@@ -58,5 +59,41 @@ export const getDescriptionContentTemplate = (
         >
             ${gettext_provider.gettext("No commit description has been provided yet.")}
         </p>
+    `;
+};
+
+export const getDescriptionContentTemplate = (
+    host: PullRequestDescriptionComment,
+    gettext_provider: GettextProvider
+): UpdateFunction<PullRequestDescriptionComment> => {
+    if (host.edition_form_presenter !== null) {
+        return html``;
+    }
+
+    const onClickToggleEditionForm = (host: PullRequestDescriptionComment): void => {
+        host.controller.showEditionForm(host);
+    };
+
+    return html`
+        <div class="pull-request-comment-content" data-test="pull-request-description-read-mode">
+            <div class="pull-request-comment-content-info">
+                ${getHeaderTemplate(
+                    host.description.author,
+                    host.controller.getRelativeDateHelper(),
+                    host.description.post_date
+                )}
+            </div>
+            ${getContent(host, gettext_provider)}
+            <div class="pull-request-comment-footer">
+                <button
+                    type="button"
+                    class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
+                    onclick="${onClickToggleEditionForm}"
+                    data-test="button-edit-description-comment"
+                >
+                    ${gettext_provider.gettext("Edit")}
+                </button>
+            </div>
+        </div>
     `;
 };

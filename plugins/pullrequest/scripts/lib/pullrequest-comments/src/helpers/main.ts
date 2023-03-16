@@ -17,12 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-
-export interface PullRequestDescriptionCommentPresenter {
-    readonly author: User;
-    readonly post_date: string;
-    readonly content: string;
-    readonly raw_content: string;
-    readonly can_user_update_description: boolean;
-}
+export { PullRequestCommentTextareaFocusHelper } from "./textarea-focus-helper";

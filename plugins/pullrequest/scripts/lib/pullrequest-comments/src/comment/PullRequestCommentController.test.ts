@@ -29,8 +29,8 @@ import type {
     PullRequestCommentErrorCallback,
 } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
-import { FocusTextReplyToCommentAreaStub } from "../../tests/stubs/FocusTextReplyToCommentAreaStub";
-import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
+import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
+import type { FocusTextArea } from "../helpers/textarea-focus-helper";
 import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
 import { SaveNewReplyToCommentStub } from "../../tests/stubs/SaveNewReplyToCommentStub";
 import { CurrentPullRequestUserPresenterStub } from "../../tests/stubs/CurrentPullRequestUserPresenterStub";
@@ -43,12 +43,12 @@ import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRe
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 
 describe("PullRequestCommentController", () => {
-    let focus_helper: FocusReplyToCommentTextArea,
+    let focus_helper: FocusTextArea,
         replies_store: StorePullRequestCommentReplies,
         on_error_callback: PullRequestCommentErrorCallback;
 
     beforeEach(() => {
-        focus_helper = FocusTextReplyToCommentAreaStub();
+        focus_helper = FocusTextareaStub();
         replies_store = PullRequestCommentRepliesStore([]);
         on_error_callback = vi.fn();
     });
@@ -64,14 +64,16 @@ describe("PullRequestCommentController", () => {
         );
 
     it("should show the reply to comment form and sets the focus on the textarea", () => {
+        const content = document.implementation.createHTMLDocument().createElement("div");
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            content: () => content,
         } as unknown as HostElement;
 
         getController(SaveNewReplyToCommentStub.withDefault()).showReplyForm(host);
 
         expect(host.reply_comment_presenter).not.toBeNull();
-        expect(focus_helper.focusFormReplyToCommentTextArea).toHaveBeenCalledTimes(1);
+        expect(focus_helper.focusTextArea).toHaveBeenCalledTimes(1);
     });
 
     it("should hide the reply to comment form", () => {

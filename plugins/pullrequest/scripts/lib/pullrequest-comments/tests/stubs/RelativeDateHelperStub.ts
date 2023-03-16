@@ -19,6 +19,7 @@
 
 import { vi } from "vitest";
 import type { HelpRelativeDatesDisplay } from "../../src/helpers/relative-dates-helper";
+import "@tuleap/tlp-relative-date";
 
 export const RelativeDateHelperStub: HelpRelativeDatesDisplay = {
     getRelativeDatePreference: vi.fn(),

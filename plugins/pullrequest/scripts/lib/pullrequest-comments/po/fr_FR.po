@@ -18,6 +18,9 @@ msgstr "Annuler"
 msgid "Comment"
 msgstr "Commenter"
 
+msgid "Edit"
+msgstr "Éditer"
+
 msgid "No commit description has been provided yet."
 msgstr "Aucune description de commit n'a encore été fournie."
 
@@ -30,5 +33,11 @@ msgstr "Veuillez en ajouter une."
 msgid "Reply"
 msgstr "Répondre"
 
+msgid "Save"
+msgstr "Sauvegarder"
+
 msgid "Say something…"
 msgstr "Dites quelque chose…"
+
+msgid "Write"
+msgstr "Écrire"
