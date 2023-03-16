@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Service;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationsError;
 use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectByUnixNameFactory;
@@ -38,9 +39,10 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
     public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
     public function __construct(
-        private ProjectByUnixNameFactory $project_retriever,
-        private IsProjectAllowedToUsePlugin $plugin,
-        private \TemplateRendererFactory $renderer_factory,
+        private readonly ProjectByUnixNameFactory $project_retriever,
+        private readonly IsProjectAllowedToUsePlugin $plugin,
+        private readonly \TemplateRendererFactory $renderer_factory,
+        private readonly CheckOngoingInitializationsError $check_ongoing_initializations_error,
     ) {
     }
 
@@ -60,7 +62,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
         $this->renderer_factory
             ->getRenderer(__DIR__ . '/../../templates')
             ->renderToPage(
-                'under-construction',
+                $this->check_ongoing_initializations_error->isInError((int) $project->getID()) ? 'under-construction-error' : 'under-construction',
                 [
                     'project_icon' => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
                     'project_name' => $project->getPublicName(),

@@ -45,5 +45,18 @@ final class OngoingInitializationsDaoTest extends TestCase
         // ignore already started initializations
         $dao->startInitialization(101);
         self::assertTrue($dao->isOngoingMigration(101));
+        self::assertFalse($dao->isInError(101));
+    }
+
+    public function testError(): void
+    {
+        $dao = new OngoingInitializationsDao();
+
+        $dao->startInitialization(101);
+        self::assertFalse($dao->isInError(101));
+
+        $dao->markAsError(101);
+        self::assertTrue($dao->isInError(101));
+        self::assertTrue($dao->isOngoingMigration(101));
     }
 }

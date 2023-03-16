@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_standalone_permissions (
 );
 
 CREATE TABLE IF NOT EXISTS plugin_mediawiki_standalone_ongoing_initializations (
-    project_id INT NOT NULL PRIMARY KEY
+    project_id INT NOT NULL PRIMARY KEY,
+    is_error BOOL DEFAULT FALSE
 );
 
 INSERT INTO service(`group_id`, `label`, `description`, `short_name`, `link`, `is_active`, `is_used`, `scope`, `rank`)

@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 final class OngoingInitializationsStateStub implements OngoingInitializationsState
 {
     private bool $is_started = false;
+    private bool $is_error   = false;
 
     private function __construct()
     {
@@ -43,5 +44,15 @@ final class OngoingInitializationsStateStub implements OngoingInitializationsSta
     public function isStarted(): bool
     {
         return $this->is_started;
+    }
+
+    public function markAsError(int $project_id): void
+    {
+        $this->is_error = true;
+    }
+
+    public function isError(): bool
+    {
+        return $this->is_error;
     }
 }

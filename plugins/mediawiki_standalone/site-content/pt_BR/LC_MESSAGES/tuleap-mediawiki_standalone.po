@@ -9,6 +9,12 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+msgid "Build of %s MediaWiki failed"
+msgstr ""
+
+msgid "Building of %s MediaWiki in progress"
+msgstr ""
+
 msgid "Global MediaWiki Administrator"
 msgstr ""
 
@@ -66,6 +72,9 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
+msgid "Please come back later"
+msgstr ""
+
 msgid "Project administrators are de facto administrators of MediaWiki"
 msgstr ""
 
@@ -73,6 +82,9 @@ msgid "Read only access to information about Mediawiki Standalone"
 msgstr ""
 
 msgid "Save configuration"
+msgstr ""
+
+msgid "Something went wrong"
 msgstr ""
 
 msgid "Standalone MediaWiki instances integration with Tuleap"

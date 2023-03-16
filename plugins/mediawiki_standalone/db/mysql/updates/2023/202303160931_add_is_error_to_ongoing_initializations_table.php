@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
-
-interface OngoingInitializationsState
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202303160931_add_is_error_to_ongoing_initializations_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function startInitialization(int $project_id): void;
+    public function description(): string
+    {
+        return 'Add is_error to mediawiki standalone ongoing initializations table';
+    }
 
-    public function markAsError(int $project_id): void;
+    public function up(): void
+    {
+        $this->api->dbh->query(
+            'ALTER TABLE plugin_mediawiki_standalone_ongoing_initializations ADD COLUMN is_error BOOL DEFAULT FALSE'
+        );
+    }
 }

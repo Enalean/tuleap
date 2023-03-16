@@ -123,6 +123,12 @@ final class MigrateInstance
                         )
                     };
                 }
+            )->orElse(
+                function (Fault $fault): Err {
+                    $this->initializations_state->markAsError((int) $this->project->getID());
+
+                    return Result::err($fault);
+                }
             );
     }
 

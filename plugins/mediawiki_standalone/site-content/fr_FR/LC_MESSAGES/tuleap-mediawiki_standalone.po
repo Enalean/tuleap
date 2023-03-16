@@ -10,10 +10,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Administration"
 msgstr "Administration"
+
+msgid "Build of %s MediaWiki failed"
+msgstr "La construction du MediaWiki de %s a échoué"
+
+msgid "Building of %s MediaWiki in progress"
+msgstr "Construction du MediaWiki de %s en cours"
 
 msgid "Global MediaWiki Administrator"
 msgstr "Administrateur d'instances de MediaWiki"
@@ -72,6 +78,9 @@ msgstr "Réinitialisation des permissions pour les écrivains de MediaWiki"
 msgid "Permissions"
 msgstr "Permissions"
 
+msgid "Please come back later"
+msgstr "Merci de revenir plus tard"
+
 msgid "Project administrators are de facto administrators of MediaWiki"
 msgstr ""
 "Les administrateurs de projets sont de facto administrateurs de MediaWiki"
@@ -81,6 +90,9 @@ msgstr "Accès en lecture seule aux informations Mediawiki Autonome"
 
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
+
+msgid "Something went wrong"
+msgstr "Quelque chose s'est mal passé"
 
 msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr "Intégration avec Tuleap d'instances autonome de MediaWiki"
