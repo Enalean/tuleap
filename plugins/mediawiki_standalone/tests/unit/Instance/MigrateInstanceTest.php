@@ -72,7 +72,7 @@ final class MigrateInstanceTest extends TestCase
                 function (RequestInterface $request): bool {
                     return $request->getMethod() === 'POST' &&
                         $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/register/gpig' &&
-                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"en"}';
+                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"en","dbprefix":"mw"}';
                 }
             ),
             function () {
@@ -243,7 +243,7 @@ final class MigrateInstanceTest extends TestCase
                 function (RequestInterface $request): bool {
                     return $request->getMethod() === 'POST' &&
                         $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/register/gpig' &&
-                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"en"}';
+                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"en","dbprefix":"mw"}';
                 }
             ),
             function () {
