@@ -275,8 +275,8 @@ export const LinkField = define<LinkField>({
             ${getLinkFieldCanOnlyHaveOneParentNote(host)}
             <table id="tuleap-artifact-modal-link-table" class="tlp-table">
                 <tbody class="link-field-table-body">
-                    ${host.linked_artifacts_presenter.linked_artifacts.map(
-                        getLinkedArtifactTemplate
+                    ${host.linked_artifacts_presenter.linked_artifacts.map((link) =>
+                        getLinkedArtifactTemplate(host, link)
                     )}
                     ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
                     ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}

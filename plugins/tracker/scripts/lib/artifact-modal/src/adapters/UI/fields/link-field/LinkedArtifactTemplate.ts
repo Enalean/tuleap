@@ -50,13 +50,20 @@ const getCrossRefClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOf
     return classes;
 };
 
-export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFunction<LinkField> => {
+export const getActionButton = (
+    host: LinkField,
+    artifact: LinkedArtifactPresenter
+): UpdateFunction<LinkField> => {
     const button_classes = [
         "tlp-table-cell-actions-button",
         "tlp-button-small",
         "tlp-button-danger",
         "tlp-button-outline",
     ];
+
+    if (!host.controller.canMarkForRemoval(artifact)) {
+        return html``;
+    }
 
     if (!artifact.is_marked_for_removal) {
         const markForRemoval = (host: LinkField): void => {
@@ -92,6 +99,7 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
 };
 
 export const getLinkedArtifactTemplate = (
+    host: LinkField,
     artifact: LinkedArtifactPresenter
 ): UpdateFunction<LinkField> => html`
     <tr class="${getArtifactTableRowClasses(artifact)}" data-test="artifact-row">
@@ -130,6 +138,6 @@ export const getLinkedArtifactTemplate = (
                 </span>
             `}
         </td>
-        <td class="link-field-table-cell-action">${getActionButton(artifact)}</td>
+        <td class="link-field-table-cell-action">${getActionButton(host, artifact)}</td>
     </tr>
 `;

@@ -158,6 +158,9 @@ export const UNTYPED_LINK: UntypedLink = "";
 export type IsChildLinkType = "_is_child";
 export const IS_CHILD_LINK_TYPE: IsChildLinkType = "_is_child";
 
+export type MirroredMilestoneLinkType = "_mirrored_milestone";
+export const MIRRORED_MILESTONE_LINK_TYPE: MirroredMilestoneLinkType = "_mirrored_milestone";
+
 export type ColorName =
     | "inca-silver"
     | "chrome-silver"
