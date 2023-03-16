@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 use Tuleap\DB\DataAccessObject;
 
-final class OngoingInitializationsDao extends DataAccessObject implements OngoingInitializationsState
+final class OngoingInitializationsDao extends DataAccessObject implements OngoingInitializationsState, CheckOngoingInitializationsError
 {
     public function startInitialization(int $project_id): void
     {
@@ -39,6 +39,23 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         return $this->getDB()->exists(
             "SELECT 1 FROM plugin_mediawiki_standalone_ongoing_initializations WHERE project_id = ?",
             $project_id
+        );
+    }
+
+    public function isInError(int $project_id): bool
+    {
+        return $this->getDB()->exists(
+            "SELECT 1 FROM plugin_mediawiki_standalone_ongoing_initializations WHERE project_id = ? AND is_error = TRUE",
+            $project_id
+        );
+    }
+
+    public function markAsError(int $project_id): void
+    {
+        $this->getDB()->update(
+            'plugin_mediawiki_standalone_ongoing_initializations',
+            ['is_error' => true],
+            ['project_id' => $project_id]
         );
     }
 }

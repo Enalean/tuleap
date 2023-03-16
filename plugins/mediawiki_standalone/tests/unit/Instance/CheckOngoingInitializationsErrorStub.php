@@ -22,9 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-interface OngoingInitializationsState
+final class CheckOngoingInitializationsErrorStub implements CheckOngoingInitializationsError
 {
-    public function startInitialization(int $project_id): void;
+    private function __construct(private readonly bool $is_error)
+    {
+    }
 
-    public function markAsError(int $project_id): void;
+    public static function withError(): self
+    {
+        return new self(true);
+    }
+
+    public static function withoutError(): self
+    {
+        return new self(false);
+    }
+
+    public function isInError(int $project_id): bool
+    {
+        return $this->is_error;
+    }
 }

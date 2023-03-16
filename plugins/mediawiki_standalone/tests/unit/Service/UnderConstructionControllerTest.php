@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
+use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationsErrorStub;
 use Tuleap\Plugin\IsProjectAllowedToUsePluginStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Templating\TemplateCache;
@@ -52,6 +53,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withoutError(),
         );
 
         ob_start();
@@ -66,6 +68,40 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
+    public function testUnderConstructionInError(): void
+    {
+        $project = ProjectTestBuilder::aProject()
+            ->withUnixName('acme')
+            ->withPublicName('Acme Project')
+            ->build();
+
+        $service = $this->createMock(MediawikiStandaloneService::class);
+        $service->method('displayMediawikiHeader');
+        $service->method('displayFooter');
+        $project->addUsedServices([MediawikiStandaloneService::SERVICE_SHORTNAME, $service]);
+
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+
+        $controller = new UnderConstructionController(
+            ProjectByUnixUnixNameFactory::buildWith($project),
+            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withError(),
+        );
+
+        ob_start();
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::buildWithDefaults())->build(),
+            LayoutBuilder::build(),
+            ['project_name' => 'acme'],
+        );
+        self::assertStringContainsString(
+            'Build of 😬 Acme Project MediaWiki failed',
+            ob_get_clean(),
+        );
+    }
+
     public function testExceptionWhenNoProjectIsAskedInTheRequest(): void
     {
         $template_cache = $this->createMock(TemplateCache::class);
@@ -75,6 +111,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withoutError(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -95,6 +132,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withoutError(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -120,6 +158,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withoutError(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -146,6 +185,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationsErrorStub::withoutError(),
         );
 
         $this->expectException(NotFoundException::class);

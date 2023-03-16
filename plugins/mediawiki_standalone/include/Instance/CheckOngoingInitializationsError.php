@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-interface OngoingInitializationsState
+interface CheckOngoingInitializationsError
 {
-    public function startInitialization(int $project_id): void;
-
-    public function markAsError(int $project_id): void;
+    public function isInError(int $project_id): bool;
 }

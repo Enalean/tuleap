@@ -536,6 +536,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ProjectManager::instance(),
             $this,
             TemplateRendererFactory::build(),
+            new OngoingInitializationsDao(),
         );
     }
 
