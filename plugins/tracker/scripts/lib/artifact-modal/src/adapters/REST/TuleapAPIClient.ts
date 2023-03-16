@@ -25,7 +25,6 @@ import type {
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { UserHistoryResponse, SearchResultEntry } from "@tuleap/core-rest-api-types";
-import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveLinkTypes";
@@ -51,6 +50,7 @@ import type { SearchArtifacts } from "../../domain/fields/link-field/SearchArtif
 import type { RetrieveComments } from "../../domain/comments/RetrieveComments";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
+import { LinkableArtifactRESTFilter } from "./fields/link-field/LinkableArtifactRESTFilter";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -70,7 +70,9 @@ type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
 };
 
-export const TuleapAPIClient = (): TuleapAPIClientType => ({
+export const TuleapAPIClient = (
+    current_artifact_identifier: CurrentArtifactIdentifier | null
+): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         getJSON<ParentArtifact>(uri`/api/v1/artifacts/${artifact_id.id}`).mapErr(
             ParentRetrievalFault
@@ -142,7 +144,12 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
         return getJSON<UserHistoryResponse>(uri`/api/v1/users/${user_identifier.id}/history`).map(
             (history) => {
                 return history.entries
-                    .filter((entry) => entry.type === ARTIFACT_TYPE)
+                    .filter((entry) =>
+                        LinkableArtifactRESTFilter.filterArtifact(
+                            entry,
+                            current_artifact_identifier
+                        )
+                    )
                     .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
             }
         );
@@ -153,7 +160,9 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             keywords: query,
         }).map((results) => {
             return results
-                .filter((entry) => entry.type === ARTIFACT_TYPE)
+                .filter((entry) =>
+                    LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_identifier)
+                )
                 .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
         });
     },

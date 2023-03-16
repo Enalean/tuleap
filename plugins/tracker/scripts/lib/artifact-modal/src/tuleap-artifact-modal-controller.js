@@ -98,15 +98,15 @@ function ArtifactModalController(
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
-    const api_client = TuleapAPIClient();
+    const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
+        modal_model.artifact_id
+    );
+    const api_client = TuleapAPIClient(current_artifact_identifier);
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
     const possible_parents_cache = PossibleParentsCache(api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
-    const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
-        modal_model.artifact_id
-    );
     const parent_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
         modal_model.parent_artifact_id
     );
