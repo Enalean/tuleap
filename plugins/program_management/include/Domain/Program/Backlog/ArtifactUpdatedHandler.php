@@ -34,10 +34,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class ArtifactUpdatedHandler
 {
     public function __construct(
+        private LogMessage $logger,
         private VerifyIsProgramIncrementTracker $program_increment_verifier,
         private VerifyIsIterationTracker $iteration_tracker_verifier,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
@@ -53,6 +55,7 @@ final class ArtifactUpdatedHandler
      */
     public function handle(ArtifactUpdatedEvent $event): void
     {
+        $this->logger->debug(sprintf('%s handle', self::class));
         $program_increment_update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
             $this->program_increment_verifier,
             $event

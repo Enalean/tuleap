@@ -45,16 +45,10 @@ final class TeamIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->teams_searcher = SearchVisibleTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
     }
 
-    private function getCollection(): TeamIdentifierCollection
-    {
-        return TeamIdentifierCollection::fromProgram($this->teams_searcher, $this->program, $this->user);
-    }
-
     public function testItBuildsATeamIdentifierCollection(): void
     {
-        $collection = $this->getCollection();
-        $team_ids   = array_map(static fn(TeamIdentifier $team) => $team->getId(), $collection->getTeams());
-        self::assertContains(self::FIRST_TEAM_ID, $team_ids);
-        self::assertContains(self::SECOND_TEAM_ID, $team_ids);
+        $collection = TeamIdentifierCollection::fromProgram($this->teams_searcher, $this->program, $this->user);
+        self::assertContains(self::FIRST_TEAM_ID, $collection->getArrayOfTeamsId());
+        self::assertContains(self::SECOND_TEAM_ID, $collection->getArrayOfTeamsId());
     }
 }

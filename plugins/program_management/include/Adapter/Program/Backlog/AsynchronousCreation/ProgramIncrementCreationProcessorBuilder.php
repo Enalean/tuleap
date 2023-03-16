@@ -99,7 +99,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $user_manager                   = \UserManager::instance();
         $program_dao                    = new ProgramDaoProject();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
-        $logger                         = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $logger                         = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $tracker_factory                = \TrackerFactory::instance();
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
@@ -257,6 +257,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $program_dao,
             $program_adapter,
             new ProgramIncrementsPlanner(
+                MessageLog::buildFromLogger($logger),
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $mirror_creator,
                 new ProjectReferenceRetriever($project_manager_adapter),

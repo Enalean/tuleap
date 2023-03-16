@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
-use BackendLogger;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -349,7 +348,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $artifact_retriever,
                 $user_retriever,
                 SemanticTimeframeBuilder::build(),
-                BackendLogger::getDefaultLogger(),
+                \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger(),
             ),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),

@@ -640,7 +640,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         $artifact_retriever,
                         $user_retriever,
                         SemanticTimeframeBuilder::build(),
-                        BackendLogger::getDefaultLogger()
+                        $this->getLogger(),
                     ),
                     new URIRetriever($artifact_retriever),
                     new CrossReferenceRetriever($artifact_retriever),
@@ -708,7 +708,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         $artifact_retriever,
                         $user_retriever,
                         SemanticTimeframeBuilder::build(),
-                        BackendLogger::getDefaultLogger()
+                        $this->getLogger(),
                     ),
                     new URIRetriever($artifact_retriever),
                     new CrossReferenceRetriever($artifact_retriever),
@@ -878,7 +878,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                                 $artifact_retriever,
                                 $user_retriever,
                                 SemanticTimeframeBuilder::build(),
-                                BackendLogger::getDefaultLogger()
+                                $this->getLogger(),
                             ),
                             new URIRetriever($artifact_retriever),
                             new CrossReferenceRetriever($artifact_retriever),
@@ -945,11 +945,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $transaction_executor           = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $queue_factory                  = new QueueFactory($logger);
-        $user_manager                   = \UserManager::instance();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
-        $logger                         = \BackendLogger::getDefaultLogger('program_management_syslog');
-        $artifact_factory               = \Tracker_ArtifactFactory::instance();
-        $user_retriever                 = new UserManagerAdapter($user_manager);
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $field_initializator            = new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory);
@@ -1007,6 +1003,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
 
         $handler = new ArtifactUpdatedHandler(
+            MessageLog::buildFromLogger($logger),
             $program_increments_DAO,
             $iterations_DAO,
             (new UserStoriesInMirroredProgramIncrementsPlanner(
@@ -1438,7 +1435,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     private function getLogger(): \Psr\Log\LoggerInterface
     {
-        return BackendLogger::getDefaultLogger("program_management_syslog");
+        return \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void

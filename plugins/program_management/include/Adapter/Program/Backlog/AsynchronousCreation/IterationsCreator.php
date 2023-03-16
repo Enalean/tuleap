@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkTypeProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangeset;
@@ -53,6 +54,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\RetrieveTrackerOfArtifact;
 final class IterationsCreator implements CreateIterations
 {
     public function __construct(
+        private LoggerInterface $logger,
         private DBTransactionExecutor $transaction_executor,
         private RetrieveMirroredIterationTracker $milestone_retriever,
         private MapStatusByValue $status_mapper,
@@ -104,6 +106,7 @@ final class IterationsCreator implements CreateIterations
         ArtifactLinkValue $artifact_link_value,
         IterationCreation $creation,
     ): void {
+        $this->logger->debug(sprintf('%s createOneIteration for #%d', self::class, $team->getId()));
         $mirrored_iteration_tracker = MirroredIterationTrackerIdentifier::fromTeam(
             $this->milestone_retriever,
             $this->project_retriever,

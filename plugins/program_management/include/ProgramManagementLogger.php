@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,17 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement;
 
-use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
+use BackendLogger;
+use Psr\Log\LoggerInterface;
 
-interface ProcessIterationCreation
+final class ProgramManagementLogger
 {
-    public function processCreation(IterationCreation $iteration_creation): void;
-
-    public function processCreationForTeams(IterationCreation $iteration_creation, TeamIdentifierCollection $teams): void;
+    public static function getLogger(): LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger("program_management_syslog");
+    }
 }

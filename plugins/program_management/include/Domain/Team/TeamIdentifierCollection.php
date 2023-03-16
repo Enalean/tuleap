@@ -33,7 +33,7 @@ final class TeamIdentifierCollection
     /**
      * @param TeamIdentifier[] $teams
      */
-    private function __construct(private array $teams)
+    private function __construct(private readonly array $teams)
     {
     }
 
@@ -61,5 +61,13 @@ final class TeamIdentifierCollection
     public function getTeams(): array
     {
         return $this->teams;
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function getArrayOfTeamsId(): array
+    {
+        return array_values(array_map(static fn (TeamIdentifier $team) => $team->getId(), $this->teams));
     }
 }

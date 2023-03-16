@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\AddArtifactLinkChangesetException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredIterationCreationException;
@@ -78,6 +79,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getCreator(): IterationsCreator
     {
         return new IterationsCreator(
+            new NullLogger(),
             new DBTransactionExecutorPassthrough(),
             $this->milestone_retriever,
             MapStatusByValueStub::withSuccessiveBindValueIds(2061, 2130),
