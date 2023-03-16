@@ -454,7 +454,7 @@ class ExecutionsResource
                 $this->tracker_factory,
                 new FieldsDataFromValuesByFieldBuilder($this->formelement_factory, $artifact_link_initial_builder),
                 $this->formelement_factory,
-                new ArtifactUpdateHandler($changeset_creator, $this->formelement_factory, $this->artifact_factory, $event_dispatcher),
+                new ArtifactUpdateHandler($changeset_creator, $this->formelement_factory, $this->artifact_factory),
                 SubmissionPermissionVerifier::instance()
             );
 
