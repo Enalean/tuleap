@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Appearance;
 
-use ThemeVariantColor;
 
 class ThemeColorPresenterBuilder
 {
@@ -41,12 +40,11 @@ class ThemeColorPresenterBuilder
      */
     public function getColorPresenterCollection(\PFUser $user): array
     {
-        $user_variant = $this->theme_variant->getVariantForUser($user);
+        $user_variant = $this->theme_variant->getVariantColorForUser($user);
 
         $presenters = [];
-        foreach ($this->theme_variant->getAllowedVariants() as $variant) {
-            $color        = ThemeVariantColor::buildFromVariant($variant);
-            $is_selected  = $user_variant === $variant;
+        foreach ($this->theme_variant->getAllowedVariantColors() as $color) {
+            $is_selected  = $user_variant === $color;
             $presenters[] = new ThemeColorPresenter($color, $is_selected);
         }
 

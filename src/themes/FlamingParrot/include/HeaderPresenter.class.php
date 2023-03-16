@@ -20,7 +20,7 @@
 
 use Tuleap\OpenGraph\OpenGraphPresenter;
 
-class FlamingParrot_HeaderPresenter
+class FlamingParrot_HeaderPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var string */
     private $title;
@@ -41,14 +41,13 @@ class FlamingParrot_HeaderPresenter
         $title,
         $img_root,
         OpenGraphPresenter $open_graph,
-        $variant,
-        $variant_color_code,
+        \Tuleap\Layout\ThemeVariantColor $variant,
     ) {
         $this->title              = $title;
         $this->img_root           = $img_root;
         $this->open_graph         = $open_graph;
-        $this->variant            = $variant;
-        $this->variant_color_code = $variant_color_code;
+        $this->variant            = $variant->value;
+        $this->variant_color_code = $variant->getHexaCode();
     }
 
     public function title()

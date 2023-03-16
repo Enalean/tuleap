@@ -255,12 +255,9 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
      */
     private function setColorTheme(&$color_logo = null, &$color_button = null): void
     {
-        if (! class_exists('FlamingParrot_Theme')) {
-            require_once __DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
-        }
         $theme_variant       = new ThemeVariant();
         $defaultThemeVariant = $theme_variant->getDefault();
-        $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
+        $color_logo          = $defaultThemeVariant->getHexaCode();
         $color_button        = $color_logo;
     }
 

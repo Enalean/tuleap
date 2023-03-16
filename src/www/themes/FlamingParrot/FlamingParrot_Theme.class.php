@@ -112,32 +112,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return __DIR__ . '/../../../themes/FlamingParrot/templates/';
     }
 
-    public static function getVariants()
-    {
-        return [
-            "FlamingParrot_Orange",
-            "FlamingParrot_Blue",
-            "FlamingParrot_Green",
-            "FlamingParrot_BlueGrey",
-            "FlamingParrot_Purple",
-            "FlamingParrot_Red",
-        ];
-    }
-
-    public static function getColorOfCurrentTheme($theme)
-    {
-        $array = [
-            "FlamingParrot_Orange"          => "#F79514",
-            "FlamingParrot_Blue"            => "#1593C4",
-            "FlamingParrot_Green"           => "#67AF45",
-            "FlamingParrot_BlueGrey"        => "#5B6C79",
-            "FlamingParrot_Purple"          => "#79558A",
-            "FlamingParrot_Red"             => "#BD2626",
-        ];
-
-        return $array[$theme];
-    }
-
     public function header(HeaderConfiguration|array $params): void
     {
         $this->addJavascriptAsset(new JavascriptViteAsset(
@@ -162,7 +136,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $current_user    = UserManager::instance()->getCurrentUser();
         $theme_variant   = new ThemeVariant();
-        $current_variant = $theme_variant->getVariantForUser($current_user);
+        $current_variant = $theme_variant->getVariantColorForUser($current_user);
 
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
@@ -171,7 +145,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->imgroot,
             $open_graph,
             $current_variant,
-            $this->getColorOfCurrentTheme($current_variant)
         ));
 
         if (! empty($params['group'])) {
@@ -226,14 +199,14 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $current_user = UserManager::instance()->getCurrentUser();
 
         $theme_variant = new ThemeVariant();
-        $variant_used  = $theme_variant->getVariantForUser($current_user);
+        $variant_used  = $theme_variant->getVariantColorForUser($current_user);
 
         $tlp_vars = new \Tuleap\Layout\CssAsset($include_assets, 'tlp-vars');
 
         return [
             $include_assets->getFileURL('FlamingParrot/style.css'),
             $include_assets->getFileURL('common-theme/project-sidebar.css'),
-            $tlp_vars->getFileURL(new \Tuleap\Layout\ThemeVariation(ThemeVariantColor::buildFromVariant($variant_used), $current_user)),
+            $tlp_vars->getFileURL(new \Tuleap\Layout\ThemeVariation($variant_used, $current_user)),
         ];
     }
 
@@ -333,8 +306,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
     {
         $theme_variant   = new ThemeVariant();
-        $current_variant = $theme_variant->getVariantForUser($user);
-        $body_class[]    = $current_variant;
+        $current_variant = $theme_variant->getVariantColorForUser($user);
+        $body_class[]    = ThemeVariant::convertToFlamingParrotVariant($current_variant);
     }
 
     private function addBodyClassDependingUserPreference(PFUser $user, array &$body_class)

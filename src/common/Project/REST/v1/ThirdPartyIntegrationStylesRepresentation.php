@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST\v1;
 
 use ThemeVariant;
-use ThemeVariantColor;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\ThemeVariation;
 
@@ -38,7 +37,7 @@ final class ThirdPartyIntegrationStylesRepresentation
 
     public static function fromUser(\PFUser $user): self
     {
-        $theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($user));
+        $theme_variant_color = (new ThemeVariant())->getVariantColorForUser($user);
         $tlp_vars            = new \Tuleap\Layout\CssAssetWithDensityVariants(new IncludeCoreAssets(), 'tlp-vars');
         $url                 = $tlp_vars->getFileURL(new ThemeVariation($theme_variant_color, $user));
         $path                = __DIR__ . '/../../../../scripts/main/frontend-assets/' . substr($url, strlen('/assets/core/main/'));

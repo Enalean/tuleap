@@ -25,7 +25,6 @@ use Project;
 use ProjectManager;
 use TemplateRendererFactory;
 use ThemeVariant;
-use ThemeVariantColor;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
@@ -57,6 +56,7 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
+use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Admin\MembershipDelegationDao;
@@ -124,7 +124,7 @@ class BurningParrotTheme extends BaseLayout
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
-        $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($this->current_user->user));
+        $this->theme_variant_color = (new ThemeVariant())->getVariantColorForUser($this->current_user->user);
         $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
 
         $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
@@ -327,7 +327,7 @@ class BurningParrotTheme extends BaseLayout
             $body_classes = $params['body_class'];
         }
 
-        $color          = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->current_user->user));
+        $color          = (new \ThemeVariant())->getVariantColorForUser($this->current_user->user);
         $body_classes[] = 'theme-' . $color->getName();
         $is_condensed   = $this->current_user->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
         if ($is_condensed) {

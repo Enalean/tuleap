@@ -20,7 +20,7 @@
 
 namespace Tuleap\OpenGraph;
 
-use ThemeVariantColor;
+use Tuleap\Layout\ThemeVariantColor;
 
 class OpenGraphPresenter
 {

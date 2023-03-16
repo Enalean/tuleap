@@ -86,8 +86,8 @@ class SkinTuleap123 extends SkinTemplate
         $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
 
         $theme_variant       = new ThemeVariant();
-        $prefered_variant    = $theme_variant->getVariantForUser($current_user);
-        $bodyAttrs['class'] .= ' ' . $prefered_variant;
+        $prefered_variant    = $theme_variant->getVariantColorForUser($current_user);
+        $bodyAttrs['class'] .= ' ' . $prefered_variant->getName();
     }
 }
 

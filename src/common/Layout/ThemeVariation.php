@@ -21,23 +21,13 @@
 namespace Tuleap\Layout;
 
 use PFUser;
-use ThemeVariantColor;
 
 class ThemeVariation
 {
-    /**
-     * @var ThemeVariantColor
-     */
-    private $color;
+    private bool $is_condensed_mode;
 
-    /**
-     * @var bool
-     */
-    private $is_condensed_mode;
-
-    public function __construct(ThemeVariantColor $color, PFUser $current_user)
+    public function __construct(private ThemeVariantColor $color, PFUser $current_user)
     {
-        $this->color             = $color;
         $this->is_condensed_mode = $current_user->getPreference(
             PFUser::PREFERENCE_DISPLAY_DENSITY
         ) === PFUser::DISPLAY_DENSITY_CONDENSED;

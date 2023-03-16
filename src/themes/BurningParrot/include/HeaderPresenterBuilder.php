@@ -22,7 +22,6 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use ThemeVariantColor;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
@@ -34,6 +33,7 @@ use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\Layout\ThemeVariantColor;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
@@ -136,7 +136,7 @@ class HeaderPresenterBuilder
                 $platform_banner,
             ),
             $theme_color,
-            $this->getStylesheets($theme_color, $theme_variation),
+            $this->getStylesheets($theme_variation),
             $feedback_logs,
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
@@ -171,7 +171,7 @@ class HeaderPresenterBuilder
         return $page_title;
     }
 
-    private function getStylesheets(ThemeVariantColor $theme_color, ThemeVariation $theme_variation): array
+    private function getStylesheets(ThemeVariation $theme_variation): array
     {
         $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection(
@@ -195,7 +195,6 @@ class HeaderPresenterBuilder
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
             [
-                'variant'         => $theme_color,
                 'stylesheets'     => &$stylesheets,
                 'theme_variation' => $theme_variation,
             ]

@@ -28,7 +28,7 @@ final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCondensedModeThemeVariation(): void
     {
-        $color = \ThemeVariantColor::buildFromName('orange');
+        $color = ThemeVariantColor::buildFromName('orange');
         $user  = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getPreference')->with(\PFUser::PREFERENCE_DISPLAY_DENSITY)->andReturn(\PFUser::DISPLAY_DENSITY_CONDENSED);
 
@@ -39,7 +39,7 @@ final class ThemeVariationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testComfortableModeThemeVariation(): void
     {
-        $color = \ThemeVariantColor::buildFromName('orange');
+        $color = ThemeVariantColor::buildFromName('orange');
         $user  = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getPreference')->with(\PFUser::PREFERENCE_DISPLAY_DENSITY)->andReturn(false);
 

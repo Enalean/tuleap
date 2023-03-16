@@ -18,78 +18,89 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ThemeVariant
+use Tuleap\Layout\ThemeVariantColor;
+
+class ThemeVariant //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const PREFERENCE_NAME = 'theme_variant';
 
-    /** @var string */
-    private $default;
+    private ThemeVariantColor $default;
 
-    /** @var string[] */
-    private $allowed;
+    /** @var list<ThemeVariantColor> */
+    private array $allowed;
 
     public function __construct()
     {
-        $this->default = ForgeConfig::get('sys_default_theme_variant');
+        $this->default = self::normalizeVariant(ForgeConfig::get('sys_default_theme_variant'));
         $this->setAllowedVariants();
         $this->adjustDefaultVariantAccordingToAllowedVariants();
     }
 
-    private function setAllowedVariants()
+    private function setAllowedVariants(): void
     {
-        $this->allowed = ForgeConfig::get('sys_available_theme_variants');
-        $this->allowed = explode(',', $this->allowed);
-        $this->allowed = array_map('trim', $this->allowed);
-        $this->allowed = array_filter($this->allowed);
+        $comma_separated_configured_variant_names = (string) ForgeConfig::get('sys_available_theme_variants');
+        $configured_variant_names                 = explode(',', $comma_separated_configured_variant_names);
+        $configured_variant_names                 = array_map('trim', $configured_variant_names);
+        $configured_variant_names                 = array_filter($configured_variant_names);
 
-        if (! is_file(__DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php')) {
-            return;
+        $allowed = [];
+        foreach ($configured_variant_names as $name) {
+            $color = self::normalizeVariant($name);
+            if (! isset($allowed[$color->value])) {
+                $allowed[$color->value] = $color;
+            }
         }
 
-        require_once __DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
-        $this->unsetInvalidThemes();
+        $this->allowed = array_values($allowed);
     }
 
-    private function adjustDefaultVariantAccordingToAllowedVariants()
+    private static function normalizeVariant(string $variant): ThemeVariantColor
+    {
+        $normalized = str_replace(
+            'bluegrey',
+            ThemeVariantColor::Grey->value,
+            strtolower(str_replace('FlamingParrot_', '', $variant))
+        );
+
+        return ThemeVariantColor::buildFromName($normalized);
+    }
+
+    public static function convertToFlamingParrotVariant(ThemeVariantColor $color): string
+    {
+        return 'FlamingParrot_' . str_replace('Grey', 'BlueGrey', ucfirst($color->getName()));
+    }
+
+    private function adjustDefaultVariantAccordingToAllowedVariants(): void
     {
         if (! $this->isAllowed($this->default)) {
-            $this->default = 'FlamingParrot_Orange';
+            $this->default = ThemeVariantColor::DEFAULT;
         }
     }
 
-    public function getVariantForUser(PFUser $user)
+    public function getVariantColorForUser(PFUser $user): ThemeVariantColor
     {
         $variant = $user->getPreference(self::PREFERENCE_NAME);
-        if (! $variant || ! $this->isAllowed($variant)) {
-            $variant = $this->default;
+        if (! $variant) {
+            return $this->default;
         }
 
-        return $variant;
+        $variant = self::normalizeVariant($variant);
+        return $this->isAllowed($variant) ? $variant : $this->default;
     }
 
-    public function getAllowedVariants()
+    /** @return list<ThemeVariantColor> */
+    public function getAllowedVariantColors(): array
     {
         return $this->allowed;
     }
 
-    public function isAllowed($variant)
+    private function isAllowed(ThemeVariantColor $variant): bool
     {
-        return in_array($variant, $this->allowed);
+        return in_array($variant, $this->allowed, true);
     }
 
-    public function getDefault()
+    public function getDefault(): ThemeVariantColor
     {
         return $this->default;
-    }
-
-    private function unsetInvalidThemes()
-    {
-        foreach ($this->allowed as $index => $item) {
-            if (! in_array($item, FlamingParrot_Theme::getVariants())) {
-                unset($this->allowed[$index]);
-            }
-        }
-
-        $this->allowed = array_values($this->allowed);
     }
 }

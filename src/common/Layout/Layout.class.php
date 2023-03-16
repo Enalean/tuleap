@@ -471,7 +471,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     {
         $current_user  = UserManager::instance()->getCurrentUser();
         $theme_variant = new ThemeVariant();
-        $color         = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $color         = $theme_variant->getVariantColorForUser($current_user);
         return new ThemeVariation($color, $current_user);
     }
 
@@ -698,8 +698,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     {
         $current_user        = UserManager::instance()->getCurrentUser();
         $theme_variant       = new ThemeVariant();
-        $color               = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
-        $theme_color_variant = $color->getVariant();
+        $color               = $theme_variant->getVariantColorForUser($current_user);
+        $theme_color_variant = ThemeVariant::convertToFlamingParrotVariant($color);
         $user_locale         = $current_user->getLocale();
 
         $this->includeCalendarScripts();
