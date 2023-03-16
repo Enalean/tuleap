@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationsErrorStub;
+use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationStatusStub;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationStatus;
 use Tuleap\Plugin\IsProjectAllowedToUsePluginStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
@@ -53,7 +55,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withoutError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::Ongoing),
         );
 
         ob_start();
@@ -87,7 +89,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::InError),
         );
 
         ob_start();
@@ -111,7 +113,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withoutError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::Ongoing),
         );
 
         $this->expectException(NotFoundException::class);
@@ -132,7 +134,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withoutError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::Ongoing),
         );
 
         $this->expectException(NotFoundException::class);
@@ -158,7 +160,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withoutError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::Ongoing),
         );
 
         $this->expectException(NotFoundException::class);
@@ -185,7 +187,7 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             ProjectByUnixUnixNameFactory::buildWith($project),
             IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             new \TemplateRendererFactory($template_cache),
-            CheckOngoingInitializationsErrorStub::withoutError(),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::Ongoing),
         );
 
         $this->expectException(NotFoundException::class);
@@ -195,5 +197,35 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             LayoutBuilder::build(),
             ['project_name' => 'acme'],
         );
+    }
+
+    public function testWhenUserRefreshUnderConstructionAndMigrationIsFinishedThenWeShouldRedirectToMediaWikiPages(): void
+    {
+        $project = ProjectTestBuilder::aProject()
+            ->withUnixName('acme')
+            ->withPublicName('Acme Project')
+            ->build();
+
+        $service = $this->createMock(MediawikiStandaloneService::class);
+        $service->method('getUrl')->willReturn('/mediawiki/acme');
+        $project->addUsedServices([MediawikiStandaloneService::SERVICE_SHORTNAME, $service]);
+
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+
+        $controller = new UnderConstructionController(
+            ProjectByUnixUnixNameFactory::buildWith($project),
+            IsProjectAllowedToUsePluginStub::projectIsAllowed(),
+            new \TemplateRendererFactory($template_cache),
+            CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::None),
+        );
+
+        $inspector = new LayoutInspector();
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::buildWithDefaults())->build(),
+            LayoutBuilder::buildWithInspector($inspector),
+            ['project_name' => 'acme'],
+        );
+        self::assertEquals('/mediawiki/acme', $inspector->getRedirectUrl());
     }
 }

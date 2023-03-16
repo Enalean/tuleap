@@ -22,48 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-final class OngoingInitializationsStateStub implements OngoingInitializationsState
+enum OngoingInitializationStatus
 {
-    private bool $is_started  = false;
-    private bool $is_finished = false;
-    private bool $is_error    = false;
-
-    private function __construct()
-    {
-    }
-
-    public static function buildSelf(): self
-    {
-        return new self();
-    }
-
-    public function startInitialization(int $project_id): void
-    {
-        $this->is_started = true;
-    }
-
-    public function isStarted(): bool
-    {
-        return $this->is_started;
-    }
-
-    public function markAsError(int $project_id): void
-    {
-        $this->is_error = true;
-    }
+    case None;
+    case Ongoing;
+    case InError;
 
     public function isError(): bool
     {
-        return $this->is_error;
+        return match ($this) {
+            self::None, self::Ongoing => false,
+            self::InError => true,
+        };
     }
 
-    public function finishInitialization(int $project_id): void
+    public function isOngoing(): bool
     {
-        $this->is_finished = true;
-    }
-
-    public function isFinished(): bool
-    {
-        return $this->is_finished;
+        return match ($this) {
+            self::None, self::InError => false,
+            self::Ongoing => true,
+        };
     }
 }

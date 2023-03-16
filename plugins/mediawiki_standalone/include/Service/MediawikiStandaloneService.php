@@ -29,6 +29,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsDao;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationStatus;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
 use Tuleap\Project\Service\ServiceForCreation;
 
@@ -85,11 +86,11 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
     public function getUrl(?string $url = null): string
     {
         $dao = new OngoingInitializationsDao();
-        if ($dao->isOngoingMigration((int) $this->project->getID())) {
-            return '/mediawiki_standalone/under-construction/' . urlencode($this->project->getUnixNameMixedCase());
-        }
 
-        return self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase();
+        return match ($dao->getStatus((int) $this->project->getID())) {
+            OngoingInitializationStatus::InError, OngoingInitializationStatus::Ongoing => '/mediawiki_standalone/under-construction/' . urlencode($this->project->getUnixNameMixedCase()),
+            OngoingInitializationStatus::None => self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase(),
+        };
     }
 
     public function urlCanChange(): bool

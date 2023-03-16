@@ -38,14 +38,14 @@ final class OngoingInitializationsDaoTest extends TestCase
     {
         $dao = new OngoingInitializationsDao();
 
-        self::assertFalse($dao->isOngoingMigration(101));
+        self::assertFalse($dao->getStatus(101)->isOngoing());
         $dao->startInitialization(101);
-        self::assertTrue($dao->isOngoingMigration(101));
+        self::assertTrue($dao->getStatus(101)->isOngoing());
 
         // ignore already started initializations
         $dao->startInitialization(101);
-        self::assertTrue($dao->isOngoingMigration(101));
-        self::assertFalse($dao->isInError(101));
+        self::assertTrue($dao->getStatus(101)->isOngoing());
+        self::assertFalse($dao->getStatus(101)->isError());
     }
 
     public function testError(): void
@@ -53,10 +53,21 @@ final class OngoingInitializationsDaoTest extends TestCase
         $dao = new OngoingInitializationsDao();
 
         $dao->startInitialization(101);
-        self::assertFalse($dao->isInError(101));
+        self::assertFalse($dao->getStatus(101)->isError());
 
         $dao->markAsError(101);
-        self::assertTrue($dao->isInError(101));
-        self::assertTrue($dao->isOngoingMigration(101));
+        self::assertTrue($dao->getStatus(101)->isError());
+        self::assertFalse($dao->getStatus(101)->isOngoing());
+    }
+
+    public function testFinishInitialization(): void
+    {
+        $dao = new OngoingInitializationsDao();
+
+        $dao->startInitialization(101);
+        self::assertTrue($dao->getStatus(101)->isOngoing());
+
+        $dao->finishInitialization(101);
+        self::assertFalse($dao->getStatus(101)->isOngoing());
     }
 }

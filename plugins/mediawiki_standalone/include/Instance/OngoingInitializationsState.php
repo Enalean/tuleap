@@ -26,5 +26,7 @@ interface OngoingInitializationsState
 {
     public function startInitialization(int $project_id): void;
 
+    public function finishInitialization(int $project_id): void;
+
     public function markAsError(int $project_id): void;
 }

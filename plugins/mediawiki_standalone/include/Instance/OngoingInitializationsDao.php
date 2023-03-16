@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 use Tuleap\DB\DataAccessObject;
 
-final class OngoingInitializationsDao extends DataAccessObject implements OngoingInitializationsState, CheckOngoingInitializationsError
+final class OngoingInitializationsDao extends DataAccessObject implements OngoingInitializationsState, CheckOngoingInitializationStatus
 {
     public function startInitialization(int $project_id): void
     {
@@ -34,19 +34,11 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
         );
     }
 
-    public function isOngoingMigration(int $project_id): bool
+    public function finishInitialization(int $project_id): void
     {
-        return $this->getDB()->exists(
-            "SELECT 1 FROM plugin_mediawiki_standalone_ongoing_initializations WHERE project_id = ?",
-            $project_id
-        );
-    }
-
-    public function isInError(int $project_id): bool
-    {
-        return $this->getDB()->exists(
-            "SELECT 1 FROM plugin_mediawiki_standalone_ongoing_initializations WHERE project_id = ? AND is_error = TRUE",
-            $project_id
+        $this->getDB()->delete(
+            'plugin_mediawiki_standalone_ongoing_initializations',
+            ['project_id' => $project_id]
         );
     }
 
@@ -57,5 +49,21 @@ final class OngoingInitializationsDao extends DataAccessObject implements Ongoin
             ['is_error' => true],
             ['project_id' => $project_id]
         );
+    }
+
+    public function getStatus(int $project_id): OngoingInitializationStatus
+    {
+        $row = $this->getDB()->row(
+            'SELECT is_error FROM plugin_mediawiki_standalone_ongoing_initializations WHERE project_id = ?',
+            $project_id,
+        );
+
+        if (! $row) {
+            return OngoingInitializationStatus::None;
+        }
+
+        return $row['is_error']
+            ? OngoingInitializationStatus::InError
+            : OngoingInitializationStatus::Ongoing;
     }
 }
