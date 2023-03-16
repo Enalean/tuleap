@@ -51,6 +51,8 @@ final class MigrateInstance
         private readonly \Project $project,
         private readonly bool $use_central_database,
         private readonly string $short_language_code,
+        private readonly OngoingInitializationsState $initializations_state,
+        private readonly SwitchMediawikiService $switch_mediawiki_service,
     ) {
     }
 
@@ -62,6 +64,8 @@ final class MigrateInstance
         ProjectByIDFactory $project_factory,
         MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
         MediaWikiManagementCommandFactory $command_factory,
+        OngoingInitializationsState $initializations_state,
+        SwitchMediawikiService $switch_mediawiki_service,
     ): Option {
         if ($event->getEventName() !== self::TOPIC) {
             return Option::nothing(self::class);
@@ -77,6 +81,8 @@ final class MigrateInstance
                 $project_factory->getValidProjectById($payload['project_id']),
                 $central_database_parameter_generator->getCentralDatabase() !== null,
                 (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT),
+                $initializations_state,
+                $switch_mediawiki_service,
             )
         );
     }
@@ -87,6 +93,11 @@ final class MigrateInstance
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
+        $this->initializations_state->startInitialization((int) $this->project->getID());
+
+        $logger->info("Switching to MediaWiki Standalone service");
+        $this->switch_mediawiki_service->switchToStandalone($this->project);
+
         $instance_name = $this->project->getUnixNameLowerCase();
         $request       = $request_factory->createRequest(
             'GET',

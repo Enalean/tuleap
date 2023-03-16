@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_mediawiki_standalone_permissions;
-DROP TABLE IF EXISTS plugin_mediawiki_standalone_ongoing_initializations;
+declare(strict_types=1);
 
-DELETE FROM service WHERE short_name = 'plugin_mediawiki_standalone';
+namespace Tuleap\MediawikiStandalone\Instance;
+
+final class OngoingInitializationsStateStub implements OngoingInitializationsState
+{
+    private bool $is_started = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self();
+    }
+
+    public function startInitialization(int $project_id): void
+    {
+        $this->is_started = true;
+    }
+
+    public function isStarted(): bool
+    {
+        return $this->is_started;
+    }
+}

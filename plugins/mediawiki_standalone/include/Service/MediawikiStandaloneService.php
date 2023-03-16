@@ -28,12 +28,13 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsDao;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
 use Tuleap\Project\Service\ServiceForCreation;
 
 class MediawikiStandaloneService extends \Service implements ServiceForCreation
 {
-    private const ICON_NAME          = 'fas fa-tlp-mediawiki';
+    public const ICON_NAME           = 'fas fa-tlp-mediawiki';
     private const SERVICE_URL_PREFIX = '/mediawiki/';
     public const  SERVICE_SHORTNAME  = 'plugin_mediawiki_standalone';
 
@@ -83,6 +84,11 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
 
     public function getUrl(?string $url = null): string
     {
+        $dao = new OngoingInitializationsDao();
+        if ($dao->isOngoingMigration((int) $this->project->getID())) {
+            return '/mediawiki_standalone/under-construction/' . urlencode($this->project->getUnixNameMixedCase());
+        }
+
         return self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase();
     }
 

@@ -67,9 +67,11 @@ use Tuleap\MediawikiStandalone\Configuration\UpdateMediaWikiTask;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsDao;
 use Tuleap\MediawikiStandalone\Instance\ProjectRenameHandler;
 use Tuleap\MediawikiStandalone\Instance\ProjectStatusHandler;
 use Tuleap\MediawikiStandalone\Instance\ProvideSiteLevelInitializationLanguageCode;
+use Tuleap\MediawikiStandalone\Instance\ServiceMediawikiSwitcher;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
@@ -456,6 +458,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ProjectManager::instance(),
             new MediaWikiCentralDatabaseParameter($this->_getPluginManager()),
             $this->getMediaWikiManagementCommandProcessFactory($logger),
+            new OngoingInitializationsDao(),
+            new ServiceMediawikiSwitcher(new ServiceDao(), $logger),
         ))->process($event);
         (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }

@@ -93,16 +93,21 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            $initializations_state,
+            $switcher,
         );
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance): void {
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -110,6 +115,8 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
+                self::assertTrue($initializations_state->isStarted());
+                self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
     }
@@ -136,15 +143,20 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
-            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()])
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            $initializations_state,
+            $switcher,
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance): void {
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -152,6 +164,8 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
+                self::assertTrue($initializations_state->isStarted());
+                self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
     }
@@ -165,15 +179,20 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            $initializations_state,
+            $switcher,
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance): void {
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -182,6 +201,8 @@ final class MigrateInstanceTest extends TestCase
                 );
                 self::assertTrue(Result::isErr($result));
                 self::assertStringContainsString('foo bar error', (string) $result->error);
+                self::assertTrue($initializations_state->isStarted());
+                self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
     }
@@ -212,6 +233,8 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            OngoingInitializationsStateStub::buildSelf(),
+            SwitchMediawikiServiceStub::buildSelf(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -256,6 +279,8 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
+            OngoingInitializationsStateStub::buildSelf(),
+            SwitchMediawikiServiceStub::buildSelf(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -280,6 +305,8 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            OngoingInitializationsStateStub::buildSelf(),
+            SwitchMediawikiServiceStub::buildSelf(),
         );
 
         self::assertTrue($migrate_instance_option->isNothing());
