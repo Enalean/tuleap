@@ -35,7 +35,8 @@ export interface PullRequestDescriptionComment {
     readonly content: () => HTMLElement;
     readonly after_render_once: unknown;
     readonly controller: ControlPullRequestDescriptionComment;
-    readonly description: PullRequestDescriptionCommentPresenter;
+    readonly post_description_form_close_callback: () => void;
+    description: PullRequestDescriptionCommentPresenter;
     edition_form_presenter: DescriptionCommentFormPresenter | null;
 }
 
@@ -46,11 +47,20 @@ export const after_render_once_descriptor = {
     },
 };
 
+export const post_description_form_close_callback_descriptor = {
+    get: (host: HostElement) => (): void => {
+        setTimeout(() => {
+            loadTooltips(host, false);
+        });
+    },
+};
+
 export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     description: undefined,
     controller: undefined,
     after_render_once: after_render_once_descriptor,
+    post_description_form_close_callback: post_description_form_close_callback_descriptor,
     edition_form_presenter: {
         set: (host, presenter: DescriptionCommentFormPresenter | undefined) => presenter ?? null,
     },

@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect, vi } from "vitest";
+import { describe, it, beforeEach, expect } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./PullRequestDescriptionComment";
-import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
 import { getDescriptionContentTemplate } from "./PullRequestDescriptionContentTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
-import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
 import { DescriptionAuthorStub } from "../../tests/stubs/DescriptionAuthorStub";
+import { ControlPullRequestDescriptionCommentStub } from "../../tests/stubs/ControlPullRequestDescriptionCommentStub";
 
 describe("PullRequestDescriptionContentTemplate", () => {
     let target: ShadowRoot, base_host: HostElement;
@@ -36,11 +35,7 @@ describe("PullRequestDescriptionContentTemplate", () => {
 
         base_host = {
             edition_form_presenter: null,
-            controller: {
-                showEditionForm: vi.fn(),
-                hideEditionForm: vi.fn(),
-                getRelativeDateHelper: () => RelativeDateHelperStub,
-            } as ControlPullRequestDescriptionComment,
+            controller: ControlPullRequestDescriptionCommentStub,
         } as HostElement;
     });
 

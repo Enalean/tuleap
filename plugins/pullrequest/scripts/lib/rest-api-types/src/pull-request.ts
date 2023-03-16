@@ -22,6 +22,7 @@ import type { BuildStatus } from "@tuleap/plugin-pullrequest-constants";
 export interface PullRequest {
     readonly id: number;
     readonly title: string;
+    readonly raw_title: string;
     readonly creation_date: string;
     readonly short_stat: {
         readonly lines_added: number;

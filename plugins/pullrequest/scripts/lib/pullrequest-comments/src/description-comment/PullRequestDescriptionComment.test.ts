@@ -23,13 +23,13 @@ import type { HostElement } from "./PullRequestDescriptionComment";
 import {
     PullRequestCommentDescriptionComponent,
     after_render_once_descriptor,
+    post_description_form_close_callback_descriptor,
 } from "./PullRequestDescriptionComment";
 import { selectOrThrow } from "@tuleap/dom";
 import * as tooltip from "@tuleap/tooltip";
-import { RelativeDateHelperStub } from "../../tests/stubs/RelativeDateHelperStub";
-import type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
 import { PullRequestDescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
 import { DescriptionAuthorStub } from "../../tests/stubs/DescriptionAuthorStub";
+import { ControlPullRequestDescriptionCommentStub } from "../../tests/stubs/ControlPullRequestDescriptionCommentStub";
 
 vi.mock("@tuleap/tooltip", () => ({
     loadTooltips: (): void => {
@@ -62,11 +62,7 @@ describe("PullRequestDescriptionComment", () => {
                     post_date: "2023-03-13T15:00:00Z",
                     can_user_update_description: true,
                 },
-                controller: {
-                    showEditionForm: vi.fn(),
-                    hideEditionForm: vi.fn(),
-                    getRelativeDateHelper: () => RelativeDateHelperStub,
-                } as ControlPullRequestDescriptionComment,
+                controller: ControlPullRequestDescriptionCommentStub,
             } as HostElement;
         });
 
@@ -102,5 +98,15 @@ describe("PullRequestDescriptionComment", () => {
 
         expect(loadTooltips).toHaveBeenCalledTimes(1);
         expect(loadTooltips).toHaveBeenCalledWith(host, false);
+    });
+
+    it("should load tooltips when the post_description_form_close_callback is triggered", () => {
+        const host = {} as HostElement;
+
+        vi.useFakeTimers();
+        post_description_form_close_callback_descriptor.get(host)();
+        vi.advanceTimersToNextTimer();
+
+        expect(loadTooltips).toHaveBeenCalledTimes(1);
     });
 });

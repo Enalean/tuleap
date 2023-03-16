@@ -20,13 +20,32 @@
 import type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 
 export interface DescriptionCommentFormPresenter {
+    readonly pull_request_id: number;
+    readonly pull_request_raw_title: string;
     readonly description_content: string;
+    readonly is_being_submitted: boolean;
 }
 
 export const PullRequestDescriptionCommentFormPresenter = {
     fromCurrentDescription: (
         current_description: PullRequestDescriptionCommentPresenter
     ): DescriptionCommentFormPresenter => ({
+        pull_request_id: current_description.pull_request_id,
+        pull_request_raw_title: current_description.pull_request_raw_title,
         description_content: current_description.raw_content,
+        is_being_submitted: false,
+    }),
+    updateDescriptionContent: (
+        presenter: DescriptionCommentFormPresenter,
+        content: string
+    ): DescriptionCommentFormPresenter => ({
+        ...presenter,
+        description_content: content,
+    }),
+    buildSubmitted: (
+        presenter: DescriptionCommentFormPresenter
+    ): DescriptionCommentFormPresenter => ({
+        ...presenter,
+        is_being_submitted: true,
     }),
 };

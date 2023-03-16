@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    PullRequestCommentDescriptionComponent,
-    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
-} from "./PullRequestDescriptionComment";
+import { vi } from "vitest";
+import type { ControlPullRequestDescriptionComment } from "../../src/description-comment/PullRequestDescriptionCommentController";
+import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
 
-export type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
-
-export { PullRequestDescriptionCommentController } from "./PullRequestDescriptionCommentController";
-export type { ControlPullRequestDescriptionComment } from "./PullRequestDescriptionCommentController";
-
-export { PullRequestDescriptionCommentSaver } from "./PullRequestDescriptionCommentSaver";
+export const ControlPullRequestDescriptionCommentStub: ControlPullRequestDescriptionComment = {
+    showEditionForm: vi.fn(),
+    hideEditionForm: vi.fn(),
+    updateCurrentlyEditedDescription: vi.fn(),
+    saveDescriptionComment: vi.fn(),
+    getRelativeDateHelper: () => RelativeDateHelperStub,
+};
