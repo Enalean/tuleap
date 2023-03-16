@@ -5,7 +5,7 @@ specifiers:
   console-stamp: 0.2.6
   express: 4.16.3
   jsonwebtoken: 9.0.0
-  lodash: 3.10.1
+  lodash: 4.17.21
   pkg: ^5.5.2
   socket.io: ^4.6.1
 
@@ -14,7 +14,7 @@ dependencies:
   console-stamp: 0.2.6
   express: 4.16.3
   jsonwebtoken: 9.0.0
-  lodash: 3.10.1
+  lodash: 4.17.21
   socket.io: 4.6.1
 
 devDependencies:
@@ -961,10 +961,6 @@ packages:
       pify: 2.3.0
       pinkie-promise: 2.0.1
       strip-bom: 2.0.0
-    dev: false
-
-  /lodash/3.10.1:
-    resolution: {integrity: sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=}
     dev: false
 
   /lodash/4.17.21:

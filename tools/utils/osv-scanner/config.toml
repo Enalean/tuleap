@@ -46,42 +46,6 @@ reason = "Only used when targetting macOS."
 
 ### TO BE FIXED
 
-# Lodash
-[[IgnoredVulns]]
-id = "GHSA-jf85-cpcp-j695" # CVE-2019-10744
-reason = "No usage of defaultsDeep."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-fvqr-27wr-82fm" # CVE-2018-3721
-reason = "No usage of defaultsDeep, merge or mergeWith on user content."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-4xc9-xhrj-v574" # CVE-2018-16487
-reason = "No usage of defaultsDeep, merge or mergeWith on user content."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-x5rq-j2xg-h7qm" # CVE-2019-1010266
-reason = "ReDoS."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-p6mc-m468-83gw" # CVE-2020-8203
-reason = "No usage of zipObjectDeep/baseSet."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-29mw-wpgm-hmr9" # CVE-2020-28500
-reason = "ReDoS."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-35jh-r3h4-6jhm" # CVE-2021-23337
-reason = "Only used on the frontend and no usage of lodash.template."
-ignoreUntil = 2023-05-08
-
 # Dev tools
 ## minimatch
 [[IgnoredVulns]]
@@ -203,17 +167,6 @@ ignoreUntil = 2023-05-08
 ## minimist
 [[IgnoredVulns]]
 id = "GHSA-vh95-rmgr-6w4m" # CVE-2020-7598
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-## moment
-[[IgnoredVulns]]
-id = "GHSA-446m-mv8f-q348" # CVE-2017-18214
-reason = "ReDoS. To be investigated."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-8hfj-j24r-96c4" # CVE-2022-24785
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
