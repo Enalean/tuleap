@@ -24,6 +24,7 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { setCatalog } from "../../../../gettext-catalog";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
+import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
@@ -66,9 +67,13 @@ describe(`LinkedArtifactTemplate`, () => {
     });
 
     const render = (linked_artifact_presenter: LinkedArtifactPresenter): void => {
-        const host = {} as HostElement;
+        const host = {
+            controller: {
+                canMarkForRemoval: () => true,
+            } as unknown as LinkFieldControllerType,
+        } as HostElement;
 
-        const updateFunction = getLinkedArtifactTemplate(linked_artifact_presenter);
+        const updateFunction = getLinkedArtifactTemplate(host, linked_artifact_presenter);
         updateFunction(host, target);
     };
 
@@ -231,9 +236,19 @@ describe(`LinkedArtifactTemplate`, () => {
                 linked_artifact,
                 is_marked_for_removal
             );
-            const update = getActionButton(linked_artifact_presenter);
+            const update = getActionButton(host, linked_artifact_presenter);
             update(host, target);
         };
+
+        it(`will not render a button when the link can't be deleted`, () => {
+            const linked_artifact = LinkedArtifactStub.withIdAndType(
+                33,
+                LinkTypeStub.buildMirrors()
+            );
+            const host = getHost(linked_artifact);
+            render(host, linked_artifact, false);
+            expect(target.children).toHaveLength(0);
+        });
 
         it(`will mark the artifact for removal`, () => {
             const linked_artifact = LinkedArtifactStub.withDefaults();

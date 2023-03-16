@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import {
+    UNTYPED_LINK,
+    IS_CHILD_LINK_TYPE,
+    MIRRORED_MILESTONE_LINK_TYPE,
+} from "@tuleap/plugin-tracker-constants";
 
 export const FORWARD_DIRECTION = "forward";
 export const REVERSE_DIRECTION = "reverse";
@@ -42,4 +46,7 @@ export const LinkType = {
         type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
 
     isUntypedLink: (type: LinkType): boolean => type.shortname === UNTYPED_LINK,
+
+    isMirroredMilestone: (type: LinkType): boolean =>
+        type.shortname === MIRRORED_MILESTONE_LINK_TYPE,
 };

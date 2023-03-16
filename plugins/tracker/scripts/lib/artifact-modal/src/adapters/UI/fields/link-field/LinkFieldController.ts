@@ -21,7 +21,10 @@ import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPre
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
-import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type {
+    LinkedArtifact,
+    LinkedArtifactIdentifier,
+} from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-field/AddLinkMarkedForRemoval";
 import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field/DeleteLinkMarkedForRemoval";
@@ -61,6 +64,7 @@ export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): PromiseLike<LinkedArtifactCollectionPresenter>;
     displayAllowedTypes(): CollectionOfAllowedLinksTypesPresenters;
+    canMarkForRemoval(link: LinkedArtifact): boolean;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete(host: LinkField, query: string): void;
@@ -149,6 +153,10 @@ export const LinkFieldController = (
                 return LinkedArtifactCollectionPresenter.forFault();
             }
         );
+    },
+
+    canMarkForRemoval(link): boolean {
+        return !LinkType.isMirroredMilestone(link.link_type);
     },
 
     markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {

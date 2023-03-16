@@ -50,4 +50,15 @@ describe(`LinkType`, () => {
             expect(LinkType.isForwardChild(link_type)).toBe(expected_return);
         }
     );
+
+    it.each([
+        [true, "forward _mirrored_milestone", LinkTypeStub.buildMirrors()],
+        [true, "reverse _mirrored_milestone", LinkTypeStub.buildMirroredBy()],
+        [false, "untyped", LinkTypeStub.buildUntyped()],
+    ])(
+        `isMirroredMilestone() returns %s when given a %s link type`,
+        (expected_return, link_type_string, link_type) => {
+            expect(LinkType.isMirroredMilestone(link_type)).toBe(expected_return);
+        }
+    );
 });

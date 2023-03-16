@@ -268,6 +268,27 @@ describe(`LinkFieldController`, () => {
         });
     });
 
+    describe(`canMarkForRemoval()`, () => {
+        let link_type: LinkType;
+        beforeEach(() => {
+            link_type = LinkTypeStub.buildUntyped();
+        });
+
+        const canMark = (): boolean => {
+            const linked_artifact = LinkedArtifactStub.withIdAndType(ARTIFACT_ID, link_type);
+            return getController().canMarkForRemoval(linked_artifact);
+        };
+
+        it(`returns false when the given artifact's link type is _mirrored_milestone`, () => {
+            link_type = LinkTypeStub.buildMirrors();
+            expect(canMark()).toBe(false);
+        });
+
+        it(`returns true otherwise`, () => {
+            expect(canMark()).toBe(true);
+        });
+    });
+
     describe(`markForRemoval`, () => {
         const markForRemoval = (): LinkedArtifactCollectionPresenter => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);

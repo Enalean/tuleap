@@ -22,7 +22,7 @@ import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
 } from "../../src/domain/fields/link-field/LinkType";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { IS_CHILD_LINK_TYPE, MIRRORED_MILESTONE_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 
 const CUSTOM_TYPE = "custom";
 export const LinkTypeStub = {
@@ -36,6 +36,16 @@ export const LinkTypeStub = {
         shortname: IS_CHILD_LINK_TYPE,
         direction: REVERSE_DIRECTION,
         label: "is Child of",
+    }),
+    buildMirrors: (): LinkType => ({
+        shortname: MIRRORED_MILESTONE_LINK_TYPE,
+        direction: "forward",
+        label: "Mirrors",
+    }),
+    buildMirroredBy: (): LinkType => ({
+        shortname: MIRRORED_MILESTONE_LINK_TYPE,
+        direction: "reverse",
+        label: "Mirrored by",
     }),
     buildForwardCustom: (): LinkType => ({
         shortname: CUSTOM_TYPE,
