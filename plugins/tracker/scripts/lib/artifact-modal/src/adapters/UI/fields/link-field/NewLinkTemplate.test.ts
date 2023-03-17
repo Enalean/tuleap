@@ -19,7 +19,7 @@
 
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./LinkField";
-import { getArtifactLinkTypeLabel, getNewLinkTemplate } from "./NewLinkTemplate";
+import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
@@ -50,9 +50,8 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
+import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -155,6 +154,7 @@ describe(`NewLinkTemplate`, () => {
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                ChangeLinkTypeStub.withCount(),
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
@@ -215,44 +215,5 @@ describe(`NewLinkTemplate`, () => {
 
             expect(host.new_links_presenter).toHaveLength(0);
         });
-    });
-
-    describe(`getArtifactLinkTypeLabel()`, () => {
-        it.each([
-            [
-                LinkedArtifactPresenter.fromLinkedArtifact(
-                    LinkedArtifactStub.withIdAndType(303, LinkTypeStub.buildChildLinkType()),
-                    false
-                ),
-                "is Child of",
-            ],
-            [
-                LinkedArtifactPresenter.fromLinkedArtifact(
-                    LinkedArtifactStub.withIdAndType(558, LinkTypeStub.buildParentLinkType()),
-                    false
-                ),
-                "is Parent of",
-            ],
-            [
-                LinkedArtifactPresenter.fromLinkedArtifact(
-                    LinkedArtifactStub.withIdAndType(959, LinkTypeStub.buildUntyped()),
-                    false
-                ),
-                "is Linked to",
-            ],
-            [
-                LinkedArtifactPresenter.fromLinkedArtifact(
-                    LinkedArtifactStub.withIdAndType(961, LinkTypeStub.buildForwardCustom()),
-                    false
-                ),
-                "Custom Forward",
-            ],
-        ])(
-            `will rename the labels of _is_child types
-            A -> _is_child -> B actually means B is child of A and A is parent of B`,
-            (linked_artifact, expected_type_label) => {
-                expect(getArtifactLinkTypeLabel(linked_artifact)).toBe(expected_type_label);
-            }
-        );
     });
 });

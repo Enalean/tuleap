@@ -19,7 +19,11 @@
 
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
-import { getActionButton, getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
+import {
+    getActionButton,
+    getLinkedArtifactTemplate,
+    getTypeTemplate,
+} from "./LinkedArtifactTemplate";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { setCatalog } from "../../../../gettext-catalog";
@@ -54,8 +58,8 @@ import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsS
 import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
+import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -68,8 +72,12 @@ describe(`LinkedArtifactTemplate`, () => {
 
     const render = (linked_artifact_presenter: LinkedArtifactPresenter): void => {
         const host = {
+            field_presenter: {
+                current_artifact_reference: ArtifactCrossReferenceStub.withRef("art #136"),
+            },
             controller: {
                 canMarkForRemoval: () => true,
+                canChangeType: () => true,
             } as unknown as LinkFieldControllerType,
         } as HostElement;
 
@@ -116,17 +124,12 @@ describe(`LinkedArtifactTemplate`, () => {
         const xref = selectOrThrow(target, "[data-test=artifact-xref]");
         const title = selectOrThrow(target, "[data-test=artifact-title]");
         const status = selectOrThrow(target, "[data-test=artifact-status]");
-        const type = selectOrThrow(target, "[data-test=artifact-link-type]");
-        const expected_type = LinkType.isUntypedLink(presenter.link_type)
-            ? "is Linked to"
-            : presenter.link_type.label;
 
         expect(link.href).toBe(presenter.uri);
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
-        expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
@@ -153,20 +156,18 @@ describe(`LinkedArtifactTemplate`, () => {
         const xref = selectOrThrow(target, "[data-test=artifact-xref]");
         const title = selectOrThrow(target, "[data-test=artifact-title]");
         const status = selectOrThrow(target, "[data-test=artifact-status]");
-        const type = selectOrThrow(target, "[data-test=artifact-link-type]");
 
         expect(link.href).toBe(presenter.uri);
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
-        expect(type.textContent?.trim()).toBe(presenter.link_type.label);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
-    describe(`getActionButton`, () => {
+    describe(`controller actions`, () => {
         let marked_for_removal_verifier: VerifyLinkIsMarkedForRemoval;
 
         beforeEach(() => {
@@ -180,10 +181,12 @@ describe(`LinkedArtifactTemplate`, () => {
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
             const event_dispatcher = DispatchEventsStub.buildNoOp();
+            const current_artifact_reference = ArtifactCrossReferenceStub.withRef("story #72");
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
+                ChangeLinkTypeStub.withCount(),
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
@@ -217,75 +220,111 @@ describe(`LinkedArtifactTemplate`, () => {
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
-                ArtifactCrossReferenceStub.withRef("story #72"),
+                current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair()
             );
 
             return {
+                field_presenter: {
+                    current_artifact_reference,
+                },
                 linked_artifacts_presenter: LinkedArtifactCollectionPresenter.buildLoadingState(),
                 controller,
             } as unknown as HostElement;
         };
 
-        const render = (
-            host: HostElement,
-            linked_artifact: LinkedArtifact,
-            is_marked_for_removal: boolean
-        ): void => {
-            const linked_artifact_presenter = LinkedArtifactPresenter.fromLinkedArtifact(
-                linked_artifact,
-                is_marked_for_removal
-            );
-            const update = getActionButton(host, linked_artifact_presenter);
-            update(host, target);
-        };
+        describe(`getActionButton`, () => {
+            const render = (
+                host: HostElement,
+                linked_artifact: LinkedArtifact,
+                is_marked_for_removal: boolean
+            ): void => {
+                const linked_artifact_presenter = LinkedArtifactPresenter.fromLinkedArtifact(
+                    linked_artifact,
+                    is_marked_for_removal
+                );
+                const update = getActionButton(host, linked_artifact_presenter);
+                update(host, target);
+            };
 
-        it(`will not render a button when the link can't be deleted`, () => {
-            const linked_artifact = LinkedArtifactStub.withIdAndType(
-                33,
-                LinkTypeStub.buildMirrors()
-            );
-            const host = getHost(linked_artifact);
-            render(host, linked_artifact, false);
-            expect(target.children).toHaveLength(0);
+            it(`will not render a button when the link can't be deleted`, () => {
+                const linked_artifact = LinkedArtifactStub.withIdAndType(
+                    33,
+                    LinkTypeStub.buildMirrors()
+                );
+                const host = getHost(linked_artifact);
+                render(host, linked_artifact, false);
+                expect(target.children).toHaveLength(0);
+            });
+
+            it(`will mark the artifact for removal`, () => {
+                const linked_artifact = LinkedArtifactStub.withDefaults();
+                const host = getHost(linked_artifact);
+                render(host, linked_artifact, false);
+                const button = selectOrThrow(
+                    target,
+                    "[data-test=action-button]",
+                    HTMLButtonElement
+                );
+                button.click();
+
+                expect(
+                    host.linked_artifacts_presenter.linked_artifacts.some(
+                        (artifact) => artifact.is_marked_for_removal
+                    )
+                ).toBe(true);
+            });
+
+            it(`will cancel the removal of the artifact`, () => {
+                marked_for_removal_verifier =
+                    VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
+                const linked_artifact = LinkedArtifactStub.withDefaults();
+                const host = getHost(linked_artifact);
+                render(host, linked_artifact, true);
+                const button = selectOrThrow(
+                    target,
+                    "[data-test=action-button]",
+                    HTMLButtonElement
+                );
+                button.click();
+
+                expect(
+                    host.linked_artifacts_presenter.linked_artifacts.some(
+                        (artifact) => artifact.is_marked_for_removal
+                    )
+                ).toBe(false);
+            });
         });
 
-        it(`will mark the artifact for removal`, () => {
-            const linked_artifact = LinkedArtifactStub.withDefaults();
-            const host = getHost(linked_artifact);
-            render(host, linked_artifact, false);
-            const button = target.querySelector("[data-test=action-button]");
+        describe(`getTypeTemplate()`, () => {
+            const render = (host: HostElement, linked_artifact: LinkedArtifact): void => {
+                const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
+                    linked_artifact,
+                    false
+                );
+                const update = getTypeTemplate(host, presenter);
+                update(host, target);
+            };
 
-            if (!(button instanceof HTMLButtonElement)) {
-                throw new Error("An expected element has not been found in template");
-            }
-            button.click();
+            it(`when I can't change the type of link, it returns a readonly type label`, () => {
+                const linked_artifact = LinkedArtifactStub.withIdAndType(
+                    36,
+                    LinkTypeStub.buildMirroredBy()
+                );
 
-            expect(
-                host.linked_artifacts_presenter.linked_artifacts.some(
-                    (artifact) => artifact.is_marked_for_removal
-                )
-            ).toBe(true);
-        });
+                render(getHost(linked_artifact), linked_artifact);
+                expect(target.querySelector("[data-test=readonly-type]")).not.toBeNull();
+            });
 
-        it(`will cancel the removal of the artifact`, () => {
-            marked_for_removal_verifier =
-                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
-            const linked_artifact = LinkedArtifactStub.withDefaults();
-            const host = getHost(linked_artifact);
-            render(host, linked_artifact, true);
-            const button = target.querySelector("[data-test=action-button]");
+            it(`when I can change the type of link, it returns a type selector`, () => {
+                const linked_artifact = LinkedArtifactStub.withIdAndType(
+                    58,
+                    LinkTypeStub.buildUntyped()
+                );
 
-            if (!(button instanceof HTMLButtonElement)) {
-                throw new Error("An expected element has not been found in template");
-            }
-            button.click();
-
-            expect(
-                host.linked_artifacts_presenter.linked_artifacts.some(
-                    (artifact) => artifact.is_marked_for_removal
-                )
-            ).toBe(false);
+                render(getHost(linked_artifact), linked_artifact);
+                expect(target.querySelector("[data-test=type-selector]")).not.toBeNull();
+            });
         });
     });
 });

@@ -22,13 +22,7 @@ import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import type { LinkField } from "./LinkField";
-import {
-    getChildTypeLabel,
-    getDefaultLinkTypeLabel,
-    getParentTypeLabel,
-    getRemoveLabel,
-} from "../../../../gettext-catalog";
-import { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import { getRemoveLabel } from "../../../../gettext-catalog";
 import "./LinkTypeSelectorElement";
 import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 
@@ -58,19 +52,6 @@ export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink):
     return classes;
 };
 
-export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter): string => {
-    if (LinkType.isForwardChild(artifact.link_type)) {
-        return getParentTypeLabel();
-    }
-    if (LinkType.isReverseChild(artifact.link_type)) {
-        return getChildTypeLabel();
-    }
-    if (LinkType.isUntypedLink(artifact.link_type)) {
-        return getDefaultLinkTypeLabel();
-    }
-    return artifact.link_type.label;
-};
-
 export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFunction<LinkField> => {
     const removeNewLink = (): void => {
         host.new_links_presenter = host.controller.removeNewLink(link);
@@ -96,7 +77,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
             <td class="link-field-table-cell-xref">
                 <a
                     href="${link.uri}"
-                    class="link-field-new-artifact-link"
+                    class="link-field-artifact-link"
                     title="${link.title}"
                     data-test="link-link"
                 >

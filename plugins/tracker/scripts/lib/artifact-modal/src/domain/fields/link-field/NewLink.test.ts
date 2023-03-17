@@ -19,8 +19,10 @@
 
 import { ArtifactCrossReferenceStub } from "../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { NewLink } from "./NewLink";
-import type { LinkType } from "./LinkType";
+import { LinkType } from "./LinkType";
 import { LinkableArtifactStub } from "../../../../tests/stubs/LinkableArtifactStub";
+import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
+import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
 
 const ARTIFACT_ID = 88;
 const TITLE = "thermonatrite";
@@ -57,5 +59,13 @@ describe(`NewLink`, () => {
         expect(new_link.status?.color).toBeNull();
         expect(new_link.is_open).toBe(true);
         expect(new_link.link_type).toStrictEqual(link_type);
+    });
+
+    it(`builds a NewLink from an existing one with a new type`, () => {
+        const link = NewLinkStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped());
+        const new_type = LinkTypeStub.buildParentLinkType();
+        const changed_link = NewLink.fromNewLinkAndType(link, new_type);
+
+        expect(LinkType.isForwardChild(changed_link.link_type)).toBe(true);
     });
 });

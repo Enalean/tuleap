@@ -20,6 +20,7 @@
 import { NewLinksStore } from "./NewLinksStore";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 
 describe(`NewLinksStore`, () => {
     it(`adds, changes types of new links, and deletes new links`, () => {
@@ -40,7 +41,7 @@ describe(`NewLinksStore`, () => {
         const links_after_update = store.getNewLinks();
         expect(links_after_update).toHaveLength(2);
         expect(links_after_update).toContain(first_link);
-        expect(links_after_update[1].link_type.shortname).toBe("");
+        expect(LinkType.isUntypedLink(links_after_update[1].link_type)).toBe(true);
 
         store.deleteNewLink(first_link);
 
@@ -52,9 +53,9 @@ describe(`NewLinksStore`, () => {
     it(`does not update new links that were never added to the store`, () => {
         const store = NewLinksStore();
 
-        const non_existing_links = NewLinkStub.withIdAndType(54, LinkTypeStub.buildUntyped());
+        const non_existing_link = NewLinkStub.withIdAndType(54, LinkTypeStub.buildUntyped());
 
-        store.changeNewLinkType(non_existing_links, LinkTypeStub.buildChildLinkType());
+        store.changeNewLinkType(non_existing_link, LinkTypeStub.buildChildLinkType());
         const stored_links = store.getNewLinks();
         expect(stored_links).toHaveLength(0);
     });

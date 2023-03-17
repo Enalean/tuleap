@@ -39,3 +39,10 @@ export interface LinkedArtifact {
     readonly is_open: boolean;
     readonly link_type: LinkType;
 }
+
+export const LinkedArtifact = {
+    fromLinkAndType: (link: LinkedArtifact, new_type: LinkType): LinkedArtifact => ({
+        ...link,
+        link_type: new_type,
+    }),
+};

@@ -70,6 +70,7 @@ import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsS
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
+import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -89,7 +90,8 @@ describe(`LinkFieldController`, () => {
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
         event_dispatcher: DispatchEventsStub,
-        new_link_type_changer: ChangeNewLinkTypeStub;
+        new_link_type_changer: ChangeNewLinkTypeStub,
+        link_type_changer: ChangeLinkTypeStub;
 
     beforeEach(() => {
         setCatalog({
@@ -108,6 +110,7 @@ describe(`LinkFieldController`, () => {
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         new_link_type_changer = ChangeNewLinkTypeStub.withCount();
+        link_type_changer = ChangeLinkTypeStub.withCount();
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -119,6 +122,7 @@ describe(`LinkFieldController`, () => {
         return LinkFieldController(
             links_retriever,
             links_retriever_sync,
+            link_type_changer,
             deleted_link_adder,
             deleted_link_remover,
             deleted_link_verifier,
@@ -328,6 +332,42 @@ describe(`LinkFieldController`, () => {
                 (linked_artifact) => linked_artifact.is_marked_for_removal
             );
             expect(is_marked).toBe(false);
+        });
+    });
+
+    describe(`canChangeType()`, () => {
+        let link_type: LinkType;
+
+        beforeEach(() => {
+            link_type = LinkTypeStub.buildUntyped();
+        });
+        const canChangeType = (): boolean => {
+            const linked_artifact = LinkedArtifactStub.withIdAndType(ARTIFACT_ID, link_type);
+            return getController().canChangeType(linked_artifact);
+        };
+
+        it(`returns false when the given artifact's link type is _mirrored_milestone`, () => {
+            link_type = LinkTypeStub.buildMirroredBy();
+            expect(canChangeType()).toBe(false);
+        });
+
+        it(`returns true otherwise`, () => {
+            expect(canChangeType()).toBe(true);
+        });
+    });
+
+    describe(`changeLinkType()`, () => {
+        const changeLinkType = (): LinkedArtifactCollectionPresenter => {
+            const link = LinkedArtifactStub.withIdAndType(113, LinkTypeStub.buildUntyped());
+            const type = LinkTypeStub.buildForwardCustom();
+            links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(link);
+            return getController().changeLinkType(link, type);
+        };
+
+        it(`changes the type of link for the existing link and returns an updated presenter`, () => {
+            const presenter = changeLinkType();
+            expect(link_type_changer.getCallCount()).toBe(1);
+            expect(presenter.linked_artifacts).toHaveLength(1);
         });
     });
 

@@ -168,6 +168,7 @@ function ArtifactModalController(
             return LinkFieldController(
                 LinksRetriever(api_client, api_client, links_store),
                 links_store,
+                links_store,
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,

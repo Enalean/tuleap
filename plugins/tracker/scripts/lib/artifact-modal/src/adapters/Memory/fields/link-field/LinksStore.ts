@@ -19,9 +19,10 @@
 
 import type { AddLinkedArtifactCollection } from "../../../../domain/fields/link-field/AddLinkedArtifactCollection";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
+import { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type { ChangeLinkType } from "../../../../domain/fields/link-field/ChangeLinkType";
 
-type LinksStoreType = AddLinkedArtifactCollection & RetrieveLinkedArtifactsSync;
+type LinksStoreType = AddLinkedArtifactCollection & RetrieveLinkedArtifactsSync & ChangeLinkType;
 
 export const LinksStore = (): LinksStoreType => {
     let links: LinkedArtifact[] = [];
@@ -33,6 +34,17 @@ export const LinksStore = (): LinksStoreType => {
 
         addLinkedArtifacts(new_links: LinkedArtifact[]): void {
             links = new_links;
+        },
+
+        changeLinkType(link, type): void {
+            const updated_link = LinkedArtifact.fromLinkAndType(link, type);
+            const index = links.findIndex(
+                (stored_link) => stored_link.identifier.id === updated_link.identifier.id
+            );
+            if (index === -1) {
+                return;
+            }
+            links.splice(index, 1, updated_link);
         },
     };
 };
