@@ -59,6 +59,7 @@ import { getSubmitDisabledForLinksReason } from "../../../../gettext-catalog";
 import { WillClearFaultNotification } from "../../../../domain/WillClearFaultNotification";
 import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
 import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/ChangeNewLinkType";
+import type { ChangeLinkType } from "../../../../domain/fields/link-field/ChangeLinkType";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -67,6 +68,11 @@ export type LinkFieldControllerType = {
     canMarkForRemoval(link: LinkedArtifact): boolean;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
+    canChangeType(link: LinkedArtifact): boolean;
+    changeLinkType(
+        link: LinkedArtifact,
+        new_link_type: LinkType
+    ): LinkedArtifactCollectionPresenter;
     autoComplete(host: LinkField, query: string): void;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
@@ -97,6 +103,7 @@ const buildPresenter = (
 export const LinkFieldController = (
     links_retriever: RetrieveAllLinkedArtifacts,
     links_store: RetrieveLinkedArtifactsSync,
+    link_type_changer: ChangeLinkType,
     deleted_link_adder: AddLinkMarkedForRemoval,
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
@@ -166,6 +173,15 @@ export const LinkFieldController = (
 
     unmarkForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
         deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
+        return buildPresenter(links_store, deleted_link_verifier);
+    },
+
+    canChangeType(link): boolean {
+        return !LinkType.isMirroredMilestone(link.link_type);
+    },
+
+    changeLinkType(link, type): LinkedArtifactCollectionPresenter {
+        link_type_changer.changeLinkType(link, type);
         return buildPresenter(links_store, deleted_link_verifier);
     },
 

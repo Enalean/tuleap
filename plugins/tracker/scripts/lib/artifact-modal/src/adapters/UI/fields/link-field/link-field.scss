@@ -139,19 +139,15 @@ $link-table-cell-background: transparent;
     width: 100%;
 }
 
-.link-field-new-artifact-link {
-    display: flex;
-    position: absolute;
-    inset: 0;
-    padding: ($link-table-cell-padding + 4px) $link-table-cell-padding;
-    color: var(--tlp-dark-color);
+.link-field-artifact-readonly-type {
+    line-height: var(--tlp-form-element-small-height);
 }
 
 .link-field-artifact-link {
     display: flex;
     position: absolute;
     inset: 0;
-    padding: $link-table-cell-padding;
+    padding: ($link-table-cell-padding + 4px) $link-table-cell-padding;
     color: var(--tlp-dark-color);
 }
 
