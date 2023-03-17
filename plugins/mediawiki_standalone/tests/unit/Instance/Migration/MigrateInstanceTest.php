@@ -48,6 +48,7 @@ final class MigrateInstanceTest extends TestCase
 
     private Client $mediawiki_client;
     private ProjectByIDFactoryStub $project_factory;
+    private \Project $project;
 
     protected function setUp(): void
     {
@@ -55,13 +56,16 @@ final class MigrateInstanceTest extends TestCase
         $this->mediawiki_client = new Client();
         $this->mediawiki_client->setDefaultResponse(HTTPFactoryBuilder::responseFactory()->createResponse(400, 'Should be overridden in tests'));
 
+        $this->project         = ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
         $this->project_factory = ProjectByIDFactoryStub::buildWith(
-            ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build(),
+            $this->project,
         );
     }
 
     public function testSuccess(): void
     {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -126,6 +130,8 @@ final class MigrateInstanceTest extends TestCase
 
     public function testInstanceAlreadyExistsRunsMaintenanceSoUnsuccessfulMigrationHaveAChanceToComplete(): void
     {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -176,6 +182,8 @@ final class MigrateInstanceTest extends TestCase
 
     public function testInstanceIsInErrorAbortProcess(): void
     {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -214,6 +222,8 @@ final class MigrateInstanceTest extends TestCase
 
     public function testFailureToRegisterInstanceAbortProcess(): void
     {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -262,6 +272,8 @@ final class MigrateInstanceTest extends TestCase
 
     public function testFailureOfMaintenanceCommandAbortTheProcess(): void
     {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -305,6 +317,37 @@ final class MigrateInstanceTest extends TestCase
                 self::assertTrue(Result::isErr($result));
                 self::assertTrue($initializations_state->isError());
                 self::assertStringContainsString('Exit code', (string) $result->error);
+            }
+        );
+    }
+
+    public function testNoUsageOfMWServiceAbortTheProcess(): void
+    {
+        $this->project->addUsedServices('git');
+
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+
+        $migrate_instance_option = MigrateInstance::fromEvent(
+            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            $this->project_factory,
+            new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
+            $initializations_state,
+            SwitchMediawikiServiceStub::buildSelf(),
+        );
+
+        self::assertTrue($migrate_instance_option->isValue());
+        $migrate_instance_option->apply(
+            function (MigrateInstance $migrate_instance) use ($initializations_state): void {
+                $result = $migrate_instance->process(
+                    $this->mediawiki_client,
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
+                    new NullLogger(),
+                );
+                self::assertTrue(Result::isErr($result));
+                self::assertFalse($initializations_state->isStarted());
+                self::assertStringContainsString('Project does not use MediaWiki service', (string) $result->error);
             }
         );
     }

@@ -94,6 +94,11 @@ final class MigrateInstance
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
+        $service = $this->project->getService(\MediaWikiPlugin::SERVICE_SHORTNAME);
+        if (! $service) {
+            return Result::err(Fault::fromMessage("Project does not use MediaWiki service"));
+        }
+
         $this->initializations_state->startInitialization((int) $this->project->getID());
 
         $logger->info("Switching to MediaWiki Standalone service");
