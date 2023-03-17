@@ -63,13 +63,7 @@ final class api_explorerPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(\Tuleap\REST\ExplorerEndpointAvailableEvent::NAME);
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $route_collector = $event->getRouteCollector();
@@ -112,6 +106,7 @@ final class api_explorerPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function explorerEndpointAvailableEvent(ExplorerEndpointAvailableEvent $event): void
     {
         $event->enableExplorer(self::API_EXPLORER_ENDPOINT);

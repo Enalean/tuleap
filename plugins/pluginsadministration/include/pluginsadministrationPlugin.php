@@ -20,7 +20,6 @@
 
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Config\ConfigClassProvider;
-use Tuleap\Config\GetConfigKeys;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
@@ -30,21 +29,17 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
+class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Config\PluginWithConfigKeys
 {
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook(GetConfigKeys::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(CLICommandsCollector::NAME);
         $this->listenToCollectRouteEventWithDefaultController();
         bindtextdomain('tuleap-pluginsadministration', __DIR__ . '/../site-content');
     }
 
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $event->setIsInBurningParrotCompatiblePage();
@@ -65,20 +60,23 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         $event->addConfigClass(\Tuleap\PluginsAdministration\PluginDisablerVerifier::class);
     }
 
-    public function burning_parrot_get_stylesheets($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
+    public function burningParrotGetStylesheets($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('pluginsadministration-style.css');
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array $params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = $this->getAssets()->getFileURL('pluginsadministration.js');
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $collector): void
     {
         $collector->addCommand(

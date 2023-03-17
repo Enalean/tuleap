@@ -42,16 +42,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class userlogPlugin extends Plugin implements DispatchableWithRequest, DispatchableWithBurningParrot //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function __construct($id)
-    {
-        parent::__construct($id);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(HitEvent::NAME);
-
-        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-        $this->addHook(ProjectProviderEvent::NAME);
-    }
-
     public function &getPluginInfo()
     {
         if (! $this->pluginInfo instanceof \UserLogPluginInfo) {
@@ -61,6 +51,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
@@ -71,7 +62,8 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         );
     }
 
-    public function hitEvent(HitEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function hitEvent(HitEvent $event): void
     {
         if ($event->isScript() === true) {
             return;
@@ -103,6 +95,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         });
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectProviderEvent(ProjectProviderEvent $event): void
     {
         $userlog_access_storage = UserlogAccessStorage::instance();
@@ -137,7 +130,8 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
         return $this;
     }
 
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addRoute(['GET', 'POST'], '/plugins/userlog[/]', $this->getRouteHandler('routeSlash'));
     }
