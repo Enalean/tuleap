@@ -87,15 +87,19 @@ function OverviewController(
                     self.author = user;
                 });
 
-                TooltipService.setupTooltips($element[0]);
+                loadTooltipsInPullRequestInfoArea();
             })
             .catch(function () {
                 $state.go("dashboard");
             });
     }
 
+    function loadTooltipsInPullRequestInfoArea() {
+        TooltipService.setupTooltips($element.find("#pull-request-overview"));
+    }
+
     function showEditionForm() {
-        EditModalService.showEditModal(self.pull_request);
+        EditModalService.showEditModal(self.pull_request, loadTooltipsInPullRequestInfoArea);
     }
 
     function buildStatusIs(status) {

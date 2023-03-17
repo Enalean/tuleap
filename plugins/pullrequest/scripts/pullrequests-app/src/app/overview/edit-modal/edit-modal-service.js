@@ -12,7 +12,7 @@ function EditModalService(TlpModalService) {
         showEditModal,
     });
 
-    function showEditModal(pullrequest) {
+    function showEditModal(pullrequest, on_success_callback) {
         TlpModalService.open({
             templateUrl: "edit-modal.tpl.html",
             controller,
@@ -21,7 +21,7 @@ function EditModalService(TlpModalService) {
                 keyboard: true,
                 backdrop: "static",
             },
-            resolve: { pullrequest },
+            resolve: { pullrequest, on_success_callback },
         });
     }
 }
