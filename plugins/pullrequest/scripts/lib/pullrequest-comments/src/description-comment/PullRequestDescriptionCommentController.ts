@@ -34,8 +34,13 @@ export interface ControlPullRequestDescriptionComment {
         host: PullRequestDescriptionComment,
         new_description: string
     ) => void;
+    updateWritingZoneState: (
+        host: PullRequestDescriptionComment,
+        is_writing_zone_focused: boolean
+    ) => void;
     saveDescriptionComment: (host: PullRequestDescriptionComment) => void;
     getRelativeDateHelper: () => HelpRelativeDatesDisplay;
+    getFocusHelper: () => FocusTextArea;
 }
 
 export const PullRequestDescriptionCommentController = (
@@ -61,6 +66,16 @@ export const PullRequestDescriptionCommentController = (
                 new_description
             );
     },
+    updateWritingZoneState: (
+        host: PullRequestDescriptionComment,
+        is_writing_zone_focused: boolean
+    ): void => {
+        host.edition_form_presenter =
+            PullRequestDescriptionCommentFormPresenter.updateWritingZoneState(
+                getExistingEditionFormPresenter(host),
+                is_writing_zone_focused
+            );
+    },
     saveDescriptionComment: (host: PullRequestDescriptionComment): void => {
         host.edition_form_presenter = PullRequestDescriptionCommentFormPresenter.buildSubmitted(
             getExistingEditionFormPresenter(host)
@@ -83,6 +98,7 @@ export const PullRequestDescriptionCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale
         ),
+    getFocusHelper: () => focus_helper,
 });
 
 function hideEditionForm(host: PullRequestDescriptionComment): void {

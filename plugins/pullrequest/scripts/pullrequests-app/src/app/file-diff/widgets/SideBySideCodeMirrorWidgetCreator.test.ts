@@ -203,12 +203,8 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 post_rendering_callback,
             });
 
-            expect(new_comment_form.comment_saver).toBeDefined();
             expect(new_comment_form.post_rendering_callback).toBeDefined();
-            expect(new_comment_form.on_cancel_callback).toBeDefined();
-            expect(new_comment_form.post_submit_callback).toBeDefined();
-            expect(new_comment_form.config).toBeDefined();
-            expect(new_comment_form.author_presenter).toBeDefined();
+            expect(new_comment_form.controller).toBeDefined();
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(15, new_comment_form, {
                 coverGutter: true,
@@ -237,7 +233,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 unidiff_offset: 15,
             };
 
-            new_comment_form.post_submit_callback(new_comment_payload);
+            new_comment_form.controller.triggerPostSubmitCallback(new_comment_payload);
 
             expect(line_widget.clear).toHaveBeenCalledTimes(1);
             expect(comments_store.getAllRootComments()).toStrictEqual([

@@ -44,6 +44,10 @@ describe("ReplyCommentFormPresenter", () => {
             comment_content: "",
             is_being_submitted: false,
             is_submittable: false,
+            writing_zone_state: {
+                initial_content: "",
+                is_focused: false,
+            },
         });
     });
 
@@ -80,6 +84,16 @@ describe("ReplyCommentFormPresenter", () => {
             const submitted_presenter = ReplyCommentFormPresenter.buildSubmitted(presenter);
 
             expect(submitted_presenter.is_being_submitted).toBe(true);
+        });
+
+        it("should update the writing zone focus state", () => {
+            const is_focused = true;
+            const updated_presenter = ReplyCommentFormPresenter.updateWritingZoneState(
+                presenter,
+                is_focused
+            );
+
+            expect(updated_presenter.writing_zone_state.is_focused).toBe(is_focused);
         });
     });
 });

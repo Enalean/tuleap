@@ -34,8 +34,13 @@ export interface ControlPullRequestComment {
     hideReplyForm: (host: PullRequestCommentComponentType) => void;
     displayReplies: (host: PullRequestCommentComponentType) => void;
     updateCurrentReply: (host: PullRequestCommentComponentType, reply_content: string) => void;
+    updateWritingZoneState: (
+        host: PullRequestCommentComponentType,
+        is_textarea_focused: boolean
+    ) => void;
     saveReply: (host: PullRequestCommentComponentType) => void;
     getRelativeDateHelper: () => HelpRelativeDatesDisplay;
+    getFocusHelper: () => FocusTextArea;
 }
 
 export const PullRequestCommentController = (
@@ -62,6 +67,15 @@ export const PullRequestCommentController = (
         host.reply_comment_presenter = ReplyCommentFormPresenter.updateContent(
             comment_reply,
             reply_content
+        );
+    },
+    updateWritingZoneState: (
+        host: PullRequestCommentComponentType,
+        is_textarea_focused: boolean
+    ): void => {
+        host.reply_comment_presenter = ReplyCommentFormPresenter.updateWritingZoneState(
+            getExistingCommentReplyPresenter(host),
+            is_textarea_focused
         );
     },
     saveReply: (host: PullRequestCommentComponentType): void => {
@@ -101,6 +115,7 @@ export const PullRequestCommentController = (
             current_user.preferred_relative_date_display,
             current_user.user_locale
         ),
+    getFocusHelper: (): FocusTextArea => focus_helper,
 });
 
 function getExistingCommentReplyPresenter(

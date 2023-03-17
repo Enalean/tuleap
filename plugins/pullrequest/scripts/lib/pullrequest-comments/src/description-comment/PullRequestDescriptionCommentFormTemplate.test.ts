@@ -43,19 +43,6 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
         } as HostElement;
     });
 
-    it("should put the current description in the textarea", () => {
-        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
-        render(host, target);
-
-        expect(
-            selectOrThrow(
-                target,
-                "[data-test=pull-request-description-comment-form-textarea]",
-                HTMLTextAreaElement
-            ).value
-        ).toBe("This is a description");
-    });
-
     it("When the user clicks [Cancel], Then the controller should be asked to hide the reply form", () => {
         const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
         render(host, target);
@@ -64,5 +51,41 @@ describe("PullRequestDescriptionCommentFormTemplate", () => {
 
         expect(host.controller.hideEditionForm).toHaveBeenCalledOnce();
         expect(host.controller.hideEditionForm).toHaveBeenCalledWith(host);
+    });
+
+    it("When the user clicks [Save], Then the controller should be asked to save the description", () => {
+        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        selectOrThrow(target, "[data-test=button-save-edition]").click();
+
+        expect(host.controller.saveDescriptionComment).toHaveBeenCalledOnce();
+        expect(host.controller.saveDescriptionComment).toHaveBeenCalledWith(host);
+    });
+
+    it("When some content has been updated in the writing zone, then the controller should update the template", () => {
+        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        selectOrThrow(
+            target,
+            "[data-test=writing-zone-textarea]",
+            HTMLTextAreaElement
+        ).dispatchEvent(new Event("input"));
+
+        expect(host.controller.updateCurrentlyEditedDescription).toHaveBeenCalledOnce();
+    });
+
+    it("When the writing zone focus has changed, then the controller should update the template", () => {
+        const render = getDescriptionCommentFormTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        selectOrThrow(
+            target,
+            "[data-test=writing-zone-textarea]",
+            HTMLTextAreaElement
+        ).dispatchEvent(new Event("focus"));
+
+        expect(host.controller.updateWritingZoneState).toHaveBeenCalledOnce();
     });
 });

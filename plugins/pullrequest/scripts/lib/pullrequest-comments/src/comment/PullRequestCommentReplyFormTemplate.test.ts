@@ -41,6 +41,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
             currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
+            controller: PullRequestCommentControllerStub(),
         } as unknown as HostElement;
         const render = getReplyFormTemplate(host, GettextProviderStub);
         render(host, target);
@@ -70,7 +71,6 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         } as unknown as HostElement;
 
         const render = getReplyFormTemplate(host, GettextProviderStub);
-
         render(host, target);
 
         selectOrThrow(target, "[data-test=button-cancel-reply]").click();
@@ -89,7 +89,6 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         } as unknown as HostElement;
 
         const render = getReplyFormTemplate(host, GettextProviderStub);
-
         render(host, target);
 
         const reply_button = selectOrThrow(target, "[data-test=button-save-reply]");
@@ -112,7 +111,6 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         } as unknown as HostElement;
 
         const render = getReplyFormTemplate(host, GettextProviderStub);
-
         render(host, target);
 
         expect(
@@ -130,14 +128,17 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         } as unknown as HostElement;
 
         const render = getReplyFormTemplate(host, GettextProviderStub);
-
         render(host, target);
 
-        const textarea = selectOrThrow(target, "[data-test=reply-text-area]", HTMLTextAreaElement);
+        const textarea = selectOrThrow(
+            target,
+            "[data-test=writing-zone-textarea]",
+            HTMLTextAreaElement
+        );
         textarea.value = "Some comment";
         textarea.dispatchEvent(new Event("input"));
 
-        expect(controller.updateCurrentReply).toHaveBeenCalledTimes(1);
+        expect(controller.updateCurrentReply).toHaveBeenCalledOnce();
     });
 
     it("Should save the new comment presenter when user clicks on [Reply]", () => {
@@ -150,11 +151,52 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         } as unknown as HostElement;
 
         const render = getReplyFormTemplate(host, GettextProviderStub);
-
         render(host, target);
 
         selectOrThrow(target, "[data-test=button-save-reply]").click();
 
-        expect(controller.saveReply).toHaveBeenCalledTimes(1);
+        expect(controller.saveReply).toHaveBeenCalledOnce();
+    });
+
+    it("When some content has been updated in the writing zone, then the controller should update the template", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Some content"),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        selectOrThrow(
+            target,
+            "[data-test=writing-zone-textarea]",
+            HTMLTextAreaElement
+        ).dispatchEvent(new Event("input"));
+
+        expect(controller.updateCurrentReply).toHaveBeenCalledOnce();
+    });
+
+    it("When the writing zone focus has changed, then the controller should update the template", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Some content"),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        selectOrThrow(
+            target,
+            "[data-test=writing-zone-textarea]",
+            HTMLTextAreaElement
+        ).dispatchEvent(new Event("focus"));
+
+        expect(controller.updateWritingZoneState).toHaveBeenCalledOnce();
     });
 });

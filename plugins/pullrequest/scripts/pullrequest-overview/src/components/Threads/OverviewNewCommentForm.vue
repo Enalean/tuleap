@@ -20,11 +20,7 @@
 <template>
     <tuleap-pullrequest-new-comment-form
         data-test="pull-request-new-global-comment-component"
-        v-bind:comment_saver="comment_saver"
-        v-bind:post_submit_callback="post_submit_callback"
-        v-bind:error_callback="displayTuleapAPIFault"
-        v-bind:config="{ is_cancel_allowed: false, is_autofocus_enabled: false }"
-        v-bind:author_presenter="{ avatar_url }"
+        v-bind:controller="controller"
     />
 </template>
 
@@ -44,6 +40,8 @@ import {
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
+import { NewCommentFormController } from "@tuleap/plugin-pullrequest-comments";
+import { PullRequestCommentTextareaFocusHelper } from "@tuleap/plugin-pullrequest-comments";
 
 const { $gettext } = useGettext();
 
@@ -54,12 +52,6 @@ const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const displayNewlyCreatedGlobalComment = strictInject(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
-const comment_saver = NewCommentSaver({
-    user_id,
-    type: TYPE_GLOBAL_COMMENT,
-    pull_request_id: Number.parseInt(pull_request_id, 10),
-});
-
 const post_submit_callback = (new_comment: PullRequestComment): void => {
     if (new_comment.type !== TYPE_GLOBAL_COMMENT) {
         return;
@@ -69,4 +61,17 @@ const post_submit_callback = (new_comment: PullRequestComment): void => {
         CommentPresenterBuilder.fromPayload(new_comment, base_url, pull_request_id, $gettext)
     );
 };
+
+const controller = NewCommentFormController(
+    NewCommentSaver({
+        user_id,
+        type: TYPE_GLOBAL_COMMENT,
+        pull_request_id: Number.parseInt(pull_request_id, 10),
+    }),
+    PullRequestCommentTextareaFocusHelper(),
+    { avatar_url },
+    { is_cancel_allowed: false, is_autofocus_enabled: false },
+    post_submit_callback,
+    displayTuleapAPIFault
+);
 </script>

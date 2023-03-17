@@ -29,7 +29,7 @@ import type {
     PullRequestInlineCommentPresenter,
     PullRequestGlobalCommentPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
-import type { PullRequestCommentFile } from "@tuleap/plugin-pullrequest-comments/src/comment/PullRequestCommentPresenter";
+import type { PullRequestCommentFile } from "@tuleap/plugin-pullrequest-comments";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
