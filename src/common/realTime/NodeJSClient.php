@@ -19,7 +19,6 @@
 
 namespace Tuleap\RealTime;
 
-use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -28,6 +27,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class NodeJSClient implements Client
 {
+    private const SERVER_URL = 'http://localhost:2999';
+
     /**
      * @var ClientInterface
      */
@@ -44,10 +45,6 @@ class NodeJSClient implements Client
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var string|null
-     */
-    private $url;
 
     public function __construct(
         ClientInterface $http_client,
@@ -58,11 +55,7 @@ class NodeJSClient implements Client
         $this->http_client     = $http_client;
         $this->request_factory = $request_factory;
         $this->stream_factory  = $stream_factory;
-        $nodejs_server_address = $this->getNodeJsServerAddress();
         $this->logger          = $logger;
-        if ($nodejs_server_address !== '') {
-            $this->url = 'https://' . $nodejs_server_address;
-        }
     }
 
     /**
@@ -73,11 +66,7 @@ class NodeJSClient implements Client
      */
     public function sendMessage(MessageDataPresenter $message): void
     {
-        if ($this->url === null) {
-            return;
-        }
-
-        $request = $this->request_factory->createRequest('POST', $this->url . '/message')
+        $request = $this->request_factory->createRequest('POST', self::SERVER_URL . '/message')
             ->withHeader('Content-Type', 'application/json')
             ->withBody($this->stream_factory->createStream(json_encode($message)));
 
@@ -85,7 +74,7 @@ class NodeJSClient implements Client
             $response = $this->http_client->sendRequest($request);
         } catch (ClientExceptionInterface $e) {
             $this->logger->error(
-                sprintf('Not able to send a message to the realtime NodeJS server (%s): %s', $this->url, $e->getMessage())
+                sprintf('Not able to send a message to the realtime NodeJS server: %s', $e->getMessage())
             );
             return;
         }
@@ -94,18 +83,11 @@ class NodeJSClient implements Client
         if ($status_code !== 200) {
             $this->logger->error(
                 sprintf(
-                    'Realtime NodeJS server (%s) has not processed a message: %d %s',
-                    $this->url,
+                    'Realtime NodeJS server has not processed a message: %d %s',
                     $status_code,
                     $response->getReasonPhrase()
                 )
             );
         }
-    }
-
-    private function getNodeJsServerAddress(): string
-    {
-        return ForgeConfig::get('nodejs_server_int') !== '' ?
-            ForgeConfig::get('nodejs_server_int') : ForgeConfig::get('nodejs_server');
     }
 }

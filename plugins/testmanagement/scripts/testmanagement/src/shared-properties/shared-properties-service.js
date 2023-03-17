@@ -5,7 +5,6 @@ function SharedPropertiesService() {
         campaign_id: undefined,
         project_id: undefined,
         user: undefined,
-        nodejs_server: undefined,
         nodejs_server_version: undefined,
         uuid: undefined,
         milestone: undefined,
@@ -40,8 +39,6 @@ function SharedPropertiesService() {
         setUserLocale,
         getUserTimezone,
         setUserTimezone,
-        getNodeServerAddress,
-        setNodeServerAddress,
         getUUID,
         setUUID,
         setNodeServerVersion,
@@ -136,14 +133,6 @@ function SharedPropertiesService() {
 
     function setCurrentUser(user) {
         property.user = user;
-    }
-
-    function getNodeServerAddress() {
-        return property.nodejs_server;
-    }
-
-    function setNodeServerAddress(nodejs_server) {
-        property.nodejs_server = nodejs_server;
     }
 
     function setUUID(uuid) {

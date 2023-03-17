@@ -183,22 +183,6 @@ reason = "No outbound HTTP request in our situation. To be investigated/reported
 ignoreUntil = 2023-05-08
 
 # src/additional-packages/tuleap-realtime/pnpm-lock.yaml
-## convict
-[[IgnoredVulns]]
-id = "GHSA-jjf5-wx3j-3fv7" # CVE-2022-21190
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-x2w5-725j-gf2g" # CVE-2022-22143
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-4jrm-c32x-w4jf" # CVE-2023-0163
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 ## debug
 [[IgnoredVulns]]
 id = "GHSA-9vvw-cc9w-f27h" # CVE-2017-20165
@@ -233,12 +217,6 @@ id = "GHSA-8hfj-j24r-96c4" # CVE-2022-24785
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
-## nconf
-[[IgnoredVulns]]
-id = "GHSA-6xwr-q98w-rvg7" # CVE-2022-21803
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 ## qs
 [[IgnoredVulns]]
 id = "GHSA-gqgv-6jq5-jjj9" # CVE-2017-1000048
@@ -255,10 +233,4 @@ ignoreUntil = 2023-05-08
 [[IgnoredVulns]]
 id = "GHSA-7p7h-4mm5-852v" # CVE-2021-33623
 reason = "To be investigated. False positive?"
-ignoreUntil = 2023-05-08
-
-## validator
-[[IgnoredVulns]]
-id = "GHSA-qgmg-gppg-76g5" # CVE-2021-3765
-reason = "ReDos. To be investigated."
 ignoreUntil = 2023-05-08

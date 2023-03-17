@@ -38,7 +38,6 @@ export default function controller(
         openEditCampaignLabelModal,
         openEditCampaignAutomatedModal,
         showPresencesModal,
-        isRealtimeEnabled,
         positiveScore,
         isAutomatedTestButtonShown,
         launchAutomatedTests,
@@ -137,10 +136,6 @@ export default function controller(
                 },
             },
         });
-    }
-
-    function isRealtimeEnabled() {
-        return SharedPropertiesService.getNodeServerAddress();
     }
 
     function positiveScore(score) {

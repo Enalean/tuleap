@@ -1237,7 +1237,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
         $node_js_client                    = new NodeJSClient(
-            HttpClientFactory::createClient(),
+            HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()

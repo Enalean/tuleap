@@ -20,17 +20,20 @@
 namespace Tuleap\JWT\REST\v1;
 
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\UnsafeSha512;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\Header;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\Generators\JWTGenerator;
 use UserManager;
-use ForgeConfig;
 
 class JWTResource
 {
+    private const PRIVATE_KEY_FILE   = '/var/lib/tuleap/tuleap-realtime-key';
+    private const PRIVATE_KEY_SUFFIX = 'PRIVATE_KEY=';
+
     /**
      * To have a json web token
      *
@@ -42,8 +45,8 @@ class JWTResource
     {
         $jwt_generator = new JWTGenerator(
             Configuration::forSymmetricSigner(
-                new UnsafeSha512(),
-                Key\InMemory::plainText(ForgeConfig::get('nodejs_server_jwt_private_key'))
+                new Sha512(),
+                Key\InMemory::plainText($this->getPrivateKey()->getString())
             ),
             UserManager::instance(),
             new UGroupLiteralizer()
@@ -55,6 +58,17 @@ class JWTResource
         );
         $this->sendAllowHeader();
         return $token;
+    }
+
+    private function getPrivateKey(): ConcealedString
+    {
+        $private_key_file_content = \Psl\File\read(self::PRIVATE_KEY_FILE);
+        $private_key              = \Psl\Str\after($private_key_file_content, self::PRIVATE_KEY_SUFFIX);
+        sodium_memzero($private_key_file_content);
+        if ($private_key === null) {
+            throw new \RuntimeException(self::PRIVATE_KEY_FILE . ' content does not have the expected format');
+        }
+        return new ConcealedString($private_key);
     }
 
     /**

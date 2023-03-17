@@ -9,7 +9,6 @@ in pkgs.stdenvNoCC.mkDerivation {
   srcs = [
     ./tuleap-realtime/dist/tuleap-realtime
     ./tuleap-realtime/packaging/tuleap-realtime.systemd-service
-    ./tuleap-realtime/src/config/config.json
   ];
 
   nativeBuildInputs = [ pkgs.rpm pkgs.jq ];

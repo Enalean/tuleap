@@ -78,20 +78,16 @@ function SocketService(
     }
 
     function listenNodeJSServer() {
-        if (SharedPropertiesService.getNodeServerAddress()) {
-            listenToDisconnect();
-            listenToError();
-            listenPresences();
-            listenToUsersScore();
-            self.listenToArtifactLinked();
-            return JWTService.getJWT().then((data) => {
-                locker.put("token", data.token);
-                locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
-                return subscribe();
-            });
-        } else {
-            return $q.reject("No server Node.js.");
-        }
+        listenToDisconnect();
+        listenToError();
+        listenPresences();
+        listenToUsersScore();
+        self.listenToArtifactLinked();
+        return JWTService.getJWT().then((data) => {
+            locker.put("token", data.token);
+            locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
+            return subscribe();
+        });
     }
 
     function subscribe() {

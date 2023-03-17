@@ -14,7 +14,6 @@ Summary:    Tuleap realtime server
 Group:      Development/Tools
 License:    GPLv3
 Source0:    %{name}
-Source1:    config.json
 Source2:    %{name}.systemd-service
 
 BuildArch:      x86_64
@@ -34,9 +33,7 @@ Tuleap realtime server
 rm -rf               %{buildroot}
 mkdir -p             %{buildroot}%{target_path}
 cp -pr               %{SOURCE0} %{buildroot}%{target_path}/%{name}
-mkdir -p             %{buildroot}%{_sysconfdir}/%{name}
 install -p -D -m 644 %{SOURCE2} %{buildroot}%{_unitdir}/%{name}.service
-jq                   '.process_uid="tuleaprt" | .process_gid="tuleaprt"' %{SOURCE1} > %{buildroot}%{_sysconfdir}/%{name}/config.json
 
 %pre
 getent group tuleaprt >/dev/null || groupadd -r tuleaprt
@@ -46,6 +43,9 @@ getent passwd tuleaprt >/dev/null || \
 exit 0
 
 %post
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl enable %{name}.service &>/dev/null || :
+fi
 
 %preun
 if [ $1 = 0 ]; then
@@ -63,8 +63,6 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%attr(0750, tuleaprt, tuleaprt) %dir %{_sysconfdir}/%{name}
-%attr(0640, tuleaprt, tuleaprt) %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %attr(00644,root,root) %{_unitdir}/%{name}.service
 
 %{target_path}/%{name}

@@ -57,5 +57,6 @@ $application->add(new \TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginxCommand
 $application->add(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\ForgeUpgrade\SiteDeployForgeUpgradeCommand());
 $application->add(new TuleapCfg\Command\SiteDeploy\Mercure\SiteDeployMercureCommand());
+$application->add(new TuleapCfg\Command\SiteDeploy\Realtime\SiteDeployRealtimeCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Plugins\SiteDeployPluginsCommand(new ProcessFactory()));
 $application->run();

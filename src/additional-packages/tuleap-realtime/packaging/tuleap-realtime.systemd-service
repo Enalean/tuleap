@@ -1,12 +1,16 @@
 [Unit]
 Description=Tuleap Realtime
+After=tuleap.service
+PartOf=tuleap.service
 
 [Service]
 Type=simple
 Environment=NODE_ENV=production
-PIDFile=/var/run/tuleap-realtime.pid
-ExecStart=/usr/lib/tuleap-realtime/tuleap-realtime --config=/etc/tuleap-realtime/config.json
+PIDFile=/run/tuleap-realtime.pid
+ExecStart=/usr/lib/tuleap-realtime/tuleap-realtime
+EnvironmentFile=/var/lib/tuleap/tuleap-realtime-key
 Restart=on-failure
+User=tuleaprt
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=tuleap.service

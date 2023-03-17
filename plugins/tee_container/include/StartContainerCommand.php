@@ -39,7 +39,6 @@ use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\LogToSyslog;
 use TuleapCfg\Command\Docker\Postfix;
-use TuleapCfg\Command\Docker\Realtime;
 use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
@@ -103,8 +102,6 @@ final class StartContainerCommand extends Command
             );
 
             $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-            $realtime       = new Realtime($console_logger);
-            $realtime->setup($tuleap_fqdn);
 
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output, $tuleap_fqdn);

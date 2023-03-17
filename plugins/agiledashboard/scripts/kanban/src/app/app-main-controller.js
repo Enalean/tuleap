@@ -59,8 +59,6 @@ function MainCtrl(
         const uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
         SharedPropertiesService.setNodeServerVersion("2.0.0");
-        const nodejs_server = kanban_init_data.nodejsServer;
-        SharedPropertiesService.setNodeServerAddress(nodejs_server);
 
         setAccessibilityMode(kanban_init_data.userAccessibilityMode === "1");
     }

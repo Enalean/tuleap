@@ -76,12 +76,6 @@ else
 
     cp -f /etc/pki/tls/certs/localhost.cert.pem /etc/pki/ca-trust/source/anchors/tuleap-web-cert.pem
 
-    while [ ! -f /realtime-cert/tuleap-realtime-cert.pem ]; do
-        echo "Waiting for Tuleap Realtime certificate…"
-        sleep 1
-    done
-    cp -f /realtime-cert/tuleap-realtime-cert.pem /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem
-
     while [ ! -f /front-cert/certs/front-reverse-proxy.cert.pem ]; do
         echo "Waiting for front reverse proxy certificate…"
         sleep 1
@@ -91,10 +85,6 @@ else
     echo "All certificates have been found. Adding to the CA bundle."
     update-ca-trust enable
     update-ca-trust extract
-
-    echo "\$nodejs_server_jwt_private_key = '$REALTIME_KEY';" >> /etc/tuleap/conf/local.inc
-    echo "\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';" >> /etc/tuleap/conf/local.inc
-    echo "\$nodejs_server_int = 'realtime';" >> /etc/tuleap/conf/local.inc
 
     if [ -f /usr/share/tuleap/.metrics_secret.key ]; then
         mkdir -p /etc/tuleap/plugins/prometheus_metrics/etc/

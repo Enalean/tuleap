@@ -318,7 +318,6 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@echo "LDAP_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
-	@echo "REALTIME_KEY=`head -c 64 /dev/urandom | base64 --wrap=88`" >> .env
 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web cat /data/root/.tuleap_passwd

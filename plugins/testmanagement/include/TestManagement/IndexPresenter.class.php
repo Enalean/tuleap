@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use CSRFSynchronizerToken;
-use ForgeConfig as TuleapConfig;
 use PFUser;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -60,9 +59,6 @@ class IndexPresenter
 
     /** @var string */
     public $lang;
-
-    /** @var string */
-    public $nodejs_server;
 
     /** @var  string */
     public $tracker_ids;
@@ -186,7 +182,6 @@ class IndexPresenter
         $this->test_execution_tracker_id  = intval($test_execution_tracker_id);
         $this->campaign_tracker_id        = intval($campaign_tracker_id);
         $this->issue_tracker_id           = $issue_tracker_id ? intval($issue_tracker_id) : null;
-        $this->nodejs_server              = TuleapConfig::get('nodejs_server');
         $this->tracker_ids                = json_encode(
             [
                 'definition_tracker_id' => $this->test_definition_tracker_id,

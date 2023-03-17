@@ -33,19 +33,6 @@ $sys_cookie_prefix = "TULEAP";
 //
 //
 
-// The ip address of the node server.
-// For example : $node_server = '192.168.1.13';
-// Server node support only the protocol https
-// Be careful for the moment when you add a nodeJS server
-// Data sent are distributed for all clients who listening appropriate event
-$nodejs_server = '';
-
-// The private key sharing between tuleap server and nodejs server.
-// To protect data sending between servers.
-// We need to have the same private key on nodejs server in "config.json" file
-// You can generate a random key with the terminal command "head -c 32 /dev/urandom | base64" and put on tuleap and nodejs servers.
-$nodejs_server_jwt_private_key = '';
-
 // In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
 // Please update the following variables:
 // $codendi_dir = "mydir/tuleap"

@@ -36,6 +36,7 @@ final class Supervisord
     public const UNIT_SSHD            = 'sshd';
     public const UNIT_BACKEND_WORKERS = 'backend_workers';
     public const UNIT_MEDIAWIKI_FPM   = 'mediawiki_fpm';
+    private const UNIT_REALTIME       = 'realtime';
 
     private const BASE_DIR = __DIR__ . '/../../../../tools/docker/tuleap-aio-c7/supervisor.d';
 
@@ -49,6 +50,7 @@ final class Supervisord
         self::UNIT_SSHD,
         self::UNIT_BACKEND_WORKERS,
         self::UNIT_MEDIAWIKI_FPM,
+        self::UNIT_REALTIME,
     ];
 
     /**

@@ -202,7 +202,7 @@ class ExecutionsResource
         );
 
         $node_js_client          = new NodeJSClient(
-            HttpClientFactory::createClient(),
+            HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger(),
