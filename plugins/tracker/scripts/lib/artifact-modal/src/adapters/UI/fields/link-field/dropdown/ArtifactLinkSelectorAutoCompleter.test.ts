@@ -26,10 +26,6 @@ import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArt
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
-import type { RetrievePossibleParents } from "../../../../../domain/fields/link-field/RetrievePossibleParents";
-import { RetrievePossibleParentsStub } from "../../../../../../tests/stubs/RetrievePossibleParentsStub";
-import { CurrentTrackerIdentifierStub } from "../../../../../../tests/stubs/CurrentTrackerIdentifierStub";
-import type { CurrentTrackerIdentifier } from "../../../../../domain/CurrentTrackerIdentifier";
 import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { LinkField } from "../LinkField";
@@ -41,10 +37,10 @@ import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../../tests/stubs/SearchArtifactsStub";
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
+import type { LinkFieldControllerType } from "../LinkFieldController";
 
 const FIRST_ARTIFACT_ID = 1621;
 const SECOND_ARTIFACT_ID = 15;
-const TRACKER_ID = 978;
 const FIRST_PARENT_ID = 429;
 const FIRST_TITLE = "vancourier";
 const SECOND_PARENT_ID = 748;
@@ -66,13 +62,12 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         second_artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
         artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
-        parents_retriever: RetrievePossibleParents,
         current_artifact_identifier: CurrentArtifactIdentifier | null,
-        current_tracker_identifier: CurrentTrackerIdentifier,
         user_history_retriever: RetrieveUserHistory,
         event_dispatcher: DispatchEventsStub,
         host: LinkField,
-        artifacts_searcher: SearchArtifacts;
+        artifacts_searcher: SearchArtifacts,
+        get_parents_promise: Promise<LinkableArtifact[]>;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
@@ -92,32 +87,33 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         artifact_retriever = RetrieveMatchingArtifactStub.withFault(NotFoundFault());
         user_history_retriever = RetrieveUserHistoryStub.withoutUserHistory();
         artifacts_searcher = SearchArtifactsStub.withoutResults();
-        parents_retriever = RetrievePossibleParentsStub.withoutParents();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
         current_artifact_identifier = null;
-        current_tracker_identifier = CurrentTrackerIdentifierStub.withId(TRACKER_ID);
 
         const initial_dropdown_content: GroupCollection = [];
+
+        get_parents_promise = Promise.resolve([]);
         host = {
             current_link_type: LinkTypeStub.buildUntyped(),
             recently_viewed_section: initial_dropdown_content,
             matching_artifact_section: initial_dropdown_content,
             possible_parents_section: initial_dropdown_content,
             search_results_section: initial_dropdown_content,
+            controller: {
+                getPossibleParents: () => get_parents_promise,
+            } as unknown as LinkFieldControllerType,
         } as LinkField;
     });
 
     const autocomplete = (query: string): void => {
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
             artifact_retriever,
-            parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             user_history_retriever,
             artifacts_searcher,
             event_dispatcher,
             current_artifact_identifier,
-            current_tracker_identifier,
             UserIdentifierStub.fromUserId(USER_ID)
         );
         autocompleter.autoComplete(host, query);
@@ -293,14 +289,12 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     });
 
     describe(`given the selected type is reverse _is_child`, () => {
-        let parent_retriever_async: ResultAsync<readonly LinkableArtifact[], never>;
         beforeEach(() => {
             host.current_link_type = LinkTypeStub.buildChildLinkType();
-            parent_retriever_async = okAsync([
+            get_parents_promise = Promise.resolve([
                 LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID, title: FIRST_TITLE }),
                 LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID, title: SECOND_TITLE }),
             ]);
-            parents_retriever = RetrievePossibleParentsStub.withParents(parent_retriever_async);
         });
 
         it(`will retrieve the possible parents and set a group holding them`, async () => {
@@ -309,8 +303,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await parent_retriever_async;
-            await parent_retriever_async; //There are two level of promise
+            await get_parents_promise;
+            await get_parents_promise; //There are two levels of promise
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);
@@ -324,23 +318,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(parent_ids).toContain(SECOND_PARENT_ID);
         });
 
-        it(`when there is an error during retrieval of the possible parents,
-                it will notify that there has been a fault
-                and will set the dropdown content with an empty group of possible parents`, async () => {
-            parents_retriever = RetrievePossibleParentsStub.withFault(Fault.fromMessage("Ooops"));
-
-            autocomplete("irrelevant");
-
-            await parent_retriever_async;
-            await parent_retriever_async; //There are two level of promise
-
-            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
-            const groups = host.possible_parents_section;
-            expect(groups).toHaveLength(1);
-            expect(groups[0].is_loading).toBe(false);
-            expect(groups[0].items).toHaveLength(0);
-        });
-
         it.each([
             ["an empty string", "", 2],
             ["a string part of the Title of a possible parent", "uri", 2],
@@ -351,8 +328,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await parent_retriever_async;
-                await parent_retriever_async; //There are two level of promise
+                await get_parents_promise;
+                await get_parents_promise; //There are two levels of promise
 
                 const groups = host.possible_parents_section;
                 expect(groups).toHaveLength(1);
@@ -370,8 +347,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await parent_retriever_async;
-                await parent_retriever_async; //There are two level of promise
+                await get_parents_promise;
+                await get_parents_promise; //There are two levels of promise
 
                 const parent_groups = host.possible_parents_section;
                 expect(parent_groups).toHaveLength(1);
@@ -387,8 +364,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 and it will set two groups holding each`, async () => {
             autocomplete(String(FIRST_ARTIFACT_ID));
 
-            await parent_retriever_async;
-            await parent_retriever_async; //There are two level of promise
+            await get_parents_promise;
+            await get_parents_promise; //There are two levels of promise
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);

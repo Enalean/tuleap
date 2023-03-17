@@ -27,8 +27,6 @@ import { MatchingArtifactRetrievalFault } from "../../../../../domain/fields/lin
 import { LinkType } from "../../../../../domain/fields/link-field/LinkType";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
-import type { RetrievePossibleParents } from "../../../../../domain/fields/link-field/RetrievePossibleParents";
-import type { CurrentTrackerIdentifier } from "../../../../../domain/CurrentTrackerIdentifier";
 import { LinkableArtifactFilter } from "../../../../../domain/fields/link-field/LinkableArtifactFilter";
 import type { VerifyIsAlreadyLinked } from "../../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { LinkField } from "../LinkField";
@@ -61,13 +59,11 @@ const SEARCH_QUERY_MINIMUM_LENGTH = 3;
 
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
-    parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     user_history_retriever: RetrieveUserHistory,
     artifacts_searcher: SearchArtifacts,
     event_dispatcher: DispatchEvents,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
-    current_tracker_identifier: CurrentTrackerIdentifier,
     user: UserIdentifier
 ): ArtifactLinkSelectorAutoCompleterType => {
     const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
@@ -119,18 +115,12 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
         );
 
-    const getPossibleParentsGroup = (query: string): PromiseLike<GroupOfItems> => {
+    const getPossibleParentsGroup = (host: LinkField, query: string): PromiseLike<GroupOfItems> => {
         const filter = LinkableArtifactFilter(query);
-        return parents_retriever
-            .getPossibleParents(current_tracker_identifier)
-            .map((artifacts) => artifacts.filter(filter.matchesQuery))
-            .match(
-                (artifacts) => PossibleParentsGroup.fromPossibleParents(link_verifier, artifacts),
-                (fault) => {
-                    event_dispatcher.dispatch(WillNotifyFault(fault));
-                    return PossibleParentsGroup.buildEmpty();
-                }
-            );
+        return host.controller.getPossibleParents().then((artifacts) => {
+            const matching_parents = artifacts.filter(filter.matchesQuery);
+            return PossibleParentsGroup.fromPossibleParents(link_verifier, matching_parents);
+        });
     };
 
     return {
@@ -168,7 +158,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
             if (isParentSelected(host)) {
                 host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];
-                getPossibleParentsGroup(query).then((group) => {
+                getPossibleParentsGroup(host, query).then((group) => {
                     if (isParentSelected(host)) {
                         host.possible_parents_section = [group];
                     }
