@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
+namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsState;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;

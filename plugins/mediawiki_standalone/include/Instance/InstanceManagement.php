@@ -29,6 +29,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
+use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
+use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiService;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;

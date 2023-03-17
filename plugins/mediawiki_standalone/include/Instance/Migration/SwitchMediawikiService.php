@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
+namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 interface SwitchMediawikiService
 {

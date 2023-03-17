@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
+namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Http\Message\RequestMatcher\RequestMatcher;
@@ -32,6 +32,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandAlwaysFail;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandDoNothing;
+use Tuleap\MediawikiStandalone\Instance\MediaWikiCentralDatabaseParameterGeneratorStub;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Queue\WorkerEvent;
