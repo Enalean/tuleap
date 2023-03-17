@@ -53,6 +53,7 @@ import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -213,11 +214,11 @@ describe("LinkField", () => {
 
             beforeEach(() => {
                 host = {
-                    controller: {
+                    autocompleter: {
                         autoComplete(): void {
                             //Do nothing
                         },
-                    } as unknown as LinkFieldControllerType,
+                    } as ArtifactLinkSelectorAutoCompleterType,
                     current_link_type: LinkTypeStub.buildUntyped(),
                 } as LinkField;
             });
@@ -233,7 +234,7 @@ describe("LinkField", () => {
 
             it(`when the current type is changed,
                 it will call the autocompleter with an empty string`, () => {
-                const autoComplete = jest.spyOn(host.controller, "autoComplete");
+                const autoComplete = jest.spyOn(host.autocompleter, "autoComplete");
 
                 current_link_type_descriptor.observe(host);
 

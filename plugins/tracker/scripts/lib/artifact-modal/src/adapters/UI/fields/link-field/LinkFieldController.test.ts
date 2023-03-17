@@ -32,8 +32,6 @@ import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/Ver
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
-import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
@@ -63,10 +61,7 @@ import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentA
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
-import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
-import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -126,19 +121,6 @@ describe(`LinkFieldController`, () => {
             deleted_link_adder,
             deleted_link_remover,
             deleted_link_verifier,
-            ArtifactLinkSelectorAutoCompleter(
-                RetrieveMatchingArtifactStub.withMatchingArtifact(
-                    okAsync(LinkableArtifactStub.withDefaults())
-                ),
-                parents_retriever,
-                link_verifier,
-                RetrieveUserHistoryStub.withoutUserHistory(),
-                SearchArtifactsStub.withoutResults(),
-                event_dispatcher,
-                current_artifact_identifier,
-                current_tracker_identifier,
-                UserIdentifierStub.fromUserId(101)
-            ),
             new_link_adder,
             new_link_remover,
             new_links_retriever,
