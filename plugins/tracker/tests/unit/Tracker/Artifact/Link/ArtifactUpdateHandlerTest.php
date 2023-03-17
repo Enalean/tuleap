@@ -33,7 +33,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -64,7 +63,6 @@ final class ArtifactUpdateHandlerTest extends TestCase
         );
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
         $this->artifact_retriever   = RetrieveViewableArtifactStub::withNoArtifact();
-        $this->event                = $this->createMock(EventManager::class);
     }
 
     /**
@@ -81,7 +79,6 @@ final class ArtifactUpdateHandlerTest extends TestCase
             $this->changeset_creator,
             $this->form_element_factory,
             $this->artifact_retriever,
-            $this->event
         );
         return $artifact_unlinker->removeReverseLinks($artifact, $user, $removed_reverse_links);
     }
@@ -111,28 +108,9 @@ final class ArtifactUpdateHandlerTest extends TestCase
         $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
 
-        $validate_artifact_link = ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, []);
-        $this->event->method('dispatch')->willReturn($validate_artifact_link);
-
         $result = $this->unlinkReverseArtifact();
 
         self::assertSame(1, $this->changeset_creator->getCallsCount());
-        self::assertTrue(Result::isOk($result));
-        self::assertNull($result->value);
-    }
-
-    public function testItDoesNotUnlinkTheSourceArtifactWithTheCurrentArtifactIfTheLinkCannotBeEdited(): void
-    {
-        $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
-
-        $validate_artifact_link = ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, []);
-        $validate_artifact_link->setIsNotValid();
-        $this->event->method('dispatch')->willReturn($validate_artifact_link);
-
-        $result = $this->unlinkReverseArtifact();
-
-        self::assertSame(0, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);
     }
@@ -149,7 +127,6 @@ final class ArtifactUpdateHandlerTest extends TestCase
             $this->changeset_creator,
             $this->form_element_factory,
             $this->artifact_retriever,
-            $this->createMock(EventManager::class)
         );
         return $artifact_updater->updateTypeAndAddReverseLinks($artifact, $user, $added_links, $updated_type);
     }

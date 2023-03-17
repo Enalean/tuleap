@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Link;
 
 use PFUser;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Exception;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoChangeException;
@@ -44,7 +43,6 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
@@ -54,7 +52,6 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         private CreateNewChangeset $changeset_creator,
         private RetrieveUsedArtifactLinkFields $form_element_factory,
         private RetrieveViewableArtifact $artifact_retriever,
-        private EventDispatcherInterface $event,
     ) {
     }
 
@@ -113,13 +110,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                             $source_artifact_link_to_be_removed
                         );
 
-                        $container           = new ChangesetValuesContainer([], $new_changeset_value);
-                        $validate_link_event = $this->event->dispatch(
-                            ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, $container->getFieldsData()[$artifact_link_field->getId()])
-                        );
-                        if ($validate_link_event->isValid() === false) {
-                            return null;
-                        }
+                        $container = new ChangesetValuesContainer([], $new_changeset_value);
                         $this->updateArtifact($source_artifact, $submitter, $container, $comment);
                         return null;
                     },

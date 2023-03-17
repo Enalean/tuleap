@@ -243,7 +243,7 @@ class KanbanItemsResource extends AuthenticatedResource
             $this->tracker_factory,
             new FieldsDataFromValuesByFieldBuilder($this->form_element_factory, $artifact_link_initial_builder),
             $this->form_element_factory,
-            new ArtifactUpdateHandler($changeset_creator, $this->form_element_factory, $this->artifact_factory, $event_dispatcher),
+            new ArtifactUpdateHandler($changeset_creator, $this->form_element_factory, $this->artifact_factory),
             SubmissionPermissionVerifier::instance()
         );
 
