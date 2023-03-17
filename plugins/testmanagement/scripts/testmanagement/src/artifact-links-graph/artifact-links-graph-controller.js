@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { extend } from "lodash-es";
 
 export default ArtifactLinksGraphCtrl;
 
@@ -11,7 +11,7 @@ ArtifactLinksGraphCtrl.$inject = [
 function ArtifactLinksGraphCtrl(modal_instance, ArtifactLinksGraphModalLoading, modal_model) {
     var self = this;
 
-    _.extend(self, {
+    extend(self, {
         graph: modal_model.graph,
         errors: modal_model.errors,
         title: modal_model.title,

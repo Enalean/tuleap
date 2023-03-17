@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+import { clone } from "lodash-es";
 import CKEDITOR from "ckeditor4";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
@@ -273,8 +273,7 @@ describe("ExecutionService", () => {
             const promise = ExecutionService.synchronizeExecutions(campaign_id);
             resolveExecutions(remote_executions);
             await wrapPromise(promise);
-            //eslint-disable-next-line you-dont-need-lodash-underscore/size
-            expect(_.size(service_executions())).toBe(2);
+            expect(Object.keys(service_executions())).toHaveLength(2);
             expect(service_categories().Security.executions).toHaveLength(1);
             expect(service_categories().NonRegression.executions).toHaveLength(1);
         });
@@ -501,7 +500,7 @@ describe("ExecutionService", () => {
                 },
             };
 
-            var campaign_copy = _.clone(campaign);
+            var campaign_copy = clone(campaign);
             const brodcast = jest.spyOn($rootScope, "$broadcast");
 
             ExecutionService.campaign = campaign;

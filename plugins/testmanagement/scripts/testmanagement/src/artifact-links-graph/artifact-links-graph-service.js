@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { extend } from "lodash-es";
 import "./artifact-links-graph.tpl.html";
 
 export default ArtifactLinksGraphService;
@@ -18,7 +18,7 @@ function ArtifactLinksGraphService(
 ) {
     var self = this;
 
-    _.extend(self, {
+    extend(self, {
         showGraphModal: showGraphModal,
         showGraph: showGraph,
     });

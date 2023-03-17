@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+// eslint-disable-next-line you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/filter, you-dont-need-lodash-underscore/size
+import _, { filter, forEach, size, has } from "lodash-es";
 
 import { UNCATEGORIZED } from "../definition/definition-constants.js";
 import {
@@ -117,23 +118,20 @@ function CampaignEditCtrl(
     }
 
     function selectedTests(category) {
-        //eslint-disable-next-line you-dont-need-lodash-underscore/filter
-        return _.filter(category.tests, function (test) {
+        return filter(category.tests, function (test) {
             return test.selected;
         });
     }
 
     function toggleCategory(category) {
         //category.tests is not an array
-        //eslint-disable-next-line you-dont-need-lodash-underscore/size
-        if (selectedTests(category).length === _.size(category.tests)) {
-            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-            _.forEach(category.tests, function (test) {
+
+        if (selectedTests(category).length === size(category.tests)) {
+            forEach(category.tests, function (test) {
                 test.selected = false;
             });
         } else {
-            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-            _.forEach(category.tests, function (test) {
+            forEach(category.tests, function (test) {
                 test.selected = true;
             });
         }
@@ -143,8 +141,8 @@ function CampaignEditCtrl(
         switch (selectedTests(category).length) {
             case 0:
                 return "fa-square-o";
-            //eslint-disable-next-line you-dont-need-lodash-underscore/size
-            case _.size(category.tests):
+
+            case size(category.tests):
                 return "fa-check-square-o";
             default:
                 return "fa-minus-square-o";
@@ -166,8 +164,9 @@ function CampaignEditCtrl(
         // eslint-disable-next-line you-dont-need-lodash-underscore/map
         return _($scope.tests_list)
             .map(function (category) {
-                //eslint-disable-next-line you-dont-need-lodash-underscore/select
-                return _.select(category.tests, { execution: null, selected: true });
+                return Object.values(category.tests).filter(
+                    (test) => test.execution === null && test.selected === true
+                );
             })
             .flatten()
             .value();
@@ -226,7 +225,7 @@ function CampaignEditCtrl(
     function addTest(definition) {
         var category = definition.category || UNCATEGORIZED;
 
-        if (!_.has($scope.tests_list, category)) {
+        if (!has($scope.tests_list, category)) {
             $scope.tests_list[category] = buildCategory(category);
         }
 

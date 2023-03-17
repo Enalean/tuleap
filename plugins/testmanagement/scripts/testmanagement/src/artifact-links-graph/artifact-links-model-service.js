@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+import { extend } from "lodash-es";
 
 export default ArtifactLinksModelService;
 
 function ArtifactLinksModelService() {
     var self = this;
 
-    _.extend(self, {
+    extend(self, {
         getGraphStructure: getGraphStructure,
     });
 
@@ -48,8 +48,9 @@ function ArtifactLinksModelService() {
             createNodesAndLinksForOutgoingLinks(modal_model, artifact, outgoing_artifact_links);
             createNodesAndLinksForIncomingLinks(modal_model, artifact, incoming_artifact_links);
 
-            //eslint-disable-next-line you-dont-need-lodash-underscore/uniq
-            modal_model.graph.nodes = _.uniq(modal_model.graph.nodes, "id");
+            modal_model.graph.nodes = [
+                ...new Map(modal_model.graph.nodes.map((node) => [node.id, node])).values(),
+            ];
         }
 
         return modal_model;

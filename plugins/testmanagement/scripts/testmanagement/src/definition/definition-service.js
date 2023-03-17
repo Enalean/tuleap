@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { merge } from "lodash";
+import { merge } from "lodash-es";
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import { UNCATEGORIZED } from "./definition-constants.js";
 

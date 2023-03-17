@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+// eslint-disable-next-line you-dont-need-lodash-underscore/some
+import { has, isEmpty, some } from "lodash-es";
 import angular from "angular";
 
 import { sortAlphabetically } from "../ksort.js";
@@ -80,11 +81,11 @@ function ExecutionListCtrl(
         var old_execution,
             old_execution_id = "";
 
-        if (_.has(ExecutionService.executions, $scope.execution_id)) {
+        if (has(ExecutionService.executions, $scope.execution_id)) {
             old_execution = ExecutionService.executions[$scope.execution_id];
         }
 
-        if (!_.isEmpty(old_execution)) {
+        if (!isEmpty(old_execution)) {
             if (current_execution.id !== old_execution.id) {
                 old_execution_id = old_execution.id;
                 updateViewTestExecution(current_execution.id, old_execution_id);
@@ -231,8 +232,7 @@ function ExecutionListCtrl(
     function hideDetailsForRemovedTestExecution() {
         if ($state.includes("campaigns.executions.detail")) {
             var campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
-                //eslint-disable-next-line you-dont-need-lodash-underscore/any
-                current_execution_exists = _.any(campaign_executions, checkActiveClassOnExecution);
+                current_execution_exists = some(campaign_executions, checkActiveClassOnExecution);
 
             if (!current_execution_exists) {
                 $state.go("^");
