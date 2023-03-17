@@ -125,9 +125,6 @@ export class MultipleSelectionManager implements SelectionManager {
     private readSelectedItemsFromSelectElement(): ReadonlyArray<ListPickerItem> {
         const items: ListPickerItem[] = [];
         for (const option of this.source_select_box.selectedOptions) {
-            if (!option.value) {
-                continue;
-            }
             const item_to_select = this.items_map_manager.getItemWithValue(option.value);
             if (item_to_select) {
                 items.push(item_to_select);

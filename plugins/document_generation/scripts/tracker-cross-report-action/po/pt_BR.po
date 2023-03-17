@@ -6,9 +6,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "All usable link types have been selected"
-msgstr ""
-
 msgid "Cancel"
 msgstr "Cancelar"
 
