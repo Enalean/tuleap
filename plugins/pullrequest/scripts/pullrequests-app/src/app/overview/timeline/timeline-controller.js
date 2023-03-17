@@ -2,7 +2,7 @@ import { PullRequestCurrentUserPresenterBuilder } from "../../comments/PullReque
 import { PullRequestPresenterBuilder } from "../../comments/PullRequestPresenterBuilder";
 import {
     PullRequestCommentController,
-    PullRequestCommentReplyFormFocusHelper,
+    PullRequestCommentTextareaFocusHelper,
     PullRequestCommentRepliesStore,
     PullRequestCommentNewReplySaver,
 } from "@tuleap/plugin-pullrequest-comments";
@@ -40,7 +40,7 @@ function TimelineController(SharedPropertiesService, TimelineService) {
                     self.comment_replies_store = PullRequestCommentRepliesStore(timeline);
                     self.timeline = self.comment_replies_store.getAllRootComments();
                     self.comment_controller = PullRequestCommentController(
-                        PullRequestCommentReplyFormFocusHelper(),
+                        PullRequestCommentTextareaFocusHelper(),
                         self.comment_replies_store,
                         PullRequestCommentNewReplySaver(),
                         PullRequestCurrentUserPresenterBuilder.fromUserInfo(
