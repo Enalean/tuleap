@@ -83,6 +83,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         Massmail::class,
         InvitationPurger::class,
         DisableSOAPEndpoints::class,
+        \ThemeVariant::class,
     ];
 
     /**

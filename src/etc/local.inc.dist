@@ -349,19 +349,6 @@ $sys_max_number_of_emailed_people = 100;
 // Set to 0 to force commit message to not be empty
 $sys_allow_empty_svn_commit_message = 1;
 
-// Default theme variant in forge
-$sys_default_theme_variant = 'orange';
-
-// List of available theme variant in forge
-// Available variants:
-// * orange
-// * blue
-// * green
-// * grey
-// * purple
-// * red
-$sys_available_theme_variants = 'orange,blue,green,grey,purple,red';
-
 // Set the reporting level for logging
 //
 //  Possible levels:
