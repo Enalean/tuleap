@@ -27,26 +27,23 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 use Valid_UInt;
 
 class InvertCommentsController implements DispatchableWithRequest
 {
     /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param array       $variables
-     * @throws NotFoundException
      * @throws ForbiddenException
-     * @return void
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        if ($request->getCurrentUser()->isAnonymous()) {
+            throw new ForbiddenException();
+        }
         $valid = new Valid_UInt('tracker');
         $valid->required();
         if ($request->valid($valid)) {
             $preference_name = 'tracker_comment_invertorder_' . $request->get('tracker');
-            $request->getCurrentUser()->togglePreference($preference_name, 0, 1);
+            $request->getCurrentUser()->togglePreference($preference_name, 1, 0);
         }
     }
 }
