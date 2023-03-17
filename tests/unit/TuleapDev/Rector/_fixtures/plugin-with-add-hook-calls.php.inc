@@ -36,6 +36,13 @@ class SamplePlugin
         $this->addHook(\Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector::NAME);
     }
 
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(Event::REST_RESOURCES);
+
+        return parent::getHooksAndCallbacks();
+    }
+
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
     }
@@ -63,6 +70,11 @@ class SamplePlugin
     }
 
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(\Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+    }
+
+    /** @see Event::REST_RESOURCES */
+    public function restResources(array $params)
     {
     }
 }
@@ -96,6 +108,11 @@ class SamplePlugin
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         bindtextdomain('tuleap-svn', __DIR__ . '/../site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        return parent::getHooksAndCallbacks();
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SYSTEM_EVENT_CLASS)]
@@ -132,6 +149,12 @@ class SamplePlugin
 
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(\Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector $quick_links_collector): void
+    {
+    }
+
+    /** @see Event::REST_RESOURCES */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
     }
 }
