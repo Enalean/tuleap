@@ -54,7 +54,7 @@
 </template>
 <script setup lang="ts">
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
-import { strictInject } from "../strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import PrivacyBadge from "./PrivacyBadge.vue";
 import { computed } from "vue";
 import { sanitizeURL } from "../url-sanitizer";

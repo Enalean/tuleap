@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { useActiveElement, useMagicKeys } from "@vueuse/core";
 import ToolPresenter from "./ToolPresenter.vue";
-import { strictInject } from "../strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
 import { getAvailableShortcutsFromToolsConfiguration } from "../shortcuts";

@@ -63,7 +63,7 @@ import AddServerButton from "./AddServerButton.vue";
 import ServersEmptyState from "./ServersEmptyState.vue";
 import ServerRow from "./ServerRow.vue";
 
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIG } from "../../injection-keys";
 
 const config = strictInject(CONFIG);

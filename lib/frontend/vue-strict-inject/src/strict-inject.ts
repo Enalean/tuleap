@@ -23,8 +23,10 @@
 import type { InjectionKey } from "vue";
 import { inject } from "vue";
 
-export function strictInject<T>(key: InjectionKey<T>): T {
-    const resolved_injection = inject(key);
+export type StrictInjectionKey<T> = InjectionKey<T>;
+
+export function strictInject<T>(key: StrictInjectionKey<T>): T {
+    const resolved_injection = inject<T>(key);
     if (resolved_injection === undefined) {
         throw new Error(`Could not find the injection key ${key.toString()}`);
     }

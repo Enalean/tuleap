@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
 import type { Config, Navigation } from "./type";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export const CONFIG: InjectionKey<Config> = Symbol();
-export const NAVIGATION: InjectionKey<Navigation> = Symbol();
+export const CONFIG: StrictInjectionKey<Config> = Symbol("config");
+export const NAVIGATION: StrictInjectionKey<Navigation> = Symbol("navigation");

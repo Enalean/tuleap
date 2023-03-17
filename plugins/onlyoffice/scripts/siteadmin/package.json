@@ -16,6 +16,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "mitt": "^3.0.0",
     "vue": "3.2.37",

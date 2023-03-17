@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
-import { inject } from "vue";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-export function strictInject<T>(key: InjectionKey<T>): T {
-    const resolved_injection = inject(key);
-    if (resolved_injection === undefined) {
-        throw new Error(`Could not find the injection key ${key.toString()}`);
-    }
-
-    return resolved_injection;
-}
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/strict-inject.ts"),
+            name: "VueStrictInject",
+        },
+        rollupOptions: {
+            external: ["vue"],
+            output: {
+                globals: {
+                    vue: "Vue",
+                },
+            },
+        },
+    },
+    plugins: [viteDtsPlugin()],
+});

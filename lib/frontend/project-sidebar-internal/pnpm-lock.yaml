@@ -7,6 +7,7 @@ specifiers:
   '@tuleap/project-privacy-helper': workspace:*
   '@tuleap/tlp': workspace:*
   '@tuleap/tlp-popovers': workspace:*
+  '@tuleap/vue-strict-inject': workspace:*
   '@vue/test-utils': ^2.0.0
   '@vueuse/core': ^8.7.3
   vue: ^3.2.37
@@ -18,6 +19,7 @@ dependencies:
   '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
+  '@tuleap/vue-strict-inject': link:../vue-strict-inject
   '@vueuse/core': 8.7.3_vue@3.2.37
   vue: 3.2.37
   vue-dompurify-html: 4.0.0_vue@3.2.37

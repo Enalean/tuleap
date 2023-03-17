@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
-import { strictInject } from "../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();
 

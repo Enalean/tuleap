@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { strictInject } from "../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIG } from "../injection-keys";
 
 const config = strictInject(CONFIG);

@@ -108,7 +108,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { CONFIG } from "../../injection-keys";
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import CsrfToken from "../CsrfToken.vue";
 
 const config = strictInject(CONFIG);

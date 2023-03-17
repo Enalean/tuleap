@@ -17,22 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import OverviewTabs from "./OverviewTabs.vue";
 import { getGlobalTestOptions } from "../tests-helpers/global-options-for-tests";
 import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("OverviewTabs", () => {
     it("should build the tabs with proper urls", () => {
         const APP_BASE_URL = "https://example.com/";
         const PULLREQUEST_ID = 15;
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            switch (key) {
+                case OVERVIEW_APP_BASE_URL_KEY:
+                    return APP_BASE_URL;
+                case PULL_REQUEST_ID_KEY:
+                    return PULLREQUEST_ID;
+            }
+        });
         const wrapper = shallowMount(OverviewTabs, {
             global: {
-                provide: {
-                    [OVERVIEW_APP_BASE_URL_KEY as symbol]: APP_BASE_URL,
-                    [PULL_REQUEST_ID_KEY as symbol]: PULLREQUEST_ID,
-                },
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },

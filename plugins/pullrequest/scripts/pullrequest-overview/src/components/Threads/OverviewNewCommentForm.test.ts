@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
@@ -30,6 +30,9 @@ import {
     OVERVIEW_APP_BASE_URL_KEY,
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 const current_user_id = 102;
 const current_user_avatar_url = "url/to/user_avatar.png";
@@ -39,19 +42,26 @@ const noop = (): void => {
 
 describe("OverviewNewCommentForm", () => {
     it("should init a <tuleap-pullrequest-new-comment-form /> component", () => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            switch (key) {
+                case CURRENT_USER_ID:
+                    return current_user_id;
+                case PULL_REQUEST_ID_KEY:
+                    return "15";
+                case OVERVIEW_APP_BASE_URL_KEY:
+                    return new URL("https://example.com");
+                case CURRENT_USER_AVATAR_URL:
+                    return current_user_avatar_url;
+                case DISPLAY_TULEAP_API_ERROR:
+                case DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT:
+                    return noop;
+            }
+        });
         const wrapper = shallowMount(OverviewNewCommentForm, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: {
                     [PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME]: true,
-                },
-                provide: {
-                    [CURRENT_USER_ID as symbol]: current_user_id,
-                    [PULL_REQUEST_ID_KEY as symbol]: "15",
-                    [OVERVIEW_APP_BASE_URL_KEY as symbol]: new URL("https://example.com"),
-                    [CURRENT_USER_AVATAR_URL as symbol]: current_user_avatar_url,
-                    [DISPLAY_TULEAP_API_ERROR as symbol]: noop,
-                    [DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT as symbol]: noop,
                 },
             },
         });

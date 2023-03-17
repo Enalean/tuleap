@@ -58,7 +58,7 @@ import {
     BUILD_STATUS_UNKNOWN,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,

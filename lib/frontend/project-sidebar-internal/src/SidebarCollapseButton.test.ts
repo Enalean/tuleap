@@ -20,21 +20,20 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SidebarCollapseButton from "./SidebarCollapseButton.vue";
 import { example_config } from "./project-sidebar-example-config";
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import { ref } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("SidebarCollapseButton", () => {
     it("displays sidebar collapse button when the user is logged in", () => {
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
+
         const wrapper = shallowMount(SidebarCollapseButton, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
-                },
-            },
             props: {
                 is_sidebar_collapsed: false,
                 can_sidebar_be_collapsed: true,
@@ -55,12 +54,8 @@ describe("SidebarCollapseButton", () => {
     it("does not display a button when the user is not logged in", () => {
         const config = example_config;
         config.user.is_logged_in = false;
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
         const wrapper = shallowMount(SidebarCollapseButton, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
-                },
-            },
             props: {
                 is_sidebar_collapsed: false,
                 can_sidebar_be_collapsed: true,
@@ -71,12 +66,8 @@ describe("SidebarCollapseButton", () => {
     });
 
     it("does not display the collapse button when sidebar collapse behavior is disabled", () => {
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
         const wrapper = shallowMount(SidebarCollapseButton, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
-                },
-            },
             props: {
                 is_sidebar_collapsed: false,
                 can_sidebar_be_collapsed: false,

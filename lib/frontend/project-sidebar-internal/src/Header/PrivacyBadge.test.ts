@@ -23,11 +23,13 @@
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PrivacyBadge from "./PrivacyBadge.vue";
-import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
 import tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("PrivacyBadge", () => {
     it("displays the badge with its popover", () => {
@@ -35,13 +37,9 @@ describe("PrivacyBadge", () => {
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        const wrapper = shallowMount(PrivacyBadge, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
-                },
-            },
-        });
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
+
+        const wrapper = shallowMount(PrivacyBadge);
 
         expect(wrapper.element).toMatchSnapshot();
         expect(create_popover_spy).toHaveBeenCalled();

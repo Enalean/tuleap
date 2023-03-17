@@ -48,7 +48,7 @@ import { ref, reactive, provide, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     PULL_REQUEST_ID_KEY,
     CURRENT_USER_ID,

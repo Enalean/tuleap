@@ -20,46 +20,61 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
-import type { InjectionKey, VNode } from "vue";
-import { h, provide } from "vue";
+import { describe, it, expect } from "vitest";
+import type { InjectionKey, Component, VNode } from "vue";
+import { createApp, defineComponent, h, provide } from "vue";
 import { strictInject } from "./strict-inject";
-import { mount } from "@vue/test-utils";
+
+function mount(component: Component): void {
+    const el = document.createElement("div");
+    const app = createApp(component);
+    app.config.warnHandler = (): void => {
+        // Do nothing, we might throw error on purposes
+    };
+
+    app.mount(el);
+}
 
 describe("strict-inject", () => {
     it("resolves the value when it has been provided", () => {
         const key: InjectionKey<string> = Symbol("Test");
         const expected_value = "my_injected_value";
+        let setup_consumer_called = false;
 
-        const Consumer = {
-            setup(): () => string {
-                const value = strictInject(key);
-                return (): string => value;
+        const Consumer = defineComponent({
+            setup(): void {
+                expect(strictInject(key)).toStrictEqual(expected_value);
+                setup_consumer_called = true;
             },
-        };
+            render() {
+                return h("div", []);
+            },
+        });
 
-        const Provider = {
-            setup(): () => VNode {
+        const Provider = defineComponent({
+            setup(): void {
                 provide(key, expected_value);
-                return (): VNode => h(Consumer);
             },
-        };
-        const wrapper = mount(Provider);
+            render(): VNode {
+                return h(Consumer);
+            },
+        });
 
-        expect(wrapper.text()).toStrictEqual(expected_value);
+        mount(Provider);
+
+        expect(setup_consumer_called).toBe(true);
     });
 
     it("throws an error when the value has not been provided", () => {
         const Consumer = {
-            setup(): () => unknown {
-                const value = strictInject(Symbol("TestUndefined"));
-                return (): unknown => value;
+            setup(): void {
+                strictInject(Symbol("TestUndefined"));
+            },
+            render(): VNode {
+                return h("div", []);
             },
         };
 
-        vi.spyOn(console, "warn").mockImplementation(() => {
-            // Do nothing
-        });
         expect(() => mount(Consumer)).toThrowError(/TestUndefined/);
     });
 });

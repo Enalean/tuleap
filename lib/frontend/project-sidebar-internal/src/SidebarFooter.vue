@@ -65,7 +65,7 @@
     </span>
 </template>
 <script setup lang="ts">
-import { strictInject } from "./strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 
 const config = strictInject(SIDEBAR_CONFIGURATION);

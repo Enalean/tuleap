@@ -20,23 +20,20 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import ToolList from "./ToolList.vue";
 import ToolPresenter from "./ToolPresenter.vue";
 import { ref } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("ToolList", () => {
     it("displays all the tools", () => {
-        const wrapper = shallowMount(ToolList, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
-                },
-            },
-        });
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
+        const wrapper = shallowMount(ToolList);
 
         const tools = wrapper.findAllComponents(ToolPresenter);
         expect(tools).toHaveLength(example_config.tools.length);

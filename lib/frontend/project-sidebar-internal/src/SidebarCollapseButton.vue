@@ -36,7 +36,7 @@
     </button>
 </template>
 <script setup lang="ts">
-import { strictInject } from "./strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 
 const props = defineProps<{ is_sidebar_collapsed: boolean; can_sidebar_be_collapsed: boolean }>();

@@ -66,7 +66,7 @@ import type { Project, ProjectFromRest, Server } from "../../../type";
 import { useGettext } from "vue3-gettext";
 import { autocomplete_projects_for_select2 } from "@tuleap/autocomplete-for-select2";
 import MoveProjectConfirmationModal from "./MoveProjectConfirmationModal.vue";
-import { strictInject } from "../../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIG } from "../../../injection-keys";
 
 const config = strictInject(CONFIG);

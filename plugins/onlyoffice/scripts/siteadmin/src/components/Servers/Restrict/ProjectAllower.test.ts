@@ -19,6 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 const getSpy = vi.fn();
 vi.mock("@tuleap/fetch-result");
@@ -30,6 +31,7 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
         },
     };
 });
+vi.mock("@tuleap/vue-strict-inject");
 
 import { createGettext } from "vue3-gettext";
 import { shallowMount } from "@vue/test-utils";
@@ -38,7 +40,6 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
 import type { Config, Server } from "../../../type";
-import { CONFIG } from "../../../injection-keys";
 import MoveProjectConfirmationModal from "./MoveProjectConfirmationModal.vue";
 
 describe("ProjectAllower", () => {
@@ -52,13 +53,13 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server],
+        } as unknown as Config);
 
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
-                },
             },
             props: {
                 server,
@@ -86,13 +87,13 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([]));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server],
+        } as unknown as Config);
 
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
-                },
             },
             props: {
                 server,
@@ -116,13 +117,13 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server],
+        } as unknown as Config);
 
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
-                },
             },
             props: {
                 server,
@@ -151,13 +152,13 @@ describe("ProjectAllower", () => {
                 { id: 103, label: "ACME Corp clone", shortname: "acme" },
             ])
         );
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server],
+        } as unknown as Config);
 
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
-                },
             },
             props: {
                 server,
@@ -190,13 +191,13 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server, another_server],
+        } as unknown as Config);
 
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: { servers: [server, another_server] } as unknown as Config,
-                },
             },
             props: {
                 server,
