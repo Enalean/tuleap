@@ -25,7 +25,7 @@ namespace Tuleap\MediawikiStandalone\Service;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationsError;
+use Tuleap\MediawikiStandalone\Instance\CheckOngoingInitializationStatus;
 use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectByUnixNameFactory;
@@ -42,7 +42,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
         private readonly ProjectByUnixNameFactory $project_retriever,
         private readonly IsProjectAllowedToUsePlugin $plugin,
         private readonly \TemplateRendererFactory $renderer_factory,
-        private readonly CheckOngoingInitializationsError $check_ongoing_initializations_error,
+        private readonly CheckOngoingInitializationStatus $check_ongoing_initializations_status,
     ) {
     }
 
@@ -58,11 +58,18 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
             throw new NotFoundException();
         }
 
+        $ongoing_initialization_status = $this->check_ongoing_initializations_status->getStatus((int) $project->getID());
+        if (! $ongoing_initialization_status->isOngoing() && ! $ongoing_initialization_status->isError()) {
+            $layout->redirect($service->getUrl());
+
+            return;
+        }
+
         $service->displayMediawikiHeader($request->getCurrentUser());
         $this->renderer_factory
             ->getRenderer(__DIR__ . '/../../templates')
             ->renderToPage(
-                $this->check_ongoing_initializations_error->isInError((int) $project->getID()) ? 'under-construction-error' : 'under-construction',
+                $ongoing_initialization_status->isError() ? 'under-construction-error' : 'under-construction',
                 [
                     'project_icon' => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
                     'project_name' => $project->getPublicName(),

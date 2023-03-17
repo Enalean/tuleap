@@ -115,7 +115,7 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isStarted());
+                self::assertTrue($initializations_state->isFinished());
                 self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }
@@ -165,7 +165,7 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isStarted());
+                self::assertTrue($initializations_state->isFinished());
                 self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }

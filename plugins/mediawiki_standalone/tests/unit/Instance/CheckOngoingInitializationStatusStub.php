@@ -22,7 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-interface CheckOngoingInitializationsError
+final class CheckOngoingInitializationStatusStub implements CheckOngoingInitializationStatus
 {
-    public function isInError(int $project_id): bool;
+    private function __construct(private readonly OngoingInitializationStatus $status)
+    {
+    }
+
+    public static function withStatus(OngoingInitializationStatus $status): self
+    {
+        return new self($status);
+    }
+
+    public function getStatus(int $project_id): OngoingInitializationStatus
+    {
+        return $this->status;
+    }
 }

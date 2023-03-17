@@ -185,7 +185,8 @@ final class MigrateInstance
             ->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->project->getUnixNameLowerCase()) . '/update')
             ->withBody($stream_factory->createStream('{}'));
         return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
-            static function () use ($logger): Ok {
+            function () use ($logger): Ok {
+                $this->initializations_state->finishInitialization((int) $this->project->getID());
                 $logger->info(sprintf('Mediawiki %s success', self::class));
                 return Result::ok(null);
             }
