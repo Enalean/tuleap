@@ -36,6 +36,7 @@ import kanban_item from "./kanban-item/kanban-item.js";
 import shared_properties from "./shared-properties/shared-properties.js";
 import uuid_generator from "./uuid-generator/uuid-generator.js";
 import socket from "./socket/socket.js";
+import mercure from "./realtime/mercure";
 import user_preferences from "./user-preferences/user-preferences.js";
 import error_modal from "./error-modal/error-modal.js";
 
@@ -84,6 +85,7 @@ export default angular
         socket,
         user_preferences,
         uuid_generator,
+        mercure,
     ])
     .run([
         "gettextCatalog",

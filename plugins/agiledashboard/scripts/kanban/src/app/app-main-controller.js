@@ -23,7 +23,6 @@ function MainCtrl(
 
     function init() {
         const kanban_init_data = $element[0].querySelector(".kanban-init-data").dataset;
-
         const user_id = kanban_init_data.userId;
         SharedPropertiesService.setUserId(user_id);
         const kanban_representation = JSON.parse(kanban_init_data.kanban);
@@ -40,7 +39,8 @@ function MainCtrl(
         SharedPropertiesService.setViewMode(view_mode);
         const kanban_url = kanban_init_data.kanbanUrl;
         SharedPropertiesService.setKanbanUrl(kanban_url);
-
+        const mercure_enabled = kanban_init_data.kanbanMercureEnabled;
+        SharedPropertiesService.setMercureEnabled(mercure_enabled);
         const tracker_reports = Object.values(JSON.parse(kanban_init_data.trackerReports));
         FilterTrackerReportService.initTrackerReports(tracker_reports);
 

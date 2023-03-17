@@ -37,6 +37,7 @@ KanbanCtrl.$inject = [
     "NewTuleapArtifactModalService",
     "UserPreferencesService",
     "SocketService",
+    "MercureService",
     "KanbanColumnService",
     "ColumnCollectionService",
     "DroppedService",
@@ -57,6 +58,7 @@ function KanbanCtrl(
     NewTuleapArtifactModalService,
     UserPreferencesService,
     SocketService,
+    MercureService,
     KanbanColumnService,
     ColumnCollectionService,
     DroppedService,
@@ -135,26 +137,29 @@ function KanbanCtrl(
         loadColumns();
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
-        SocketService.listenNodeJSServer()
-            .then(function () {
-                if (FilterTrackerReportService.isFiltersTrackerReportSelected()) {
-                    SocketService.listenKanbanFilteredUpdate();
-                } else {
-                    SocketService.listenKanbanItemCreate();
-                    SocketService.listenKanbanItemEdit();
-                    SocketService.listenKanbanItemMove();
-                }
-                SocketService.listenKanbanColumnCreate();
-                SocketService.listenKanbanColumnMove();
-                SocketService.listenKanbanColumnEdit();
-                SocketService.listenKanbanColumnDelete();
-                SocketService.listenKanban();
-                SocketService.listenTokenExpired();
-            })
-            .catch(() => {
-                // ignore the fact that there is no nodejs server
-            });
-
+        if (SharedPropertiesService.getMercureEnabled()) {
+            MercureService.init();
+        } else {
+            SocketService.listenNodeJSServer()
+                .then(function () {
+                    if (FilterTrackerReportService.isFiltersTrackerReportSelected()) {
+                        SocketService.listenKanbanFilteredUpdate();
+                    } else {
+                        SocketService.listenKanbanItemCreate();
+                        SocketService.listenKanbanItemEdit();
+                        SocketService.listenKanbanItemMove();
+                    }
+                    SocketService.listenKanbanColumnCreate();
+                    SocketService.listenKanbanColumnMove();
+                    SocketService.listenKanbanColumnEdit();
+                    SocketService.listenKanbanColumnDelete();
+                    SocketService.listenKanban();
+                    SocketService.listenTokenExpired();
+                })
+                .catch(() => {
+                    // ignore the fact that there is no nodejs server
+                });
+        }
         if (kanban.user_can_add_artifact) {
             angular
                 .element(`[data-shortcut-create-option][data-tracker-id=${kanban.tracker_id}]`)

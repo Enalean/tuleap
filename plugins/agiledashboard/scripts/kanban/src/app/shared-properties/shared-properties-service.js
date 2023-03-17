@@ -16,6 +16,7 @@ function SharedPropertiesService() {
         dashboard_dropdown: undefined,
         widget_id: 0,
         kanban_url: "",
+        mercure_enabled: false,
     };
 
     return {
@@ -110,6 +111,12 @@ function SharedPropertiesService() {
         },
         getSelectedTrackerReportId() {
             return property.selected_tracker_report_id;
+        },
+        getMercureEnabled() {
+            return property.mercure_enabled;
+        },
+        setMercureEnabled(mercure_enabled) {
+            property.mercure_enabled = mercure_enabled;
         },
     };
 }
