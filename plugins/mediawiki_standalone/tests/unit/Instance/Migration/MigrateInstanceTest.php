@@ -34,6 +34,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandAlwaysFai
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandDoNothing;
 use Tuleap\MediawikiStandalone\Instance\MediaWikiCentralDatabaseParameterGeneratorStub;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
+use Tuleap\MediawikiStandalone\Instance\ProvideInitializationLanguageCodeStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Queue\WorkerEvent;
@@ -63,6 +64,74 @@ final class MigrateInstanceTest extends TestCase
     }
 
     public function testSuccess(): void
+    {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/register/gpig' &&
+                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"fr","dbprefix":"mw"}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
+                        $request->getBody()->getContents() === '{}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+
+        $migrate_instance_option = MigrateInstance::fromEvent(
+            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            $this->project_factory,
+            new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            $initializations_state,
+            $switcher,
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('fr_FR'),
+            new ProvideInitializationLanguageCodeStub(),
+        );
+
+        self::assertTrue($migrate_instance_option->isValue());
+        $migrate_instance_option->apply(
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+                $result = $migrate_instance->process(
+                    $this->mediawiki_client,
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
+                    new NullLogger(),
+                );
+                self::assertTrue(Result::isOk($result));
+                self::assertTrue($initializations_state->isFinished());
+                self::assertFalse($initializations_state->isError());
+                self::assertTrue($switcher->isSwitchedToStandalone());
+            }
+        );
+    }
+
+    public function testUseDefaultLanguageIfLegacyMediaWikiDoesNotHaveOne(): void
     {
         $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
 
@@ -109,6 +178,76 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
+            new ProvideInitializationLanguageCodeStub(),
+        );
+
+        self::assertTrue($migrate_instance_option->isValue());
+        $migrate_instance_option->apply(
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+                $result = $migrate_instance->process(
+                    $this->mediawiki_client,
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
+                    new NullLogger(),
+                );
+                self::assertTrue(Result::isOk($result));
+                self::assertTrue($initializations_state->isFinished());
+                self::assertFalse($initializations_state->isError());
+                self::assertTrue($switcher->isSwitchedToStandalone());
+            }
+        );
+    }
+
+    public function testUseDefaultLanguageIfLegacyMediaWikiLanguageDoesNotHaveTheExpectedFormat(): void
+    {
+        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
+
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/register/gpig' &&
+                        $request->getBody()->getContents() === '{"project_id":120,"project_name":"gpig","lang":"en","dbprefix":"mw"}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
+                        $request->getBody()->getContents() === '{}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $initializations_state = OngoingInitializationsStateStub::buildSelf();
+        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+
+        $migrate_instance_option = MigrateInstance::fromEvent(
+            new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
+            $this->project_factory,
+            new MediaWikiCentralDatabaseParameterGeneratorStub(),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            $initializations_state,
+            $switcher,
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('invalid'),
+            new ProvideInitializationLanguageCodeStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -162,6 +301,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
+            new ProvideInitializationLanguageCodeStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -201,6 +342,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
+            new ProvideInitializationLanguageCodeStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -252,6 +395,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
+            new ProvideInitializationLanguageCodeStub(),
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
@@ -303,6 +448,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
+            new ProvideInitializationLanguageCodeStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -334,6 +481,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
+            new ProvideInitializationLanguageCodeStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
@@ -361,6 +510,8 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
+            LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
+            new ProvideInitializationLanguageCodeStub(),
         );
 
         self::assertTrue($migrate_instance_option->isNothing());

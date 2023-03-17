@@ -29,6 +29,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetriever;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiService;
 use Tuleap\NeverThrow\Err;
@@ -50,6 +51,8 @@ final class InstanceManagement
         private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
+        private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
+        private readonly InitializationLanguageCodeProvider $default_language_code_provider,
     ) {
     }
 
@@ -57,7 +60,16 @@ final class InstanceManagement
     {
         try {
             $this->processInitializationEvent(CreateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator));
-            $this->processInitializationEvent(MigrateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator, $this->command_factory, $this->initializations_state, $this->switch_mediawiki_service));
+            $this->processInitializationEvent(MigrateInstance::fromEvent(
+                $worker_event,
+                $this->project_factory,
+                $this->central_database_parameter_generator,
+                $this->command_factory,
+                $this->initializations_state,
+                $this->switch_mediawiki_service,
+                $this->legacy_mediawiki_language_retriever,
+                $this->default_language_code_provider,
+            ));
 
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($suspension_event);
