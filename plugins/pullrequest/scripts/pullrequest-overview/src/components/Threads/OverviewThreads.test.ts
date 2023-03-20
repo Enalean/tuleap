@@ -117,12 +117,18 @@ describe("OverviewThreads", () => {
         const wrapper = getWrapper();
         expect(wrapper.find("[data-test=pull-request-threads]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pull-request-threads-skeleton]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=pull-request-description-comment-skeleton]").exists()).toBe(
+            true
+        );
 
         await setWrapperProps(wrapper);
         await flushPromises();
 
         expect(display_error_callback).not.toHaveBeenCalled();
-        expect(wrapper.find("[data-test=pull-request-threads-spinner]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=pull-request-threads-skeleton]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=pull-request-description-comment-skeleton]").exists()).toBe(
+            false
+        );
 
         const threads = wrapper.find("[data-test=pull-request-threads]");
         expect(threads.exists()).toBe(true);
