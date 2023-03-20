@@ -27,7 +27,7 @@ use Mockery as M;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use UserManager;
 
 class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -90,6 +90,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldReceive('updateDb');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -114,15 +115,12 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldReceive('updateDb');
 
-        $layout_inspector = new LayoutInspector();
-
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/account/notifications'));
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
+            LayoutBuilder::build(),
             []
         );
-
-        $this->assertEquals('/account/notifications', $layout_inspector->getRedirectUrl());
     }
 
     public function testItActivatesMailSiteUpdate(): void
@@ -146,6 +144,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
         $this->user_manager->shouldReceive('updateDb')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_updates', '1')->build(),
             LayoutBuilder::build(),
@@ -174,6 +173,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
         $this->user_manager->shouldReceive('updateDb')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -198,6 +198,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldNotReceive('updateDb');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_updates', '1')->build(),
             LayoutBuilder::build(),
@@ -222,6 +223,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldNotReceive('updateDb');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_updates', '0')->build(),
             LayoutBuilder::build(),
@@ -250,6 +252,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
         $this->user_manager->shouldReceive('updateDb')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_community', '1')->build(),
             LayoutBuilder::build(),
@@ -278,6 +281,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
         $this->user_manager->shouldReceive('updateDb')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -302,6 +306,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager->shouldNotReceive('updateDb');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_community', '1')->build(),
             LayoutBuilder::build(),
@@ -311,7 +316,6 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesEmailFormatPreferenceToHtml(): void
     {
-        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user
@@ -325,6 +329,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'html')->build(),
             LayoutBuilder::build(),
@@ -334,7 +339,6 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesEmailFormatPreferenceToText(): void
     {
-        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user
@@ -348,6 +352,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->andReturn(Codendi_Mail_Interface::FORMAT_TEXT);
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'text')->build(),
             LayoutBuilder::build(),
@@ -357,7 +362,6 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntUpdateMailFormatPreferenceWhenPreferenceDoesntChange(): void
     {
-        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user
@@ -371,6 +375,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(Codendi_Mail_Interface::PREF_FORMAT)
             ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'html')->build(),
             LayoutBuilder::build(),

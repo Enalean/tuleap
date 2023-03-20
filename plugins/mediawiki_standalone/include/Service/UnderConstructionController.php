@@ -61,8 +61,6 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
         $ongoing_initialization_status = $this->check_ongoing_initializations_status->getStatus((int) $project->getID());
         if (! $ongoing_initialization_status->isOngoing() && ! $ongoing_initialization_status->isError()) {
             $layout->redirect($service->getUrl());
-
-            return;
         }
 
         $service->displayMediawikiHeader($request->getCurrentUser());

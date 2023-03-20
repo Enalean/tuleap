@@ -22,26 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ForumML;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
-class WriteMailControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WriteMailControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItRedirectsToThreadsControllerInOrderToAvoidAnApparentlyInternalServerErrorWhenUsingTheLegacyUrl(): void
     {
-        $layout_inspector = new LayoutInspector();
-
         $controller = new WriteMailController();
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/forumml/list/123/threads'));
         $controller->process(
             HTTPRequestBuilder::get()->withParam('list', 123)->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
+            LayoutBuilder::build(),
             []
         );
-
-        self::assertEquals('/plugins/forumml/list/123/threads', $layout_inspector->getRedirectUrl());
     }
 }

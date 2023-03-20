@@ -31,8 +31,9 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
-class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -97,13 +98,16 @@ class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $inspector = new LayoutInspector();
 
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($inspector),
-            []
-        );
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
+        }
 
-        $this->assertEquals('/admin/document/files-download-limits', $inspector->getRedirectUrl());
         $this->assertEquals(
             [
                 [
@@ -134,13 +138,15 @@ class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $inspector = new LayoutInspector();
 
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($inspector),
-            []
-        );
-
-        $this->assertEquals('/admin/document/files-download-limits', $inspector->getRedirectUrl());
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
+        }
         $this->assertEquals(
             [
                 [
@@ -171,13 +177,16 @@ class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $inspector = new LayoutInspector();
 
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($inspector),
-            []
-        );
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/admin/document/files-download-limits'), $ex);
+        }
 
-        $this->assertEquals('/admin/document/files-download-limits', $inspector->getRedirectUrl());
         $this->assertEquals(
             [
                 [

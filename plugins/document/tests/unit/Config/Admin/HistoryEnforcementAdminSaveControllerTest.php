@@ -32,6 +32,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
 final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -92,13 +93,16 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
 
         $inspector = new LayoutInspector();
 
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($inspector),
-            []
-        );
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/admin/document/history-enforcement'), $ex);
+        }
 
-        $this->assertEquals('/admin/document/history-enforcement', $inspector->getRedirectUrl());
         $this->assertEquals(
             [
                 [

@@ -26,13 +26,14 @@ use Tuleap\Document\Tree\IExtractProjectFromVariables;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;
 
-class UpdateSearchViewTest extends TestCase
+final class UpdateSearchViewTest extends TestCase
 {
     public function testSearchViewIsUpdated(): void
     {
@@ -86,14 +87,18 @@ class UpdateSearchViewTest extends TestCase
 
         $layout_inspector = new LayoutInspector();
 
-        $update->process(
-            HTTPRequestBuilder::get()
-                ->withParam('criteria', ["title", "description"])
-                ->withParam('columns', ["title", "status"])
-                ->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            ['project_name' => 'acme']
-        );
+        try {
+            $update->process(
+                HTTPRequestBuilder::get()
+                    ->withParam('criteria', ["title", "description"])
+                    ->withParam('columns', ["title", "status"])
+                    ->build(),
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                ['project_name' => 'acme']
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
+        }
 
         assertTrue($assertions->columns);
         assertTrue($assertions->criteria);
@@ -106,7 +111,6 @@ class UpdateSearchViewTest extends TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        assertEquals('/plugins/document/testproject/admin-search', $layout_inspector->getRedirectUrl());
     }
 
     public function testCsrfIsChecked(): void
@@ -213,14 +217,18 @@ class UpdateSearchViewTest extends TestCase
 
         $layout_inspector = new LayoutInspector();
 
-        $update->process(
-            HTTPRequestBuilder::get()
-                ->withParam('criteria', ["title", "description"])
-                ->withParam('columns', "warez")
-                ->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            ['project_name' => 'acme']
-        );
+        try {
+            $update->process(
+                HTTPRequestBuilder::get()
+                    ->withParam('criteria', ["title", "description"])
+                    ->withParam('columns', "warez")
+                    ->build(),
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                ['project_name' => 'acme']
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
+        }
 
         assertFalse($assertions->columns);
         assertEquals(
@@ -232,7 +240,6 @@ class UpdateSearchViewTest extends TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        assertEquals('/plugins/document/testproject/admin-search', $layout_inspector->getRedirectUrl());
     }
 
     public function testCriteriaIsInvalid(): void
@@ -277,14 +284,18 @@ class UpdateSearchViewTest extends TestCase
 
         $layout_inspector = new LayoutInspector();
 
-        $update->process(
-            HTTPRequestBuilder::get()
-                ->withParam('criteria', "warez")
-                ->withParam('columns', ["title", "description"])
-                ->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            ['project_name' => 'acme']
-        );
+        try {
+            $update->process(
+                HTTPRequestBuilder::get()
+                    ->withParam('criteria', "warez")
+                    ->withParam('columns', ["title", "description"])
+                    ->build(),
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                ['project_name' => 'acme']
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            self::assertEquals(new LayoutInspectorRedirection('/plugins/document/testproject/admin-search'), $ex);
+        }
 
         assertFalse($assertions->criteria);
         assertEquals(
@@ -296,6 +307,5 @@ class UpdateSearchViewTest extends TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        assertEquals('/plugins/document/testproject/admin-search', $layout_inspector->getRedirectUrl());
     }
 }

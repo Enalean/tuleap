@@ -35,9 +35,10 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder as UserTestBuilderAlias;
 
-class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -94,12 +95,13 @@ class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItLogsAnErrorIfSSHKeyPushFails()
+    public function testItLogsAnErrorIfSSHKeyPushFails(): void
     {
         $this->user_account_manager->shouldReceive('pushSSHKeys')->andThrows(new Git_UserSynchronisationException());
 
         $this->logger->shouldReceive('error')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -107,7 +109,7 @@ class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItAddsResponseFeedbackIfSSHKeyPushFails()
+    public function testItAddsResponseFeedbackIfSSHKeyPushFails(): void
     {
         $this->user_account_manager->shouldReceive('pushSSHKeys')->andThrows(new Git_UserSynchronisationException());
 
@@ -115,12 +117,18 @@ class PushSSHKeysControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $layout_inspector = new LayoutInspector();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->build(),
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(Feedback::ERROR, $feedback[0]['level']);

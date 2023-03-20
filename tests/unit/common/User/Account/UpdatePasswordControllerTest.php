@@ -32,6 +32,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\PasswordVerifier;
@@ -146,6 +147,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->csrf_token->shouldReceive('check')->with('/account/security')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -159,6 +161,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('current_password', 'the_old_password')->build(),
             LayoutBuilder::build(),
@@ -179,6 +182,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('current_password', 'the_old_password')->build(),
             LayoutBuilder::build(),
@@ -192,6 +196,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
@@ -210,6 +215,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
@@ -231,6 +237,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
@@ -255,6 +262,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldReceive('changePassword')->andThrow(new \Exception());
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
@@ -279,6 +287,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->password_verifier->shouldNotReceive('verifyPassword');
         $this->password_changer->shouldNotReceive('changePassword');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
@@ -302,6 +311,7 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->password_changer->shouldReceive('changePassword')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)

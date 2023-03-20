@@ -29,6 +29,7 @@ use PFUser;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -81,6 +82,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->shouldReceive('check')->with('/account/security')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -94,6 +96,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getStickyLogin() === 1;
         })->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('account-remember-me', '1')->build(),
             LayoutBuilder::build(),
@@ -107,6 +110,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getStickyLogin() === 0;
         })->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),

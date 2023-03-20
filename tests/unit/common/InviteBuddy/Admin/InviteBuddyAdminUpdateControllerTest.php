@@ -26,6 +26,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
@@ -74,12 +75,18 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->expects(self::never())
             ->method('save');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '42')->build(),
-            LayoutBuilder::build(),
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '42')->build(),
+                LayoutBuilder::build(),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
@@ -95,12 +102,18 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->expects(self::never())
             ->method('save');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '-10')->build(),
-            LayoutBuilder::build(),
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '-10')->build(),
+                LayoutBuilder::build(),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 
@@ -116,11 +129,18 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->expects(self::never())
             ->method('save');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '0')->build(),
-            LayoutBuilder::build(),
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '0')->build(),
+                LayoutBuilder::build(),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
+
+        self::assertTrue($has_been_redirected);
 
         self::assertTrue($this->csrf_token->hasBeenChecked());
     }
@@ -138,12 +158,18 @@ final class InviteBuddyAdminUpdateControllerTest extends \Tuleap\Test\PHPUnit\Te
             ->method('saveInt')
             ->with('max_invitations_by_day', 10);
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '10')->build(),
-            LayoutBuilder::build(),
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)->withParam('max_invitations_by_day', '10')->build(),
+                LayoutBuilder::build(),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         self::assertTrue($this->csrf_token->hasBeenChecked());
     }
 }

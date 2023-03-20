@@ -26,7 +26,7 @@ namespace Tuleap\SVN\Repository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\SVN\Dao;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -58,58 +58,54 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRedirectsAccessToCoreSubversionIntro(): void
     {
-        $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
+        $event = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/?func=info&group_id=101',
-            LayoutBuilder::buildWithInspector($layout_inspector)
+            LayoutBuilder::build()
         );
         $this->plugin_svn_access->process($event);
-        $event->redirect();
 
-        self::assertEquals('/plugins/svn/?roottype=svn&root=TestProject', $layout_inspector->getRedirectUrl());
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/svn/?roottype=svn&root=TestProject'));
+        $event->redirect();
     }
 
     public function testItRedirectsAccessToViewVcRoot(): void
     {
-        $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
+        $event = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/?root=TestProject',
-            LayoutBuilder::buildWithInspector($layout_inspector)
+            LayoutBuilder::build()
         );
         $this->plugin_svn_access->process($event);
-        $event->redirect();
 
-        self::assertEquals('/plugins/svn/?root=TestProject', $layout_inspector->getRedirectUrl());
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/svn/?root=TestProject'));
+        $event->redirect();
     }
 
     public function testItRedirectsAccessToViewVcDirectory(): void
     {
-        $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
+        $event = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/trunk/?root=mozilla',
-            LayoutBuilder::buildWithInspector($layout_inspector)
+            LayoutBuilder::build()
         );
         $this->plugin_svn_access->process($event);
-        $event->redirect();
 
-        self::assertEquals('/plugins/svn/trunk/?root=mozilla', $layout_inspector->getRedirectUrl());
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/svn/trunk/?root=mozilla'));
+        $event->redirect();
     }
 
     public function testItRedirectsAccessToViewVcFileLog(): void
     {
-        $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
+        $event = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/trunk/README?root=mozilla&view=log',
-            LayoutBuilder::buildWithInspector($layout_inspector)
+            LayoutBuilder::build()
         );
         $this->plugin_svn_access->process($event);
-        $event->redirect();
 
-        self::assertEquals('/plugins/svn/trunk/README?root=mozilla&view=log', $layout_inspector->getRedirectUrl());
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/svn/trunk/README?root=mozilla&view=log'));
+        $event->redirect();
     }
 
     public function testItForbidsSOAPAccess(): void

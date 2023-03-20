@@ -25,6 +25,7 @@ namespace Tuleap\date\Admin;
 use Mockery;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
 final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -76,6 +77,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $this->config_dao->shouldReceive('save')->once();
         $this->preferences_dao->shouldReceive('deletePreferenceForAllUsers')->never();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 
@@ -94,6 +96,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $this->config_dao->shouldReceive('save')->once();
         $this->preferences_dao->shouldReceive('deletePreferenceForAllUsers')->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 }

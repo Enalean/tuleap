@@ -28,7 +28,7 @@ use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\InviteBuddy\InvitationToEmail;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -275,30 +275,34 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
-        $inspector = new LayoutInspector();
+        $redirect_url = null;
 
-        $after->afterSuccessfullUserRegistration(
-            UserTestBuilder::buildWithDefaults(),
-            HTTPRequestBuilder::get()
-                ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
-                ->build(),
-            LayoutBuilder::buildWithInspector($inspector),
-            'secret',
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->to('jdoe@example.com')
-                        ->build(),
-                    new ConcealedString('secret')
-                )
-            ),
-        );
+        try {
+            $after->afterSuccessfullUserRegistration(
+                UserTestBuilder::buildWithDefaults(),
+                HTTPRequestBuilder::get()
+                    ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
+                    ->build(),
+                LayoutBuilder::build(),
+                'secret',
+                RegisterFormContext::forAnonymous(
+                    true,
+                    InvitationToEmail::fromInvitation(
+                        InvitationTestBuilder::aSentInvitation(1)
+                            ->to('jdoe@example.com')
+                            ->build(),
+                        new ConcealedString('secret')
+                    )
+                ),
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         self::assertTrue($after_event_emitted);
         self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
         self::assertTrue($log_user->hasBeenLoggedIn());
-        self::assertEquals('/my/', $inspector->getRedirectUrl());
+        self::assertEquals('/my/', $redirect_url);
     }
 
     public function testItRedirectsToProjectTheUserHasBeenInvitedInto(): void
@@ -338,30 +342,34 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
         );
 
-        $inspector = new LayoutInspector();
+        $redirect_url = null;
 
-        $after->afterSuccessfullUserRegistration(
-            UserTestBuilder::buildWithDefaults(),
-            HTTPRequestBuilder::get()
-                ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
-                ->build(),
-            LayoutBuilder::buildWithInspector($inspector),
-            'secret',
-            RegisterFormContext::forAnonymous(
-                true,
-                InvitationToEmail::fromInvitation(
-                    InvitationTestBuilder::aSentInvitation(1)
-                        ->to('jdoe@example.com')
-                        ->toProjectId(111)
-                        ->build(),
-                    new ConcealedString('secret')
-                )
-            ),
-        );
+        try {
+            $after->afterSuccessfullUserRegistration(
+                UserTestBuilder::buildWithDefaults(),
+                HTTPRequestBuilder::get()
+                    ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
+                    ->build(),
+                LayoutBuilder::build(),
+                'secret',
+                RegisterFormContext::forAnonymous(
+                    true,
+                    InvitationToEmail::fromInvitation(
+                        InvitationTestBuilder::aSentInvitation(1)
+                            ->to('jdoe@example.com')
+                            ->toProjectId(111)
+                            ->build(),
+                        new ConcealedString('secret')
+                    )
+                ),
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         self::assertTrue($after_event_emitted);
         self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
         self::assertTrue($log_user->hasBeenLoggedIn());
-        self::assertEquals('/projects/awesome-project', $inspector->getRedirectUrl());
+        self::assertEquals('/projects/awesome-project', $redirect_url);
     }
 }
