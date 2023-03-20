@@ -30,7 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
@@ -152,16 +152,20 @@ final class DisplayRegisterFormControllerTest extends TestCase
             ),
         );
 
-        $inspector = new LayoutInspector();
+        $redirect_url = null;
 
-        $controller->process(
-            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anActiveUser()->build())->build(),
-            LayoutBuilder::buildWithInspector($inspector),
-            [],
-        );
+        try {
+            $controller->process(
+                HTTPRequestBuilder::get()->withUser(UserTestBuilder::anActiveUser()->build())->build(),
+                LayoutBuilder::build(),
+                [],
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         self::assertFalse($form_displayer->hasBeenDisplayed());
-        self::assertEquals('/my/', $inspector->getRedirectUrl());
+        self::assertEquals('/my/', $redirect_url);
     }
 
     public function testRedirectToLoginWhenInvitationHasAlreadyBeenUsed(): void
@@ -182,16 +186,20 @@ final class DisplayRegisterFormControllerTest extends TestCase
             ),
         );
 
-        $inspector = new LayoutInspector();
+        $redirect_url = null;
 
-        $controller->process(
-            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
-            LayoutBuilder::buildWithInspector($inspector),
-            [],
-        );
+        try {
+            $controller->process(
+                HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
+                LayoutBuilder::build(),
+                [],
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         self::assertFalse($form_displayer->hasBeenDisplayed());
-        self::assertEquals('/account/login.php', $inspector->getRedirectUrl());
+        self::assertEquals('/account/login.php', $redirect_url);
     }
 
     public function testWithoutInvitation(): void

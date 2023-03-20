@@ -28,6 +28,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
@@ -92,7 +93,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($request, $project, null, $response)
             ->willThrowException(new InvalidServicePOSTDataException());
 
-        $controller = new EditController(
+        $controller          = new EditController(
             ProjectByIDFactoryStub::buildWith($project),
             new ProjectAdministratorChecker(),
             $this->createMock(ServiceUpdator::class),
@@ -101,10 +102,15 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->csrf_token,
             new \EventManager(),
         );
-        $controller->process($request, $response, ['project_id' => '102']);
+        $has_been_redirected = false;
+        try {
+            $controller->process($request, $response, ['project_id' => '102']);
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
         self::assertEquals('error', $inspector->getFeedback()[0]['level']);
-        self::assertNotNull($inspector->getRedirectUrl());
+        self::assertTrue($has_been_redirected);
     }
 
     public function testItCreatesANewSystemService(): void
@@ -157,15 +163,20 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             'rank' => 500,
         ]);
 
-        $controller->process(
-            $request_builder->build(),
-            $response,
-            [
-                'project_id' => '120',
-            ]
-        );
+        $has_been_redirected = false;
+        try {
+            $controller->process(
+                $request_builder->build(),
+                $response,
+                [
+                    'project_id' => '120',
+                ]
+            );
+        } catch (LayoutInspectorRedirection $exception) {
+            $has_been_redirected = true;
+        }
 
         self::assertEquals('info', $inspector->getFeedback()[0]['level']);
-        self::assertNotNull($inspector->getRedirectUrl());
+        self::assertTrue($has_been_redirected);
     }
 }

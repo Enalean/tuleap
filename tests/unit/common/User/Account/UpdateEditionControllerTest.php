@@ -29,8 +29,9 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
-class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -95,11 +96,17 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -110,7 +117,7 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/edition', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/edition', $redirect_url);
     }
 
     public function testItRejectsIfItDoesNotKnowTheDefaultFormat(): void
@@ -136,11 +143,17 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -151,7 +164,7 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/edition', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/edition', $redirect_url);
     }
 
     public function testItRejectsIfItDoesNotKnowTheCSVSeparator(): void
@@ -177,11 +190,17 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -192,7 +211,7 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/edition', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/edition', $redirect_url);
     }
 
     public function testItRejectsIfItDoesNotKnowTheCSVDateFormat(): void
@@ -218,11 +237,17 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -233,6 +258,6 @@ class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/edition', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/edition', $redirect_url);
     }
 }

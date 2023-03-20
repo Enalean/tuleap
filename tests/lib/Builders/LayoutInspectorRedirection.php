@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,28 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
-final class LayoutInspector
+final class LayoutInspectorRedirection extends \RuntimeException
 {
-    private $feedbacks = [];
-
-    public function setRedirectUrl(string $redirect_url): never
+    public function __construct(public readonly string $redirect_url)
     {
-        throw new LayoutInspectorRedirection($redirect_url);
-    }
-
-    public function addFeedback(string $level, string $message): void
-    {
-        $this->feedbacks[] = [
-            'level'   => $level,
-            'message' => $message,
-        ];
-    }
-
-    /**
-     * @return array{level:string, message:string}
-     */
-    public function getFeedback(): array
-    {
-        return $this->feedbacks;
+        parent::__construct("Redirected to " . $this->redirect_url);
     }
 }

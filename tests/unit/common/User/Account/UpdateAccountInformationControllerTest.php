@@ -31,6 +31,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\DisplayAccountInformationController;
@@ -148,6 +149,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->csrf_token->shouldReceive('check')->with(DisplayAccountInformationController::URL)->once();
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -161,6 +163,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->user_manager->shouldNotReceive('updateDb');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
             LayoutBuilder::build(),
@@ -176,12 +179,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->avatar_generator->shouldReceive('generate')->once();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -198,12 +207,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->avatar_generator->shouldReceive('generate')->never();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -214,11 +229,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldNotReceive('updateDb');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Alice FooBar')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Alice FooBar')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
+
+        self::assertTrue($has_been_redirected);
 
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
@@ -230,12 +252,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldNotReceive('updateDb');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', "FooBar \n FooBard")->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', "FooBar \n FooBard")->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -246,12 +274,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Foo Bar')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Foo Bar')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -264,6 +298,7 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
             LayoutBuilder::build(),
@@ -278,12 +313,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getEmailNew() === 'bob@example.com' && $user->getConfirmHash() != '';
         })->once()->andReturnTrue();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -295,12 +336,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
         $this->email_updater->shouldNotReceive('sendEmailChangeConfirm');
         $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -314,12 +361,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getEmailNew() === 'bob@example.com';
         })->once()->andReturnTrue();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Alice FooBar')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->withParam('realname', 'Alice FooBar')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -331,12 +384,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->email_updater->shouldNotReceive('setEmailChangeConfirm');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'alice@example.com')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'alice@example.com')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -350,12 +409,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getEmailNew() === 'bob@example.com';
         })->once()->andReturnTrue();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('email', 'bob@example.com')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -366,12 +431,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldNotReceive('updateDb');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Frank Zappa')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Frank Zappa')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -382,12 +453,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldNotReceive('updateDb');
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'UTC')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'UTC')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -400,12 +477,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
             return $user->getTimezone() === 'Europe/Berlin';
         })->once()->andReturnTrue();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
@@ -416,12 +499,18 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
     {
         $this->user_manager->shouldReceive('updateDb')->andReturnFalse();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($this->user)->withParam('timezone', 'Europe/Berlin')->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(2, $feedback);
         $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
@@ -444,17 +533,23 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
 
         $this->avatar_generator->shouldReceive('generate')->once();
 
-        $this->controller->process(
-            HTTPRequestBuilder::get()
-                ->withUser($this->user)
-                ->withParam('email', 'bob@example.com')
-                ->withParam('realname', 'Franck Zappa')
-                ->withParam('timezone', 'Europe/Berlin')
-                ->build(),
-            $this->layout,
-            []
-        );
+        $has_been_redirected = false;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()
+                    ->withUser($this->user)
+                    ->withParam('email', 'bob@example.com')
+                    ->withParam('realname', 'Franck Zappa')
+                    ->withParam('timezone', 'Europe/Berlin')
+                    ->build(),
+                $this->layout,
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $has_been_redirected = true;
+        }
 
+        self::assertTrue($has_been_redirected);
         $feedback = $this->layout_inspector->getFeedback();
         $this->assertCount(3, $feedback);
         $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);

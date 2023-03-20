@@ -32,6 +32,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 
 final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -110,11 +111,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -125,7 +132,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfLanguageIsNotSupported(): void
@@ -148,11 +155,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -167,7 +180,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserKeepsItsLanguage(): void
@@ -190,11 +203,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -205,7 +224,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfColorIsNotSubmitted(): void
@@ -225,11 +244,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
         $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -240,7 +265,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfColorIsNotSupported(): void
@@ -267,11 +292,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -286,7 +317,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserKeepsItsColor(): void
@@ -312,11 +343,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -327,7 +364,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserStillDoesNotWantCondensed(): void
@@ -350,11 +387,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -365,7 +408,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserStillWantsCondensed(): void
@@ -388,11 +431,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -403,7 +452,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItRemovesTheCondensedMode(): void
@@ -426,11 +475,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -441,7 +496,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserKeepsTheSameUsernameDisplay(): void
@@ -464,11 +519,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -479,7 +540,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testRejectsInvalidUsernameDisplay(): void
@@ -502,11 +563,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -521,7 +588,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testRejectsInvalidRelativeDatesDisplay(): void
@@ -544,11 +611,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -563,7 +636,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserKeepsTheSameRelativeDatesDisplay(): void
@@ -586,11 +659,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -601,7 +680,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserStillDoesNotWantAccessibility(): void
@@ -624,11 +703,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -639,7 +724,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItDoesNothingIfUserStillWantsAccessibility(): void
@@ -662,11 +747,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -677,7 +768,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        $this->assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItRemovesTheAccessibilityMode(): void
@@ -700,11 +791,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -715,7 +812,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 
     public function testItUpdatesTheUser(): void
@@ -771,11 +868,17 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ->build();
 
         $layout_inspector = new LayoutInspector();
-        $this->controller->process(
-            $request,
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+
+        try {
+            $this->controller->process(
+                $request,
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $this->assertEquals(
             [
@@ -786,6 +889,6 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
             ],
             $layout_inspector->getFeedback()
         );
-        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+        self::assertEquals('/account/appearance', $redirect_url);
     }
 }

@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,21 +63,18 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItUpdatesUserSSHKey()
+    public function testItUpdatesUserSSHKey(): void
     {
         $user = UserTestBuilder::aUser()->withId(110)->build();
         $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
 
         $this->user_manager->shouldReceive('addSSHKeys')->with($user, 'ssh-rsa blabla')->once();
 
-        $layout_inspector = new LayoutInspector();
-
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/account/keys-tokens'));
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('ssh-key', 'ssh-rsa blabla')->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
+            LayoutBuilder::build(),
             []
         );
-
-        $this->assertEquals('/account/keys-tokens', $layout_inspector->getRedirectUrl());
     }
 }

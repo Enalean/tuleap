@@ -27,6 +27,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -66,6 +67,7 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
         $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser');
 
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser(UserTestBuilder::aUser()->withId(120)->build())
@@ -83,16 +85,20 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser')->with($user, ['2', '5'])->once()->andReturnTrue();
 
         $layout_inspector = new LayoutInspector();
-
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('svn-tokens-selected', ['2', '5'])->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
+        $redirect_url     = null;
+        try {
+            $this->controller->process(
+                HTTPRequestBuilder::get()->withUser($user)->withParam('svn-tokens-selected', ['2', '5'])->build(),
+                LayoutBuilder::buildWithInspector($layout_inspector),
+                []
+            );
+        } catch (LayoutInspectorRedirection $ex) {
+            $redirect_url = $ex->redirect_url;
+        }
 
         $feedback = $layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(Feedback::INFO, $feedback[0]['level']);
-        $this->assertEquals('/account/keys-tokens', $layout_inspector->getRedirectUrl());
+        $this->assertEquals('/account/keys-tokens', $redirect_url);
     }
 }

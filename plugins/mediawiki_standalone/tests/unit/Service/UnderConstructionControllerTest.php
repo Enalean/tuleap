@@ -29,7 +29,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
@@ -220,12 +220,11 @@ final class UnderConstructionControllerTest extends \Tuleap\Test\PHPUnit\TestCas
             CheckOngoingInitializationStatusStub::withStatus(OngoingInitializationStatus::None),
         );
 
-        $inspector = new LayoutInspector();
+        $this->expectExceptionObject(new LayoutInspectorRedirection('/mediawiki/acme'));
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::buildWithDefaults())->build(),
-            LayoutBuilder::buildWithInspector($inspector),
+            LayoutBuilder::build(),
             ['project_name' => 'acme'],
         );
-        self::assertEquals('/mediawiki/acme', $inspector->getRedirectUrl());
     }
 }
