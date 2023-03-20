@@ -52,12 +52,6 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         bindtextdomain('tuleap-captcha', __DIR__ . '/../site-content');
 
         $this->setScope(self::SCOPE_SYSTEM);
-
-        $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
-        $this->addHook(AddAdditionalFieldUserRegistration::NAME);
-        $this->addHook(BeforeRegisterFormValidationEvent::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     /**
@@ -72,7 +66,8 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function addExternalScriptToTheWhitelist(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST)]
+    public function addExternalScriptToTheWhitelist(array $params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
             $params['whitelist_scripts'][] = 'https://www.google.com/recaptcha/';
@@ -80,6 +75,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function addAdditionalFieldUserRegistration(AddAdditionalFieldUserRegistration $event): void
     {
         if (! $event->getRequest()->getCurrentUser()->isSuperUser()) {
@@ -108,6 +104,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function beforeRegisterFormValidationEvent(BeforeRegisterFormValidationEvent $event): void
     {
         $request = $event->getRequest();
@@ -165,6 +162,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         return true;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
@@ -192,7 +190,8 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->get('/admin/[index.php]', $this->getRouteHandler('routeGetAdmin'));

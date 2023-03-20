@@ -53,13 +53,6 @@ final class securitytxtPlugin extends Plugin implements PluginWithConfigKeys
         $event->addConfigClass(\Tuleap\SecurityTxt\SecurityTxtOptions::class);
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function routeGetSecurityTxt(): \Tuleap\SecurityTxt\SecurityTxtController
     {
         return new \Tuleap\SecurityTxt\SecurityTxtController(
@@ -69,6 +62,7 @@ final class securitytxtPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(\Tuleap\SecurityTxt\SecurityTxtController::WELL_KNOWN_SECURITY_TXT_HREF, $this->getRouteHandler('routeGetSecurityTxt'));

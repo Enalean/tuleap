@@ -59,14 +59,6 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(CLICommandsCollector::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function routeGetMetrics(): MetricsController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -94,11 +86,13 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get('/metrics', $this->getRouteHandler('routeGetMetrics'));
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
     {
         $commands_collector->addCommand(

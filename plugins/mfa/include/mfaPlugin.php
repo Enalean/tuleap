@@ -42,13 +42,6 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         bindtextdomain('tuleap-mfa', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -93,7 +86,8 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/enroll', $this->getRouteHandler('routeGetEnroll'));
