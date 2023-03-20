@@ -51,10 +51,11 @@ final class MigrateInstance
     private function __construct(
         private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly \Project $project,
-        private readonly bool $use_central_database,
+        private readonly MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
+        private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
     ) {
     }
@@ -69,6 +70,7 @@ final class MigrateInstance
         MediaWikiManagementCommandFactory $command_factory,
         OngoingInitializationsState $initializations_state,
         SwitchMediawikiService $switch_mediawiki_service,
+        LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         InitializationLanguageCodeProvider $default_language_code_provider,
     ): Option {
@@ -84,10 +86,11 @@ final class MigrateInstance
             new self(
                 $command_factory,
                 $project_factory->getValidProjectById($payload['project_id']),
-                $central_database_parameter_generator->getCentralDatabase() !== null,
+                $central_database_parameter_generator,
                 $default_language_code_provider,
                 $initializations_state,
                 $switch_mediawiki_service,
+                $legacy_mediawiki_db_primer,
                 $legacy_mediawiki_language_retriever,
             )
         );
@@ -108,6 +111,8 @@ final class MigrateInstance
 
         $logger->info("Switching to MediaWiki Standalone service");
         $this->switch_mediawiki_service->switchToStandalone($this->project);
+
+        $this->legacy_mediawiki_db_primer->prepareDBForMigration($this->getDBName(), $this->getDBPrefix());
 
         $instance_name = $this->project->getUnixNameLowerCase();
         $request       = $request_factory->createRequest(
@@ -158,12 +163,9 @@ final class MigrateInstance
             'project_id' => (int) $this->project->getID(),
             'project_name' => $this->project->getUnixNameLowerCase(),
             'lang' => $short_language_code,
+            'dbprefix' => $this->getDBPrefix(),
         ];
 
-        $payload['dbprefix'] = 'mw';
-        if ($this->use_central_database) {
-            $payload['dbprefix'] = 'mw_' . $this->project->getID() . '_';
-        }
         return self::jsonEncoder($payload)
             ->andThen(
                 /** @return Ok<null>|Err<Fault> */
@@ -253,5 +255,19 @@ final class MigrateInstance
                     return Result::ok(null);
                 }
             );
+    }
+
+    private function getDBPrefix(): string
+    {
+        if ($this->central_database_parameter_generator->getCentralDatabase() !== null) {
+            return 'mw_' . $this->project->getID() . '_';
+        }
+
+        return 'mw';
+    }
+
+    private function getDBName(): string
+    {
+        return $this->central_database_parameter_generator->getCentralDatabase() ?? 'plugin_mediawiki_' . $this->project->getID();
     }
 }

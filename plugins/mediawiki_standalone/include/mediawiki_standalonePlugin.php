@@ -461,6 +461,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             $this->getMediaWikiManagementCommandProcessFactory($logger),
             new OngoingInitializationsDao(),
             new ServiceMediawikiSwitcher(new ServiceDao(), $logger),
+            new \Tuleap\MediawikiStandalone\Instance\Migration\PrimeLegacyMediawikiDB(),
             new LegacyMediawikiLanguageDao(),
             new ProvideSiteLevelInitializationLanguageCode(),
         ))->process($event);
