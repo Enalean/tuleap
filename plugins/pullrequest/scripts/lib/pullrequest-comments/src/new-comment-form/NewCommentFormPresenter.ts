@@ -67,4 +67,8 @@ export const NewCommentFormPresenter = {
         ...presenter,
         is_saving_comment: true,
     }),
+    buildNotSavingComment: (presenter: NewCommentFormPresenter): NewCommentFormPresenter => ({
+        ...presenter,
+        is_saving_comment: false,
+    }),
 };

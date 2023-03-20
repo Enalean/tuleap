@@ -64,4 +64,10 @@ export const PullRequestDescriptionCommentFormPresenter = {
         ...presenter,
         is_being_submitted: true,
     }),
+    buildNotSubmitted: (
+        presenter: DescriptionCommentFormPresenter
+    ): DescriptionCommentFormPresenter => ({
+        ...presenter,
+        is_being_submitted: false,
+    }),
 };

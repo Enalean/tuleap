@@ -67,4 +67,8 @@ export const ReplyCommentFormPresenter = {
         ...presenter,
         is_being_submitted: true,
     }),
+    buildNotSubmitted: (presenter: ReplyCommentFormPresenter): ReplyCommentFormPresenter => ({
+        ...presenter,
+        is_being_submitted: false,
+    }),
 };

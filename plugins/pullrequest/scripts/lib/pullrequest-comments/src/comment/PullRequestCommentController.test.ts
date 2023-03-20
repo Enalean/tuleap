@@ -39,6 +39,7 @@ import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore
 import { CurrentPullRequestPresenterStub } from "../../tests/stubs/CurrentPullRequestPresenterStub";
 import type { SaveNewReplyToComment } from "./PullRequestCommentReplySaver";
 import type { PullRequestCommentErrorCallback } from "../types";
+import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusTextArea,
@@ -193,15 +194,19 @@ describe("PullRequestCommentController", () => {
     it("should trigger the on_error_callback when it is defined and an error occurred while saving a reply", async () => {
         const tuleap_api_fault = Fault.fromMessage("You cannot");
         const save_new_comment = SaveNewReplyToCommentStub.withFault(tuleap_api_fault);
-
+        const reply_comment_presenter =
+            ReplyCommentFormPresenterStub.buildWithContent("Please don't");
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
             comment,
-            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
+            reply_comment_presenter,
         } as unknown as HostElement;
 
         await getController(save_new_comment).saveReply(host);
 
         expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
+        expect(host.reply_comment_presenter).toStrictEqual(
+            ReplyCommentFormPresenter.buildNotSubmitted(reply_comment_presenter)
+        );
     });
 });

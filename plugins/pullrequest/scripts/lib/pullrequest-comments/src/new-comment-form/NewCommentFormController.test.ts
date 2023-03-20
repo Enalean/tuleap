@@ -154,7 +154,7 @@ describe("NewCommentFormController", () => {
     describe("saveNewComment()", () => {
         it(`When the comment is saved successfully
             Then it should call the post_submit_callback with the PullRequestComment
-            And reset the textarea`, async () => {
+            And reset the textarea + the presenter`, async () => {
             const comment_content = "This is what I have to say";
             const host = {
                 presenter: NewCommentFormPresenter.buildWithUpdatedComment(
@@ -174,11 +174,18 @@ describe("NewCommentFormController", () => {
 
             expect(post_submit_callback).toHaveBeenCalledOnce();
             expect(focus_helper.resetTextArea).toHaveBeenCalledOnce();
+            expect(host.presenter).toStrictEqual(getEmptyPresenter());
         });
 
         it(`When the comment is saved with error
             Then it should call the on_error_callback with the Fault`, async () => {
-            const host = {} as NewCommentForm;
+            const presenter = NewCommentFormPresenter.buildWithUpdatedComment(
+                getEmptyPresenter(),
+                "This is a comment"
+            );
+            const host = {
+                presenter,
+            } as NewCommentForm;
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
 
             await getController(SaveNewCommentStub.withFault(tuleap_api_fault)).saveNewComment(
@@ -187,6 +194,9 @@ describe("NewCommentFormController", () => {
 
             expect(on_error_callback).toHaveBeenCalledOnce();
             expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
+            expect(host.presenter).toStrictEqual(
+                NewCommentFormPresenter.buildNotSavingComment(presenter)
+            );
         });
     });
 });

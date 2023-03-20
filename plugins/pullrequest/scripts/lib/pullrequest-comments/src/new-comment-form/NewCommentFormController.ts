@@ -68,15 +68,18 @@ export const NewCommentFormController = (
     saveNewComment: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildSavingComment(host.presenter);
 
-        comment_saver
-            .postComment(host.presenter.comment)
-            .match((payload: PullRequestComment) => {
+        comment_saver.postComment(host.presenter.comment).match(
+            (payload: PullRequestComment) => {
                 post_submit_callback(payload);
                 focus_helper.resetTextArea(host.content());
-            }, on_error_callback)
-            .finally(() => {
+
                 host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
-            });
+            },
+            (fault) => {
+                host.presenter = NewCommentFormPresenter.buildNotSavingComment(host.presenter);
+                on_error_callback(fault);
+            }
+        );
     },
     updateNewComment: (host: NewCommentForm, new_comment: string): void => {
         host.presenter = NewCommentFormPresenter.buildWithUpdatedComment(

@@ -97,6 +97,10 @@ export const PullRequestCommentController = (
                 host.post_reply_save_callback();
             },
             (fault) => {
+                host.reply_comment_presenter = ReplyCommentFormPresenter.buildNotSubmitted(
+                    getExistingCommentReplyPresenter(host)
+                );
+
                 if (on_error_callback) {
                     on_error_callback(fault);
                     return;
