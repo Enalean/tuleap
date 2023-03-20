@@ -72,7 +72,7 @@ export class EventManager {
 
     public removeEventsListenersOnDocument(): void {
         this.doc.removeEventListener("keyup", this.escape_key_handler);
-        this.doc.removeEventListener("pointerdown", this.click_outside_handler);
+        this.doc.removeEventListener("pointerup", this.click_outside_handler);
         this.doc.removeEventListener("keydown", this.keyboard_events_handler);
         this.doc.removeEventListener("keypress", this.prevent_form_submit_on_enter_handler);
     }
@@ -91,13 +91,13 @@ export class EventManager {
         const handler = (event: Event): void => {
             this.handleClicksOutsideListPicker(event);
         };
-        this.doc.addEventListener("pointerdown", handler);
+        this.doc.addEventListener("pointerup", handler);
 
         return handler;
     }
 
     private attachOpenCloseEvent(): void {
-        this.link_selector_element.addEventListener("pointerdown", (event: Event) => {
+        this.link_selector_element.addEventListener("pointerup", (event: Event) => {
             event.preventDefault();
             if (
                 event.target instanceof Element &&

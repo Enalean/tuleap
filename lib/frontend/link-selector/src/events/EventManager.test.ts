@@ -152,11 +152,11 @@ describe("event manager", () => {
         it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
             manager.attachEvents();
 
-            link_selector_input.dispatchEvent(new MouseEvent("pointerdown"));
+            link_selector_input.dispatchEvent(new MouseEvent("pointerup"));
             expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(1);
             expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
 
-            link_selector_input.dispatchEvent(new MouseEvent("pointerdown"));
+            link_selector_input.dispatchEvent(new MouseEvent("pointerup"));
             expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
 
@@ -189,7 +189,7 @@ describe("event manager", () => {
 
             // Now user closes the dropdown without selecting any item
             doesSelectionElementHaveTheFocus.mockReturnValue(false);
-            doc.dispatchEvent(new MouseEvent("pointerdown"));
+            doc.dispatchEvent(new MouseEvent("pointerup"));
             expect(manage_dropdown.isDropdownOpen()).toBe(false);
 
             // And finally, he hits enter once again
@@ -231,22 +231,22 @@ describe("event manager", () => {
 
         it("should close the dropdown when the user clicks outside the link-selector while it is open", () => {
             manager.attachEvents();
-            doc.dispatchEvent(new MouseEvent("pointerdown"));
+            doc.dispatchEvent(new MouseEvent("pointerup"));
 
             expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
 
         it(`Given that the dropdown is open and user has not selected any value,
-            When the user clicks outside the list picker,
+            When the user clicks outside the link-selector,
             Then the dropdown is closed and the search field is cleared`, () => {
             manager.attachEvents();
-            doc.dispatchEvent(new MouseEvent("pointerdown"));
+            doc.dispatchEvent(new MouseEvent("pointerup"));
 
             expect(clear_search_field.getCallsCount()).toBe(1);
         });
 
         it(`Given that the dropdown is open and user has selected a value,
-            When the user clicks outside the list picker,
+            When the user clicks outside the link-selector,
             Then the dropdown is closed BUT the search field is left untouched`, () => {
             const manager = getEventManager(
                 dropdown,
