@@ -21,6 +21,14 @@
     <section class="tlp-pane-section pull-request-threads-section">
         <tuleap-pullrequest-comment-skeleton
             v-if="is_loading_threads"
+            v-bind:has_replies="false"
+            class="pull-request-description"
+            data-test="pull-request-description-comment-skeleton"
+        />
+        <tuleap-pullrequest-comment-skeleton
+            v-if="is_loading_threads"
+            v-bind:has_replies="true"
+            class="pull-request-overview-thread"
             data-test="pull-request-threads-skeleton"
         />
         <div v-if="!is_loading_threads" data-test="pull-request-threads">
@@ -203,7 +211,8 @@ function addNewRootComment(comment: PullRequestCommentPresenter): void {
 @use "@tuleap/plugin-pullrequest-comments";
 
 .pull-request-overview-thread > .pull-request-comment-component,
-.pull-request-description > .pull-request-description-comment {
+.pull-request-description > .pull-request-description-comment,
+.pull-request-comment-skeleton {
     margin: 0 0 var(--tlp-small-spacing);
 }
 
