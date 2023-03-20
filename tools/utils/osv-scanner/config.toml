@@ -129,13 +129,6 @@ id = "GHSA-hrpp-h998-j3pp" # CVE-2022-24999
 reason = "Not exploitable. Only used as a dev tool."
 ignoreUntil = 2023-05-08
 
-# src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
-## remove_dir_all
-[[IgnoredVulns]]
-id = "RUSTSEC-2023-0018"
-reason = "Only used at build time."
-ignoreUntil = 2023-05-08
-
 [[IgnoredVulns]]
 id = "GHSA-mc8h-8q98-g5hr" # RUSTSEC-2023-0018
 reason = "Only used at build time."
