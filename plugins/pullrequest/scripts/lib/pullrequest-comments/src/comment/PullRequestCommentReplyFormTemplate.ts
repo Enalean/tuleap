@@ -21,10 +21,8 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestCommentComponentType } from "./PullRequestComment";
 import type { GettextProvider } from "@tuleap/gettext";
-import { FOCUSABLE_TEXTAREA_CLASSNAME } from "../helpers/textarea-focus-helper";
 import { getCommentAvatarTemplate } from "../templates/CommentAvatarTemplate";
-
-type MapOfClasses = Record<string, boolean>;
+import { getWritingZoneTemplate } from "../templates/WritingZoneTemplate";
 
 export const getReplyFormTemplate = (
     host: PullRequestCommentComponentType,
@@ -42,40 +40,24 @@ export const getReplyFormTemplate = (
         host.controller.saveReply(host);
     };
 
-    const onTextAreaInput = (host: PullRequestCommentComponentType, event: InputEvent): void => {
-        const textarea = event.target;
-        if (!(textarea instanceof HTMLTextAreaElement)) {
-            return;
-        }
-
-        host.controller.updateCurrentReply(host, textarea.value);
-    };
-
-    const getCommentContentClasses = (host: PullRequestCommentComponentType): MapOfClasses => {
-        const classes: MapOfClasses = {
-            "pull-request-comment-content": true,
-        };
-
-        if (host.comment.color) {
-            classes[`pull-request-comment-content-color`] = true;
-            classes[`tlp-swatch-${host.comment.color}`] = true;
-        }
-
-        return classes;
+    const classes = {
+        "pull-request-comment-content": true,
+        "pull-request-comment-with-writing-zone-active":
+            host.reply_comment_presenter.writing_zone_state.is_focused,
     };
 
     return html`
         <div class="pull-request-comment-reply-form" data-test="pull-request-comment-reply-form">
             <div class="pull-request-comment pull-request-comment-follow-up-content">
                 ${getCommentAvatarTemplate(host.comment.user)}
-                <div class="${getCommentContentClasses(host)}">
-                    <textarea
-                        class="${FOCUSABLE_TEXTAREA_CLASSNAME} tlp-textarea"
-                        rows="10"
-                        placeholder="${gettext_provider.gettext("Say something…")}"
-                        oninput="${onTextAreaInput}"
-                        data-test="reply-text-area"
-                    ></textarea>
+                <div class="${classes}">
+                    ${getWritingZoneTemplate(
+                        host.reply_comment_presenter.writing_zone_state,
+                        host.controller.getFocusHelper(),
+                        (content) => host.controller.updateCurrentReply(host, content),
+                        (is_focused) => host.controller.updateWritingZoneState(host, is_focused),
+                        gettext_provider
+                    )}
                     <div
                         class="pull-request-comment-footer"
                         data-test="pull-request-comment-footer"

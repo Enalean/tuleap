@@ -98,6 +98,17 @@ describe("PullRequestCommentController", () => {
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
     });
 
+    it("should update the writing zone focus state", () => {
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
+        } as unknown as HostElement;
+
+        getController(SaveNewReplyToCommentStub.withDefault()).updateWritingZoneState(host, true);
+
+        expect(host.reply_comment_presenter?.writing_zone_state.is_focused).toBe(true);
+    });
+
     it("Should save the new comment, hide the form and add the new comment reply in the collection of replies", async () => {
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {

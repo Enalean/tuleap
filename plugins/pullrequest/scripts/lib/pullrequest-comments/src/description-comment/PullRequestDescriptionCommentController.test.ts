@@ -98,6 +98,27 @@ describe("PullRequestDescriptionCommentController", () => {
         });
     });
 
+    describe("updateWritingZoneState()", () => {
+        it(`should update the writing zone focus state`, () => {
+            const host = {
+                edition_form_presenter:
+                    PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
+                        raw_content: "This commit fixes bug #",
+                    } as PullRequestDescriptionCommentPresenter),
+            } as PullRequestDescriptionComment;
+
+            const is_focused = true;
+            getController(SaveDescriptionCommentStub.withDefault()).updateWritingZoneState(
+                host,
+                is_focused
+            );
+
+            expect(host.edition_form_presenter?.writing_zone_state.is_focused).toStrictEqual(
+                is_focused
+            );
+        });
+    });
+
     describe("saveDescriptionComment()", () => {
         it(`should save the new description, update the description presenter and display back the read mode`, async () => {
             const edition_form_presenter =

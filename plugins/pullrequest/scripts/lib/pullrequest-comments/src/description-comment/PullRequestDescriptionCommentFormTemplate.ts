@@ -21,7 +21,7 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GettextProvider } from "@tuleap/gettext";
 import type { PullRequestDescriptionComment } from "./PullRequestDescriptionComment";
-import { FOCUSABLE_TEXTAREA_CLASSNAME } from "../helpers/textarea-focus-helper";
+import { getWritingZoneTemplate } from "../templates/WritingZoneTemplate";
 
 export const getDescriptionCommentFormTemplate = (
     host: PullRequestDescriptionComment,
@@ -35,34 +35,29 @@ export const getDescriptionCommentFormTemplate = (
         host.controller.hideEditionForm(host);
     };
 
-    const onTextareaInput = (host: PullRequestDescriptionComment, event: InputEvent): void => {
-        const textarea = event.target;
-        if (!(textarea instanceof HTMLTextAreaElement)) {
-            return;
-        }
-
-        host.controller.updateCurrentlyEditedDescription(host, textarea.value);
-    };
-
     const onClickSave = (host: PullRequestDescriptionComment): void => {
         host.controller.saveDescriptionComment(host);
     };
 
+    const classes = {
+        "pull-request-comment-content": true,
+        "pull-request-comment-with-writing-zone-active":
+            host.edition_form_presenter.writing_zone_state.is_focused,
+    };
+
     return html`
-        <div class="pull-request-comment-content pull-request-comment-content-main-color" data-test="pull-request-description-write-mode">
-            <div class="pull-request-comment-write-mode-header">
-                <div class="tlp-tabs pull-request-comment-write-mode-header-tabs">
-                    <span class="tlp-tab tlp-tab-active">${gettext_provider.gettext("Write")}</a>
-                </div>
-            </div>
-            <textarea
-                data-test="pull-request-description-comment-form-textarea"
-                class="${FOCUSABLE_TEXTAREA_CLASSNAME} tlp-textarea"
-                rows="10"
-                placeholder="${gettext_provider.gettext("Say something…")}"
-                oninput="${onTextareaInput}"
-            >${host.edition_form_presenter.description_content}</textarea>
-            <div class="pull-request-comment-footer" data-test="pull-request-description-comment-footer">
+        <div class="${classes}" data-test="pull-request-description-write-mode">
+            ${getWritingZoneTemplate(
+                host.edition_form_presenter.writing_zone_state,
+                host.controller.getFocusHelper(),
+                (content) => host.controller.updateCurrentlyEditedDescription(host, content),
+                (is_focused) => host.controller.updateWritingZoneState(host, is_focused),
+                gettext_provider
+            )}
+            <div
+                class="pull-request-comment-footer"
+                data-test="pull-request-description-comment-footer"
+            >
                 <button
                     data-test="button-cancel-edition"
                     type="button"
@@ -80,16 +75,14 @@ export const getDescriptionCommentFormTemplate = (
                     disabled="${host.edition_form_presenter.is_being_submitted}"
                 >
                     ${gettext_provider.gettext("Save")}
-                    ${
-                        host.edition_form_presenter.is_being_submitted &&
-                        html`
-                            <i
-                                class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
-                                aria-hidden="true"
-                                data-test="reply-being-saved-spinner"
-                            ></i>
-                        `
-                    }
+                    ${host.edition_form_presenter.is_being_submitted &&
+                    html`
+                        <i
+                            class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
+                            aria-hidden="true"
+                            data-test="reply-being-saved-spinner"
+                        ></i>
+                    `}
                 </button>
             </div>
         </div>

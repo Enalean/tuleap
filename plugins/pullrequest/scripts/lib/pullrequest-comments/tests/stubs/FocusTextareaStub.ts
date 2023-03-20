@@ -22,4 +22,5 @@ import type { FocusTextArea } from "../../src/helpers/textarea-focus-helper";
 
 export const FocusTextareaStub = (): FocusTextArea => ({
     focusTextArea: vi.fn(),
+    resetTextArea: vi.fn(),
 });

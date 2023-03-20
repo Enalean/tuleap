@@ -18,17 +18,17 @@
  */
 
 import { vi } from "vitest";
-import type { ControlPullRequestComment } from "../../src/comment/PullRequestCommentController";
-import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import type { ControlNewCommentForm } from "../../src/new-comment-form/NewCommentFormController";
 import { FocusTextareaStub } from "./FocusTextareaStub";
 
-export const PullRequestCommentControllerStub = (): ControlPullRequestComment => ({
-    hideReplyForm: vi.fn(),
-    showReplyForm: vi.fn(),
-    displayReplies: vi.fn(),
-    updateCurrentReply: vi.fn(),
+export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
+    buildInitialPresenter: vi.fn(),
+    saveNewComment: vi.fn(),
+    cancelNewComment: vi.fn(),
+    updateNewComment: vi.fn(),
     updateWritingZoneState: vi.fn(),
-    saveReply: vi.fn(),
-    getRelativeDateHelper: () => RelativeDateHelperStub,
     getFocusHelper: () => FocusTextareaStub(),
+    triggerPostSubmitCallback: (): void => {
+        // Do nothing
+    },
 });

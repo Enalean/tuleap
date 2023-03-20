@@ -17,20 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { errAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
-import type { ResultAsync } from "neverthrow";
-import type { CommentOnFile } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { SaveNewComment } from "@tuleap/plugin-pullrequest-comments";
+import type { NewCommentFormComponentConfig } from "../../src/new-comment-form/NewCommentFormController";
 
-export const SaveNewInlineCommentStub = {
-    withDefault: (): SaveNewComment => ({
-        postComment: (): ResultAsync<CommentOnFile, Fault> => {
-            return errAsync(
-                Fault.fromMessage(
-                    "SaveNewInlineCommentStub::postComment was called while it's not configured"
-                )
-            );
-        },
+export const NewCommentFormComponentConfigStub = {
+    withCancelActionAllowed: (): NewCommentFormComponentConfig => ({
+        is_cancel_allowed: true,
+        is_autofocus_enabled: true,
+    }),
+    withCancelActionDisallowed: (): NewCommentFormComponentConfig => ({
+        is_cancel_allowed: false,
+        is_autofocus_enabled: false,
     }),
 };

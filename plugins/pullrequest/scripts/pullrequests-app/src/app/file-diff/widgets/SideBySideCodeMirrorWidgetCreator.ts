@@ -36,6 +36,8 @@ import {
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
     NewCommentSaver,
+    NewCommentFormController,
+    PullRequestCommentTextareaFocusHelper,
 } from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 import { PullRequestCommentPresenterBuilder } from "../../comments/PullRequestCommentPresenterBuilder";
@@ -124,26 +126,14 @@ export const SideBySideCodeMirrorWidgetCreator = (
             }
 
             new_comment_element.setAttribute("class", "inline-comment-element");
-            new_comment_element.comment_saver = NewCommentSaver({
-                type: TYPE_INLINE_COMMENT,
-                pull_request_id: widget_params.pull_request_id,
-                user_id: widget_params.user_id,
-                comment_context: widget_params.context,
-            });
+
             const widget = widget_params.code_mirror.addLineWidget(
                 widget_params.line_number,
                 new_comment_element,
                 getWidgetPlacementOptions(widget_params)
             );
 
-            new_comment_element.post_rendering_callback = (): void => {
-                widget_params.post_rendering_callback();
-                widget.changed();
-            };
-
-            new_comment_element.post_submit_callback = (
-                comment_payload: PullRequestComment
-            ): void => {
+            const post_submit_callback = (comment_payload: PullRequestComment): void => {
                 widget.clear();
 
                 if (comment_payload.type !== TYPE_INLINE_COMMENT) {
@@ -162,19 +152,36 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 });
             };
 
-            new_comment_element.on_cancel_callback = (): void => {
+            const on_cancel_callback = (): void => {
                 widget.clear();
                 widget_params.post_rendering_callback();
             };
 
-            new_comment_element.config = {
-                is_cancel_allowed: true,
-                is_autofocus_enabled: true,
+            new_comment_element.post_rendering_callback = (): void => {
+                widget_params.post_rendering_callback();
+                widget.changed();
             };
 
-            new_comment_element.author_presenter = {
-                avatar_url: widget_params.user_avatar_url,
-            };
+            new_comment_element.controller = NewCommentFormController(
+                NewCommentSaver({
+                    type: TYPE_INLINE_COMMENT,
+                    pull_request_id: widget_params.pull_request_id,
+                    user_id: widget_params.user_id,
+                    comment_context: widget_params.context,
+                }),
+                PullRequestCommentTextareaFocusHelper(),
+                { avatar_url: widget_params.user_avatar_url },
+                {
+                    is_cancel_allowed: true,
+                    is_autofocus_enabled: true,
+                },
+                post_submit_callback,
+                (fault) => {
+                    // eslint-disable-next-line no-console
+                    console.error(String(fault));
+                },
+                on_cancel_callback
+            );
         },
     };
 };

@@ -22,7 +22,6 @@ import type {
     FileDiffPlaceholderWidget,
 } from "../../src/app/file-diff/types";
 import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
-import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
 import type { InlineCommentWidget } from "../../src/app/file-diff/types";
 
 const base_element = document.implementation.createHTMLDocument().createElement("div");
@@ -61,6 +60,8 @@ export const FileDiffWidgetStub = {
             showReplyForm: jest.fn(),
             updateCurrentReply: jest.fn(),
             getRelativeDateHelper: jest.fn(),
+            updateWritingZoneState: jest.fn(),
+            getFocusHelper: jest.fn(),
         },
         post_rendering_callback: noop,
         ...data,
@@ -70,17 +71,16 @@ export const FileDiffWidgetStub = {
         ...base_element,
         localName: "tuleap-pullrequest-new-comment-form",
         getBoundingClientRect: stubBounding(height),
-        comment_saver: SaveNewInlineCommentStub.withDefault(),
-        author_presenter: {
-            avatar_url: "url/to_user_avatar.png",
-        },
-        config: {
-            is_cancel_allowed: true,
-            is_autofocus_enabled: true,
+        controller: {
+            cancelNewComment: jest.fn(),
+            saveNewComment: jest.fn(),
+            updateNewComment: jest.fn(),
+            buildInitialPresenter: jest.fn(),
+            updateWritingZoneState: jest.fn(),
+            getFocusHelper: jest.fn(),
+            triggerPostSubmitCallback: jest.fn(),
         },
         post_rendering_callback: noop,
-        post_submit_callback: noop,
-        on_cancel_callback: noop,
     }),
 
     buildCodeCommentPlaceholder: (height = 20): FileDiffPlaceholderWidget => ({

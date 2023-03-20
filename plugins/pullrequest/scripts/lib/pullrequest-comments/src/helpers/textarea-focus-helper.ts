@@ -19,16 +19,18 @@
 
 export interface FocusTextArea {
     focusTextArea: (component_content: HTMLElement) => void;
+    resetTextArea: (component_content: HTMLElement) => void;
 }
 
 export const FOCUSABLE_TEXTAREA_CLASSNAME = "pull-request-comment-textarea";
 
+const getTextArea = (component_content: HTMLElement): HTMLTextAreaElement | null => {
+    return component_content.querySelector<HTMLTextAreaElement>(`.${FOCUSABLE_TEXTAREA_CLASSNAME}`);
+};
+
 export const PullRequestCommentTextareaFocusHelper = (): FocusTextArea => ({
     focusTextArea: (component_content: HTMLElement): void => {
-        const target_textarea = component_content.querySelector<HTMLTextAreaElement>(
-            `.${FOCUSABLE_TEXTAREA_CLASSNAME}`
-        );
-
+        const target_textarea = getTextArea(component_content);
         if (!target_textarea) {
             return;
         }
@@ -38,5 +40,14 @@ export const PullRequestCommentTextareaFocusHelper = (): FocusTextArea => ({
             target_textarea.value.length,
             target_textarea.value.length
         );
+    },
+    resetTextArea: (component_content: HTMLElement): void => {
+        const target_textarea = getTextArea(component_content);
+        if (!target_textarea) {
+            return;
+        }
+
+        target_textarea.value = "";
+        target_textarea.blur();
     },
 });

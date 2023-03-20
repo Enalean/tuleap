@@ -131,6 +131,7 @@ $thread-border-width: 2px;
 
 .pull-request-comment-write-mode-header-tabs {
     margin: 0;
+    cursor: pointer;
 }
 
 .pull-request-comment-file-path,
@@ -225,12 +226,17 @@ $thread-border-width: 2px;
     }
 }
 
-.pull-request-comment-content-main-color {
+.pull-request-comment-with-writing-zone-active {
+    transition: border-color 75ms ease-in-out;
+    border-color: var(--tlp-main-color-transparent-50);
+
     &::before {
+        transition: border-color 75ms ease-in-out;
         border-color: transparent var(--tlp-main-color) transparent transparent;
     }
 
     &::after {
+        transition: background 75ms ease-in-out;
         background: var(--tlp-main-color);
     }
 }
