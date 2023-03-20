@@ -34,7 +34,6 @@ import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRet
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import type { GroupOfItems } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { AddNewLink } from "../../../../domain/fields/link-field/AddNewLink";
@@ -46,7 +45,6 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
@@ -74,7 +72,7 @@ export type LinkFieldControllerType = {
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     changeNewLinkType(link: NewLink, new_link_type: LinkType): NewLinkCollectionPresenter;
-    retrievePossibleParentsGroups(): PromiseLike<GroupOfItems>;
+    getPossibleParents(): PromiseLike<ReadonlyArray<LinkableArtifact>>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
 };
@@ -200,13 +198,12 @@ export const LinkFieldController = (
         return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
     },
 
-    retrievePossibleParentsGroups(): PromiseLike<GroupOfItems> {
+    getPossibleParents(): PromiseLike<ReadonlyArray<LinkableArtifact>> {
         return parents_retriever.getPossibleParents(current_tracker_identifier).match(
-            (possible_parents) =>
-                PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
+            (possible_parents) => possible_parents,
             (fault) => {
                 event_dispatcher.dispatch(WillNotifyFault(fault));
-                return PossibleParentsGroup.buildEmpty();
+                return [];
             }
         );
     },

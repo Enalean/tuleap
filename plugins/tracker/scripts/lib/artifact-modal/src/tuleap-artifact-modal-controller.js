@@ -195,13 +195,11 @@ function ArtifactModalController(
         getLinkFieldAutoCompleter: () => {
             return ArtifactLinkSelectorAutoCompleter(
                 api_client,
-                possible_parents_cache,
                 already_linked_verifier,
                 user_history_cache,
                 api_client,
                 event_dispatcher,
                 current_artifact_identifier,
-                current_tracker_identifier,
                 UserIdentifierProxy.fromUserId(modal_model.user_id)
             );
         },

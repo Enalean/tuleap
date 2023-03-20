@@ -53,7 +53,6 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import { setCatalog } from "../../../../gettext-catalog";
-import type { GroupOfItems } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -409,7 +408,7 @@ describe(`LinkFieldController`, () => {
         });
     });
 
-    describe(`retrievePossibleParentsGroups`, () => {
+    describe(`getPossibleParents`, () => {
         beforeEach(() => {
             const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
             const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
@@ -418,18 +417,14 @@ describe(`LinkFieldController`, () => {
             );
         });
 
-        const retrieveParents = (): PromiseLike<GroupOfItems> => {
-            return getController().retrievePossibleParentsGroups();
+        const getParents = (): PromiseLike<ReadonlyArray<LinkableArtifact>> => {
+            return getController().getPossibleParents();
         };
 
-        it(`will return the group of possible parents for this tracker`, async () => {
-            const group = await retrieveParents();
+        it(`will return the possible parents for this tracker`, async () => {
+            const parents = await getParents();
 
-            expect(group.is_loading).toBe(false);
-            const parent_ids = group.items.map((item) => {
-                const linkable_artifact = item.value as LinkableArtifact;
-                return linkable_artifact.id;
-            });
+            const parent_ids = parents.map((parent) => parent.id);
             expect(parent_ids).toHaveLength(2);
             expect(parent_ids).toContain(FIRST_PARENT_ID);
             expect(parent_ids).toContain(SECOND_PARENT_ID);
@@ -437,14 +432,13 @@ describe(`LinkFieldController`, () => {
 
         it(`when there is an error during retrieval of the possible parents,
             it will notify that there has been a fault
-            and will return an empty group`, async () => {
+            and will return an empty array`, async () => {
             parents_retriever = RetrievePossibleParentsStub.withFault(Fault.fromMessage("Ooops"));
 
-            const group = await retrieveParents();
+            const parents = await getParents();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
-            expect(group.is_loading).toBe(false);
-            expect(group.items).toHaveLength(0);
+            expect(parents).toHaveLength(0);
         });
     });
 });
