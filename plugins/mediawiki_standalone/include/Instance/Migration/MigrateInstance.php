@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
+use Tuleap\MediawikiStandalone\Instance\InitializationLanguageCodeProvider;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsState;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -51,9 +52,10 @@ final class MigrateInstance
         private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly \Project $project,
         private readonly bool $use_central_database,
-        private readonly string $short_language_code,
+        private readonly InitializationLanguageCodeProvider $default_language_code_provider,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
+        private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
     ) {
     }
 
@@ -67,6 +69,8 @@ final class MigrateInstance
         MediaWikiManagementCommandFactory $command_factory,
         OngoingInitializationsState $initializations_state,
         SwitchMediawikiService $switch_mediawiki_service,
+        LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
+        InitializationLanguageCodeProvider $default_language_code_provider,
     ): Option {
         if ($event->getEventName() !== self::TOPIC) {
             return Option::nothing(self::class);
@@ -81,9 +85,10 @@ final class MigrateInstance
                 $command_factory,
                 $project_factory->getValidProjectById($payload['project_id']),
                 $central_database_parameter_generator->getCentralDatabase() !== null,
-                (string) ($payload['language_code'] ?? \BaseLanguage::DEFAULT_LANG_SHORT),
+                $default_language_code_provider,
                 $initializations_state,
                 $switch_mediawiki_service,
+                $legacy_mediawiki_language_retriever,
             )
         );
     }
@@ -143,11 +148,18 @@ final class MigrateInstance
      */
     private function registerInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        $payload             = [
+        $short_language_code = $this->default_language_code_provider->getLanguageCode();
+        $language            = $this->legacy_mediawiki_language_retriever->getLanguageFor((int) $this->project->getID());
+        if ($language) {
+            $short_language_code = \Psl\Str\before($language, '_') ?? $short_language_code;
+        }
+
+        $payload = [
             'project_id' => (int) $this->project->getID(),
             'project_name' => $this->project->getUnixNameLowerCase(),
-            'lang' => $this->short_language_code,
+            'lang' => $short_language_code,
         ];
+
         $payload['dbprefix'] = 'mw';
         if ($this->use_central_database) {
             $payload['dbprefix'] = 'mw_' . $this->project->getID() . '_';
