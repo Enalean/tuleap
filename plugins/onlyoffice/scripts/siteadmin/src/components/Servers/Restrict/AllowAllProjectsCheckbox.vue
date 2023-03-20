@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import type { Server } from "../../../type";
 import { CONFIG } from "../../../injection-keys";
-import { strictInject } from "../../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { ref } from "vue";
 import UnrestictionConfirmationModal from "./UnrestictionConfirmationModal.vue";
 import RestrictionConfirmationModal from "./RestrictionConfirmationModal.vue";

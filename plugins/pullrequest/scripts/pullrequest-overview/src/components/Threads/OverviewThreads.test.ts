@@ -43,6 +43,9 @@ import {
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
 import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
     wrapper.setProps({
@@ -65,20 +68,29 @@ describe("OverviewThreads", () => {
     });
 
     const getWrapper = (): VueWrapper => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
+            switch (key) {
+                case OVERVIEW_APP_BASE_URL_KEY:
+                    return new URL("https://example.com");
+                case DISPLAY_TULEAP_API_ERROR:
+                    return display_error_callback;
+                case PULL_REQUEST_ID_KEY:
+                    return "15";
+                case CURRENT_USER_ID:
+                    return 102;
+                case CURRENT_USER_AVATAR_URL:
+                    return "/url/to/user_102_profile_page.html";
+                case USER_DATE_TIME_FORMAT_KEY:
+                    return "d/m/Y H:i";
+                case USER_LOCALE_KEY:
+                    return "fr_FR";
+                case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
+                    return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
+            }
+        });
         return shallowMount(OverviewThreads, {
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [OVERVIEW_APP_BASE_URL_KEY as symbol]: new URL("https://example.com"),
-                    [DISPLAY_TULEAP_API_ERROR as symbol]: display_error_callback,
-                    [PULL_REQUEST_ID_KEY as symbol]: "15",
-                    [CURRENT_USER_ID as symbol]: 102,
-                    [CURRENT_USER_AVATAR_URL as symbol]: "/url/to/user_102_profile_page.html",
-                    [USER_DATE_TIME_FORMAT_KEY as symbol]: "d/m/Y H:i",
-                    [USER_LOCALE_KEY as symbol]: "fr_FR",
-                    [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY as symbol]:
-                        PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
-                },
                 stubs: {
                     [PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME]: true,
                     [PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME]: true,

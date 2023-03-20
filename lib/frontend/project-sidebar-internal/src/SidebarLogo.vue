@@ -95,7 +95,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { sanitizeURL } from "./url-sanitizer";
-import { strictInject } from "./strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 

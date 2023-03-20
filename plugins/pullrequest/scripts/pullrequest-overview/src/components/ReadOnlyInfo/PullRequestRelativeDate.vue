@@ -37,7 +37,7 @@ import { computed } from "vue";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,

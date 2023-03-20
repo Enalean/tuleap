@@ -29,7 +29,7 @@ import ListOfServers from "./Servers/ListOfServers.vue";
 import RestrictServer from "./Servers/Restrict/RestrictServer.vue";
 import { CONFIG, NAVIGATION } from "../injection-keys";
 import type { Server } from "../type";
-import { strictInject } from "../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const props = defineProps<{ location: Location; history: History }>();
 

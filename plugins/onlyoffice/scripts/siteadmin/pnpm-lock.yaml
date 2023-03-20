@@ -7,6 +7,7 @@ specifiers:
   '@tuleap/fetch-result': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/tlp-modal': workspace:*
+  '@tuleap/vue-strict-inject': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vue/test-utils': ^2.0.2
   mitt: ^3.0.0
@@ -19,6 +20,7 @@ dependencies:
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
+  '@tuleap/vue-strict-inject': link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   mitt: 3.0.0
   vue: 3.2.37

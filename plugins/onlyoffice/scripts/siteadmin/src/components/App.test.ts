@@ -31,10 +31,13 @@ import { mount, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import ListOfServers from "./Servers/ListOfServers.vue";
 import RestrictServer from "./Servers/Restrict/RestrictServer.vue";
-import { CONFIG, NAVIGATION } from "../injection-keys";
+import { NAVIGATION } from "../injection-keys";
 import type { Config, Server } from "../type";
-import { defineComponent } from "vue";
-import { strictInject } from "../helpers/strict-inject";
+import { defineComponent, inject } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import type { Navigation } from "../type";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("App", () => {
     it("should display list of servers by default", () => {
@@ -50,15 +53,12 @@ describe("App", () => {
             restrict_url: "/restrict/2",
         } as Server;
 
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server_a, server_b],
+            base_url: "/",
+        } as unknown as Config);
+
         const wrapper = shallowMount(App, {
-            global: {
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [server_a, server_b],
-                        base_url: "/",
-                    } as unknown as Config,
-                },
-            },
             props: {
                 location: { pathname: "/" } as Location,
                 history: window.history,
@@ -82,15 +82,12 @@ describe("App", () => {
             restrict_url: "/restrict/2",
         } as Server;
 
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server_a, server_b],
+            base_url: "/",
+        } as unknown as Config);
+
         const wrapper = shallowMount(App, {
-            global: {
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [server_a, server_b],
-                        base_url: "/",
-                    } as unknown as Config,
-                },
-            },
             props: {
                 location: { pathname: "/restrict/2" } as Location,
                 history: window.history,
@@ -126,9 +123,9 @@ describe("App", () => {
         // eslint-disable-next-line vue/one-component-per-file
         const FakeListOfServers = defineComponent({
             setup() {
-                const navigation = strictInject(NAVIGATION);
+                const navigation: Navigation | undefined = inject(NAVIGATION);
                 restrictServerAction = (): void => {
-                    navigation.restrict(server_b);
+                    navigation?.restrict(server_b);
                 };
             },
             template: '<span id="server-list"></span>',
@@ -137,9 +134,9 @@ describe("App", () => {
         // eslint-disable-next-line vue/one-component-per-file
         const FakeRestrictServer = defineComponent({
             setup() {
-                const navigation = strictInject(NAVIGATION);
+                const navigation: Navigation | undefined = inject(NAVIGATION);
                 cancelRestrictionAction = (): void => {
-                    navigation.cancelRestriction();
+                    navigation?.cancelRestriction();
                 };
             },
             template: '<span id="restrict-server"></span>',
@@ -147,14 +144,13 @@ describe("App", () => {
 
         const pushState = vi.fn();
 
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
+            servers: [server_a, server_b],
+            base_url: "/",
+        } as unknown as Config);
+
         const wrapper = mount(App, {
             global: {
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [server_a, server_b],
-                        base_url: "/",
-                    } as unknown as Config,
-                },
                 stubs: {
                     RestrictServer: FakeRestrictServer,
                     ListOfServers: FakeListOfServers,

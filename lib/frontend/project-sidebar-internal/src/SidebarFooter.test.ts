@@ -20,12 +20,14 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SidebarFooter from "./SidebarFooter.vue";
 import { example_config } from "./project-sidebar-example-config";
-import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 import type { Configuration } from "./configuration";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+
+vi.mock("@tuleap/vue-strict-inject");
 
 describe("SidebarFooter", () => {
     it("displays a link with the version information without copyright", () => {
@@ -36,13 +38,10 @@ describe("SidebarFooter", () => {
                 copyright: null,
             },
         };
-        const wrapper = shallowMount(SidebarFooter, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: config,
-                },
-            },
-        });
+
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+
+        const wrapper = shallowMount(SidebarFooter);
 
         expect(wrapper.find("a").exists()).toBe(true);
         expect(wrapper.find("[data-test=copyright]").exists()).toBe(false);
@@ -58,13 +57,10 @@ describe("SidebarFooter", () => {
                 copyright: expected_copyright,
             },
         };
-        const wrapper = shallowMount(SidebarFooter, {
-            global: {
-                provide: {
-                    [SIDEBAR_CONFIGURATION.valueOf()]: config,
-                },
-            },
-        });
+
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(config);
+
+        const wrapper = shallowMount(SidebarFooter);
 
         expect(wrapper.find("[data-test=copyright]").exists()).toBe(true);
         expect(wrapper.text()).toContain(expected_copyright);

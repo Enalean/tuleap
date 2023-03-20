@@ -33,7 +33,7 @@ import { useGettext } from "vue3-gettext";
 import { NewCommentSaver } from "@tuleap/plugin-pullrequest-comments";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { strictInject } from "../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 import {
     CURRENT_USER_AVATAR_URL,

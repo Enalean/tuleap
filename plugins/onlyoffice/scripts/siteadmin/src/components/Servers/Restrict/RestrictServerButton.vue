@@ -30,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import type { Server } from "../../../type";
-import { strictInject } from "../../../helpers/strict-inject";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { NAVIGATION } from "../../../injection-keys";
 
 defineProps<{ server: Server }>();
