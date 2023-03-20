@@ -32,9 +32,6 @@ import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkM
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
-import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
@@ -44,10 +41,6 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
-import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
-import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
-import { okAsync } from "neverthrow";
-import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -147,9 +140,7 @@ describe(`NewLinkTemplate`, () => {
         const getHost = (new_link: NewLink): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
-            const parents_retriever = RetrievePossibleParentsStub.withoutParents();
-            const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-            const event_dispatcher = DispatchEventsStub.buildNoOp();
+            const current_artifact_reference = ArtifactCrossReferenceStub.withRef("bug #22");
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -158,28 +149,15 @@ describe(`NewLinkTemplate`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-                ArtifactLinkSelectorAutoCompleter(
-                    RetrieveMatchingArtifactStub.withMatchingArtifact(
-                        okAsync(LinkableArtifactStub.withDefaults())
-                    ),
-                    parents_retriever,
-                    link_verifier,
-                    RetrieveUserHistoryStub.withoutUserHistory(),
-                    SearchArtifactsStub.withoutResults(),
-                    event_dispatcher,
-                    current_artifact_identifier,
-                    current_tracker_identifier,
-                    UserIdentifierStub.fromUserId(101)
-                ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 ChangeNewLinkTypeStub.withCount(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                parents_retriever,
-                link_verifier,
+                RetrievePossibleParentsStub.withoutParents(),
+                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                event_dispatcher,
+                DispatchEventsStub.buildNoOp(),
                 {
                     field_id: 525,
                     label: "Artifact link",
@@ -188,7 +166,7 @@ describe(`NewLinkTemplate`, () => {
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
-                ArtifactCrossReferenceStub.withRef("bug #22"),
+                current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair()
             );
 

@@ -40,9 +40,6 @@ import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/lin
 import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
-import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
@@ -51,10 +48,6 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
-import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
-import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
-import { okAsync } from "neverthrow";
-import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
@@ -178,9 +171,6 @@ describe(`LinkedArtifactTemplate`, () => {
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
-            const parents_retriever = RetrievePossibleParentsStub.withoutParents();
-            const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-            const event_dispatcher = DispatchEventsStub.buildNoOp();
             const current_artifact_reference = ArtifactCrossReferenceStub.withRef("story #72");
 
             const controller = LinkFieldController(
@@ -190,28 +180,15 @@ describe(`LinkedArtifactTemplate`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
-                ArtifactLinkSelectorAutoCompleter(
-                    RetrieveMatchingArtifactStub.withMatchingArtifact(
-                        okAsync(LinkableArtifactStub.withDefaults())
-                    ),
-                    parents_retriever,
-                    link_verifier,
-                    RetrieveUserHistoryStub.withoutUserHistory(),
-                    SearchArtifactsStub.withoutResults(),
-                    event_dispatcher,
-                    current_artifact_identifier,
-                    current_tracker_identifier,
-                    UserIdentifierStub.fromUserId(101)
-                ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 ChangeNewLinkTypeStub.withCount(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                parents_retriever,
-                link_verifier,
+                RetrievePossibleParentsStub.withoutParents(),
+                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                event_dispatcher,
+                DispatchEventsStub.buildNoOp(),
                 {
                     field_id: 457,
                     label: "Artifact link",

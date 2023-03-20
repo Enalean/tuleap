@@ -34,7 +34,6 @@ import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRet
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import type { GroupOfItems } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -49,7 +48,6 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
-import type { LinkField } from "./LinkField";
 import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import type { DispatchEvents } from "../../../../domain/DispatchEvents";
@@ -73,7 +71,6 @@ export type LinkFieldControllerType = {
         link: LinkedArtifact,
         new_link_type: LinkType
     ): LinkedArtifactCollectionPresenter;
-    autoComplete(host: LinkField, query: string): void;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     changeNewLinkType(link: NewLink, new_link_type: LinkType): NewLinkCollectionPresenter;
@@ -107,7 +104,6 @@ export const LinkFieldController = (
     deleted_link_adder: AddLinkMarkedForRemoval,
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
-    links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     new_link_adder: AddNewLink,
     new_link_remover: DeleteNewLink,
     new_links_retriever: RetrieveNewLinks,
@@ -184,8 +180,6 @@ export const LinkFieldController = (
         link_type_changer.changeLinkType(link, type);
         return buildPresenter(links_store, deleted_link_verifier);
     },
-
-    autoComplete: links_autocompleter.autoComplete,
 
     clearFaultNotification(): void {
         event_dispatcher.dispatch(WillClearFaultNotification());

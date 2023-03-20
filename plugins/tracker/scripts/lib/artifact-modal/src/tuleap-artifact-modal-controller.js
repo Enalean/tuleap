@@ -172,17 +172,6 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
-                ArtifactLinkSelectorAutoCompleter(
-                    api_client,
-                    possible_parents_cache,
-                    already_linked_verifier,
-                    user_history_cache,
-                    api_client,
-                    event_dispatcher,
-                    current_artifact_identifier,
-                    current_tracker_identifier,
-                    UserIdentifierProxy.fromUserId(modal_model.user_id)
-                ),
                 new_links_store,
                 new_links_store,
                 new_links_store,
@@ -201,6 +190,19 @@ function ArtifactModalController(
                     modal_model.tracker.color_name
                 ),
                 LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types)
+            );
+        },
+        getLinkFieldAutoCompleter: () => {
+            return ArtifactLinkSelectorAutoCompleter(
+                api_client,
+                possible_parents_cache,
+                already_linked_verifier,
+                user_history_cache,
+                api_client,
+                event_dispatcher,
+                current_artifact_identifier,
+                current_tracker_identifier,
+                UserIdentifierProxy.fromUserId(modal_model.user_id)
             );
         },
         getFileFieldController: (field) => {

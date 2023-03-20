@@ -43,10 +43,12 @@ import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 import "./LinkTypeSelectorElement";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
+    readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
     readonly artifact_link_select: HTMLSelectElement;
     link_selector: LinkSelector;
     field_presenter: LinkFieldPresenter;
@@ -170,7 +172,7 @@ export const current_link_type_descriptor = {
         return link_type;
     },
     observe: (host: LinkField): void => {
-        host.controller.autoComplete(host, "");
+        host.autocompleter.autoComplete(host, "");
     },
 };
 
@@ -230,7 +232,7 @@ export const LinkField = define<LinkField>({
                 search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
                 search_field_callback: (query) => {
                     host.controller.clearFaultNotification();
-                    return controller.autoComplete(host, query);
+                    return host.autocompleter.autoComplete(host, query);
                 },
                 templating_callback: getLinkableArtifactTemplate,
                 selection_callback: (value) => {
@@ -252,6 +254,7 @@ export const LinkField = define<LinkField>({
             return controller;
         },
     },
+    autocompleter: undefined,
     field_presenter: undefined,
     allowed_link_types: {
         set: setAllowedTypes,
