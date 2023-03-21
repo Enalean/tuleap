@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactLinkFieldInfo } from "../../../../domain/fields/link-field/ArtifactLinkFieldInfo";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-
-export type LinkFieldPresenter = {
-    readonly field_id: number;
-    readonly label: string;
-    readonly current_artifact_reference: ArtifactCrossReference | null;
+type AllowedLinkType = {
+    readonly shortname: string;
+    readonly forward_label: string;
+    readonly reverse_label: string;
 };
 
-export const LinkFieldPresenter = {
-    fromFieldAndCrossReference: (
-        field: ArtifactLinkFieldInfo,
-        current_artifact_reference: ArtifactCrossReference | null
-    ): LinkFieldPresenter => ({
-        field_id: field.field_id,
-        label: field.label,
-        current_artifact_reference,
-    }),
+export type ArtifactLinkFieldInfo = {
+    readonly field_id: number;
+    readonly label: string;
+    readonly allowed_types: ReadonlyArray<AllowedLinkType>;
 };

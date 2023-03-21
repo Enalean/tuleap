@@ -20,6 +20,7 @@
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
 const FIELD_ID = 920;
 const FIELD_LABEL = "Artifact link";
@@ -33,12 +34,7 @@ describe(`LinkFieldPresenter`, () => {
 
     const build = (): LinkFieldPresenter =>
         LinkFieldPresenter.fromFieldAndCrossReference(
-            {
-                field_id: FIELD_ID,
-                label: FIELD_LABEL,
-                type: "art_link",
-                allowed_types: [],
-            },
+            ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID, label: FIELD_LABEL }),
             cross_reference
         );
 

@@ -45,6 +45,7 @@ import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStu
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
+import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -158,12 +159,7 @@ describe(`NewLinkTemplate`, () => {
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
                 DispatchEventsStub.buildNoOp(),
-                {
-                    field_id: 525,
-                    label: "Artifact link",
-                    type: "art_link",
-                    allowed_types: [],
-                },
+                ArtifactLinkFieldInfoStub.withDefaults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
                 current_artifact_reference,

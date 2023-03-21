@@ -65,6 +65,7 @@ import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStu
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
+import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -129,12 +130,7 @@ describe(`LinkFieldController`, () => {
             link_verifier,
             verify_is_tracker_in_a_hierarchy,
             event_dispatcher,
-            {
-                field_id: FIELD_ID,
-                type: "art_link",
-                label: "Artifact link",
-                allowed_types: [],
-            },
+            ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID }),
             current_artifact_identifier,
             current_tracker_identifier,
             cross_reference,

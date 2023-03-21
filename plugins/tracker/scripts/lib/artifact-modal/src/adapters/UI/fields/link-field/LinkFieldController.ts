@@ -32,7 +32,7 @@ import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/lin
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
 import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRetrievalFault";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ArtifactLinkFieldInfo } from "../../../../domain/fields/link-field/ArtifactLinkFieldInfo";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -111,7 +111,7 @@ export const LinkFieldController = (
     link_verifier: VerifyIsAlreadyLinked,
     tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
     event_dispatcher: DispatchEvents,
-    field: ArtifactLinkFieldStructure,
+    field: ArtifactLinkFieldInfo,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null,
