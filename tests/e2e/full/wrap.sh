@@ -36,14 +36,7 @@ cypress_version="$(python3 -c 'import json,sys;print(json.load(sys.stdin)["versi
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
-
-wait_until_tests_are_executed() {
-    local test_phpunit_container_id="$($DOCKERCOMPOSE ps -q test-phpunit)"
-    local test_cypress_container_id="$($DOCKERCOMPOSE ps -q test-cypress)"
-
-    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$test_cypress_container_id" || \
-        echo 'Tests take to much time to execute. End of execution will not be waited for!'
-}
+trap clean_env EXIT
 
 mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
@@ -53,7 +46,14 @@ export TEST_RESULT_OUTPUT="$test_results_folder"
 export CYPRESS_VERSION="$cypress_version"
 $DOCKERCOMPOSE up -d --build
 
-wait_until_tests_are_executed
+# Give a bit of time for containers to be in "running" state
+sleep 1
+
+test_phpunit_container_id="$($DOCKERCOMPOSE ps -q test-phpunit)"
+test_cypress_container_id="$($DOCKERCOMPOSE ps -q test-cypress)"
+
+$TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_phpunit_container_id" "$test_cypress_container_id" || \
+        echo 'Tests take to much time to execute. End of execution will not be waited for!'
 
 mkdir -p "$test_results_folder/logs"
 $DOCKERCOMPOSE cp tuleap:/var/log/ "$test_results_folder/logs"
@@ -63,4 +63,5 @@ $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 $DOCKERCOMPOSE logs test-phpunit > "$test_results_folder/logs/test-phpunit.log"
 $DOCKERCOMPOSE logs test-cypress > "$test_results_folder/logs/test-cypress.log"
 
-clean_env
+[ "$(docker inspect "$test_phpunit_container_id" --format='{{.State.ExitCode}}')" -eq 0 ]
+[ "$(docker inspect "$test_cypress_container_id" --format='{{.State.ExitCode}}')" -eq 0 ]
