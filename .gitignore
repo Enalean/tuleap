@@ -44,6 +44,7 @@ ENTERPRISE_BUILD
 tsconfig.tsbuildinfo
 .turbo/
 js-test-results/
+result
 
 #legacy
 coverage/
