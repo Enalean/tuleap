@@ -40,14 +40,8 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
 
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $git_mirror_mapper;
-
     /** @var CSRFSynchronizerToken */
     private $csrf;
-
-    /** @var Git_MirrorResourceRestrictor */
-    private $git_mirror_resource_restrictor;
 
     /** @var ProjectManager */
     private $project_manager;
@@ -96,8 +90,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken $csrf,
-        Git_Mirror_MirrorDataMapper $git_mirror_factory,
-        Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
         RegexpFineGrainedRetriever $regexp_retriever,
@@ -112,8 +104,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;
-        $this->git_mirror_mapper                = $git_mirror_factory;
-        $this->git_mirror_resource_restrictor   = $git_mirror_resource_restrictor;
         $this->project_manager                  = $project_manager;
         $this->git_system_event_manager         = $git_system_event_manager;
         $this->regexp_retriever                 = $regexp_retriever;
@@ -164,16 +154,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->big_object_authorization_manager,
                 new JavascriptViteAsset($this->include_assets, 'src/gitolite.ts'),
                 $this->version_detector
-            );
-        } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction') {
-            return new Git_AdminMirrorController(
-                $this->csrf,
-                $this->git_mirror_mapper,
-                $this->git_mirror_resource_restrictor,
-                $this->project_manager,
-                $this->git_system_event_manager,
-                $this->admin_page_renderer,
-                new JavascriptViteAsset($this->include_assets, 'src/mirror/index.ts'),
             );
         } else {
             return new GeneralSettingsController(

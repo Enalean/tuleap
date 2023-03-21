@@ -32,10 +32,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user;
     private $user_manager;
     private $sshkey_dumper;
-    /**
-     * @var Git_SystemEventManager&\Mockery\MockInterface
-     */
-    private $system_event_manager;
 
     protected function setUp(): void
     {
@@ -45,7 +41,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager         = \Mockery::spy(\UserManager::class);
         $this->sshkey_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
         $this->user_account_manager = \Mockery::spy(\Git_UserAccountManager::class);
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->logger               = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
@@ -58,7 +53,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->sshkey_dumper,
             $this->user_account_manager,
-            $this->system_event_manager,
             $this->logger
         );
 
@@ -74,7 +68,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->sshkey_dumper,
             $this->user_account_manager,
-            $this->system_event_manager,
             $this->logger
         );
 
@@ -93,7 +86,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->sshkey_dumper,
             $this->user_account_manager,
-            $this->system_event_manager,
             $this->logger
         );
 
@@ -118,7 +110,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->sshkey_dumper,
             $this->user_account_manager,
-            $this->system_event_manager,
             $this->logger
         );
 
@@ -137,7 +128,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->sshkey_dumper,
             $this->user_account_manager,
-            $this->system_event_manager,
             $this->logger
         );
 

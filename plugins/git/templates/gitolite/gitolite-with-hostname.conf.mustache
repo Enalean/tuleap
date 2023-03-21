@@ -1,15 +1,5 @@
-{{# has_mirror }}
-@mirrors ={{# mirrors }} {{ . }}{{/ mirrors }}
-
-
-repo    gitolite-admin
-    R       =   @mirrors
-    RW+     =   id_rsa_gl-adm
-{{/ has_mirror }}
-{{^ has_mirror }}
 repo    gitolite-admin
     RW+     =   id_rsa_gl-adm
-{{/ has_mirror }}
 
 # Codendiadm has write access to all repositories to merge and update pull requests
 repo @all

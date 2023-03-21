@@ -33,7 +33,6 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
     private $repository_id;
     private $repository;
     private $repository_factory;
-    private $system_event_manager;
     private $ugroups_to_notify_dao;
     private $users_to_notify_dao;
 
@@ -68,7 +67,6 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
         $this->event->injectDependencies(
             $this->repository_factory,
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
-            $this->system_event_manager,
             $this->ugroups_to_notify_dao,
             $this->users_to_notify_dao,
             $this->event_manager
@@ -86,13 +84,6 @@ final class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->ugroups_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
         $this->users_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
-
-        $this->event->process();
-    }
-
-    public function testItAsksToDeleteRepositoryFromManifestFiles(): void
-    {
-        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestRepoDelete')->with($this->repository->getPath())->once();
 
         $this->event->process();
     }

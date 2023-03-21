@@ -34,8 +34,6 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends \Tuleap\Test\P
     private $dao;
     private $backup_directory;
     private $repository_factory;
-    private $mirror_updater;
-    private $mirror_data_mapper;
 
     protected function setUp(): void
     {
@@ -45,16 +43,12 @@ final class GitRepositoryManagerDeleteAllRepositoriesTest extends \Tuleap\Test\P
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->dao                      = Mockery::mock(GitDao::class);
         $this->backup_directory         = vfsStream::setup()->url();
-        $this->mirror_updater           = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
         $this->git_repository_manager = new GitRepositoryManager(
             $this->repository_factory,
             $this->git_system_event_manager,
             $this->dao,
             $this->backup_directory,
-            $this->mirror_updater,
-            $this->mirror_data_mapper,
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),

@@ -34,9 +34,6 @@ class GitViews_ShowRepo_Content
      * @var GitViews_GitPhpViewer
      */
     private $gitphp_viewer;
-
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $mirror_data_mapper;
     /**
      * @var GitPhpAccessLogger
      */
@@ -46,14 +43,12 @@ class GitViews_ShowRepo_Content
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
         HTTPRequest $request,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPhpAccessLogger $access_logger,
     ) {
-        $this->repository         = $repository;
-        $this->gitphp_viewer      = $gitphp_viewer;
-        $this->request            = $request;
-        $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->access_logger      = $access_logger;
+        $this->repository    = $repository;
+        $this->gitphp_viewer = $gitphp_viewer;
+        $this->request       = $request;
+        $this->access_logger = $access_logger;
     }
 
     public function display()
@@ -72,22 +67,6 @@ class GitViews_ShowRepo_Content
         $html = '<div class="tlp-alert-info">';
 
         $html .= dgettext('tuleap-git', 'The repository is in queue for creation. Please check back here in a few minutes');
-
-        $default_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
-
-        if ($default_mirrors) {
-            $default_mirrors_names = array_map(
-                static function (Git_Mirror_Mirror $mirror): string {
-                    $purifier = Codendi_HTMLPurifier::instance();
-
-                    return $purifier->purify($mirror->name);
-                },
-                $default_mirrors
-            );
-
-            $html .= '<br/>';
-            $html .= sprintf(dgettext('tuleap-git', 'The repository will be automatically mirrored on: %1$s.'), implode(', ', $default_mirrors_names));
-        }
 
         $html .= '</div>';
         return $html;

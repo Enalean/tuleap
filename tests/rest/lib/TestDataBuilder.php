@@ -145,11 +145,6 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $forge_permission_delegate = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
 
         $retrieve_membership_permission = new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
-        $this->delegatePermissionToUser(
-            $forge_permission_delegate,
-            $retrieve_membership_permission,
-            'grokmirror users'
-        );
 
         $manage_users_permission = new User_ForgeUserGroupPermission_UserManagement();
         $this->delegatePermissionToUser(

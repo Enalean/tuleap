@@ -31,12 +31,11 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 
     public function __construct(
         $project_id,
-        $are_mirrors_defined,
         array $external_pane_presenters,
         $static_ugroups,
         $selected_ugroups,
     ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+        parent::__construct($project_id, $external_pane_presenters);
 
         $this->static_ugroups   = $static_ugroups;
         $this->selected_ugroups = $selected_ugroups;

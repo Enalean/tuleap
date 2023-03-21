@@ -25,9 +25,6 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
     /** @var ProjectManager */
     private $project_manager;
 
@@ -36,14 +33,12 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
 
     public function injectDependencies(
         \Psr\Log\LoggerInterface $logger,
-        Git_SystemEventManager $system_event_manager,
         ProjectManager $project_manager,
         Git_GitoliteDriver $gitolite_driver,
     ) {
-        $this->logger               = new WrapperLogger($logger, self::NAME);
-        $this->system_event_manager = $system_event_manager;
-        $this->project_manager      = $project_manager;
-        $this->gitolite_driver      = $gitolite_driver;
+        $this->logger          = new WrapperLogger($logger, self::NAME);
+        $this->project_manager = $project_manager;
+        $this->gitolite_driver = $gitolite_driver;
     }
 
     private function getProjectIdsFromParameters()
@@ -60,7 +55,6 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent
                 $this->gitolite_driver->dumpProjectRepoConf($project);
             }
         }
-        $this->system_event_manager->queueGrokMirrorGitoliteAdminUpdate();
 
         $this->done();
     }

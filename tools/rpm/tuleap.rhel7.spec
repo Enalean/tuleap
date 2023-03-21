@@ -807,7 +807,6 @@ done
 # plugin-git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/repositories
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/grokmirror
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
@@ -834,8 +833,6 @@ done
 %{__ln_s} %{APP_DIR}/plugins/git/bin/TULEAP_PROTECT_DEFAULT_BRANCH $RPM_BUILD_ROOT/usr/share/gitolite3/VREF/TULEAP_PROTECT_DEFAULT_BRANCH
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} plugins/git/etc/systemd/tuleap-process-system-events-grokmirror.timer $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} plugins/git/etc/systemd/tuleap-process-system-events-grokmirror.service $RPM_BUILD_ROOT/%{_unitdir}
 
 #
 ##codendiadm > gitolite sudo
@@ -1098,6 +1095,14 @@ if [ $1 -eq 0 ]; then
 fi
 
 
+%preun plugin-git
+if [ $1 -eq 0 ]; then
+    /usr/bin/systemctl stop tuleap-process-system-events-git.timer tuleap-process-system-events-git.service &>/dev/null || :
+    /usr/bin/systemctl disable tuleap-process-system-events-git.timer tuleap-process-system-events-git.service &>/dev/null || :
+fi
+/usr/bin/systemctl stop tuleap-process-system-events-grokmirror.timer tuleap-process-system-events-grokmirror.service &>/dev/null || :
+/usr/bin/systemctl disable tuleap-process-system-events-grokmirror.timer tuleap-process-system-events-grokmirror.service &>/dev/null || :
+
 %postun
 /usr/bin/systemctl unmask php81-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
@@ -1297,7 +1302,6 @@ fi
 %{APP_DIR}/plugins/git
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
-%attr(00775,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/gitolite3-suexec-wrapper.sh
@@ -1314,8 +1318,6 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.service
-%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.timer
-%attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.service
 %attr(00755,root,root) /usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
 /usr/share/gitolite3/VREF/TULEAP_PROTECT_DEFAULT_BRANCH
 

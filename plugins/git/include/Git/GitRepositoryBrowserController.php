@@ -51,10 +51,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     private $project_manager;
     /**
-     * @var \Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-    /**
      * @var History\GitPhpAccessLogger
      */
     private $access_logger;
@@ -75,7 +71,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
-        \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         History\GitPhpAccessLogger $access_logger,
         GitRepositoryHeaderDisplayer $header_displayer,
         FilesHeaderPresenterBuilder $files_header_presenter_builder,
@@ -83,7 +78,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     ) {
         $this->repository_factory             = $repository_factory;
         $this->project_manager                = $project_manager;
-        $this->mirror_data_mapper             = $mirror_data_mapper;
         $this->access_logger                  = $access_logger;
         $this->header_displayer               = $header_displayer;
         $this->files_header_presenter_builder = $files_header_presenter_builder;
@@ -157,7 +151,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             $repository,
             $git_php_viewer,
             $request,
-            $this->mirror_data_mapper,
             $this->access_logger
         );
         $view->display();

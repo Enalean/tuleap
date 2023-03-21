@@ -36,11 +36,6 @@ class Git_SystemCheck
     private $config_checker;
 
     /**
-     *  @var Git_SystemEventManager
-     */
-    private $system_event_manager;
-
-    /**
      * @var Git_GitoliteDriver
      */
     private $gitolite;
@@ -53,22 +48,19 @@ class Git_SystemCheck
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc $gitgc,
         Git_GitoliteDriver $gitolite,
-        Git_SystemEventManager $system_event_manager,
         PluginConfigChecker $config_checker,
         Plugin $git_plugin,
     ) {
-        $this->gitgc                = $gitgc;
-        $this->gitolite             = $gitolite;
-        $this->system_event_manager = $system_event_manager;
-        $this->config_checker       = $config_checker;
-        $this->git_plugin           = $git_plugin;
+        $this->gitgc          = $gitgc;
+        $this->gitolite       = $gitolite;
+        $this->config_checker = $config_checker;
+        $this->git_plugin     = $git_plugin;
     }
 
     public function process()
     {
         $this->gitolite->checkAuthorizedKeys();
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
-        $this->system_event_manager->queueGrokMirrorManifestCheck();
 
         $this->checkIncFolderAndFileOwnership();
     }

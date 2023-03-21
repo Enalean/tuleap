@@ -33,7 +33,6 @@ export default vite.defineAppConfig(
                 input: {
                     gitolite: path.resolve(__dirname, "src/gitolite.ts"),
                     gerrit: path.resolve(__dirname, "src/gerrit/index.ts"),
-                    mirror: path.resolve(__dirname, "src/mirror/index.ts"),
                     theme: path.resolve(__dirname, "themes/git.scss"),
                 },
             },

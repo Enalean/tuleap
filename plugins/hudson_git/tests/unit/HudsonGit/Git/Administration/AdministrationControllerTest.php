@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use GitRepository;
@@ -89,11 +88,6 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $header_renderer;
 
     /**
-     * @var Git_Mirror_MirrorDataMapper|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $mirror_data_mapper;
-
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
      */
     private $jenkins_server_factory;
@@ -116,7 +110,6 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_permissions_manager = Mockery::mock(GitPermissionsManager::class);
         $this->header_renderer         = Mockery::mock(HeaderRenderer::class);
         $this->renderer                = Mockery::mock(TemplateRenderer::class);
-        $this->mirror_data_mapper      = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
         $this->jenkins_server_factory  = Mockery::mock(JenkinsServerFactory::class);
         $this->include_assets          = Mockery::mock(IncludeAssets::class);
         $this->log_factory             = Mockery::mock(LogFactory::class);
@@ -124,7 +117,6 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller = new AdministrationController(
             $this->project_manager,
             $this->git_permissions_manager,
-            $this->mirror_data_mapper,
             $this->jenkins_server_factory,
             $this->log_factory,
             $this->header_renderer,
@@ -243,8 +235,6 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->project
             )
             ->andReturnTrue();
-
-        $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
 
         $jenkins_server = new JenkinsServer(1, 'url', 'encrypted_token', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')

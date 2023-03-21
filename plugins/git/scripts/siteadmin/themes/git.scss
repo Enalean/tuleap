@@ -35,56 +35,6 @@
     }
 }
 
-/* -------------------- MIRROR ---------------------- */
-
-.mirror-global-action-container {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
-.mirror-info {
-    display: flex;
-}
-
-.mirror-info-two {
-    margin: 0 0 0 calc(var(--tlp-medium-spacing) * 2);
-}
-
-.mirror-info-two-ssh-key {
-    word-break: break-all;
-}
-
-.mirror-info-two-ssh-key-icon {
-    margin: 0 5px;
-}
-
-.mirror-action-container {
-    display: flex;
-    flex: 0 1 auto;
-    justify-content: center;
-}
-
-.mirror-action {
-    display: flex;
-    align-items: center;
-}
-
-.mirror-action-delete-button,
-.mirror-action-restrict-button {
-    margin: 0 0 0 calc(var(--tlp-medium-spacing) / 2);
-}
-
-.mirror-configuration {
-    line-height: 30px;
-}
-
-.mirror-repo-list-for-project:not(:last-child) {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
-.mirror-repo-list-for-project-reponame {
-    width: 100%;
-}
-
 /* -------------------- GERRIT ---------------------- */
 
 .add-gerrit-server-button {
@@ -145,11 +95,6 @@
 @media screen and (max-width: 1300px) {
     .tlp-pane {
         flex-direction: column;
-    }
-
-    .mirror-action-container {
-        align-items: flex-end;
-        border-top: 1px solid var(--tlp-neutral-light-color);
     }
 
     .gerrit-server-action-container {

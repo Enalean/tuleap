@@ -22,9 +22,9 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 {
     public $panes;
 
-    public function __construct($project_id, $are_mirrors_defined, array $external_pane_presenters, array $panes)
+    public function __construct($project_id, array $external_pane_presenters, array $panes)
     {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+        parent::__construct($project_id, $external_pane_presenters);
         $this->panes = $panes;
     }
 

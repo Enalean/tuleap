@@ -46,11 +46,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
     private $template_renderer;
 
     /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $data_mapper;
-
-    /**
      * @var Git_Driver_Gerrit_ProjectCreatorStatus
      */
     private $gerrit_status;
@@ -70,7 +65,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
     private $event_manager;
 
     public function __construct(
-        Git_Mirror_MirrorDataMapper $data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $gerrit_status,
         $etc_templates_path,
         FineGrainedRetriever $fine_grained_retriever,
@@ -78,7 +72,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
         RegexpFineGrainedRetriever $regexp_retriever,
         EventManager $event_manager,
     ) {
-        $this->data_mapper   = $data_mapper;
         $this->gerrit_status = $gerrit_status;
         $template_dirs       = [];
         if (is_dir($etc_templates_path)) {
@@ -99,7 +92,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
             'gitolite.conf',
             new Git_Gitolite_Presenter_GitoliteConfPresenter(
                 $project_names,
-                $this->data_mapper->fetchAll()
             )
         );
     }
@@ -110,7 +102,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
             'gitolite-with-hostname.conf',
             new Git_Gitolite_Presenter_GitoliteConfPresenter(
                 $project_names,
-                $this->data_mapper->fetchAll()
             )
         );
     }
@@ -141,7 +132,6 @@ class Git_Gitolite_ConfigPermissionsSerializer
         $project      = $repository->getProject();
         $repo_config  = '';
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $repo_config .= $this->formatPermission(Git::PERM_READ, $this->getMirrorUserNames($repository));
         $repo_config .= $this->getExternalProtectedReferencesFormattedPermissions($repository);
         if ($this->isMigrationToGerritCompletedWithSuccess($repository)) {
             $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
@@ -306,14 +296,5 @@ class Git_Gitolite_ConfigPermissionsSerializer
         $ugroup_literalizer = new UGroupLiteralizer();
         $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
         return $this->formatPermission($permission_type, $repository_groups);
-    }
-
-    private function getMirrorUserNames(GitRepository $repository)
-    {
-        $names = [];
-        foreach ($this->data_mapper->fetchAllRepositoryMirrors($repository) as $mirror) {
-            $names[] = $mirror->owner->getUserName();
-        }
-        return $names;
     }
 }

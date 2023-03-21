@@ -8,8 +8,3 @@ $weeks_number   = 12;
 
 // Tell tuleap to use user friendly URLs in Git Plugin (eg: /git/plugins/project_name/repo_path)
 $git_use_friendly_urls = 1;
-
-// If you are mirroring repositories, then you should name the master
-// so that end users know where they are cloning from, instead of "Default"
-// If empty, "Default" will be displayed to end users
-$master_location_name = '';

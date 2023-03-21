@@ -215,16 +215,6 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->ci_token_manager = new CITokenManager(new CITokenDao());
 
-        $mirror_data_mapper = new \Git_Mirror_MirrorDataMapper(
-            new \Git_Mirror_MirrorDao(),
-            $this->user_manager,
-            $this->repository_factory,
-            $this->project_manager,
-            $this->git_system_event_manager,
-            new \Git_Gitolite_GitoliteRCReader(new VersionDetector()),
-            new \DefaultProjectMirrorDao()
-        );
-
         $regexp_retriever     = new RegexpFineGrainedRetriever(
             new RegexpFineGrainedDao(),
             new RegexpRepositoryDao(),
@@ -292,10 +282,8 @@ class RepositoryResource extends AuthenticatedResource
             new \Git_Backend_Gitolite(
                 new \Git_GitoliteDriver(
                     \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
-                    $this->git_system_event_manager,
                     $url_manager,
                     $git_dao,
-                    new \Git_Mirror_MirrorDao(),
                     $git_plugin,
                     new BigObjectAuthorizationManager(
                         new BigObjectAuthorizationDao(),
@@ -307,20 +295,16 @@ class RepositoryResource extends AuthenticatedResource
                     null,
                     null,
                     null,
-                    null,
                 ),
                 new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
                 new DefaultBranchUpdateExecutorAsGitoliteUser(),
                 \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             ),
-            $mirror_data_mapper,
             new \GitRepositoryManager(
                 $this->repository_factory,
                 $this->git_system_event_manager,
                 $git_dao,
                 "",
-                new \GitRepositoryMirrorUpdater($mirror_data_mapper, $project_history_dao),
-                $mirror_data_mapper,
                 $fine_grained_replicator,
                 $project_history_dao,
                 $history_value_formatter,

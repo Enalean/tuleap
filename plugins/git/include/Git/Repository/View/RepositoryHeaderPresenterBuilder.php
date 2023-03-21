@@ -24,7 +24,6 @@ use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Driver_Gerrit_UserAccountManager;
 use Git_GitRepositoryUrlManager;
-use Git_Mirror_MirrorDataMapper;
 use Git_RemoteServer_GerritServer;
 use GitDao;
 use GitPermissionsManager;
@@ -67,10 +66,6 @@ class RepositoryHeaderPresenterBuilder
      * @var Git_Driver_Gerrit_ProjectCreatorStatus
      */
     private $project_creator_status;
-    /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
     private $selected_tab;
     /**
      * @var \EventManager
@@ -93,7 +88,6 @@ class RepositoryHeaderPresenterBuilder
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         GitPermissionsManager $permissions_manager,
         array $gerrit_servers,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         $selected_tab,
         \EventManager $event_manager,
         DefaultCloneURLSelector $default_clone_url_selector,
@@ -106,7 +100,6 @@ class RepositoryHeaderPresenterBuilder
         $this->gerrit_usermanager         = $gerrit_usermanager;
         $this->permissions_manager        = $permissions_manager;
         $this->gerrit_servers             = $gerrit_servers;
-        $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->selected_tab               = $selected_tab;
         $this->event_manager              = $event_manager;
         $this->default_clone_url_selector = $default_clone_url_selector;
@@ -182,9 +175,6 @@ class RepositoryHeaderPresenterBuilder
             $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $gerrit_user);
             $clone_urls->setGerritUrl($clone_url);
         }
-
-        $mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
-        $clone_urls->setMirrors($mirrors);
 
         $clone_presenter = new ClonePresenter($this->default_clone_url_selector);
         $clone_presenter->build($clone_urls, $repository, $current_user);

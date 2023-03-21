@@ -56,9 +56,6 @@ class Git_GitoliteDriver
     /** @var Git_Gitolite_GitoliteConfWriter  */
     private $gitolite_conf_writer;
 
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $mirror_data_mapper;
-
     /** @var GitDao */
     private $git_dao;
 
@@ -70,14 +67,11 @@ class Git_GitoliteDriver
 
     public const OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
     public const NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
-    public const EXTRA_REPO_RESTORE_DEPTH = 2;
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
         GitDao $git_dao,
-        Git_Mirror_MirrorDao $git_mirror_dao,
         GitPlugin $git_plugin,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         VersionDetector $version_detector,
@@ -86,7 +80,6 @@ class Git_GitoliteDriver
         ?Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
         ?Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
         ?ProjectManager $project_manager = null,
-        ?Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
     ) {
         $this->git_dao = $git_dao;
         $this->logger  = $logger;
@@ -100,26 +93,8 @@ class Git_GitoliteDriver
 
         $project_manager = $project_manager ?: ProjectManager::instance();
 
-        if (empty($mirror_data_mapper)) {
-            $this->mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
-                $git_mirror_dao,
-                UserManager::instance(),
-                new GitRepositoryFactory(
-                    $this->getDao(),
-                    ProjectManager::instance()
-                ),
-                $project_manager,
-                $git_system_event_manager,
-                new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
-                new DefaultProjectMirrorDao()
-            );
-        } else {
-            $this->mirror_data_mapper = $mirror_data_mapper;
-        }
-
         if ($permissions_serializer === null) {
             $permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-                $this->mirror_data_mapper,
                 new Git_Driver_Gerrit_ProjectCreatorStatus(
                     new Git_Driver_Gerrit_ProjectCreatorStatusDao()
                 ),
@@ -144,7 +119,6 @@ class Git_GitoliteDriver
             $permissions_serializer,
             $project_serializer,
             new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
-            $this->mirror_data_mapper,
             $this->logger,
             $project_manager,
             $adminPath
@@ -490,64 +464,5 @@ class Git_GitoliteDriver
     protected function getDao()
     {
         return $this->git_dao;
-    }
-
-    public function dumpAllMirroredRepositories()
-    {
-        foreach ($this->mirror_data_mapper->fetchAllProjectsConcernedByMirroring() as $project) {
-            if (! $this->dumpProjectRepoConf($project)) {
-                return false;
-            }
-        }
-
-        return $this->updateMainConfIncludes();
-    }
-
-    public function updateMirror($mirror_id, $old_hostname)
-    {
-        $git_modifications = $this->gitolite_conf_writer->updateMirror($mirror_id, $old_hostname);
-
-        foreach ($git_modifications->toAdd() as $file) {
-            if (! $this->gitExec->add($file)) {
-                return false;
-            }
-        }
-
-        foreach ($git_modifications->toRemove() as $file) {
-            $file_path = $this->getAdminPath() . '/' . $file;
-
-            if (is_dir($file_path)) {
-                if (! $this->gitExec->recursiveRm($file)) {
-                    return false;
-                }
-            } elseif (is_file($file_path)) {
-                if (! $this->gitExec->rm($file)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function deleteMirror($old_hostname)
-    {
-        $git_modifications = $this->gitolite_conf_writer->deleteMirror($old_hostname);
-
-        foreach ($git_modifications->toRemove() as $file) {
-            $file_path = $this->getAdminPath() . '/' . $file;
-
-            if (is_dir($file_path)) {
-                if (! $this->gitExec->recursiveRm($file)) {
-                    return false;
-                }
-            } elseif (is_file($file_path)) {
-                if (! $this->gitExec->rm($file)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

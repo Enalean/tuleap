@@ -25,11 +25,9 @@ class Git_AdminPresenter
     public $csrf_token;
 
     public $manage_gerrit           = false;
-    public $manage_mirrors          = false;
     public $manage_gitolite_config  = false;
     public $manage_general_settings = false;
 
-    public $mirrors_active          = '';
     public $general_settings_active = '';
     public $gerrit_active           = '';
     public $gitolite_config_active  = '';
@@ -48,11 +46,6 @@ class Git_AdminPresenter
     public function general_settings_tab_name()
     {
         return dgettext('tuleap-git', 'General settings');
-    }
-
-    public function mirror_tab_name()
-    {
-        return dgettext('tuleap-git', 'Mirrors');
     }
 
     public function gitolite_config_tab_name()

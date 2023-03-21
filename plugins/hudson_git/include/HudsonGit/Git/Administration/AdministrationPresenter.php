@@ -36,12 +36,11 @@ class AdministrationPresenter extends GitPresenters_AdminPresenter
 
     public function __construct(
         $project_id,
-        bool $are_mirrors_defined,
         array $external_pane_presenters,
         array $jenkins_server_presenters,
         CSRFSynchronizerToken $csrf_token,
     ) {
-        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
+        parent::__construct($project_id, $external_pane_presenters);
 
         $this->csrf_token                = $csrf_token;
         $this->jenkins_server_presenters = $jenkins_server_presenters;

@@ -24,18 +24,14 @@ abstract class GitPresenters_AdminPresenter
 {
     public $project_id;
 
-    /** @var bool */
-    public $are_mirrors_defined = false;
-
     /**
      * @var AdminExternalPanePresenter[]
      */
     public $external_pane_presenters = [];
 
-    public function __construct($project_id, bool $are_mirrors_defined, array $external_pane_presenters)
+    public function __construct($project_id, array $external_pane_presenters)
     {
         $this->project_id               = $project_id;
-        $this->are_mirrors_defined      = $are_mirrors_defined;
         $this->external_pane_presenters = $external_pane_presenters;
     }
 

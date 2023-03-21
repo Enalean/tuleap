@@ -4,7 +4,6 @@ echo -n "Update data ownership to current image..."
 
 chown -R gitolite:gitolite \
     /data/lib/tuleap/gitolite/repositories \
-    /data/lib/tuleap/gitolite/grokmirror \
     /data/lib/gitolite
 
 chown -R codendiadm:codendiadm \

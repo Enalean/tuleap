@@ -33,14 +33,12 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase // @codingSt
 
     public function testProtectedReferencesArePresentInTheSerialization()
     {
-        $mirror_data_mapper            = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
         $event_manager                 = Mockery::mock(EventManager::class);
         $fine_grained_retriever        = Mockery::mock(FineGrainedRetriever::class);
         $regexp_fine_grained_retriever = Mockery::mock(RegexpFineGrainedRetriever::class);
         $serializer                    = Mockery::mock(
             Git_Gitolite_ConfigPermissionsSerializer::class . '[fetchConfigPermissions]',
             [
-                $mirror_data_mapper,
                 Mockery::mock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
                 '',
                 $fine_grained_retriever,
@@ -51,7 +49,6 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TestCase // @codingSt
         );
         $serializer->shouldReceive('fetchConfigPermissions');
 
-        $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([]);
         $event_manager->shouldReceive('processEvent')->with(
             Mockery::on(function ($event) {
                 if (! $event instanceof GetProtectedGitReferences) {

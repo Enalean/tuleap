@@ -65,10 +65,6 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $parse_log;
     /**
-     * @var \Git_SystemEventManager & Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $system_event_manager;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&DefaultBranchPostReceiveUpdater
      */
     private $default_branch_post_receive_updater;
@@ -84,7 +80,6 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository                          = $this->createStub(\GitRepository::class);
         $this->ci_launcher                         = \Mockery::spy(\Git_Ci_Launcher::class);
         $this->parse_log                           = \Mockery::spy(ParseLog::class);
-        $this->system_event_manager                = \Mockery::spy(\Git_SystemEventManager::class);
         $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
 
         $this->repository->method('getNotifiedMails')->willReturn([]);
@@ -107,7 +102,6 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->ci_launcher,
             $this->parse_log,
-            $this->createStub(\Git_SystemEventManager::class),
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(WebhookRequestSender::class),
             \Mockery::spy(PostReceiveMailSender::class),
@@ -237,7 +231,6 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(\UserManager::class),
             $this->createStub(\Git_Ci_Launcher::class),
             $this->createStub(ParseLog::class),
-            $this->system_event_manager,
             $this->createStub(\EventManager::class),
             $this->createStub(WebhookRequestSender::class),
             $this->createStub(PostReceiveMailSender::class),
@@ -248,22 +241,9 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_receive->beforeParsingReferences(self::REPOSITORY_PATH);
     }
 
-    public function testItLaunchesGrokMirrorUpdates(): void
-    {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->default_branch_post_receive_updater->method('updateDefaultBranchWhenNeeded');
-
-        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestFollowingAGitPush')->with(
-            $this->repository
-        )->once();
-
-        $this->beforeParsing();
-    }
-
     public function testUpdatesDefaultBranch(): void
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestFollowingAGitPush');
 
         $this->default_branch_post_receive_updater->expects(self::once())->method('updateDefaultBranchWhenNeeded');
 

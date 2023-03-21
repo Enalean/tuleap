@@ -62,11 +62,7 @@ class ConfigPermissionsSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         PermissionsManager::setInstance(Mockery::spy(\PermissionsManager::class));
         $this->permissions_manager = PermissionsManager::instance();
 
-        $mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn([]);
-
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),

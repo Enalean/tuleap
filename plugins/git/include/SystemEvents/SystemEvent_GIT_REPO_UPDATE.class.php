@@ -28,29 +28,14 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
     private DefaultBranchUpdateExecutor $default_branch_update_executor;
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Git_SystemEventManager $system_event_manager,
         DefaultBranchUpdateExecutor $default_branch_update_executor,
     ) {
         $this->repository_factory             = $repository_factory;
-        $this->system_event_manager           = $system_event_manager;
         $this->default_branch_update_executor = $default_branch_update_executor;
-    }
-
-    public static function queueInSystemEventManager(SystemEventManager $system_event_manager, GitRepository $repository)
-    {
-        $system_event_manager->createEvent(
-            self::NAME,
-            $repository->getId(),
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
     }
 
     private function getRepositoryIdFromParameters(): int
@@ -89,8 +74,6 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
             $this->error('Unable to update gitolite configuration for repository with ID ' . $this->getRepositoryIdFromParameters());
             return;
         }
-
-        $this->system_event_manager->queueGrokMirrorManifest($repository);
 
         $default_branch = $this->getDefaultBranchIfItExistsFromParameters();
         if ($default_branch !== null) {

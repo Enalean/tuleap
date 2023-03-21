@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.7.5@5390c212bab06ee230c8720c2e9c54b823db00c8">
+<files psalm-version="5.8.0@9cf4f60a333f779ad3bc704a555920e81d4fdcda">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -3918,8 +3918,6 @@
       <code>rest_project_resources</code>
       <code>rest_resources</code>
       <code>system_event_get_types_for_default_queue</code>
-      <code>testmanagementGetItemsFromMilestone</code>
-      <code>testmanagementGetMilestone</code>
       <code>trackerArtifactCreated</code>
       <code>trackerArtifactUpdated</code>
       <code>trackerArtifactsReordered</code>
@@ -3960,10 +3958,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/api_explorer/include/api_explorerPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
@@ -5368,20 +5362,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/captcha/include/captchaPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>addExternalScriptToTheWhitelist</code>
-      <code>collectRoutesEvent</code>
-    </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -13990,19 +13973,12 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code>cleanUnusedResources</code>
-      <code>codendiDaily</code>
-      <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
-      <code>file_exists_in_data_dir</code>
-      <code>fillProjectHistorySubEvents</code>
       <code>getController</code>
       <code>getHTTPController</code>
-      <code>getHooksAndCallbacks</code>
       <code>getItemFactory</code>
       <code>getNotificationsForProjectMemberCleaner</code>
       <code>getNotifiedPeopleRetriever</code>
-      <code>getPermsLabelForWiki</code>
       <code>getPluginInfo</code>
-      <code>getProjectWidgetList</code>
       <code>getSOAPController</code>
       <code>getSystemDocmanReferenceByKeyword</code>
       <code>getUGroupManager</code>
@@ -14011,45 +13987,15 @@
       <code>getUGroupsUpdater</code>
       <code>getUgroupsToNotifyUpdater</code>
       <code>getUserManager</code>
-      <code>getUserWidgetList</code>
       <code>getUsersNotificationRetriever</code>
       <code>getUsersToNotifyDao</code>
       <code>getUsersUpdater</code>
       <code>getWikiController</code>
-      <code>isWikiPageEditable</code>
-      <code>isWikiPageReferenced</code>
-      <code>logsDaily</code>
-      <code>permissionPerGroupPaneCollector</code>
-      <code>permission_get_name</code>
-      <code>permission_get_object_name</code>
-      <code>permission_get_object_type</code>
-      <code>permission_user_allowed_to_change</code>
-      <code>plugin_statistics_color</code>
-      <code>plugin_statistics_disk_usage_collect_project</code>
-      <code>plugin_statistics_disk_usage_service_label</code>
-      <code>plugin_statistics_frequence_stat_entries</code>
-      <code>plugin_statistics_frequence_stat_sample</code>
-      <code>proccess_system_check</code>
       <code>process</code>
       <code>processSOAP</code>
-      <code>project_admin_ugroup_deletion</code>
-      <code>referenceGetTooltipContentEvent</code>
-      <code>restResources</code>
-      <code>service_classnames</code>
-      <code>service_is_used</code>
-      <code>service_public_areas</code>
-      <code>services_truncated_emails</code>
       <code>showPendingItems</code>
       <code>showPendingVersions</code>
-      <code>site_access_change</code>
-      <code>soap</code>
       <code>uninstall</code>
-      <code>userCanAccessWikiDocument</code>
-      <code>webdav_root_for_service</code>
-      <code>widgetInstance</code>
-      <code>wiki_before_content</code>
-      <code>wiki_display_remove_button</code>
-      <code>wiki_page_updated</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$event->getProject()->getID()]]></code>
@@ -16877,9 +16823,6 @@
     <InvalidArgument>
       <code>$p[1]</code>
     </InvalidArgument>
-    <InvalidScalarArgument>
-      <code><![CDATA[$this->groupId]]></code>
-    </InvalidScalarArgument>
     <MissingParamType>
       <code>$action</code>
       <code>$action</code>
@@ -16918,7 +16861,6 @@
       <code>_informAboutPendingEvents</code>
       <code>addAdditionalPermittedActions</code>
       <code>addRedirectToDefaultSettingsAction</code>
-      <code>areMirrorsEnabledForProject</code>
       <code>checkSynchronizerToken</code>
       <code>definePermittedActions</code>
       <code>emitFeedbackForPermissionDeletion</code>
@@ -16959,9 +16901,6 @@
     </TooManyArguments>
   </file>
   <file src="plugins/git/include/Git/AdminAllowedProjectsGerritPresenter.class.php">
-    <MissingParamType>
-      <code>$is_mirror_restricted</code>
-    </MissingParamType>
     <MissingPropertyType>
       <code>$allow_all_enabled</code>
     </MissingPropertyType>
@@ -16995,45 +16934,6 @@
     <UndefinedDocblockClass>
       <code>Project[]</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/git/include/Git/AdminAllowedProjectsPresenter.class.php">
-    <MissingParamType>
-      <code>$is_mirror_restricted</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$allow_all_enabled</code>
-      <code><![CDATA[$this->mirror->url]]></code>
-      <code><![CDATA[$this->mirror->url]]></code>
-      <code><![CDATA[$this->mirror->url]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getTemplate</code>
-      <code>resource_allowed_project_allow_all</code>
-      <code>resource_allowed_project_allow_all_submit</code>
-      <code>resource_allowed_project_back_link</code>
-      <code>resource_allowed_project_back_link_title</code>
-      <code>resource_allowed_project_filter_empty</code>
-      <code>resource_allowed_project_information</code>
-      <code>resource_allowed_project_list</code>
-      <code>resource_allowed_project_list_allow_placeholder</code>
-      <code>resource_allowed_project_list_allow_project</code>
-      <code>resource_allowed_project_list_empty</code>
-      <code>resource_allowed_project_list_filter_placeholder</code>
-      <code>resource_allowed_project_list_id</code>
-      <code>resource_allowed_project_list_name</code>
-      <code>resource_allowed_project_list_revoke_projects</code>
-      <code>resource_allowed_project_pane_title</code>
-      <code>resource_allowed_project_revoke_description</code>
-      <code>resource_allowed_project_revoke_no</code>
-      <code>resource_allowed_project_revoke_title</code>
-      <code>resource_allowed_project_revoke_yes</code>
-      <code>resource_allowed_project_title</code>
-      <code>restricted_resource_action</code>
-      <code>restricted_resource_action_csrf</code>
-      <code>there_is_no_project</code>
-      <code>update_allowed_projects_action</code>
-      <code>update_allowed_projects_action_csrf</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/AdminGerritBuilder.php">
     <MissingParamType>
@@ -17157,152 +17057,6 @@
       <code>update_allowed_projects_action</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/AdminMirrorAddPresenter.class.php">
-    <MissingParamType>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$add_a_mirror</code>
-      <code>$btn_submit</code>
-      <code>$id</code>
-      <code>$owner_id</code>
-      <code>$owner_name</code>
-      <code>$ssh_key</code>
-      <code>$url</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>add_mirror</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/AdminMirrorController.class.php">
-    <MissingParamType>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$mirror_id</code>
-      <code>$presenter</code>
-      <code>$presenter</code>
-      <code>$project_ids</code>
-      <code>$project_to_add</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$template_path</code>
-      <code>$template_path</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>allowProjectOnMirror</code>
-      <code>askForAGitoliteDumpConf</code>
-      <code>checkSynchronizerToken</code>
-      <code>createMirror</code>
-      <code>deleteMirror</code>
-      <code>display</code>
-      <code>getAllMirrorsPresenter</code>
-      <code>getGitSystemEventsQueueURL</code>
-      <code>getManageAllowedProjectsPresenter</code>
-      <code>getMirrorFromRequest</code>
-      <code>modifyMirror</code>
-      <code>process</code>
-      <code>redirectToCreateWithError</code>
-      <code>redirectToEditFormWithError</code>
-      <code>renderANoFramedPresenter</code>
-      <code>renderAPresenter</code>
-      <code>revokeProjectsFromMirror</code>
-      <code>setMirrorRestriction</code>
-      <code>updateAllowedProjectList</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/AdminMirrorEditPresenter.class.php">
-    <MissingParamType>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$btn_submit</code>
-      <code>$hostname</code>
-      <code>$id</code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->name]]></code>
-      <code><![CDATA[$mirror->owner_id]]></code>
-      <code><![CDATA[$mirror->owner_name]]></code>
-      <code><![CDATA[$mirror->url]]></code>
-      <code>$modify_a_mirror</code>
-      <code>$name</code>
-      <code>$owner</code>
-      <code>$owner_id</code>
-      <code>$owner_name</code>
-      <code>$url</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>change</code>
-      <code>delete_button</code>
-      <code>hostname</code>
-      <code>or_action</code>
-      <code>ssh_key</code>
-      <code>update_button</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/AdminMirrorListPresenter.class.php">
-    <MissingParamType>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$base_url</code>
-      <code>$btn_close</code>
-      <code>$btn_submit</code>
-      <code>$empty_content</code>
-      <code>$list_of_mirrors</code>
-      <code>$mirror_repo</code>
-      <code>$no_repositories</code>
-      <code>$see_all</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>dump_mirrored_repositories_label</code>
-      <code>dump_mirrored_repositories_text</code>
-      <code>getTemplate</code>
-      <code>hostname_label</code>
-      <code>list_of_mirrors_is_empty</code>
-      <code>manage_allowed_projects_label</code>
-      <code>mirror_section_title</code>
-      <code>mirrored_repo_label</code>
-      <code>owner_label</code>
-      <code>pwd_label</code>
-      <code>repositories_label</code>
-      <code>ssh_key_label</code>
-      <code>url_label</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/AdminMirrorPresenter.class.php">
-    <MissingParamType>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$add_a_mirror</code>
-      <code>$manage_mirrors</code>
-      <code>$mirrors_active</code>
-      <code>$modify_a_mirror</code>
-      <code>$see_all</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>add_mirror</code>
-      <code>btn_cancel</code>
-      <code>btn_delete</code>
-      <code>btn_edit</code>
-      <code>btn_restrict</code>
-      <code>btn_yes</code>
-      <code>hostname_label</code>
-      <code>identifier</code>
-      <code>mirror_section_title</code>
-      <code>no_specified_mirror_name</code>
-      <code>owner_label</code>
-      <code>pwd_label</code>
-      <code>reserved_hostnames_help</code>
-      <code>ssh_key_label</code>
-      <code>url_label</code>
-      <code>warning</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/Git/AdminPresenter.class.php">
     <MissingParamType>
       <code>$title</code>
@@ -17314,15 +17068,12 @@
       <code>$manage_general_settings</code>
       <code>$manage_gerrit</code>
       <code>$manage_gitolite_config</code>
-      <code>$manage_mirrors</code>
-      <code>$mirrors_active</code>
       <code>$title</code>
     </MissingPropertyType>
     <MissingReturnType>
       <code>general_settings_tab_name</code>
       <code>gerrit_tab_name</code>
       <code>gitolite_config_tab_name</code>
-      <code>mirror_tab_name</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/AdminRepositoryListForProjectPresenter.class.php">
@@ -17454,7 +17205,6 @@
       <code>$presenter</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>areMirrorsEnabledForProject</code>
       <code>displayDefaultSettings</code>
       <code>render</code>
     </MissingReturnType>
@@ -17551,28 +17301,6 @@
       <code>add</code>
       <code>getPanes</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/DefaultSettings/Pane/Mirroring.php">
-    <MissingParamType>
-      <code>$is_active</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getMirrorPresenters</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/DefaultSettings/Pane/MirroringPresenter.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$this->project_id]]></code>
-    </InvalidScalarArgument>
-    <MissingPropertyType>
-      <code>$mirror_presenters</code>
-      <code>$mirroring_info</code>
-      <code>$mirroring_mirror_url</code>
-      <code>$mirroring_mirror_used</code>
-      <code>$mirroring_title</code>
-      <code>$mirroring_update_mirroring</code>
-      <code>$project_id</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/git/include/Git/DefaultSettings/Pane/Pane.php">
     <MissingPropertyType>
@@ -18044,7 +17772,6 @@
       <code>getForRepository</code>
       <code>getGitoliteDotConf</code>
       <code>getGitoliteDotConfForHostname</code>
-      <code>getMirrorUserNames</code>
       <code>getPatternConfiguration</code>
       <code>getPatternInGitoliteFormat</code>
       <code>grantUgroupsForPattern</code>
@@ -18126,7 +17853,6 @@
       <code>$hostname</code>
       <code>$hostname</code>
       <code>$hostname</code>
-      <code>$mirror_id</code>
       <code>$new_file</code>
       <code>$new_name</code>
       <code>$new_name</code>
@@ -18139,7 +17865,6 @@
       <code>$new_name</code>
       <code>$new_name</code>
       <code>$old_file</code>
-      <code>$old_hostname</code>
       <code>$old_name</code>
       <code>$old_name</code>
       <code>$old_name</code>
@@ -18152,56 +17877,25 @@
       <code>$old_name</code>
       <code>$project_file_path</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
-      <code>createConfFolderForMirrorIfNeeded</code>
-      <code>deleteMirror</code>
-      <code>dumpConfForMirror</code>
-      <code>dumpProjectRepoConfForAGivenMirror</code>
-      <code>dumpProjectRepoConfForMirrors</code>
-      <code>dumpSuspendedProjectRepositoriesConfigurationForAGivenMirror</code>
-      <code>dumpSuspendedProjectRepositoriesConfigurationForMirrors</code>
-      <code>getConfFolderForHostname</code>
-      <code>getConfFolderForMirror</code>
       <code>getFullConfigFilePathFromHostname</code>
       <code>getGitoliteConfFilePath</code>
       <code>getProjectList</code>
       <code>getProjectPermissionConfFile</code>
-      <code>getProjectPermissionConfFileForMirror</code>
-      <code>getProjectsListForMirror</code>
       <code>getRelativeConfigFilePathFromHostname</code>
       <code>modifyGitConfigurationFileInGitolite</code>
       <code>modifyIncludersConf</code>
-      <code>modifyIncludersConfForMirror</code>
       <code>modifyProjectConf</code>
-      <code>modifyProjectConfForMirror</code>
-      <code>moveProjectFileForMirror</code>
       <code>moveProjectFiles</code>
       <code>proceedRenameInIncluderConf</code>
-      <code>proceedRenameInMirrorIncluderConf</code>
       <code>proceedToFileMove</code>
       <code>proceedToRenameInSpecifiedProjectFile</code>
       <code>readProjectListFromPath</code>
-      <code>removeMirrorConfiguration</code>
       <code>renameProject</code>
-      <code>updateMirror</code>
-      <code>updateMirrorIncludes</code>
       <code>writeGitConfig</code>
       <code>writeGitoliteConfiguration</code>
       <code>writeGitoliteConfigurationOnDisk</code>
       <code>writeGitoliteIncludesInHostnameFile</code>
-      <code>writeGitoliteMirrorIncludes</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteFileLogsDao.php">
@@ -18261,11 +17955,6 @@
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->version_detector]]></code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/git/include/Git/Gitolite/Presenter/GitoliteConfPresenter.class.php">
-    <MissingReturnType>
-      <code>has_mirror</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ProjectSerializer.class.php">
     <MissingParamType>
@@ -18510,293 +18199,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code>markAsTechnical</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/DefaultProjectMirrorDao.php">
-    <MissingParamType>
-      <code>$deleted_mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$new_project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$template_project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addDefaultMirrorsToProject</code>
-      <code>deleteFromDefaultMirrors</code>
-      <code>deleteFromDefaultMirrorsInProjects</code>
-      <code>getDefaultMirrorIdsForProject</code>
-      <code>removeAllToProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/ManifestFileGenerator.class.php">
-    <MissingParamType>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$list_of_repositories</code>
-      <code>$manifest_directory</code>
-      <code>$path_name</code>
-      <code>$repository_key</code>
-      <code>$repository_path</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->url]]></code>
-      <code><![CDATA[$mirror->url]]></code>
-      <code><![CDATA[$mirror->url]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>addRepository</code>
-      <code>addRepositoryToManifestFile</code>
-      <code>ensureManifestContainsLatestInfoOfRepositories</code>
-      <code>getListOfRepositoriesFromManifest</code>
-      <code>getManifestDirectory</code>
-      <code>getManifestFilenameForMirror</code>
-      <code>getRepositoryInformation</code>
-      <code>getRepositoryKey</code>
-      <code>getRepositoryKeyFromPathName</code>
-      <code>makeSureThatGitoliteAdminRepositoryIsInTheManifest</code>
-      <code>removeRepository</code>
-      <code>removeRepositoryFromManifestFile</code>
-      <code>setCurrentTimeForGitoliteAdminRepository</code>
-      <code>setCurrentTimeForRepository</code>
-      <code>updateCurrentTimeOfRepository</code>
-      <code>writeManifest</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/ManifestManager.class.php">
-    <MissingParamType>
-      <code>$repository_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>checkManifestFiles</code>
-      <code>forceFileOwnershipToAppUser</code>
-      <code>triggerDelete</code>
-      <code>triggerUpdate</code>
-      <code>triggerUpdateFollowingAGitPush</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/Mirror.class.php">
-    <MissingParamType>
-      <code>$hostname</code>
-      <code>$name</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$hostname</code>
-      <code>$name</code>
-      <code>$owner_id</code>
-      <code>$owner_name</code>
-      <code>$ssh_key</code>
-      <code>$url</code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorDao.class.php">
-    <MissingParamType>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_ids</code>
-      <code>$repository_id</code>
-      <code>$repository_id</code>
-      <code>$repository_id</code>
-      <code>$selected_mirror_ids</code>
-      <code>$selected_mirror_ids</code>
-      <code>$url</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>fetch</code>
-      <code>fetchAll</code>
-      <code>fetchAllForProject</code>
-      <code>fetchAllProjectIdsConcernedByAMirror</code>
-      <code>fetchAllProjectIdsConcernedByMirroring</code>
-      <code>fetchAllProjectRepositoriesForMirror</code>
-      <code>fetchAllRepositoryMirroredByMirror</code>
-      <code>fetchAllRepositoryMirroredInProject</code>
-      <code>fetchByIds</code>
-      <code>getNumberOfMirrorByHostname</code>
-      <code>getNumberOfMirrorByHostnameExcludingGivenId</code>
-      <code>mirrorRepositoryTo</code>
-      <code>unmirrorRepository</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorDataMapper.class.php">
-    <InvalidArgument>
-      <code>$rows</code>
-    </InvalidArgument>
-    <InvalidNullableReturnType>
-      <code>PFUser</code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code>$deleted_mirror_id</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$new_project_id</code>
-      <code>$repository_id</code>
-      <code>$repository_id</code>
-      <code>$row</code>
-      <code>$selected_mirror_ids</code>
-      <code>$selected_mirror_ids</code>
-      <code>$ssh_key</code>
-      <code>$ssh_key</code>
-      <code>$ssh_key</code>
-      <code>$template_project_id</code>
-      <code>$url</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->name]]></code>
-      <code><![CDATA[$mirror->owner_id]]></code>
-      <code><![CDATA[$mirror->ssh_key]]></code>
-      <code><![CDATA[$mirror->ssh_key]]></code>
-      <code><![CDATA[$mirror->url]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>addDefaultMirrorsToProject</code>
-      <code>checkThatHostnameIsValidOnCreation</code>
-      <code>checkThatHostnameIsValidOnUpdate</code>
-      <code>deleteFromDefaultMirrorsInProjects</code>
-      <code>doesAllSelectedMirrorIdsExist</code>
-      <code>doesHostnameIsForbidden</code>
-      <code>fetchAllProjectRepositoriesForMirror</code>
-      <code>fetchAllProjectsConcernedByAMirror</code>
-      <code>fetchRepositoriesForMirror</code>
-      <code>fetchRepositoriesPerMirrorPresenters</code>
-      <code>getDefaultMirrorIdsForProject</code>
-      <code>getListOfMirrorIdsPerRepositoryForProject</code>
-      <code>mirrorRepositoryTo</code>
-      <code>removeAllDefaultMirrorsToProject</code>
-      <code>unmirrorRepository</code>
-    </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->user_manager->getUserByUserName(
-            self::MIRROR_OWNER_PREFIX . $mirror_id
-        )]]></code>
-    </NullableReturnStatement>
-    <PossiblyUndefinedVariable>
-      <code>$project_presenter</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorPresenter.php">
-    <MissingClosureReturnType>
-      <code>function ($nb, $repositories_for_one_project) {</code>
-    </MissingClosureReturnType>
-    <MissingPropertyType>
-      <code>$already_used</code>
-      <code>$delete_title</code>
-      <code>$edit_title</code>
-      <code>$has_repositories</code>
-      <code>$hostname</code>
-      <code>$id</code>
-      <code><![CDATA[$mirror->hostname]]></code>
-      <code><![CDATA[$mirror->name]]></code>
-      <code><![CDATA[$mirror->owner_id]]></code>
-      <code><![CDATA[$mirror->owner_name]]></code>
-      <code><![CDATA[$mirror->ssh_key]]></code>
-      <code><![CDATA[$mirror->url]]></code>
-      <code>$name</code>
-      <code>$number_of_repositories</code>
-      <code>$owner_id</code>
-      <code>$owner_name</code>
-      <code>$purified_delete_desc</code>
-      <code>$repos_title</code>
-      <code>$ssh_key_ellipsis_value</code>
-      <code>$ssh_key_value</code>
-      <code>$url</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getNbOfRepositories</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code>Git_AdminRepositoryListForProjectPresenter[]</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorResourceRestrictor.class.php">
-    <DeprecatedMethod>
-      <code>groupAddHistory</code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code>allowProjectOnMirror</code>
-      <code>isMirrorRestricted</code>
-      <code>revokeProjectsFromMirror</code>
-      <code>searchAllowedProjectsOnMirror</code>
-      <code>setMirrorRestricted</code>
-      <code>unsetMirrorRestricted</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorSystemEventQueue.class.php">
-    <MissingReturnType>
-      <code>getLabel</code>
-      <code>getLogger</code>
-      <code>getName</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/MirrorUpdater.php">
-    <DeprecatedMethod>
-      <code>groupAddHistory</code>
-    </DeprecatedMethod>
-    <MissingReturnType>
-      <code>updateRepositoryMirrors</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/Mirror/RestrictedMirrorDao.class.php">
-    <DeprecatedMethod>
-      <code>RestrictedResourceDao</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>retrieve</code>
-      <code>retrieveFirstRow</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getResourceAllowedProjectsTableName</code>
-      <code>getResourceFieldName</code>
-      <code>isResourceRestricted</code>
-      <code>searchAllowedProjectsOnResource</code>
-      <code>setResourceRestricted</code>
-      <code>unsetResourceRestricted</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Notifications/CollectionOfUgroupToBeNotifiedPresenterBuilder.php">
@@ -19864,7 +19266,6 @@
       <code>getGitRepositoryUrlManager</code>
       <code>getGitSystemEventManager</code>
       <code>getHeaderRenderer</code>
-      <code>getMirrorDataMapper</code>
       <code>getProjectCreatorStatus</code>
       <code>getRepositoryFactory</code>
       <code>getRepositoryHeaderPresenterBuilder</code>
@@ -19942,21 +19343,14 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/ClonePresenter.php">
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->name]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>build</code>
-      <code>getMirrorLinksCloneURLPresenter</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/View/CloneURLs.php">
     <MissingReturnType>
-      <code>getMirrorsLinks</code>
-      <code>hasMirrorLinks</code>
       <code>setGerritUrl</code>
       <code>setHttpsUrl</code>
-      <code>setMirrors</code>
       <code>setSshUrl</code>
     </MissingReturnType>
   </file>
@@ -20153,35 +19547,22 @@
   <file src="plugins/git/include/Git/SystemEventManager.class.php">
     <MissingParamType>
       <code>$gerrit_template_id</code>
-      <code>$mirror_id</code>
-      <code>$mirror_id</code>
-      <code>$old_hostname</code>
-      <code>$old_hostname</code>
       <code>$old_user_name</code>
       <code>$original_keys</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$remote_server_id</code>
-      <code>$repository_path</code>
       <code>$user_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>getGrokMirrorTypes</code>
       <code>getTypes</code>
       <code>isProjectDeletionOnGerritOnGoing</code>
       <code>isProjectSetReadOnlyOnGerritOnGoing</code>
       <code>isRepositoryMigrationToGerritOnGoing</code>
       <code>isRepositoryUpdateAlreadyQueued</code>
-      <code>queueDeleteMirror</code>
       <code>queueDumpAllSSHKeys</code>
-      <code>queueDumpOfAllMirroredRepositories</code>
       <code>queueEditSSHKey</code>
       <code>queueGerritReplicationKeyUpdate</code>
-      <code>queueGrokMirrorGitoliteAdminUpdate</code>
-      <code>queueGrokMirrorManifest</code>
-      <code>queueGrokMirrorManifestCheck</code>
-      <code>queueGrokMirrorManifestFollowingAGitPush</code>
-      <code>queueGrokMirrorManifestRepoDelete</code>
       <code>queueMigrateToGerrit</code>
       <code>queueProjectIsSuspended</code>
       <code>queueProjectsConfigurationUpdate</code>
@@ -20191,7 +19572,6 @@
       <code>queueRepositoryDeletion</code>
       <code>queueRepositoryFork</code>
       <code>queueRepositoryRestore</code>
-      <code>queueUpdateMirror</code>
       <code>queueUserRenameUpdate</code>
     </MissingReturnType>
     <UndefinedInterfaceMethod>
@@ -20445,8 +19825,6 @@
       <code>$repoId</code>
       <code>$repoId</code>
       <code>$repoId</code>
-      <code>$repo_id</code>
-      <code>$repositories</code>
       <code>$repositoryId</code>
       <code>$repositoryId</code>
       <code>$repositoryId</code>
@@ -20461,12 +19839,10 @@
       <code>$repository_id</code>
       <code>$repository_id</code>
       <code>$scope</code>
-      <code>$selected_mirror_ids</code>
       <code>$template_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>_loadRepository</code>
-      <code>areThereAnyChanges</code>
       <code>changeProjectRepositoriesAccess</code>
       <code>checkIfProjectIsValid</code>
       <code>checkRepoValidity</code>
@@ -20503,13 +19879,9 @@
       <code>removeRegisteredUsersFromSelectGroups</code>
       <code>removeUndesiredUgroupsFromRequest</code>
       <code>repoManagement</code>
-      <code>restoreRepository</code>
       <code>save</code>
       <code>setPrivate</code>
-      <code>setSelectedRepositories</code>
-      <code>updateDefaultMirroring</code>
       <code>updateGitAdminGroups</code>
-      <code>updateMirroring</code>
     </MissingReturnType>
     <NullReference>
       <code>getProject</code>
@@ -21492,7 +20864,6 @@
   </file>
   <file src="plugins/git/include/GitPresenters/AdminDefaultSettingsPresenter.php">
     <MissingParamType>
-      <code>$are_mirrors_defined</code>
       <code>$project_id</code>
     </MissingParamType>
     <MissingPropertyType>
@@ -21501,7 +20872,6 @@
   </file>
   <file src="plugins/git/include/GitPresenters/AdminGerritTemplatesPresenter.class.php">
     <MissingParamType>
-      <code>$are_mirrors_defined</code>
       <code>$has_gerrit_servers_set_up</code>
       <code>$parent_templates_list</code>
       <code>$project_id</code>
@@ -21535,7 +20905,6 @@
   </file>
   <file src="plugins/git/include/GitPresenters/AdminGitAdminsPresenter.class.php">
     <MissingParamType>
-      <code>$are_mirrors_defined</code>
       <code>$project_id</code>
       <code>$selected_ugroups</code>
       <code>$static_ugroups</code>
@@ -21555,46 +20924,6 @@
       <code><![CDATA[isset($this->selected_ugroups)]]></code>
     </RedundantPropertyInitializationCheck>
   </file>
-  <file src="plugins/git/include/GitPresenters/AdminMassUpdateMirroringPresenter.php">
-    <MissingReturnType>
-      <code>has_more_than_one_mirror</code>
-      <code>mirroring_mirror_name</code>
-      <code>mirroring_mirror_url</code>
-      <code>mirroring_title</code>
-      <code>percent_width</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/GitPresenters/AdminMassUpdatePresenter.class.php">
-    <InvalidPropertyAssignmentValue>
-      <code>$mirroring_presenter</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidScalarArgument>
-      <code>$nb_to_keep</code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>exceed_max_input_vars_message</code>
-      <code>has_more_than_one_repository</code>
-      <code>info_mass_update</code>
-      <code>previous_state_unused</code>
-      <code>previous_state_used</code>
-      <code>submit_mass_change</code>
-      <code>title</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/GitPresenters/AdminMassUpdateSelectRepositoriesPresenter.class.php">
-    <MissingParamType>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>mass_change</code>
-      <code>repository_list_name</code>
-      <code>select_repositories</code>
-      <code>title</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/GitPresenters/AdminPresenter.php">
     <MissingParamType>
       <code>$project_id</code>
@@ -21608,31 +20937,6 @@
       <code>tab_git_admins</code>
       <code>tab_mass_update</code>
       <code>tab_template_settings</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/GitPresenters/MirrorPresenter.php">
-    <MissingParamType>
-      <code>$is_used</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->name]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/git/include/GitPresenters/MirroredRepositoryPresenter.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->repository_id]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/git/include/GitPresenters/MirroringPresenter.php">
-    <MissingReturnType>
-      <code>mirroring_info</code>
-      <code>mirroring_mirror_name</code>
-      <code>mirroring_mirror_url</code>
-      <code>mirroring_mirror_used</code>
-      <code>mirroring_title</code>
-      <code>mirroring_update_mirroring</code>
-      <code>project_id</code>
-      <code>repository_id</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPresenters/RepositoryPaneNotificationPresenter.php">
@@ -21693,7 +20997,6 @@
       <code>$id</code>
       <code>$id</code>
       <code>$initialized</code>
-      <code>$is_mirrored</code>
       <code>$mailPrefix</code>
       <code>$mails</code>
       <code>$name</code>
@@ -21712,11 +21015,9 @@
       <code>$description</code>
       <code>$id</code>
       <code>$isInitialized</code>
-      <code>$is_mirrored</code>
       <code>$last_push_date</code>
       <code>$loaded</code>
       <code>$mailPrefix</code>
-      <code><![CDATA[$mirror->url]]></code>
       <code>$name</code>
       <code>$namespace</code>
       <code>$notifiedMails</code>
@@ -21750,7 +21051,6 @@
       <code>getDiffLink</code>
       <code>getId</code>
       <code>getIsInitialized</code>
-      <code>getIsMirrored</code>
       <code>getLabel</code>
       <code>getLastPushDate</code>
       <code>getMailPrefix</code>
@@ -21760,7 +21060,6 @@
       <code>getPostReceiveMailManager</code>
       <code>getProjectId</code>
       <code>getRemoteServerId</code>
-      <code>getSSHForMirror</code>
       <code>hasChild</code>
       <code>isMigratedToGerrit</code>
       <code>isPrivate</code>
@@ -21778,7 +21077,6 @@
       <code>setDescription</code>
       <code>setId</code>
       <code>setIsInitialized</code>
-      <code>setIsMirrored</code>
       <code>setLastPushDate</code>
       <code>setMailPrefix</code>
       <code>setName</code>
@@ -21880,7 +21178,6 @@
       <code>getTmpPath</code>
       <code>initRepository</code>
       <code>isNamespaceValid</code>
-      <code>mirrorForkedRepository</code>
       <code>nameAlreadyExistsAsPath</code>
       <code>nameIsSubPathOfExistingRepository</code>
       <code>purgeArchivedRepositories</code>
@@ -21934,24 +21231,18 @@
   </file>
   <file src="plugins/git/include/GitViews.class.php">
     <MissingParamType>
-      <code>$are_mirrors_defined</code>
-      <code>$are_mirrors_defined</code>
       <code>$controller</code>
       <code>$currentProjectId</code>
     </MissingParamType>
     <MissingReturnType>
       <code>adminGerritTemplatesView</code>
       <code>adminGitAdminsView</code>
-      <code>adminMassUpdateSelectRepositoriesView</code>
-      <code>adminMassUpdateView</code>
-      <code>buildListOfMirroredRepositoriesPresenters</code>
       <code>confirmPrivate</code>
       <code>fetchCopyToAnotherProject</code>
       <code>footer</code>
       <code>forkRepositories</code>
       <code>generateMassUpdateCSRF</code>
       <code>getAccessRightsPresenterOptionsBuilder</code>
-      <code>getAdminMassUpdateMirrorPresenters</code>
       <code>getGitRepositoryFactory</code>
       <code>getUserProjectsAsOptions</code>
       <code>header</code>
@@ -22078,18 +21369,6 @@
       <code>getLogsForWebhook</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/GitViews/RepoManagement/Pane/Mirroring.class.php">
-    <InvalidArgument>
-      <code>$mirror</code>
-    </InvalidArgument>
-    <MissingReturnType>
-      <code>getMirrorPresenters</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code>Git_Mirror_Mirror[]</code>
-      <code>Git_Mirror_Mirror[]</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Notification.class.php">
     <MissingReturnType>
       <code>getPluginNotifications</code>
@@ -22113,9 +21392,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitViews/ShowRepo/Content.class.php">
-    <MissingPropertyType>
-      <code><![CDATA[$mirror->name]]></code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>display</code>
       <code>getWaitingForRepositoryCreationInfo</code>
@@ -22275,10 +21551,7 @@
       <code>$cmd</code>
       <code>$git_root_path</code>
       <code>$message</code>
-      <code>$mirror_id</code>
       <code>$new_ns</code>
-      <code>$old_hostname</code>
-      <code>$old_hostname</code>
       <code>$old_ns</code>
       <code>$path</code>
       <code>$repo</code>
@@ -22296,8 +21569,6 @@
       <code>commit</code>
       <code>delete</code>
       <code>deleteBackup</code>
-      <code>deleteMirror</code>
-      <code>dumpAllMirroredRepositories</code>
       <code>dumpProjectRepoConf</code>
       <code>dumpSuspendedProjectRepositoriesConfiguration</code>
       <code>executeShellCommand</code>
@@ -22308,7 +21579,6 @@
       <code>push</code>
       <code>setAdminPath</code>
       <code>updateMainConfIncludes</code>
-      <code>updateMirror</code>
     </MissingReturnType>
     <UndefinedInterfaceMethod>
       <code>updateRepoConf</code>
@@ -22679,20 +21949,6 @@
       <code>process</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_DELETE_MIRROR.php">
-    <MissingReturnType>
-      <code>getMirrorIdFromParameters</code>
-      <code>getMirrorOldHostnameFromParameters</code>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES.php">
-    <MissingReturnType>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_DUMP_ALL_SSH_KEYS.class.php">
     <MissingReturnType>
       <code>injectDependencies</code>
@@ -22773,32 +22029,6 @@
       <code>process</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK.class.php">
-    <MissingReturnType>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE.class.php">
-    <MissingReturnType>
-      <code>getRepositoryPathFromParameters</code>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE.class.php">
-    <MissingReturnType>
-      <code>getRepositoryFromParameters</code>
-      <code>getRepositoryIdFromParameters</code>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH.class.php">
-    <MissingReturnType>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_PROJECTS_UPDATE.class.php">
     <MissingReturnType>
       <code>getProjectIdsFromParameters</code>
@@ -22849,15 +22079,6 @@
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_REPO_UPDATE.class.php">
     <MissingReturnType>
       <code>getRepositoryFromParameters</code>
-      <code>injectDependencies</code>
-      <code>process</code>
-      <code>queueInSystemEventManager</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_UPDATE_MIRROR.php">
-    <MissingReturnType>
-      <code>getMirrorIdFromParameters</code>
-      <code>getMirrorOldHostnameFromParameters</code>
       <code>injectDependencies</code>
       <code>process</code>
     </MissingReturnType>
@@ -23138,8 +22359,6 @@
       <code>plugin_statistics_color</code>
       <code>plugin_statistics_disk_usage_collect_project</code>
       <code>plugin_statistics_disk_usage_service_label</code>
-      <code>plugin_statistics_frequence_stat_entries</code>
-      <code>plugin_statistics_frequence_stat_sample</code>
       <code>post_system_events_actions</code>
       <code>proccess_system_check</code>
       <code>projectCanDisplayHierarchy</code>
@@ -28406,15 +27625,10 @@
     </PossiblyFalseOperand>
   </file>
   <file src="plugins/mfa/include/mfaPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
@@ -29310,20 +28524,11 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['PluginsAdministrationPluginInfo']]></code>
     </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>burningParrotCompatiblePage</code>
-      <code>burning_parrot_get_stylesheets</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
@@ -30632,16 +29837,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/prometheus_metrics/include/prometheus_metricsPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
@@ -32006,11 +31205,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/securitytxt/include/securitytxtPlugin.php">
-    <DeprecatedMethod>
       <code>addHook</code>
     </DeprecatedMethod>
   </file>
@@ -35658,42 +34852,6 @@
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
       <code>rowCount</code>
     </DeprecatedMethod>
     <InvalidClass>
@@ -35705,48 +34863,14 @@
       <code>$keyword</code>
       <code>$new_ugroup_name</code>
       <code>$old_ugroup_name</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>burningParrotGetStylesheets</code>
-      <code>changeProjectRepositoriesAccess</code>
-      <code>codendi_daily_start</code>
-      <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
-      <code>cssFile</code>
       <code>getApacheConfGenerator</code>
       <code>getPluginInfo</code>
       <code>getReferenceExtractor</code>
       <code>getTypes</code>
-      <code>get_system_event_class</code>
-      <code>httpdPostRotate</code>
-      <code>import_xml_project</code>
       <code>lastMonthStatisticsCollectorSVN</code>
-      <code>logs_daily</code>
-      <code>permissionPerGroupPaneCollector</code>
-      <code>plugin_statistics_color</code>
-      <code>plugin_statistics_disk_usage_collect_project</code>
-      <code>plugin_statistics_disk_usage_service_label</code>
-      <code>plugin_statistics_service_usage</code>
-      <code>project_admin_remove_user</code>
-      <code>project_admin_ugroup_deletion</code>
-      <code>project_creation_remove_legacy_services</code>
-      <code>project_registration_activate_service</code>
-      <code>rest_project_get_svn</code>
-      <code>rest_project_options_svn</code>
-      <code>rest_project_resources</code>
-      <code>rest_resources</code>
-      <code>site_access_change</code>
       <code>statisticsCollectorSVN</code>
-      <code>statistics_collector</code>
-      <code>svn_repository_created</code>
-      <code>systemEventProjectRename</code>
-      <code>systemevent_user_rename</code>
       <code>updateAllAccessFileOfProject</code>
     </MissingReturnType>
     <PossiblyNullArgument>
@@ -52319,15 +51443,11 @@
     <InvalidArrayOffset>
       <code>$s[$e]</code>
     </InvalidArrayOffset>
-    <InvalidFalsableReturnType>
-      <code>void</code>
-    </InvalidFalsableReturnType>
     <InvalidOperand>
       <code><![CDATA[$this->getFilesize()]]></code>
     </InvalidOperand>
     <InvalidReturnStatement>
       <code><![CDATA[$parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types)]]></code>
-      <code>false</code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code>true</code>
@@ -55128,8 +54248,6 @@
       <code>permission_get_object_name</code>
       <code>permission_get_object_type</code>
       <code>permission_user_allowed_to_change</code>
-      <code>plugin_statistics_frequence_stat_entries</code>
-      <code>plugin_statistics_frequence_stat_sample</code>
       <code>plugin_statistics_service_usage</code>
       <code>proccess_system_check</code>
       <code>project_admin_remove_user</code>
@@ -56094,19 +55212,8 @@
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="plugins/userlog/include/userlogPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-    </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
-      <code>hitEvent</code>
     </MissingReturnType>
   </file>
   <file src="plugins/velocity/include/Velocity/InvalidArtifactRepresentation.php">
@@ -57139,24 +56246,6 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="src/common/Dashboard/Project/WidgetMinimizor.php">
-    <MissingParamType>
-      <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
-      <code>$dashboard_type</code>
-      <code>$dashboard_type</code>
-      <code>$widget_id</code>
-      <code>$widget_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>checkUserCanMinimize</code>
-      <code>maximize</code>
-      <code>minimize</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/common/Dashboard/User/AtUserCreationDefaultWidgetsCreator.php">
     <MissingReturnType>
       <code>createDefaultDashboard</code>
@@ -57300,20 +56389,6 @@
       <code>delete</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Dashboard/User/WidgetMinimizor.php">
-    <MissingParamType>
-      <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
-      <code>$dashboard_type</code>
-      <code>$dashboard_type</code>
-      <code>$widget_id</code>
-      <code>$widget_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>maximize</code>
-      <code>minimize</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Dashboard/Widget/Add/AddWidgetController.php">
     <InvalidReturnStatement>
       <code>$owner_id</code>
@@ -57394,7 +56469,6 @@
       <code>$column_id</code>
       <code>$content_id</code>
       <code>$id</code>
-      <code>$is_minimized</code>
       <code>$name</code>
       <code>$rank</code>
     </MissingParamType>
@@ -57402,13 +56476,9 @@
       <code>$column_id</code>
       <code>$content_id</code>
       <code>$id</code>
-      <code>$is_minimized</code>
       <code>$name</code>
       <code>$rank</code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code>isMinimized</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/Widget/DashboardWidgetColumn.php">
     <MissingParamType>
@@ -57619,7 +56689,6 @@
       <code>$dashboard_type</code>
       <code>$dashboard_type</code>
       <code>$dashboard_type</code>
-      <code>$is_minimized</code>
       <code>$layout</code>
       <code>$line_id</code>
       <code>$line_id</code>
@@ -57709,8 +56778,6 @@
       <code>getNbColumns</code>
       <code>insertWidgetInColumn</code>
       <code>insertWidgetInColumnWithRank</code>
-      <code>maximizeWidget</code>
-      <code>minimizeWidget</code>
       <code>removeColumn</code>
       <code>removeLine</code>
       <code>removeOrphanWidgetsByNames</code>
@@ -57719,7 +56786,6 @@
       <code>reorderColumns</code>
       <code>reorderLines</code>
       <code>reorderWidgets</code>
-      <code>saveMinimizedState</code>
       <code>searchAllColumnsByLineIdOrderedByRank</code>
       <code>searchAllLinesByDashboardIdOrderedByRank</code>
       <code>searchAllWidgetByColumnId</code>
@@ -59987,25 +59053,6 @@
       <code>themeExists</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Layout/ThemeVariant.class.php">
-    <MissingParamType>
-      <code>$variant</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>adjustDefaultVariantAccordingToAllowedVariants</code>
-      <code>getAllowedVariants</code>
-      <code>getDefault</code>
-      <code>getVariantForUser</code>
-      <code>isAllowed</code>
-      <code>setAllowedVariants</code>
-      <code>unsetInvalidThemes</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Layout/ThemeVariantColor.php">
-    <MissingReturnType>
-      <code>buildFromDefaultVariant</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Mail/Codendi_Mail.class.php">
     <InvalidArrayOffset>
       <code><![CDATA[$row['email']]]></code>
@@ -60872,26 +59919,6 @@
       <code>$regexp</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/Password/PasswordSanityChecker.php">
-    <MissingPropertyType>
-      <code><![CDATA[$password_strategy->errors]]></code>
-      <code><![CDATA[$this->getStrategy()->validators]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Password/PasswordStrategy.class.php">
-    <MissingParamType>
-      <code>$pwd</code>
-      <code>$v</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$errors</code>
-      <code>$validators</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>add</code>
-      <code>validate</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Password/PasswordValidator.class.php">
     <MissingParamType>
       <code>$description</code>
@@ -60907,13 +59934,11 @@
       <code>$callback</code>
       <code>$event</code>
       <code>$plugin_id</code>
-      <code>$recall_event</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$callback</code>
       <code>$event</code>
       <code>$plugin_id</code>
-      <code>$recall_event</code>
     </MissingPropertyType>
   </file>
   <file src="src/common/Plugin/Plugin.php">
@@ -61085,7 +60110,6 @@
       <code><![CDATA[$listener->callback]]></code>
       <code><![CDATA[$listener->event]]></code>
       <code><![CDATA[$listener->plugin_id]]></code>
-      <code><![CDATA[$listener->recall_event]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code>getHooksCacheFile</code>
@@ -63535,13 +62559,9 @@
       <code>addProjectMember</code>
       <code>cleanProjectMembersFromUserCreator</code>
       <code>createProject</code>
-      <code>getProjectXMLFromArchive</code>
-      <code>import</code>
       <code>importContent</code>
       <code>importDashboards</code>
-      <code>importFromArchive</code>
       <code>importFromXMLIntoExistingProject</code>
-      <code>importNewFromArchive</code>
       <code>importUgroups</code>
     </MissingReturnType>
   </file>
@@ -64499,9 +63519,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/XML/XMLFileContentRetriever.php">
-    <MissingParamType>
-      <code>$file_contents</code>
-    </MissingParamType>
     <TypeDoesNotContainType>
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
@@ -67367,14 +66384,6 @@
       <code><![CDATA[$user->getId()]]></code>
     </InvalidScalarArgument>
   </file>
-  <file src="src/common/User/Password/Reset/Verifier.php">
-    <InvalidNullableReturnType>
-      <code>\PFUser</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->user_manager->getUserById($row['user_id'])]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/common/User/PendingUserNotifier.php">
     <MissingReturnType>
       <code>notifyAdministrator</code>
@@ -69025,7 +68034,6 @@
       <code>$legal</code>
       <code>$login</code>
       <code>$new_password</code>
-      <code><![CDATA[$password_strategy->validators]]></code>
       <code>$password_strategy_validators</code>
       <code>$prefill_values</code>
       <code>$purpose</code>
@@ -80661,9 +79669,6 @@
     <PossiblyInvalidOperand>
       <code>$purgeState</code>
     </PossiblyInvalidOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType>
       <code>(int) $groupId</code>
       <code>(int) $id</code>
@@ -81631,29 +80636,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="src/www/account/deleted.php">
-    <UndefinedGlobalVariable>
-      <code>$HTML</code>
-      <code>$HTML</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/account/lostlogin.php">
-    <PossiblyUndefinedGlobalVariable>
-      <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-    </PossiblyUndefinedGlobalVariable>
-    <UndefinedGlobalVariable>
-      <code>$HTML</code>
-      <code>$HTML</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/account/lostpw-confirm.php">
-    <ImplicitToStringCast>
-      <code>$identifier</code>
-    </ImplicitToStringCast>
-  </file>
-  <file src="src/www/account/lostpw.php">
     <UndefinedGlobalVariable>
       <code>$HTML</code>
       <code>$HTML</code>
@@ -83457,9 +82439,6 @@
     <NullArgument>
       <code>null</code>
     </NullArgument>
-    <ParadoxicalCondition>
-      <code><![CDATA[is_float($val) || is_double($val) || $type == 'float']]></code>
-    </ParadoxicalCondition>
     <PossiblyFalseArgument>
       <code><![CDATA[strpos($domain, ';')]]></code>
       <code><![CDATA[strpos($expires, ';')]]></code>
@@ -86657,7 +85636,6 @@
       <code>$presenter</code>
       <code>$root</code>
       <code>$template_name</code>
-      <code>$theme</code>
     </MissingParamType>
     <MissingReturnType>
       <code>addBodyClassDependingThemeVariant</code>
@@ -86665,9 +85643,7 @@
       <code>body</code>
       <code>displayCommonStylesheetElements</code>
       <code>endOfPage</code>
-      <code>getColorOfCurrentTheme</code>
       <code>getTemplateDir</code>
-      <code>getVariants</code>
       <code>includeJavascriptPolyfills</code>
       <code>includeSubsetOfCombined</code>
       <code>navbar</code>

@@ -987,7 +987,6 @@ class gitlabPlugin extends Plugin
                 'src/main.ts'
             ),
             $git_plugin->getHeaderRenderer(),
-            $git_plugin->getMirrorDataMapper(),
             new GitPermissionsManager(
                 new Git_PermissionsDao(),
                 new Git_SystemEventManager(

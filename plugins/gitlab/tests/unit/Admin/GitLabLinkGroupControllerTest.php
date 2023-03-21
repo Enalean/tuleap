@@ -21,7 +21,6 @@
 namespace Tuleap\Gitlab\Admin;
 
 use Feedback;
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
@@ -103,16 +102,12 @@ final class GitLabLinkGroupControllerTest extends TestCase
             }
         );
 
-        $mirror_data_mapper = $this->createStub(Git_Mirror_MirrorDataMapper::class);
-        $mirror_data_mapper->method('fetchAllForProject')->willReturn([]);
-
         $controller = new GitLabLinkGroupController(
             $this->project_factory,
             $event_dispatcher,
             JavascriptAssetGenericBuilder::build(),
             JavascriptAssetGenericBuilder::build(),
             $this->header_renderer,
-            $mirror_data_mapper,
             $this->git_permission_manager,
             $this->template_renderer,
             $this->group_retriever,

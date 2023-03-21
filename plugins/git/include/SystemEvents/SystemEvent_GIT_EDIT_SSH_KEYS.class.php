@@ -37,20 +37,15 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
     /** @var Git_UserAccountManager */
     private $git_user_account_manager;
 
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
     public function injectDependencies(
         UserManager $user_manager,
         Dumper $sshkey_dumper,
         Git_UserAccountManager $git_user_account_manager,
-        Git_SystemEventManager $system_event_manager,
         \Psr\Log\LoggerInterface $logger,
     ) {
         $this->user_manager             = $user_manager;
         $this->sshkey_dumper            = $sshkey_dumper;
         $this->git_user_account_manager = $git_user_account_manager;
-        $this->system_event_manager     = $system_event_manager;
         $this->logger                   = $logger;
     }
 
@@ -81,12 +76,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
         $this->logger->debug('Dump key for user ' . $user_id);
 
         $user                   = $this->getUserFromParameters();
-        $gitolite_admin_repo    = new GitRepositoryGitoliteAdmin();
         $invalid_keys_collector = new InvalidKeysCollector();
 
         $this->updateGitolite($user, $invalid_keys_collector);
         $are_keys_successfuly_deployed = ! $invalid_keys_collector->hasInvalidKeys();
-        $this->system_event_manager->queueGrokMirrorManifest($gitolite_admin_repo);
 
         $warning_message = '';
         try {

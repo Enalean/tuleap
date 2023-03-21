@@ -46,7 +46,7 @@ final class LinkedGroupPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $project    = ProjectTestBuilder::aProject()->withPublicName(self::PROJECT_NAME)->build();
         $presenter  = new LinkedGroupPresenter(
-            new GitLabLinkGroupPanePresenter($project, false, []),
+            new GitLabLinkGroupPanePresenter($project, []),
             $project,
             $group_link,
             URIInterfaceBuilder::fromString(self::GITLAB_URI),

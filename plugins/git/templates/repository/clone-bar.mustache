@@ -20,16 +20,6 @@
             {{# clone_url_presenters }}
                 {{> repository/clone-bar-input }}
             {{/ clone_url_presenters }}
-
-            {{# has_ssh_mirrors }}
-                <hr class="git-repository-clone-popover-separator">
-                <p>
-                    {{# dgettext }}tuleap-git | Clone from SSH mirrors{{/ dgettext }}
-                </p>
-                {{# ssh_mirrors_presenters }}
-                    {{> repository/clone-bar-input }}
-                {{/ ssh_mirrors_presenters }}
-            {{/ has_ssh_mirrors }}
         </div>
     </section>
 {{/ has_clone_urls }}

@@ -37,21 +37,15 @@ class AdminAllowedProjectsGerritPresenter
      */
     public $allowed_projects;
 
-    /**
-     * @var bool
-     */
-    public $is_resource_restricted;
-
     public $allow_all_enabled = true;
 
     public function __construct(
         Git_RemoteServer_GerritServer $gerrit_server,
         array $allowed_projects,
-        $is_mirror_restricted,
+        public readonly bool $is_resource_restricted,
     ) {
-        $this->gerrit                 = $gerrit_server;
-        $this->allowed_projects       = $allowed_projects;
-        $this->is_resource_restricted = $is_mirror_restricted;
+        $this->gerrit           = $gerrit_server;
+        $this->allowed_projects = $allowed_projects;
     }
 
     public function getTemplate()

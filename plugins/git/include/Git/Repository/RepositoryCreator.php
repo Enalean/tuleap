@@ -22,7 +22,6 @@ namespace Tuleap\Git\Repository;
 
 use EventManager;
 use Git_Backend_Gitolite;
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitRepositoryFactory;
 use GitRepositoryManager;
@@ -45,10 +44,6 @@ class RepositoryCreator
      * @var Git_Backend_Gitolite
      */
     private $backend_gitolite;
-    /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
     /**
      * @var GitRepositoryManager
      */
@@ -81,7 +76,6 @@ class RepositoryCreator
     public function __construct(
         GitRepositoryFactory $factory,
         Git_Backend_Gitolite $backend_gitolite,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitRepositoryManager $manager,
         GitPermissionsManager $git_permissions_manager,
         FineGrainedPermissionReplicator $fine_grained_replicator,
@@ -92,7 +86,6 @@ class RepositoryCreator
     ) {
         $this->factory                 = $factory;
         $this->backend_gitolite        = $backend_gitolite;
-        $this->mirror_data_mapper      = $mirror_data_mapper;
         $this->manager                 = $manager;
         $this->git_permissions_manager = $git_permissions_manager;
         $this->fine_grained_replicator = $fine_grained_replicator;
@@ -118,12 +111,7 @@ class RepositoryCreator
             $this->backend_gitolite
         );
 
-        $default_mirrors = $this->mirror_data_mapper->getDefaultMirrorIdsForProject($project);
-        if (! $default_mirrors) {
-            $default_mirrors = [];
-        }
-
-        $this->manager->create($repository, $this->backend_gitolite, $default_mirrors, BranchName::defaultBranchName());
+        $this->manager->create($repository, $this->backend_gitolite, BranchName::defaultBranchName());
 
         $this->backend_gitolite->savePermissions(
             $repository,

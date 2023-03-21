@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Admin;
 
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
@@ -51,7 +50,6 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         private JavascriptAssetGeneric $wizard_assets,
         private JavascriptAssetGeneric $linked_group_assets,
         private HeaderRenderer $header_renderer,
-        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GitPermissionsManager $git_permissions_manager,
         private TemplateRenderer $renderer,
         private RetrieveGroupLinkedToProject $group_link_retriever,
@@ -134,7 +132,6 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
 
         return new GitLabLinkGroupPanePresenter(
             $project,
-            ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
             $event->getExternalPanePresenters(),
         );
     }

@@ -21,7 +21,6 @@
 namespace Tuleap\Git\DefaultSettings;
 
 use EventManager;
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPresenters_AdminDefaultSettingsPresenter;
 use HTTPRequest;
@@ -31,7 +30,6 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\DefaultSettings\Pane\AccessControl;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\DefaultSettings\Pane\DisabledPane;
-use Tuleap\Git\DefaultSettings\Pane\Mirroring;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
@@ -67,10 +65,6 @@ class IndexController
      */
     private $regexp_retriever;
     /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-    /**
      * @var HeaderRenderer
      */
     private $header_renderer;
@@ -86,7 +80,6 @@ class IndexController
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         FineGrainedRepresentationBuilder $fine_grained_builder,
         RegexpFineGrainedRetriever $regexp_retriever,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         HeaderRenderer $header_renderer,
         EventManager $event_manager,
     ) {
@@ -96,7 +89,6 @@ class IndexController
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_builder                    = $fine_grained_builder;
         $this->regexp_retriever                        = $regexp_retriever;
-        $this->mirror_data_mapper                      = $mirror_data_mapper;
         $this->header_renderer                         = $header_renderer;
         $this->event_manager                           = $event_manager;
     }
@@ -105,16 +97,13 @@ class IndexController
     {
         $project = $request->getProject();
 
-        $are_mirrors_defined = $this->areMirrorsEnabledForProject($project);
-
-        $panes = $this->getPanes($project, $request, $are_mirrors_defined);
+        $panes = $this->getPanes($project, $request);
 
         $event = new GitAdminGetExternalPanePresenters($project, '');
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
             $project->getID(),
-            $are_mirrors_defined,
             $event->getExternalPanePresenters(),
             $panes
         );
@@ -122,17 +111,10 @@ class IndexController
         $this->render($request, $presenter);
     }
 
-    private function areMirrorsEnabledForProject(Project $project)
-    {
-        return count($this->mirror_data_mapper->fetchAllForProject($project)) > 0;
-    }
-
     /**
-     * @param bool        $are_mirrors_defined
-     *
      * @return Pane\Pane[]
      */
-    private function getPanes(Project $project, HTTPRequest $request, $are_mirrors_defined)
+    private function getPanes(Project $project, HTTPRequest $request)
     {
         $current_pane   = AccessControl::NAME;
         $requested_pane = $request->get('pane');
@@ -157,11 +139,6 @@ class IndexController
             )
         );
         $panes->add(new DisabledPane(dgettext('tuleap-git', 'CI Token')));
-
-        if ($are_mirrors_defined) {
-            $panes->add(new Mirroring($this->mirror_data_mapper, $project, $current_pane === Mirroring::NAME));
-        }
-
         $panes->add(new DisabledPane(dgettext('tuleap-git', 'Notifications')));
         $panes->add(new DisabledPane(dgettext('tuleap-git', 'Webhooks')));
 
