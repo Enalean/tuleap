@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg
         class="document-folder-icon document-quick-look-icon"
         xmlns="http://www.w3.org/2000/svg"

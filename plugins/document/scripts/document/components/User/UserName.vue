@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <span>
         <a
             v-bind:href="props.user.user_url"
@@ -33,4 +33,8 @@
     </span>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { User } from "../../type";
+
+const props = defineProps<{ user: User }>();
+</script>

@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-framed">
         <h1><span class="tlp-skeleton-text"></span></h1>
 

@@ -28,10 +28,12 @@ describe("ModalFooter", () => {
     function createWrapper(isLoading: boolean): Wrapper<ModalFooter> {
         return shallowMount(ModalFooter, {
             localVue,
-            context: {
-                props: {
-                    isLoading: isLoading,
-                },
+            propsData: {
+                isLoading: isLoading,
+                ariaLabelledBy: "label",
+                dataTest: "",
+                iconSubmitButtonClass: "",
+                submitButtonLabel: "Submit",
             },
         });
     }

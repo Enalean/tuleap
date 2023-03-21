@@ -28,12 +28,10 @@ describe("UserName", () => {
         Then we should be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
             localVue,
-            context: {
-                props: {
-                    user: {
-                        id: 1,
-                        is_anonymous: false,
-                    },
+            propsData: {
+                user: {
+                    id: 1,
+                    is_anonymous: false,
                 },
             },
         });
@@ -46,12 +44,10 @@ describe("UserName", () => {
         Then we should not be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
             localVue,
-            context: {
-                props: {
-                    user: {
-                        id: 1,
-                        is_anonymous: true,
-                    },
+            propsData: {
+                user: {
+                    id: 1,
+                    is_anonymous: true,
                 },
             },
         });
