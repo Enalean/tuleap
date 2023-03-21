@@ -51,7 +51,7 @@ final class MigrateInstance
     private function __construct(
         private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly \Project $project,
-        private readonly MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
+        private readonly ?string $central_database_name,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
@@ -86,7 +86,7 @@ final class MigrateInstance
             new self(
                 $command_factory,
                 $project_factory->getValidProjectById($payload['project_id']),
-                $central_database_parameter_generator,
+                $central_database_parameter_generator->getCentralDatabase(),
                 $default_language_code_provider,
                 $initializations_state,
                 $switch_mediawiki_service,
@@ -112,40 +112,48 @@ final class MigrateInstance
         $logger->info("Switching to MediaWiki Standalone service");
         $this->switch_mediawiki_service->switchToStandalone($this->project);
 
-        $this->legacy_mediawiki_db_primer->prepareDBForMigration($this->getDBName(), $this->getDBPrefix());
-
         $instance_name = $this->project->getUnixNameLowerCase();
-        $request       = $request_factory->createRequest(
-            'GET',
-            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode($instance_name)
-        );
-        return self::processRequest($client, $request, $logger)
-            ->andThen(
-                /** @return Ok<null>|Err<Fault> */
-                function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $logger, $instance_name) {
-                    return match ($response->getStatusCode()) {
-                        404 => $this->registerInstance($client, $request_factory, $stream_factory, $logger),
-                        200 => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
-                        default => Result::err(
-                            Fault::fromMessage(
-                                sprintf(
-                                    "Could not determine current status of the %s instance, received %d %s\n%s",
-                                    $instance_name,
-                                    $response->getStatusCode(),
-                                    $response->getReasonPhrase(),
-                                    $response->getBody()->getContents(),
-                                )
+
+        return $this->legacy_mediawiki_db_primer->prepareDBForMigration(
+            $this->project,
+            $this->central_database_name,
+            $this->getDBName(),
+            $this->getDBPrefix()
+        )->andThen(
+            /** @psalm-return Ok<ResponseInterface>|Err<Fault> */
+            function () use ($request_factory, $instance_name, $client, $logger): Ok|Err {
+                $request = $request_factory->createRequest(
+                    'GET',
+                    ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode($instance_name)
+                );
+                return self::processRequest($client, $request, $logger);
+            }
+        )->andThen(
+            /** @psalm-return Ok<null>|Err<Fault> */
+            function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $logger, $instance_name): Ok|Err {
+                return match ($response->getStatusCode()) {
+                    404 => $this->registerInstance($client, $request_factory, $stream_factory, $logger),
+                    200 => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
+                    default => Result::err(
+                        Fault::fromMessage(
+                            sprintf(
+                                "Could not determine current status of the %s instance, received %d %s\n%s",
+                                $instance_name,
+                                $response->getStatusCode(),
+                                $response->getReasonPhrase(),
+                                $response->getBody()->getContents(),
                             )
                         )
-                    };
-                }
-            )->orElse(
-                function (Fault $fault): Err {
-                    $this->initializations_state->markAsError((int) $this->project->getID());
+                    )
+                };
+            }
+        )->orElse(
+            function (Fault $fault): Err {
+                $this->initializations_state->markAsError((int) $this->project->getID());
 
-                    return Result::err($fault);
-                }
-            );
+                return Result::err($fault);
+            }
+        );
     }
 
     /**
@@ -259,7 +267,7 @@ final class MigrateInstance
 
     private function getDBPrefix(): string
     {
-        if ($this->central_database_parameter_generator->getCentralDatabase() !== null) {
+        if ($this->central_database_name !== null) {
             return 'mw_' . $this->project->getID() . '_';
         }
 
@@ -268,6 +276,6 @@ final class MigrateInstance
 
     private function getDBName(): string
     {
-        return $this->central_database_parameter_generator->getCentralDatabase() ?? 'plugin_mediawiki_' . $this->project->getID();
+        return $this->central_database_name ?? 'plugin_mediawiki_' . $this->project->getID();
     }
 }

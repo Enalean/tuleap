@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Option;
 
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OptionTest extends TestCase
@@ -39,6 +40,9 @@ final class OptionTest extends TestCase
         self::assertSame($applied_value, $value);
         self::assertTrue($optional->isValue());
         self::assertFalse($optional->isNothing());
+        $result = $optional->okOr(Result::err('Not expected'));
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($value, $result->value);
     }
 
     public function testDoNoApplyOnNothing(): void
@@ -54,6 +58,9 @@ final class OptionTest extends TestCase
         self::assertFalse($has_called_apply_function);
         self::assertFalse($optional->isValue());
         self::assertTrue($optional->isNothing());
+        $expected_error = Result::err('Expected error');
+        $result         = $optional->okOr($expected_error);
+        self::assertSame($expected_error, $result);
     }
 
     public function testCanMapOptionalValueWithADefault(): void

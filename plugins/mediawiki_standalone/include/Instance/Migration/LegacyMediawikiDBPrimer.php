@@ -22,7 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
 interface LegacyMediawikiDBPrimer
 {
-    public function prepareDBForMigration(string $db_name, string $db_prefix): void;
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok|Err;
 }
