@@ -631,7 +631,8 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     new \Tuleap\Project\ProjectAccessChecker(
                         new RestrictedUserCanAccessProjectVerifier(),
                         EventManager::instance()
-                    )
+                    ),
+                    self::getLogger(),
                 ),
                 EventManager::instance(),
                 UserManager::instance()

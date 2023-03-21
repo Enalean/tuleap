@@ -31,5 +31,5 @@ def __check_read_access_with_epel_viewvc(username, svnrepo, svnpath):
     from vcauth.svnauthz import ViewVCAuthorizer
     root_lookup_func = lambda _: 'svn', svnrepo
     authorizer = ViewVCAuthorizer(root_lookup_func, username, {'authzfile' : svnrepo + '/.SVNAccessFile'})
-    requested_path_parts = filter(None, svnpath.split('/'))
+    requested_path_parts = list(filter(None, svnpath.split('/')))
     return authorizer.check_path_access(svnrepo, requested_path_parts, None)
