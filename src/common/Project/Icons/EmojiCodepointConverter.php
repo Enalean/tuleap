@@ -28,6 +28,7 @@ use JsonException;
 final class EmojiCodepointConverter
 {
     /**
+     * @psalm-mutation-free
      * @throws JsonException
      */
     public static function convertEmojiToStoreFormat(?string $emoji): string
@@ -39,6 +40,9 @@ final class EmojiCodepointConverter
         return json_encode($emoji, JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public static function convertStoredEmojiFormatToEmojiFormat(?string $stored_emoji): string
     {
         if ($stored_emoji === null || $stored_emoji === '') {

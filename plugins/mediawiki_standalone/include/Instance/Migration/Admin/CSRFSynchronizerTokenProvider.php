@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 20223- Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap;
+namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-/**
- * @psalm-immutable
- */
-final class CSRFSynchronizerTokenPresenter
+class CSRFSynchronizerTokenProvider
 {
-    private function __construct(public string $name, public string $token)
+    public function getCSRF(): CSRFSynchronizerTokenInterface
     {
-    }
-
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
-    {
-        return new self($token->getTokenName(), $token->getToken());
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getTokenName(): string
-    {
-        return $this->name;
+        return new \CSRFSynchronizerToken(DisplayMigrationController::URL);
     }
 }

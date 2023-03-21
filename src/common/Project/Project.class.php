@@ -23,6 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -569,5 +570,13 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function getIconUnicodeCodepoint(): ?string
     {
         return $this->project_data_array['icon_codepoint'];
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getIconAndPublicName(): string
+    {
+        return EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($this->getIconUnicodeCodepoint()) . ' ' . $this->getPublicName();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
-namespace Tuleap;
-
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
-
-/**
- * @psalm-immutable
- */
-final class CSRFSynchronizerTokenPresenter
+interface ProjectReadyToBeMigratedVerifier
 {
-    private function __construct(public string $name, public string $token)
-    {
-    }
-
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
-    {
-        return new self($token->getTokenName(), $token->getToken());
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getTokenName(): string
-    {
-        return $this->name;
-    }
+    public function isProjectReadyToBeMigrated(int $project_id): bool;
 }

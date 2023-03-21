@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -41,6 +42,7 @@ final class DisplayMigrationController implements DispatchableWithRequest, Dispa
         private readonly LegacyReadyToMigrateDao $to_migrate_dao,
         private readonly IsProjectAllowedToUsePlugin $plugin,
         private readonly AdminPageRenderer $renderer,
+        private readonly CSRFSynchronizerTokenProvider $token_provider,
     ) {
     }
 
@@ -64,6 +66,7 @@ final class DisplayMigrationController implements DispatchableWithRequest, Dispa
             'legacy-migration',
             [
                 'projects' => $this->getProjects($current_user),
+                'token'    => CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getCSRF()),
             ]
         );
     }

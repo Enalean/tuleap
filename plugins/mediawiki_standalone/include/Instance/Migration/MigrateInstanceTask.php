@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,35 +16,40 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap;
 
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+namespace Tuleap\MediawikiStandalone\Instance\Migration;
+
+use Tuleap\Queue\QueueTask;
 
 /**
  * @psalm-immutable
  */
-final class CSRFSynchronizerTokenPresenter
+final class MigrateInstanceTask implements QueueTask
 {
-    private function __construct(public string $name, public string $token)
+    private readonly int $project_id;
+
+    public function __construct(\Project $project)
     {
+        $this->project_id = (int) $project->getID();
     }
 
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
+    public function getTopic(): string
     {
-        return new self($token->getTokenName(), $token->getToken());
+        return MigrateInstance::TOPIC;
     }
 
-    public function getToken(): string
+    public function getPayload(): array
     {
-        return $this->token;
+        return ['project_id' => $this->project_id];
     }
 
-    public function getTokenName(): string
+    public function getPreEnqueueMessage(): string
     {
-        return $this->name;
+        return 'Migrate MediaWiki instance #' . $this->project_id;
     }
 }
