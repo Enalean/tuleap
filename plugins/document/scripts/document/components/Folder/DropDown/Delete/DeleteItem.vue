@@ -36,11 +36,11 @@
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 
 const props = defineProps<{ item: Item }>();
 
-const { is_deletion_allowed } = useState<Pick<ConfigurationState, "is_deletion_allowed">>(
+const { is_deletion_allowed } = useNamespacedState<Pick<ConfigurationState, "is_deletion_allowed">>(
     "configuration",
     ["is_deletion_allowed"]
 );

@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
 import { computed } from "vue";
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<{ date: string; relative_placement?: "top
     relative_placement: "top",
 });
 
-const { date_time_format, relative_dates_display, user_locale } = useState<
+const { date_time_format, relative_dates_display, user_locale } = useNamespacedState<
     Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
 >("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
 

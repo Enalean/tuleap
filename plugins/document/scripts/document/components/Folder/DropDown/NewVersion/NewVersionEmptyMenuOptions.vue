@@ -103,7 +103,7 @@ import {
 } from "../../../../constants";
 import type { ItemHasJustBeenUpdatedEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
-import { useActions, useState } from "vuex-composition-helpers";
+import { useActions, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { inject } from "vue";
 import type { NewItemAlternativeArray } from "../../../../type";
@@ -116,7 +116,7 @@ import { isFile } from "../../../../helpers/type-check-helper";
 const { createNewVersionFromEmpty } = useActions<
     Pick<RootActionsUpdate, "createNewVersionFromEmpty">
 >(["createNewVersionFromEmpty"]);
-const { embedded_are_allowed, user_can_create_wiki, user_locale } = useState<
+const { embedded_are_allowed, user_can_create_wiki, user_locale } = useNamespacedState<
     Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki" | "user_locale">
 >("configuration", ["embedded_are_allowed", "user_can_create_wiki", "user_locale"]);
 

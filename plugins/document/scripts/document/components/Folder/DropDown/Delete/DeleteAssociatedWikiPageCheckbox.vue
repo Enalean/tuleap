@@ -61,14 +61,14 @@
 import { sprintf } from "sprintf-js";
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const props = defineProps<{ item: Wiki; wikiPageReferencers: Array<ItemPath> }>();
 
-const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
     "project_id",
 ]);
 

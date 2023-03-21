@@ -85,7 +85,7 @@ import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useState } from "vuex-composition-helpers";
+import { useState, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { useRouter } from "../../../helpers/use-router";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
@@ -103,7 +103,9 @@ const props = defineProps<{
 
 const limit = ref(SEARCH_LIMIT);
 
-const { columns } = useState<Pick<ConfigurationState, "columns">>("configuration", ["columns"]);
+const { columns } = useNamespacedState<Pick<ConfigurationState, "columns">>("configuration", [
+    "columns",
+]);
 
 const nb_columns = computed((): number => {
     let nb_extra_columns = columns.value.some((column) => column.name === "title") ? 1 : 0;

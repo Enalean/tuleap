@@ -89,7 +89,7 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import { isEmpty, isFile, isFolder, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { computed } from "vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
@@ -98,12 +98,17 @@ import DownloadFile from "./DownloadFile.vue";
 
 const props = defineProps<{ item: Item }>();
 
-const { forbid_writers_to_update, forbid_writers_to_delete, is_deletion_allowed } = useState<
-    Pick<
-        ConfigurationState,
-        "forbid_writers_to_update" | "forbid_writers_to_delete" | "is_deletion_allowed"
-    >
->("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete", "is_deletion_allowed"]);
+const { forbid_writers_to_update, forbid_writers_to_delete, is_deletion_allowed } =
+    useNamespacedState<
+        Pick<
+            ConfigurationState,
+            "forbid_writers_to_update" | "forbid_writers_to_delete" | "is_deletion_allowed"
+        >
+    >("configuration", [
+        "forbid_writers_to_update",
+        "forbid_writers_to_delete",
+        "is_deletion_allowed",
+    ]);
 
 const is_item_a_wiki_with_approval_table = computed((): boolean => {
     return isWiki(props.item) && props.item.approval_table !== null;

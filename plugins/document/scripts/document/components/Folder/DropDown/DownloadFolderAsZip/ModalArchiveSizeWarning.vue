@@ -106,12 +106,12 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const props = defineProps<{ size: number; folderHref: string; shouldWarnOsxUser: boolean }>();
 
-const { warning_threshold } = useState<Pick<ConfigurationState, "warning_threshold">>(
+const { warning_threshold } = useNamespacedState<Pick<ConfigurationState, "warning_threshold">>(
     "configuration",
     ["warning_threshold"]
 );
