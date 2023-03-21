@@ -51,3 +51,15 @@ Cypress.Commands.add("putFromTuleapApi", (url: string, payload: Record<string, u
         },
     });
 });
+
+Cypress.Commands.add("patchFromTuleapAPI", (url: string, payload: Record<string, unknown>) => {
+    cy.request({
+        method: "PATCH",
+        url,
+        body: payload,
+        headers: {
+            accept: "application/json",
+            referer: Cypress.config("baseUrl"),
+        },
+    });
+});

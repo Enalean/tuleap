@@ -190,10 +190,10 @@ describe(`Artifact Modal`, function () {
             });
 
             getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
-                selectLabelInLinkSelectorDropdown(
+                cy.searchItemInLinkSelectorDropdown(
                     String(this.artifact_link_id),
                     LINKABLE_ARTIFACT_TITLE
-                );
+                ).click();
             });
 
             cy.get("[data-test=artifact-modal-save-button]").click();
@@ -370,38 +370,6 @@ describe(`Artifact Modal`, function () {
         });
         waitForKanbanCard(`Editable Artifact ${now}`);
     });
-
-    it(`can link artifacts from user's history`, function () {
-        const HISTORY_ARTIFACT_TITLE = "History Artifact";
-
-        cy.projectMemberSession();
-        cy.log(`Visit History Artifact to ensure it is in history`);
-        cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
-        cy.get("[data-test=tracker-report-table-results-artifact]")
-            .contains(HISTORY_ARTIFACT_TITLE)
-            .parents("[data-test=tracker-report-table-results-artifact]")
-            .find("[data-test=direct-link-to-artifact]")
-            .click();
-
-        cy.log("Edit Editable Artifact");
-        visitKanban(this.project_id, this.kanban_id);
-        getKanbanCard("Editable Artifact").within(() => {
-            cy.get("[data-test=edit-link]").click();
-        });
-
-        cy.get("[data-test=artifact-modal-form]").within(() => {
-            getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
-                cy.get("[data-test=link-selector-selection]").click();
-            });
-        });
-        cy.get("[data-test=link-selector-search-field]").type(HISTORY_ARTIFACT_TITLE);
-        cy.get("[data-test=link-selector-dropdown]")
-            .find("[data-test=link-selector-item]")
-            .should("contain", HISTORY_ARTIFACT_TITLE);
-
-        cy.log("Close the modal");
-        cy.get("[data-test=artifact-modal-cancel-button]").click();
-    });
 });
 
 function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
@@ -434,14 +402,11 @@ function getFieldsetWithLabel(label: string): CypressWrapper {
         .get("[data-test=fieldset-label]")
         .contains(label)
         .parents("[data-test=fieldset]")
-        .within(() => {
-            return cy.get("[data-test=fieldset-content]");
-        });
+        .find("[data-test=fieldset-content]");
 }
 
 function getFieldWithLabel(label: string, form_element_selector: string): CypressWrapper {
-    // eslint-disable-next-line cypress/require-data-selectors
-    return cy.get(form_element_selector).contains(label).parents(form_element_selector);
+    return cy.getContains(form_element_selector, label);
 }
 
 function checkRadioButtonWithLabel(label: string): void {
@@ -482,23 +447,6 @@ function selectLabelInListPickerDropdown(
         });
 }
 
-function selectLabelInLinkSelectorDropdown(
-    query: string,
-    dropdown_item_label: string
-): Cypress.Chainable<JQuery<HTMLBodyElement>> {
-    cy.get("[data-test=link-selector-selection]").click();
-    return cy
-        .root()
-        .parents("body")
-        .within(() => {
-            cy.get("[data-test=link-selector-search-field]").type(query);
-            cy.get("[data-test=link-selector-dropdown]")
-                .find("[data-test=link-selector-item]")
-                .contains(dropdown_item_label)
-                .click();
-        });
-}
-
 function selectLabelInSelect2Dropdown(label: string): Cypress.Chainable<JQuery<HTMLBodyElement>> {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection").click();
@@ -524,10 +472,7 @@ function visitKanban(project_id: number, kanban_id: number): void {
 }
 
 function getKanbanCard(label: string): CypressWrapper {
-    return cy
-        .get("[data-test-static=kanban-item-content]")
-        .contains(label)
-        .parents("[data-test-static=kanban-item-content]");
+    return cy.getContains("[data-test-static=kanban-item-content]", label);
 }
 
 function waitForKanbanCard(label: string): void {

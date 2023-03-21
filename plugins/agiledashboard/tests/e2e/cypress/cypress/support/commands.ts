@@ -26,9 +26,18 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
             dragAndDrop(source: string, destination: string, position: string): void;
+
+            searchItemInLinkSelectorDropdown(
+                query: string,
+                dropdown_item_label: string
+            ): Chainable<JQuery<HTMLElement>>;
+
+            getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
+
+const LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
 Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
     // eslint-disable-next-line cypress/require-data-selectors
@@ -36,5 +45,31 @@ Cypress.Commands.add("dragAndDrop", (source: string, destination: string, positi
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
 });
+
+Cypress.Commands.add("searchItemInLinkSelectorDropdown", (query, dropdown_item_label) => {
+    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
+    return cy.wrap(Cypress.$("body")).then((body) => {
+        cy.wrap(body).find("[data-test=link-selector]").click();
+        cy.wrap(body).find("[data-test=link-selector-search-field]").type(query);
+        // Link field auto-completer waits a delay before loading items
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
+        cy.wrap(body).find("[data-test=link-selector-loading-group-spinner]").should("not.exist");
+        return cy
+            .wrap(body)
+            .find("[data-test=link-selector-item]")
+            .contains(dropdown_item_label)
+            .first()
+            .parents("[data-test=link-selector-item]");
+    });
+});
+
+Cypress.Commands.add(
+    "getContains",
+    (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+        // eslint-disable-next-line cypress/require-data-selectors
+        return cy.get(selector).contains(label).parents(selector);
+    }
+);
 
 export {};

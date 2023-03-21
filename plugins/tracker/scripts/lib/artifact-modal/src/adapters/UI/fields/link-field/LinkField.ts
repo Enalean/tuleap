@@ -285,7 +285,7 @@ export const LinkField = define<LinkField>({
                     ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
                     ${getEmptyStateIfNeeded(host)}
                 </tbody>
-                <tfoot class="link-field-table-footer">
+                <tfoot class="link-field-table-footer" data-test="link-field-table-footer">
                     <tr class="link-field-table-row">
                         <td class="link-field-table-footer-type">
                             <tuleap-artifact-modal-link-type-selector

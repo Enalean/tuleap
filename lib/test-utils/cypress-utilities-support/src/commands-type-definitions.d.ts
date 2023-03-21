@@ -83,6 +83,8 @@ declare global {
 
             putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
 
+            patchFromTuleapAPI(url: string, payload: Record<string, unknown>): void;
+
             reloadUntilCondition(
                 reloadCallback: ReloadCallback,
                 conditionCallback: ConditionPredicate,
@@ -90,21 +92,15 @@ declare global {
                 number_of_attempts?: number
             ): PromiseLike<void>;
 
-            createNewPublicProject(
-                project_name: string,
-                xml_template: string
-            ): Cypress.Chainable<number>;
+            createNewPublicProject(project_name: string, xml_template: string): Chainable<number>;
 
             createNewPrivateProject(project_name: string): void;
 
             addProjectMember(user_name: string): void;
 
-            getTrackerIdFromREST(
-                project_id: number,
-                tracker_name: string
-            ): Cypress.Chainable<number>;
+            getTrackerIdFromREST(project_id: number, tracker_name: string): Chainable<number>;
 
-            createArtifact(payload: ArtifactCreationPayload): Cypress.Chainable<number>;
+            createArtifact(payload: ArtifactCreationPayload): Chainable<number>;
 
             createFRSPackage(project_id: number, package_name: string): void;
         }
