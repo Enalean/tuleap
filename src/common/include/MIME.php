@@ -133,10 +133,13 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                         // add a new rule to the current mimetype
                         case '>':
                         default:
-                            $indent                                   = $buffer[0] == '>' ? 0 : \intval($buffer);
-                            $buffer                                   = \substr($buffer, \strpos($buffer, '>') + 1);
-                            $parents[$indent][]                       = new \MIME_MagicRule();
-                            $rulenum                                  = \sizeof($parents[$indent]) - 1;
+                            $indent             = $buffer[0] == '>' ? 0 : \intval($buffer);
+                            $buffer             = \substr($buffer, \strpos($buffer, '>') + 1);
+                            $parents[$indent][] = new \MIME_MagicRule();
+                            $rulenum            = \sizeof($parents[$indent]) - 1;
+                            if ($rulenum < 0) {
+                                $rulenum = 0;
+                            }
                             $parents[$indent][$rulenum]->start_offset = \intval($buffer);
                             $buffer                                   = \substr($buffer, \strpos($buffer, '=') + 1);
                             $value_length                             = 256 * \ord($buffer[0]) + \ord($buffer[1]);

@@ -612,7 +612,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function listPendingAttachments($groupId, $offset, $limit)
     {
         $dao = $this->getDao();
-        return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+        return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp(), $groupId, $offset, $limit);
     }
 
     /**
