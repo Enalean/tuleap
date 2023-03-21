@@ -103,8 +103,7 @@ class WebDAVFRSFile implements IFile
     public function getContentType()
     {
         if (file_exists($this->file->getFileLocation()) && filesize($this->file->getFileLocation())) {
-            $mime = MIME::instance();
-            return $mime->type($this->file->getFileLocation());
+            return mime_content_type($this->file->getFileLocation()) ?: null;
         }
         return null;
     }

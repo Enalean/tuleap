@@ -656,7 +656,6 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
     $tmp     = tempnam(ForgeConfig::get('tmp_dir'), 'Mime-detect');
     $tmpname = $tmp . '-' . basename($file_name);
     file_put_contents($tmpname, $content);
-    $mime_type = MIME::instance()->type($tmpname);
 
     //remove both files created by tempnam() and file_put_contents()
     unlink($tmp);
@@ -666,7 +665,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
         'file_name'      => $file_name,
-        'mime_type'      => $mime_type,
+        'mime_type'      => mime_content_type($tmpname) ?: 'application/octet-stream',
         'upload_content' => $content,
         'date'           => $date,
         'author'         => _getUserIdByUserName($author),
