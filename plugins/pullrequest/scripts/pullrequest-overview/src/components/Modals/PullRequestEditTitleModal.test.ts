@@ -28,7 +28,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
-import { DISPLAY_TULEAP_API_ERROR, UPDATE_PULL_REQUEST_TITLE } from "../../constants";
+import { DISPLAY_TULEAP_API_ERROR, POST_PULL_REQUEST_UPDATE_CALLBACK } from "../../constants";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { Fault } from "@tuleap/fault";
 
@@ -43,15 +43,15 @@ const noop = (): void => {
     // do nothing
 };
 let api_error_callback: SpyInstance;
-let update_pullrequest_title_callback: SpyInstance;
+let postPullRequestUpdateCallback: SpyInstance;
 
 const getWrapper = (pull_request_id: number): VueWrapper => {
     vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
         switch (key) {
             case DISPLAY_TULEAP_API_ERROR:
                 return api_error_callback;
-            case UPDATE_PULL_REQUEST_TITLE:
-                return update_pullrequest_title_callback;
+            case POST_PULL_REQUEST_UPDATE_CALLBACK:
+                return postPullRequestUpdateCallback;
             default:
                 return noop;
         }
@@ -83,7 +83,7 @@ describe("PullRequestEditTitleModal", () => {
         vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
 
         api_error_callback = vi.fn();
-        update_pullrequest_title_callback = vi.fn();
+        postPullRequestUpdateCallback = vi.fn();
     });
 
     it("When pull request is defined, it shows the modal", async () => {
@@ -130,7 +130,7 @@ describe("PullRequestEditTitleModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(tuleap_api.patchTitle).toHaveBeenCalledWith(pull_request_id, "My updated title");
-        expect(update_pullrequest_title_callback).toHaveBeenCalled();
+        expect(postPullRequestUpdateCallback).toHaveBeenCalled();
     });
 
     it("When an error occurs, Then it should call the display_error_callback with the fault", async () => {

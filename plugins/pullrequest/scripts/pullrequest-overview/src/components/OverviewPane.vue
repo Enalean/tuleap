@@ -22,24 +22,31 @@
         <overview-app-header v-bind:pull_request="pull_request_info" />
 
         <div class="tlp-pane pullrequest-overview-content-pane">
-            <div class="tlp-pane-container pullrequest-overview-threads">
+            <div class="tlp-pane-container pullrequest-overview-section-left">
                 <overview-threads
                     v-bind:pull_request_info="pull_request_info"
                     v-bind:pull_request_author="pull_request_author"
                 />
             </div>
-            <div class="tlp-pane-container pullrequest-overview-info">
-                <section class="pull-request-action-buttons">
+
+            <div class="tlp-pane-container pullrequest-overview-section-right">
+                <section class="tlp-pane-section pullrequest-overview-actions-top">
                     <pull-request-checkout-button v-bind:pull_request_info="pull_request_info" />
                     <pull-request-edit-title-modal v-bind:pull_request_info="pull_request_info" />
                 </section>
-                <section class="tlp-pane-section">
+                <section class="tlp-pane-section pullrequest-overview-info">
                     <pull-request-author v-bind:pull_request_author="pull_request_author" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
                     <pull-request-reviewer-list />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
+                </section>
+                <section class="tlp-pane-section pullrequest-overview-actions-bottom">
+                    <pull-request-change-state-actions
+                        v-if="pull_request_info"
+                        v-bind:pull_request="pull_request_info"
+                    />
                 </section>
             </div>
         </div>
@@ -56,7 +63,7 @@ import type { Fault } from "@tuleap/fault";
 import {
     PULL_REQUEST_ID_KEY,
     DISPLAY_TULEAP_API_ERROR,
-    UPDATE_PULL_REQUEST_TITLE,
+    POST_PULL_REQUEST_UPDATE_CALLBACK,
 } from "../constants";
 
 import OverviewAppHeader from "./OverviewAppHeader.vue";
@@ -70,6 +77,7 @@ import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
 import PullRequestEditTitleModal from "./Modals/PullRequestEditTitleModal.vue";
 import PullRequestReviewerList from "./WriteInfo/PullRequestReviewerList.vue";
+import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActions.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);
@@ -79,9 +87,9 @@ const error = ref<Fault | null>(null);
 
 provide(PULL_REQUEST_ID_KEY, pull_request_id);
 provide(DISPLAY_TULEAP_API_ERROR, (fault: Fault) => handleAPIFault(fault));
-provide(UPDATE_PULL_REQUEST_TITLE, (updated_title: PullRequest) =>
-    updatePullRequestTitle(updated_title)
-);
+provide(POST_PULL_REQUEST_UPDATE_CALLBACK, (pull_request: PullRequest) => {
+    pull_request_info.value = pull_request;
+});
 
 fetchPullRequestInfo(pull_request_id)
     .andThen((pull_request) => {
@@ -97,13 +105,6 @@ fetchPullRequestInfo(pull_request_id)
             error.value = fault;
         }
     );
-
-function updatePullRequestTitle(updated_pull_request: PullRequest): void {
-    if (!pull_request_info.value) {
-        return;
-    }
-    pull_request_info.value = updated_pull_request;
-}
 
 function handleAPIFault(fault: Fault) {
     error.value = fault;
@@ -132,15 +133,26 @@ function handleAPIFault(fault: Fault) {
     border-top-right-radius: 0;
 }
 
-.pullrequest-overview-threads {
+.pullrequest-overview-section-left {
     background-color: var(--tlp-background-color-lighter-50);
 }
 
-.pullrequest-overview-info {
-    flex: 0 1 50%;
+.pullrequest-overview-section-right {
+    flex: 0 1 33%;
 }
 
-.pull-request-action-buttons {
+.pullrequest-overview-actions-top {
     display: flex;
+    border-bottom: unset;
+}
+
+.pullrequest-overview-info {
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-x-large-spacing)
+        var(--tlp-medium-spacing);
+}
+
+.pullrequest-overview-actions-bottom {
+    padding: var(--tlp-x-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        var(--tlp-medium-spacing);
 }
 </style>

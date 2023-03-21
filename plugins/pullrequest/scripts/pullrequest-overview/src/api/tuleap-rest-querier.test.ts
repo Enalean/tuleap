@@ -26,13 +26,14 @@ import type {
     GlobalComment,
     User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { EVENT_TYPE_MERGE } from "@tuleap/plugin-pullrequest-constants";
+import { EVENT_TYPE_MERGE, PULL_REQUEST_STATUS_MERGED } from "@tuleap/plugin-pullrequest-constants";
 import {
     fetchPullRequestInfo,
     fetchPullRequestTimelineItems,
     fetchReviewersInfo,
     fetchUserInfo,
     patchTitle,
+    mergePullRequest,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
@@ -143,6 +144,25 @@ describe("tuleap-rest-querier", () => {
                 uri`/api/v1/pull_requests/${pull_request_id}/reviewers`
             );
             expect(result.value).toStrictEqual(reviewers);
+        });
+    });
+
+    describe("mergePullRequest", () => {
+        it("Given a pull-request id, Then it should merge the pull-request", async () => {
+            const pull_request_id = 50;
+
+            vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
+                okAsync({
+                    status: PULL_REQUEST_STATUS_MERGED,
+                })
+            );
+
+            await mergePullRequest(pull_request_id);
+
+            expect(fetch_result.patchJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}`,
+                { status: PULL_REQUEST_STATUS_MERGED }
+            );
         });
     });
 });

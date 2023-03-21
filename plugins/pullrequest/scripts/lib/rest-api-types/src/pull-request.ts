@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BuildStatus } from "@tuleap/plugin-pullrequest-constants";
+import type { BuildStatus, PullRequestMergeStatusType } from "@tuleap/plugin-pullrequest-constants";
 import type { User } from "@tuleap/core-rest-api-types";
+import type { PullRequestStatusType } from "@tuleap/plugin-pullrequest-constants/src/constants";
 
 export interface PullRequest {
     readonly id: number;
@@ -30,6 +31,7 @@ export interface PullRequest {
         readonly lines_removed: number;
     };
     readonly reference_src: string;
+    readonly reference_dest: string;
     readonly branch_src: string;
     readonly branch_dest: string;
     readonly last_build_status: BuildStatus;
@@ -43,6 +45,8 @@ export interface PullRequest {
     readonly description: string;
     readonly raw_description: string;
     readonly user_can_merge: boolean;
+    readonly status: PullRequestStatusType;
+    readonly merge_status: PullRequestMergeStatusType;
 }
 
 export interface Reviewer {
