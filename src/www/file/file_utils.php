@@ -1186,7 +1186,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 //update files
                 $index = 0;
                 foreach ($release_files as $rel_file) {
-                    if (! $release_files_to_delete || ! in_array($rel_file, $release_files_to_delete)) {
+                    if (empty($release_files_to_delete) || ! in_array($rel_file, $release_files_to_delete)) {
                         $package_id = $release['package_id'];
                         $fname      = $files[$index]->getFileName();
                         $list       = explode('/', $fname);
