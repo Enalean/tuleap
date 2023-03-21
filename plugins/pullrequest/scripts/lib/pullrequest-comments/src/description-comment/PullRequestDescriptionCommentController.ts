@@ -81,16 +81,23 @@ export const PullRequestDescriptionCommentController = (
             getExistingEditionFormPresenter(host)
         );
 
-        description_saver
-            .saveDescriptionComment(host.edition_form_presenter)
-            .match((pull_request) => {
+        description_saver.saveDescriptionComment(host.edition_form_presenter).match(
+            (pull_request) => {
                 host.description =
                     PullRequestDescriptionCommentPresenter.fromPullRequestWithUpdatedDescription(
                         host.description,
                         pull_request
                     );
                 hideEditionForm(host);
-            }, on_error_callback);
+            },
+            (fault) => {
+                host.edition_form_presenter =
+                    PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(
+                        getExistingEditionFormPresenter(host)
+                    );
+                on_error_callback(fault);
+            }
+        );
     },
     getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
         RelativeDatesHelper(

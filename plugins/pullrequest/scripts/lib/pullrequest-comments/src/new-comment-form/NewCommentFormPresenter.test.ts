@@ -84,10 +84,29 @@ describe("NewCommentFormPresenter", () => {
             author,
         });
     });
+
     it("buildSavingComment() should return a clone of the provided presenter containing is_saving_comment as true", () => {
         expect(NewCommentFormPresenter.buildSavingComment(getBasePresenter())).toStrictEqual({
             comment: "This is a new comment",
             is_saving_comment: true,
+            is_cancel_allowed: true,
+            writing_zone_state: {
+                initial_content: "",
+                is_focused: false,
+            },
+            author,
+        });
+    });
+
+    it("buildNotSavingComment() should return a clone of the provided presenter containing is_saving_comment as false", () => {
+        const presenter_saving_comment = NewCommentFormPresenter.buildSavingComment(
+            getBasePresenter()
+        );
+        expect(
+            NewCommentFormPresenter.buildNotSavingComment(presenter_saving_comment)
+        ).toStrictEqual({
+            comment: "This is a new comment",
+            is_saving_comment: false,
             is_cancel_allowed: true,
             writing_zone_state: {
                 initial_content: "",

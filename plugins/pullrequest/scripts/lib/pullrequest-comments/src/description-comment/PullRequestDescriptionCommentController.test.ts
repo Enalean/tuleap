@@ -150,11 +150,13 @@ describe("PullRequestDescriptionCommentController", () => {
         });
 
         it(`should trigger the onErrorCallback when an error occurres while saving the description`, async () => {
+            const edition_form_presenter =
+                PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
+                    raw_content: "This commit fixes bug #456",
+                } as PullRequestDescriptionCommentPresenter);
+
             const host = {
-                edition_form_presenter:
-                    PullRequestDescriptionCommentFormPresenter.fromCurrentDescription({
-                        raw_content: "This commit fixes bug #456",
-                    } as PullRequestDescriptionCommentPresenter),
+                edition_form_presenter,
             } as PullRequestDescriptionComment;
 
             const tuleap_api_fault = Fault.fromMessage("Forbidden");
@@ -163,6 +165,9 @@ describe("PullRequestDescriptionCommentController", () => {
 
             expect(onErrorCallback).toHaveBeenCalledOnce();
             expect(onErrorCallback).toHaveBeenCalledWith(tuleap_api_fault);
+            expect(host.edition_form_presenter).toStrictEqual(
+                PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(edition_form_presenter)
+            );
         });
     });
 });

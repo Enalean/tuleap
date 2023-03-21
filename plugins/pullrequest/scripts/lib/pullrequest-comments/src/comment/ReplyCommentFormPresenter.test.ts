@@ -86,6 +86,14 @@ describe("ReplyCommentFormPresenter", () => {
             expect(submitted_presenter.is_being_submitted).toBe(true);
         });
 
+        it("should return a presenter with the is_being_submitted property set to false", () => {
+            const updated_presenter = ReplyCommentFormPresenter.buildSubmitted(presenter);
+            expect(updated_presenter.is_being_submitted).toBe(true);
+
+            const submitted_presenter = ReplyCommentFormPresenter.buildNotSubmitted(presenter);
+            expect(submitted_presenter.is_being_submitted).toBe(false);
+        });
+
         it("should update the writing zone focus state", () => {
             const is_focused = true;
             const updated_presenter = ReplyCommentFormPresenter.updateWritingZoneState(
