@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ForwardLink;
  */
 final class ForwardLinkProxy implements ForwardLink
 {
-    private function __construct(private int $id, private ?string $type)
+    private function __construct(private int $id, private string $type)
     {
     }
 
@@ -40,7 +40,7 @@ final class ForwardLinkProxy implements ForwardLink
     {
         return new self(
             $linked_artifact_id,
-            ($artifact_link_type === '') ? null : $artifact_link_type
+            $artifact_link_type
         );
     }
 

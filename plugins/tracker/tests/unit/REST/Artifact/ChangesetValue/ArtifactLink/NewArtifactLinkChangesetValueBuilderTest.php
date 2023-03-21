@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
@@ -115,7 +116,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertCount(3, $submitted_values);
         [$first_link, $second_link, $third_link] = $submitted_values;
         self::assertSame(self::FIRST_UNCHANGED_ARTIFACT_ID, $first_link->getTargetArtifactId());
-        self::assertNull($first_link->getType());
+        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $first_link->getType());
         self::assertSame(self::SECOND_UNCHANGED_ARTIFACT_ID, $second_link->getTargetArtifactId());
         self::assertSame('_is_child', $second_link->getType());
         self::assertSame(self::ADDED_ARTIFACT_ID, $third_link->getTargetArtifactId());

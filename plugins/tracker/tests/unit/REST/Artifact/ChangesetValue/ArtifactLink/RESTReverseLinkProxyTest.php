@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
@@ -39,13 +40,13 @@ final class RESTReverseLinkProxyTest extends TestCase
         self::assertSame('_is_child', $reverse->getType());
     }
 
-    public function testItDefaultsEmptyTypeToNull(): void
+    public function testWithDefaultsEmptyType(): void
     {
         $link = RESTReverseLinkProxy::fromPayload(
             LinkWithDirectionRepresentationBuilder::aReverseLink(49)->withType('')->build()
         );
         self::assertSame(49, $link->getSourceArtifactId());
-        self::assertNull($link->getType());
+        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $link->getType());
     }
 
     public function testItThrowsWhenTypeIsNull(): void

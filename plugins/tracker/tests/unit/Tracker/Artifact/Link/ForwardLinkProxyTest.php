@@ -32,11 +32,4 @@ final class ForwardLinkProxyTest extends TestCase
         self::assertSame(101, $link->getTargetArtifactId());
         self::assertSame('_is_child', $link->getType());
     }
-
-    public function testFromDataWithoutType(): void
-    {
-        $link = ForwardLinkProxy::buildFromData(101, '');
-        self::assertSame(101, $link->getTargetArtifactId());
-        self::assertNull($link->getType());
-    }
 }
