@@ -1,6 +1,6 @@
 # Need glibc here (so not alpine) otherwise we face an iconv error with nette/utils dependency
 # https://github.com/nette/utils/issues/109
-FROM fedora:35
+FROM fedora:38
 
 RUN dnf install -y \
     php \
