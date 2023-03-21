@@ -1,0 +1,98 @@
+<h1>{{# dgettext }} tuleap-mediawiki_standalone | MediaWiki Standalone {{/ dgettext }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Projects with MediaWiki to migrate</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# dgettext }}
+                    tuleap-mediawiki_standalone |
+                    The projects below are using the legacy MediaWiki (≤ 1.23). You can migrate them to MediaWiki standalone (≥ 1.35).
+                {{/ dgettext }}
+            </p>
+            <div class="tlp-table-actions">
+                <div class="tlp-table-actions-spacer"></div>
+                <div class="tlp-form-element tlp-table-actions-element">
+                    <input type="search"
+                           class="tlp-search tlp-table-actions-filter"
+                           id="projects-to-migrate-filter"
+                           data-target-table-id="projects-to-migrate-table"
+                           autocomplete="off"
+                           placeholder="{{# dgettext }} tuleap-mediawiki_standalone | Project name, status {{/ dgettext }}">
+                </div>
+            </div>
+            <table class="tlp-table" id="projects-to-migrate-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }} tuleap-mediawiki_standalone | Project {{/ dgettext }}</th>
+                        <th>{{# dgettext }} tuleap-mediawiki_standalone | Status {{/ dgettext }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# projects }}
+                        {{# project }}
+                            <tr>
+                                <td class="tlp-table-cell-filterable">
+                                    <a href="{{ project_uri }}">
+                                        {{ icon }} {{ project_name }}
+                                    </a>
+                                </td>
+                                <td class="tlp-table-cell-filterable">
+                                    {{# is_allowed }}
+                                        {{# is_ongoing_initialization }}
+                                            {{# is_error }}
+                                                <span class="tlp-badge-danger"
+                                                      title="{{# dgettext }} tuleap-mediawiki_standalone | An error occurred while migrating the project.{{/ dgettext }} {{# dgettext }} tuleap-mediawiki_standalone | Please check the logs.{{/ dgettext }}"
+                                                >
+                                                    <i class="fa-solid fa-triangle-exclamation tlp-badge-icon"></i>
+                                                    {{# dgettext }} tuleap-mediawiki_standalone | Migration failed {{/ dgettext }}
+                                                </span>
+                                            {{/ is_error }}
+                                            {{^ is_error }}
+                                                <span class="tlp-badge-info tlp-badge-outline"
+                                                      title="{{# dgettext }} tuleap-mediawiki_standalone | The migration already started.{{/ dgettext }} {{# dgettext }} tuleap-mediawiki_standalone | Please come back later.{{/ dgettext }}"
+                                                >
+                                                    {{# dgettext }} tuleap-mediawiki_standalone | Migration started {{/ dgettext }}
+                                                </span>
+                                            {{/ is_error }}
+                                        {{/ is_ongoing_initialization }}
+                                        {{^ is_ongoing_initialization }}
+                                            <span class="tlp-badge-secondary tlp-badge-outline">
+                                                {{# dgettext }} tuleap-mediawiki_standalone | To be migrated {{/ dgettext }}
+                                            </span>
+                                        {{/ is_ongoing_initialization }}
+                                    {{/ is_allowed }}
+                                    {{^ is_allowed }}
+                                            <span class="tlp-badge-secondary tlp-badge-outline"
+                                                  title="{{# dgettext }} tuleap-mediawiki_standalone | The project is not allowed to use MediaWiki standalone.{{/ dgettext }} {{# dgettext }} tuleap-mediawiki_standalone | Please check plugin restrictions.{{/ dgettext }}"
+                                            >
+                                                {{# dgettext }} tuleap-mediawiki_standalone | Unauthorized {{/ dgettext }}
+                                            </span>
+                                    {{/ is_allowed }}
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    <button
+                                        type="button"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                        {{^ can_perform_migration }}disabled{{/ can_perform_migration }}
+                                    >
+                                        <i class="tlp-button-icon fa-solid fa-circle-play" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-mediawiki_standalone | Start migration {{/ dgettext }}
+                                    </button>
+                                </td>
+                            </tr>
+                        {{/ project }}
+                    {{/ projects }}
+                    {{^ projects }}
+                        <td colspan="3" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-mediawiki_standalone | There isn't any projects to migrate {{/ dgettext }}
+                        </td>
+                    {{/ projects }}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>

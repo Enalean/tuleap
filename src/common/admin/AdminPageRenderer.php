@@ -24,7 +24,7 @@ use TemplateRendererFactory;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\SidebarPresenter;
 
 class AdminPageRenderer
@@ -94,7 +94,7 @@ class AdminPageRenderer
         return $presenter;
     }
 
-    public function addJavascriptAsset(JavascriptAsset $asset): void
+    public function addJavascriptAsset(JavascriptAssetGeneric $asset): void
     {
         $GLOBALS['HTML']->addJavascriptAsset($asset);
     }

@@ -23,12 +23,15 @@ declare(strict_types=1);
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\ForgeUserGroupDeletedEvent;
 use Tuleap\admin\PermissionDelegation\PermissionDelegationsAddedToForgeUserGroupEvent;
 use Tuleap\Admin\PermissionDelegation\PermissionDelegationsRemovedForForgeUserGroupEvent;
 use Tuleap\Admin\PermissionDelegation\UserAddedToForgeUserGroupEvent;
 use Tuleap\Admin\PermissionDelegation\UsersRemovedFromForgeUserGroupEvent;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -68,6 +71,8 @@ use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageDao;
+use Tuleap\MediawikiStandalone\Instance\Migration\Admin\DisplayMigrationController;
+use Tuleap\MediawikiStandalone\Instance\Migration\Admin\LegacyReadyToMigrateDao;
 use Tuleap\MediawikiStandalone\Instance\Migration\ServiceMediawikiSwitcher;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsDao;
 use Tuleap\MediawikiStandalone\Instance\ProjectRenameHandler;
@@ -119,6 +124,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -531,6 +537,20 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             '/mediawiki_standalone/under-construction/{' . UnderConstructionController::PROJECT_NAME_VARIABLE_NAME . '}',
             $this->getRouteHandler('routeUnderConstruction')
         );
+        $route_collector->addRoute(
+            'GET',
+            DisplayMigrationController::URL,
+            $this->getRouteHandler('routeAdminDisplayMigrations')
+        );
+    }
+
+    public function routeAdminDisplayMigrations(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new DisplayMigrationController(
+            new LegacyReadyToMigrateDao(),
+            $this,
+            new AdminPageRenderer()
+        );
     }
 
     public function routeUnderConstruction(): \Tuleap\Request\DispatchableWithRequest
@@ -819,5 +839,16 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
         $rank_in_project = $service->getRank();
         $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    #[ListeningToEventClass]
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void
+    {
+        $event->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone'),
+                DisplayMigrationController::URL,
+            )
+        );
     }
 }

@@ -15,6 +15,9 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "An error occurred while migrating the project."
+msgstr "Une erreur est survenue lors de la migration du projet."
+
 msgid "Build of %s MediaWiki failed"
 msgstr "La construction du MediaWiki de %s a échoué"
 
@@ -54,6 +57,15 @@ msgstr "Écrivains MediaWiki"
 msgid "Mediawiki Standalone (read only)"
 msgstr "MediaWiki autonome (lecture seule)"
 
+msgid "Migration failed"
+msgstr "Migration échouée"
+
+msgid "Migration started"
+msgstr "Migration démarrée"
+
+msgid "Migrations to MediaWiki standalone"
+msgstr "Migrations vers MediaWiki autonome"
+
 msgid "Permission"
 msgstr "Permission"
 
@@ -78,12 +90,27 @@ msgstr "Réinitialisation des permissions pour les écrivains de MediaWiki"
 msgid "Permissions"
 msgstr "Permissions"
 
+msgid "Please check plugin restrictions."
+msgstr "Veuillez vérifier les restrictions du plugin."
+
+msgid "Please check the logs."
+msgstr "Veuillez jeter un œil aux logs."
+
 msgid "Please come back later"
 msgstr "Merci de revenir plus tard"
+
+msgid "Please come back later."
+msgstr "Veuillez revenir plus tard."
+
+msgid "Project"
+msgstr "Projet"
 
 msgid "Project administrators are de facto administrators of MediaWiki"
 msgstr ""
 "Les administrateurs de projets sont de facto administrateurs de MediaWiki"
+
+msgid "Project name, status"
+msgstr "Nom du projet, statut"
 
 msgid "Read only access to information about Mediawiki Standalone"
 msgstr "Accès en lecture seule aux informations Mediawiki Autonome"
@@ -96,6 +123,12 @@ msgstr "Quelque chose s'est mal passé"
 
 msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr "Intégration avec Tuleap d'instances autonome de MediaWiki"
+
+msgid "Start migration"
+msgstr "Démarrer la migration"
+
+msgid "Status"
+msgstr "Statut"
 
 msgid ""
 "The MediaWiki standalone service cannot activated when the Mediawiki service "
@@ -125,12 +158,34 @@ msgstr ""
 "Le service Mediawiki ne peut pas être activé quand il y a encore des données "
 "du service MediaWiki autonome"
 
+msgid "The migration already started."
+msgstr "La migration a déjà démarré."
+
+msgid "The project is not allowed to use MediaWiki standalone."
+msgstr "Le projet n'est pas autorisé à utiliser MediaWiki autonome."
+
+msgid ""
+"The projects below are using the legacy MediaWiki (≤ 1.23). You can migrate "
+"them to MediaWiki standalone (≥ 1.35)."
+msgstr ""
+"Les projets ci-dessous utilise le vieux MediaWiki (≤ 1.23). Vous pouvez les "
+"migrer vers MediaWiki autonome (≥ 1.35)."
+
+msgid "There isn't any projects to migrate"
+msgstr "Il n'y a pas de projets à migrer"
+
 msgid ""
 "This permission grants MediaWiki administration rights for each MediaWiki of "
 "every project"
 msgstr ""
 "Cette permission donne le droit d'administration sur toutes les instances de "
 "MediaWiki"
+
+msgid "To be migrated"
+msgstr "À migrer"
+
+msgid "Unauthorized"
+msgstr "Pas autorisé"
 
 msgid "User groups who can administrate"
 msgstr "Groupes d'utilisateurs qui peuvent administrer"
