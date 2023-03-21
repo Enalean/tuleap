@@ -37,6 +37,7 @@ use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
 use Tuleap\MediawikiStandalone\Instance\ProvideInitializationLanguageCodeStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -102,6 +103,7 @@ final class MigrateInstanceTest extends TestCase
 
         $initializations_state = OngoingInitializationsStateStub::buildSelf();
         $switcher              = SwitchMediawikiServiceStub::buildSelf();
+        $db_primer             = new LegacyMediawikiDBPrimerStub();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -110,13 +112,14 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            $db_primer,
             LegacyMediawikiLanguageRetrieverStub::withLanguage('fr_FR'),
             new ProvideInitializationLanguageCodeStub(),
         );
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher, $db_primer): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -127,6 +130,8 @@ final class MigrateInstanceTest extends TestCase
                 self::assertTrue($initializations_state->isFinished());
                 self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
+                self::assertEquals(Option::fromValue('plugin_mediawiki_120'), $db_primer->db_name_used);
+                self::assertEquals(Option::fromValue('mw'), $db_primer->db_prefix_used);
             }
         );
     }
@@ -178,6 +183,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -246,6 +252,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('invalid'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -301,6 +308,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -342,6 +350,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             $switcher,
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -395,6 +404,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -448,6 +458,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -481,6 +492,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
             new ProvideInitializationLanguageCodeStub(),
         );
@@ -510,6 +522,7 @@ final class MigrateInstanceTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
         );

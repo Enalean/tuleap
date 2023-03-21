@@ -33,6 +33,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimerStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetrieverStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiServiceStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
@@ -86,6 +87,7 @@ final class InstanceManagementTest extends TestCase
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([]),
             OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
+            new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
         );

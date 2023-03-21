@@ -29,6 +29,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
+use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimer;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetriever;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiService;
@@ -51,6 +52,7 @@ final class InstanceManagement
         private readonly MediaWikiManagementCommandFactory $command_factory,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
+        private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
     ) {
@@ -67,6 +69,7 @@ final class InstanceManagement
                 $this->command_factory,
                 $this->initializations_state,
                 $this->switch_mediawiki_service,
+                $this->legacy_mediawiki_db_primer,
                 $this->legacy_mediawiki_language_retriever,
                 $this->default_language_code_provider,
             ));
