@@ -418,7 +418,7 @@ class CampaignsResource
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater());
 
         $node_js_client          = new NodeJSClient(
-            HttpClientFactory::createClient(),
+            HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger(),

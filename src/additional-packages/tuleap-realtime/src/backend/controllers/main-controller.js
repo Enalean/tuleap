@@ -25,10 +25,10 @@ const Rights = require("../modules/rights");
 const Scores = require("../modules/scores");
 const JWT = require("../modules/jwt");
 
-module.exports = function (io, app, config) {
+module.exports = function (io, app, private_key) {
     var jsonParser           = bodyParser.json();
     var rooms                = new Rooms(new Rights(), new Scores());
-    var jwt                  = new JWT(config.conf.get('nodejs_server_jwt_private_key'));
+    var jwt                  = new JWT(private_key);
     var communicationService = new CommunicationService(rooms, jwt);
     var scoresService        = new ScoresService(rooms.scores);
 

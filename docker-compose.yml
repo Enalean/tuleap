@@ -14,7 +14,6 @@ services:
       - reverse-proxy-cert:/etc/pki/tls
     depends_on:
     - web
-    - realtime
     networks:
       default:
         aliases:
@@ -26,7 +25,6 @@ services:
     volumes:
       - .:/usr/share/tuleap:cached
       - tuleap-data:/data
-      - realtime-cert:/realtime-cert:ro
       - reverse-proxy-cert:/front-cert:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - .env:/root/.tuleap_env:ro
@@ -38,21 +36,7 @@ services:
     depends_on:
     - ldap
     - db
-    - realtime
     - mailhog
-
-  realtime:
-    build:
-      context: tools/docker/realtime
-      platforms:
-        - linux/amd64
-    command: /tuleap/tools/docker/realtime/run.sh
-    volumes:
-      - .:/tuleap:ro,cached
-      - realtime-conf:/etc/tuleap-realtime
-      - realtime-cert:/published-certificate
-    env_file:
-      - .env
 
   mailhog:
     image: mailhog/mailhog
@@ -201,8 +185,6 @@ volumes:
   db80-data:
   mariadb103-data:
   redis-data:
-  realtime-conf:
-  realtime-cert:
   reverse-proxy-cert:
   prom-data:
   jenkins-data:

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\RealTime;
 
-use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
@@ -35,10 +34,6 @@ final class NodeJSClientTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMessageIsTransmittedToRealTimeNodeJSServer(): void
     {
-        $realtime_server_address = 'realtime.example.com';
-        ForgeConfig::set('nodejs_server', $realtime_server_address);
-        ForgeConfig::set('nodejs_server_int', '');
-
         $http_client   = new \Http\Mock\Client();
         $logger        = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $nodejs_client = new NodeJSClient(
@@ -65,6 +60,6 @@ final class NodeJSClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $requests);
         $request = $requests[0];
         $this->assertEquals('POST', $request->getMethod());
-        $this->assertStringStartsWith('https://' . $realtime_server_address, (string) $request->getUri());
+        $this->assertStringStartsWith('http://localhost:2999', (string) $request->getUri());
     }
 }

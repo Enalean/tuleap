@@ -2,20 +2,13 @@ import io from "socket.io-client";
 
 export default SocketFactory;
 
-SocketFactory.$inject = ["socketFactory", "SharedPropertiesService"];
+SocketFactory.$inject = ["socketFactory"];
 
-function SocketFactory(socketFactory, SharedPropertiesService) {
-    if (SharedPropertiesService.getNodeServerAddress()) {
-        var io_socket = io.connect(
-            "https://" + SharedPropertiesService.getNodeServerAddress() + "/testmanagement",
-            {
-                secure: true,
-                path: "/socket.io",
-            }
-        );
-
-        return socketFactory({
-            ioSocket: io_socket,
-        });
-    }
+function SocketFactory(socketFactory) {
+    return socketFactory({
+        ioSocket: io.connect("/testmanagement", {
+            secure: true,
+            path: "/local-socket.io",
+        }),
+    });
 }

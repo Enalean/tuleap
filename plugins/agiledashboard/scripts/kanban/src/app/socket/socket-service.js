@@ -64,16 +64,13 @@ function SocketService(
     }
 
     function listenNodeJSServer() {
-        if (SharedPropertiesService.getNodeServerAddress()) {
-            listenToDisconnect();
-            listenToError();
-            return JWTService.getJWT().then((data) => {
-                locker.put("token", data.token);
-                locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
-                return subscribe();
-            });
-        }
-        return $q.reject("No server Node.js.");
+        listenToDisconnect();
+        listenToError();
+        return JWTService.getJWT().then((data) => {
+            locker.put("token", data.token);
+            locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
+            return subscribe();
+        });
     }
 
     function subscribe() {

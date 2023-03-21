@@ -115,7 +115,7 @@ class KanbanColumnsResource
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
         $this->node_js_client         = new NodeJSClient(
-            HttpClientFactory::createClient(),
+            HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()

@@ -3,14 +3,13 @@ import angular from "angular";
 import "angular-mocks";
 
 describe("FilterTrackerReportService -", () => {
-    let FilterTrackerReportService, SharedPropertiesService;
+    let FilterTrackerReportService;
 
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
-        angular.mock.inject(function (_FilterTrackerReportService_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_FilterTrackerReportService_) {
             FilterTrackerReportService = _FilterTrackerReportService_;
-            SharedPropertiesService = _SharedPropertiesService_;
         });
     });
 
@@ -97,8 +96,7 @@ describe("FilterTrackerReportService -", () => {
     });
 
     describe("areCardsAndWIPUpdated() -", () => {
-        it("Given node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
+        it("Given a selected report, then false will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -117,47 +115,7 @@ describe("FilterTrackerReportService -", () => {
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
         });
 
-        it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
-        });
-
-        it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
-        });
-
-        it("Given node.js server address and no selected report, then true will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
+        it("Given no selected report, then true will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -177,8 +135,7 @@ describe("FilterTrackerReportService -", () => {
     });
 
     describe("isWIPUpdated() -", () => {
-        it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
+        it("Given a selected report, then false will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -192,64 +149,6 @@ describe("FilterTrackerReportService -", () => {
                     name: "Assigned to me",
                     selectable: true,
                     selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
-        });
-
-        it("Given empty node.js server address and no selected report, then true will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toBe(true);
-        });
-
-        it("Given node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
-        });
-
-        it("Given node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
                 },
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
@@ -257,8 +156,7 @@ describe("FilterTrackerReportService -", () => {
     });
 
     describe("areNotCardsAndWIPUpdated() -", () => {
-        it("Given node.js server address and a selected report, then true will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
+        it("Given a selected report, then true will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -277,47 +175,7 @@ describe("FilterTrackerReportService -", () => {
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(true);
         });
 
-        it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
-        });
-
-        it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
-        });
-
-        it("Given node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
+        it("Given no selected report, then false will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -337,8 +195,7 @@ describe("FilterTrackerReportService -", () => {
     });
 
     describe("isNotWIPUpdated() -", () => {
-        it("Given empty node.js server address and a selected report, then true will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
+        it("Given a selected report, then true will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -357,47 +214,7 @@ describe("FilterTrackerReportService -", () => {
             expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(true);
         });
 
-        it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
-        });
-
-        it("Given node.js server address and a selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
-            FilterTrackerReportService.initTrackerReports([
-                {
-                    id: 305,
-                    description: "The system default artifact report",
-                    name: "Default",
-                    selectable: true,
-                },
-                {
-                    id: 306,
-                    description: "Custom Assigned to me report",
-                    name: "Assigned to me",
-                    selectable: true,
-                    selected: true,
-                },
-            ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
-        });
-
-        it("Given node.js server address and no selected report, then false will be returned", () => {
-            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
+        it("Given no selected report, then false will be returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,

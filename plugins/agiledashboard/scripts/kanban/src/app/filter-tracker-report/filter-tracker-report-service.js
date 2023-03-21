@@ -1,8 +1,6 @@
 export default FilterTrackerReportService;
 
-FilterTrackerReportService.$inject = ["SharedPropertiesService"];
-
-function FilterTrackerReportService(SharedPropertiesService) {
+function FilterTrackerReportService() {
     const self = this;
 
     Object.assign(self, {
@@ -58,26 +56,18 @@ function FilterTrackerReportService(SharedPropertiesService) {
     }
 
     function areCardsAndWIPUpdated() {
-        return (
-            SharedPropertiesService.thereIsNodeServerAddress() && !isFiltersTrackerReportSelected()
-        );
+        return !isFiltersTrackerReportSelected();
     }
 
     function isWIPUpdated() {
-        return (
-            !SharedPropertiesService.thereIsNodeServerAddress() && !isFiltersTrackerReportSelected()
-        );
+        return !isFiltersTrackerReportSelected();
     }
 
     function areNotCardsAndWIPUpdated() {
-        return (
-            SharedPropertiesService.thereIsNodeServerAddress() && isFiltersTrackerReportSelected()
-        );
+        return isFiltersTrackerReportSelected();
     }
 
     function isNotWIPUpdated() {
-        return (
-            !SharedPropertiesService.thereIsNodeServerAddress() && isFiltersTrackerReportSelected()
-        );
+        return isFiltersTrackerReportSelected();
     }
 }

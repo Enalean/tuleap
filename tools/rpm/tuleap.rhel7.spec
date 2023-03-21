@@ -61,6 +61,7 @@ Requires: rh-mysql80-mysql
 
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate
+Requires: tuleap-realtime = @@VERSION@@
 
 # xmllint
 Requires: libxml2

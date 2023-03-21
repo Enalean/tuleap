@@ -39,7 +39,6 @@ final class KanbanPresenter
     public int $project_id;
     public int $user_id;
     public string $view_mode;
-    public string $nodejs_server;
     public int $widget_id;
     /**
      * @var string json of \Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder
@@ -113,7 +112,6 @@ final class KanbanPresenter
         $this->view_mode                         = (string) $user->getPreference(
             'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
         );
-        $this->nodejs_server                     = ForgeConfig::get('nodejs_server');
         $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
                 'group_id' => $this->project_id,
