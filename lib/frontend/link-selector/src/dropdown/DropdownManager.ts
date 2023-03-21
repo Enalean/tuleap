@@ -108,14 +108,14 @@ export class DropdownManager implements ManageDropdown {
 
     private resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered: boolean): void {
         window.requestAnimationFrame(() => {
-            const list_picker_boundaries = this.wrapper_element.getBoundingClientRect();
-            const x_coordinate = list_picker_boundaries.left + window.scrollX;
-            const y_coordinate = list_picker_boundaries.bottom + window.scrollY;
+            const link_selector_boundaries = this.wrapper_element.getBoundingClientRect();
+            const x_coordinate = link_selector_boundaries.left + window.scrollX;
+            const y_coordinate = link_selector_boundaries.bottom + window.scrollY;
             const { height } = this.dropdown_element.getBoundingClientRect();
             const has_enough_room_below =
-                list_picker_boundaries.bottom + height <= this.doc.documentElement.clientHeight;
+                link_selector_boundaries.bottom + height <= this.doc.documentElement.clientHeight;
 
-            this.dropdown_element.style.width = list_picker_boundaries.width + "px";
+            this.dropdown_element.style.width = link_selector_boundaries.width + "px";
             this.dropdown_element.style.left = x_coordinate + "px";
 
             this.dropdown_element.classList.remove("link-selector-dropdown-above");
@@ -125,7 +125,7 @@ export class DropdownManager implements ManageDropdown {
                 !has_enough_room_below ||
                 (this.is_dropdown_placed_above && is_list_being_filtered)
             ) {
-                const pos = y_coordinate - height - list_picker_boundaries.height;
+                const pos = y_coordinate - height - link_selector_boundaries.height;
                 this.dropdown_element.style.top = pos + "px";
 
                 this.dropdown_element.classList.add("link-selector-dropdown-above");

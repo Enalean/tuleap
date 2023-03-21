@@ -105,14 +105,15 @@ export class BaseComponentRenderer {
     }
 
     private createLinkSelectorElement(): Element {
-        const list_picker_element = document.createElement("span");
-        list_picker_element.classList.add("link-selector");
+        const link_selector_element = document.createElement("span");
+        link_selector_element.classList.add("link-selector");
+        link_selector_element.setAttribute("data-test", "link-selector");
 
         if (this.source_select_box.disabled) {
-            list_picker_element.classList.add("link-selector-disabled");
+            link_selector_element.classList.add("link-selector-disabled");
         }
 
-        return list_picker_element;
+        return link_selector_element;
     }
 
     private createSearchSectionElement(): Element {
