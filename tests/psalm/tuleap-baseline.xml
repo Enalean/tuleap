@@ -27514,36 +27514,6 @@
       <code>new self($identifier)</code>
     </InvalidReturnStatement>
   </file>
-  <file src="plugins/mediawiki_standalone/include/mediawiki_standalonePlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/mediawiki_standalone/tests/unit/Permissions/ISearchByProjectStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->permissions]]></code>
@@ -27551,86 +27521,6 @@
     <MoreSpecificReturnType>
       <code>array</code>
     </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/EnrollmentDisplayController.php">
-    <NullReference>
-      <code>$_SESSION</code>
-    </NullReference>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/EnrollmentPresenter.php">
-    <ImplicitToStringCast>
-      <code>$secret</code>
-    </ImplicitToStringCast>
-    <MissingParamType>
-      <code>$is_user_already_registered</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/EnrollmentRegisterController.php">
-    <InvalidReturnType>
-      <code>process</code>
-    </InvalidReturnType>
-    <NullReference>
-      <code>$_SESSION</code>
-    </NullReference>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/TOTP/TOTPEnroller.php">
-    <MissingParamType>
-      <code>$validation_totp_code</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>enrollUser</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/TOTP/TOTPEnrollmentDAO.php">
-    <MissingParamType>
-      <code>$secret</code>
-      <code>$user_id</code>
-      <code>$user_id</code>
-      <code>$user_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>enrollUserID</code>
-      <code>isUserIDEnrolled</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/mfa/include/Enrollment/TrialAuthenticationVerifierController.php">
-    <InvalidReturnType>
-      <code>process</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/mfa/include/OTP/TOTP.php">
-    <MissingParamType>
-      <code>$shared_secret</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/mfa/include/OTP/TOTPMode.php">
-    <MissingParamType>
-      <code>$algorithm</code>
-      <code>$code_length</code>
-      <code>$time_step</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/mfa/include/OTP/TOTPValidator.php">
-    <InvalidOperand>
-      <code><![CDATA[hash_equals($totp->generateCode($time), $code)]]></code>
-    </InvalidOperand>
-    <MissingParamType>
-      <code>$code</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getAcceptedStepTimes</code>
-    </MissingReturnType>
-    <PossiblyFalseOperand>
-      <code>$is_valid</code>
-    </PossiblyFalseOperand>
-  </file>
-  <file src="plugins/mfa/include/mfaPlugin.php">
-    <MissingParamType>
-      <code>$id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getPluginInfo</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/mytuleap_contact_support/include/ContactSupportFormController.php">
     <MissingReturnType>
@@ -29909,8 +29799,6 @@
       <code>$limit</code>
       <code>$merge_status</code>
       <code>$merge_status</code>
-      <code>$new_description</code>
-      <code>$new_title</code>
       <code>$offset</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
@@ -29949,7 +29837,6 @@
       <code>updateMergeStatus</code>
       <code>updateSha1Dest</code>
       <code>updateSha1Src</code>
-      <code>updateTitleAndDescription</code>
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/DefaultSettings/DefaultSettingsController.php">
@@ -29992,10 +29879,8 @@
       <code>$branch_name</code>
       <code>$id</code>
       <code>$merge_status</code>
-      <code>$new_description</code>
       <code>$new_rev</code>
       <code>$new_rev</code>
-      <code>$new_title</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$rows</code>
@@ -30006,7 +29891,6 @@
       <code>updateDestRev</code>
       <code>updateMergeStatus</code>
       <code>updateSourceRev</code>
-      <code>updateTitleAndDescription</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$user->getId()]]></code>
@@ -30619,13 +30503,11 @@
         )]]></code>
     </InvalidPropertyAssignmentValue>
     <MissingParamType>
-      <code>$body</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$id</code>
-      <code>$project_id</code>
       <code>$repository_id</code>
       <code>$status</code>
       <code>$uri</code>
@@ -72914,65 +72796,6 @@
       <code>$is_script</code>
     </MissingParamType>
   </file>
-  <file src="src/common/include/MIME.php">
-    <MissingClosureParamType>
-      <code>$attrs</code>
-      <code>$data</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$parser</code>
-      <code>$parser</code>
-      <code>$parser</code>
-    </MissingClosureParamType>
-    <MissingParamType>
-      <code>$filename</code>
-      <code>$fp</code>
-      <code>$language</code>
-      <code>$mimetype</code>
-      <code>$openfile</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$XDG_DATA_DIRS</code>
-      <code>$description</code>
-      <code>$globFileLines</code>
-      <code>$lang</code>
-      <code>$magicRules</code>
-      <code>$read</code>
-      <code><![CDATA[$rule->range_length]]></code>
-      <code><![CDATA[$rule->start_offset]]></code>
-      <code><![CDATA[$rule->value]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>applyRecursiveMagic</code>
-      <code>description</code>
-      <code>type</code>
-    </MissingReturnType>
-    <PossiblyFalseOperand>
-      <code><![CDATA[\strpos($buffer, "\n")]]></code>
-      <code><![CDATA[\strpos($buffer, '=')]]></code>
-      <code><![CDATA[\strpos($buffer, '>')]]></code>
-      <code><![CDATA[\strpos($buffer, ']')]]></code>
-    </PossiblyFalseOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code>$glob</code>
-      <code>$mimetype</code>
-    </PossiblyUndefinedArrayOffset>
-    <PossiblyUndefinedVariable>
-      <code>$parents</code>
-    </PossiblyUndefinedVariable>
-    <UnsupportedReferenceUsage>
-      <code><![CDATA[$parents[$indent + 1]                     =& $parents[$indent][$rulenum]->children]]></code>
-    </UnsupportedReferenceUsage>
-  </file>
-  <file src="src/common/include/MIME_MagicRule.php">
-    <MissingPropertyType>
-      <code>$mask</code>
-      <code>$range_length</code>
-      <code>$start_offset</code>
-      <code>$value</code>
-      <code>$word_size</code>
-    </MissingPropertyType>
-  </file>
   <file src="src/common/include/PropertyDescriptor.class.php">
     <MissingParamType>
       <code>$name</code>
@@ -80534,12 +80357,6 @@
     <MissingReturnType>
       <code>getUserFormat</code>
     </MissingReturnType>
-  </file>
-  <file src="src/tuleap-cfg/Command/Docker/Realtime.php">
-    <RedundantCast>
-      <code>(string) $out</code>
-      <code>(string) $out</code>
-    </RedundantCast>
   </file>
   <file src="src/utils/TrackerV3-data-exporter.php">
     <ArgumentTypeCoercion>
