@@ -70,6 +70,7 @@ use Tuleap\MediawikiStandalone\Configuration\UpdateMediaWikiTask;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
+use Tuleap\MediawikiStandalone\Instance\Migration\Admin\StartMigrationController;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageDao;
 use Tuleap\MediawikiStandalone\Instance\Migration\Admin\DisplayMigrationController;
 use Tuleap\MediawikiStandalone\Instance\Migration\Admin\LegacyReadyToMigrateDao;
@@ -543,6 +544,28 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             DisplayMigrationController::URL,
             $this->getRouteHandler('routeAdminDisplayMigrations')
         );
+        $route_collector->addRoute(
+            'POST',
+            StartMigrationController::URL,
+            $this->getRouteHandler('routeAdminStartMigrations')
+        );
+    }
+
+    public function routeAdminStartMigrations(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new StartMigrationController(
+            new \Tuleap\MediawikiStandalone\Instance\Migration\Admin\CSRFSynchronizerTokenProvider(),
+            new LegacyReadyToMigrateDao(),
+            $this,
+            ProjectManager::instance(),
+            new EnqueueTask(),
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao())
+            ),
+            new SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
     }
 
     public function routeAdminDisplayMigrations(): \Tuleap\Request\DispatchableWithRequest
@@ -550,7 +573,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         return new DisplayMigrationController(
             new LegacyReadyToMigrateDao(),
             $this,
-            new AdminPageRenderer()
+            new AdminPageRenderer(),
+            new \Tuleap\MediawikiStandalone\Instance\Migration\Admin\CSRFSynchronizerTokenProvider(),
         );
     }
 

@@ -18,6 +18,11 @@ msgstr ""
 msgid "Building of %s MediaWiki in progress"
 msgstr ""
 
+msgid ""
+"Cannot start MediaWiki standalone migration. Make sure that project is using "
+"legacy MediaWiki service and migration is not already started."
+msgstr ""
+
 msgid "Global MediaWiki Administrator"
 msgstr ""
 
@@ -37,6 +42,12 @@ msgid "MediaWiki administration"
 msgstr ""
 
 msgid "MediaWiki administrators"
+msgstr ""
+
+#, php-format
+msgid ""
+"MediaWiki migration has been started for %s. It might take some time to be "
+"effective."
 msgstr ""
 
 msgid "MediaWiki permissions have been saved"

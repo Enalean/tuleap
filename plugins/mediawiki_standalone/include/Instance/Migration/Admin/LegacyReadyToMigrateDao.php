@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
 use Tuleap\DB\DataAccessObject;
 
-final class LegacyReadyToMigrateDao extends DataAccessObject
+final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectReadyToBeMigratedVerifier
 {
     public function searchProjectsUsingLegacyMediaWiki(): array
     {
@@ -46,6 +46,25 @@ final class LegacyReadyToMigrateDao extends DataAccessObject
             ORDER BY project.group_name',
             \MediaWikiPlugin::SERVICE_SHORTNAME,
             \Project::STATUS_ACTIVE,
+        );
+    }
+
+    public function isProjectReadyToBeMigrated(int $project_id): bool
+    {
+        return $this->getDB()->exists(
+            'SELECT 1
+            FROM `groups` AS project
+                INNER JOIN service ON (project.group_id = service.group_id)
+                INNER JOIN plugin_mediawiki_admin_options AS legacy ON (service.group_id = legacy.project_id)
+                LEFT JOIN plugin_mediawiki_standalone_ongoing_initializations AS ongoing ON (project.group_id = ongoing.project_id)
+            WHERE project.group_id = ?
+              AND project.status = ?
+              AND service.short_name = ?
+              AND service.is_used = 1
+              AND ongoing.project_id IS NULL',
+            $project_id,
+            \Project::STATUS_ACTIVE,
+            \MediaWikiPlugin::SERVICE_SHORTNAME,
         );
     }
 }

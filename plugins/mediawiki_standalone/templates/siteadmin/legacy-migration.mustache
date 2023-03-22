@@ -5,7 +5,10 @@
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">Projects with MediaWiki to migrate</h1>
         </div>
-        <section class="tlp-pane-section">
+        <form action="" method="POST" class="tlp-pane-section">
+            {{# token }}
+                {{> csrf_token_input }}
+            {{/ token }}
             <p>
                 {{# dgettext }}
                     tuleap-mediawiki_standalone |
@@ -75,7 +78,9 @@
                                 </td>
                                 <td class="tlp-table-cell-actions">
                                     <button
-                                        type="button"
+                                        type="submit"
+                                        name="project"
+                                        value="{{ id }}"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                                         {{^ can_perform_migration }}disabled{{/ can_perform_migration }}
                                     >
@@ -93,6 +98,6 @@
                     {{/ projects }}
                 </tbody>
             </table>
-        </section>
+        </form>
     </div>
 </section>
