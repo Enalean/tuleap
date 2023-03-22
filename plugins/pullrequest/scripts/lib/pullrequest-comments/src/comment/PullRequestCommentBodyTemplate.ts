@@ -100,11 +100,7 @@ export const buildBodyForComment = (
 ): UpdateFunction<PullRequestCommentComponentType> => html`
     <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
-            ${getHeaderTemplate(
-                host.comment.user,
-                host.relative_date_helper,
-                host.comment.post_date
-            )}
+            ${getHeaderTemplate(host.comment.user, host.relative_date_helper, comment.post_date)}
             ${displayOutdatedBadgeIfNeeded(host, comment, gettext_provider)}
         </div>
 
