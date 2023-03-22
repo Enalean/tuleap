@@ -143,6 +143,8 @@ setup_system_configuration
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
 
+/usr/share/tuleap/tools/docker/tuleap-aio-c7/supervisor.d/start-tuleap-realtime.sh &
+
 /opt/remi/php81/root/usr/sbin/php-fpm --daemonize
 nginx
 /usr/sbin/httpd
