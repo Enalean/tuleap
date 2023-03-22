@@ -35,6 +35,7 @@ import {
     TYPE_EVENT_PULLREQUEST_ACTION,
     TYPE_INLINE_COMMENT,
 } from "@tuleap/plugin-pullrequest-constants";
+import { formatFilePathForUIRouter } from "../../helpers/file-path-formatter";
 
 export const CommentPresenterBuilder = {
     fromPayload: (
@@ -90,9 +91,11 @@ function buildFilePresenter(
     pull_request_id: string
 ): PullRequestCommentFile {
     const file_url = new URL(base_url);
+    const formatted_file_path = formatFilePathForUIRouter(payload.file_path);
+
     file_url.hash = `#/pull-requests/${encodeURIComponent(
         pull_request_id
-    )}/files/diff-${encodeURIComponent(payload.file_path)}/${encodeURIComponent(payload.id)}`;
+    )}/files/diff-${encodeURIComponent(formatted_file_path)}/${encodeURIComponent(payload.id)}`;
 
     return {
         file_url: file_url.toString(),
