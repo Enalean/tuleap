@@ -31,14 +31,16 @@ class ProjectMediaWikiServiceDAO extends DataAccessObject
     /**
      * @return array{project_name: string}[]
      */
-    public function searchAllProjectsWithMediaWikiStandaloneServiceEnabled(): array
+    public function searchAllProjectsWithMediaWikiStandaloneServiceReady(): array
     {
         return $this->getDB()->run(
             'SELECT unix_group_name AS project_name
-                       FROM `groups`
-                       JOIN service ON (service.group_id = `groups`.group_id)
-                       AND status != "D"
-                       WHERE service.is_used = 1 AND service.short_name = ?',
+                FROM `groups`
+                JOIN service ON (service.group_id = `groups`.group_id AND status != "D")
+                LEFT JOIN plugin_mediawiki_standalone_ongoing_initializations ON (plugin_mediawiki_standalone_ongoing_initializations.project_id = `groups`.group_id)
+                WHERE `groups`.status != "D" AND service.is_used = 1 AND
+                      service.short_name = ? AND plugin_mediawiki_standalone_ongoing_initializations.project_id IS NULL
+                ',
             MediawikiStandaloneService::SERVICE_SHORTNAME
         );
     }
