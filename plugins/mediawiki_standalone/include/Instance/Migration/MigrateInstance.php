@@ -46,7 +46,8 @@ use Tuleap\ServerHostname;
 
 final class MigrateInstance
 {
-    final public const TOPIC = 'tuleap.mediawiki-standalone.instance-migration';
+    final public const TOPIC                = 'tuleap.mediawiki-standalone.instance-migration';
+    public const MEDIAWIKI_123_SERVICE_NAME = 'plugin_mediawiki';
 
     private function __construct(
         private readonly MediaWikiManagementCommandFactory $command_factory,
@@ -102,7 +103,7 @@ final class MigrateInstance
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
-        $service = $this->project->getService(\MediaWikiPlugin::SERVICE_SHORTNAME);
+        $service = $this->project->getService(self::MEDIAWIKI_123_SERVICE_NAME);
         if (! $service) {
             return Result::err(Fault::fromMessage("Project does not use MediaWiki service"));
         }
