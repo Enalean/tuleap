@@ -54,6 +54,7 @@ import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -66,12 +67,7 @@ describe("LinkField", () => {
         function getHost(): HostElement {
             return {
                 field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
-                    {
-                        field_id: 60,
-                        type: "art_link",
-                        label: "Links overview",
-                        allowed_types: [],
-                    },
+                    ArtifactLinkFieldInfoStub.withDefaults(),
                     artifact_cross_reference
                 ),
             } as unknown as HostElement;
