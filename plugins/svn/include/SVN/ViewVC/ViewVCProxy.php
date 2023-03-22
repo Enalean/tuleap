@@ -22,9 +22,10 @@ namespace Tuleap\SVN\ViewVC;
 
 use Codendi_HTMLPurifier;
 use CrossReferenceFactory;
-use EventManager;
 use HTTPRequest;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Project\CheckProjectAccess;
@@ -34,28 +35,13 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class ViewVCProxy
 {
-    /**
-     * @var AccessHistorySaver
-     */
-    private $access_history_saver;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ProjectAccessSuspendedController
-     */
-    private $access_suspended_controller;
-
     public function __construct(
-        AccessHistorySaver $access_history_saver,
-        EventManager $event_manager,
-        ProjectAccessSuspendedController $access_suspended_controller,
+        private AccessHistorySaver $access_history_saver,
+        private EventDispatcherInterface $event_manager,
+        private ProjectAccessSuspendedController $access_suspended_controller,
         private CheckProjectAccess $check_project_access,
+        private LoggerInterface $logger,
     ) {
-        $this->access_history_saver        = $access_history_saver;
-        $this->event_manager               = $event_manager;
-        $this->access_suspended_controller = $access_suspended_controller;
     }
 
     private function displayViewVcHeader(HTTPRequest $request)
@@ -172,7 +158,7 @@ class ViewVCProxy
     private function getUsername(\PFUser $user, Project $project)
     {
         $event = new GetSVNLoginNameEvent($user, $project);
-        $this->event_manager->processEvent($event);
+        $this->event_manager->dispatch($event);
         return $event->getUsername();
     }
 
@@ -222,6 +208,10 @@ class ViewVCProxy
             $this->getPythonLauncher() . ' 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
+
+        if ($return_var === 1) {
+            $this->logger->error(sprintf("ViewVC error in #%s at #%s:\n%s", $repository->getPublicPath(), $path, $content));
+        }
 
         if ($return_var === 128) {
             return $this->getPermissionDeniedError($project);
