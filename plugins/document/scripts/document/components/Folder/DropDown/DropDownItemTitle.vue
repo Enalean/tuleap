@@ -17,8 +17,14 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <span class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
         {{ props.item.title }}
     </span>
 </template>
+
+<script setup lang="ts">
+import type { Item } from "../../../type";
+
+const props = defineProps<{ item: Item }>();
+</script>

@@ -17,7 +17,7 @@
   -  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <tr>
         <td>
             <a v-bind:href="encodeURI(props.version.download_href)">{{ props.version.number }}</a>
@@ -30,3 +30,9 @@
         </td>
     </tr>
 </template>
+
+<script setup lang="ts">
+import type { FileHistory } from "../../../../../type";
+
+const props = defineProps<{ version: FileHistory }>();
+</script>

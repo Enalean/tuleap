@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div v-bind:id="props.ariaLabelledBy" class="tlp-modal-footer">
         <button
             type="button"
@@ -49,3 +49,13 @@
         </button>
     </div>
 </template>
+
+<script setup lang="ts">
+const props = defineProps<{
+    ariaLabelledBy: string;
+    isLoading: boolean;
+    dataTest: string;
+    iconSubmitButtonClass: string;
+    submitButtonLabel: string;
+}>();
+</script>

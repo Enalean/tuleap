@@ -17,6 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <span class="tlp-dropdown-menu-separator" role="separator"></span>
 </template>
