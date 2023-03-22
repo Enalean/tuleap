@@ -59,10 +59,6 @@ final class CollectionOfForwardLinks
     {
         $types_by_links = [];
         foreach ($this->artifact_links as $artifact_link) {
-            if ($artifact_link->getType() === null) {
-                continue;
-            }
-
             $types_by_links[$artifact_link->getTargetArtifactId()] = $artifact_link->getType();
         }
         return $types_by_links;

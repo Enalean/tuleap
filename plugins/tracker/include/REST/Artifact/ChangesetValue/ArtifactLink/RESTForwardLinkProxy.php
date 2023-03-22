@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ForwardLink;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
@@ -89,7 +88,7 @@ final class RESTForwardLinkProxy implements ForwardLink
     private static function getLinkTypeFromLinksKey(array $link_payload): string
     {
         if (! array_key_exists(self::PAYLOAD_KEY_TYPE, $link_payload) || ! is_string($link_payload[self::PAYLOAD_KEY_TYPE])) {
-            return Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
+            return \Tracker_FormElement_Field_ArtifactLink::NO_TYPE;
         }
 
         return $link_payload[self::PAYLOAD_KEY_TYPE];
@@ -100,7 +99,7 @@ final class RESTForwardLinkProxy implements ForwardLink
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }

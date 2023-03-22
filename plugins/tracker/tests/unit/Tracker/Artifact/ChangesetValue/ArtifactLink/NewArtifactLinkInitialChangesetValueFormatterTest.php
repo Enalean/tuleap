@@ -52,14 +52,20 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
 
     public function testItFormatsNewLinksWithoutType(): void
     {
-        $this->new_links = new CollectionOfForwardLinks([
-            ForwardLinkStub::withNoType(24),
-            ForwardLinkStub::withNoType(45),
+        $first_artifact_id  = 24;
+        $second_artifact_id = 45;
+        $this->new_links    = new CollectionOfForwardLinks([
+            ForwardLinkStub::withNoType($first_artifact_id),
+            ForwardLinkStub::withNoType($second_artifact_id),
         ]);
-        $field_data      = $this->format();
+        $field_data         = $this->format();
         self::assertArrayHasKey('new_values', $field_data);
         self::assertSame('24,45', $field_data['new_values']);
-        self::assertCount(0, $field_data['types']);
+        self::assertCount(2, $field_data['types']);
+        self::assertArrayHasKey($first_artifact_id, $field_data['types']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $field_data['types'][$first_artifact_id]);
+        self::assertArrayHasKey($second_artifact_id, $field_data['types']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $field_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsNewLinksWithTypes(): void

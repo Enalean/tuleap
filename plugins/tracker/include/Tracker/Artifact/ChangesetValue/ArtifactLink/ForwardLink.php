@@ -28,5 +28,5 @@ interface ForwardLink
 {
     public function getTargetArtifactId(): int;
 
-    public function getType(): ?string;
+    public function getType(): string;
 }

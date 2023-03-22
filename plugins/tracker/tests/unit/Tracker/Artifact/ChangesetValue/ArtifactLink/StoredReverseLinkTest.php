@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-use PFUser;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Stub\ArtifactUserCanViewStub;
@@ -30,40 +29,49 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
 final class StoredReverseLinkTest extends TestCase
 {
-    private PFUser $user;
+    private const ARTIFACT_ID = 1045;
+    private const TYPE        = '_is_child';
     private StoredLinkRow $row;
+    private RetrieveArtifactStub $artifact_retriever;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::buildWithDefaults();
-        $this->row  = new StoredLinkRow(15, "_is_child");
+        $this->row = new StoredLinkRow(self::ARTIFACT_ID, self::TYPE);
+        $artifact  = ArtifactUserCanViewStub::buildUserCanViewArtifact(self::ARTIFACT_ID);
+
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
+    }
+
+    private function build(): ?StoredReverseLink
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+        return StoredReverseLink::fromRow($this->artifact_retriever, $user, $this->row);
     }
 
     public function testItReturnsNullIfTheSourceArtifactCannotBeRetrieved(): void
     {
-        $artifact_retriever = RetrieveArtifactStub::withNoArtifact();
-
-        self::assertNull(StoredReverseLink::fromRow($artifact_retriever, $this->user, $this->row));
+        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
+        self::assertNull($this->build());
     }
 
     public function testItReturnsNullIfTheUserCannotSeeTheArtifact(): void
     {
-        $artifact = ArtifactUserCanViewStub::buildUserCannotViewArtifact(12);
-
-        $artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
-
-        self::assertNull(StoredReverseLink::fromRow($artifact_retriever, $this->user, $this->row));
+        $artifact                 = ArtifactUserCanViewStub::buildUserCannotViewArtifact(self::ARTIFACT_ID);
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
+        self::assertNull($this->build());
     }
 
     public function testItReturnsTheSourceArtifactAndTheType(): void
     {
-        $artifact =  ArtifactUserCanViewStub::buildUserCanViewArtifact(1045);
+        $reverse_link = $this->build();
+        self::assertSame(self::ARTIFACT_ID, $reverse_link->getSourceArtifactId());
+        self::assertSame(self::TYPE, $reverse_link->getType());
+    }
 
-        $artifact_retriever = RetrieveArtifactStub::withArtifacts($artifact);
-
-        $reverse_link = StoredReverseLink::fromRow($artifact_retriever, $this->user, $this->row);
-
-        self::assertSame(1045, $reverse_link->getSourceArtifactId());
-        self::assertSame("_is_child", $reverse_link->getType());
+    public function testItDefaultsNullTypeToNoType(): void
+    {
+        $this->row    = new StoredLinkRow(self::ARTIFACT_ID, null);
+        $reverse_link = $this->build();
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $reverse_link->getType());
     }
 }

@@ -34,8 +34,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_links = [
             ForwardLinkStub::withType(101, '_is_child'),
             ForwardLinkStub::withType(102, '_depends_on'),
-            ForwardLinkStub::withType(103, ''),
-            ForwardLinkStub::withNoType(104),
+            ForwardLinkStub::withNoType(103),
         ];
     }
 
@@ -50,7 +49,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $collection = new CollectionOfForwardLinks($this->artifact_links);
 
-        self::assertEquals([101, 102, 103, 104], $collection->getTargetArtifactIds());
+        self::assertEquals([101, 102, 103], $collection->getTargetArtifactIds());
     }
 
     public function testItReturnsTheTypesByArtifactLinks(): void
@@ -60,7 +59,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([
             101 => '_is_child',
             102 => '_depends_on',
-            103 => '',
+            103 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
         ], $collection->getArtifactTypesByIds());
     }
 

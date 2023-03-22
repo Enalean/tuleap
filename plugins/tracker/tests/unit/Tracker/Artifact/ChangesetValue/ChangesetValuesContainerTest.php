@@ -76,7 +76,10 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'new_values'     => '99,42',
                 'removed_values' => [53 => [53], 34 => [34]],
-                'types'           => [99 => 'custom_type'],
+                'types'           => [
+                    99 => 'custom_type',
+                    42 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+                ],
             ],
             $new_fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );
