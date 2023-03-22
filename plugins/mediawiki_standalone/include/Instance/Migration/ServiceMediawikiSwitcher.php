@@ -35,7 +35,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
     {
         $results = $this->service_dao->searchByProjectIdAndShortNames(
             (int) $project->getID(),
-            [\MediaWikiPlugin::SERVICE_SHORTNAME],
+            [MigrateInstance::MEDIAWIKI_123_SERVICE_NAME],
         );
         $legacy  = null;
         if (count($results) > 0) {
@@ -44,7 +44,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
             $this->logger->info("Deactivating legacy MediaWiki service");
             $this->service_dao->updateServiceUsageByShortName(
                 (int) $project->getID(),
-                \MediaWikiPlugin::SERVICE_SHORTNAME,
+                MigrateInstance::MEDIAWIKI_123_SERVICE_NAME,
                 0,
             );
         }

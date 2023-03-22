@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
 
 final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectReadyToBeMigratedVerifier
 {
@@ -44,7 +45,7 @@ final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectR
                 LEFT JOIN plugin_mediawiki_standalone_ongoing_initializations AS ongoing ON (project.group_id = ongoing.project_id)
             WHERE project.status = ?
             ORDER BY project.group_name',
-            \MediaWikiPlugin::SERVICE_SHORTNAME,
+            MigrateInstance::MEDIAWIKI_123_SERVICE_NAME,
             \Project::STATUS_ACTIVE,
         );
     }
@@ -64,7 +65,7 @@ final class LegacyReadyToMigrateDao extends DataAccessObject implements ProjectR
               AND ongoing.project_id IS NULL',
             $project_id,
             \Project::STATUS_ACTIVE,
-            \MediaWikiPlugin::SERVICE_SHORTNAME,
+            MigrateInstance::MEDIAWIKI_123_SERVICE_NAME,
         );
     }
 }
