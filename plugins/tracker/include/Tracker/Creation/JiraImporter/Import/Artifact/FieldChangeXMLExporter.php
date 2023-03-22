@@ -198,19 +198,10 @@ class FieldChangeXMLExporter
             }
 
             assert(is_array($value));
-            $value_ids = [];
-            foreach ($value as $label_name) {
-                $mapped_value = $mapping->getValueForLabel($label_name);
-                if (! $mapped_value) {
-                    throw new \RuntimeException('Value ' . $label_name . ' doesnt exist in structure mapping');
-                }
-                $value_ids[] = $mapped_value->getXMLIdValue();
-            }
-
-            $this->field_change_list_builder->buildAStaticOpenList(
+            $this->field_change_list_builder->buildAStaticOpenListWithValueLabels(
                 $changeset_node,
                 $mapping->getFieldName(),
-                $value_ids,
+                $value,
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FILE_TYPE) {
             assert(is_array($value));

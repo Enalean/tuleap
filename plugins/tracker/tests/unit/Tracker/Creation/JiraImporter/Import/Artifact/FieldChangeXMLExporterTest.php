@@ -788,7 +788,8 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_change_node = $changeset_node->field_change;
         self::assertSame('open_list', (string) $field_change_node['type']);
         self::assertCount(1, $field_change_node->value);
-        self::assertSame('blabel01', (string) $field_change_node->value[0]);
+        self::assertFalse(isset($field_change_node->value[0]['format']));
+        self::assertSame('label01', (string) $field_change_node->value[0]);
     }
 
     public function testItExportsOpenListFieldWithValueAsString(): void
@@ -834,7 +835,9 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_change_node = $changeset_node->field_change;
         self::assertSame('open_list', (string) $field_change_node['type']);
         self::assertCount(2, $field_change_node->value);
-        self::assertSame('blabel01', (string) $field_change_node->value[0]);
-        self::assertSame('blabel02', (string) $field_change_node->value[1]);
+        self::assertFalse(isset($field_change_node->value[0]['format']));
+        self::assertSame('label01', (string) $field_change_node->value[0]);
+        self::assertFalse(isset($field_change_node->value[1]['format']));
+        self::assertSame('label02', (string) $field_change_node->value[1]);
     }
 }

@@ -63,8 +63,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsRetrieverFromAPI;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -342,10 +340,6 @@ final class CreateProjectFromJira
                         $xml_user_groups->export($xml_element);
                     }
 
-                    $logger->info("Retrieving Jira labels");
-                    $labels                 = (new JiraLabelsRetrieverFromAPI($jira_client, $logger))->getPlatformLabels();
-                    $jira_labels_collection = JiraLabelsCollection::buildFromLabels($labels);
-
                     $field_id_generator = new FieldAndValueIDGenerator();
 
                     $trackers_xml = $xml_element->addChild('trackers');
@@ -365,7 +359,6 @@ final class CreateProjectFromJira
                             $jira_issue_type,
                             $field_id_generator,
                             $linked_issues_collection,
-                            $jira_labels_collection,
                         );
 
                         $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
