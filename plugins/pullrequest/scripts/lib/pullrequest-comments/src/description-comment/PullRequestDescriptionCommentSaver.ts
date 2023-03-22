@@ -34,7 +34,6 @@ export const PullRequestDescriptionCommentSaver = (): SaveDescriptionComment => 
         description: DescriptionCommentFormPresenter
     ): ResultAsync<PullRequest, Fault> =>
         patchJSON<PullRequest>(uri`/api/v1/pull_requests/${description.pull_request_id}`, {
-            title: description.pull_request_raw_title,
             description: description.description_content,
         }),
 });

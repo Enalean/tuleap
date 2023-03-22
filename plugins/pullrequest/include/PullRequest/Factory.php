@@ -191,10 +191,11 @@ class Factory
         $this->dao->updateMergeStatus($pull_request->getId(), $merge_status);
     }
 
-    public function updateTitleAndDescription(PFUser $user, PullRequest $pull_request, $project_id, $new_title, $new_description)
+    public function updateTitle(PFUser $user, PullRequest $pull_request, int $project_id, string $new_title): void
     {
         $pull_request_id = $pull_request->getId();
-        $this->dao->updateTitleAndDescription($pull_request_id, $new_title, $new_description);
+
+        $this->dao->updateTitle($pull_request_id, $new_title);
 
         $this->reference_manager->extractCrossRef(
             $new_title,
@@ -204,6 +205,13 @@ class Factory
             $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
+    }
+
+    public function updateDescription(PFUser $user, PullRequest $pull_request, int $project_id, string $new_description): void
+    {
+        $pull_request_id = $pull_request->getId();
+
+        $this->dao->updateDescription($pull_request_id, $new_description);
 
         $this->reference_manager->extractCrossRef(
             $new_description,

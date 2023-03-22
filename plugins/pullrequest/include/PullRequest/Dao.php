@@ -221,14 +221,22 @@ class Dao extends DataAccessObject
         );
     }
 
-    public function updateTitleAndDescription($pull_request_id, $new_title, $new_description)
+    public function updateTitle(int $pull_request_id, string $new_title): void
     {
         $sql = 'UPDATE plugin_pullrequest_review
-                SET title = ?,
-                    description = ?
+                SET title = ?
                 WHERE id = ?';
 
-        $this->getDB()->run($sql, $new_title, $new_description, $pull_request_id);
+        $this->getDB()->run($sql, $new_title, $pull_request_id);
+    }
+
+    public function updateDescription(int $pull_request_id, string $new_description): void
+    {
+        $sql = 'UPDATE plugin_pullrequest_review
+                SET description = ?
+                WHERE id = ?';
+
+        $this->getDB()->run($sql, $new_description, $pull_request_id);
     }
 
     public function deleteAllPullRequestsOfRepository($repository_id)
