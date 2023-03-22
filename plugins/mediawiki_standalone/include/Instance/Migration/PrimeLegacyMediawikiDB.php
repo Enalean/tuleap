@@ -24,16 +24,118 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
 
 final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMediawikiDBPrimer
 {
     private const MAPPING_TABLE_BASE_NAME = 'tuleap_user_mapping';
 
-    public function prepareDBForMigration(string $db_name, string $db_prefix): void
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok|Err
     {
-        $mapping_table_name = $db_prefix . self::MAPPING_TABLE_BASE_NAME;
-        $this->createUserMappingTable($db_name, $mapping_table_name);
-        $this->fillUserMappingTable($db_name, $db_prefix, $mapping_table_name);
+        $project_id = (int) $project->getID();
+
+        return $this->getCurrentDatabaseName($project_id)->okOr(
+            Result::err(Fault::fromMessage(sprintf('No current MediaWiki database found for project #%d', $project_id)))
+        )->andThen(
+            /**
+             * @psalm-return Ok<null>|Err<Fault>
+             */
+            function (string $current_db_name) use ($db_name, $central_db_name, $db_prefix, $project_id): Ok|Err {
+                if ($current_db_name === $db_name || $central_db_name === null) {
+                    return Result::ok(null);
+                }
+
+                return $this->moveToCentralDB($current_db_name, $central_db_name, $db_prefix, $project_id);
+            }
+        )->andThen(
+            /** @psalm-return Ok<null> */
+            function () use ($db_prefix, $db_name): Ok {
+                $mapping_table_name = $db_prefix . self::MAPPING_TABLE_BASE_NAME;
+                $this->createUserMappingTable($db_name, $mapping_table_name);
+                $this->fillUserMappingTable($db_name, $db_prefix, $mapping_table_name);
+
+                return Result::ok(null);
+            }
+        );
+    }
+
+    /**
+     * @psalm-return Option<string>
+     */
+    private function getCurrentDatabaseName(int $project_id): Option
+    {
+        $database_name = $this->getDB()->single('SELECT database_name FROM plugin_mediawiki_database WHERE project_id = ?', [$project_id]);
+        if ($database_name === false) {
+            return Option::nothing(\Psl\Type\string());
+        }
+        return Option::fromValue($database_name);
+    }
+
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    private function moveToCentralDB(string $current_db_name, string $central_db_name, string $db_prefix, int $project_id): Ok|Err
+    {
+        return $this->moveTablesToCentralDB($current_db_name, $central_db_name, $db_prefix)
+            ->andThen(
+                /**
+                 * @psalm-return Ok<null>
+                 */
+                function () use ($current_db_name, $central_db_name, $project_id): Ok {
+                    $this->getDB()->run(
+                        'UPDATE plugin_mediawiki_database SET database_name = ? WHERE project_id = ?',
+                        $central_db_name,
+                        $project_id,
+                    );
+                    $this->getDB()->run('DROP DATABASE ' . $this->getDB()->escapeIdentifier($current_db_name));
+
+                    return Result::ok(null);
+                }
+            );
+    }
+
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    private function moveTablesToCentralDB(string $current_db_name, string $central_db_name, string $db_prefix): Ok|Err
+    {
+        foreach ($this->searchDBTableNames($current_db_name) as $table_name) {
+            $table_name_without_prefix = \Psl\Str\after($table_name, 'mw');
+            if ($table_name_without_prefix === null) {
+                return Result::err(
+                    Fault::fromMessage(
+                        sprintf('Table %s in database %s does not have the expected format', $table_name, $central_db_name)
+                    )
+                );
+            }
+
+            $this->getDB()->run(
+                sprintf(
+                    'ALTER TABLE %s.%s RENAME %s.%s',
+                    $this->getDB()->escapeIdentifier($current_db_name),
+                    $this->getDB()->escapeIdentifier($table_name),
+                    $this->getDB()->escapeIdentifier($central_db_name),
+                    $this->getDB()->escapeIdentifier($db_prefix . $table_name_without_prefix)
+                )
+            );
+        }
+
+        return Result::ok(null);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function searchDBTableNames(string $db_name): array
+    {
+        return $this->getDB()->col('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?', 0, $db_name);
     }
 
     private function createUserMappingTable(string $db_name, string $mapping_table_name): void

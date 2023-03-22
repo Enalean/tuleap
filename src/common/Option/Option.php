@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Option;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+
 /**
  * @template Value
  */
@@ -83,6 +87,23 @@ final class Option
         }
 
         return $fn($this->value);
+    }
+
+    /**
+     * @template F
+     * @psalm-param Err<F> $err
+     * @psalm-return Ok<Value>|Err<F>
+     */
+    public function okOr(Err $err): Ok|Err
+    {
+        return $this->mapOr(
+            /**
+             * @psalm-param Value $value
+             * @psalm-return Ok<Value>
+             */
+            fn(mixed $value): Ok => Result::ok($value),
+            $err,
+        );
     }
 
     public function isValue(): bool

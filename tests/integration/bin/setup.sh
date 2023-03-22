@@ -81,7 +81,7 @@ seed_data() {
         oauth2_server \
         program_management \
         onlyoffice \
-        mediawiki_standalone \
+        mediawiki mediawiki_standalone \
         hudson_git \
         fts_db \
         fts_meilisearch \

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
 final class LegacyMediawikiDBPrimerStub implements LegacyMediawikiDBPrimer
@@ -41,9 +43,10 @@ final class LegacyMediawikiDBPrimerStub implements LegacyMediawikiDBPrimer
         $this->db_prefix_used = Option::nothing(\Psl\Type\string());
     }
 
-    public function prepareDBForMigration(string $db_name, string $db_prefix): void
+    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok
     {
         $this->db_name_used   = Option::fromValue($db_name);
         $this->db_prefix_used = Option::fromValue($db_prefix);
+        return Result::ok(null);
     }
 }
