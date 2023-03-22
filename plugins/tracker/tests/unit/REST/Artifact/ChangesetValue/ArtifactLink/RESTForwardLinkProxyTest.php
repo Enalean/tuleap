@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
@@ -39,11 +40,11 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         RESTForwardLinkProxy::fromPayload(['type' => '_is_child']);
     }
 
-    public function testItDefaultsToNullWhenNoType(): void
+    public function testItDefaultsToNoTypeWhenEmptyString(): void
     {
         $link = RESTForwardLinkProxy::fromPayload(['id' => 75]);
         self::assertSame(75, $link->getTargetArtifactId());
-        self::assertNull($link->getType());
+        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $link->getType());
     }
 
     public function testItThrowsExceptionIfTheTypeKeyInAllLinksPayloadIsNotAString(): void
@@ -57,7 +58,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
     }
 
-    public function testTheTypeAttributeIsNullWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
+    public function testTheTypeAttributeIsNoTypeWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
     {
         $all_link_payload            = new LinkWithDirectionRepresentation();
         $all_link_payload->id        = 121;
@@ -67,7 +68,7 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
 
         self::assertSame(121, $forward_links->getTargetArtifactId());
-        self::assertNull($forward_links->getType());
+        self::assertSame(Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $forward_links->getType());
     }
 
     public function testItReturnsTheProxyObjectWithTheIdAndType(): void

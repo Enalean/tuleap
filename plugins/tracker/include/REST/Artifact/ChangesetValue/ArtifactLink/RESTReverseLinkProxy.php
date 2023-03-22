@@ -33,7 +33,7 @@ use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
  */
 final class RESTReverseLinkProxy implements ReverseLink
 {
-    private function __construct(private int $id, private ?string $type)
+    private function __construct(private int $id, private string $type)
     {
     }
 
@@ -48,15 +48,12 @@ final class RESTReverseLinkProxy implements ReverseLink
     /**
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private static function getLinkType(LinkWithDirectionRepresentation $link_payload): ?string
+    private static function getLinkType(LinkWithDirectionRepresentation $link_payload): string
     {
         if (! is_string($link_payload->type)) {
             throw new \Tracker_FormElement_InvalidFieldValueException(
                 'Artifact links "type" must be a string, use empty string for no type'
             );
-        }
-        if ($link_payload->type === '') {
-            return null;
         }
         return $link_payload->type;
     }
@@ -66,13 +63,13 @@ final class RESTReverseLinkProxy implements ReverseLink
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
 
     public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks
     {
-        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type ?? '')]);
+        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type)]);
     }
 }
