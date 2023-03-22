@@ -21,6 +21,7 @@ import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import { viteExternalsPlugin } from "vite-plugin-externals";
 
 export default vite.defineAppConfig(
     {
@@ -28,9 +29,10 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [POGettextPlugin.vite(), vue()],
+        plugins: [POGettextPlugin.vite(), vue(), viteExternalsPlugin({ jquery: "jQuery" })],
         build: {
             rollupOptions: {
+                external: ["jquery"],
                 input: {
                     "pullrequest-overview": path.resolve(__dirname, "src/index.ts"),
                 },

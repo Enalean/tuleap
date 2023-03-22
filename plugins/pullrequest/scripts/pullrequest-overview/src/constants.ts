@@ -21,10 +21,11 @@ import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
 import type { PullRequestCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 type DisplayErrorCallback = (fault: Fault) => void;
 type DisplayNewlyCreatedGlobalCommentCallback = (comment: PullRequestCommentPresenter) => void;
-
+type UpdatePullRequestTitle = (updated_title: PullRequest) => void;
 export const OVERVIEW_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("overview_app_base_url");
 export const PULL_REQUEST_ID_KEY: StrictInjectionKey<string> = Symbol("pull_request_id");
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_local");
@@ -36,6 +37,10 @@ export const CURRENT_USER_ID: StrictInjectionKey<number> = Symbol("current_user"
 export const CURRENT_USER_AVATAR_URL: StrictInjectionKey<string> = Symbol("current_user_avatar");
 export const DISPLAY_TULEAP_API_ERROR: StrictInjectionKey<DisplayErrorCallback> =
     Symbol("display_tuleap_api");
+
+export const UPDATE_PULL_REQUEST_TITLE: StrictInjectionKey<UpdatePullRequestTitle> = Symbol(
+    "update_pull_request_title"
+);
 export const DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT: StrictInjectionKey<DisplayNewlyCreatedGlobalCommentCallback> =
     Symbol("display_newly_created_global_comment");
 

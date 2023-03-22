@@ -18,6 +18,9 @@ msgstr "Une erreur est survenue durant l’une de vos dernières actions."
 msgid "Author"
 msgstr "Auteur"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Changes"
 msgstr "Changements"
 
@@ -32,6 +35,9 @@ msgstr "Fermer"
 
 msgid "Commits"
 msgstr "Commits"
+
+msgid "Edit title"
+msgstr "Éditer le titre"
 
 msgid "Error details"
 msgstr "Détails de l'erreur"
@@ -84,6 +90,9 @@ msgstr "Références"
 msgid "SSH"
 msgstr "SSH"
 
+msgid "Save changes"
+msgstr "Sauvegarder les changements"
+
 msgid "Show details"
 msgstr "Voir les détails"
 
@@ -92,6 +101,9 @@ msgstr "Succès"
 
 msgid "Success on"
 msgstr "Succès le"
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "Unknown"
 msgstr "Inconnu"

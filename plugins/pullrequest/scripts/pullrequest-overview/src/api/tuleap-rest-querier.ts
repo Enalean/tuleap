@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, uri } from "@tuleap/fetch-result";
+import { getJSON, getAllJSON, uri, patchJSON } from "@tuleap/fetch-result";
 import type { PullRequest, User, TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
@@ -46,4 +46,13 @@ export const fetchPullRequestTimelineItems = (
             ): ReadonlyArray<TimelineItem> => payload.collection,
         }
     );
+};
+
+export const patchTitle = (
+    pull_request_id: number,
+    updated_title: string
+): ResultAsync<PullRequest, Fault> => {
+    return patchJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`, {
+        title: updated_title,
+    });
 };

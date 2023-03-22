@@ -30,6 +30,7 @@ import {
     fetchPullRequestInfo,
     fetchPullRequestTimelineItems,
     fetchUserInfo,
+    patchTitle,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
@@ -101,6 +102,26 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(timeline_items);
+        });
+    });
+
+    describe("patchTitle", () => {
+        it("Given a pull-request id, and a title, then it should update the title", async () => {
+            const pull_request_id = 50;
+
+            vi.spyOn(fetch_result, "patchJSON").mockReturnValue(okAsync(undefined));
+
+            const result = await patchTitle(pull_request_id, "new title");
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.patchJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}`,
+                {
+                    title: "new title",
+                }
+            );
         });
     });
 });
