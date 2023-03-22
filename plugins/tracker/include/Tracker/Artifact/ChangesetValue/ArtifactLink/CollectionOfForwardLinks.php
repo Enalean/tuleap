@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
+
 /**
  * I hold a collection of ForwardLink
  * @see ForwardLink
@@ -34,6 +37,11 @@ final class CollectionOfForwardLinks
      */
     public function __construct(private array $artifact_links)
     {
+    }
+
+    public static function fromReverseLink(Artifact $source, ReverseLink $reverse_link): self
+    {
+        return new self([ForwardLinkProxy::buildFromData($source->getId(), $reverse_link->getType())]);
     }
 
     /**
@@ -64,7 +72,7 @@ final class CollectionOfForwardLinks
         return $types_by_links;
     }
 
-    public function differenceById(self $other_links): CollectionOfForwardLinks
+    public function differenceById(self $other_links): self
     {
         $values_not_present_here = [];
         foreach ($other_links->artifact_links as $link) {

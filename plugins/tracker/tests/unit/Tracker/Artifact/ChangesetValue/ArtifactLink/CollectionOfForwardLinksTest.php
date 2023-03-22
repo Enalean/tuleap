@@ -20,7 +20,9 @@
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -63,16 +65,14 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
         ], $collection->getArtifactTypesByIds());
     }
 
-    public function testItReturnsTrueWhenEmpty(): void
+    public function testItBuildsWithASingleLinkFromAReverseLinkAndASourceArtifact(): void
     {
-        $collection = new CollectionOfForwardLinks([]);
-        self::assertEmpty($collection->getArtifactLinks());
-    }
-
-    public function testItReturnsFalseWhenItContainsLinks(): void
-    {
-        $collection = new CollectionOfForwardLinks($this->artifact_links);
-        self::assertNotEmpty($collection->getArtifactLinks());
+        $source       = ArtifactTestBuilder::anArtifact(378)->build();
+        $reverse_link = ReverseLinkStub::withType(662, '_is_child');
+        $collection   = CollectionOfForwardLinks::fromReverseLink($source, $reverse_link);
+        self::assertEqualsCanonicalizing([
+            378 => '_is_child',
+        ], $collection->getArtifactTypesByIds());
     }
 
     public function testItReturnsADiffOfAddedAndRemovedLinks(): void
