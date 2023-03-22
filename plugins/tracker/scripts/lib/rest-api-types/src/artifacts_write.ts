@@ -28,11 +28,18 @@ interface UnknownNewChangesetValue extends BaseNewChangesetValue {
 export type ArtifactLinkNewChangesetLink = {
     readonly id: number;
     readonly direction: "forward" | "reverse";
-    readonly type?: string | null;
+    readonly type: string;
 };
 
 export type ArtifactLinkNewChangesetValue = BaseNewChangesetValue & {
     readonly all_links: ReadonlyArray<ArtifactLinkNewChangesetLink>;
 };
 
-export type NewChangesetValue = UnknownNewChangesetValue | ArtifactLinkNewChangesetValue;
+export type ListNewChangesetValue = BaseNewChangesetValue & {
+    readonly bind_value_ids: Array<number | string>;
+};
+
+export type NewChangesetValue =
+    | UnknownNewChangesetValue
+    | ArtifactLinkNewChangesetValue
+    | ListNewChangesetValue;

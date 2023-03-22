@@ -43,6 +43,7 @@ export * from "./file-field";
 
 export interface BaseFieldStructure {
     readonly field_id: number;
+    readonly name: string;
 }
 
 export interface UnknownFieldStructure extends BaseFieldStructure {

@@ -280,7 +280,7 @@ type StructureFieldsWithoutUnusedProperties =
 
 export type FieldsStructure = StructureFieldsWithoutUnusedProperties | StepExecutionFieldStructure;
 
-export interface StepExecutionFieldStructure extends BaseFieldStructure {
+export interface StepExecutionFieldStructure extends Pick<BaseFieldStructure, "field_id"> {
     type: "ttmstepexec";
     label: string;
 }

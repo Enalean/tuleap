@@ -104,7 +104,7 @@ declare global {
                 tracker_name: string
             ): Cypress.Chainable<number>;
 
-            createArtifact(payload: ArtifactCreationPayload): void;
+            createArtifact(payload: ArtifactCreationPayload): Cypress.Chainable<number>;
 
             createFRSPackage(project_id: number, package_name: string): void;
         }

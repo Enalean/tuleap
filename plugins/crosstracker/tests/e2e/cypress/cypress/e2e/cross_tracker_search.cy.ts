@@ -30,43 +30,45 @@ describe("Cross tracker search", function () {
 
         cy.createNewPublicProject(`x-tracker-${now}`, "agile_alm").then((project_id) => {
             cy.getTrackerIdFromREST(project_id, "bug").then((tracker_id) => {
+                const TITLE_FIELD_NAME = "summary";
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "bug",
                     artifact_status: "New",
-                    title_field_name: "summary",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "bug 1",
                     artifact_status: "New",
-                    title_field_name: "summary",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "bug 2",
                     artifact_status: "In Progress",
-                    title_field_name: "summary",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
             });
             cy.getTrackerIdFromREST(project_id, "task").then((tracker_id) => {
+                const TITLE_FIELD_NAME = "title";
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "nananana",
                     artifact_status: "Todo",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "kanban 1",
                     artifact_status: "Done",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
-                    tracker_id: tracker_id,
+                    tracker_id,
                     artifact_title: "kanban 2",
                     artifact_status: "Todo",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
             });
         });

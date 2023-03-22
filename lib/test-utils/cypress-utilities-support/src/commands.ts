@@ -18,6 +18,11 @@
  */
 
 import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
+import type {
+    StructureFields,
+    ListNewChangesetValue,
+    StaticBoundListField,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
 export const WEB_UI_SESSION = "WebUI";
 
@@ -250,58 +255,65 @@ Cypress.Commands.add(
     }
 );
 
-interface BindValue {
-    id: number;
-    label: string;
-}
-
-interface Field {
-    field_id: number;
-    name: string;
-    type: string;
-    value: string | Array<BindValue>;
-}
-
 export interface ArtifactCreationPayload {
     tracker_id: number;
     artifact_title: string;
-    artifact_status: string;
+    artifact_status?: string;
     title_field_name: string;
 }
 
-Cypress.Commands.add("createArtifact", (payload: ArtifactCreationPayload): void => {
-    cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
-        const result = response.body;
+const statusFieldGuard = (field: StructureFields): field is StaticBoundListField =>
+    field.type === "sb" && field.bindings.type === "static";
 
-        const title_id = result.fields.find(
-            (field: Field) => field.name === payload.title_field_name
-        ).field_id;
-        const status = result.fields.find((field: Field) => field.name === "status");
-        const status_id = status.field_id;
-        if (!Array.isArray(status.values)) {
-            throw new Error("status is not a select box");
-        }
-        const status_value_id = status.values.find(
-            (value: BindValue) => value.label === payload.artifact_status
-        ).id;
+function getStatusPayload(
+    status_label: string | undefined,
+    fields: readonly StructureFields[]
+): ListNewChangesetValue[] {
+    if (status_label === undefined) {
+        return [];
+    }
+    const status = fields.find((field) => field.name === "status");
+    if (!status || !statusFieldGuard(status)) {
+        throw Error("No status field in tracker structure");
+    }
+    const status_id = status.field_id;
+    const status_bind_value = status.values.find((value) => value.label === status_label);
+    if (status_bind_value === undefined) {
+        throw Error(`Could not find status value with given label: ${status_label}`);
+    }
+    return [
+        {
+            bind_value_ids: [status_bind_value.id],
+            field_id: status_id,
+        },
+    ];
+}
 
-        const artifact_payload = {
-            tracker: { id: payload.tracker_id },
-            values: [
-                {
-                    field_id: title_id,
-                    value: payload.artifact_title,
-                },
-                {
-                    bind_value_ids: [status_value_id],
-                    field_id: status_id,
-                },
-            ],
-        };
+Cypress.Commands.add(
+    "createArtifact",
+    (payload: ArtifactCreationPayload): Cypress.Chainable<number> =>
+        cy.getFromTuleapAPI(`/api/trackers/${payload.tracker_id}`).then((response) => {
+            const result = response.body;
 
-        cy.postFromTuleapApi("/api/artifacts/", artifact_payload);
-    });
-});
+            const title_id = result.fields.find(
+                (field: StructureFields) => field.name === payload.title_field_name
+            ).field_id;
+            const artifact_payload = {
+                tracker: { id: payload.tracker_id },
+                values: [
+                    {
+                        field_id: title_id,
+                        value: payload.artifact_title,
+                    },
+                    ...getStatusPayload(payload.artifact_status, result.fields),
+                ],
+            };
+
+            return cy
+                .postFromTuleapApi("/api/artifacts/", artifact_payload)
+                .then((response) => response.body.id);
+        })
+);
 
 Cypress.Commands.add("createFRSPackage", (project_id: number, package_name: string): void => {
     const payload = {
