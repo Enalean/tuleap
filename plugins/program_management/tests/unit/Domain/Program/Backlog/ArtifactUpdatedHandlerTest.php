@@ -65,6 +65,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
     private function getHandler(): ArtifactUpdatedHandler
     {
         return new ArtifactUpdatedHandler(
+            MessageLog::buildFromLogger(new NullLogger()),
             $this->program_increment_verifier,
             $this->iteration_verifier,
             $this->user_stories_planner,

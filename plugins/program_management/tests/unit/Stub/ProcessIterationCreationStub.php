@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 
 final class ProcessIterationCreationStub implements ProcessIterationCreation
 {
@@ -44,5 +45,9 @@ final class ProcessIterationCreationStub implements ProcessIterationCreation
     public function processCreation(IterationCreation $iteration_creation): void
     {
         $this->call_count++;
+    }
+
+    public function processCreationForTeams(IterationCreation $iteration_creation, TeamIdentifierCollection $teams): void
+    {
     }
 }

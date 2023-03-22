@@ -82,7 +82,7 @@ final class MissingProgramIncrementCreator
             return;
         }
 
-        $log_message->debug("Missing milestones " . implode(',', $missing_milestones->missing_program_increments_ids));
+        $log_message->debug("Missing Program Increments #" . implode(',', $missing_milestones->missing_program_increments_ids));
 
         $program = ProgramIdentifier::fromId(
             $this->build_program,

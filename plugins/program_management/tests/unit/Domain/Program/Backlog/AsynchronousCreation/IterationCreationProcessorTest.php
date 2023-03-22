@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
+use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationsCreator;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\ArtifactLinkChangeset;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AddArtifactLinkChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
@@ -149,6 +153,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             BuildProgramStub::stubValidProgram(),
             $this->teams_searcher,
             new IterationsCreator(
+                new NullLogger(),
                 new DBTransactionExecutorPassthrough(),
                 RetrieveMirroredIterationTrackerStub::withValidTrackers(
                     TrackerReferenceStub::withIdAndLabel(self::FIRST_MIRRORED_ITERATION_TRACKER_ID, 'Sprints'),
@@ -189,11 +194,57 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(2, $this->artifact_creator->getCallCount());
         [$first_changeset, $second_changeset] = $this->artifact_creator->getArguments();
-        // Check first Mirrored Iteration
-        $first_values = $first_changeset->values;
+        $this->checkFirstMirroredIteration($first_changeset);
+
+        // Check second Mirrored Iteration
+        $this->checkSecondMirroredIteration($second_changeset);
+
+        // Check both Mirrored Iterations have copied the source field values
+        $this->checkMirroredIterationsHaveCopiedTheSourceFieldValues($first_changeset);
+        $this->checkMirroredIterationsHaveCopiedTheSourceFieldValues($second_changeset);
+
+        self::assertSame(2, $this->link_adder->getCallCount());
+        [$first_link, $second_link] = $this->link_adder->getArguments();
+
+        // Check link from first Mirrored Program Increment --> first Mirrored Iteration
+        $this->checkLinkFromFirstMirroredProgramIncrementToFirstMirroredIteration($first_link);
+
+        // Check link from second Mirrored Program Increment --> second Mirrored Iteration
+        $this->checkLinkFromSecondMirroredProgramIncrementToSecondMirroredIteration($second_link);
+    }
+
+    public function testItProcessesIterationCreationForOnlyOneTeam(): void
+    {
+        $teams = TeamIdentifierCollection::fromSingleTeam(TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
+        $this->getProcessor()->processCreationForTeams($this->creation, $teams);
+        self::assertTrue(
+            $this->logger->hasDebug(
+                sprintf(
+                    'Processing iteration creation with iteration #%d for user #%d and for teams: %s',
+                    self::ITERATION_ID,
+                    self::USER_ID,
+                    self::FIRST_TEAM_ID,
+                )
+            )
+        );
+        self::assertSame(1, $this->artifact_creator->getCallCount());
+
+        [$first_changeset] = $this->artifact_creator->getArguments();
+        $this->checkFirstMirroredIteration($first_changeset);
+
+        $this->checkMirroredIterationsHaveCopiedTheSourceFieldValues($first_changeset);
+
+        self::assertSame(1, $this->link_adder->getCallCount());
+        [$first_link] = $this->link_adder->getArguments();
+        $this->checkLinkFromFirstMirroredProgramIncrementToFirstMirroredIteration($first_link);
+    }
+
+    private function checkFirstMirroredIteration(MirroredTimeboxFirstChangeset $changeset): void
+    {
+        $first_values = $changeset->values;
         self::assertSame(
             self::FIRST_MIRRORED_ITERATION_TRACKER_ID,
-            $first_changeset->mirrored_timebox_tracker->getId()
+            $changeset->mirrored_timebox_tracker->getId()
         );
         self::assertSame(self::FIRST_TITLE_FIELD_ID, $first_values->title_field->getId());
         self::assertSame(self::FIRST_DESCRIPTION_FIELD_ID, $first_values->description_field->getId());
@@ -202,12 +253,14 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FIRST_START_DATE_FIELD_ID, $first_values->start_date_field->getId());
         self::assertSame(self::FIRST_END_DATE_FIELD_ID, $first_values->end_period_field->getId());
         self::assertSame(self::FIRST_ARTIFACT_LINK_FIELD_ID, $first_values->artifact_link_field->getId());
+    }
 
-        // Check second Mirrored Iteration
-        $second_values = $second_changeset->values;
+    private function checkSecondMirroredIteration(MirroredTimeboxFirstChangeset $changeset): void
+    {
+        $second_values = $changeset->values;
         self::assertSame(
             self::SECOND_MIRRORED_ITERATION_TRACKER_ID,
-            $second_changeset->mirrored_timebox_tracker->getId()
+            $changeset->mirrored_timebox_tracker->getId()
         );
         self::assertSame(self::SECOND_TITLE_FIELD_ID, $second_values->title_field->getId());
         self::assertSame(self::SECOND_DESCRIPTION_FIELD_ID, $second_values->description_field->getId());
@@ -219,51 +272,53 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::SECOND_START_DATE_FIELD_ID, $second_values->start_date_field->getId());
         self::assertSame(self::SECOND_END_DATE_FIELD_ID, $second_values->end_period_field->getId());
         self::assertSame(self::SECOND_ARTIFACT_LINK_FIELD_ID, $second_values->artifact_link_field->getId());
+    }
 
-        // Check both Mirrored Iterations have copied the source field values
-        foreach ($this->artifact_creator->getArguments() as $changeset) {
-            $values = $changeset->values;
-            self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
-            self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
-            self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
-            self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
-            self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
-            self::assertSame(self::ITERATION_ID, $values->artifact_link_value?->linked_artifact->getId());
-            self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
-            self::assertSame(self::USER_ID, $changeset->user->getId());
-            self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
-        }
+    private function checkMirroredIterationsHaveCopiedTheSourceFieldValues(MirroredTimeboxFirstChangeset $changeset): void
+    {
+        $values = $changeset->values;
+        self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+        self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+        self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+        self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+        self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
+        self::assertSame(self::ITERATION_ID, $values->artifact_link_value?->linked_artifact->getId());
+        self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
+        self::assertSame(self::USER_ID, $changeset->user->getId());
+        self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
+    }
 
-        self::assertSame(2, $this->link_adder->getCallCount());
-        [$first_link, $second_link] = $this->link_adder->getArguments();
-        // Check link from first Mirrored Program Increment --> first Mirrored Iteration
-        self::assertSame(self::FIRST_MIRRORED_PROGRAM_INCREMENT_ID, $first_link->mirrored_program_increment->getId());
+    private function checkLinkFromFirstMirroredProgramIncrementToFirstMirroredIteration(ArtifactLinkChangeset $link): void
+    {
+        self::assertSame(self::FIRST_MIRRORED_PROGRAM_INCREMENT_ID, $link->mirrored_program_increment->getId());
         self::assertSame(
             self::FIRST_MIRRORED_PROGRAM_INCREMENT_ARTIFACT_LINK_FIELD_ID,
-            $first_link->artifact_link_field->getId()
+            $link->artifact_link_field->getId()
         );
-        self::assertSame(self::FIRST_MIRRORED_ITERATION_ID, $first_link->artifact_link_value->linked_artifact->getId());
+        self::assertSame(self::FIRST_MIRRORED_ITERATION_ID, $link->artifact_link_value->linked_artifact->getId());
         self::assertSame(
             \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
-            (string) $first_link->artifact_link_value->type
+            (string) $link->artifact_link_value->type
         );
-        self::assertSame(self::USER_ID, $first_link->user->getId());
+        self::assertSame(self::USER_ID, $link->user->getId());
+    }
 
-        // Check link from second Mirrored Program Increment --> second Mirrored Iteration
-        self::assertSame(self::SECOND_MIRRORED_PROGRAM_INCREMENT_ID, $second_link->mirrored_program_increment->getId());
+    private function checkLinkFromSecondMirroredProgramIncrementToSecondMirroredIteration(ArtifactLinkChangeset $link): void
+    {
+        self::assertSame(self::SECOND_MIRRORED_PROGRAM_INCREMENT_ID, $link->mirrored_program_increment->getId());
         self::assertSame(
             self::SECOND_MIRRORED_PROGRAM_INCREMENT_ARTIFACT_LINK_FIELD_ID,
-            $second_link->artifact_link_field->getId()
+            $link->artifact_link_field->getId()
         );
         self::assertSame(
             self::SECOND_MIRRORED_ITERATION_ID,
-            $second_link->artifact_link_value->linked_artifact->getId()
+            $link->artifact_link_value->linked_artifact->getId()
         );
         self::assertSame(
             \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD,
-            (string) $second_link->artifact_link_value->type
+            (string) $link->artifact_link_value->type
         );
-        self::assertSame(self::USER_ID, $second_link->user->getId());
+        self::assertSame(self::USER_ID, $link->user->getId());
     }
 
     public function testItStopsExecutionIfProgramHasNoTeams(): void

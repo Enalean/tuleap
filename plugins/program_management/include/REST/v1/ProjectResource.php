@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
-use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -185,7 +184,7 @@ final class ProjectResource extends AuthenticatedResource
                     $artifact_retriever,
                     $this->user_manager_adapter,
                     SemanticTimeframeBuilder::build(),
-                    BackendLogger::getDefaultLogger(),
+                    \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger(),
                 ),
                 new URIRetriever($artifact_retriever),
                 new CrossReferenceRetriever($artifact_retriever),

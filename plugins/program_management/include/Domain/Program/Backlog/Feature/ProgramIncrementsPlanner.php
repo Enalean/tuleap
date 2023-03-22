@@ -41,10 +41,12 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncremen
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class ProgramIncrementsPlanner implements PlanProgramIncrements
 {
     public function __construct(
+        private LogMessage $logger,
         private RetrieveMirroredProgramIncrementTracker $mirrored_tracker_retriever,
         private CreateProgramIncrements $program_increment_creator,
         private RetrieveProjectReference $project_retriever,
@@ -97,7 +99,8 @@ final class ProgramIncrementsPlanner implements PlanProgramIncrements
             $creation
         );
         foreach ($iterations_to_create as $iteration_to_create) {
-            $this->process_iteration_creation->processCreation($iteration_to_create);
+            $this->logger->debug(sprintf("Create iteration #%d for program increment #%d", $iteration_to_create->getIteration()->getId(), $iteration_to_create->getProgramIncrement()->getId()));
+            $this->process_iteration_creation->processCreationForTeams($iteration_to_create, $teams);
         }
 
         return ProgramIncrementChanged::fromCreation($creation);

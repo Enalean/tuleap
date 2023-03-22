@@ -20,6 +20,8 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
@@ -102,6 +104,7 @@ final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function getBuilder(): ProgramIncrementsPlanner
     {
         return new ProgramIncrementsPlanner(
+            MessageLog::buildFromLogger(new NullLogger()),
             RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
                 TrackerReferenceStub::withId(99),
                 TrackerReferenceStub::withId(34)

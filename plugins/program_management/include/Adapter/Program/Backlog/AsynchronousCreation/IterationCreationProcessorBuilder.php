@@ -88,7 +88,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
 {
     public function getProcessor(): ProcessIterationCreation
     {
-        $logger                   = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $logger                   = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
         $artifact_factory         = \Tracker_ArtifactFactory::instance();
         $tracker_factory          = \TrackerFactory::instance();
         $form_element_factory     = \Tracker_FormElementFactory::instance();
@@ -219,6 +219,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         );
 
         $mirrors_creator = new IterationsCreator(
+            $logger,
             $transaction_executor,
             new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
             new StatusValueMapper($form_element_factory),

@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TeamHasNoMirroredIterationTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
@@ -76,6 +77,27 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         }
     }
 
+    public function processCreationForTeams(IterationCreation $iteration_creation, TeamIdentifierCollection $teams): void
+    {
+        $this->logger->debug(
+            sprintf(
+                'Processing iteration creation with iteration #%d for user #%d and for teams: %s',
+                $iteration_creation->getIteration()->getId(),
+                $iteration_creation->getUser()->getId(),
+                implode(', ', $teams->getArrayOfTeamsId()),
+            )
+        );
+        try {
+            $this->createWithTeams($iteration_creation, $teams);
+        } catch (
+            FieldSynchronizationException
+            | MirroredTimeboxReplicationException $exception
+        ) {
+            $this->logger->error('Error during creation of mirror iterations', ['exception' => $exception]);
+            return;
+        }
+    }
+
     /**
      * @throws FieldSynchronizationException
      * @throws MirroredTimeboxReplicationException
@@ -86,13 +108,6 @@ final class IterationCreationProcessor implements ProcessIterationCreation
      */
     private function create(IterationCreation $creation): void
     {
-        $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
-            $this->fields_gatherer,
-            $this->values_retriever,
-            $this->submission_date_retriever,
-            $creation
-        );
-
         $program = ProgramIdentifier::fromIteration(
             $this->program_retriever,
             $this->program_builder,
@@ -101,6 +116,25 @@ final class IterationCreationProcessor implements ProcessIterationCreation
         );
 
         $teams = TeamIdentifierCollection::fromProgram($this->teams_searcher, $program, $creation->getUser());
+        $this->createWithTeams($creation, $teams);
+    }
+
+    /**
+     * @throws TeamHasNoMirroredIterationTrackerException
+     * @throws MirroredIterationCreationException
+     * @throws MirroredTimeboxReplicationException
+     * @throws FieldSynchronizationException
+     */
+    private function createWithTeams(IterationCreation $creation, TeamIdentifierCollection $teams): void
+    {
+        $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
+            $this->fields_gatherer,
+            $this->values_retriever,
+            $this->submission_date_retriever,
+            $creation
+        );
+
+        $this->logger->debug(self::class . ' create for #' . count($teams->getTeams()) . ' teams');
         $this->iterations_creator->createIterations($source_values, $teams, $creation);
     }
 }

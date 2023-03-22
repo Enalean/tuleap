@@ -76,7 +76,7 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
 {
     public function getProcessor(): ProcessProgramIncrementUpdate
     {
-        $logger                   = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $logger                   = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
         $artifact_factory         = \Tracker_ArtifactFactory::instance();
         $tracker_factory          = \TrackerFactory::instance();
         $form_element_factory     = \Tracker_FormElementFactory::instance();
