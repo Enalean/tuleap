@@ -30,7 +30,6 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $repository_id = 115;
-    private $system_event_manager;
     private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
     /**
      * @var Git_Backend_Gitolite&\Mockery\MockInterface
@@ -59,14 +58,12 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
         $this->repository->shouldReceive('getBackend')->andReturns($this->backend);
 
         $this->repository_factory             = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->system_event_manager           = \Mockery::spy(\Git_SystemEventManager::class);
         $this->default_branch_update_executor = new DefaultBranchUpdateTestExecutor();
 
         $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_UPDATE::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies(
             $this->repository_factory,
-            $this->system_event_manager,
             $this->default_branch_update_executor
         );
     }
@@ -109,16 +106,6 @@ final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCas
         $this->repository_factory->shouldReceive('getDeletedRepository')->andReturns($this->repository);
 
         $this->event->shouldReceive('done')->with('Unable to update a repository marked as deleted')->once();
-
-        $this->event->process();
-    }
-
-    public function testItAskToUpdateGrokmirrorManifestFiles(): void
-    {
-        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
-
-        $this->backend->shouldReceive('updateRepoConf')->once()->andReturns(true);
-        $this->system_event_manager->shouldReceive('queueGrokMirrorManifest')->with($this->repository)->once();
 
         $this->event->process();
     }

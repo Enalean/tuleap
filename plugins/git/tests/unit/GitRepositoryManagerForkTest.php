@@ -55,14 +55,6 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_history_dao;
     /**
-     * @var GitRepositoryMirrorUpdater&\Mockery\MockInterface
-     */
-    private $mirror_updater;
-    /**
-     * @var \Mockery\MockInterface&Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-    /**
      * @var EventManager&\Mockery\MockInterface
      */
     private $event_manager;
@@ -80,8 +72,6 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->backup_directory         = vfsStream::setup()->url();
-        $this->mirror_updater           = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class)->shouldReceive('fetchAllRepositoryMirrors')->andReturns([])->getMock();
 
         $this->event_manager = \Mockery::spy(EventManager::class);
 
@@ -96,8 +86,6 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->git_system_event_manager,
                 Mockery::mock(GitDao::class),
                 $this->backup_directory,
-                $this->mirror_updater,
-                $this->mirror_data_mapper,
                 $this->fine_grained_permission_replicator,
                 $this->project_history_dao,
                 $this->history_value_formatter,

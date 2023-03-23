@@ -42,7 +42,6 @@ class GitViews extends PluginViews
 
     public function __construct(
         $controller,
-        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GitPermissionsManager $git_permissions_manager,
         private FineGrainedPermissionFactory $fine_grained_permission_factory,
         private FineGrainedRetriever $fine_grained_retriever,
@@ -95,7 +94,6 @@ class GitViews extends PluginViews
             $params['driver_factory'],
             $this->gerrit_server_factory->getAvailableServersForProject($this->project),
             $params['gerrit_templates'],
-            $this->mirror_data_mapper,
             $params['gerrit_can_migrate_checker'],
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
@@ -233,14 +231,13 @@ class GitViews extends PluginViews
         echo '</div>';
     }
 
-    protected function adminGitAdminsView($are_mirrors_defined)
+    protected function adminGitAdminsView()
     {
         $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
-            $are_mirrors_defined,
             $event->getExternalPanePresenters(),
             $this->ugroup_manager->getStaticUGroups($this->project),
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
@@ -253,7 +250,7 @@ class GitViews extends PluginViews
         $this->footer();
     }
 
-    protected function adminGerritTemplatesView($are_mirrors_defined)
+    protected function adminGerritTemplatesView()
     {
         $params = $this->getData();
 
@@ -269,7 +266,6 @@ class GitViews extends PluginViews
             $templates_list,
             $parent_templates_list,
             $this->groupId,
-            $are_mirrors_defined,
             $event->getExternalPanePresenters(),
             $params['has_gerrit_servers_set_up']
         );
@@ -281,99 +277,9 @@ class GitViews extends PluginViews
         $this->footer();
     }
 
-    protected function adminMassUpdateSelectRepositoriesView()
-    {
-        $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
-
-        $event = new GitAdminGetExternalPanePresenters($this->project);
-        $this->event_manager->processEvent($event);
-
-        $presenter = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
-            $this->generateMassUpdateCSRF(),
-            $this->groupId,
-            $event->getExternalPanePresenters(),
-            $repository_list
-        );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
-
-        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin-mass-update-select-repositories', $presenter);
-        $this->footer();
-    }
-
-    protected function adminMassUpdateView()
-    {
-        $params = $this->getData();
-
-        $repositories = $params['repositories'];
-        $mirrors      = $this->getAdminMassUpdateMirrorPresenters();
-
-        $event = new GitAdminGetExternalPanePresenters($this->project);
-        $this->event_manager->processEvent($event);
-
-        $presenter = new GitPresenters_AdminMassUpdatePresenter(
-            $this->generateMassUpdateCSRF(),
-            $this->groupId,
-            $event->getExternalPanePresenters(),
-            $this->buildListOfMirroredRepositoriesPresenters(
-                $repositories,
-                $mirrors,
-                $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($this->project)
-            ),
-            new GitPresenters_AdminMassUdpdateMirroringPresenter($mirrors)
-        );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
-
-        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin-mass-update', $presenter);
-        $this->footer();
-    }
-
-    private function buildListOfMirroredRepositoriesPresenters(
-        array $repositories,
-        array $mirrors,
-        array $mirror_ids_per_repository,
-    ) {
-        $mirrored_repositories_presenters = [];
-
-        foreach ($repositories as $repository) {
-            $used_mirrors = [];
-            foreach ($mirrors as $mirror) {
-                $is_used = isset($mirror_ids_per_repository[$repository->getId()])
-                    && in_array($mirror->mirror_id, $mirror_ids_per_repository[$repository->getId()]);
-
-                $copy_of_mirror          = clone $mirror;
-                $copy_of_mirror->is_used = $is_used;
-
-                $used_mirrors[] = $copy_of_mirror;
-            }
-
-            $mirrored_repositories_presenters[] = new GitPresenters_MirroredRepositoryPresenter(
-                $repository,
-                $used_mirrors
-            );
-        }
-
-        return $mirrored_repositories_presenters;
-    }
-
     private function generateMassUpdateCSRF()
     {
         return new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=admin-mass-update');
-    }
-
-    private function getAdminMassUpdateMirrorPresenters()
-    {
-        $mirrors           = $this->mirror_data_mapper->fetchAllForProject($this->project);
-        $mirror_presenters = [];
-
-        foreach ($mirrors as $mirror) {
-            $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, false);
-        }
-
-        return $mirror_presenters;
     }
 
     /**

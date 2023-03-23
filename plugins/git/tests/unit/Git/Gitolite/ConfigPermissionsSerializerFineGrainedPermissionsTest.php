@@ -111,10 +111,7 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends \Tuleap\Test
         $this->factory          = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
         $this->regexp_retriever = Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
 
-        $mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn([]);
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             $this->retriever,

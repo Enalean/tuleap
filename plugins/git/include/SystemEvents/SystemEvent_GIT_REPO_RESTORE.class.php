@@ -28,15 +28,10 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Git_SystemEventManager $system_event_manager,
     ) {
-        $this->repository_factory   = $repository_factory;
-        $this->system_event_manager = $system_event_manager;
+        $this->repository_factory = $repository_factory;
     }
 
     public function process()
@@ -70,7 +65,6 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
         }
 
         $repository->getBackend()->updateRepoConf($repository);
-        $this->system_event_manager->queueGrokMirrorManifest($repository);
 
         $this->done();
     }

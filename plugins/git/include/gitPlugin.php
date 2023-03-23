@@ -535,11 +535,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             Git_SystemEventQueue::NAME,
             new Git_SystemEventQueue($this->getLogger())
         );
-
-        $event->addAvailableQueue(
-            Git_Mirror_MirrorSystemEventQueue::NAME,
-            new Git_Mirror_MirrorSystemEventQueue($this->getLogger())
-        );
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
@@ -549,13 +544,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $params['types'] = array_merge(
                 $params['types'],
                 $this->getGitSystemEventManager()->getTypes()
-            );
-        }
-
-        if ($params['queue'] == Git_Mirror_MirrorSystemEventQueue::NAME) {
-            $params['types'] = array_merge(
-                $params['types'],
-                $this->getGitSystemEventManager()->getGrokMirrorTypes()
             );
         }
     }
@@ -570,7 +558,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $params['class']        = 'SystemEvent_GIT_REPO_UPDATE';
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
-                    $this->getGitSystemEventManager(),
                     new DefaultBranchUpdateExecutorAsGitoliteUser(),
                 ];
                 break;
@@ -579,7 +566,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
                     $this->getLogger(),
-                    $this->getGitSystemEventManager(),
                     $this->getUgroupsToNotifyDao(),
                     $this->getUsersToNotifyDao(),
                     EventManager::instance(),
@@ -644,39 +630,12 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     UserManager::instance(),
                 ];
                 break;
-            case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME:
-                $params['class']        = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
-                    $this->getManifestManager(),
-                ];
-                break;
-            case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME:
-                $params['class']        = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
-                $params['dependencies'] = [
-                    $this->getRepositoryFactory(),
-                    $this->getManifestManager(),
-                ];
-                break;
-            case SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME:
-                $params['class']        = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK';
-                $params['dependencies'] = [
-                    $this->getManifestManager(),
-                ];
-                break;
-            case SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME:
-                $params['class']        = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE';
-                $params['dependencies'] = [
-                    $this->getManifestManager(),
-                ];
-                break;
             case SystemEvent_GIT_EDIT_SSH_KEYS::NAME:
                 $params['class']        = 'SystemEvent_GIT_EDIT_SSH_KEYS';
                 $params['dependencies'] = [
                     UserManager::instance(),
                     $this->getSSHKeyDumper(),
                     $this->getUserAccountManager(),
-                    $this->getGitSystemEventManager(),
                     $this->getLogger(),
                 ];
                 break;
@@ -691,33 +650,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $params['class']        = 'SystemEvent_GIT_REPO_RESTORE';
                 $params['dependencies'] = [
                     $this->getRepositoryFactory(),
-                    $this->getGitSystemEventManager(),
                 ];
                 break;
             case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
                 $params['class']        = 'SystemEvent_GIT_PROJECTS_UPDATE';
                 $params['dependencies'] = [
                     $this->getLogger(),
-                    $this->getGitSystemEventManager(),
                     $this->getProjectManager(),
-                    $this->getGitoliteDriver(),
-                ];
-                break;
-            case SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME:
-                $params['class']        = 'SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
-                $params['dependencies'] = [
-                    $this->getGitoliteDriver(),
-                ];
-                break;
-            case SystemEvent_GIT_UPDATE_MIRROR::NAME:
-                $params['class']        = 'SystemEvent_GIT_UPDATE_MIRROR';
-                $params['dependencies'] = [
-                    $this->getGitoliteDriver(),
-                ];
-                break;
-            case SystemEvent_GIT_DELETE_MIRROR::NAME:
-                $params['class']        = 'SystemEvent_GIT_DELETE_MIRROR';
-                $params['dependencies'] = [
                     $this->getGitoliteDriver(),
                 ];
                 break;
@@ -890,7 +829,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $this->getDefaultFineGrainedPermissionFactory(),
                 $this->getFineGrainedRepresentationBuilder(),
                 $this->getRegexpFineGrainedRetriever(),
-                $this->getMirrorDataMapper(),
                 $this->getHeaderRenderer(),
                 EventManager::instance()
             )
@@ -937,13 +875,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new Git_AdminRouter(
             $this->getGerritServerFactory(),
             new CSRFSynchronizerToken(GIT_SITE_ADMIN_BASE_URL),
-            $this->getMirrorDataMapper(),
-            new Git_MirrorResourceRestrictor(
-                new Git_RestrictedMirrorDao(),
-                $this->getMirrorDataMapper(),
-                $this->getGitSystemEventManager(),
-                new ProjectHistoryDao()
-            ),
             $project_manager,
             $this->getGitSystemEventManager(),
             $this->getRegexpFineGrainedRetriever(),
@@ -996,22 +927,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     private function getRegexpRepositoryDao()
     {
         return new RegexpRepositoryDao();
-    }
-
-    public function getMirrorDataMapper(): Git_Mirror_MirrorDataMapper
-    {
-        return new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            ),
-            $this->getProjectManager(),
-            $this->getGitSystemEventManager(),
-            new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
-            new DefaultProjectMirrorDao()
-        );
     }
 
     private function getAdminPageRenderer()
@@ -1226,7 +1141,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $system_check = new Git_SystemCheck(
             $gitgc,
             $gitolite_driver,
-            $this->getGitSystemEventManager(),
             new PluginConfigChecker($params['logger']),
             $this
         );
@@ -1238,10 +1152,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         return new Git_GitoliteDriver(
             $this->getLogger(),
-            $this->getGitSystemEventManager(),
             $this->getGitRepositoryUrlManager(),
             $this->getGitDao(),
-            new Git_Mirror_MirrorDao(),
             $this,
             $this->getBigObjectAuthorizationManager(),
             new VersionDetector(),
@@ -1250,7 +1162,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             null,
             null,
             $this->getProjectManager(),
-            $this->getMirrorDataMapper(),
         );
     }
 
@@ -1643,7 +1554,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getGitPermissionsManager(),
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
-            $this->getMirrorDataMapper(),
             $this->getProjectCreatorStatus(),
             new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory),
             $this->getFineGrainedUpdater(),
@@ -1906,8 +1816,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getGitSystemEventManager(),
             $this->getGitDao(),
             $this->getConfigurationParameter('git_backup_dir'),
-            new GitRepositoryMirrorUpdater($this->getMirrorDataMapper(), new ProjectHistoryDao()),
-            $this->getMirrorDataMapper(),
             $this->getFineGrainedPermissionReplicator(),
             new ProjectHistoryDao(),
             $this->getHistoryValueFormatter(),
@@ -2034,11 +1942,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $just_created_project->getID(),
             $ugroup_mapping,
         );
-
-        $this->getMirrorDataMapper()->duplicate(
-            $template_project->getID(),
-            $just_created_project->getID()
-        );
     }
 
     private function getDefaultFineGrainedPermissionReplicator()
@@ -2067,20 +1970,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     private function getGitRepositoryUrlManager()
     {
         return new Git_GitRepositoryUrlManager($this);
-    }
-
-    /**
-     * @return Git_Mirror_ManifestManager
-     */
-    public function getManifestManager()
-    {
-        return new Git_Mirror_ManifestManager(
-            $this->getMirrorDataMapper(),
-            new Git_Mirror_ManifestFileGenerator(
-                $this->getLogger(),
-                ForgeConfig::get('sys_data_dir') . '/gitolite/grokmirror'
-            )
-        );
     }
 
     /**
@@ -2148,7 +2037,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             'git_repo_create',
             'git_repo_delete',
             'git_repo_update',
-            'git_repo_mirroring_update',
             'git_repo_to_gerrit',
             'git_create_template',
             'git_delete_template',
@@ -2677,7 +2565,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new \Tuleap\Git\GitRepositoryBrowserController(
             $this->getRepositoryFactory(),
             $this->getProjectManager(),
-            $this->getMirrorDataMapper(),
             $this->getGitPhpAccessLogger(),
             $this->getGitRepositoryHeaderDisplayer(),
             new FilesHeaderPresenterBuilder(
@@ -2752,7 +2639,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new \Tuleap\Git\Repository\RepositoryCreator(
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
-            $this->getMirrorDataMapper(),
             $this->getRepositoryManager(),
             $this->getGitPermissionsManager(),
             $this->getFineGrainedPermissionReplicator(),

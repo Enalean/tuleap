@@ -161,36 +161,6 @@ CREATE TABLE IF NOT EXISTS plugin_git_gerrit_config_template (
     INDEX idx_gerrit_config_template_by_project (group_id)
 );
 
-CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
-    id INT(11) unsigned NOT NULL auto_increment,
-    url VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    hostname VARCHAR(255) NULL,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS plugin_git_repository_mirrors (
-    repository_id INT(10) NOT NULL,
-    mirror_id INT(10) NOT NULL,
-    PRIMARY KEY (repository_id, mirror_id)
-);
-
-CREATE TABLE IF NOT EXISTS plugin_git_default_project_mirrors (
-    project_id INT(11) NOT NULL,
-    mirror_id INT(11) unsigned NOT NULL,
-    PRIMARY KEY (project_id, mirror_id)
-);
-
-CREATE TABLE IF NOT EXISTS plugin_git_restricted_mirrors (
-    mirror_id INT(11) unsigned PRIMARY KEY
-);
-
-CREATE TABLE IF NOT EXISTS plugin_git_restricted_mirrors_allowed_projects (
-    mirror_id INT(11) unsigned NOT NULL,
-    project_id INT(11) NOT NULL,
-    PRIMARY KEY idx(mirror_id, project_id)
-);
-
 CREATE TABLE IF NOT EXISTS plugin_git_webhook_url (
     id int(11) unsigned PRIMARY KEY AUTO_INCREMENT,
     repository_id int(10) unsigned NOT NULL,

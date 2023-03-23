@@ -32,14 +32,6 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
     private $project_name;
     private $dao;
     private $backup_directory;
-    /**
-     * @var GitRepositoryMirrorUpdater&\Mockery\MockInterface
-     */
-    private $mirror_updater;
-    /**
-     * @var Git_Mirror_MirrorDataMapper&\Mockery\MockInterface
-     */
-    private $mirror_data_mapper;
 
     protected function setUp(): void
     {
@@ -50,10 +42,8 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->project->shouldReceive('getID')->andReturns($this->project_id);
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
 
-        $this->dao                = Mockery::mock(GitDao::class);
-        $this->backup_directory   = "/tmp/";
-        $this->mirror_updater     = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
+        $this->dao              = Mockery::mock(GitDao::class);
+        $this->backup_directory = "/tmp/";
 
         $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
         $this->manager = new GitRepositoryManager(
@@ -61,8 +51,6 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
             \Mockery::spy(\Git_SystemEventManager::class),
             $this->dao,
             $this->backup_directory,
-            $this->mirror_updater,
-            $this->mirror_data_mapper,
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),

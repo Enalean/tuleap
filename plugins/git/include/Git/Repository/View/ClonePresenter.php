@@ -33,19 +33,8 @@ class ClonePresenter
     public const  HTTPS_ID    = 'https';
     public const  HTTPS_LABEL = 'HTTPS';
 
-    private const MIRROR_ID_PREFIX = 'mirror-';
-
-    private const IS_READ_ONLY = true;
-
     /** @var CloneURLPresenter[] */
     public $clone_url_presenters = [];
-
-    /** @var CloneURLPresenter[] */
-    public $ssh_mirrors_presenters = [];
-
-    /** @var bool */
-    public $has_ssh_mirrors = false;
-
     /** @var DefaultCloneURLSelector */
     private $default_url_selector;
     /**
@@ -99,26 +88,5 @@ class ClonePresenter
                 $clone_urls->hasGerritUrl()
             );
         }
-        if ($clone_urls->hasMirrorLinks()) {
-            $this->ssh_mirrors_presenters = $this->getMirrorLinksCloneURLPresenter($clone_urls, $repository);
-        }
-
-        $this->has_ssh_mirrors = $clone_urls->hasMirrorLinks();
-    }
-
-    private function getMirrorLinksCloneURLPresenter(CloneURLs $clone_urls, GitRepository $repository)
-    {
-        $presenters = [];
-
-        foreach ($clone_urls->getMirrorsLinks() as $mirror) {
-            $presenters[] = new CloneURLPresenter(
-                self::MIRROR_ID_PREFIX . $mirror->id,
-                $repository->getSSHForMirror($mirror),
-                $mirror->name,
-                self::IS_READ_ONLY
-            );
-        }
-
-        return $presenters;
     }
 }

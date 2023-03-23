@@ -138,11 +138,6 @@ class Git extends PluginController
     }
 
     /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
@@ -287,7 +282,6 @@ class Git extends PluginController
         GitPermissionsManager $permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
         \Psr\Log\LoggerInterface $logger,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         FineGrainedUpdater $fine_grained_updater,
@@ -330,7 +324,6 @@ class Git extends PluginController
         $this->plugin                     = $plugin;
         $this->url_manager                = $url_manager;
         $this->logger                     = $logger;
-        $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
 
@@ -382,7 +375,6 @@ class Git extends PluginController
     {
         return new GitViews(
             $this,
-            $this->mirror_data_mapper,
             $this->permissions_manager,
             $this->fine_grained_permission_factory,
             $this->fine_grained_retriever,
@@ -481,12 +473,7 @@ class Git extends PluginController
                 'migrate_to_gerrit',
                 'disconnect_gerrit',
                 'delete_gerrit_project',
-                'update_mirroring',
-                'update_default_mirroring',
             ];
-            if ($this->areMirrorsEnabledForProject()) {
-                $this->permittedActions[] = 'admin-mass-update';
-            }
             if ($user->isSuperUser()) {
                 $this->permittedActions[] = 'restore';
             }
@@ -769,7 +756,6 @@ class Git extends PluginController
                 $this->setDefaultPageRendering(false);
                 $this->addView(
                     'adminGitAdminsView',
-                    [$this->areMirrorsEnabledForProject()]
                 );
 
                 break;
@@ -802,45 +788,12 @@ class Git extends PluginController
                     $this->setDefaultPageRendering(false);
                     $this->addView(
                         'adminGerritTemplatesView',
-                        [$this->areMirrorsEnabledForProject()]
                     );
                 } else {
                     $this->addError(dgettext('tuleap-git', 'You are not allowed to access this page'));
                     $this->redirect('/plugins/git/?action=index&group_id=' . $this->groupId);
                     return false;
                 }
-
-                break;
-            case 'admin-mass-update':
-                if ($this->request->get('save-mass-change') || $this->request->get('go-to-mass-change')) {
-                    $this->checkSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=admin-mass-update');
-
-                    $repositories = $this->getRepositoriesFromIds($this->request->get('repository_ids'));
-
-                    if (! $repositories) {
-                        $this->redirectNoRepositoryError();
-                    }
-                }
-
-                if ($this->request->get('go-to-mass-change')) {
-                    assert(isset($repositories));
-                    $this->addAction('setSelectedRepositories', [$repositories]);
-                    $this->setDefaultPageRendering(false);
-                    $this->addView('adminMassUpdateView');
-                    return;
-                }
-
-                if ($this->request->get('save-mass-change')) {
-                    assert(isset($repositories));
-                    $this->addAction('updateMirroring', [
-                        $this->request->getProject(),
-                        $repositories,
-                        $this->request->get('selected_mirror_ids'),
-                    ]);
-                }
-
-                $this->setDefaultPageRendering(false);
-                $this->addView('adminMassUpdateSelectRepositoriesView');
 
                 break;
             case 'admin-default-access-rights':
@@ -979,49 +932,6 @@ class Git extends PluginController
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
                 $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', [$this->groupId, $repository->getId(), $pane]);
-                break;
-
-            case 'update_mirroring':
-                if (! $repository) {
-                    $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
-                }
-
-                $this->defaultCSRFChecks($repository, 'mirroring');
-
-                $selected_mirror_ids = $this->request->get('selected_mirror_ids');
-
-                if (is_array($selected_mirror_ids)) {
-                    $this->addAction('updateMirroring', [
-                        $this->request->getProject(),
-                        [$repository],
-                        $selected_mirror_ids,
-                    ]);
-                } else {
-                    $this->addError(dgettext('tuleap-git', 'This request is not valid (invalid mirror ids).'));
-                }
-
-                $this->addAction('redirectToRepoManagement', [$this->groupId, $repository->getId(), $pane]);
-                break;
-
-            case 'update_default_mirroring':
-                if (! $this->request->isPost()) {
-                    break;
-                }
-                $url  = '?action=admin-default-settings&pane=mirroring&group_id=' . urlencode($this->groupId);
-                $csrf = new CSRFSynchronizerToken($url);
-                $csrf->check();
-
-                $project             = $this->request->getProject();
-                $selected_mirror_ids = $this->request->get('selected_mirror_ids');
-
-                if (is_array($selected_mirror_ids)) {
-                    $this->addAction('updateDefaultMirroring', [$project, $selected_mirror_ids]);
-                } else {
-                    $this->addError(dgettext('tuleap-git', 'This request is not valid (invalid mirror ids).'));
-                }
-
-                $this->addRedirectToDefaultSettingsAction();
-
                 break;
             case 'restore':
                 $this->addAction('restoreRepository', [$repo_id, $this->groupId]);
@@ -1273,9 +1183,7 @@ class Git extends PluginController
             $this->permissions_manager,
             $this->url_manager,
             $this->logger,
-            $this->mirror_data_mapper,
             $this->history_dao,
-            new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $this->history_dao),
             new MigrationHandler(
                 $this->git_system_event_manager,
                 $this->gerrit_server_factory,
@@ -1438,10 +1346,5 @@ class Git extends PluginController
     {
         $logger = new GitLog();
         $logger->logsDaily($params);
-    }
-
-    private function areMirrorsEnabledForProject()
-    {
-        return count($this->mirror_data_mapper->fetchAllForProject($this->project)) > 0;
     }
 }

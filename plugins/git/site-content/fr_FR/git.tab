@@ -7,7 +7,6 @@ project_admin_utils	default_git_perms_granted_for_project	Permissions git par d�
 project_admin_utils	git_repo_create	Création d'un dépôt Git
 project_admin_utils	git_repo_delete	Suppression d'un dépôt Git
 project_admin_utils	git_repo_update	Mise à jour d'un dépôt Git
-project_admin_utils	git_repo_mirroring_update	Mise à jour des miroirs d'un dépôt Git
 project_admin_utils	git_repo_to_gerrit	Migration d'un dépôt Git vers Gerrit
 project_admin_utils	git_create_template	Création d'un template Gerrit
 project_admin_utils	git_delete_template	Suppression d'un template Gerrit

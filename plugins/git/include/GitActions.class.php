@@ -68,11 +68,6 @@ class GitActions extends PluginActions
     private $fine_grained_updater;
 
     /**
-     * @var GitRepositoryMirrorUpdater
-     */
-    private $mirror_updater;
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
@@ -117,9 +112,6 @@ class GitActions extends PluginActions
 
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
-
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $mirror_data_mapper;
 
     /** @var ProjectHistoryDao*/
     private $history_dao;
@@ -179,9 +171,7 @@ class GitActions extends PluginActions
         GitPermissionsManager $git_permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
         \Psr\Log\LoggerInterface $logger,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao,
-        GitRepositoryMirrorUpdater $mirror_updater,
         MigrationHandler $migration_handler,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         FineGrainedUpdater $fine_grained_updater,
@@ -210,9 +200,7 @@ class GitActions extends PluginActions
         $this->git_permissions_manager       = $git_permissions_manager;
         $this->url_manager                   = $url_manager;
         $this->logger                        = $logger;
-        $this->mirror_data_mapper            = $mirror_data_mapper;
         $this->history_dao                   = $history_dao;
-        $this->mirror_updater                = $mirror_updater;
         $this->migration_handler             = $migration_handler;
         $this->gerrit_can_migrate_checker    = $gerrit_can_migrate_checker;
         $this->fine_grained_updater          = $fine_grained_updater;
@@ -1231,124 +1219,5 @@ class GitActions extends PluginActions
         }
 
         return true;
-    }
-
-    public function updateMirroring(Project $project, array $repositories, $selected_mirror_ids)
-    {
-        $current_mirror_ids_per_repository = $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($project);
-        foreach ($repositories as $repository) {
-            if (! isset($selected_mirror_ids[$repository->getId()]) || ! is_array($selected_mirror_ids[$repository->getId()])) {
-                continue;
-            }
-
-            $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, $repository->getId());
-
-            if (! $this->areThereAnyChanges($repository, $mirror_ids, $current_mirror_ids_per_repository)) {
-                continue;
-            }
-
-            if (! $this->mirror_updater->updateRepositoryMirrors($repository, $mirror_ids)) {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Error when defining on which mirrors the repository is replicated.'));
-                return;
-            }
-
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
-        }
-
-        $more_than_one_repository = count($repositories) > 1;
-
-        if ($more_than_one_repository && ! $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repositories will be completely removed from mirrors in a few minutes.'));
-        } elseif ($more_than_one_repository && $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repositories will be replicated on the selected mirrors  in a few minutes.'));
-        } elseif (! $selected_mirror_ids) {
-            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repository will be completely revoked from mirrors  in a few minutes.'));
-        } else {
-            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repository will be replicated on the selected mirrors in a few minutes.'));
-        }
-    }
-
-    /**
-     * @param array $selected_mirror_ids
-     * @param int   $request_key The request_key can be either project_id (default mirror) or repository_id (repository's mirror)
-     *
-     * @return array
-     */
-    private function getSelectedMirrorIdsFromRequest(array $selected_mirror_ids, $request_key)
-    {
-        $mirror_ids = [];
-        foreach ($selected_mirror_ids[$request_key] as $mirror_id => $should_be_mirrored) {
-            if ($should_be_mirrored) {
-                $mirror_ids[] = $mirror_id;
-            }
-        }
-
-        return $mirror_ids;
-    }
-
-    private function areThereAnyChanges(
-        GitRepository $repository,
-        array $mirror_ids,
-        array $current_mirror_ids_per_repository,
-    ) {
-        $current_mirrors = [];
-        if (isset($current_mirror_ids_per_repository[$repository->getId()])) {
-            $current_mirrors = $current_mirror_ids_per_repository[$repository->getId()];
-        }
-
-        return count(array_diff($mirror_ids, $current_mirrors)) > 0
-            || count(array_diff($current_mirrors, $mirror_ids)) > 0;
-    }
-
-    public function setSelectedRepositories($repositories)
-    {
-        $this->addData(['repositories' => $repositories]);
-    }
-
-    public function restoreRepository($repo_id, $project_id)
-    {
-        $repository = $this->factory->getDeletedRepository($repo_id);
-        $url        = '/admin/show_pending_documents.php?group_id=' . $project_id;
-        (new CSRFSynchronizerToken($url))->check();
-
-        assert($GLOBALS['Response'] instanceof \Tuleap\Layout\BaseLayout);
-        if (! $repository) {
-            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Unable to restore Git repository : Invalid repository id'));
-            $GLOBALS['Response']->redirect($url);
-        }
-
-        $active_repository = $this->factory->getRepositoryByPath($project_id, $repository->getPath());
-        if ($active_repository instanceof GitRepository) {
-            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Unable to restore Git repository : repository with the same name already exist'));
-        } else {
-            $this->git_system_event_manager->queueRepositoryRestore($repository);
-            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'System event created to restore repository') . ' : ' . $repository->getName());
-        }
-        $GLOBALS['Response']->redirect($url . '&focus=git_repository');
-    }
-
-    public function updateDefaultMirroring(Project $project, array $selected_mirror_ids)
-    {
-        $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, (int) $project->getID());
-
-        if (
-            $this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
-            && $this->mirror_data_mapper->removeAllDefaultMirrorsToProject($project)
-            && $this->mirror_data_mapper->addDefaultMirrorsToProject($project, $mirror_ids)
-        ) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-git', 'Default mirrors updated.')
-            );
-
-            return true;
-        }
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            dgettext('tuleap-git', 'An error occured while updating default mirrors.')
-        );
-
-        return false;
     }
 }

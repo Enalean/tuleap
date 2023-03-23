@@ -35,17 +35,14 @@ $git_plugin = PluginManager::instance()->getPluginByName('git');
 $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 $driver      = new Git_GitoliteDriver(
     $git_plugin->getLogger(),
-    $git_plugin->getGitSystemEventManager(),
     $url_manager,
     new GitDao(),
-    new Git_Mirror_MirrorDao(),
     $git_plugin,
     new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
         new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
         ProjectManager::instance()
     ),
     new \Tuleap\Git\Gitolite\VersionDetector(),
-    null,
     null,
     null,
     null,

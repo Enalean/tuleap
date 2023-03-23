@@ -24,10 +24,6 @@ msgid "%1$s projects restriction"
 msgstr "Restriction de projets pour %1$s"
 
 #, php-format
-msgid "%1$s repositories"
-msgstr "%1$s dépôts"
-
-#, php-format
 msgid "%s (Default)"
 msgstr "%s (Défaut)"
 
@@ -69,26 +65,6 @@ msgstr "Un push est survenu sur %s"
 msgid "A repository backup of '%1$s' will be available in the backup directory"
 msgstr "Une sauvegarde du dépôt '%1$s' sera disponible dans le repertoire"
 
-#, php-format
-msgid ""
-"A system event has been queued. The gitolite configuration will be dumped at "
-"the time of its execution. <a href=\"%1$s\">Git queue can be found here</a>."
-msgstr ""
-"Un évènement système a été généré. La configuration de gitolite sera "
-"reconstruite au moment de son éxécution. <a href=\"%1$s\">La queue Git se "
-"trouve ici</a>."
-
-msgid ""
-"A system event will be queued to dump the mirrored repositories "
-"configuration. This dump will rewrite the gitolite configuration according "
-"to the hostnames of each mirror and the hostname define for this server in "
-"the .gitolite.rc file. Do you want to continue?"
-msgstr ""
-"Un évènement système sera généré pour reconstruire la configuration des "
-"dépôts miroirs. Cette reconstruction réécrira la configuration de gitolite "
-"en tenant compte du hostname de chaque miroir ainsi que de celui de ce "
-"serveur définit dans le fichier .gitolite.rc. Voulez-vous continuer ?"
-
 msgid "Access control"
 msgstr "Permissions"
 
@@ -120,9 +96,6 @@ msgstr "Ajouter un webhook générique"
 msgid "Add gerrit server"
 msgstr "Ajouter un serveur gerrit"
 
-msgid "Add mirror"
-msgstr "Ajouter un miroir"
-
 msgid "Add permission on a new branch"
 msgstr "Ajouter une permission sur une nouvelle branche"
 
@@ -132,15 +105,9 @@ msgstr "Ajouter une permission sur une nouvelle étiquette"
 msgid "Add server"
 msgstr "Ajouter un serveur"
 
-msgid "All fields are required"
-msgstr "Tous les champs sont requis"
-
 msgid "All projects can now use this Gerrit server."
 msgstr ""
 "Tous les projets ont maintenant la possibilité d'utiliser ce serveur Gerrit."
-
-msgid "All projects can now use this mirror."
-msgstr "Tous les projets ont maintenant la possibilité d'utiliser ce miroir."
 
 msgid ""
 "All rules containing regular expressions will be deleted and you won't be "
@@ -163,9 +130,6 @@ msgstr "Autoriser l'accès"
 
 msgid "Allow all the projects to use this Gerrit server."
 msgstr "Autoriser tous les projets à utiliser ce serveur Gerrit."
-
-msgid "Allow all the projects to use this mirror."
-msgstr "Autoriser tous les projets à utiliser ce miroir."
 
 msgid "Allow artifact closure"
 msgstr "Autoriser la fermeture des artéfacts"
@@ -216,16 +180,6 @@ msgstr ""
 msgid "An error occured while trying to delete the template."
 msgstr "Une erreur est survenue pendant la suppression du modèle."
 
-msgid "An error occured while updating default mirrors."
-msgstr "Une erreur est survenue lors de la mise à jour des miroirs par défaut."
-
-msgid ""
-"An error occured whiled deleting the mirror in the default mirrors for "
-"projects."
-msgstr ""
-"Une erreur est apparue lors de la suppression du miroir en tant que miroir "
-"par défaut."
-
 msgid ""
 "An error occurred while activating regular expressions option for Git fine "
 "grained permission."
@@ -266,9 +220,6 @@ msgstr "Liste des projets autorisés"
 
 msgid "Back to Gerrit servers list"
 msgstr "Retour à la liste des serveurs Gerrit"
-
-msgid "Back to mirror list"
-msgstr "Retour à la liste des miroirs"
 
 msgid "Bad repository id"
 msgstr "Id du dépôt Git non valide"
@@ -326,9 +277,6 @@ msgstr "Choisissez le chemin pour les forks"
 msgid "Clone"
 msgstr "Cloner"
 
-msgid "Clone from SSH mirrors"
-msgstr "Cloner depuis les miroirs SSH"
-
 msgid "Clone or download"
 msgstr "Cloner ou télécharger"
 
@@ -383,9 +331,6 @@ msgid "Currently, there's no project allowed to use this Gerrit server."
 msgstr ""
 "Actuellement, il n'y a aucun projet autorisé à utiliser ce serveur Gerrit."
 
-msgid "Currently, there's no project allowed to use this mirror."
-msgstr "Actuellement, il n'y a aucun projet autorisé à utiliser ce miroir."
-
 msgid "Date"
 msgstr "Date"
 
@@ -394,9 +339,6 @@ msgstr "La branche par défaut a été mise à jour"
 
 msgid "Default branch:"
 msgstr "Branche par défaut : "
-
-msgid "Default mirrors updated."
-msgstr "Miroirs par défaut mis à jour."
 
 msgid "Default permissions"
 msgstr "Permissions par défaut"
@@ -414,10 +356,6 @@ msgstr "Supprimer"
 #, php-format
 msgid "Delete %1$s"
 msgstr "Supprimer %1$s"
-
-#, php-format
-msgid "Delete %1$s mirror"
-msgstr "Supprimer le miroir %1$s"
 
 msgid "Delete gerrit project"
 msgstr "Supprimer ce projet sur Gerrit"
@@ -455,10 +393,6 @@ msgstr "Etes-vous certain(e) de vouloir changer l'accés a ce dépôt a privé ?
 #, php-format
 msgid "Edit %1$s"
 msgstr "Éditer %1$s"
-
-#, php-format
-msgid "Edit %1$s mirror"
-msgstr "Éditer le miroir %1$s"
 
 msgid "Edit generic webhook"
 msgstr "Éditer un webhook générique"
@@ -501,10 +435,6 @@ msgstr "Entrer un chemin ou laisser vide"
 msgid "Error pushing SSH Keys. Please add them manually."
 msgstr "Impossible de copier les clés SSH. Ajoutez-les de façon manuelle."
 
-msgid "Error when defining on which mirrors the repository is replicated."
-msgstr ""
-"Erreur lors de la mise à jour des miroirs sur lesquels le dépôt est répliqué."
-
 #, php-format
 msgid ""
 "Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : "
@@ -521,15 +451,6 @@ msgstr "Erreur lors de la suppression du webhook :("
 
 msgid "Error while saving the webhook :("
 msgstr "Erreur lors de la sauvegarde du webhook :("
-
-msgid "Failed to add new mirror"
-msgstr "Impossible d'enregistrer le miroir"
-
-msgid "Failed to delete mirror"
-msgstr "Impossible de supprimer le miroir"
-
-msgid "Failed to update mirror"
-msgstr "Impossible de mettre à jour le miroir"
 
 msgid "Files"
 msgstr "Fichiers"
@@ -600,9 +521,6 @@ msgstr "Administrateurs Git"
 msgid "Git commit"
 msgstr "Commit Git"
 
-msgid "Git mirror administration"
-msgstr "Administration des miroirs"
-
 msgid "Git push"
 msgstr "Push Git"
 
@@ -645,9 +563,6 @@ msgstr "Permissions globales"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
-msgid "Grok Mirror"
-msgstr "Grok Mirror"
-
 msgid "HTTP password"
 msgstr "Mot de passe HTTP"
 
@@ -657,21 +572,8 @@ msgstr "Port HTTP"
 msgid "Host"
 msgstr "Host"
 
-msgid "Hostname"
-msgstr "Hôte"
-
-#, php-format
-msgid "Hostname (%1$s) is reserved!"
-msgstr "Le hostname choisi (%1$s) est réservé !"
-
-msgid "Hostname must be unique!"
-msgstr "Le hostname choisi doit être unique !"
-
 msgid "Id"
 msgstr "Id"
-
-msgid "Identifier"
-msgstr "Identifiant"
 
 msgid "Identity file"
 msgstr "Fichier d'identité"
@@ -774,9 +676,6 @@ msgstr ""
 "Changer l'accés a ce dépôt a privé va annuler la notification pour les "
 "adresses mail qui ne correspondent a aucun utilisateur membre de ce projet."
 
-msgid "Manage allowed projects"
-msgstr "Liste des projets autorisés sur ce miroir"
-
 msgid "Manually push SSH keys"
 msgstr "Pousser les clés SSH"
 
@@ -799,31 +698,12 @@ msgstr "Erreur lors de la migration de %1$s vers gerrit"
 msgid "Migration to Gerrit"
 msgstr "Migration vers Gerrit"
 
-msgid "Mirror not found, please try again"
-msgstr "Miroir non trouvé, merci de réessayer"
-
-msgid "Mirror updated!"
-msgstr "Miroir modifié !"
-
-msgid "Mirroring"
-msgstr "Réplication"
-
-msgid "Mirrors"
-msgstr "Miroirs"
-
 msgid "Missing repository id or project id"
 msgstr ""
 "Impossible de supprimer le dépôt de la base de données, paramètres invalides"
 
 msgid "Month"
 msgstr "Mois"
-
-msgid ""
-"Must be unique. The name \"projects\" and the hostname defined in .gitolite."
-"rc file cannot be used."
-msgstr ""
-"Doit être unique. Le nom \"projects\" et le hostname défini dans le fichier ."
-"gitolite.rc ne peuvent être utilisés."
 
 msgid "My last Git pushes"
 msgstr "Mes derniers push Git"
@@ -840,9 +720,6 @@ msgstr "Aucun jeton défini"
 msgid "No access selected for the fork"
 msgstr "Aucun accès sélectionné pour le fork"
 
-msgid "No changes for mirror"
-msgstr "Pas de nouveau changements pour le miroir"
-
 msgid "No data retrieved from the request"
 msgstr "La requête ne contient aucune donnée."
 
@@ -854,9 +731,6 @@ msgstr "Aucun server gerrit"
 
 msgid "No logs yet"
 msgstr "Pas encore d'historique"
-
-msgid "No mirror"
-msgstr "Aucun miroir"
 
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"
@@ -885,14 +759,8 @@ msgstr "Aucun dépôt sélectionné pour le fork"
 msgid "No restorable git repositories found"
 msgstr "Aucun dépôt Git restorable n'a été trouvé"
 
-msgid "None"
-msgstr "Aucun"
-
 msgid "Not specified host"
 msgstr "Hôte non renseigné"
-
-msgid "Not specified mirror name"
-msgstr "Nom de miroir non renseigné"
 
 msgid "Notification Prefix"
 msgstr "Préfixe de notification"
@@ -914,29 +782,11 @@ msgstr ""
 "maintenant, seuls les projets autorisés pourront utiliser ce serveur Gerrit. "
 "Pour le moment, cette restriction n'est pas prise en compte."
 
-msgid ""
-"Now, only the allowed projects are able to use this mirror. Projects with at "
-"least one repository using this mirror have been automatically added to the "
-"list of allowed projects."
-msgstr ""
-"Les projets contenant un ou plusieurs dépôts utilisant ce miroir ont été "
-"automatiquements ajoutés à la liste des projets autorisés. A partir de "
-"maintenant, seuls les projets autorisés pourront utiliser ce miroir."
-
 msgid "Only one replication SSH key is allowed by server"
 msgstr "Seulement une clé SSH pour la réplication est acceptée par serveur"
 
 msgid "Only project administrator can create repositories"
 msgstr "Seuls les administrateurs de projet peuvent créer des dépôts"
-
-msgid "Owner"
-msgstr "Propriétaire"
-
-msgid "Owner's Password"
-msgstr "Mot de passe du propriétaire"
-
-msgid "Owner's SSH Key"
-msgstr "Clé SSH du propriétaire"
 
 msgid ""
 "Parent project is not active, you are not allowed to migrate your repository "
@@ -1078,13 +928,6 @@ msgstr ""
 msgid "Replication password"
 msgstr "Mot de passe pour la réplication"
 
-#, php-format
-msgid "Repositories on %1$s mirror"
-msgstr "Dépôts sur le miroir %1$s"
-
-msgid "Repositories on this mirror"
-msgstr "Dépôts sur ce miroir"
-
 msgid "Repository"
 msgstr "Dépôt"
 
@@ -1150,15 +993,9 @@ msgstr "Révoquer l'autorisation"
 msgid "Rewind"
 msgstr "Rewind"
 
-msgid "Rewrite mirrored repositories configuration"
-msgstr "Réécrire la configuration des dépôts miroirs"
-
 msgid ""
 "Right now, there are no projects authorized to go over object's size limit"
 msgstr "Aucun projet n'est autorisé à dépasser la limite pour l'instant"
-
-msgid "SSH Host"
-msgstr "Hôte SSH"
 
 msgid "SSH port"
 msgstr "Port SSH"
@@ -1178,27 +1015,6 @@ msgstr "Sélectionnez une branche ou une étiquette"
 msgid "Select repositories to fork"
 msgstr "Sélectionnez les dépôts à forker"
 
-msgid ""
-"Select the mirrors where the new repositories will be replicated by default:"
-msgstr ""
-"Sélectionnez les miroirs sur lesquels vous souhaitez répliquer par défaut "
-"tout nouveau dépôt :"
-
-#, php-format
-msgid ""
-"Select the mirrors where you want to replicate the repository <b>%1$s</b>:"
-msgstr ""
-"Sélectionnez les miroirs sur lesquels vous souhaitez répliquer le dépôt <b>"
-"%1$s</b>:"
-
-msgid ""
-"Select the repositories you want to update. You will be able to apply mass "
-"changes on the next page."
-msgstr ""
-"Sélectionnez les dépôts que vous souhaitez mettre à jour. Vous serez ensuite "
-"redirigé vers une page vous permettant d'appliquer des modifications en "
-"masse."
-
 msgid "Set build status"
 msgstr "Changer les statuts de builds"
 
@@ -1212,10 +1028,6 @@ msgid "Something went wrong during the update of the allowed project list."
 msgstr ""
 "Une erreur est survenue pendant la mise à jour de la liste des projets "
 "autorisés."
-
-msgid ""
-"Something went wrong during the update of the mirror restriction status."
-msgstr "Une erreur est survenue pendant la mise à jour du status de ce miroir."
 
 msgid ""
 "Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a "
@@ -1232,20 +1044,11 @@ msgstr "Valider"
 msgid "Submitted project can now use this Gerrit server."
 msgstr "Le projet soumis peut maintenant utiliser ce serveur Gerrit."
 
-msgid "Submitted project can now use this mirror."
-msgstr "Le projet soumis peut maintenant utiliser ce miroir."
-
 msgid "Submitted projects will not be able to use this Gerrit server."
 msgstr "Les projets soumis ne pourront plus utiliser ce serveur Gerrit."
 
-msgid "Submitted projects will not be able to use this mirror."
-msgstr "Les projets soumis ne pourront plus utiliser ce miroir."
-
 msgid "Successfully forked"
 msgstr "Fork créé avec succès"
-
-msgid "System event created to restore repository"
-msgstr "Tâche crée pour restorer le dépôt"
 
 msgid "Tags"
 msgstr "Étiquettes"
@@ -1357,17 +1160,6 @@ msgstr ""
 "L'utilisation des expression régulières a été désactivée au niveau de la "
 "plateforme."
 
-msgid ""
-"The repositories will be completely removed from mirrors in a few minutes."
-msgstr "Les dépôts ne seront plus répliqués dans quelques minutes."
-
-msgid ""
-"The repositories will be replicated on the selected mirrors  in a few "
-"minutes."
-msgstr ""
-"Les dépôts vont être répliqués sur les miroirs sélectionnés dans quelques "
-"minutes."
-
 #, php-format
 msgid ""
 "The repository <em>%1$s</em> has already been migrated to the Gerrit "
@@ -1387,19 +1179,6 @@ msgid ""
 "minutes"
 msgstr ""
 "Le dépôt est en attente de création. Veuillez revenir dans quelques minutes."
-
-#, php-format
-msgid "The repository will be automatically mirrored on: %1$s."
-msgstr "Le dépôt sera automatiquement répliqué sur les miroirs : %1$s."
-
-msgid ""
-"The repository will be completely revoked from mirrors  in a few minutes."
-msgstr "Le dépôt ne sera plus repliqué dans quelques minutes."
-
-msgid ""
-"The repository will be replicated on the selected mirrors in a few minutes."
-msgstr ""
-"Le dépôt va être répliqué sur les miroirs sélectionnés dans quelques minutes."
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
@@ -1461,9 +1240,6 @@ msgstr ""
 "code malveillant qui semble sûr. Vous devriez examiner le fichier dans un "
 "éditeur qui révèle les caractères Unicode cachés."
 
-msgid "This mirror is used by repositories, you shall not delete it."
-msgstr "Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer."
-
 msgid ""
 "This operation <strong>cannot</strong> be undone. This repository will never "
 "again be managed by a gerrit server. Do you confirm the disconnection?"
@@ -1492,15 +1268,6 @@ msgid ""
 msgstr ""
 "Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible "
 "de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé."
-
-msgid "This request is not valid (invalid mirror ids)."
-msgstr "La requête contient des données non valides (identifiants de miroir)."
-
-#, php-format
-msgid "This section allows to define which projects will be able to use %1$s."
-msgstr ""
-"Cette section permet de définir les projets qui pourront utiliser ou non "
-"%1$s."
 
 msgid ""
 "This section allows you to choose a Gerrit project configuration and create "
@@ -1600,15 +1367,6 @@ msgstr ""
 "Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire "
 "root du projet"
 
-msgid "Unable to restore Git repository : Invalid repository id"
-msgstr "Impossible de restorer le dépôt Git : Identifiant invalide"
-
-msgid ""
-"Unable to restore Git repository : repository with the same name already "
-"exist"
-msgstr ""
-"Impossible de restorer le dépôt Git : un dépôt avec le même nom existe déjà"
-
 msgid "Unable to update Repository data"
 msgstr "Impossible d'enregistrer les données du dépôt"
 
@@ -1618,29 +1376,8 @@ msgstr "Impossible de modifier le modèle"
 msgid "Undefined"
 msgstr "Indéfini"
 
-msgid "Update"
-msgstr "Modifier"
-
-msgid "Update default mirroring"
-msgstr "Mettre à jour les réplications par défaut"
-
-msgid "Update mirroring of this repository"
-msgstr "Mettre à jour les réplications de ce dépôt"
-
-msgid "Update repositories"
-msgstr "Mettre à jour les dépôts"
-
-msgid "Update selected repositories"
-msgstr "Mettre à jour les dépôts sélectionnés"
-
 msgid "Use SSL?"
 msgstr "Utilisation de SSL ?"
-
-msgid "Used by default?"
-msgstr "Utilisé par défaut ?"
-
-msgid "Used by this repository?"
-msgstr "Utilisé par ce dépôt ?"
 
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
@@ -1674,20 +1411,6 @@ msgstr ""
 msgid "Warning"
 msgstr "Attention"
 
-msgid "Was unused"
-msgstr "N'était pas utilisé"
-
-msgid "Was used"
-msgstr "Était utilisé"
-
-#, php-format
-msgid ""
-"We cannot handle the mass update of all selected repositoies therefore we "
-"kept only %1$s repositories in your selection."
-msgstr ""
-"Nous ne pouvons pas gérer la mise à jour de l'ensemble des dépôts "
-"sélectionnés, nous avons donc limité votre sélection à %1$s dépôts."
-
 msgid "Webhook added"
 msgstr "Webhook ajouté"
 
@@ -1699,14 +1422,6 @@ msgstr "Webhook sauvegardé"
 
 msgid "Webhooks"
 msgstr "Webhooks"
-
-#, php-format
-msgid ""
-"Wow, wait a minute. You are about to delete the <b>%1$s</b> mirror. Please "
-"confirm your action."
-msgstr ""
-"Hop hop hop, attendez une minute… Vous êtes sur le point de supprimer le "
-"miroir <b>%1$s</b> ! Merci de confirmer votre action."
 
 #, php-format
 msgid ""
@@ -1760,31 +1475,6 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point d'interdire l'accès à ce serveur Gerrit pour les "
 "projects sélectionnés. Êtes-vous sûr de vouloir faire celà ?"
-
-msgid ""
-"You are about to revoke the access to this mirror to one or several "
-"projects. This implies the unmirroring of all repositories of the selected "
-"projects. Are you sure you want to do this?"
-msgstr ""
-"Vous êtes sur le point d'interdire l'accès à ce miroir pour les projects "
-"sélectionnés. Celà implique la suppression de la réplication des dépôts des "
-"projets sélectionnés. Êtes-vous sûr de vouloir faire celà ?"
-
-#, php-format
-msgid ""
-"You are about to update <span>%1$s repositories</span>. For now, only "
-"mirroring settings can be updated."
-msgstr ""
-"Vous êtes sur le point de mettre à jour les informations de <span>%1$s "
-"dépôts</span>. Seules les informations de réplication peuvent-être modifiées."
-
-#, php-format
-msgid ""
-"You are about to update the repository <b>%1$s</b>. For now, only mirroring "
-"settings can be updated."
-msgstr ""
-"Vous êtes sur le point de mettre à jour les informations du dépôt <b>%1$s</"
-"b>. Seules les informations de réplication peuvent-être modifiées."
 
 #, php-format
 msgid "You are going to fork repository: %1$s"
@@ -1847,9 +1537,6 @@ msgstr ""
 "Votre plateforme ne semble pas autoriser les expressions régulières, les "
 "permissions %1$s n'ont pas été dupliquées."
 
-msgid "click here to change"
-msgstr "cliquer ici pour modifier"
-
 msgid "close artifacts"
 msgstr "fermer les artéfacts"
 
@@ -1870,9 +1557,6 @@ msgstr "vide"
 
 msgid "from template"
 msgstr "à partir d'un modèle existant"
-
-msgid "or"
-msgstr "ou"
 
 msgid "repository"
 msgstr "dépôt"

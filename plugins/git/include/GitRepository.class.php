@@ -63,8 +63,6 @@ class GitRepository
     private $remote_server_migration_status;
     private $last_push_date;
 
-    private $is_mirrored;
-
     protected $backendType;
     private ?Git_Backend_Interface $backend = null;
 
@@ -81,11 +79,10 @@ class GitRepository
         $this->access        = 'private';
         $this->mailPrefix    = self::DEFAULT_MAIL_PREFIX;
         $this->notifiedMails;
-        $this->parent      = null;
-        $this->parentId    = 0;
-        $this->loaded      = false;
-        $this->scope       = self::REPO_SCOPE_PROJECT;
-        $this->is_mirrored = false;
+        $this->parent   = null;
+        $this->parentId = 0;
+        $this->loaded   = false;
+        $this->scope    = self::REPO_SCOPE_PROJECT;
     }
 
     /**
@@ -539,11 +536,6 @@ class GitRepository
         return $this->path;
     }
 
-    public function getSSHForMirror(Git_Mirror_Mirror $mirror)
-    {
-        return 'ssh://gitolite@' . $mirror->url . '/' . $this->getPath();
-    }
-
     /**
      * Gives the full relative path (from git root directory) to the repository.
      *
@@ -935,16 +927,6 @@ class GitRepository
         $href     = $url_manager->getRepositoryBaseUrl($this);
         $label    = $this->getName();
         return '<a href="' . $purifier->purify($href) . '">' . $purifier->purify($label) . '</a>';
-    }
-
-    public function setIsMirrored($is_mirrored)
-    {
-        $this->is_mirrored = (bool) $is_mirrored;
-    }
-
-    public function getIsMirrored()
-    {
-        return $this->is_mirrored;
     }
 
     public function getBackupPath()

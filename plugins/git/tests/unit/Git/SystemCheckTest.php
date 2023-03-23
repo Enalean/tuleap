@@ -29,28 +29,21 @@ class Git_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $driver;
     private $gitgc;
-
-    /**
-     * @var Git_SystemEventManager&\Mockery\MockInterface
-     */
-    private $system_event_manager;
     /** @var Git_SystemCheck */
     private $system_check;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->driver               = \Mockery::spy(\Git_GitoliteDriver::class);
-        $this->gitgc                = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class);
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $logger                     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $config_checker             = new PluginConfigChecker($logger);
-        $plugin                     = \Mockery::spy(\Plugin::class);
+        $this->driver   = \Mockery::spy(\Git_GitoliteDriver::class);
+        $this->gitgc    = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class);
+        $logger         = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $config_checker = new PluginConfigChecker($logger);
+        $plugin         = \Mockery::spy(\Plugin::class);
 
         $this->system_check = new Git_SystemCheck(
             $this->gitgc,
             $this->driver,
-            $this->system_event_manager,
             $config_checker,
             $plugin
         );
@@ -66,13 +59,6 @@ class Git_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAsksToCleanUpGitoliteAdminRepository(): void
     {
         $this->gitgc->shouldReceive('cleanUpGitoliteAdminWorkingCopy')->once();
-
-        $this->system_check->process();
-    }
-
-    public function testItAsksToCheckManifestFiles(): void
-    {
-        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestCheck')->once();
 
         $this->system_check->process();
     }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use CSRFSynchronizerToken;
-use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
@@ -46,7 +45,6 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
     public function __construct(
         private ProjectManager $project_manager,
         private GitPermissionsManager $git_permissions_manager,
-        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private JenkinsServerFactory $jenkins_server_factory,
         private LogFactory $log_factory,
         private HeaderRenderer $header_renderer,
@@ -86,7 +84,6 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
             'git-administration-jenkins',
             new AdministrationPresenter(
                 (int) $project->getID(),
-                count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
                 $event->getExternalPanePresenters(),
                 $this->buildServerPresenters($project),
                 new CSRFSynchronizerToken(

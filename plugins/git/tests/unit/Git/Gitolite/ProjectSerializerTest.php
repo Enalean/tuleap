@@ -72,14 +72,9 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $mirror_data_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn([]);
-        $mirror_data_mapper->shouldReceive('fetchAll')->andReturn([]);
-
         $this->gerrit_project_status = Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class);
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $mirror_data_mapper,
             $this->gerrit_project_status,
             'whatever',
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),

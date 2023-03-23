@@ -22,7 +22,6 @@ namespace Tuleap\Git\Gitolite;
 
 use EventManager;
 use Git_Gitolite_ConfigPermissionsSerializer;
-use Git_Mirror_Mirror;
 use Mockery;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
@@ -33,33 +32,19 @@ class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\T
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    private $mirror_mapper;
-    private $mirror_1;
-    private $mirror_2;
     private string $cache_dir;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->mirror_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-
-        $user_mirror1 = Mockery::spy(\PFUser::class);
-        $user_mirror1->shouldReceive('getUserName')->andReturn('forge__gitmirror_1');
-        $this->mirror_1 = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'CHN');
-
-        $user_mirror2 = Mockery::spy(\PFUser::class);
-        $user_mirror2->shouldReceive('getUserName')->andReturn('forge__gitmirror_2');
-        $this->mirror_2 = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'JPN');
 
         $this->cache_dir = $this->getTmpDir();
         \ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
     }
 
-    public function testItDumpsTheConf()
+    public function testItDumpsTheConf(): void
     {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([]);
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
@@ -74,11 +59,9 @@ class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\T
         );
     }
 
-    public function testItAllowsOverrideBySiteAdmin()
+    public function testItAllowsOverrideBySiteAdmin(): void
     {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([]);
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             __DIR__ . '/_fixtures/etc_templates',
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
@@ -89,24 +72,6 @@ class ConfigPermissionsSerializerGitoliteConfTest extends \Tuleap\Test\PHPUnit\T
 
         $this->assertSame(
             file_get_contents(__DIR__ . '/_fixtures/override_gitolite.conf'),
-            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
-        );
-    }
-
-    public function testItGrantsReadAccessToGitoliteAdminForMirrorUsers()
-    {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([$this->mirror_1, $this->mirror_2]);
-        $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->mirror_mapper,
-            Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
-            'whatever',
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            Mockery::spy(EventManager::class)
-        );
-        $this->assertSame(
-            file_get_contents(dirname(__FILE__) . '/_fixtures/mirrors_gitolite.conf'),
             $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
     }

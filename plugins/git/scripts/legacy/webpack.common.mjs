@@ -43,7 +43,6 @@ export default [{
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
             "git.js": [
                 "./src/git.js",
-                "./src/mass-update.js",
                 "./src/webhooks.js",
                 "./src/permissions.js",
             ],

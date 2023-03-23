@@ -136,51 +136,6 @@ class Git_SystemEventManager
         );
     }
 
-    public function queueGrokMirrorGitoliteAdminUpdate()
-    {
-        $this->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
-    }
-
-    public function queueGrokMirrorManifest(GitRepository $repository)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
-            $repository->getId(),
-            SystemEvent::PRIORITY_LOW,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueGrokMirrorManifestFollowingAGitPush(GitRepository $repository)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
-            $repository->getId(),
-            SystemEvent::PRIORITY_LOW,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueGrokMirrorManifestRepoDelete($repository_path)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
-            $repository_path,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueGrokMirrorManifestCheck()
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
-            '',
-            SystemEvent::PRIORITY_LOW,
-            SystemEvent::OWNER_APP
-        );
-    }
-
     public function queueEditSSHKey($user_id, $original_keys)
     {
         $this->system_event_manager->createEvent(
@@ -211,36 +166,6 @@ class Git_SystemEventManager
                 SystemEvent::OWNER_APP
             );
         }
-    }
-
-    public function queueDumpOfAllMirroredRepositories()
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
-            '',
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueUpdateMirror($mirror_id, $old_hostname)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_UPDATE_MIRROR::NAME,
-            $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function queueDeleteMirror($mirror_id, $old_hostname)
-    {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_DELETE_MIRROR::NAME,
-            $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
     }
 
     public function queueRegenerateGitoliteConfig($project_id)
@@ -302,21 +227,8 @@ class Git_SystemEventManager
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
-            SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
-            SystemEvent_GIT_UPDATE_MIRROR::NAME,
-            SystemEvent_GIT_DELETE_MIRROR::NAME,
             SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
             ProjectIsSuspended::NAME,
-        ];
-    }
-
-    public function getGrokMirrorTypes()
-    {
-        return [
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
-            SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
         ];
     }
 

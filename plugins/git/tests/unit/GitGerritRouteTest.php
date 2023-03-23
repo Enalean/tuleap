@@ -119,8 +119,6 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $server                = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getServerById')->andReturns($server)->getMock();
         $can_migrate_checker   = \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class)->shouldReceive('canMigrate')->andReturns(true)->getMock();
-        $mirror_data_mapper    = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
-        $mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturns([]);
 
         $gerrit_driver = Mockery::mock(Git_Driver_Gerrit::class);
         $gerrit_driver->shouldReceive('doesTheProjectExist')->andReturn(false);
@@ -146,7 +144,6 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->git_permissions_manager,
                 $url_manager,
                 \Mockery::spy(\Psr\Log\LoggerInterface::class),
-                $mirror_data_mapper,
                 \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
                 $can_migrate_checker,
                 \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),

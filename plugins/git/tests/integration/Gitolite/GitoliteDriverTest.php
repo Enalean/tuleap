@@ -30,7 +30,6 @@ use Git_Gitolite_GitoliteConfWriter;
 use Git_Gitolite_GitoliteRCReader;
 use Git_Gitolite_ProjectSerializer;
 use Git_GitoliteDriver;
-use Git_Mirror_MirrorDao;
 use GitDao;
 use GitPlugin;
 use Mockery;
@@ -76,7 +75,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $this->gitoliterc_reader = \Mockery::spy(\Git_Gitolite_GitoliteRCReader::class);
 
         $this->another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->mirror_data_mapper,
             \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
@@ -98,7 +96,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->another_gitolite_permissions_serializer,
             $this->a_gitolite_project_serializer,
             $this->gitoliterc_reader,
-            $this->mirror_data_mapper,
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->project_manager,
             $this->sys_data_dir . '/gitolite/admin'
@@ -106,10 +103,8 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
         $this->a_gitolite_driver = new Git_GitoliteDriver(
             $this->logger,
-            $this->git_system_event_manager,
             $this->url_manager,
             \Mockery::mock(GitDao::class),
-            \Mockery::mock(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
             \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
@@ -118,17 +113,14 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
-            $this->mirror_data_mapper,
         );
 
         $this->another_git_exec = \Mockery::spy(\Git_Exec::class);
 
         $this->another_gitolite_driver = new Git_GitoliteDriver(
             $this->logger,
-            $this->git_system_event_manager,
             $this->url_manager,
             \Mockery::mock(GitDao::class),
-            \Mockery::mock(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
             \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
@@ -137,7 +129,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
-            $this->mirror_data_mapper,
         );
     }
 

@@ -29,7 +29,6 @@ use ForgeUpgradeConfig;
 use Git;
 use Git_Backend_Gitolite;
 use Git_GitoliteDriver;
-use Git_Mirror_MirrorDao;
 use GitDao;
 use GitPlugin;
 use GitRepository;
@@ -172,8 +171,6 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager = new UGroupManager($this->ugroup_dao, \Mockery::spy(\EventManager::class));
 
         $this->git_systemeventmanager        = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->mirror_updater                = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper            = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
         $this->event_manager                 = \Mockery::spy(\EventManager::class);
         $this->fine_grained_updater          = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class);
         $this->regexp_fine_grained_retriever = \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
@@ -190,8 +187,6 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->git_systemeventmanager,
             $this->git_dao,
             $this->getTmpDir(),
-            $this->mirror_updater,
-            $this->mirror_data_mapper,
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
@@ -212,13 +207,10 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->permission_dao = \Mockery::spy(\PermissionsDao::class);
         $permissions_manager  = new PermissionsManager($this->permission_dao);
-        $git_mirror_dao       = Mockery::mock(Git_Mirror_MirrorDao::class);
         $git_gitolite_driver  = new Git_GitoliteDriver(
             $this->logger,
-            $this->git_systemeventmanager,
             \Mockery::spy(\Git_GitRepositoryUrlManager::class),
             $this->git_dao,
-            $git_mirror_dao,
             $this->git_plugin,
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
             \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
@@ -227,7 +219,6 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class),
             null,
             null,
-            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
         );
         $this->user_finder    = \Mockery::spy(XMLImportHelper::class);
 

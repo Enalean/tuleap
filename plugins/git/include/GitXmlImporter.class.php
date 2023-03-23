@@ -138,7 +138,7 @@ class GitXmlImporter
                 (string) $repository_info['bundle-path']
             );
         } else {
-            $this->repository_manager->create($repository, $this->gitolite_backend, [], BranchName::defaultBranchName());
+            $this->repository_manager->create($repository, $this->gitolite_backend, BranchName::defaultBranchName());
         }
         $this->importAllowArtifactClosure($repository, $repository_xmlnode);
         if ($this->hasLegacyPermissions($repository_xmlnode)) {

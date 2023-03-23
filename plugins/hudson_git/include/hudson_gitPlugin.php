@@ -239,7 +239,6 @@ class hudson_gitPlugin extends Plugin
         return new AdministrationController(
             ProjectManager::instance(),
             self::getGitPermissionsManager(),
-            $git_plugin->getMirrorDataMapper(),
             self::getJenkinsServerFactory(),
             new LogFactory(
                 new JobDao(),

@@ -31,10 +31,9 @@ final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
 {
     public function __construct(
         \Project $project,
-        bool $are_mirrors_defined,
         array $external_pane_presenters,
     ) {
-        parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
+        parent::__construct((int) $project->getID(), $external_pane_presenters);
     }
 
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

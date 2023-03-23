@@ -49,16 +49,6 @@ class GitRepositoryManager
     private $fine_grained_replicator;
 
     /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-
-    /**
-     * @var GitRepositoryMirrorUpdater
-     */
-    private $mirror_updater;
-
-    /**
      * @var GitRepositoryFactory
      */
     private $repository_factory;
@@ -95,8 +85,6 @@ class GitRepositoryManager
         Git_SystemEventManager $git_system_event_manager,
         GitDao $dao,
         $backup_directory,
-        GitRepositoryMirrorUpdater $mirror_updater,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
@@ -106,8 +94,6 @@ class GitRepositoryManager
         $this->git_system_event_manager = $git_system_event_manager;
         $this->dao                      = $dao;
         $this->backup_directory         = $backup_directory;
-        $this->mirror_updater           = $mirror_updater;
-        $this->mirror_data_mapper       = $mirror_data_mapper;
         $this->system_command           = new System_Command();
         $this->fine_grained_replicator  = $fine_grained_replicator;
         $this->history_dao              = $history_dao;
@@ -149,19 +135,13 @@ class GitRepositoryManager
     }
 
     /**
-     * @param array                $mirror_ids
-     *
      * @throws GitDaoException
      * @throws GitRepositoryAlreadyExistsException
      * @throws GitRepositoryNameIsInvalidException
      */
-    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids, BranchName $default_branch): void
+    public function create(GitRepository $repository, GitRepositoryCreator $creator, BranchName $default_branch): void
     {
         $this->initRepository($repository, $creator);
-
-        if ($mirror_ids) {
-            $this->mirror_updater->updateRepositoryMirrors($repository, $mirror_ids);
-        }
 
         $this->git_system_event_manager->queueRepositoryUpdate($repository, $default_branch);
     }
@@ -281,30 +261,6 @@ class GitRepositoryManager
             $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
         } else {
             throw new Exception(dgettext('tuleap-git', 'No repository has been forked.'));
-        }
-
-        $this->mirrorForkedRepository($clone, $repository);
-    }
-
-    private function mirrorForkedRepository(
-        GitRepository $forked_repository,
-        GitRepository $base_repository,
-    ) {
-        $base_repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($base_repository);
-
-        $project_destination               = $forked_repository->getProject();
-        $allowed_mirrors_forked_repository = $this->mirror_data_mapper->fetchAllForProject($project_destination);
-
-        $repository_mirrors_ids = [];
-        foreach ($base_repository_mirrors as $mirror) {
-            if (in_array($mirror, $allowed_mirrors_forked_repository)) {
-                $repository_mirrors_ids[] = $mirror->id;
-            }
-        }
-
-        if ($repository_mirrors_ids) {
-            $this->mirror_updater->updateRepositoryMirrors($forked_repository, $repository_mirrors_ids);
-            $this->git_system_event_manager->queueRepositoryUpdate($forked_repository);
         }
     }
 

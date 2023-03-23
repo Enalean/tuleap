@@ -22,7 +22,6 @@ namespace Tuleap\Git\Hook;
 
 use Git_Ci_Launcher;
 use Git_Exec;
-use Git_SystemEventManager;
 use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
@@ -45,7 +44,6 @@ class PostReceive
         private \UserManager $user_manager,
         private Git_Ci_Launcher $ci_launcher,
         private ParseLog $parse_log,
-        private Git_SystemEventManager $system_event_manager,
         private \EventManager $event_manager,
         private WebhookRequestSender $webhook_request_sender,
         private PostReceiveMailSender $mail_sender,
@@ -59,8 +57,6 @@ class PostReceive
     {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
-            $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
-
             $this->default_branch_post_receive_updater->updateDefaultBranchWhenNeeded(
                 Git_Exec::buildFromRepository($repository)
             );

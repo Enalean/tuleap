@@ -40,22 +40,6 @@ class GitPluginPostSystemEvents extends \Tuleap\Test\PHPUnit\TestCase
         $this->plugin->shouldReceive('getLogger')->andReturns(\Mockery::spy(\TruncateLevel\Psr\Log\LoggerInterface::class));
     }
 
-    public function testItProcessGrokmirrorManifestUpdateInPostSystemEventsActions(): void
-    {
-        $this->gitolite_driver->shouldReceive('commit')
-            ->once();
-
-        $this->gitolite_driver->shouldReceive('push')
-            ->once();
-
-        $params = [
-            'executed_events_ids' => [125],
-            'queue_name' => 'git',
-        ];
-
-        $this->plugin->post_system_events_actions($params);
-    }
-
     public function testItDoesNotProcessPostSystemEventsActionsIfNotGitRelated(): void
     {
         $this->gitolite_driver->shouldReceive('commit')

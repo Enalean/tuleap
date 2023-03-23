@@ -52,7 +52,6 @@ class GitViews_RepoManagement
         private Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         private array $gerrit_servers,
         private array $gerrit_config_templates,
-        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GerritCanMigrateChecker $gerrit_can_migrate_checker,
         private FineGrainedPermissionFactory $fine_grained_permission_factory,
         private FineGrainedRetriever $fine_grained_retriever,
@@ -105,12 +104,6 @@ class GitViews_RepoManagement
             $this->regexp_retriever
         ));
         $collection->add(new CIBuilds($repository, $this->request));
-
-        $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
-        if (count($mirrors) > 0) {
-            $repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
-            $collection->add(new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors));
-        }
 
         $webhook_dao                  = new WebhookDao();
         $webhook_factory              = new WebhookFactory($webhook_dao);

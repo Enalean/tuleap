@@ -29,8 +29,6 @@ use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Gitolite_SSHKeyDumper;
 use Git_GitoliteDriver;
 use Git_GitRepositoryUrlManager;
-use Git_Mirror_MirrorDao;
-use Git_Mirror_MirrorDataMapper;
 use Git_SystemEventManager;
 use GitDao;
 use GitPlugin;
@@ -63,9 +61,6 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Git_SystemEventManager */
     protected $git_system_event_manager;
-
-    /** @var Git_Mirror_MirrorDataMapper */
-    protected $mirror_data_mapper;
 
     /** @var \Psr\Log\LoggerInterface&MockInterface */
     protected $logger;
@@ -130,12 +125,7 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $this->mirror_data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
-        $this->mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([]);
-        $this->mirror_data_mapper->shouldReceive('fetchAll')->andReturns([]);
-
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $this->mirror_data_mapper,
             \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
@@ -149,10 +139,8 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->driver = new Git_GitoliteDriver(
             $this->logger,
-            $this->git_system_event_manager,
             $this->url_manager,
             \Mockery::spy(GitDao::class),
-            \Mockery::spy(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
             \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
@@ -161,7 +149,6 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
             $this->gitolite_permissions_serializer,
             null,
             null,
-            $this->mirror_data_mapper,
         );
     }
 

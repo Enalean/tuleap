@@ -54,9 +54,6 @@ $git_repository_factory = new GitRepositoryFactory(
     $git_dao,
     ProjectManager::instance()
 );
-$system_event_manager   = new Git_SystemEventManager(
-    SystemEventManager::instance(),
-);
 
 $git_plugin                 = PluginManager::instance()->getPluginByName('git');
 $logger                     = $git_plugin->getLogger();
@@ -111,7 +108,6 @@ $post_receive = new PostReceive(
         ),
         $logger
     ),
-    $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
         new \Tuleap\Webhook\Emitter(

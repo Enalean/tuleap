@@ -38,9 +38,6 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
     /** @var UgroupsToNotifyDao */
     private $ugroups_to_notify_dao;
 
@@ -50,14 +47,12 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         \Psr\Log\LoggerInterface $logger,
-        Git_SystemEventManager $system_event_manager,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UsersToNotifyDao $users_to_notify_dao,
         EventManager $event_manager,
     ) {
         $this->repository_factory    = $repository_factory;
         $this->logger                = $logger;
-        $this->system_event_manager  = $system_event_manager;
         $this->ugroups_to_notify_dao = $ugroups_to_notify_dao;
         $this->users_to_notify_dao   = $users_to_notify_dao;
         $this->event_manager         = $event_manager;
@@ -104,7 +99,6 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
             $this->logger->debug("Deleting repository " . $path);
             $this->users_to_notify_dao->deleteByRepositoryId($repository->getId());
             $this->ugroups_to_notify_dao->deleteByRepositoryId($repository->getId());
-            $this->system_event_manager->queueGrokMirrorManifestRepoDelete($path);
             $this->event_manager->processEvent(new GitRepositoryDeletionEvent($repository));
             $repository->delete();
         } catch (Exception $e) {

@@ -20,16 +20,12 @@
 
 namespace Tuleap\Git\Repository;
 
-use DefaultProjectMirrorDao;
 use EventManager;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_Driver_Gerrit_UserAccountManager;
-use Git_Gitolite_GitoliteRCReader;
 use Git_GitRepositoryUrlManager;
-use Git_Mirror_MirrorDao;
-use Git_Mirror_MirrorDataMapper;
 use Git_PermissionsDao;
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_GerritServerFactory;
@@ -44,7 +40,6 @@ use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -55,7 +50,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use URLVerification;
-use UserManager;
 
 class GitRepositoryHeaderDisplayerBuilder
 {
@@ -150,7 +144,6 @@ class GitRepositoryHeaderDisplayerBuilder
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory()->getServers(),
-            $this->getMirrorDataMapper(),
             $selected_tab,
             EventManager::instance(),
             new DefaultCloneURLSelector(),
@@ -188,21 +181,5 @@ class GitRepositoryHeaderDisplayerBuilder
     private function getCoreAssets(): IncludeAssets
     {
         return new \Tuleap\Layout\IncludeCoreAssets();
-    }
-
-    private function getMirrorDataMapper()
-    {
-        return new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            ),
-            ProjectManager::instance(),
-            $this->getGitSystemEventManager(),
-            new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
-            new DefaultProjectMirrorDao()
-        );
     }
 }

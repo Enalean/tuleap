@@ -7,7 +7,6 @@ project_admin_utils	default_git_perms_granted_for_project	Default git permission
 project_admin_utils	git_repo_create	Git repository creation
 project_admin_utils	git_repo_delete	Git repository deletion
 project_admin_utils	git_repo_update	Git repository update
-project_admin_utils	git_repo_mirroring_update	Git repository mirroring update
 project_admin_utils	git_repo_to_gerrit	Git repository to gerrit
 project_admin_utils	git_create_template	Gerrit template created
 project_admin_utils	git_delete_template	Gerrit template deleted

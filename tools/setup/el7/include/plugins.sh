@@ -144,16 +144,6 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! $(${tuleapcfg} systemctl is-enabled tuleap-process-system-events-grokmirror.timer); then
-        ${tuleapcfg} systemctl enable "tuleap-process-system-events-grokmirror.timer"
-        plugin_git_configured="true"
-    fi
-
-    if ! $(${tuleapcfg} systemctl is-active tuleap-process-system-events-grokmirror.timer); then
-        ${tuleapcfg} systemctl start "tuleap-process-system-events-grokmirror.timer"
-        plugin_git_configured="true"
-    fi
-
     if [ ${plugin_git_configured} = "true" ]; then
         _infoMessage "Plugin Git is configured"
         plugins_configured+=('true')
