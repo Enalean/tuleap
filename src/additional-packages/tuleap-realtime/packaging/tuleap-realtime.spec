@@ -43,9 +43,7 @@ getent passwd tuleaprt >/dev/null || \
 exit 0
 
 %post
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl enable %{name}.service &>/dev/null || :
-fi
+/usr/bin/systemctl enable %{name}.service &>/dev/null || :
 
 %preun
 if [ $1 = 0 ]; then
