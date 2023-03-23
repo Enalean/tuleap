@@ -1082,7 +1082,6 @@ var Enumerable = (function() {
     reject:     reject,
     sortBy:     sortBy,
     toArray:    toArray,
-    entries:    toArray,
     size:       size,
     inspect:    inspect,
     find:       detect
@@ -1346,8 +1345,6 @@ function $w(string) {
 
 
   Object.extend(arrayProto, Enumerable);
-
-  arrayProto.entries = Array.prototype.entries;
 
   if (!arrayProto._reverse)
     arrayProto._reverse = arrayProto.reverse;
