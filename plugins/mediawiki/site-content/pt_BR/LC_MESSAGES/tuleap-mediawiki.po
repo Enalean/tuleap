@@ -51,6 +51,11 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+msgid ""
+"Legacy Mediawiki service is not active in this project. You are being "
+"redirected to the new MediaWiki service."
+msgstr ""
+
 msgid "List of migrated projects"
 msgstr ""
 
