@@ -27,6 +27,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\CLI\AssertRunner;
+use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PluginUpdateHookCommandTest extends TestCase

@@ -126,7 +126,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\Plugin\ListeningToEventClass;
-use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -187,43 +187,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         ];
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(OAuth2ScopeBuilderCollector::NAME);
-        $this->addHook(CLICommandsCollector::NAME);
-        $this->addHook(PluginExecuteUpdateHookEvent::NAME);
-        $this->addHook(WorkerEvent::NAME);
-        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
-        $this->addHook('project_admin_remove_user', 'projectUserMemberRemoved');
-        $this->addHook(Event::SITE_ACCESS_CHANGE);
-        $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(Event::PROJECT_RENAME);
-        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
-        $this->addHook(Event::USER_MANAGER_UPDATE_DB);
-        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
-        $this->addHook(GetHistoryKeyLabel::NAME);
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
-        $this->addHook(ExportXmlProject::NAME);
-        $this->addHook(Event::IMPORT_XML_PROJECT);
-        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
-        $this->addHook(ForgeUserGroupDeletedEvent::NAME);
-        $this->addHook(PermissionDelegationsAddedToForgeUserGroupEvent::NAME);
-        $this->addHook(PermissionDelegationsRemovedForForgeUserGroupEvent::NAME);
-        $this->addHook(UserAddedToForgeUserGroupEvent::NAME);
-        $this->addHook(UsersRemovedFromForgeUserGroupEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[ListeningToEventClass]
     public function forgeUserGroupDeletedEvent(ForgeUserGroupDeletedEvent $event): void
     {
         $this->logsForgeUserGroupMembersOutOfAllProjects($event->getUserGroup());
     }
 
+    #[ListeningToEventClass]
     public function permissionDelegationsAddedToForgeUserGroupEvent(PermissionDelegationsAddedToForgeUserGroupEvent $event): void
     {
         foreach ($event->getPermissions() as $permission) {
@@ -234,6 +204,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
     }
 
+    #[ListeningToEventClass]
     public function permissionDelegationsRemovedForForgeUserGroupEvent(PermissionDelegationsRemovedForForgeUserGroupEvent $event): void
     {
         foreach ($event->getPermissions() as $permission) {
@@ -255,6 +226,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
     }
 
+    #[ListeningToEventClass]
     public function userAddedToForgeUserGroupEvent(UserAddedToForgeUserGroupEvent $event): void
     {
         (new EnqueueTask())->enqueue(
@@ -262,6 +234,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[ListeningToEventClass]
     public function usersRemovedFromForgeUserGroupEvent(UsersRemovedFromForgeUserGroupEvent $event): void
     {
         $enqueue_task = new EnqueueTask();
@@ -272,11 +245,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION)]
     public function getPermissionDelegation(array $params): void
     {
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
+    #[ListeningToEventClass]
     public function exportXmlProject(ExportXmlProject $event): void
     {
         if (! $this->isAllowed($event->getProject()->getID())) {
@@ -299,9 +274,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
-    /**
-     * @see Event::IMPORT_XML_PROJECT
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::IMPORT_XML_PROJECT)]
     public function importXmlProject(array $params): void
     {
         $importer = new XMLMediaWikiImporter(
@@ -313,6 +286,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $importer->import($params['project'], $params['xml_content']);
     }
 
+    #[ListeningToEventClass]
     public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
     {
         $label = ProjectPermissionsSaver::getLabelFromKey($event->getKey());
@@ -321,6 +295,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
     public function fillProjectHistorySubEvents(array $params): void
     {
         ProjectPermissionsSaver::fillProjectHistorySubEvents($params);
@@ -360,6 +335,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         (new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode()))->handle(
@@ -390,9 +366,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     /**
      * @param array{project_id: int} $params
-     *
-     * @see Event::PROJECT_ACCESS_CHANGE
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::PROJECT_ACCESS_CHANGE)]
     public function projectAccessChange(array $params): void
     {
         $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
@@ -408,7 +383,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     /**
      * @param array{group_id: int|string, user_id: int|string} $params
      */
-    public function projectUserMemberRemoved(array $params): void
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_remove_user')]
+    public function projectAdminRemoveUser(array $params): void
     {
         $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAProjectFromItsID(
             (int) $params['group_id'],
@@ -422,10 +398,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see Event::USER_MANAGER_UPDATE_DB
-     *
      * @psalm-param array{old_user: PFUser, new_user: PFUser} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::USER_MANAGER_UPDATE_DB)]
     public function userManagerUpdateDb(array $params): void
     {
         $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects(
@@ -437,9 +412,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     /**
      * @param array{old_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED, new_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED} $params
-     *
-     * @see Event::SITE_ACCESS_CHANGE
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SITE_ACCESS_CHANGE)]
     public function siteAccessChange(array $params): void
     {
         (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
@@ -450,11 +424,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ->updatePermissionsFollowingSiteAccessChange($params['old_value']);
     }
 
+    #[ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         (new ProjectStatusHandler(new EnqueueTask()))->handle($event->project, $event->status);
     }
 
+    #[ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
         $logger = $this->getBackendLogger();
@@ -482,10 +458,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see         Event::PROJECT_RENAME
-     *
      * @psalm-param array{group_id: string|int, new_name: string} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::PROJECT_RENAME)]
     public function projectRename(array $params): void
     {
         (new ProjectRenameHandler(
@@ -495,10 +470,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see         Event::REST_RESOURCES
-     *
      * @psalm-param array{restler: \Luracast\Restler\Restler} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new MediawikiStandaloneResourcesInjector();
@@ -506,15 +480,15 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
-     *
      * @psalm-param array{allowed_services: string[]} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED)]
     public function getServicesAllowedForRestricted(array &$params): void
     {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
 
+    #[ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $route_collector = $event->getRouteCollector();
@@ -735,6 +709,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         ];
     }
 
+    #[ListeningToEventClass]
     public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
     {
         $collector->addOAuth2ScopeBuilder(
@@ -744,6 +719,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $collector): void
     {
         $collector->addCommand(
@@ -754,6 +730,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[ListeningToEventClass]
     public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
     {
         $logger = new BrokerLogger(
@@ -812,6 +789,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         return ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName();
     }
 
+    #[ListeningToEventClass]
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
         NavigationDropdownQuickLinksCollector $quick_links_collector,
     ): void {
@@ -833,6 +811,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
     }
 
+    #[ListeningToEventClass]
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
     {
         $project = $event->getProject();

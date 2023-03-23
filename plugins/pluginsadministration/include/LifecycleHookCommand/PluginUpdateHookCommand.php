@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\AssertRunner;
 use Tuleap\CLI\ConsoleLogger;
+use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 
 final class PluginUpdateHookCommand extends Command
 {
