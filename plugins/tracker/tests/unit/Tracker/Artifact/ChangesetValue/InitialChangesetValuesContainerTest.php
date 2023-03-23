@@ -70,7 +70,10 @@ final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\Tes
         self::assertSame(
             [
                 'new_values' => '41,91',
-                'types' => [41 => 'custom_type'],
+                'types' => [
+                    41 => 'custom_type',
+                    91 => \Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
+                ],
             ],
             $new_fields_data[self::ARTIFACT_LINK_FIELD_ID]
         );

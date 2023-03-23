@@ -32,7 +32,7 @@ interface ReverseLink
 {
     public function getSourceArtifactId(): int;
 
-    public function getType(): ?string;
+    public function getType(): string;
 
     public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks;
 }

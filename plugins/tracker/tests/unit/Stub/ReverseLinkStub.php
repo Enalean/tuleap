@@ -31,13 +31,13 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
  */
 final class ReverseLinkStub implements ReverseLink
 {
-    private function __construct(private int $id, private ?string $type)
+    private function __construct(private int $id, private string $type)
     {
     }
 
     public static function withNoType(int $id): self
     {
-        return new self($id, null);
+        return new self($id, \Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
     }
 
     public static function withType(int $id, string $type): self
@@ -50,7 +50,7 @@ final class ReverseLinkStub implements ReverseLink
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }

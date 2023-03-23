@@ -53,14 +53,20 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsNewValuesWithoutType(): void
     {
+        $first_artifact_id     = 48;
+        $second_artifact_id    = 53;
         $this->submitted_links = new CollectionOfForwardLinks([
-            ForwardLinkStub::withNoType(48),
-            ForwardLinkStub::withNoType(53),
+            ForwardLinkStub::withNoType($first_artifact_id),
+            ForwardLinkStub::withNoType($second_artifact_id),
         ]);
         $fields_data           = $this->format();
         self::assertArrayHasKey('new_values', $fields_data);
         self::assertSame('48,53', $fields_data['new_values']);
-        self::assertCount(0, $fields_data['types']);
+        self::assertCount(2, $fields_data['types']);
+        self::assertArrayHasKey($first_artifact_id, $fields_data['types']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$first_artifact_id]);
+        self::assertArrayHasKey($second_artifact_id, $fields_data['types']);
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $fields_data['types'][$second_artifact_id]);
     }
 
     public function testItFormatsNewValuesWithType(): void

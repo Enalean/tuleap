@@ -32,7 +32,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
  */
 final class StoredReverseLink implements ReverseLink
 {
-    private function __construct(private int $id, private ?string $type)
+    private function __construct(private int $id, private string $type)
     {
     }
 
@@ -42,7 +42,7 @@ final class StoredReverseLink implements ReverseLink
         if (! $artifact || ! $artifact->userCanView($user)) {
             return null;
         }
-        return new self($artifact->getId(), $row->getType());
+        return new self($artifact->getId(), $row->getType() ?? \Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
     }
 
     public function getSourceArtifactId(): int
@@ -50,13 +50,13 @@ final class StoredReverseLink implements ReverseLink
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }
 
     public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks
     {
-        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type ?? '')]);
+        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type)]);
     }
 }

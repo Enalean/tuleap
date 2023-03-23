@@ -30,7 +30,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
  */
 final class StoredForwardLink implements ForwardLink
 {
-    private function __construct(private int $id, private ?string $type)
+    private function __construct(private int $id, private string $type)
     {
     }
 
@@ -43,7 +43,7 @@ final class StoredForwardLink implements ForwardLink
         if (! $artifact || ! $artifact->userCanView($user)) {
             return null;
         }
-        return new self($artifact->getId(), $row['nature']);
+        return new self($artifact->getId(), $row['nature'] ?? \Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
     }
 
     public function getTargetArtifactId(): int
@@ -51,7 +51,7 @@ final class StoredForwardLink implements ForwardLink
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getType(): string
     {
         return $this->type;
     }

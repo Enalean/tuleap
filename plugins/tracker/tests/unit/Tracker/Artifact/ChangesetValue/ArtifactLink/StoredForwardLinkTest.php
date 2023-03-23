@@ -61,13 +61,13 @@ final class StoredForwardLinkTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::TYPE, $link->getType());
     }
 
-    public function testItBuildsWithNullType(): void
+    public function testItDefaultsNullTypeToNoType(): void
     {
         $this->row['nature'] = null;
         $link                = $this->build();
         self::assertNotNull($link);
         self::assertSame(self::ARTIFACT_ID, $link->getTargetArtifactId());
-        self::assertNull($link->getType());
+        self::assertSame(\Tracker_FormElement_Field_ArtifactLink::NO_TYPE, $link->getType());
     }
 
     public function testItReturnsNullWhenArtifactCannotBeRetrieved(): void
