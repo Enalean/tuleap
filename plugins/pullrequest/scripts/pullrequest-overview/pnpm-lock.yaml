@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/copy-to-clipboard': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
   '@tuleap/fault': workspace:*
@@ -25,6 +26,7 @@ specifiers:
   vue3-gettext: ^2.2.1
 
 dependencies:
+  '@tuleap/copy-to-clipboard': link:../../../../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../../../../lib/frontend/date-helper
   '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
