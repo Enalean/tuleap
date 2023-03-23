@@ -36,6 +36,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimerStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetrieverStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiServiceStub;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
@@ -85,6 +86,7 @@ final class InstanceManagementTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project_120, $project_130),
             $this->central_database_parameter_generator,
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([]),
+            new MediawikiFlavorUsageStub(),
             OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),

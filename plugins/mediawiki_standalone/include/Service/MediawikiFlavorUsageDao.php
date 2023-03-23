@@ -29,7 +29,15 @@ final class MediawikiFlavorUsageDao extends DataAccessObject implements Mediawik
 {
     public function wasLegacyMediawikiUsed(\Project $project): bool
     {
-        return $this->getDB()->cell('SELECT 1 FROM plugin_mediawiki_database WHERE project_id = ?', $project->getID()) === 1;
+        return $this->getDB()->exists(
+            'SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?',
+            'plugin_mediawiki_database',
+            \ForgeConfig::get('sys_dbname')
+        ) &&
+               $this->getDB()->exists(
+                   'SELECT 1 FROM plugin_mediawiki_database WHERE project_id = ?',
+                   $project->getID()
+               );
     }
 
     public function wasStandaloneMediawikiUsed(\Project $project): bool

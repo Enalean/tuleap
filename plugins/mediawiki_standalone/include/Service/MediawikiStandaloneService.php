@@ -85,9 +85,9 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
 
     public function getUrl(?string $url = null): string
     {
-        $dao = new OngoingInitializationsDao();
+        $dao = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());
 
-        return match ($dao->getStatus((int) $this->project->getID())) {
+        return match ($dao->getStatus($this->project)) {
             OngoingInitializationStatus::InError, OngoingInitializationStatus::Ongoing => '/mediawiki_standalone/under-construction/' . urlencode($this->project->getUnixNameMixedCase()),
             OngoingInitializationStatus::None => self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase(),
         };
