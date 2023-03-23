@@ -36,6 +36,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
@@ -103,7 +104,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
                     function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
-                        $source_artifact_link_to_be_removed = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
+                        $source_artifact_link_to_be_removed = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
                         $new_changeset_value = NewArtifactLinkChangesetValue::fromRemovedValues(
                             $artifact_link_field->getId(),
@@ -141,7 +142,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
                     function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
-                        $source_artifact_link_to_be_added = $reverse_link->convertIntoForwardLinkCollection($current_artifact);
+                        $source_artifact_link_to_be_added = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
                         $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
                             $artifact_link_field->getId(),

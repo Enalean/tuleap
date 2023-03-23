@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 /**
@@ -53,10 +51,5 @@ final class StoredReverseLink implements ReverseLink
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks
-    {
-        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type)]);
     }
 }
