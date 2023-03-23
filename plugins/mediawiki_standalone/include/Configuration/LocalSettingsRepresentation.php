@@ -32,7 +32,7 @@ use Tuleap\Cryptography\ConcealedString;
 /**
  * @psalm-immutable
  */
-#[ConfigKeyCategory('Mediawiki')]
+#[ConfigKeyCategory('MediaWiki')]
 final class LocalSettingsRepresentation
 {
     #[ConfigKey('Shared database that centralize all MediaWiki tables')]

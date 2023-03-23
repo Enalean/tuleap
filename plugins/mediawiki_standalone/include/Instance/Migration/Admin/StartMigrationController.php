@@ -26,6 +26,9 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstanceTask;
@@ -36,9 +39,14 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
+#[ConfigKeyCategory('MediaWiki')]
 final class StartMigrationController extends DispatchablePSR15Compatible
 {
     public const URL = '/mediawiki_standalone/admin/migrations';
+
+    #[FeatureFlagConfigKey('Enable migration to MediaWiki standalone')]
+    #[ConfigKeyInt(0)]
+    public const FEATURE_FLAG = 'enable_migration_to_mediawiki_standalone';
 
     public function __construct(
         private readonly CSRFSynchronizerTokenProvider $token_provider,
@@ -55,6 +63,10 @@ final class StartMigrationController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        if (! self::isEnabled()) {
+            throw new NotFoundException();
+        }
+
         $this->token_provider->getCSRF()->check();
 
         $body = $request->getParsedBody();
@@ -109,5 +121,10 @@ final class StartMigrationController extends DispatchablePSR15Compatible
                 ),
             ),
         );
+    }
+
+    public static function isEnabled(): bool
+    {
+        return (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG) === 1;
     }
 }
