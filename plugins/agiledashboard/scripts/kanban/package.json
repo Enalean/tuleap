@@ -5,6 +5,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@tuleap/angular-async": "workspace:*",
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:*",

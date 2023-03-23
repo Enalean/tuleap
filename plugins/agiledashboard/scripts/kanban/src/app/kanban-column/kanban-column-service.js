@@ -25,6 +25,7 @@ function KanbanColumnService(
         filterItems,
         moveItem,
         findItemAndReorderItems,
+        findItemAndReorderItemMercure,
     });
 
     function moveItem(item, source_column, destination_column, compared_to) {
@@ -79,6 +80,24 @@ function KanbanColumnService(
                 self.filterItems(destination_column);
             }
         });
+    }
+
+    function findItemAndReorderItemMercure(
+        id,
+        source_column,
+        destination_column,
+        ordered_destination_column_item_ids
+    ) {
+        const item = findItemInColumnById(id, source_column);
+        if (!item) {
+            return;
+        }
+        item.updating = false;
+        self.moveItem(item, source_column, destination_column, null);
+        reorderItemsByItemsIds(ordered_destination_column_item_ids, destination_column);
+        if (destination_column.is_open) {
+            self.filterItems(destination_column);
+        }
     }
 
     function findItemInColumnById(item_id, column) {
