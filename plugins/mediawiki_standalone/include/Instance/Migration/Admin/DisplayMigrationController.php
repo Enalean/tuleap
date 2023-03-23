@@ -48,6 +48,10 @@ final class DisplayMigrationController implements DispatchableWithRequest, Dispa
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (! StartMigrationController::isEnabled()) {
+            throw new NotFoundException();
+        }
+
         $current_user = $request->getCurrentUser();
         if (! $current_user->isSuperUser()) {
             throw new NotFoundException();

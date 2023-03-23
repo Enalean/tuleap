@@ -36,7 +36,7 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 use Tuleap\Http\HttpClientFactory;
 
-#[ConfigKeyCategory('Mediawiki')]
+#[ConfigKeyCategory('MediaWiki')]
 final class MediawikiHTTPClientFactory implements MediawikiClientFactory
 {
     private const TIMEOUT = 30;
