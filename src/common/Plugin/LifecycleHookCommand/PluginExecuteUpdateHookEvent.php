@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PluginsAdministration\LifecycleHookCommand;
+namespace Tuleap\Plugin\LifecycleHookCommand;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Event\Dispatchable;

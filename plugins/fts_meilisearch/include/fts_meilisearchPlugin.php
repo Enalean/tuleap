@@ -35,7 +35,7 @@ use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSetti
 use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchSaveAdminSettingsController;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
 use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
-use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
