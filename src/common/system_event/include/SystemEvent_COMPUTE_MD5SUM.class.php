@@ -120,7 +120,7 @@ If you consider that the upload has been well done, you can modify the value in 
      */
     public function computeFRSMd5Sum($filePath)
     {
-        return PHP_BigFile::getMd5Sum($filePath);
+        return hash_file('md5', $filePath);
     }
 
     /**

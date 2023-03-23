@@ -69,7 +69,7 @@ class Docman_FileStorage
     public function getFileMD5sum($path)
     {
         if (is_file($path)) {
-            return PHP_BigFile::getMd5Sum($path);
+            return hash_file('md5', $path);
         } else {
             return false;
         }

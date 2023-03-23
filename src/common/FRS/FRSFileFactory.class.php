@@ -319,13 +319,13 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         }
 
         if (0 != ($extraFlags & self::COMPUTE_MD5)) {
-            $file->setComputedMd5(PHP_BigFile::getMd5Sum($filePath));
+            $file->setComputedMd5(hash_file('md5', $filePath));
             if (! $this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())) {
                 throw new FRSFileMD5SumException($file);
             }
         }
 
-        $file->setFileSize(PHP_BigFile::getSize($filePath));
+        $file->setFileSize(filesize($filePath));
         $file->setStatus('A');
 
         $now = time();
