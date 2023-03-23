@@ -23,36 +23,37 @@ describe("Kanban for the Agile Dashboard service", () => {
     before(function () {
         cy.projectAdministratorSession();
         cy.createNewPublicProject(`kanban-${now}`, "kanban").then((project_id) => {
+            const TITLE_FIELD_NAME = "title";
             cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
                 cy.createArtifact({
                     tracker_id: tracker_id,
                     artifact_title: "first title",
                     artifact_status: "To be done",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
                     tracker_id: tracker_id,
                     artifact_title: "second title",
                     artifact_status: "To be done",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
                     tracker_id: tracker_id,
                     artifact_title: "third title",
                     artifact_status: "To be done",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
                     tracker_id: tracker_id,
                     artifact_title: "in progress",
                     artifact_status: "In progress",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
                 cy.createArtifact({
                     tracker_id: tracker_id,
                     artifact_title: "also progress",
                     artifact_status: "In progress",
-                    title_field_name: "title",
+                    title_field_name: TITLE_FIELD_NAME,
                 });
             });
         });

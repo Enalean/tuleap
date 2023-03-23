@@ -5,6 +5,9 @@
   "private": true,
   "main": "dist/index.js",
   "types": "src/commands-type-definitions.d.ts",
+  "dependencies": {
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:*"
+  },
   "scripts": {
     "build": "rm -rf dist/ && tsc"
   }
