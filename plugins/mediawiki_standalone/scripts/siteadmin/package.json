@@ -11,7 +11,8 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
-    "@tuleap/filter-inline-table": "workspace:*"
+    "@tuleap/filter-inline-table": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

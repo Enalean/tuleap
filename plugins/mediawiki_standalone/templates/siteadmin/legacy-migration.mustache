@@ -5,10 +5,7 @@
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">Projects with MediaWiki to migrate</h1>
         </div>
-        <form action="" method="POST" class="tlp-pane-section">
-            {{# token }}
-                {{> csrf_token_input }}
-            {{/ token }}
+        <section class="tlp-pane-section">
             <p>
                 {{# dgettext }}
                     tuleap-mediawiki_standalone |
@@ -77,11 +74,87 @@
                                     {{/ is_allowed }}
                                 </td>
                                 <td class="tlp-table-cell-actions">
+                                    {{# can_perform_migration }}
+                                        <form action=""
+                                            method="POST"
+                                            id="start-migration-confirmation-modal-{{ id }}"
+                                            class="tlp-modal tlp-modal-danger"
+                                            role="dialog"
+                                            aria-labelledby="start-migration-confirmation-modal-{{ id }}-title"
+                                        >
+                                            <div class="tlp-modal-header">
+                                                <h1 class="tlp-modal-title" id="start-migration-confirmation-modal-{{ id }}-title">
+                                                    {{# dgettext }} tuleap-mediawiki_standalone | Start migration {{/ dgettext}}
+                                                </h1>
+                                                <button class="tlp-modal-close"
+                                                    type="button"
+                                                    data-dismiss="modal"
+                                                    aria-label="{{# gettext }} Close {{/ gettext }}"
+                                                >
+                                                    <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <div class="tlp-modal-body">
+                                                {{# token }}
+                                                    {{> csrf_token_input }}
+                                                {{/ token }}
+                                                <p>
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        You are about to migrate from legacy MediaWiki for project %s. |
+                                                        {{ icon }} {{ project_name }}
+                                                    {{/ dgettext }}
+                                                </p>
+                                                <p>
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        This action will disable the old service and enable the new one.
+                                                    {{/ dgettext }}
+
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        Existing pages and attachments will be migrated.
+                                                    {{/ dgettext }}
+                                                </p>
+                                                <p>
+                                                    <strong>
+                                                        {{# dgettext }}
+                                                            tuleap-mediawiki_standalone |
+                                                            Warning:
+                                                        {{/ dgettext }}
+                                                    </strong>
+
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        During the process – which may take some time depending on the size of the project – users won't be able to access MediaWiki.
+                                                    {{/ dgettext }}
+                                                </p>
+                                                <p>
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        Please confirm your action.
+                                                    {{/ dgettext }}
+                                                </p>
+                                            </div>
+                                            <div class="tlp-modal-footer">
+                                                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }} Cancel {{/ gettext }}</button>
+                                                <button type="submit"
+                                                    class="tlp-button-danger tlp-modal-action"
+                                                    name="project"
+                                                    value="{{ id }}"
+                                                >
+                                                    {{# dgettext }}
+                                                        tuleap-mediawiki_standalone |
+                                                        Start the migration
+                                                    {{/ dgettext }}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    {{/ can_perform_migration }}
                                     <button
-                                        type="submit"
-                                        name="project"
-                                        value="{{ id }}"
-                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                        type="button"
+                                        data-target-modal-id="start-migration-confirmation-modal-{{ id }}"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline {{# can_perform_migration }}start-migration-confirmation-button{{/ can_perform_migration }}"
                                         {{^ can_perform_migration }}disabled{{/ can_perform_migration }}
                                     >
                                         <i class="tlp-button-icon fa-solid fa-circle-play" aria-hidden="true"></i>
@@ -98,6 +171,6 @@
                     {{/ projects }}
                 </tbody>
             </table>
-        </form>
+        </section>
     </div>
 </section>

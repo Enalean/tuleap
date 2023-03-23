@@ -18,10 +18,12 @@
  */
 
 import { filterInlineTable } from "@tuleap/filter-inline-table";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
     const filter = document.getElementById("projects-to-migrate-filter");
     if (filter instanceof HTMLInputElement) {
         filterInlineTable(filter);
     }
+    openAllTargetModalsOnClick(document, ".start-migration-confirmation-button");
 });
