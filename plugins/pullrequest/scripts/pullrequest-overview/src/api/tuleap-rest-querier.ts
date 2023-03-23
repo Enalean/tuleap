@@ -18,7 +18,12 @@
  */
 
 import { getJSON, getAllJSON, uri, patchJSON } from "@tuleap/fetch-result";
-import type { PullRequest, User, TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    PullRequest,
+    User,
+    TimelineItem,
+    Reviewer,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 
@@ -55,4 +60,8 @@ export const patchTitle = (
     return patchJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`, {
         title: updated_title,
     });
+};
+
+export const fetchReviewersInfo = (pull_request_id: number): ResultAsync<Reviewer, Fault> => {
+    return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/reviewers`);
 };

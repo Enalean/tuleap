@@ -24,11 +24,13 @@ import * as fetch_result from "@tuleap/fetch-result";
 import type {
     ActionOnPullRequestEvent,
     GlobalComment,
+    User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { EVENT_TYPE_MERGE } from "@tuleap/plugin-pullrequest-constants";
 import {
     fetchPullRequestInfo,
     fetchPullRequestTimelineItems,
+    fetchReviewersInfo,
     fetchUserInfo,
     patchTitle,
 } from "./tuleap-rest-querier";
@@ -122,6 +124,25 @@ describe("tuleap-rest-querier", () => {
                     title: "new title",
                 }
             );
+        });
+    });
+
+    describe("fetchReviewersInfo()", () => {
+        it("Given a pullrequest id, then it should fetch its info", async () => {
+            const pull_request_id = 102;
+            const reviewers = [{ id: 101 } as User, { id: 102 } as User];
+
+            vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(reviewers));
+            const result = await fetchReviewersInfo(pull_request_id);
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/reviewers`
+            );
+            expect(result.value).toStrictEqual(reviewers);
         });
     });
 });

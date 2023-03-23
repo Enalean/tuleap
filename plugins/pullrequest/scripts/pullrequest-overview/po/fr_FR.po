@@ -69,6 +69,9 @@ msgstr "A mis à jour la pull request."
 msgid "Last CI status"
 msgstr "Statut intégration continue"
 
+msgid "Nobody is reviewing the pull request"
+msgstr "Personne ne revoit la pull request"
+
 msgid "OK"
 msgstr "OK"
 
@@ -86,6 +89,9 @@ msgstr "Date de la pull request"
 
 msgid "References"
 msgstr "Références"
+
+msgid "Reviewers"
+msgstr "Relecteurs"
 
 msgid "SSH"
 msgstr "SSH"
