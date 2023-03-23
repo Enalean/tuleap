@@ -22,7 +22,11 @@
         <label class="tlp-label">
             {{ $gettext("References") }}
         </label>
-        <p v-if="props.pull_request_info" data-test="pullrequest-source-reference">
+        <p
+            v-if="props.pull_request_info"
+            class="pullrequest-source-reference"
+            data-test="pullrequest-source-reference"
+        >
             {{ props.pull_request_info.reference_src }}
         </p>
         <property-skeleton v-if="!props.pull_request_info" />
@@ -32,7 +36,10 @@
             data-test="pull-request-source-destination"
         >
             {{ props.pull_request_info.branch_src }}
-            <i class="fa-solid fa-long-arrow-alt-right" aria-hidden="true"></i>
+            <i
+                class="fa-solid fa-fw fa-long-arrow-alt-right pull-request-source-destination-icon"
+                aria-hidden="true"
+            ></i>
             {{ props.pull_request_info.branch_dest }}
         </span>
         <property-skeleton v-if="!props.pull_request_info" />
@@ -50,3 +57,12 @@ const props = defineProps<{
     pull_request_info: PullRequest | null;
 }>();
 </script>
+<style lang="scss">
+.pullrequest-source-reference {
+    font-family: var(--tlp-font-family-mono);
+}
+
+.pull-request-source-destination-icon {
+    font-size: 0.8em;
+}
+</style>

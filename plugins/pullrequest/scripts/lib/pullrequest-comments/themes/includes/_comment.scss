@@ -124,6 +124,7 @@ $thread-border-width: 2px;
 }
 
 .pull-request-comment-text {
+    margin: 0;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     font-size: 0.875rem;
     line-height: 1.375rem;

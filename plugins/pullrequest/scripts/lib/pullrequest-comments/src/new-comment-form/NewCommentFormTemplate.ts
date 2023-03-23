@@ -101,8 +101,8 @@ export const getNewCommentFormContent = (
                     gettext_provider
                 )}
                 <div class="pull-request-comment-footer" data-test="pull-request-comment-footer">
-                    ${getSubmitButton(host, gettext_provider)}
                     ${getCancelButton(host, gettext_provider)}
+                    ${getSubmitButton(host, gettext_provider)}
                 </div>
             </div>
         </div>
