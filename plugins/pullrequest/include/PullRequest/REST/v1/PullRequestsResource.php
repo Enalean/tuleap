@@ -850,7 +850,7 @@ class PullRequestsResource extends AuthenticatedResource
      * <br/>
      * -- OR --
      * <br/>
-     * Update title and description of pull request.
+     * Update title and/or description of pull request.
      *
      * <br/>
      *
@@ -928,7 +928,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->patchInfo(
                 $user,
                 $pull_request,
-                $repository_src->getProjectId(),
+                (int) $repository_src->getProjectId(),
                 $body
             );
         }
@@ -996,23 +996,32 @@ class PullRequestsResource extends AuthenticatedResource
     private function patchInfo(
         PFUser $user,
         PullRequest $pull_request,
-        $project_id,
-        $body,
+        int $project_id,
+        PullRequestPATCHRepresentation $body,
     ) {
         $this->checkUserCanMerge($pull_request, $user);
 
-        $trimmed_title = trim($body->title);
-        if (empty($trimmed_title)) {
+        if ($body->title !== null && trim($body->title) === "") {
             throw new RestException(400, 'Title cannot be empty');
         }
 
-        $this->pull_request_factory->updateTitleAndDescription(
-            $user,
-            $pull_request,
-            $project_id,
-            $body->title,
-            $body->description
-        );
+        if ($body->title !== null) {
+            $this->pull_request_factory->updateTitle(
+                $user,
+                $pull_request,
+                $project_id,
+                $body->title
+            );
+        }
+
+        if ($body->description) {
+            $this->pull_request_factory->updateDescription(
+                $user,
+                $pull_request,
+                $project_id,
+                $body->description
+            );
+        }
     }
 
     /**

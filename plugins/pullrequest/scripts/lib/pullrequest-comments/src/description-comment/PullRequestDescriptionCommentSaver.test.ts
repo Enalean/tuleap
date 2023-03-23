@@ -36,7 +36,6 @@ describe("PullRequestDescriptionCommentSaver", () => {
 
         const current_description = {
             pull_request_id: 15,
-            pull_request_raw_title: "Fix some stuff",
             raw_content: "This commit fixes bug #456",
             content: `This commit fixes <a class="cross-reference">bug #456</a>`,
         } as PullRequestDescriptionCommentPresenter;
@@ -46,7 +45,6 @@ describe("PullRequestDescriptionCommentSaver", () => {
         );
 
         expect(patchSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/${pull_request_id}`, {
-            title: current_description.pull_request_raw_title,
             description: current_description.raw_content,
         });
     });

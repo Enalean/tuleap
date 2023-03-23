@@ -25,7 +25,6 @@ describe("PullRequestDescriptionCommentPresenter", () => {
     it(`fromPullRequestWithUpdatedDescription() should return a clone of the given presenter with only description and raw_description updated`, () => {
         const old_description_presenter: PullRequestDescriptionCommentPresenter = {
             pull_request_id: 15,
-            pull_request_raw_title: "Fix some stuff",
             post_date: "2023-03-16T11:45:00Z",
             author: {
                 id: 102,

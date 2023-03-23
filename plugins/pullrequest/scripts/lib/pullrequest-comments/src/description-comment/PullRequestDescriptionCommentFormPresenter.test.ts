@@ -29,7 +29,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
     beforeEach(() => {
         description = {
             pull_request_id: 15,
-            pull_request_raw_title: "Fix some stuff",
             raw_content: `This commit fixes bug #123`,
             content: `This commit fixes <a class="cross-reference">bug #123</a>`,
         } as PullRequestDescriptionCommentPresenter;
@@ -43,7 +42,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(description)
         ).toStrictEqual({
             pull_request_id: description.pull_request_id,
-            pull_request_raw_title: description.pull_request_raw_title,
             description_content: description.raw_content,
             is_being_submitted: false,
             writing_zone_state: {
@@ -61,7 +59,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             )
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
-            pull_request_raw_title: current_presenter.pull_request_raw_title,
             description_content: "This commit fixes bug #456",
             is_being_submitted: false,
             writing_zone_state: {
@@ -89,7 +86,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             PullRequestDescriptionCommentFormPresenter.buildSubmitted(current_presenter)
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
-            pull_request_raw_title: current_presenter.pull_request_raw_title,
             description_content: current_presenter.description_content,
             is_being_submitted: true,
             writing_zone_state: {
@@ -107,7 +103,6 @@ describe("PullRequestDescriptionCommentFormPresenter", () => {
             PullRequestDescriptionCommentFormPresenter.buildNotSubmitted(submitted_presenter)
         ).toStrictEqual({
             pull_request_id: current_presenter.pull_request_id,
-            pull_request_raw_title: current_presenter.pull_request_raw_title,
             description_content: current_presenter.description_content,
             is_being_submitted: false,
             writing_zone_state: {
