@@ -32,6 +32,16 @@ msgstr ""
 "que le projet utilise bien l'ancien service MediaWiki et que la migration "
 "n'a pas été démarrée entre temps."
 
+msgid ""
+"During the process – which may take some time depending on the size of the "
+"project – users won't be able to access MediaWiki."
+msgstr ""
+"Pendant la migration – qui peut prendre du temps selon la taille du projet – "
+"les utilisateurs ne pourront pas accéder à MediaWiki."
+
+msgid "Existing pages and attachments will be migrated."
+msgstr "Les pages et les attachements existants seront migrés."
+
 msgid "Global MediaWiki Administrator"
 msgstr "Administrateur d'instances de MediaWiki"
 
@@ -118,6 +128,9 @@ msgstr "Merci de revenir plus tard"
 msgid "Please come back later."
 msgstr "Veuillez revenir plus tard."
 
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
+
 msgid "Project"
 msgstr "Projet"
 
@@ -141,6 +154,9 @@ msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr "Intégration avec Tuleap d'instances autonome de MediaWiki"
 
 msgid "Start migration"
+msgstr "Démarrer la migration"
+
+msgid "Start the migration"
 msgstr "Démarrer la migration"
 
 msgid "Status"
@@ -190,6 +206,9 @@ msgstr ""
 msgid "There isn't any projects to migrate"
 msgstr "Il n'y a pas de projets à migrer"
 
+msgid "This action will disable the old service and enable the new one."
+msgstr "Cette action va désactiver l'ancien service et activer le nouveau."
+
 msgid ""
 "This permission grants MediaWiki administration rights for each MediaWiki of "
 "every project"
@@ -211,6 +230,12 @@ msgstr "Groupes d'utilisateurs qui peuvent lire"
 
 msgid "User groups who can write"
 msgstr "Groupes d'utilisateurs qui peuvent écrire"
+
+msgid "Warning:"
+msgstr "Attention :"
+
+msgid "You are about to migrate from legacy MediaWiki for project %s."
+msgstr "Vous êtes sur le point de migrer l'ancien MediaWiki du projet %s."
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

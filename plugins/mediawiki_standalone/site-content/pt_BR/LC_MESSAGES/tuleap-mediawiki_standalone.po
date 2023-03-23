@@ -23,6 +23,14 @@ msgid ""
 "legacy MediaWiki service and migration is not already started."
 msgstr ""
 
+msgid ""
+"During the process – which may take some time depending on the size of the "
+"project – users won't be able to access MediaWiki."
+msgstr ""
+
+msgid "Existing pages and attachments will be migrated."
+msgstr ""
+
 msgid "Global MediaWiki Administrator"
 msgstr ""
 
@@ -107,6 +115,9 @@ msgstr ""
 msgid "Please come back later."
 msgstr ""
 
+msgid "Please confirm your action."
+msgstr ""
+
 msgid "Project"
 msgstr ""
 
@@ -129,6 +140,9 @@ msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr ""
 
 msgid "Start migration"
+msgstr ""
+
+msgid "Start the migration"
 msgstr ""
 
 msgid "Status"
@@ -168,6 +182,9 @@ msgstr ""
 msgid "There isn't any projects to migrate"
 msgstr ""
 
+msgid "This action will disable the old service and enable the new one."
+msgstr ""
+
 msgid ""
 "This permission grants MediaWiki administration rights for each MediaWiki of "
 "every project"
@@ -186,6 +203,12 @@ msgid "User groups who can read"
 msgstr ""
 
 msgid "User groups who can write"
+msgstr ""
+
+msgid "Warning:"
+msgstr ""
+
+msgid "You are about to migrate from legacy MediaWiki for project %s."
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
