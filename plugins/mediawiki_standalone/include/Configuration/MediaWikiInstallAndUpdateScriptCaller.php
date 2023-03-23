@@ -68,7 +68,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
         $this->logger->debug('Updating MediaWiki standalone project instances');
         $ongoing_processes = [];
         $failures          = [];
-        foreach ($this->project_mediawiki_service_dao->searchAllProjectsWithMediaWikiStandaloneServiceEnabled() as ['project_name' => $project_name]) {
+        foreach ($this->project_mediawiki_service_dao->searchAllProjectsWithMediaWikiStandaloneServiceReady() as ['project_name' => $project_name]) {
             $this->logger->debug('Starting update of MediaWiki project instance of project ' . $project_name);
             $ongoing_processes[] = $this->management_command_factory->buildUpdateProjectInstanceCommand($project_name);
             if (count($ongoing_processes) >= self::MAX_ONGOING_PROCESSES) {

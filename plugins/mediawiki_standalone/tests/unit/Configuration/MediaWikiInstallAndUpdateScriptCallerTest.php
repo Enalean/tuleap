@@ -119,7 +119,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
     {
         $command_factory = new MediaWikiManagementCommandFactoryStub($install_command, $update_farm_command, $update_instance_commands);
         $dao             = $this->createStub(ProjectMediaWikiServiceDAO::class);
-        $dao->method('searchAllProjectsWithMediaWikiStandaloneServiceEnabled')->willReturn(
+        $dao->method('searchAllProjectsWithMediaWikiStandaloneServiceReady')->willReturn(
             array_fill(0, count($update_instance_commands), ['project_name' => 'some_project_name'])
         );
         return new MediaWikiInstallAndUpdateScriptCaller(
