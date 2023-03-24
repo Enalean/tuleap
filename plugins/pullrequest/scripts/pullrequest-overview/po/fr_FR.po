@@ -75,6 +75,9 @@ msgstr "Statut intégration continue"
 msgid "Merge"
 msgstr "Intégrer"
 
+msgid "Merge anyway"
+msgstr "Intégrer quand même"
+
 msgid ""
 "Merge commits are forbidden in the repository configuration (fast-forward "
 "only). Please rebase the commit and update the pull request."
@@ -85,6 +88,9 @@ msgstr ""
 
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
+
+msgid "Non fast-forward merge"
+msgstr "Intégration sans avance rapide"
 
 msgid "OK"
 msgstr "OK"
@@ -97,6 +103,16 @@ msgstr "Résumé"
 
 msgid "Pending since"
 msgstr "En cours depuis"
+
+msgid "Please be aware of the following warning before you decide to merge:"
+msgid_plural ""
+"Please be aware of these %{ nb_warnings } warnings before you decide to "
+"merge:"
+msgstr[0] ""
+"Veuillez prendre connaissance de l'avertissement suivant avant de poursuivre:"
+msgstr[1] ""
+"Veuillez prendre connaissance des %{ nb_warnings } avertissements suivants "
+"avant de poursuivre:"
 
 msgid ""
 "Pull request can not be merged automatically due to conflicts with "
@@ -113,6 +129,15 @@ msgid ""
 msgstr ""
 "La pull request ne peut pas être intégrée car les branches source et "
 "destination ont exactement le même contenu."
+
+msgid ""
+"Pull request destination has diverged. Merge will not resolve in a fast-"
+"forward. You can proceed with the merge, or cancel and update your pull "
+"request"
+msgstr ""
+"La destination de la pull request a divergé. L’intégration ne se fera pas en "
+"avance rapide. Vous pouvez continuer l’intégration, ou annuler et mettre à "
+"jour la pull request."
 
 msgid ""
 "Pull request mergeability with destination is not determined. You can merge "
@@ -142,8 +167,23 @@ msgstr "Succès"
 msgid "Success on"
 msgstr "Succès le"
 
+msgid "The last CI status is"
+msgstr "Le dernier statut de l'intégration continue est"
+
 msgid "Title"
 msgstr "Titre"
 
 msgid "Unknown"
 msgstr "Inconnu"
+
+msgid "Warning"
+msgstr "Avertissement"
+
+msgid "fail"
+msgstr "échec"
+
+msgid "pending"
+msgstr "en cours"
+
+msgid "unknown"
+msgstr "inconnu"

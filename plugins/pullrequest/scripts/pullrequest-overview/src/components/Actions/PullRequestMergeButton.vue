@@ -18,29 +18,36 @@
   -->
 
 <template>
-    <button
-        v-if="is_button_displayed"
-        type="button"
-        class="tlp-button-success"
-        v-bind:class="{
-            'tlp-button-outline': is_button_outlined,
-        }"
-        data-test="merge-button"
-        v-bind:disabled="is_merge_button_disabled"
-        v-on:click="processMerge()"
-    >
-        <i
-            v-if="!is_merge_in_progress"
-            class="fa-solid fa-check tlp-button-icon"
-            aria-hidden="true"
-        ></i>
-        <i
-            v-if="is_merge_in_progress"
-            class="fa-solid fa-circle-notch fa-spin tlp-button-icon"
-            aria-hidden="true"
-        ></i>
-        {{ $gettext("Merge") }}
-    </button>
+    <div class="pull-request-merge-button-container" v-if="is_button_displayed">
+        <button
+            type="button"
+            class="tlp-button-success pull-request-merge-button"
+            v-bind:class="{
+                'tlp-button-outline': is_merge_confirmation_required,
+            }"
+            data-test="merge-button"
+            v-bind:disabled="is_merge_button_disabled"
+            v-on:click="merge()"
+        >
+            <i
+                v-if="!is_merge_in_progress"
+                class="fa-solid fa-check tlp-button-icon"
+                aria-hidden="true"
+            ></i>
+            <i
+                v-if="is_merge_in_progress"
+                class="fa-solid fa-circle-notch fa-spin tlp-button-icon"
+                aria-hidden="true"
+            ></i>
+            {{ $gettext("Merge") }}
+        </button>
+        <pull-request-merge-warning-modal
+            v-if="show_confirmation_modal"
+            v-bind:pull_request="props.pull_request"
+            v-bind:merge_callback="processMerge"
+            v-bind:cancel_callback="cancelMerge"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +61,7 @@ import {
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
+import PullRequestMergeWarningModal from "../Modals/PullRequestMergeWarningModal.vue";
 import { mergePullRequest } from "../../api/tuleap-rest-querier";
 import {
     hasUserPermissionToMerge,
@@ -76,6 +84,7 @@ const props = defineProps<{
 
 const { $gettext } = useGettext();
 const is_merge_in_progress = ref(false);
+const show_confirmation_modal = ref(false);
 
 const is_merge_button_disabled = computed(
     () =>
@@ -87,15 +96,12 @@ const is_button_displayed = computed(
     () => !isAlreadyMerged(props.pull_request) && hasUserPermissionToMerge(props.pull_request)
 );
 
-const is_button_outlined = computed(
+const is_merge_confirmation_required = computed(
     () => !(isFastForwardMerge(props.pull_request) && isCIHappy(props.pull_request))
 );
 
-const processMerge = (): void => {
-    if (!canPullRequestBeMerged(props.pull_request, are_merge_commits_allowed_in_repository)) {
-        return;
-    }
-
+const processMerge = () => {
+    show_confirmation_modal.value = false;
     is_merge_in_progress.value = true;
 
     mergePullRequest(pull_request_id)
@@ -104,4 +110,31 @@ const processMerge = (): void => {
             is_merge_in_progress.value = false;
         });
 };
+
+const cancelMerge = (): void => {
+    show_confirmation_modal.value = false;
+};
+
+const merge = (): void => {
+    if (!canPullRequestBeMerged(props.pull_request, are_merge_commits_allowed_in_repository)) {
+        return;
+    }
+
+    if (is_merge_confirmation_required.value === true) {
+        show_confirmation_modal.value = true;
+        return;
+    }
+
+    processMerge();
+};
 </script>
+
+<style lang="scss">
+.pull-request-merge-button-container {
+    display: flex;
+}
+
+.pull-request-merge-button {
+    flex: 1;
+}
+</style>
