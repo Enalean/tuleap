@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Access control"
 msgstr "Permissions"
@@ -60,6 +60,13 @@ msgstr "Id"
 
 msgid "Language"
 msgstr "Langue"
+
+msgid ""
+"Legacy Mediawiki service is not active in this project. You are being "
+"redirected to the new MediaWiki service."
+msgstr ""
+"L'ancien service MediaWiki  n'est pas actif dans le projet. Vous allez être "
+"redirigé vers le nouveau service MediaWiki."
 
 msgid "List of migrated projects"
 msgstr "Liste des projets migrés"

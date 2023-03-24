@@ -93,6 +93,19 @@ class MediawikiStandaloneService extends \Service implements ServiceForCreation
         };
     }
 
+    /**
+     * @psalm-param non-empty-string $pagename
+     */
+    public function getPageUrl(string $pagename): string
+    {
+        $dao = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());
+
+        return match ($dao->getStatus($this->project)) {
+            OngoingInitializationStatus::InError, OngoingInitializationStatus::Ongoing => '/mediawiki_standalone/under-construction/' . urlencode($this->project->getUnixNameMixedCase()),
+            OngoingInitializationStatus::None => self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase() . '/' . urlencode($pagename),
+        };
+    }
+
     public function urlCanChange(): bool
     {
         return false;

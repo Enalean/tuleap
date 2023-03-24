@@ -109,6 +109,11 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     $service = $group->getService(MediaWikiPlugin::SERVICE_SHORTNAME);
     if (! $service) {
+        (new \Tuleap\Mediawiki\Migration\ToStandaloneMediawikiRedirector())->tryRedirection(
+            $group,
+            HTTPRequest::instance(),
+            $GLOBALS['Response']
+        );
         http_response_code(404);
         exit_error(dgettext('tuleap-mediawiki', 'Mediawiki service is not active in this project'));
     }
