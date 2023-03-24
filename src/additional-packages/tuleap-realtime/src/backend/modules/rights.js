@@ -171,7 +171,7 @@ module.exports = function () {
      */
     function hasUserRightsExist(u_group, user_rights) {
         return _.some(user_rights, function(right) {
-            return _.contains(u_group, right);
+            return _.includes(u_group, right);
         });
     }
 };
