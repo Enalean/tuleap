@@ -69,15 +69,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(PluginExecuteUpdateHookEvent::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
     {
         (new GenerateServerMasterKey(new LocalMeilisearchServer(), $event->logger))->generateMasterKey();
@@ -127,6 +119,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         return $factory->buildHandler();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
         $route_collector = $routes->getRouteCollector();
@@ -169,6 +162,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $key_local_meilisearch_server = (new LocalMeilisearchServer())->getCurrentKey();

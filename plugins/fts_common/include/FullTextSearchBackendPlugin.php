@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchCommon;
 
-use Collection;
 use Event;
 use EventManager;
 use Plugin;
@@ -47,19 +46,6 @@ use Tuleap\Search\ItemToIndexBatchQueue;
 
 abstract class FullTextSearchBackendPlugin extends Plugin
 {
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(FindIndexSearcher::NAME);
-        $this->addHook(ItemToIndex::NAME);
-        $this->addHook(IndexedItemsToRemove::NAME);
-        $this->addHook(WorkerEvent::NAME);
-        $this->addHook(CLICommandsCollector::NAME);
-        $this->addHook(ProjectStatusUpdate::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getInstallRequirements(): array
     {
         return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
@@ -71,20 +57,20 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         (EventManager::instance())->dispatch(new IdentifyAllItemsToIndexEvent());
     }
 
-    /**
-     * @see REST_RESOURCES
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function findIndexSearcher(FindIndexSearcher $find_index_searcher): void
     {
         $find_index_searcher->searcher = new SearchIndexedItemMetricCollector($this->getIndexSearcher(), Prometheus::instance());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function indexItem(ItemToIndex $item): void
     {
         (new \Tuleap\Queue\EnqueueTask())->enqueue(
@@ -92,6 +78,7 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function removeIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
         (new \Tuleap\Queue\EnqueueTask())->enqueue(
@@ -99,11 +86,13 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
         (new IndexingWorkerEventDispatcher($this->getItemInserterWithMetricCollector(), $this->getItemRemover()))->process($event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $collector): void
     {
         $collector->addCommand(
@@ -123,6 +112,7 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status !== \Project::STATUS_DELETED) {
