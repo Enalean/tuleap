@@ -22,34 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GlobalParameterDao;
 
 class ManagementDetector
 {
-    /**
-     * @var VersionDetector
-     */
-    private $version_detector;
-    /**
-     * @var GlobalParameterDao
-     */
-    private $global_parameter_dao;
-
     public function __construct(
-        VersionDetector $version_detector,
-        GlobalParameterDao $global_parameter_dao,
+        private readonly GlobalParameterDao $global_parameter_dao,
     ) {
-        $this->version_detector     = $version_detector;
-        $this->global_parameter_dao = $global_parameter_dao;
     }
 
     public function isAuthorizedKeysFileManagedByTuleap(): bool
     {
-        if (! $this->version_detector->isGitolite3()) {
-            return false;
-        }
-
         return $this->global_parameter_dao->isAuthorizedKeysFileManagedByTuleap();
     }
 }

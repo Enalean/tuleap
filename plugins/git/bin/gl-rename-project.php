@@ -42,7 +42,6 @@ $driver      = new Git_GitoliteDriver(
         new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
         ProjectManager::instance()
     ),
-    new \Tuleap\Git\Gitolite\VersionDetector(),
     null,
     null,
     null,

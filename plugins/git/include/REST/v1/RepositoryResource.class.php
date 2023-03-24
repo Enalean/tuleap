@@ -68,7 +68,6 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
@@ -289,7 +288,6 @@ class RepositoryResource extends AuthenticatedResource
                         new BigObjectAuthorizationDao(),
                         ProjectManager::instance()
                     ),
-                    new VersionDetector(),
                     null,
                     null,
                     null,

@@ -20,7 +20,6 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\JavascriptAssetGeneric;
 
 class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -52,10 +51,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     private $big_object_authorization_manager;
 
     private JavascriptAssetGeneric $asset;
-    /**
-     * @var VersionDetector
-     */
-    private $version_detector;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -64,7 +59,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         AdminPageRenderer $admin_page_renderer,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         JavascriptAssetGeneric $asset,
-        VersionDetector $version_detector,
     ) {
         $this->csrf                             = $csrf;
         $this->project_manager                  = $project_manager;
@@ -72,7 +66,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $this->admin_page_renderer              = $admin_page_renderer;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->asset                            = $asset;
-        $this->version_detector                 = $version_detector;
     }
 
     public function process(Codendi_Request $request)
@@ -195,7 +188,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
             $title,
             $this->csrf,
             $this->big_object_authorization_manager->getAuthorizedProjects(),
-            $this->version_detector->isGitolite3()
         );
 
         $this->admin_page_renderer->renderANoFramedPresenter(

@@ -18,17 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_CommandGitolite3 extends Git_HTTP_CommandGitolite
+class Git_HTTP_CommandGitolite3 extends Git_HTTP_Command
 {
     public function __construct(PFO_User $user, Git_HTTP_Command $command)
     {
-        parent::__construct($user, $command);
+        parent::__construct();
 
-        $this->env['GITOLITE_HTTP_HOME'] = $this->gitolite_home;
+        $gitolite_user_info = posix_getpwnam('gitolite');
+        $gitolite_home      = $gitolite_user_info['dir'];
+
+        $this->env['SHELL']            = '/bin/sh';
+        $this->env['REMOTE_USER']      = $user->getUserName();
+        $this->env['GIT_HTTP_BACKEND'] = $command->getCommand();
+        $this->env['HOME']             = $gitolite_home;
+        $this->env['REMOTE_ADDR']      = HTTPRequest::instance()->getIPAddress();
+        $this->env['TERM']             = 'linux';
+        $this->appendToEnv('REQUEST_URI');
+        $this->env['REMOTE_PORT'] = empty($_SERVER['REMOTE_PORT']) ? 'UNKNOWN' : $_SERVER['REMOTE_PORT'];
+        $this->appendToEnv('SERVER_ADDR');
+        $this->appendToEnv('SERVER_PORT');
+
+        $this->env['GITOLITE_HTTP_HOME'] = $gitolite_home;
     }
 
-    public function getCommand()
+    public function getCommand(): string
     {
-        return $this->sudo('/usr/share/gitolite3/gitolite-shell');
+        return 'sudo -E -u gitolite /usr/share/gitolite3/gitolite-shell';
     }
 }

@@ -18,17 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
  */
 
-use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_Gitolite_GitoliteRCReader
 {
     public const OLD_GITOLITE_RC_PATH = "/usr/com/gitolite/.gitolite.rc";
     public const NEW_GITOLITE_RC_PATH = "/var/lib/gitolite/.gitolite.rc";
-
-    public function __construct(VersionDetector $version_detector)
-    {
-        $this->version_detector = $version_detector;
-    }
 
     private function getGitoliteRCPath()
     {
@@ -56,10 +50,6 @@ class Git_Gitolite_GitoliteRCReader
 
     public function getHostname()
     {
-        if (! $this->version_detector->isGitolite3()) {
-            return;
-        }
-
         return $this->extractHostnameFromRCFile();
     }
 }

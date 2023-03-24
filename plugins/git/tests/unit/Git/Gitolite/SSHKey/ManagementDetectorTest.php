@@ -26,37 +26,22 @@ final class ManagementDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItCanNotManageAuthorizedKeysFileIfGitolite3IsNotUsed(): void
-    {
-        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
-        $version_detector->shouldReceive('isGitolite3')->andReturns(false);
-        $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
-
-        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao);
-
-        $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
-    }
-
     public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
-        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
         $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
 
-        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao);
+        $management_detector = new ManagementDetector($global_parameter_dao);
 
         $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
     public function testItIsAbleToDetectThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
-        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
         $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(true);
 
-        $management_detector = new ManagementDetector($version_detector, $global_parameter_dao);
+        $management_detector = new ManagementDetector($global_parameter_dao);
 
         $this->assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }

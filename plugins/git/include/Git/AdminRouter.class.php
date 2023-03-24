@@ -23,7 +23,6 @@ use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\GerritServerResourceRestrictor;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
@@ -82,11 +81,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
     private IncludeViteAssets $include_assets;
 
-    /**
-     * @var VersionDetector
-     */
-    private $version_detector;
-
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken $csrf,
@@ -100,7 +94,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         Restrictor $gerrit_restrictor,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         IncludeViteAssets $include_assets,
-        VersionDetector $version_detector,
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;
@@ -114,7 +107,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->gerrit_restrictor                = $gerrit_restrictor;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->include_assets                   = $include_assets;
-        $this->version_detector                 = $version_detector;
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
@@ -153,7 +145,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->admin_page_renderer,
                 $this->big_object_authorization_manager,
                 new JavascriptViteAsset($this->include_assets, 'src/gitolite.ts'),
-                $this->version_detector
             );
         } else {
             return new GeneralSettingsController(

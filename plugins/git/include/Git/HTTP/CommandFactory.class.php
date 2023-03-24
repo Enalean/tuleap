@@ -18,25 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Gitolite\VersionDetector;
-
 class Git_HTTP_CommandFactory
 {
-    /**
-     * @var VersionDetector
-     */
-    private $detector;
-
-    public function __construct(VersionDetector $detector)
-    {
-        $this->detector = $detector;
-    }
-
     public function getCommandForUser(Git_URL $url, ?PFO_User $user = null)
     {
         $command = $this->getGitHttpBackendCommand();
         if ($user !== null) {
-            $command = $this->getGitoliteCommand($user, $command);
+            $command = new Git_HTTP_CommandGitolite3($user, $command);
         }
         $command->setPathInfo($url->getPathInfo());
         $command->setQueryString($url->getQueryString());
@@ -49,18 +37,6 @@ class Git_HTTP_CommandFactory
             return new \Tuleap\Git\HTTP\CommandGitTuleapHttpBackend();
         }
 
-        if (Git_Exec::isGit218Installed()) {
-            return new \Tuleap\Git\HTTP\CommandSCL218GitHttpBackend();
-        }
-
         throw new RuntimeException('Cannot find a Git HTTP backend command');
-    }
-
-    private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command)
-    {
-        if ($this->detector->isGitolite3()) {
-            return new Git_HTTP_CommandGitolite3($user, $command);
-        }
-        return new Git_HTTP_CommandGitolite($user, $command);
     }
 }

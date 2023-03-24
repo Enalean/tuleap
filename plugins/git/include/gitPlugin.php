@@ -70,7 +70,6 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitProjectRenamer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
@@ -892,7 +891,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 __DIR__ . '/../scripts/siteadmin/frontend-assets/',
                 '/assets/git/siteadmin'
             ),
-            new VersionDetector()
         );
     }
 
@@ -1156,7 +1154,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->getGitDao(),
             $this,
             $this->getBigObjectAuthorizationManager(),
-            new VersionDetector(),
             null,
             null,
             null,
@@ -2025,7 +2022,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     private function getManagementDetector()
     {
         return new ManagementDetector(
-            new VersionDetector(),
             new GlobalParameterDao()
         );
     }
@@ -2285,16 +2281,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function codendi_daily_start()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $detector = new VersionDetector();
-        if ($detector->isGitolite3()) {
-            SystemEventManager::instance()->createEvent(
-                ParseGitolite3Logs::NAME,
-                null,
-                SystemEvent::PRIORITY_LOW,
-                SystemEvent::OWNER_ROOT,
-                '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs'
-            );
-        }
+        SystemEventManager::instance()->createEvent(
+            ParseGitolite3Logs::NAME,
+            null,
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_ROOT,
+            \Tuleap\Git\SystemEvents\ParseGitolite3Logs::class
+        );
 
         $this->getRepositoryManager()->purgeArchivedRepositories($this->getLogger());
     }

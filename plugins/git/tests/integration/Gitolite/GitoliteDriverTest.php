@@ -89,7 +89,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->another_gitolite_permissions_serializer,
             $this->url_manager,
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
 
         $this->gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
@@ -107,7 +106,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             \Mockery::mock(GitDao::class),
             \Mockery::mock(GitPlugin::class),
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             $this->git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
@@ -123,7 +121,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
             \Mockery::mock(GitDao::class),
             \Mockery::mock(GitPlugin::class),
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             $this->another_git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
