@@ -1,8 +1,10 @@
 # JS unit test runner
 
 * Status: accepted
-* Deciders: Thomas Gerbet, Joris Masson
+* Deciders: Thomas GERBET, Joris MASSON
 * Date: 2022-07-06
+
+Technical Story: [request #27548 Introduce Vitest as the new default JS test runner][3]
 
 ## Context and Problem Statement
 
@@ -70,3 +72,4 @@ supported by someone in the community for Jetbrains IDEs but [no native support]
 [EXISTING_JEST_CONFIG_ESM_WORKAROUND]: https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=dd97b0182d5b1b1130f1537f964e062618db3936&h=f6004aa9f8395b23a1b92bacdf7b1879950a51c5&f=lib%2Ffrontend%2Fbuild-system-configurator%2Fsrc%2Fjest%2Fbase-config.ts#L110
 [OPENJS_JEST]: https://openjsf.org/blog/2022/05/11/openjs-foundation-welcomes-jest/
 [VITEST_JETBRAINS_FEATURE_REQUEST]: https://youtrack.jetbrains.com/issue/WEB-54437/Support-Vitest-as-a-test-framework
+[3]: https://tuleap.net/plugins/tracker/?aid=27548

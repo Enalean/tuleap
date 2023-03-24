@@ -2,7 +2,7 @@
 
 This log lists the architectural decisions for `@tuleap/plugin-tracker`.
 
-<!-- adrlog -- Regenerate the content by using `nix-shell -p nodePackages.npm --run 'npm exec --package=adr-log -- adr-log -e template.md -i'` -->
+<!-- adrlog -- Regenerate the content by using `pnpm dlx adr-log -e template.md -i` -->
 
 * [ADR-0001](0001-implementation-of-markdown-preview.md) - Triple implementation of Markdown Preview
 

@@ -1,6 +1,7 @@
 # Triple implementation of Markdown Preview
 
 * Status: accepted
+* Deciders: Joris MASSON, Clarck ROBINSON
 * Date: 2021-03-29
 
 Technical Story: [story #18337][0] markdown replace text

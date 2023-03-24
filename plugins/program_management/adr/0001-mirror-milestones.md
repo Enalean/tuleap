@@ -1,6 +1,7 @@
 # Create Mirror Artifacts to filter what Teams can view
 
 * Status: accepted
+* Deciders: Joris MASSON, Manuel VACELET
 * Date: 2021-05-24
 
 Technical Story: [epic #16683 Program Management][0]

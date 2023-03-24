@@ -1,7 +1,7 @@
 # Repository organization of the Tuleap codebase
 
 * Status: accepted
-* Deciders: Manuel Vacelet, Thomas Gerbet, Nicolas Terray, Joris Masson
+* Deciders: Manuel VACELET, Thomas GERBET, Nicolas TERRAY, Joris MASSON
 * Date: 2023-02-01
 
 Technical Story: [request #30743: Merge external plugin repositories into the main repository](https://tuleap.net/plugins/tracker/?aid=30743)

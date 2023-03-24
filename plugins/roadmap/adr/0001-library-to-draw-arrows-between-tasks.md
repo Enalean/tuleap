@@ -1,6 +1,7 @@
 # Library to draw arrows between tasks
 
 * Status: Accepted
+* Deciders: Nicolas TERRAY
 * Date: 2021-03-29
 
 Technical story: [story #19734][1]: have a Roadmap widget on dashboard

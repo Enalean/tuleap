@@ -1,7 +1,7 @@
 # State of JS frameworks in the Tuleap codebase
 
 * Status: accepted
-* Deciders: Thomas Gerbet
+* Deciders: Thomas GERBET
 * Date: 2022-03-17
 
 ## Context and Problem Statement

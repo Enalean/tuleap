@@ -1,7 +1,7 @@
 # Caching of the build results of the JS toolchain
 
 * Status: accepted
-* Deciders: Thomas Gerbet
+* Deciders: Thomas GERBET
 * Date: 2022-04-01 (experimentation started on 2021-12-31)
 
 Technical Story: [request #24241](https://tuleap.net/plugins/tracker/?aid=24241)

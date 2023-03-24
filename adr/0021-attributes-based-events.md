@@ -4,7 +4,7 @@
 * Deciders: Thomas GERBET, Joris MASSON, Manuel VACELET
 * Date: 2023-03-03
 
-Technical Story: [request #31113 Simplify hook listening for plugins](https://tuleap.net/plugins/tracker/?tracker=140&aid=31113)
+Technical Story: [request #31113 Simplify hook listening for plugins](https://tuleap.net/plugins/tracker/?aid=31113)
 
 ## Context and Problem Statement
 

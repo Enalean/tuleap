@@ -1,7 +1,7 @@
 # Static factory method
 
 * Status: accepted
-* Deciders: Joris MASSON (@jmasson), Marie Ange GARNIER (@mgarnier)
+* Deciders: Joris MASSON, Marie Ange GARNIER
 * Date: 2021-10-12
 
 Technical Story: [epic #16683 Program Management][0]

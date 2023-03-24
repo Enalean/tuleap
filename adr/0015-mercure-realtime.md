@@ -1,7 +1,7 @@
 # Replacing NodeJs realtime server with Mercure
 
 * Status: accepted
-* Deciders: Florian Caillol, Yannis Rossetto, Manuel Vacelet, Thomas Gerbet
+* Deciders: Florian CAILLOL, Yannis ROSSETTO, Manuel VACELET, Thomas GERBET
 * Date: 29/07/2022
 
 Technical Story: [story #27884](https://tuleap.net/plugins/tracker/?aid=27884)

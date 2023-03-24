@@ -1,8 +1,10 @@
 # JS package manager
 
 * Status: accepted
-* Deciders: Thomas Gerbet, accepted by Joris Masson
+* Deciders: Thomas GERBET, Joris MASSON
 * Date: 2021-09-29
+
+Technical Story: [request #23396 Use pnpm to replace npm and Lerna](https://tuleap.net/plugins/tracker/?aid=23396)
 
 ## Context and Problem Statement
 

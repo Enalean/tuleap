@@ -2,7 +2,7 @@
 
 This log lists the architectural decisions for Roadmap plugin.
 
-<!-- adrlog -- Regenerate the content by using `nix-shell -p nodePackages.npm --run 'npm exec --package=adr-log -- adr-log -e template.md -i'` -->
+<!-- adrlog -- Regenerate the content by using `pnpm dlx adr-log -e template.md -i` -->
 
 * [ADR-0001](0001-library-to-draw-arrows-between-tasks.md) - Library to draw arrows between tasks
 
