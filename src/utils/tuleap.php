@@ -289,6 +289,11 @@ $CLI_command_collector->addCommand(
     static fn () => new \Tuleap\Queue\WorkerEnqueueCommand(),
 );
 
+$CLI_command_collector->addCommand(
+    \Tuleap\System\CollectSystemDataCommand::NAME,
+    static fn () => new \Tuleap\System\CollectSystemDataCommand(EventManager::instance()),
+);
+
 $event_manager->dispatch($CLI_command_collector);
 
 $application = new Application();
