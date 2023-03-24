@@ -219,12 +219,12 @@ class WebDAVUtils
 
     public function getIncomingFileSize($name)
     {
-        return PHP_BigFile::getSize(ForgeConfig::get('ftp_incoming_dir') . '/' . $name);
+        return filesize(ForgeConfig::get('ftp_incoming_dir') . '/' . $name);
     }
 
     public function getIncomingFileMd5Sum($file)
     {
-        return PHP_BigFile::getMd5Sum($file);
+        return hash_file('md5', $file);
     }
 
     public function getDocmanPermissionsManager(Project $project): Docman_PermissionsManager

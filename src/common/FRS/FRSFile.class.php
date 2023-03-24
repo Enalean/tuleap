@@ -484,8 +484,7 @@ class FRSFile
         if ($size == -1) {
             $size = $this->getFileSize();
         }
-        $path = PHP_BigFile::stream(realpath($this->getFileLocation()));
-        return file_get_contents($path, false, null, $offset, $size);
+        return file_get_contents(realpath($this->getFileLocation()), false, null, $offset, $size);
     }
 
     /**
