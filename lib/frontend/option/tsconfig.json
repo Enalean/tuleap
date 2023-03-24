@@ -1,0 +1,7 @@
+{
+    "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": ["es2019"]
+    },
+    "include": ["src/**/*"]
+}

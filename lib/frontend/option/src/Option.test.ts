@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { describe, expect, it, vi } from "vitest";
+import { Option } from "./Option";
+
+describe(`Option`, () => {
+    it.each([
+        ["Some", Option.fromValue(1), true, false],
+        ["None", Option.nothing(), false, true],
+    ])(
+        `reports correctly the type for %s`,
+        (_variant, option, expected_is_value, expected_is_nothing) => {
+            expect(option.isValue()).toBe(expected_is_value);
+            expect(option.isNothing()).toBe(expected_is_nothing);
+        }
+    );
+
+    describe(`Some`, () => {
+        it(`apply() calls the given function with the inner value`, () => {
+            const value = {};
+            let applied_value = null;
+
+            Option.fromValue(value).apply((received_value) => {
+                applied_value = received_value;
+            });
+
+            expect(applied_value).toBe(value);
+        });
+
+        it(`mapOr() calls the given function with the inner value and returns its result`, () => {
+            const value = "initial";
+            let map_value = null;
+
+            const mapped = Option.fromValue(value).mapOr((received_value) => {
+                map_value = received_value;
+                return "callback";
+            }, "default");
+
+            expect(mapped).toBe("callback");
+            expect(map_value).toBe(value);
+        });
+
+        it(`unwrapOr() returns the inner value`, () => {
+            const value = 486;
+            const unwrapped_value = Option.fromValue(value).unwrapOr(null);
+            expect(unwrapped_value).toBe(value);
+        });
+    });
+
+    describe(`None`, () => {
+        it(`apply() does nothing`, () => {
+            const callback = vi.fn();
+            Option.nothing<Record<string, never>>().apply(callback);
+            expect(callback).not.toHaveBeenCalled();
+        });
+
+        it(`mapOr() returns the given default value`, () => {
+            const callback = vi.fn();
+            const mapped = Option.nothing<string>().mapOr(callback, "default");
+
+            expect(mapped).toBe("default");
+            expect(callback).not.toHaveBeenCalled();
+        });
+
+        it(`unwrapOr() returns the given default value`, () => {
+            const unwrapped_value = Option.nothing<number>().unwrapOr(null);
+            expect(unwrapped_value).toBeNull();
+        });
+    });
+});
