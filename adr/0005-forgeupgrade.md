@@ -1,10 +1,10 @@
 # Database migrations with ForgeUpgrade
 
 * Status: accepted
-* Deciders: @vaceletm @tgerbet @nterray
+* Deciders: Manuel VACELET, Thomas GERBET, Nicolas TERRAY
 * Date: 2021-06-25
 
-Technical Story: request #21864 Import forgeupgrade into Tuleap
+Technical Story: [request #21864 Import forgeupgrade into Tuleap][0]
 
 ## Context and Problem Statement
 
@@ -59,3 +59,5 @@ It can be used without using Doctrine as ORM or DBAL and provide lot's of featur
 * Bad, there are a lot of features we don't want (downgrade, other DB supports, etc)
 * Bad, we need to develop our own wrapper to hide and restrict the un-wanted features
 * Bad, the way it's built doesn't play nice with our plugin system and requires [dirty hacks](https://gerrit.tuleap.net/c/tuleap/+/21274/7/src/common/DB/Migrations/MigrationsAtPluginInstallation.php#51)
+
+[0]: https://tuleap.net/plugins/tracker/?aid=21864

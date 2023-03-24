@@ -1,6 +1,7 @@
 # Choice of lit-html templating
 
 * Status: accepted
+* Deciders: Joris MASSON, Clarck ROBINSON
 * Date: 2021-04-01
 
 Technical Story: [story #18337][0] markdown replace text

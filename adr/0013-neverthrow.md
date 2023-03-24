@@ -1,7 +1,7 @@
 # NeverThrow
 
 * Status: accepted
-* Deciders: Joris MASSON (@jmasson)
+* Deciders: Joris MASSON
 * Date: 2022-06-20
 
 Technical Story: [story #26802 have smart commit with Tuleap Git][1]

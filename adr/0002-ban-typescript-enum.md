@@ -1,7 +1,7 @@
 # Ban TypeScript Enum syntax
 
 * Status: accepted
-* Deciders: Joris MASSON (@jmasson)
+* Deciders: Joris MASSON
 * Date: 2021-04-13
 
 Technical Story: [request #20917 Ban TypeScript Enums syntax][4]

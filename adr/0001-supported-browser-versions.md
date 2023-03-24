@@ -1,8 +1,10 @@
 # Supported browser list
 
 * Status: accepted
-* Deciders: @vaceletm @jmasson @tgerbet
+* Deciders: Manuel VACELET Joris MASSON, Thomas GERBET
 * Date: 2021-04-20
+
+Technical Story: [request #20935 Bring best effort support back to Firefox 68 and Chrome 70](https://tuleap.net/plugins/tracker/?aid=20935)
 
 ## Context and Problem Statement
 

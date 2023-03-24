@@ -1,7 +1,7 @@
 # TypeScript typechecking in individual task
 
 * Status: accepted
-* Deciders: Thomas Gerbet, Joris Masson
+* Deciders: Thomas GERBET, Joris MASSON
 * Date: 2022-01-13
 
 ## Context and Problem Statement

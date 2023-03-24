@@ -1,7 +1,7 @@
 # Docker images signatures / Verify Docker images authenticity
 
 * Status: accepted
-* Deciders: Thomas Gerbet
+* Deciders: Thomas GERBET
 * Date: 2021-07-22
 
 Technical Story: [Sign Docker images using Cosign](https://tuleap.net/plugins/tracker/?aid=22240)

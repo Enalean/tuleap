@@ -2,7 +2,7 @@
 
 This log lists the architectural decisions for Tuleap. You will find bellow the ADRs that applies to both Core and Plugins.
 
-<!-- adrlog -- Regenerate the content by using `nix-shell -p nodePackages.npm --run 'npm exec --package=adr-log -- adr-log -e template.md -i'` -->
+<!-- adrlog -- Regenerate the content by using `pnpm dlx adr-log -e template.md -i` -->
 
 * [ADR-0001](0001-supported-browser-versions.md) - Supported browser list
 * [ADR-0002](0002-ban-typescript-enum.md) - Ban TypeScript Enum syntax
@@ -23,15 +23,19 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0017](0017-multiple-apps-per-context.md) - Multiple independent apps per context
 * [ADR-0018](0018-js-bundler.md) - Choice of JavaScript Bundler
 * [ADR-0019](0019-split-tlp.md) - Split `tlp` global library in small packages
-* [ADR-0020](0020-repository-organization-tuleap-codebase) - Repository organization of the Tuleap codebase
+* [ADR-0020](0020-repository-organization-tuleap-codebase.md) - Repository organization of the Tuleap codebase
 * [ADR-0021](0021-attributes-based-events.md) - Usage of PHP attributes to declare listened hooks in plugins
 
 <!-- adrlogstop -->
 
-Plugins can also have their own ADRs:
+Plugins and libraries can also have their own ADRs:
+* [GitLab](../plugins/gitlab/adr/glossary.md)
 * [Program Management](../plugins/program_management/adr/index.md)
 * [Roadmap](../plugins/roadmap/adr/index.md)
 * [Tracker](../plugins/tracker/adr/index.md)
+* [Artifact Modal](../plugins/tracker/scripts/lib/artifact-modal/adr/index.md)
+* [Rich text editor](../plugins/tracker/scripts/lib/rich-text-editor/adr/index.md)
+* [Link selector](../lib/frontend/link-selector/adr/index.md)
 
 For new ADRs, please use [template.md](template.md) as basis.
 More information on MADR is available at <https://adr.github.io/madr/>.

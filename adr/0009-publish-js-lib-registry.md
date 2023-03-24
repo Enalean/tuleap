@@ -1,7 +1,7 @@
 # Publish JS libraries on a registry
 
 * Status: accepted
-* Deciders: Thomas Gerbet
+* Deciders: Thomas GERBET
 * Date: 2022-01-18
 
 ## Context and Problem Statement

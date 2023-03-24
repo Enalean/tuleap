@@ -1,7 +1,7 @@
 # Favor PHPUnit mock system over Mockery
 
 * Status: accepted
-* Deciders: @tgerbet @jmasson @vaceletm
+* Deciders: Thomas GERBET, Joris MASSON, Manuel VACELET
 * Date: 2021-04-30
 
 Technical Story: [request #20917 Favor PHPUnit mock system over Mockery][0]

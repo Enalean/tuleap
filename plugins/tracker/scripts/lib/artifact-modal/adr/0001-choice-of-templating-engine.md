@@ -1,7 +1,7 @@
 # Choice of templating engine
 
 * Status: accepted
-* Deciders: Joris MASSON (@jmasson)
+* Deciders: Joris MASSON
 * Date: from 2021-04-29 to 2021-07-22
 
 Technical Story: [request #18391][0] Migrate Tracker Artifact Modal out of AngularJS

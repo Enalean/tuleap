@@ -1,7 +1,7 @@
 # Favor Faults over Exceptions
 
 * Status: accepted
-* Deciders: Joris MASSON (@jmasson)
+* Deciders: Joris MASSON
 * Date: from 2021-11-19 to 2022-06-20
 
 Technical Story: [story #26802 have smart commit with Tuleap Git][0]

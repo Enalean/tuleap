@@ -1,7 +1,7 @@
 # Tuleap Community Edition docker image
 
 * Status: accepted
-* Deciders: @vaceletm @tgerbet
+* Deciders: Manuel VACELET, Thomas GERBET
 * Date: 2021-06-17
 
 Technical Story: [docker: replace enalean/tuleap-aio by tuleap/tuleap-community-edition](https://tuleap.net/plugins/tracker/?aid=21334)

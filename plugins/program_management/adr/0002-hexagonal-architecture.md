@@ -1,6 +1,7 @@
 # Hexagonal Architecture in Program Management plugin
 
 * Status: accepted
+* Deciders: Joris MASSON, Marie Ange GARNIER
 * Date: 2021-09-20
 
 Technical Story: [epic #16683 Program Management][0]
