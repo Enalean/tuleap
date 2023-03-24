@@ -21,6 +21,7 @@ BuildArch:      noarch
 Requires:       subversion >= 1.14
 Requires:       python3-subversion
 Requires:       python3-urllib3
+Requires:       python3-chardet
 
 %description
 ViewVC is a browser interface for CVS and Subversion version control
