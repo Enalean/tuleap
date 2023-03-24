@@ -51,7 +51,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                         [
                             'service_id' => self::STANDALONE_SERVICE_ID,
                             'label' => 'label',
-                            'icon_name' => '',
+                            'icon' => '',
                             'description' => '',
                             'link' => null,
                             'rank' => self::STANDALONE_SERVICE_RANK,
@@ -88,7 +88,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                         [
                             'service_id' => self::STANDALONE_SERVICE_ID,
                             'label' => 'label',
-                            'icon_name' => '',
+                            'icon' => '',
                             'description' => '',
                             'link' => null,
                             'rank' => self::STANDALONE_SERVICE_RANK,
