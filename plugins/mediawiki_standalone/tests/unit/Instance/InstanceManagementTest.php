@@ -60,6 +60,8 @@ final class InstanceManagementTest extends TestCase
     private Client $mediawiki_client;
     private InstanceManagement $instance_management;
     private MediaWikiCentralDatabaseParameterGeneratorStub $central_database_parameter_generator;
+    private OngoingInitializationsStateStub $initializations_state_stub;
+
     protected function setUp(): void
     {
         \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'tuleap.example.com');
@@ -69,6 +71,7 @@ final class InstanceManagementTest extends TestCase
         $project_120                                = ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
         $project_130                                = ProjectTestBuilder::aProject()->withId(self::DELETED_PROJECT_ID)->withUnixName('foo')->withStatusDeleted()->build();
         $this->central_database_parameter_generator = new MediaWikiCentralDatabaseParameterGeneratorStub();
+        $this->initializations_state_stub           = OngoingInitializationsStateStub::buildSelf();
         $this->instance_management                  = new InstanceManagement(
             $this->logger,
             new class ($this->mediawiki_client) implements MediawikiClientFactory {
@@ -87,7 +90,7 @@ final class InstanceManagementTest extends TestCase
             $this->central_database_parameter_generator,
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([]),
             new MediawikiFlavorUsageStub(),
-            OngoingInitializationsStateStub::buildSelf(),
+            $this->initializations_state_stub,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
@@ -130,6 +133,7 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertFalse($this->logger->hasErrorRecords());
+        self::assertTrue($this->initializations_state_stub->isFinished());
     }
 
     public function testCreationWithCentralDatabaseIsSuccessful(): void
@@ -159,6 +163,7 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertFalse($this->logger->hasErrorRecords());
+        self::assertTrue($this->initializations_state_stub->isFinished());
     }
 
     public function testCreationIsError(): void
@@ -180,6 +185,7 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($this->logger->hasErrorThatContains(CreateInstance::class . ' error'));
+        self::assertTrue($this->initializations_state_stub->isError());
     }
 
     public function testCreationRequestWhenInstanceIsSuspendedMeansResume(): void
@@ -214,6 +220,7 @@ final class InstanceManagementTest extends TestCase
         self::assertTrue($resume_has_been_called);
         self::assertTrue($update_instance_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
+        self::assertTrue($this->initializations_state_stub->isFinished());
     }
 
     public function testErrorIsDetectedWhenCurrentStatusOfTheInstanceCannotBeDetermined(): void
@@ -228,6 +235,7 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($this->logger->hasErrorThatContains('Could not determine current status of the gpig instance'));
+        self::assertTrue($this->initializations_state_stub->isError());
     }
 
     public function testSuspendIsSuccessful(): void

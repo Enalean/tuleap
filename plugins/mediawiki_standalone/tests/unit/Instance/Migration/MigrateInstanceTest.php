@@ -101,9 +101,8 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-        $switcher              = SwitchMediawikiServiceStub::buildSelf();
-        $db_primer             = new LegacyMediawikiDBPrimerStub();
+        $switcher  = SwitchMediawikiServiceStub::buildSelf();
+        $db_primer = new LegacyMediawikiDBPrimerStub();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -111,7 +110,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             $switcher,
             $db_primer,
             LegacyMediawikiLanguageRetrieverStub::withLanguage('fr_FR'),
@@ -120,7 +118,7 @@ final class MigrateInstanceTest extends TestCase
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher, $db_primer): void {
+            function (MigrateInstance $migrate_instance) use ($switcher, $db_primer): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -128,8 +126,6 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isFinished());
-                self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
                 self::assertEquals(Option::fromValue('plugin_mediawiki_120'), $db_primer->db_name_used);
                 self::assertEquals(Option::fromValue('mw'), $db_primer->db_prefix_used);
@@ -172,8 +168,7 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+        $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -181,7 +176,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
@@ -190,7 +184,7 @@ final class MigrateInstanceTest extends TestCase
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+            function (MigrateInstance $migrate_instance) use ($switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -198,8 +192,6 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isFinished());
-                self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
@@ -240,8 +232,7 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+        $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -249,7 +240,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('invalid'),
@@ -258,7 +248,7 @@ final class MigrateInstanceTest extends TestCase
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+            function (MigrateInstance $migrate_instance) use ($switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -266,8 +256,6 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isFinished());
-                self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
@@ -295,8 +283,7 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+        $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -304,7 +291,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
@@ -312,7 +298,7 @@ final class MigrateInstanceTest extends TestCase
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+            function (MigrateInstance $migrate_instance) use ($switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -320,8 +306,6 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isOk($result));
-                self::assertTrue($initializations_state->isFinished());
-                self::assertFalse($initializations_state->isError());
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
@@ -336,8 +320,7 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-        $switcher              = SwitchMediawikiServiceStub::buildSelf();
+        $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
@@ -345,7 +328,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
@@ -353,7 +335,7 @@ final class MigrateInstanceTest extends TestCase
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state, $switcher): void {
+            function (MigrateInstance $migrate_instance) use ($switcher): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -361,9 +343,7 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isErr($result));
-                self::assertStringContainsString('foo bar error', (string) $result->error);
-                self::assertTrue($initializations_state->isStarted());
-                self::assertTrue($initializations_state->isError());
+                self::assertStringContainsString('foo bar error', (string) $result->error->fault);
                 self::assertTrue($switcher->isSwitchedToStandalone());
             }
         );
@@ -390,15 +370,12 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
@@ -406,7 +383,7 @@ final class MigrateInstanceTest extends TestCase
         );
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state): void {
+            function (MigrateInstance $migrate_instance): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -415,8 +392,7 @@ final class MigrateInstanceTest extends TestCase
                 );
 
                 self::assertTrue(Result::isErr($result));
-                self::assertTrue($initializations_state->isError());
-                self::assertStringContainsStringIgnoringCase('bad request', (string) $result->error);
+                self::assertStringContainsStringIgnoringCase('bad request', (string) $result->error->fault);
             }
         );
     }
@@ -443,15 +419,12 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $initializations_state = OngoingInitializationsStateStub::buildSelf();
-
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
@@ -460,7 +433,7 @@ final class MigrateInstanceTest extends TestCase
 
         self::assertTrue($migrate_instance_option->isValue());
         $migrate_instance_option->apply(
-            function (MigrateInstance $migrate_instance) use ($initializations_state): void {
+            function (MigrateInstance $migrate_instance): void {
                 $result = $migrate_instance->process(
                     $this->mediawiki_client,
                     HTTPFactoryBuilder::requestFactory(),
@@ -468,8 +441,7 @@ final class MigrateInstanceTest extends TestCase
                     new NullLogger(),
                 );
                 self::assertTrue(Result::isErr($result));
-                self::assertTrue($initializations_state->isError());
-                self::assertStringContainsString('Exit code', (string) $result->error);
+                self::assertStringContainsString('Exit code', (string) $result->error->fault);
             }
         );
     }
@@ -487,7 +459,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
             $flavor_usage,
-            $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withLanguage('en_US'),
@@ -505,7 +476,7 @@ final class MigrateInstanceTest extends TestCase
                 );
                 self::assertTrue(Result::isErr($result));
                 self::assertFalse($initializations_state->isStarted());
-                self::assertStringContainsString('Project does not have a MediaWiki 1.23 to migrate', (string) $result->error);
+                self::assertStringContainsString('Project does not have a MediaWiki 1.23 to migrate', (string) $result->error->fault);
             }
         );
     }
@@ -518,7 +489,6 @@ final class MigrateInstanceTest extends TestCase
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
-            OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),

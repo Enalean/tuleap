@@ -327,7 +327,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function serviceIsUsed(array $params): void
     {
-        (new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode()))->handle(
+        $service_activation_handler = new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode(), new OngoingInitializationsDao(new MediawikiFlavorUsageDao()));
+        $service_activation_handler->handle(
             ServiceActivationEvent::fromServiceIsUsedEvent(
                 $params,
                 ProjectManager::instance()
@@ -338,7 +339,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     #[ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
-        (new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode()))->handle(
+        $service_activation_handler = new ServiceActivationHandler(new EnqueueTask(), new ProvideSiteLevelInitializationLanguageCode(), new OngoingInitializationsDao(new MediawikiFlavorUsageDao()));
+        $service_activation_handler->handle(
             ServiceActivationEvent::fromRegisterProjectCreationEvent($event),
         );
         if ($event->shouldProjectInheritFromTemplate()) {
@@ -540,6 +542,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                 HTTPFactoryBuilder::responseFactory(),
                 new FeedbackSerializer(new FeedbackDao())
             ),
+            new OngoingInitializationsDao(new MediawikiFlavorUsageDao()),
             new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
         );

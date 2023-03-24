@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Service;
 
 use Tuleap\MediawikiStandalone\Instance\CreateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
 use Tuleap\MediawikiStandalone\Instance\ProvideInitializationLanguageCodeStub;
 use Tuleap\MediawikiStandalone\Instance\SuspendInstanceTask;
 use Tuleap\Queue\QueueTask;
@@ -37,15 +38,16 @@ final class ServiceActivationHandlerTest extends TestCase
     /**
      * @dataProvider getActivationData
      */
-    public function testItSendsEvent(?QueueTask $expected_task, array $payload): void
+    public function testItSendsEvent(?QueueTask $expected_task, bool $should_start_init, array $payload): void
     {
         $factory = ProjectByIDFactoryStub::buildWith(
             ProjectTestBuilder::aProject()->withId(112)->build(),
         );
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
-        $handler = new ServiceActivationHandler($enqueue_task, new ProvideInitializationLanguageCodeStub());
+        $handler = new ServiceActivationHandler($enqueue_task, new ProvideInitializationLanguageCodeStub(), $ongoing_initializations_state);
         $handler->handle(
             ServiceActivationEvent::fromServiceIsUsedEvent(
                 $payload,
@@ -54,6 +56,7 @@ final class ServiceActivationHandlerTest extends TestCase
         );
 
         self::assertEquals($expected_task, $enqueue_task->queue_task);
+        self::assertSame($should_start_init, $ongoing_initializations_state->isStarted());
     }
 
     public static function getActivationData(): iterable
@@ -61,18 +64,22 @@ final class ServiceActivationHandlerTest extends TestCase
         return [
             'It sends the activation is the service is mediawiki standalone' => [
                 'expected_task' => new CreateInstanceTask(ProjectTestBuilder::aProject()->withId(112)->build(), new ProvideInitializationLanguageCodeStub()),
+                'should_start_init' => true,
                 'payload' => ['shortname' => MediawikiStandaloneService::SERVICE_SHORTNAME, 'is_used' => true, 'group_id' => '112'],
             ],
             'It sends the suspend event for mediawiki standalone' => [
                 'expected_task' => new SuspendInstanceTask(ProjectTestBuilder::aProject()->withId(112)->build()),
+                'should_start_init' => false,
                 'payload' => ['shortname' => MediawikiStandaloneService::SERVICE_SHORTNAME, 'is_used' => false, 'group_id' => '112'],
             ],
             'It ignores events for other services' => [
                 'expected_task' => null,
+                'should_start_init' => false,
                 'payload' => ['shortname' => 'foo', 'is_used' => true, 'group_id' => '112'],
             ],
             'It ignores events for invalid projects' => [
                 'expected_task' => null,
+                'should_start_init' => false,
                 'payload' => ['shortname' => MediawikiStandaloneService::SERVICE_SHORTNAME, 'is_used' => true, 'group_id' => '66666'],
             ],
         ];

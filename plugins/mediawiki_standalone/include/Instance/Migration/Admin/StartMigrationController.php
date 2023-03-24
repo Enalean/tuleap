@@ -32,6 +32,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsState;
 use Tuleap\Plugin\IsProjectAllowedToUsePlugin;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\EnqueueTaskInterface;
@@ -55,6 +56,7 @@ final class StartMigrationController extends DispatchablePSR15Compatible
         private readonly ProjectByIDFactory $project_manager,
         private readonly EnqueueTaskInterface $enqueue_task,
         private readonly RedirectWithFeedbackFactory $redirect_with_feedback_factory,
+        private readonly OngoingInitializationsState $ongoing_initializations_state,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -102,6 +104,7 @@ final class StartMigrationController extends DispatchablePSR15Compatible
             );
         }
 
+        $this->ongoing_initializations_state->startInitialization($project);
         $this->enqueue_task->enqueue(new MigrateInstanceTask($project));
 
         $user = $request->getAttribute(\PFUser::class);

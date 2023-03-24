@@ -70,7 +70,6 @@ final class InstanceManagement
                 $this->central_database_parameter_generator,
                 $this->command_factory,
                 $this->mediawiki_flavor_usage,
-                $this->initializations_state,
                 $this->switch_mediawiki_service,
                 $this->legacy_mediawiki_db_primer,
                 $this->legacy_mediawiki_language_retriever,
@@ -119,10 +118,12 @@ final class InstanceManagement
                     $this->http_request_factory,
                     $this->http_stream_factory,
                     $this->logger,
-                )->mapErr(
-                /** @psalm-return Err<null> */
-                    function (Fault $fault): Err {
-                        Fault::writeToLogger($fault, $this->logger);
+                )->match(
+                    fn(\Project $project) => $this->initializations_state->finishInitialization($project),
+                    /** @psalm-return Err<null> */
+                    function (InitializationIssue $initialization_issue): Err {
+                        $this->initializations_state->markAsError($initialization_issue->project);
+                        Fault::writeToLogger($initialization_issue->fault, $this->logger);
                         return Result::err(null);
                     }
                 );
