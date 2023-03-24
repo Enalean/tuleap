@@ -5,7 +5,7 @@
 
 <success-message></success-message>
 
-<div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading"></div>
+<div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading" data-test="artifact-modal-loading"></div>
 
 <div class="source-project-info-message" ng-if="planning.hasOriginalProject()" ng-class="['project-color-'+planning.backlog.original_project.background.identifier]">
     <span translate>You are in the context of the Program {{ planning.backlog.original_project.label }}</span>

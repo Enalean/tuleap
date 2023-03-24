@@ -23,6 +23,7 @@
                         ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
                         class="tlp-dropdown-menu-item"
                         role="menuitem"
+                        data-test="edit-item"
                     >
                         <i class="tlp-dropdown-menu-item-icon fas fa-fw fa-pencil-alt"></i>
                         <span translate>Edit this item</span>
@@ -54,6 +55,7 @@
                 ng-click="details.showEditModal($event, details.backlog_item, details.current_milestone)"
                 class="backlog-item-details-shortname-content"
                 data-nodrag="true"
+                data-test="edit-item"
             >
                 <span class="backlog-item-details-shortname-content-text"
                     ng-bind-html="details.backlog_item.short_type + ' #' + details.backlog_item.id | tuleapHighlight:details.backlog_filter.terms"
