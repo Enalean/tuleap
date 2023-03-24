@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <div>
+    <div class="pull-request-edit-title">
         <button
-            class="tlp-button-primary tlp-button-outline pull-request-edit-title-button"
+            class="tlp-button-primary tlp-button-outline"
             type="button"
             v-on:click="openModal"
             v-bind:disabled="pull_request_info === null"
@@ -95,7 +95,7 @@ import { useGettext } from "vue3-gettext";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { patchTitle } from "../../api/tuleap-rest-querier";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { DISPLAY_TULEAP_API_ERROR, UPDATE_PULL_REQUEST_TITLE } from "../../constants";
+import { DISPLAY_TULEAP_API_ERROR, POST_PULL_REQUEST_UPDATE_CALLBACK } from "../../constants";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
@@ -106,7 +106,7 @@ const modal_instance = ref<Modal | null>(null);
 const is_saving = ref(false);
 const title = ref("");
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
-const updatePullRequestTitle = strictInject(UPDATE_PULL_REQUEST_TITLE);
+const postPullRequestUpdateCallback = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
 
 watch(
     () => [props.pull_request_info, modal_element.value],
@@ -143,7 +143,7 @@ async function saveTitle(): Promise<void> {
     await patchTitle(props.pull_request_info.id, title.value).match(
         (updated_pull_request: PullRequest) => {
             is_saving.value = false;
-            updatePullRequestTitle(updated_pull_request);
+            postPullRequestUpdateCallback(updated_pull_request);
             if (modal_instance.value) {
                 modal_instance.value.hide();
             }
@@ -169,7 +169,7 @@ function close(): void {
 </script>
 
 <style lang="scss">
-.pull-request-edit-title-button {
-    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-small-spacing);
+.pull-request-edit-title {
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 </style>

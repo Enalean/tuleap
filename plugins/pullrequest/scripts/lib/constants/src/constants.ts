@@ -50,3 +50,20 @@ export const EVENT_TYPE_REBASE: ActionOnPullRequestEventType = "rebase";
 export const EVENT_TYPE_MERGE: ActionOnPullRequestEventType = "merge";
 export const EVENT_TYPE_ABANDON: ActionOnPullRequestEventType = "abandon";
 export const EVENT_TYPE_REOPEN: ActionOnPullRequestEventType = "reopen";
+
+export type PullRequestMergeStatusType =
+    | "conflict"
+    | "no_fastforward"
+    | "fastforward"
+    | "unknown-merge-status";
+
+export const PULL_REQUEST_MERGE_STATUS_CONFLICT: PullRequestMergeStatusType = "conflict";
+export const PULL_REQUEST_MERGE_STATUS_NOT_FF: PullRequestMergeStatusType = "no_fastforward";
+export const PULL_REQUEST_MERGE_STATUS_FF: PullRequestMergeStatusType = "fastforward";
+export const PULL_REQUEST_MERGE_STATUS_UNKNOWN: PullRequestMergeStatusType = "unknown-merge-status";
+
+export type PullRequestStatusType = "review" | "merge" | "abandon";
+
+export const PULL_REQUEST_STATUS_REVIEW: PullRequestStatusType = "review";
+export const PULL_REQUEST_STATUS_MERGED: PullRequestStatusType = "merge";
+export const PULL_REQUEST_STATUS_ABANDON: PullRequestStatusType = "abandon";

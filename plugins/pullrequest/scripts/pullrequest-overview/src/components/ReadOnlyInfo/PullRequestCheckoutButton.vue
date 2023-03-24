@@ -123,10 +123,6 @@ const getCloneInfo = computed((): string => {
 </script>
 
 <style lang="scss">
-.pull-request-checkout-dropdown-button {
-    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
-}
-
 .tlp-dropdown-menu.pull-request-checkout-dropdown {
     padding: var(--tlp-medium-spacing);
 }

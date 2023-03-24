@@ -72,6 +72,17 @@ msgstr "A mis à jour la pull request."
 msgid "Last CI status"
 msgstr "Statut intégration continue"
 
+msgid "Merge"
+msgstr "Intégrer"
+
+msgid ""
+"Merge commits are forbidden in the repository configuration (fast-forward "
+"only). Please rebase the commit and update the pull request."
+msgstr ""
+"Les commits de fusion sont interdits par la configuration du dépôt (avance "
+"rapide uniquement). Veuillez rebaser votre commit et mettre à jour la pull "
+"request."
+
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
 
@@ -86,6 +97,29 @@ msgstr "Résumé"
 
 msgid "Pending since"
 msgstr "En cours depuis"
+
+msgid ""
+"Pull request can not be merged automatically due to conflicts with "
+"destination. Resolve conflicts on the command line and update the pull "
+"request."
+msgstr ""
+"Cette pull request ne peut pas être intégrée automatiquement car il existe "
+"des conflits avec la destination. Résolvez ces conflits via la ligne de "
+"commande et mettez à jour la pull request."
+
+msgid ""
+"Pull request cannot be merged because source and destination branches have "
+"the very same content."
+msgstr ""
+"La pull request ne peut pas être intégrée car les branches source et "
+"destination ont exactement le même contenu."
+
+msgid ""
+"Pull request mergeability with destination is not determined. You can merge "
+"on the command line and push to destination."
+msgstr ""
+"Le statut d’intégration de cette pull request est indéterminé. Essayez de "
+"l’intégrer en ligne de commande et poussez vers la destination."
 
 msgid "References"
 msgstr "Références"
