@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProject, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange
+final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProject, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange, LegacyPermissionsMigrator
 {
     /**
      * @return list<array{ ugroup_id: int, permission: string }>
@@ -131,6 +131,49 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
             'plugin_mediawiki_standalone_permissions',
             ['ugroup_id' => \ProjectUGroup::REGISTERED],
             ['ugroup_id' => \ProjectUGroup::AUTHENTICATED]
+        );
+    }
+
+    public function migrateFromLegacyPermissions(\Project $project): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function () use ($project) {
+                $this->getDB()->run(
+                    <<<EOS
+                        INSERT INTO plugin_mediawiki_standalone_permissions(project_id, permission, ugroup_id)
+                        SELECT project_id, ?, ugroup_id
+                        FROM plugin_mediawiki_access_control
+                        WHERE project_id = ?
+                          AND access = 'PLUGIN_MEDIAWIKI_READ'
+                    EOS,
+                    PermissionRead::NAME,
+                    $project->getID(),
+                );
+                $this->getDB()->run(
+                    <<<EOS
+                        INSERT INTO plugin_mediawiki_standalone_permissions(project_id, permission, ugroup_id)
+                        SELECT project_id, ?, ugroup_id
+                        FROM plugin_mediawiki_access_control
+                        WHERE project_id = ?
+                          AND access = 'PLUGIN_MEDIAWIKI_WRITE'
+                    EOS,
+                    PermissionWrite::NAME,
+                    $project->getID(),
+                );
+                $this->getDB()->run(
+                    <<<EOS
+                        INSERT INTO plugin_mediawiki_standalone_permissions(project_id, permission, ugroup_id)
+                        SELECT group_id, ?, ugroup_id
+                        FROM plugin_mediawiki_ugroup_mapping
+                        WHERE group_id = ?
+                          AND mw_group_name = 'sysop'
+                          AND (ugroup_id = ? OR ugroup_id > 100)
+                    EOS,
+                    PermissionAdmin::NAME,
+                    $project->getID(),
+                    \ProjectUGroup::PROJECT_MEMBERS,
+                );
+            }
         );
     }
 }
