@@ -74,7 +74,7 @@ const props = defineProps<{
     fault: Fault | null;
 }>();
 
-const modal_element = ref<InstanceType<typeof Element>>();
+const modal_element = ref<Element | undefined>();
 const modal_instance = ref<Modal | null>(null);
 const are_error_details_shown = ref(false);
 

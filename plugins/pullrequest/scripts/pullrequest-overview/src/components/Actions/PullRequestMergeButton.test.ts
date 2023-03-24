@@ -24,6 +24,7 @@ import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
+    BUILD_STATUS_PENDING,
     BUILD_STATUS_SUCCESS,
     PULL_REQUEST_MERGE_STATUS_CONFLICT,
     PULL_REQUEST_MERGE_STATUS_FF,
@@ -35,6 +36,7 @@ import {
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
+import PullRequestMergeWarningModal from "../Modals/PullRequestMergeWarningModal.vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../constants";
 import {
@@ -183,7 +185,8 @@ describe("PullRequestMergeButton", () => {
     });
 
     describe("merge", () => {
-        it(`When the user clicks on the button
+        it(`Given that the pull-request is fast-forward, and that the CI is happy
+            When the user clicks on the button
             Then it should merge the pull-request
             And call the post_pull_request_update callback`, async () => {
             const updated_pull_request = getPullRequest({
@@ -192,7 +195,13 @@ describe("PullRequestMergeButton", () => {
 
             vi.spyOn(tuleap_api, "mergePullRequest").mockReturnValue(okAsync(updated_pull_request));
 
-            await getWrapper().find<HTMLButtonElement>("[data-test=merge-button]").element.click();
+            await getWrapper({
+                status: PULL_REQUEST_STATUS_REVIEW,
+                merge_status: PULL_REQUEST_MERGE_STATUS_FF,
+                last_build_status: BUILD_STATUS_SUCCESS,
+            })
+                .find<HTMLButtonElement>("[data-test=merge-button]")
+                .element.click();
 
             expect(tuleap_api.mergePullRequest).toHaveBeenCalledOnce();
             expect(tuleap_api.mergePullRequest).toHaveBeenCalledWith(current_pull_request_id);
@@ -201,13 +210,53 @@ describe("PullRequestMergeButton", () => {
             expect(post_update_callback).toHaveBeenCalledWith(updated_pull_request);
         });
 
+        it(`Given that the pull-request is fast-forward, but the CI is not happy
+            When the user clicks on the button
+            Then it should open the merge merge modal to ask for confirmation`, async () => {
+            vi.spyOn(tuleap_api, "mergePullRequest");
+
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_REVIEW,
+                merge_status: PULL_REQUEST_MERGE_STATUS_FF,
+                last_build_status: BUILD_STATUS_PENDING,
+            });
+
+            await wrapper.find<HTMLButtonElement>("[data-test=merge-button]").element.click();
+
+            expect(tuleap_api.mergePullRequest).not.toHaveBeenCalled();
+            expect(wrapper.findComponent(PullRequestMergeWarningModal).exists()).toBe(true);
+        });
+
+        it(`Given that the pull-request is not fast-forward but merge commits are allowed
+            When the user clicks on the button
+            Then it should open the merge merge modal to ask for confirmation`, async () => {
+            vi.spyOn(tuleap_api, "mergePullRequest");
+
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_REVIEW,
+                merge_status: PULL_REQUEST_MERGE_STATUS_NOT_FF,
+                last_build_status: BUILD_STATUS_SUCCESS,
+            });
+
+            await wrapper.find<HTMLButtonElement>("[data-test=merge-button]").element.click();
+
+            expect(tuleap_api.mergePullRequest).not.toHaveBeenCalled();
+            expect(wrapper.findComponent(PullRequestMergeWarningModal).exists()).toBe(true);
+        });
+
         it(`When an error occurres while merging the pull-request
             Then it should trigger the on_error_callback with the current fault`, async () => {
             const tuleap_api_error = Fault.fromMessage("Forbidden");
 
             vi.spyOn(tuleap_api, "mergePullRequest").mockReturnValue(errAsync(tuleap_api_error));
 
-            await getWrapper().find<HTMLButtonElement>("[data-test=merge-button]").element.click();
+            await getWrapper({
+                status: PULL_REQUEST_STATUS_REVIEW,
+                merge_status: PULL_REQUEST_MERGE_STATUS_FF,
+                last_build_status: BUILD_STATUS_SUCCESS,
+            })
+                .find<HTMLButtonElement>("[data-test=merge-button]")
+                .element.click();
 
             expect(on_error_callback).toHaveBeenCalledOnce();
             expect(on_error_callback).toHaveBeenCalledWith(tuleap_api_error);
