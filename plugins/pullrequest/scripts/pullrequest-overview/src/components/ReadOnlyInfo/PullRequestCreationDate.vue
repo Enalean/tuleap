@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-property">
         <label class="tlp-label">
-            {{ $gettext("Pull request date") }}
+            {{ $gettext("Creation date") }}
         </label>
 
         <p v-if="props.pull_request_info" data-test="pullrequest-creation-date">

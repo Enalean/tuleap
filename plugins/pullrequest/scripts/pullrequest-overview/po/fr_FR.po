@@ -36,6 +36,9 @@ msgstr "Fermer"
 msgid "Commits"
 msgstr "Commits"
 
+msgid "Creation date"
+msgstr "Date de création"
+
 msgid "Edit title"
 msgstr "Éditer le titre"
 
@@ -83,9 +86,6 @@ msgstr "Résumé"
 
 msgid "Pending since"
 msgstr "En cours depuis"
-
-msgid "Pull request date"
-msgstr "Date de la pull request"
 
 msgid "References"
 msgstr "Références"

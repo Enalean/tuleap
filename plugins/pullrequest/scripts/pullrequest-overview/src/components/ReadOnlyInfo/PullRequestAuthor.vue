@@ -56,6 +56,6 @@ const props = defineProps<{
 <style lang="scss">
 .pullrequest-author-name {
     margin: 0 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-dimmed-color);
+    color: var(--tlp-dark-color);
 }
 </style>

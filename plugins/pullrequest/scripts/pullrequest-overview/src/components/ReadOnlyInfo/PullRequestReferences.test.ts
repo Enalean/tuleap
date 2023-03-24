@@ -38,12 +38,14 @@ describe("PullRequestReferences", () => {
         expect(wrapper.find("[data-test=pullrequest-source-reference]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pull-request-source-destination]").exists()).toBe(false);
 
+        const pull_request_info = {
+            reference_src: "a1e2i3o4u5y6",
+            branch_src: "vowels-and-numbers",
+            branch_dest: "master",
+        } as PullRequest;
+
         wrapper.setProps({
-            pull_request_info: {
-                reference_src: "a1e2i3o4u5y6",
-                branch_src: "vowels-and-numbers",
-                branch_dest: "master",
-            } as PullRequest,
+            pull_request_info,
         });
 
         await wrapper.vm.$nextTick();
@@ -55,8 +57,11 @@ describe("PullRequestReferences", () => {
         expect(source_reference.exists()).toBe(true);
         expect(source_reference.text()).toBe("a1e2i3o4u5y6");
         expect(source_destination.exists()).toBe(true);
-        expect(source_destination.element.innerHTML.trim()).toBe(
-            'vowels-and-numbers <i class="fa-solid fa-long-arrow-alt-right" aria-hidden="true"></i> master'
+        expect(source_destination.element.textContent ?? "").toContain(
+            pull_request_info.branch_src
+        );
+        expect(source_destination.element.textContent ?? "").toContain(
+            pull_request_info.branch_dest
         );
     });
 });
