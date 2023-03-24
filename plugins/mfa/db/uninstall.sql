@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS plugin_mfa_enrollment_totp;

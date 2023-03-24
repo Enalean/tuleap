@@ -52,7 +52,6 @@
             <directory name="plugins/hudson_svn/tests/unit/"/>
             <directory name="plugins/ldap/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
-            <directory name="plugins/mfa/tests/unit/"/>
             <directory name="plugins/openidconnectclient/tests/unit/"/>
             <directory name="plugins/pluginsadministration/tests/unit/"/>
             <directory name="plugins/proftpd/tests/unit/"/>
