@@ -36,6 +36,7 @@
                 <section class="tlp-pane-section">
                     <pull-request-author v-bind:pull_request_author="pull_request_author" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-reviewer-list />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
@@ -68,6 +69,7 @@ import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
 import PullRequestEditTitleModal from "./Modals/PullRequestEditTitleModal.vue";
+import PullRequestReviewerList from "./WriteInfo/PullRequestReviewerList.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);

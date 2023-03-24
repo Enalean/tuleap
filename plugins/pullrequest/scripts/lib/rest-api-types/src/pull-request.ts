@@ -18,6 +18,7 @@
  */
 
 import type { BuildStatus } from "@tuleap/plugin-pullrequest-constants";
+import type { User } from "@tuleap/core-rest-api-types";
 
 export interface PullRequest {
     readonly id: number;
@@ -42,4 +43,8 @@ export interface PullRequest {
     readonly description: string;
     readonly raw_description: string;
     readonly user_can_merge: boolean;
+}
+
+export interface Reviewer {
+    readonly users: Array<User>;
 }
