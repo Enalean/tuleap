@@ -35,6 +35,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
 use Tuleap\MediawikiStandalone\Instance\InitializationLanguageCodeProvider;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsState;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsage;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -54,6 +55,7 @@ final class MigrateInstance
         private readonly \Project $project,
         private readonly ?string $central_database_name,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
+        private readonly MediawikiFlavorUsage $mediawiki_flavor_usage,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
         private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
@@ -69,6 +71,7 @@ final class MigrateInstance
         ProjectByIDFactory $project_factory,
         MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
         MediaWikiManagementCommandFactory $command_factory,
+        MediawikiFlavorUsage $mediawiki_flavor_usage,
         OngoingInitializationsState $initializations_state,
         SwitchMediawikiService $switch_mediawiki_service,
         LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
@@ -89,6 +92,7 @@ final class MigrateInstance
                 $project_factory->getValidProjectById($payload['project_id']),
                 $central_database_parameter_generator->getCentralDatabase(),
                 $default_language_code_provider,
+                $mediawiki_flavor_usage,
                 $initializations_state,
                 $switch_mediawiki_service,
                 $legacy_mediawiki_db_primer,
@@ -103,12 +107,11 @@ final class MigrateInstance
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
-        $service = $this->project->getService(self::MEDIAWIKI_123_SERVICE_NAME);
-        if (! $service) {
-            return Result::err(Fault::fromMessage("Project does not use MediaWiki service"));
+        if (! $this->mediawiki_flavor_usage->wasLegacyMediawikiUsed($this->project)) {
+            return Result::err(Fault::fromMessage("Project does not have a MediaWiki 1.23 to migrate"));
         }
 
-        $this->initializations_state->startInitialization((int) $this->project->getID());
+        $this->initializations_state->startInitialization($this->project);
 
         $logger->info("Switching to MediaWiki Standalone service");
         $this->switch_mediawiki_service->switchToStandalone($this->project);
@@ -150,7 +153,7 @@ final class MigrateInstance
             }
         )->orElse(
             function (Fault $fault): Err {
-                $this->initializations_state->markAsError((int) $this->project->getID());
+                $this->initializations_state->markAsError($this->project);
 
                 return Result::err($fault);
             }
@@ -215,7 +218,7 @@ final class MigrateInstance
             ->withBody($stream_factory->createStream('{}'));
         return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
             function () use ($logger): Ok {
-                $this->initializations_state->finishInitialization((int) $this->project->getID());
+                $this->initializations_state->finishInitialization($this->project);
                 $logger->info(sprintf('Mediawiki %s success', self::class));
                 return Result::ok(null);
             }

@@ -33,6 +33,7 @@ use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimer;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetriever;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstance;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiService;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsage;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
@@ -50,6 +51,7 @@ final class InstanceManagement
         private ProjectByIDFactory $project_factory,
         private MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
         private readonly MediaWikiManagementCommandFactory $command_factory,
+        private readonly MediawikiFlavorUsage $mediawiki_flavor_usage,
         private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
         private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
@@ -67,6 +69,7 @@ final class InstanceManagement
                 $this->project_factory,
                 $this->central_database_parameter_generator,
                 $this->command_factory,
+                $this->mediawiki_flavor_usage,
                 $this->initializations_state,
                 $this->switch_mediawiki_service,
                 $this->legacy_mediawiki_db_primer,

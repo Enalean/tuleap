@@ -35,6 +35,8 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandDoNothing
 use Tuleap\MediawikiStandalone\Instance\MediaWikiCentralDatabaseParameterGeneratorStub;
 use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
 use Tuleap\MediawikiStandalone\Instance\ProvideInitializationLanguageCodeStub;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsage;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
@@ -66,8 +68,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testSuccess(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -110,6 +110,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             $switcher,
             $db_primer,
@@ -138,8 +139,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testUseDefaultLanguageIfLegacyMediaWikiDoesNotHaveOne(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -181,6 +180,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -207,8 +207,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testUseDefaultLanguageIfLegacyMediaWikiLanguageDoesNotHaveTheExpectedFormat(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -250,6 +248,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -276,8 +275,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testInstanceAlreadyExistsRunsMaintenanceSoUnsuccessfulMigrationHaveAChanceToComplete(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -306,6 +303,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -331,8 +329,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testInstanceIsInErrorAbortProcess(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -348,6 +344,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -374,8 +371,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testFailureToRegisterInstanceAbortProcess(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -402,6 +397,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
@@ -427,8 +423,6 @@ final class MigrateInstanceTest extends TestCase
 
     public function testFailureOfMaintenanceCommandAbortTheProcess(): void
     {
-        $this->project->addUsedServices([\MediaWikiPlugin::SERVICE_SHORTNAME, $this->createMock(\Service::class)]);
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
@@ -456,6 +450,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
@@ -479,17 +474,19 @@ final class MigrateInstanceTest extends TestCase
         );
     }
 
-    public function testNoUsageOfMWServiceAbortTheProcess(): void
+    public function testNoUsageOfLegacyMWAbortTheProcess(): void
     {
-        $this->project->addUsedServices('git');
-
         $initializations_state = OngoingInitializationsStateStub::buildSelf();
+
+        $flavor_usage                  = new MediawikiFlavorUsageStub();
+        $flavor_usage->was_legacy_used = false;
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandAlwaysFail()]),
+            $flavor_usage,
             $initializations_state,
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
@@ -508,7 +505,7 @@ final class MigrateInstanceTest extends TestCase
                 );
                 self::assertTrue(Result::isErr($result));
                 self::assertFalse($initializations_state->isStarted());
-                self::assertStringContainsString('Project does not use MediaWiki service', (string) $result->error);
+                self::assertStringContainsString('Project does not have a MediaWiki 1.23 to migrate', (string) $result->error);
             }
         );
     }
@@ -520,6 +517,7 @@ final class MigrateInstanceTest extends TestCase
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
             MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            self::buildFlavorUsageWithLegacyMediaWiki(),
             OngoingInitializationsStateStub::buildSelf(),
             SwitchMediawikiServiceStub::buildSelf(),
             new LegacyMediawikiDBPrimerStub(),
@@ -528,5 +526,12 @@ final class MigrateInstanceTest extends TestCase
         );
 
         self::assertTrue($migrate_instance_option->isNothing());
+    }
+
+    private static function buildFlavorUsageWithLegacyMediaWiki(): MediawikiFlavorUsage
+    {
+        $flavor_usage                  = new MediawikiFlavorUsageStub();
+        $flavor_usage->was_legacy_used = true;
+        return $flavor_usage;
     }
 }

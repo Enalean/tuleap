@@ -433,7 +433,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     #[ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
-        $logger = $this->getBackendLogger();
+        $logger           = $this->getBackendLogger();
+        $flavor_usage_dao = new MediawikiFlavorUsageDao();
         (new InstanceManagement(
             $logger,
             new MediawikiHTTPClientFactory(),
@@ -442,7 +443,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ProjectManager::instance(),
             new MediaWikiCentralDatabaseParameter($this->_getPluginManager()),
             $this->getMediaWikiManagementCommandProcessFactory($logger),
-            new OngoingInitializationsDao(),
+            $flavor_usage_dao,
+            new OngoingInitializationsDao($flavor_usage_dao),
             new ServiceMediawikiSwitcher(new ServiceDao(), $logger),
             new \Tuleap\MediawikiStandalone\Instance\Migration\PrimeLegacyMediawikiDB(),
             new LegacyMediawikiLanguageDao(),
@@ -559,7 +561,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ProjectManager::instance(),
             $this,
             TemplateRendererFactory::build(),
-            new OngoingInitializationsDao(),
+            new OngoingInitializationsDao(new MediawikiFlavorUsageDao()),
         );
     }
 

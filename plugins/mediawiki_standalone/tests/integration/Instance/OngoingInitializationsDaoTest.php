@@ -23,51 +23,61 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Instance;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OngoingInitializationsDaoTest extends TestCase
 {
+    private OngoingInitializationsDao $dao;
+    private \Project $project;
+
+    protected function setUp(): void
+    {
+        $this->dao     = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());
+        $this->project = ProjectTestBuilder::aProject()->build();
+    }
+
     protected function tearDown(): void
     {
-        DBFactory::getMainTuleapDBConnection()
-            ->getDB()
-            ->run('DELETE FROM plugin_mediawiki_standalone_ongoing_initializations');
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+
+        $db->run('DELETE FROM plugin_mediawiki_standalone_ongoing_initializations');
+        $db->run('DELETE FROM plugin_mediawiki_database');
     }
 
     public function testStartOngoingMigration(): void
     {
-        $dao = new OngoingInitializationsDao();
-
-        self::assertFalse($dao->getStatus(101)->isOngoing());
-        $dao->startInitialization(101);
-        self::assertTrue($dao->getStatus(101)->isOngoing());
+        self::assertFalse($this->dao->getStatus($this->project)->isOngoing());
+        $this->dao->startInitialization($this->project);
+        self::assertTrue($this->dao->getStatus($this->project)->isOngoing());
 
         // ignore already started initializations
-        $dao->startInitialization(101);
-        self::assertTrue($dao->getStatus(101)->isOngoing());
-        self::assertFalse($dao->getStatus(101)->isError());
+        $this->dao->startInitialization($this->project);
+        self::assertTrue($this->dao->getStatus($this->project)->isOngoing());
+        self::assertFalse($this->dao->getStatus($this->project)->isError());
     }
 
     public function testError(): void
     {
-        $dao = new OngoingInitializationsDao();
+        $this->dao->startInitialization($this->project);
+        self::assertFalse($this->dao->getStatus($this->project)->isError());
 
-        $dao->startInitialization(101);
-        self::assertFalse($dao->getStatus(101)->isError());
-
-        $dao->markAsError(101);
-        self::assertTrue($dao->getStatus(101)->isError());
-        self::assertFalse($dao->getStatus(101)->isOngoing());
+        $this->dao->markAsError($this->project);
+        self::assertTrue($this->dao->getStatus($this->project)->isError());
+        self::assertFalse($this->dao->getStatus($this->project)->isOngoing());
     }
 
     public function testFinishInitialization(): void
     {
-        $dao = new OngoingInitializationsDao();
+        $db         = DBFactory::getMainTuleapDBConnection()->getDB();
+        $project_id = $this->project->getID();
+        $db->run('INSERT INTO plugin_mediawiki_database (project_id, database_name) VALUES (?, "db_name")', $project_id);
+        $this->dao->startInitialization($this->project);
+        self::assertTrue($this->dao->getStatus($this->project)->isOngoing());
 
-        $dao->startInitialization(101);
-        self::assertTrue($dao->getStatus(101)->isOngoing());
-
-        $dao->finishInitialization(101);
-        self::assertFalse($dao->getStatus(101)->isOngoing());
+        $this->dao->finishInitialization($this->project);
+        self::assertFalse($this->dao->getStatus($this->project)->isOngoing());
+        self::assertEmpty($db->run('SELECT project_id FROM plugin_mediawiki_database WHERE project_id=?', $project_id));
     }
 }

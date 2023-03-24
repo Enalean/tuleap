@@ -58,7 +58,7 @@ final class UnderConstructionController implements DispatchableWithRequest, Disp
             throw new NotFoundException();
         }
 
-        $ongoing_initialization_status = $this->check_ongoing_initializations_status->getStatus((int) $project->getID());
+        $ongoing_initialization_status = $this->check_ongoing_initializations_status->getStatus($project);
         if (! $ongoing_initialization_status->isOngoing() && ! $ongoing_initialization_status->isError()) {
             $layout->redirect($service->getUrl());
         }

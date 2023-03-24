@@ -24,5 +24,5 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 interface CheckOngoingInitializationStatus
 {
-    public function getStatus(int $project_id): OngoingInitializationStatus;
+    public function getStatus(\Project $project): OngoingInitializationStatus;
 }

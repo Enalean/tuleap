@@ -24,9 +24,9 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 interface OngoingInitializationsState
 {
-    public function startInitialization(int $project_id): void;
+    public function startInitialization(\Project $project): void;
 
-    public function finishInitialization(int $project_id): void;
+    public function finishInitialization(\Project $project): void;
 
-    public function markAsError(int $project_id): void;
+    public function markAsError(\Project $project): void;
 }
