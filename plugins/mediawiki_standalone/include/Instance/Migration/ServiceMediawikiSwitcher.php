@@ -60,7 +60,7 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
                 $this->service_dao->saveBasicInformation(
                     $standalone['service_id'],
                     $standalone['label'],
-                    $standalone['icon_name'],
+                    $standalone['icon'],
                     $standalone['description'],
                     $standalone['link'],
                     $legacy['rank'],
