@@ -83,4 +83,9 @@ final class TestLayout extends BaseLayout
     {
         $this->inspector->addFeedback($level, $message);
     }
+
+    public function permanentRedirect($redirect_url): never
+    {
+        $this->inspector->setPermanentRedirectUrl((string) $redirect_url);
+    }
 }
