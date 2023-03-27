@@ -60,20 +60,21 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
     protected function tearDown(): void
     {
-        DBFactory::getMainTuleapDBConnection()
-            ->getDB()
-            ->run('DELETE FROM plugin_mediawiki_standalone_permissions');
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run('DELETE FROM plugin_mediawiki_standalone_permissions');
+        $db->run('DELETE FROM plugin_mediawiki_ugroup_mapping');
+        $db->run('DELETE FROM plugin_mediawiki_access_control');
     }
 
     public function testSaveAndGetPermissions(): void
     {
         self::assertEquals(
             [],
-            $this->dao->searchByProject($this->project, new PermissionRead())
+            $this->dao->searchByProject($this->project)
         );
         self::assertEquals(
             [],
-            $this->dao->searchByProject($this->project, new PermissionWrite())
+            $this->dao->searchByProject($this->project)
         );
 
         $this->dao->saveProjectPermissions(
@@ -269,6 +270,95 @@ final class MediawikiPermissionsDaoTest extends TestCase
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
             $this->getUgroupIds($yet_another_project, new PermissionAdmin())
+        );
+    }
+
+    public function testMigrationFromMediaWiki123(): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insertMany('plugin_mediawiki_ugroup_mapping', [
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::ANONYMOUS,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::REGISTERED,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::REGISTERED,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::PROJECT_ADMIN,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::PROJECT_MEMBERS,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => self::INTEGRATORS_ID,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => \ProjectUGroup::AUTHENTICATED,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => self::QA_ID,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT,
+            ],
+            [
+                'group_id'      => self::PROJECT_ID,
+                'ugroup_id'     => self::DEVELOPERS_ID,
+                'mw_group_name' => \MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT,
+            ],
+        ]);
+        $db->insertMany('plugin_mediawiki_access_control', [
+            [
+                'project_id' => self::PROJECT_ID,
+                'access'     => \MediawikiManager::READ_ACCESS,
+                'ugroup_id'  => \ProjectUGroup::PROJECT_MEMBERS,
+            ],
+            [
+                'project_id' => self::PROJECT_ID,
+                'access'     => \MediawikiManager::WRITE_ACCESS,
+                'ugroup_id'  => \ProjectUGroup::PROJECT_MEMBERS,
+            ],
+            [
+                'project_id' => self::PROJECT_ID,
+                'access'     => \MediawikiManager::READ_ACCESS,
+                'ugroup_id'  => self::QA_ID,
+            ],
+            [
+                'project_id' => self::PROJECT_ID,
+                'access'     => \MediawikiManager::WRITE_ACCESS,
+                'ugroup_id'  => self::DEVELOPERS_ID,
+            ],
+        ]);
+
+        $this->dao->migrateFromLegacyPermissions($this->project);
+
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::QA_ID],
+            $this->getUgroupIds($this->project, new PermissionRead())
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getUgroupIds($this->project, new PermissionWrite())
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::INTEGRATORS_ID],
+            $this->getUgroupIds($this->project, new PermissionAdmin())
         );
     }
 

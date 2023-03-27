@@ -35,6 +35,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
 use Tuleap\MediawikiStandalone\Instance\InitializationIssue;
 use Tuleap\MediawikiStandalone\Instance\InitializationLanguageCodeProvider;
+use Tuleap\MediawikiStandalone\Permissions\LegacyPermissionsMigrator;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsage;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -59,6 +60,7 @@ final class MigrateInstance
         private readonly SwitchMediawikiService $switch_mediawiki_service,
         private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
+        private readonly LegacyPermissionsMigrator $legacy_permissions_migrator,
     ) {
     }
 
@@ -75,6 +77,7 @@ final class MigrateInstance
         LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
         InitializationLanguageCodeProvider $default_language_code_provider,
+        LegacyPermissionsMigrator $legacy_permissions_migrator,
     ): Option {
         if ($event->getEventName() !== self::TOPIC) {
             return Option::nothing(self::class);
@@ -94,6 +97,7 @@ final class MigrateInstance
                 $switch_mediawiki_service,
                 $legacy_mediawiki_db_primer,
                 $legacy_mediawiki_language_retriever,
+                $legacy_permissions_migrator,
             )
         );
     }
@@ -214,13 +218,21 @@ final class MigrateInstance
         $request = $request_factory
             ->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->project->getUnixNameLowerCase()) . '/update')
             ->withBody($stream_factory->createStream('{}'));
-        return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
-            /** @psalm-return Ok<\Project> */
-            function () use ($logger): Ok {
-                $logger->info(sprintf('Mediawiki %s success', self::class));
-                return Result::ok($this->project);
-            }
-        );
+        return self::processSuccessOnlyRequest($client, $request, $logger)
+            ->andThen(
+                /** @psalm-return Ok<null>|Err<Fault> */
+                function (): Ok|Err {
+                    $this->legacy_permissions_migrator->migrateFromLegacyPermissions($this->project);
+
+                    return Result::ok(null);
+                }
+            )->andThen(
+                /** @psalm-return Ok<\Project> */
+                function () use ($logger): Ok {
+                    $logger->info(sprintf('Mediawiki %s success', self::class));
+                    return Result::ok($this->project);
+                }
+            );
     }
 
     /**

@@ -36,6 +36,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiDBPrimerStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\LegacyMediawikiLanguageRetrieverStub;
 use Tuleap\MediawikiStandalone\Instance\Migration\SwitchMediawikiServiceStub;
+use Tuleap\MediawikiStandalone\Permissions\LegacyPermissionsMigratorStub;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageStub;
 use Tuleap\MediawikiStandalone\Stub\MediaWikiManagementCommandFactoryStub;
 use Tuleap\Queue\WorkerEvent;
@@ -95,6 +96,7 @@ final class InstanceManagementTest extends TestCase
             new LegacyMediawikiDBPrimerStub(),
             LegacyMediawikiLanguageRetrieverStub::withoutLanguage(),
             new ProvideInitializationLanguageCodeStub(),
+            LegacyPermissionsMigratorStub::buildSelf(),
         );
 
         parent::setUp();
