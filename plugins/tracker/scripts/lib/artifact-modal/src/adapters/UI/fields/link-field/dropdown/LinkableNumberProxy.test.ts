@@ -17,10 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Option } from "@tuleap/option";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import { CurrentArtifactIdentifierStub } from "../../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
+import type { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
 
 describe("LinkableNumberProxy", () => {
+    let current_artifact_identifier: CurrentArtifactIdentifier | null;
+
+    beforeEach(() => {
+        current_artifact_identifier = null;
+    });
+
+    const build = (query: string): Option<LinkableNumber> =>
+        LinkableNumberProxy.fromQueryString(query, current_artifact_identifier);
+
     it.each([
         "abcd",
         "10+",
@@ -34,18 +46,17 @@ describe("LinkableNumberProxy", () => {
         "0b1101001",
         "0o151",
         "0x69",
-    ])("should return null when %s is entered", (query) => {
-        expect(LinkableNumberProxy.fromQueryString(query, null)).toBeNull();
+    ])("should return nothing when %s is entered", (query) => {
+        expect(build(query).isNothing()).toBe(true);
     });
 
-    it("should return null when the user has entered the current artifact_id", () => {
-        expect(
-            LinkableNumberProxy.fromQueryString("105", CurrentArtifactIdentifierStub.withId(105))
-        ).toBeNull();
+    it("should return nothing when the user has entered the current artifact_id", () => {
+        current_artifact_identifier = CurrentArtifactIdentifierStub.withId(105);
+        expect(build("105").isNothing()).toBe(true);
     });
 
     it("should return a LinkableNumber", () => {
-        const linkable_number = LinkableNumberProxy.fromQueryString("105", null);
-        expect(linkable_number?.id).toBe(105);
+        const linkable_number = build("105");
+        expect(linkable_number.unwrapOr(null)?.id).toBe(105);
     });
 });

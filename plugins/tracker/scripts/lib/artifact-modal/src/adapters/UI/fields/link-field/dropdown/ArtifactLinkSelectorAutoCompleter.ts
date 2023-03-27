@@ -130,16 +130,14 @@ export const ArtifactLinkSelectorAutoCompleter = (
             host.search_results_section = [];
             host.possible_parents_section = [];
 
-            const linkable_number = LinkableNumberProxy.fromQueryString(
-                query,
-                current_artifact_identifier
+            LinkableNumberProxy.fromQueryString(query, current_artifact_identifier).apply(
+                (linkable_number) => {
+                    host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
+                    getMatchingArtifactsGroup(linkable_number).then((group) => {
+                        host.matching_artifact_section = [group];
+                    });
+                }
             );
-            if (linkable_number) {
-                host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
-                getMatchingArtifactsGroup(linkable_number).then((group) => {
-                    host.matching_artifact_section = [group];
-                });
-            }
             if (!isParentSelected(host)) {
                 host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildLoadingState()];
                 getRecentlyViewedItems(query).then((group) => {
