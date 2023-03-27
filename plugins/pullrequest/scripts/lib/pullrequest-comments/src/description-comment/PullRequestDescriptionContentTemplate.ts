@@ -62,6 +62,32 @@ const getContent = (
     `;
 };
 
+const getFooter = (
+    host: PullRequestDescriptionComment,
+    gettext_provider: GettextProvider
+): UpdateFunction<PullRequestDescriptionComment> => {
+    if (!host.description.can_user_update_description) {
+        return html``;
+    }
+
+    const onClickToggleEditionForm = (host: PullRequestDescriptionComment): void => {
+        host.controller.showEditionForm(host);
+    };
+
+    return html`
+        <div class="pull-request-comment-footer" data-test="description-comment-footer">
+            <button
+                type="button"
+                class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
+                onclick="${onClickToggleEditionForm}"
+                data-test="button-edit-description-comment"
+            >
+                ${gettext_provider.gettext("Edit")}
+            </button>
+        </div>
+    `;
+};
+
 export const getDescriptionContentTemplate = (
     host: PullRequestDescriptionComment,
     gettext_provider: GettextProvider
@@ -69,10 +95,6 @@ export const getDescriptionContentTemplate = (
     if (host.edition_form_presenter !== null) {
         return html``;
     }
-
-    const onClickToggleEditionForm = (host: PullRequestDescriptionComment): void => {
-        host.controller.showEditionForm(host);
-    };
 
     return html`
         <div class="pull-request-comment-content" data-test="pull-request-description-read-mode">
@@ -83,17 +105,7 @@ export const getDescriptionContentTemplate = (
                     host.description.post_date
                 )}
             </div>
-            ${getContent(host, gettext_provider)}
-            <div class="pull-request-comment-footer">
-                <button
-                    type="button"
-                    class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
-                    onclick="${onClickToggleEditionForm}"
-                    data-test="button-edit-description-comment"
-                >
-                    ${gettext_provider.gettext("Edit")}
-                </button>
-            </div>
+            ${getContent(host, gettext_provider)} ${getFooter(host, gettext_provider)}
         </div>
     `;
 };

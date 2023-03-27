@@ -18,12 +18,11 @@
   -->
 
 <template>
-    <div class="pull-request-edit-title">
+    <div class="pull-request-edit-title" v-if="can_user_edit_title">
         <button
             class="tlp-button-primary tlp-button-outline"
             type="button"
             v-on:click="openModal"
-            v-bind:disabled="pull_request_info === null"
             data-test="pull-request-open-title-modal-button"
         >
             <i class="tlp-button-icon fa-solid fa-pencil"></i>
@@ -88,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount } from "vue";
+import { ref, watch, onBeforeUnmount, computed } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useGettext } from "vue3-gettext";
@@ -108,10 +107,14 @@ const title = ref("");
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const postPullRequestUpdateCallback = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
 
+const can_user_edit_title = computed(
+    (): boolean => props.pull_request_info !== null && props.pull_request_info.user_can_merge
+);
+
 watch(
     () => [props.pull_request_info, modal_element.value],
     () => {
-        if (props.pull_request_info === null) {
+        if (props.pull_request_info === null || !can_user_edit_title.value) {
             return;
         }
 
@@ -135,7 +138,7 @@ onBeforeUnmount(() => {
 });
 
 async function saveTitle(): Promise<void> {
-    if (!props.pull_request_info) {
+    if (!props.pull_request_info || !can_user_edit_title.value) {
         return;
     }
     is_saving.value = true;

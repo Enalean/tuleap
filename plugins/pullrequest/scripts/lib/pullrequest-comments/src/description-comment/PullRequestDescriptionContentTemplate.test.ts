@@ -91,6 +91,23 @@ describe("PullRequestDescriptionContentTemplate", () => {
         }
     );
 
+    it("When the user cannot edit the description, then no footer will be rendered", () => {
+        const host = {
+            ...base_host,
+            description: {
+                author: DescriptionAuthorStub.withDefault(),
+                post_date: "2023-03-15T11:20:00Z",
+                content: "",
+                can_user_update_description: false,
+            },
+        } as HostElement;
+
+        const render = getDescriptionContentTemplate(host, GettextProviderStub);
+        render(host, target);
+
+        expect(target.querySelector("[data-test=description-comment-footer]")).toBeNull();
+    });
+
     it("When the user clicks on [Edit], then the controller should be asked to show the edition form", () => {
         const host = {
             ...base_host,
@@ -99,6 +116,7 @@ describe("PullRequestDescriptionContentTemplate", () => {
                 post_date: "2023-03-15T11:20:00Z",
                 content: "",
                 raw_content: "",
+                can_user_update_description: true,
             },
         } as HostElement;
 
