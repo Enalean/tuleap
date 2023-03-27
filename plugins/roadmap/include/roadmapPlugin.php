@@ -68,19 +68,7 @@ class RoadmapPlugin extends Plugin
         return ['tracker'];
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(ConfigureAtXMLImport::NAME);
-        $this->addHook(GetSemanticProgressUsageEvent::NAME);
-        $this->addHook(GetSemanticTimeframeUsageEvent::NAME);
-        $this->addHook(ProjectDashboardIsDisplayed::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === RoadmapProjectWidget::ID) {
@@ -98,25 +86,26 @@ class RoadmapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event): void
     {
         $event->addWidget(RoadmapProjectWidget::ID);
     }
 
-    /**
-     * @see Event::REST_RESOURCES
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function configureAtXMLImport(ConfigureAtXMLImport $event): void
     {
         (new Tuleap\Roadmap\Widget\RoadmapConfigureAtXMLImport())->configure($event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getSemanticProgressUsageEvent(GetSemanticProgressUsageEvent $event): void
     {
         $event->addUsageLocation(
@@ -124,6 +113,7 @@ class RoadmapPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getSemanticTimeframeUsageEvent(GetSemanticTimeframeUsageEvent $event): void
     {
         $event->addUsageLocation(
@@ -131,6 +121,7 @@ class RoadmapPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $event): void
     {
         $layout = $event->getLayout();
