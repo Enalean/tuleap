@@ -283,6 +283,8 @@ require_once __DIR__ . '/../include/manual_autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
+    public final const TRACKER_EVENT_INCLUDE_CSS_FILE = 'tracker_event_include_css_file';
+
     public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
@@ -524,7 +526,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function cssFile()
     {
         $include_tracker_css_file = false;
-        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
         if (
@@ -545,7 +547,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function burning_parrot_get_stylesheets($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $include_tracker_css_file = false;
-        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
 
         if ($include_tracker_css_file || strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('tracker-bp.css');

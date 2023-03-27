@@ -24,6 +24,17 @@ use Tuleap\Tracker\Artifact\Artifact;
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
     /**
+     * Event emitted when a field data can be augmented by plugins
+     *
+     * Parameters:
+     *   'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+     *   'result'                 String (OUT)
+     *   'artifact_id'            Int (IN)
+     *   'field'                  Tracker_FormElement_Field (IN)
+     */
+    public final const TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT = 'tracker_event_field_augment_data_for_report';
+
+    /**
      * @psalm-mutation-free
      */
     public function getLabel($report = null)
@@ -80,7 +91,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         $result = '';
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT,
+            self::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT,
             [
                 'additional_criteria' => $report->getAdditionalCriteria(false),
                 'result'              => &$result,

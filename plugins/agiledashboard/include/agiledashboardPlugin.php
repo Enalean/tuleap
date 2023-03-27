@@ -215,31 +215,29 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
-            $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
-            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated');
+            $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated');
             $this->addHook(BuildArtifactFormActionEvent::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited');
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
-            $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
-            $this->addHook(TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
-            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
+            $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
+            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
+            $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
+            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook('plugin_statistics_service_usage');
-            $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
-            $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
-            $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
-            $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
-            $this->addHook(TRACKER_USAGE);
+            $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
+            $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
+            $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
+            $this->addHook(Tracker_FormElement_Field_Priority::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
+            $this->addHook(Tracker::TRACKER_USAGE);
             $this->addHook(RegisterProjectCreationEvent::NAME);
-            $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-            $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+            $this->addHook(Tracker::TRACKER_EVENT_GENERAL_SETTINGS);
             $this->addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
-            $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(HistoryEntryCollection::NAME);
@@ -443,7 +441,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
+     * @see Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
      */
     public function tracker_event_report_display_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -529,7 +527,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
+     * @see Tracker_Report::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
      */
     public function tracker_event_report_save_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -552,7 +550,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA
+     * @see Tracker_Report::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA
      */
     public function tracker_event_report_load_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -851,27 +849,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function tracker_event_artifact_association_edited($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['request']->isAjax()) {
-            $milestone_factory = $this->getMilestoneFactory();
-            $milestone         = $milestone_factory->getBareMilestoneByArtifact($params['user'], $params['artifact']);
-
-            $milestone_with_contextual_info = $milestone_factory->updateMilestoneContextualInfo($params['user'], $milestone);
-
-            $capacity         = $milestone_with_contextual_info->getCapacity();
-            $remaining_effort = $milestone_with_contextual_info->getRemainingEffort();
-
-            header('Content-type: application/json');
-            echo json_encode([
-                'remaining_effort' => $remaining_effort,
-                'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
-            ]);
-        }
-    }
-
     /**
-     * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
+     * @see Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
      */
     public function tracker_event_manage_semantics($parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -883,7 +862,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see Event::TRACKER_EVENT_SEMANTIC_FROM_XML
+     * @see Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
     public function tracker_event_semantic_from_xml(&$parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -910,7 +889,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
+     * @see Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
     public function tracker_event_get_semantic_duplicators($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -925,7 +904,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     /**
      * Augment $params['semantics'] with names of AgileDashboard semantics
      *
-     * @see TRACKER_EVENT_GET_SEMANTICS_NAMES
+     * @see Tracker_SemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES
      */
     public function tracker_event_get_semantics_names(&$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -1010,21 +989,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
-    /**
-    * @see ITEM_PRIORITY_CHANGE
-    */
-    public function item_priority_change($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $planning_id = $this->getPlanningIdFromParameters($params);
-
-        $params['user_is_authorized'] = $this->getPlanningPermissionsManager()->userHasPermissionOnPlanning(
-            $planning_id,
-            $params['group_id'],
-            $params['user'],
-            PlanningPermissionsManager::PERM_PRIORITY_CHANGE
-        );
-    }
-
     private function getPlanningIdFromParameters($params)
     {
         if ($params['milestone_id'] == 0) {
@@ -1051,7 +1015,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
+     * @see Tracker_FormElement_Field_Priority::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
      */
     public function tracker_event_field_augment_data_for_report($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {

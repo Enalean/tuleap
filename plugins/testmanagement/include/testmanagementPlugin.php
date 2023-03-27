@@ -85,6 +85,7 @@ use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
@@ -140,9 +141,9 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $this->addHook('javascript_file');
             $this->addHook('cssfile');
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-            $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED);
-            $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
+            $this->addHook(ArtifactLinkValueSaver::TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
 
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
@@ -153,7 +154,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
             $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
             $this->addHook(TrackerEventExportFullXML::NAME);
-            $this->addHook(TRACKER_USAGE);
+            $this->addHook(Tracker::TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(SwitchToLinksCollection::NAME);
@@ -443,7 +444,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
     }
 
     /**
-     * @see TRACKER_USAGE
+     * @see Tracker::TRACKER_USAGE
      *
      */
     public function trackerUsage(array $params): void

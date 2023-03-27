@@ -35,6 +35,19 @@ use Tuleap\Tracker\Artifact\Artifact;
 class ArtifactLinkValueSaver
 {
     /**
+     * Request a custom type from other plugins for a new artifact link
+     *
+     * Parameters:
+     * 'project_id'      => The id of the target project
+     * 'to_artifact'     => The artifact linked to
+     * 'submitted_value' => Values from the artifact form
+     *
+     * Expected results:
+     * 'nature'          => string the type proposed by the plugin
+     */
+    public final const TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED = 'tracker_event_artifact_link_type_requested';
+
+    /**
      * @var Tracker_ReferenceManager
      */
     private $reference_manager;
@@ -239,7 +252,7 @@ class ArtifactLinkValueSaver
         array $submitted_value,
     ) {
         $type_by_plugin = null;
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED, [
+        $this->event_manager->processEvent(self::TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED, [
             'project_id'      => $artifactlinkinfo->getGroupId(),
             'to_artifact'     => $to_artifact,
             'submitted_value' => $submitted_value,

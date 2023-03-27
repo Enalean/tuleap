@@ -103,7 +103,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(Event::REST_RESOURCES);
-            $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(CollectRoutesEvent::NAME);
         }
 
@@ -159,7 +159,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $injector->populate($params['restler']);
     }
 
-    /** @see TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED */
+    /** @see TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED */
     public function trackerEventProjectCreationTrackersRequired(array $params)
     {
         $dao = new CrossTrackerReportDao();

@@ -78,15 +78,15 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
-            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
+            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(Event::JAVASCRIPT);
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
             $this->addHook(AllowedFieldTypeChangesRetriever::NAME);
-            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
-            $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
-            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
+            $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS);
+            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML);
+            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
@@ -323,7 +323,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     }
 
     /**
-     * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
+     * @see Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
      */
     public function tracker_event_manage_semantics($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -346,7 +346,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     }
 
     /**
-     * @see TRACKER_EVENT_SEMANTIC_FROM_XML
+     * @see Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
     public function tracker_event_semantic_from_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -368,7 +368,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     }
 
     /**
-     * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
+     * @see Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
     public function trackerEventGetSemanticDuplicators($params)
     {
