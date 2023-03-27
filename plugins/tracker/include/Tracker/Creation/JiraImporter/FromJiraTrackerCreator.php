@@ -40,8 +40,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsRetrieverFromAPI;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
@@ -146,10 +144,6 @@ class FromJiraTrackerCreator
             throw new TrackerCreationHasFailedException($exception->getMessage());
         }
 
-        $this->logger->info("Retrieving Jira labels");
-        $labels                 = (new JiraLabelsRetrieverFromAPI($jira_client, $this->logger))->getPlatformLabels();
-        $jira_labels_collection = JiraLabelsCollection::buildFromLabels($labels);
-
         $tracker_for_export = (new XMLTracker('T200', $itemname))
             ->withName($name)
             ->withDescription($description)
@@ -164,7 +158,6 @@ class FromJiraTrackerCreator
             $issue_type,
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
-            $jira_labels_collection,
         );
 
         $xml = $jira_exporter->getProjectSimpleXmlElement($tracker_xml);

@@ -33,7 +33,6 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\XML\IDGenerator;
@@ -547,7 +546,6 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
-            JiraLabelsCollection::buildEmpty(),
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');
@@ -573,7 +571,6 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             new PlatformConfiguration(),
             $this->field_mapping_collection,
-            JiraLabelsCollection::buildEmpty(),
         );
 
         assertEquals(" |_ Field votes_id (votes) ignored ", $this->logger->messages['debug'][0]);
@@ -601,7 +598,6 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->id_generator,
             $platform_configuration,
             $this->field_mapping_collection,
-            JiraLabelsCollection::buildEmpty(),
         );
 
         $xml              = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project><trackers/></project>');

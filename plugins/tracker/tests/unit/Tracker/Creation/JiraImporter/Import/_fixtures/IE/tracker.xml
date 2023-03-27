@@ -142,11 +142,7 @@
         <formElement type="tbl" ID="bug_labels" rank="1">
           <name><![CDATA[labels]]></name>
           <label><![CDATA[Labels]]></label>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="Vbug_labels_zezezez" label="zezezez"/>
-            </items>
-          </bind>
+          <bind type="static" is_rank_alpha="0"/>
         </formElement>
         <formElement type="msb" ID="bug_versions" rank="1">
           <name><![CDATA[versions]]></name>
@@ -531,7 +527,7 @@
           <value format="id"><![CDATA[bug_priority_highest]]></value>
         </field_change>
         <field_change field_name="labels" type="open_list" bind="static">
-          <value format="id"><![CDATA[bbug_labels_zezezez]]></value>
+          <value><![CDATA[zezezez]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
           <value format="id"><![CDATA[bug_versions_release_2_0]]></value>

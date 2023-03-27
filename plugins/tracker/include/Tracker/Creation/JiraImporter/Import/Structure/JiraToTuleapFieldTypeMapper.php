@@ -28,7 +28,6 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
@@ -60,7 +59,6 @@ class JiraToTuleapFieldTypeMapper
         IDGenerator $id_generator,
         PlatformConfiguration $platform_configuration,
         FieldMappingCollection $jira_field_mapping_collection,
-        JiraLabelsCollection $jira_labels_collection,
     ): XMLTracker {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
@@ -288,8 +286,8 @@ class JiraToTuleapFieldTypeMapper
                     $field = XMLOpenListField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRequired($jira_field->isRequired())
-                        ->withPermissions(... $permissions);
-                    $field = $this->addLabelsValues($field, $jira_labels_collection);
+                        ->withPermissions(... $permissions)
+                        ->withBindStatic();
 
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
@@ -376,16 +374,6 @@ class JiraToTuleapFieldTypeMapper
         }
 
         return $xml_tracker;
-    }
-
-    private function addLabelsValues(XMLListField $tuleap_field, JiraLabelsCollection $jira_labels_collection): XMLListField
-    {
-        $values = [];
-        foreach ($jira_labels_collection->labels as $jira_label) {
-            $values[] = XMLBindStaticValue::fromLabel($tuleap_field, $jira_label->name);
-        }
-
-        return $tuleap_field->withStaticValues(...$values);
     }
 
     private function addBoundStaticValues(XMLListField $tuleap_field, JiraFieldAPIRepresentation $jira_field): XMLListField

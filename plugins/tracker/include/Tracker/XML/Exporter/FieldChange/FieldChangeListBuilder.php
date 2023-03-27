@@ -99,4 +99,27 @@ class FieldChangeListBuilder
             }
         }
     }
+
+    public function buildAStaticOpenListWithValueLabels(
+        SimpleXMLElement $changeset_xml,
+        string $field_name,
+        array $values,
+    ): void {
+        $field_change = $changeset_xml->addChild('field_change');
+        $field_change->addAttribute('field_name', $field_name);
+        $field_change->addAttribute('type', 'open_list');
+        $field_change->addAttribute('bind', 'static');
+
+        if (empty($values)) {
+            $field_change->addChild('value');
+        } else {
+            foreach ($values as $value) {
+                $this->simple_xml_cdata_factory->insert(
+                    $field_change,
+                    'value',
+                    (string) $value,
+                );
+            }
+        }
+    }
 }

@@ -44,7 +44,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\Labels\JiraLabelsCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
@@ -166,7 +165,6 @@ final class ReplayImportCommand extends Command
             new IssueType($jira_issue_type_id, 'undefined', false),
             new FieldAndValueIDGenerator(),
             new LinkedIssuesCollection(),
-            JiraLabelsCollection::buildEmpty(),
         );
 
         return $jira_xml_exporter->getProjectSimpleXmlElement($tracker_xml);
