@@ -40,6 +40,11 @@ final class SiteDeployGitolite3
             return;
         }
 
+        if (! self::hasTuleapGitBin()) {
+            $logger->error("No Tuleap git detected whereas git plugin in installed, cannot proceed");
+            return;
+        }
+
         $this->updateGitoliteShellProfile($logger);
 
         $this->updateGitoliteConfig($logger);
@@ -111,10 +116,7 @@ final class SiteDeployGitolite3
         );
 
 
-        $git_bin_path = '/opt/rh/rh-git218/root/usr/bin';
-        if (self::hasTuleapGitBin()) {
-            $git_bin_path = '/usr/lib/tuleap/git/bin';
-        }
+        $git_bin_path = '/usr/lib/tuleap/git/bin';
 
         $config = preg_replace(
             '/^\$ENV{PATH} =.*$/m',
@@ -127,10 +129,7 @@ final class SiteDeployGitolite3
 
     private function getExpectedGitoliteProfileContent(): string
     {
-        if (self::hasTuleapGitBin()) {
-            return 'export PATH=/usr/lib/tuleap/git/bin${PATH:+:${PATH}}' . "\n";
-        }
-        return "source /opt/rh/rh-git218/enable\n";
+        return 'export PATH=/usr/lib/tuleap/git/bin${PATH:+:${PATH}}' . "\n";
     }
 
     private function writeFile(string $path, string $content): void

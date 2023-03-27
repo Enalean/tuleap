@@ -25,19 +25,12 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\History\Dao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 
 $console    = new Log_ConsoleLogger();
 $logger     = \BackendLogger::getDefaultLogger(GitPlugin::LOG_IDENTIFIER);
 $broker_log = new BrokerLogger([$logger, $console]);
-
-$detector = new VersionDetector();
-if (! $detector->isGitolite3()) {
-    $broker_log->error("You are currently using Gitolite2. Parsing logs only works for Gitolite3.");
-    exit(1);
-}
 
 $broker_log->info("Starting parse gitolite3 logs.");
 $gitolite_parser = new Gitolite3LogParser(

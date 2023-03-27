@@ -52,7 +52,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $permissions_manager;
     private $gerrit_project_status;
     private $big_object_authorization_manager;
-    private $version_detector;
 
     public function setUp(): void
     {
@@ -86,7 +85,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger = Mockery::spy(\Psr\Log\LoggerInterface::class);
 
         $this->big_object_authorization_manager = Mockery::mock(BigObjectAuthorizationManager::class);
-        $this->version_detector                 = Mockery::mock(VersionDetector::class);
 
         $this->project_serializer = new Git_Gitolite_ProjectSerializer(
             $this->logger,
@@ -94,7 +92,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->gitolite_permissions_serializer,
             $this->url_manager,
             $this->big_object_authorization_manager,
-            $this->version_detector
         );
     }
 
@@ -184,7 +181,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns(['125']);
 
         $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
-        $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
@@ -229,7 +225,6 @@ class ProjectSerializerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gerrit_project_status->shouldReceive('getStatus')->andReturn(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
         $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
-        $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
@@ -336,55 +331,10 @@ EOS;
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns([]);
 
         $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([$prj]);
-        $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
         $result   = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->fix_dir . '/perms/bigobject.conf');
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function testDoNotWriteBigObjectRuleIfItIsNotGitolite3()
-    {
-        $prj = Mockery::spy(\Project::class);
-        $prj->shouldReceive('getUnixName')->andReturn('project1');
-        $prj->shouldReceive('getID')->andReturn(404);
-
-        $repo = new GitRepository();
-        $repo->setId(4);
-        $repo->setProject($prj);
-        $repo->setName('test_default');
-        $repo->setMailPrefix('[SCM]');
-        $repo->setNamespace('');
-
-        $repo2 = new GitRepository();
-        $repo2->setId(5);
-        $repo2->setProject($prj);
-        $repo2->setName('test_pimped');
-        $repo2->setMailPrefix('[KOIN] ');
-        $repo2->setNamespace('');
-
-        // List all repo
-        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
-            ->with($prj)
-            ->once()
-            ->andReturn([$repo, $repo2]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_READ')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WRITE')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 4, 'PLUGIN_GIT_WPLUS')->andReturns([]);
-
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_READ')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WRITE')->andReturns([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($prj, 5, 'PLUGIN_GIT_WPLUS')->andReturns([]);
-
-        $this->big_object_authorization_manager->shouldReceive('getAuthorizedProjects')->andReturn([]);
-        $this->version_detector->shouldReceive('isGitolite3')->andReturnFalse();
-
-        // Ensure file is correct
-        $result   = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected = file_get_contents($this->fix_dir . '/perms/notgitolite3.conf');
 
         $this->assertSame($expected, $result);
     }

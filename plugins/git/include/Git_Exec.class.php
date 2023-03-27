@@ -27,7 +27,6 @@ use Tuleap\Git\Branch\BranchName;
 class Git_Exec
 {
     public const GIT_TULEAP_PATH = '/usr/lib/tuleap/git';
-    public const GIT218_PATH     = '/opt/rh/rh-git218/root/usr';
 
     public const TRANSPORT_EXT  = 'ext';
     public const TRANSPORT_FILE = 'file';
@@ -72,11 +71,6 @@ class Git_Exec
     public static function buildFromRepository(GitRepository $repository)
     {
         return new static($repository->getFullPath(), $repository->getFullPath());
-    }
-
-    public static function isGit218Installed(): bool
-    {
-        return is_file(self::GIT218_PATH . '/bin/git');
     }
 
     public static function isGitTuleapInstalled(): bool
@@ -471,10 +465,6 @@ class Git_Exec
     {
         if (self::isGitTuleapInstalled()) {
             return self::GIT_TULEAP_PATH . '/bin/git';
-        }
-
-        if (self::isGit218Installed()) {
-            return self::GIT218_PATH . '/bin/git';
         }
 
         return 'git';

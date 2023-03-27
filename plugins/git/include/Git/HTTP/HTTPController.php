@@ -23,7 +23,6 @@ namespace Tuleap\Git\HTTP;
 
 use HTTPRequest;
 use Project;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -77,9 +76,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
         $this->logger              = new \WrapperLogger($logger, 'http');
         $this->http_access_control = $http_access_control;
 
-        $this->http_command_factory = new \Git_HTTP_CommandFactory(
-            new VersionDetector()
-        );
+        $this->http_command_factory = new \Git_HTTP_CommandFactory();
     }
 
     /**

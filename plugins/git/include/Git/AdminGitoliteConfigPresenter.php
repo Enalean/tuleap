@@ -30,22 +30,15 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
      */
     private $authorized_projects;
 
-    /**
-     * @var bool
-     */
-    private $show_big_objects_config;
-
     public function __construct(
         $title,
         CSRFSynchronizerToken $csrf_token,
         $authorized_projects,
-        $show_big_objects_config,
     ) {
         parent::__construct($title, $csrf_token);
 
         $this->regenerate_gitolite_configuration = dgettext('tuleap-git', 'Regenerate configuration');
         $this->authorized_projects               = $authorized_projects;
-        $this->show_big_objects_config           = $show_big_objects_config;
     }
 
     public function gitolite_config_title()
@@ -126,10 +119,5 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
     public function allowed_projects()
     {
         return $this->authorized_projects;
-    }
-
-    public function show_big_objects_config()
-    {
-        return $this->show_big_objects_config;
     }
 }

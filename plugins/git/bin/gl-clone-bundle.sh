@@ -5,11 +5,10 @@
 #  in create_from_bundle bundle.
 #
 
-GIT=/usr/bin/git
-if [ -f /usr/lib/tuleap/git/bin/git ]; then
-    GIT=/usr/lib/tuleap/git/bin/git
-elif [ -f /opt/rh/rh-git218/root/usr/bin/git ]; then
-    GIT=/opt/rh/rh-git218/root/usr/bin/git
+GIT=/usr/lib/tuleap/git/bin/git
+if [ ! -f $GIT ]; then
+    echo "*** ERROR: $GIT is missing"
+    exit 1
 fi
 
 bundle_file_path="$1"

@@ -19,7 +19,6 @@
  */
 
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\PathJoinUtil;
 
 class Git_Gitolite_ProjectSerializer
@@ -49,25 +48,18 @@ class Git_Gitolite_ProjectSerializer
      */
     private $big_object_authorization_manager;
 
-    /**
-     * @var VersionDetector
-     */
-    private $version_detector;
-
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         GitRepositoryFactory $repository_factory,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
         Git_GitRepositoryUrlManager $url_manager,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        VersionDetector $version_detector,
     ) {
         $this->logger                           = $logger;
         $this->repository_factory               = $repository_factory;
         $this->permissions_serializer           = $permissions_serializer;
         $this->url_manager                      = $url_manager;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
-        $this->version_detector                 = $version_detector;
     }
 
     /**
@@ -178,10 +170,6 @@ class Git_Gitolite_ProjectSerializer
      */
     private function fetchObjectSizeLimit(Project $project)
     {
-        if (! $this->version_detector->isGitolite3()) {
-            return "";
-        }
-
         if ($this->bigObjectsAreAuthorizedForProject($project)) {
             return "";
         }

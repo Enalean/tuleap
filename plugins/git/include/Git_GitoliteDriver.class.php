@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\PathJoinUtil;
 
 /**
@@ -74,7 +73,6 @@ class Git_GitoliteDriver
         GitDao $git_dao,
         GitPlugin $git_plugin,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        VersionDetector $version_detector,
         ?Git_Exec $gitExec = null,
         ?GitRepositoryFactory $repository_factory = null,
         ?Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
@@ -112,13 +110,12 @@ class Git_GitoliteDriver
             $permissions_serializer,
             $url_manager,
             $big_object_authorization_manager,
-            $version_detector
         );
 
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
             $permissions_serializer,
             $project_serializer,
-            new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
+            new Git_Gitolite_GitoliteRCReader(),
             $this->logger,
             $project_manager,
             $adminPath

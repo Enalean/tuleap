@@ -213,7 +213,6 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->git_dao,
             $this->git_plugin,
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             null,
             null,
             \Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class),
