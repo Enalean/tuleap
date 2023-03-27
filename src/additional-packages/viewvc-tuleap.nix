@@ -53,8 +53,8 @@ in pkgs.stdenvNoCC.mkDerivation {
     '';
 
     installPhase = ''
-      mkdir $out/
-      mv RPMS/noarch/*.rpm $out/
+      mkdir -p $out/el9/
+      mv RPMS/noarch/*.rpm $out/el9/
     '';
 
     dontFixUp = true;
