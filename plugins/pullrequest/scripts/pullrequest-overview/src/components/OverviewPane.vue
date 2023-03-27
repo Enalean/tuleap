@@ -42,12 +42,11 @@
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
                 </section>
-                <section class="tlp-pane-section pullrequest-overview-actions-bottom">
-                    <pull-request-change-state-actions
-                        v-if="pull_request_info"
-                        v-bind:pull_request="pull_request_info"
-                    />
-                </section>
+
+                <pull-request-change-state-actions
+                    v-if="pull_request_info"
+                    v-bind:pull_request="pull_request_info"
+                />
             </div>
         </div>
         <pull-request-error-modal v-bind:fault="error" />
@@ -149,10 +148,6 @@ function handleAPIFault(fault: Fault) {
 .pullrequest-overview-info {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-x-large-spacing)
         var(--tlp-medium-spacing);
-}
-
-.pullrequest-overview-actions-bottom {
-    padding: var(--tlp-x-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
-        var(--tlp-medium-spacing);
+    border-bottom: unset;
 }
 </style>

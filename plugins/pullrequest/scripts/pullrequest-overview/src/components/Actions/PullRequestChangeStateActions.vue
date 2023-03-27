@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <div v-if="props.pull_request" class="pull-request-change-state-actions-section">
+    <section
+        v-if="is_section_displayed"
+        class="tlp-pane-section pullrequest-overview-actions-bottom"
+        data-test="state-action-buttons"
+    >
         <div v-if="merge_status_warning" class="tlp-alert-warning" data-test="merge-status-warning">
             {{ merge_status_warning }}
         </div>
@@ -27,7 +31,7 @@
         </div>
         <pull-request-merge-button v-bind:pull_request="props.pull_request" />
         <pull-request-already-merged-state v-bind:pull_request="props.pull_request" />
-    </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -40,8 +44,11 @@ import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
 import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
 import {
+    isPullRequestAlreadyMerged,
     isFastForwardMerge,
     isMergeConflicting,
+    isPullRequestAbandoned,
+    isPullRequestInReview,
     isSameReferenceMerge,
     isUnknownMerge,
 } from "./merge-status-helper";
@@ -85,11 +92,21 @@ const merge_status_error = computed(() => {
 
     return "";
 });
+
+const is_section_displayed = computed(
+    () =>
+        isPullRequestAlreadyMerged(props.pull_request) ||
+        isPullRequestAbandoned(props.pull_request) ||
+        (isPullRequestInReview(props.pull_request) && props.pull_request.user_can_merge)
+);
 </script>
 
 <style lang="scss">
-.pull-request-change-state-actions-section {
+.pullrequest-overview-actions-bottom {
     display: flex;
     flex-direction: column;
+    padding: var(--tlp-x-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        var(--tlp-medium-spacing);
+    border-top: 1px solid var(--tlp-neutral-light-color);
 }
 </style>

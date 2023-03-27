@@ -54,7 +54,7 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestRelativeDate from "../ReadOnlyInfo/PullRequestRelativeDate.vue";
 import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../constants";
 import { isPreferenceAbsoluteDateFirst } from "../../helpers/relative-dates-preference-helper";
-import { isAlreadyMerged } from "./merge-status-helper";
+import { isPullRequestAlreadyMerged } from "./merge-status-helper";
 
 const { $gettext } = useGettext();
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
@@ -66,7 +66,7 @@ const props = defineProps<{
 }>();
 
 const status_info = computed(() =>
-    isAlreadyMerged(props.pull_request) ? props.pull_request.status_info : null
+    isPullRequestAlreadyMerged(props.pull_request) ? props.pull_request.status_info : null
 );
 
 const getMergedText = (): string => {

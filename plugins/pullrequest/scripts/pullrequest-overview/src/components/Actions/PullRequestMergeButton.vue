@@ -67,7 +67,7 @@ import {
     hasUserPermissionToMerge,
     canPullRequestBeMerged,
     isFastForwardMerge,
-    isAlreadyMerged,
+    isPullRequestAlreadyMerged,
     isCIHappy,
 } from "./merge-status-helper";
 
@@ -93,7 +93,9 @@ const is_merge_button_disabled = computed(
 );
 
 const is_button_displayed = computed(
-    () => !isAlreadyMerged(props.pull_request) && hasUserPermissionToMerge(props.pull_request)
+    () =>
+        !isPullRequestAlreadyMerged(props.pull_request) &&
+        hasUserPermissionToMerge(props.pull_request)
 );
 
 const is_merge_confirmation_required = computed(

@@ -35,11 +35,12 @@ import {
 import {
     canPullRequestBeMerged,
     hasUserPermissionToMerge,
-    isAlreadyMerged,
+    isPullRequestAlreadyMerged,
+    isPullRequestAbandoned,
     isCIHappy,
     isFastForwardMerge,
     isMergeConflicting,
-    isPullRequestOpen,
+    isPullRequestInReview,
     isSameReferenceMerge,
     isUnknownMerge,
 } from "./merge-status-helper";
@@ -50,9 +51,9 @@ describe("merge-status-helper", () => {
         [false, PULL_REQUEST_STATUS_MERGED],
         [false, PULL_REQUEST_STATUS_ABANDON],
     ])(
-        "isPullRequestOpen() should return %s when the pull-request status is %s",
+        "isPullRequestInReview() should return %s when the pull-request status is %s",
         (expected_result, status) => {
-            expect(isPullRequestOpen({ status } as PullRequest)).toBe(expected_result);
+            expect(isPullRequestInReview({ status } as PullRequest)).toBe(expected_result);
         }
     );
 
@@ -61,9 +62,20 @@ describe("merge-status-helper", () => {
         [true, PULL_REQUEST_STATUS_MERGED],
         [false, PULL_REQUEST_STATUS_ABANDON],
     ])(
-        "isAlreadyMerged() should return %s when the pull-request status is %s",
+        "isPullRequestAlreadyMerged() should return %s when the pull-request status is %s",
         (expected_result, status) => {
-            expect(isAlreadyMerged({ status } as PullRequest)).toBe(expected_result);
+            expect(isPullRequestAlreadyMerged({ status } as PullRequest)).toBe(expected_result);
+        }
+    );
+
+    it.each([
+        [false, PULL_REQUEST_STATUS_REVIEW],
+        [false, PULL_REQUEST_STATUS_MERGED],
+        [true, PULL_REQUEST_STATUS_ABANDON],
+    ])(
+        "isPullRequestAbandoned() should return %s when the pull-request status is %s",
+        (expected_result, status) => {
+            expect(isPullRequestAbandoned({ status } as PullRequest)).toBe(expected_result);
         }
     );
 
