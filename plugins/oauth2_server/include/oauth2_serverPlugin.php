@@ -93,21 +93,6 @@ final class oauth2_serverPlugin extends Plugin
         bindtextdomain('tuleap-oauth2_server', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(NavigationPresenter::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(AccountTabPresenterCollection::NAME);
-        $this->addHook(OAuth2ScopeBuilderCollector::NAME);
-        $this->addHook(SwaggerJsonSecurityDefinitionsCollection::NAME);
-        $this->addHook(PasswordUserPostUpdateEvent::NAME);
-        $this->addHook('codendi_daily_start', 'dailyCleanup');
-        $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -124,6 +109,7 @@ final class oauth2_serverPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectProjectAdminNavigationItems(NavigationPresenter $presenter): void
     {
         $project_id = urlencode((string) $presenter->getProjectId());
@@ -137,6 +123,7 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
         $route_collector = $routes->getRouteCollector();
@@ -555,11 +542,13 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\OAuth2Server\User\Account\AppsTabAdder())->addTabs($collection);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
     {
         $collector->addOAuth2ScopeBuilder(
@@ -589,13 +578,15 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function dailyCleanup(): void
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
     {
         $current_time = (new DateTimeImmutable())->getTimestamp();
         (new OAuth2AccessTokenDAO())->deleteByExpirationDate($current_time);
         (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByExpirationDate($current_time);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
@@ -605,6 +596,7 @@ final class oauth2_serverPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function retrieveRESTSwaggerJsonSecurityDefinitions(SwaggerJsonSecurityDefinitionsCollection $collection): void
     {
         $collection->addSecurityDefinition(
@@ -616,11 +608,13 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function passwordUserPostUpdateEvent(PasswordUserPostUpdateEvent $password_user_post_update_event): void
     {
         (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByUser($password_user_post_update_event->getUser());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
