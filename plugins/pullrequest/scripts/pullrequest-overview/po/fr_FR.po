@@ -86,6 +86,12 @@ msgstr ""
 "rapide uniquement). Veuillez rebaser votre commit et mettre à jour la pull "
 "request."
 
+msgid "Merged"
+msgstr "Intégrée"
+
+msgid "Merged on"
+msgstr "Intégrée le"
+
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
 
@@ -178,6 +184,9 @@ msgstr "Inconnu"
 
 msgid "Warning"
 msgstr "Avertissement"
+
+msgid "by"
+msgstr "par"
 
 msgid "fail"
 msgstr "échec"

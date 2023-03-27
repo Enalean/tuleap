@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,47 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\User\REST\MinimalUserRepresentation;
-use Tuleap\REST\JsonCast;
 
 /**
  * @psalm-immutable
  */
-class TimelineEventRepresentation
+final class PullRequestStatusInfoRepresentation
 {
+    /**
+     * @var string {@type string}
+     */
+    public string $status_type;
+
+    /**
+     * @var string {@type string}
+     */
+    public string $status_date;
+
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
      */
-    public $user;
+    public MinimalUserRepresentation $status_updater;
 
-    /**
-     * @var string {@type string}
-     */
-    public $post_date;
-
-    /**
-     * @var string {@type string}
-     */
-    public $event_type;
-
-    /**
-     * @var string {@type string}
-     */
-    public $type;
-    /**
-     * @var int {@type int}
-     */
-    public int $parent_id;
-
-
-    public function __construct(MinimalUserRepresentation $user, int $post_date, int $event_type, int $parent_id)
-    {
-        $this->user       = $user;
-        $this->post_date  = JsonCast::toDate($post_date);
-        $this->event_type = PullRequestStatusTypeConverter::fromIntStatusToStringStatus($event_type);
-        $this->type       = 'timeline-event';
-        $this->parent_id  = $parent_id;
+    public function __construct(
+        string $status_type,
+        string $status_date,
+        MinimalUserRepresentation $status_updater,
+    ) {
+        $this->status_date    = $status_date;
+        $this->status_type    = $status_type;
+        $this->status_updater = $status_updater;
     }
 }

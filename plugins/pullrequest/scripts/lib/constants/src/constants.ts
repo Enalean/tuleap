@@ -62,8 +62,15 @@ export const PULL_REQUEST_MERGE_STATUS_NOT_FF: PullRequestMergeStatusType = "no_
 export const PULL_REQUEST_MERGE_STATUS_FF: PullRequestMergeStatusType = "fastforward";
 export const PULL_REQUEST_MERGE_STATUS_UNKNOWN: PullRequestMergeStatusType = "unknown-merge-status";
 
-export type PullRequestStatusType = "review" | "merge" | "abandon";
+export type PullRequestStatusReviewType = "review";
+export type PullRequestStatusMergedType = "merge";
+export type PullRequestStatusAbandonedType = "abandon";
 
-export const PULL_REQUEST_STATUS_REVIEW: PullRequestStatusType = "review";
-export const PULL_REQUEST_STATUS_MERGED: PullRequestStatusType = "merge";
-export const PULL_REQUEST_STATUS_ABANDON: PullRequestStatusType = "abandon";
+export type PullRequestStatusType =
+    | PullRequestStatusReviewType
+    | PullRequestStatusMergedType
+    | PullRequestStatusAbandonedType;
+
+export const PULL_REQUEST_STATUS_REVIEW: PullRequestStatusReviewType = "review";
+export const PULL_REQUEST_STATUS_MERGED: PullRequestStatusMergedType = "merge";
+export const PULL_REQUEST_STATUS_ABANDON: PullRequestStatusAbandonedType = "abandon";

@@ -22,15 +22,13 @@ import type {
     InlineCommentPosition,
     PullRequestEventType,
     ActionOnPullRequestEventType,
-} from "@tuleap/plugin-pullrequest-constants";
-
-import type { User } from "@tuleap/core-rest-api-types";
-import type {
     GlobalCommentType,
     InlineCommentType,
     PullRequestActionEventType,
     ReviewerChangeEventType,
-} from "@tuleap/plugin-pullrequest-constants/src/constants";
+} from "@tuleap/plugin-pullrequest-constants";
+
+import type { User } from "@tuleap/core-rest-api-types";
 
 interface CommonComment {
     readonly id: number;

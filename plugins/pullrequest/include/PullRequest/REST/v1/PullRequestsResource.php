@@ -358,7 +358,8 @@ class PullRequestsResource extends AuthenticatedResource
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             $this->status_retriever,
-            $this->getGitoliteAccessURLGenerator()
+            $this->getGitoliteAccessURLGenerator(),
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), UserManager::instance())
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(
@@ -937,7 +938,8 @@ class PullRequestsResource extends AuthenticatedResource
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             new CommitStatusRetriever(new CommitStatusDAO()),
-            $this->getGitoliteAccessURLGenerator()
+            $this->getGitoliteAccessURLGenerator(),
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), UserManager::instance())
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(

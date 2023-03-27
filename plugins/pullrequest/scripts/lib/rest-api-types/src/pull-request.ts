@@ -19,9 +19,20 @@
 
 import type { BuildStatus, PullRequestMergeStatusType } from "@tuleap/plugin-pullrequest-constants";
 import type { User } from "@tuleap/core-rest-api-types";
-import type { PullRequestStatusType } from "@tuleap/plugin-pullrequest-constants/src/constants";
+import type {
+    PullRequestStatusAbandonedType,
+    PullRequestStatusMergedType,
+    PullRequestStatusReviewType,
+    PullRequestStatusType,
+} from "@tuleap/plugin-pullrequest-constants";
 
-export interface PullRequest {
+export interface PullRequestStatusInfo {
+    readonly status_type: PullRequestStatusType;
+    readonly status_date: string;
+    readonly status_updater: User;
+}
+
+interface CommonPullRequest {
     readonly id: number;
     readonly title: string;
     readonly raw_title: string;
@@ -47,7 +58,27 @@ export interface PullRequest {
     readonly user_can_merge: boolean;
     readonly status: PullRequestStatusType;
     readonly merge_status: PullRequestMergeStatusType;
+    readonly status_info: PullRequestStatusInfo | null;
 }
+
+export type PullRequestInReview = CommonPullRequest & {
+    readonly status: PullRequestStatusReviewType;
+    readonly status_info: null;
+};
+
+export type PullRequestMerged = CommonPullRequest & {
+    readonly status: PullRequestStatusMergedType;
+    readonly status_info: PullRequestStatusInfo & {
+        readonly status_type: PullRequestStatusMergedType;
+    };
+};
+
+export type PullRequestAbandoned = CommonPullRequest & {
+    readonly status: PullRequestStatusAbandonedType;
+    readonly status_info: null;
+};
+
+export type PullRequest = PullRequestInReview | PullRequestMerged | PullRequestAbandoned;
 
 export interface Reviewer {
     readonly users: Array<User>;

@@ -59,19 +59,13 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
-    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
-} from "@tuleap/tlp-relative-date";
+import { isPreferenceAbsoluteDateFirst } from "../../helpers/relative-dates-preference-helper";
 
 const { $gettext } = useGettext();
 
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
 );
-const is_absolute_date_first =
-    relative_date_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN ||
-    relative_date_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP;
 
 const props = defineProps<{
     pull_request_info: PullRequest | null;
@@ -112,7 +106,7 @@ function getBadgeText(): string {
     }
 
     if (last_build_status === BUILD_STATUS_SUCCESS) {
-        if (is_absolute_date_first) {
+        if (isPreferenceAbsoluteDateFirst(relative_date_display)) {
             return $gettext(`Success on`);
         }
 
@@ -120,7 +114,7 @@ function getBadgeText(): string {
     }
 
     if (last_build_status === BUILD_STATUS_FAILED) {
-        if (is_absolute_date_first) {
+        if (isPreferenceAbsoluteDateFirst(relative_date_display)) {
             return $gettext(`Failure on`);
         }
 

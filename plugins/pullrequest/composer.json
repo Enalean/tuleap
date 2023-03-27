@@ -6,6 +6,11 @@
     },
     "classmap": ["include/"]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\PullRequest\\Tests\\": "./tests/unit/"
+    }
+  },
   "tuleap": {
     "preload": {
       "include": [
