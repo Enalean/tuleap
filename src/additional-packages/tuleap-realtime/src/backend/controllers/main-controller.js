@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const bodyParser = require("body-parser");
 const CommunicationService = require("../services/communication-service");
 const ScoresService = require("../services/scores-service");
 const Rooms = require("../modules/rooms");
 const Rights = require("../modules/rights");
 const Scores = require("../modules/scores");
 const JWT = require("../modules/jwt");
+const express = require("express");
 
 module.exports = function (io, app, private_key) {
-    var jsonParser           = bodyParser.json();
     var rooms                = new Rooms(new Rights(), new Scores());
     var jwt                  = new JWT(private_key);
     var communicationService = new CommunicationService(rooms, jwt);
@@ -103,7 +102,7 @@ module.exports = function (io, app, private_key) {
      * @param cmd               (String) : broadcast on event command
      * @param data              (Object) : data broadcasting
      */
-    app.post('/message', jsonParser, function (req, res) {
+    app.post('/message', express.json(), function (req, res) {
         res.end();
         communicationService.broadcast(req.body);
     });

@@ -147,23 +147,6 @@ reason = "No outbound HTTP request in our situation. To be investigated/reported
 ignoreUntil = 2023-05-08
 
 # src/additional-packages/tuleap-realtime/pnpm-lock.yaml
-## debug
-[[IgnoredVulns]]
-id = "GHSA-9vvw-cc9w-f27h" # CVE-2017-20165
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-gxpj-cx7g-858c" # CVE-2017-16137
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-## qs
-[[IgnoredVulns]]
-id = "GHSA-gqgv-6jq5-jjj9" # CVE-2017-1000048
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 ## simple-get
 [[IgnoredVulns]]
 id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
