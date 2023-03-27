@@ -67,8 +67,6 @@ final class Tuleap
 
     private function installTuleap(SymfonyStyle $output, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
     {
-        $ssh_daemon = new SSHDaemon($this->process_factory);
-
         $fqdn = $variable_provider->get(self::TULEAP_FQDN);
 
         ForgeConfig::wrapWithCleanConfig(function () use ($output, $fqdn, $variable_provider) {
@@ -101,6 +99,7 @@ final class Tuleap
         );
         $forge_upgrade->recordOnlyCore();
 
+        $ssh_daemon = new SSHDaemon($this->process_factory);
         $ssh_daemon->startDaemon($output);
         $this->setup(
             $output,

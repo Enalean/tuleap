@@ -1,4 +1,4 @@
-FROM centos:7
+FROM rockylinux:9.1
 
 COPY rpm/tuleap.repo /etc/yum.repos.d/
 COPY rpm/RPM-GPG-KEY-Tuleap /etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
@@ -15,21 +15,19 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/useradd -u 903 -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g dummy dummy && \
     /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin && \
     /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
-    yum install --setopt=skip_missing_names_on_install=False -y epel-release centos-release-scl sudo https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
-    yum update -y && \
-    yum install -y --setopt=skip_missing_names_on_install=False \
+    dnf install --setopt=skip_missing_names_on_install=False -y epel-release sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+    dnf update -y && \
+    dnf install -y --setopt=skip_missing_names_on_install=False \
         --exclude='tuleap-plugin-tracker-encryption,tuleap-plugin-proftpd,tuleap-plugin-referencealias-*,tuleap-plugin-artifactsfolders' \
     cronie \
-    initscripts \
-    openssh-server \
+    glibc-locale-source \
     postfix \
+    openssh-server \
     rsyslog \
     supervisor \
     tuleap-plugin-* \
-    tuleap-theme-burningparrot \
-    tuleap-theme-flamingparrot \
-    tuleap-realtime && \
-    yum clean all && \
+    tuleap-theme-* && \
+    dnf clean all && \
     localedef -i fr_FR -c -f UTF-8 fr_FR.UTF-8 && \
     localedef -i pt_BR -c -f UTF-8 pt_BR.UTF-8 && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli

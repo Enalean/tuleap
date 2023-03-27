@@ -29,18 +29,10 @@ use TuleapCfg\Command\ProcessFactory;
 
 final class SSHDaemon
 {
-    /**
-     * @var ProcessFactory
-     */
-    private $process_factory;
-    /**
-     * @var Process|null
-     */
-    private $process;
+    private ?Process $process;
 
-    public function __construct(ProcessFactory $process_factory)
+    public function __construct(private readonly ProcessFactory $process_factory)
     {
-        $this->process_factory = $process_factory;
     }
 
     public function startDaemon(OutputInterface $output): void
@@ -62,8 +54,15 @@ final class SSHDaemon
     private function generateSSHServerKeys(): void
     {
         if (! is_file('/etc/ssh/ssh_host_ecdsa_key')) {
-            $process = $this->process_factory->getProcess(['/usr/sbin/sshd-keygen']);
-            $process->mustRun();
+            if (is_executable('/usr/sbin/sshd-keygen')) {
+                $this->process_factory->getProcess(['/usr/sbin/sshd-keygen'])->mustRun();
+            } elseif (is_executable('/usr/libexec/openssh/sshd-keygen')) {
+                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'rsa'])->mustRun();
+                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'ecdsa'])->mustRun();
+                $this->process_factory->getProcess(['/usr/libexec/openssh/sshd-keygen', 'ed25519'])->mustRun();
+            } else {
+                throw new \RuntimeException('No valid sshd-keygen executable found');
+            }
         }
     }
 }
