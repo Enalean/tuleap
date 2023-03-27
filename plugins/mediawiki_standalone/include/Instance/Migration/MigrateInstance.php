@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -33,8 +33,8 @@ use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
+use Tuleap\MediawikiStandalone\Instance\InitializationIssue;
 use Tuleap\MediawikiStandalone\Instance\InitializationLanguageCodeProvider;
-use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsState;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsage;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -56,7 +56,6 @@ final class MigrateInstance
         private readonly ?string $central_database_name,
         private readonly InitializationLanguageCodeProvider $default_language_code_provider,
         private readonly MediawikiFlavorUsage $mediawiki_flavor_usage,
-        private readonly OngoingInitializationsState $initializations_state,
         private readonly SwitchMediawikiService $switch_mediawiki_service,
         private readonly LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         private readonly LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
@@ -72,7 +71,6 @@ final class MigrateInstance
         MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
         MediaWikiManagementCommandFactory $command_factory,
         MediawikiFlavorUsage $mediawiki_flavor_usage,
-        OngoingInitializationsState $initializations_state,
         SwitchMediawikiService $switch_mediawiki_service,
         LegacyMediawikiDBPrimer $legacy_mediawiki_db_primer,
         LegacyMediawikiLanguageRetriever $legacy_mediawiki_language_retriever,
@@ -93,7 +91,6 @@ final class MigrateInstance
                 $central_database_parameter_generator->getCentralDatabase(),
                 $default_language_code_provider,
                 $mediawiki_flavor_usage,
-                $initializations_state,
                 $switch_mediawiki_service,
                 $legacy_mediawiki_db_primer,
                 $legacy_mediawiki_language_retriever,
@@ -102,16 +99,19 @@ final class MigrateInstance
     }
 
     /**
-     * @psalm-return Ok<null>|Err<Fault>
+     * @psalm-return Ok<\Project>|Err<InitializationIssue>
      */
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $logger->info(sprintf("Processing %s: ", self::TOPIC));
         if (! $this->mediawiki_flavor_usage->wasLegacyMediawikiUsed($this->project)) {
-            return Result::err(Fault::fromMessage("Project does not have a MediaWiki 1.23 to migrate"));
+            return Result::err(
+                new InitializationIssue(
+                    Fault::fromMessage("Project does not have a MediaWiki 1.23 to migrate"),
+                    $this->project,
+                )
+            );
         }
-
-        $this->initializations_state->startInitialization($this->project);
 
         $logger->info("Switching to MediaWiki Standalone service");
         $this->switch_mediawiki_service->switchToStandalone($this->project);
@@ -133,7 +133,7 @@ final class MigrateInstance
                 return self::processRequest($client, $request, $logger);
             }
         )->andThen(
-            /** @psalm-return Ok<null>|Err<Fault> */
+            /** @psalm-return Ok<\Project>|Err<Fault> */
             function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $logger, $instance_name): Ok|Err {
                 return match ($response->getStatusCode()) {
                     404 => $this->registerInstance($client, $request_factory, $stream_factory, $logger),
@@ -153,15 +153,13 @@ final class MigrateInstance
             }
         )->orElse(
             function (Fault $fault): Err {
-                $this->initializations_state->markAsError($this->project);
-
-                return Result::err($fault);
+                return Result::err(new InitializationIssue($fault, $this->project));
             }
         );
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<\Project>|Err<Fault>
      */
     private function registerInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
@@ -180,7 +178,7 @@ final class MigrateInstance
 
         return self::jsonEncoder($payload)
             ->andThen(
-                /** @return Ok<null>|Err<Fault> */
+                /** @return Ok<\Project>|Err<Fault> */
                 function (string $json_payload) use ($request_factory, $stream_factory, $logger, $client): Ok|Err {
                     $request = $request_factory->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/register/' . urlencode($this->project->getUnixNameLowerCase()))
                         ->withBody(
@@ -188,7 +186,7 @@ final class MigrateInstance
                         );
 
                     return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
-                        /** @return Ok<null>|Err<Fault> */
+                        /** @return Ok<\Project>|Err<Fault> */
                         fn () => $this->performUpgrade($client, $request_factory, $stream_factory, $logger)
                     );
                 }
@@ -196,20 +194,20 @@ final class MigrateInstance
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<\Project>|Err<Fault>
      */
     private function performUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $command = $this->command_factory->buildUpdateProjectInstanceCommand($this->project->getUnixNameLowerCase());
         return $command->wait()->match(
-            /** @return Ok<null>|Err<Fault> */
+            /** @return Ok<\Project>|Err<Fault> */
             fn (): Ok|Err => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
             fn (MediaWikiManagementCommandFailure $failure): Err => Result::err(Fault::fromMessage((string) $failure))
         );
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<\Project>|Err<Fault>
      */
     private function finishUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
@@ -217,10 +215,10 @@ final class MigrateInstance
             ->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->project->getUnixNameLowerCase()) . '/update')
             ->withBody($stream_factory->createStream('{}'));
         return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
+            /** @psalm-return Ok<\Project> */
             function () use ($logger): Ok {
-                $this->initializations_state->finishInitialization($this->project);
                 $logger->info(sprintf('Mediawiki %s success', self::class));
-                return Result::ok(null);
+                return Result::ok($this->project);
             }
         );
     }

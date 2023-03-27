@@ -28,6 +28,7 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\MediawikiStandalone\Instance\Migration\MigrateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\OngoingInitializationsStateStub;
 use Tuleap\Plugin\IsProjectAllowedToUsePluginStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -59,7 +60,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -68,6 +70,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -87,6 +90,7 @@ final class StartMigrationControllerTest extends TestCase
         if ($enqueue_task->queue_task instanceof MigrateInstanceTask) {
             self::assertEquals((int) $project->getID(), $enqueue_task->queue_task->getPayload()['project_id']);
         }
+        self::assertTrue($ongoing_initializations_state->isStarted());
     }
 
     public function testExceptionWhenBodyIsNotAnArray(): void
@@ -100,7 +104,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -109,6 +114,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -122,6 +128,7 @@ final class StartMigrationControllerTest extends TestCase
 
         self::assertTrue($token->hasBeenChecked());
         self::assertNull($enqueue_task->queue_task);
+        self::assertFalse($ongoing_initializations_state->isStarted());
     }
 
     public function testExceptionWhenProjectIdIsNotInTheRequest(): void
@@ -135,7 +142,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -144,6 +152,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -157,6 +166,7 @@ final class StartMigrationControllerTest extends TestCase
 
         self::assertTrue($token->hasBeenChecked());
         self::assertNull($enqueue_task->queue_task);
+        self::assertTrue($ongoing_initializations_state->isFinished());
     }
 
     public function testExceptionWhenProjectIsNotFound(): void
@@ -170,7 +180,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -179,6 +190,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWithoutProject(),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -196,6 +208,7 @@ final class StartMigrationControllerTest extends TestCase
 
         self::assertTrue($token->hasBeenChecked());
         self::assertNull($enqueue_task->queue_task);
+        self::assertFalse($ongoing_initializations_state->isStarted());
     }
 
     public function testExceptionWhenProjectIsNotAllowedToUsePlugin(): void
@@ -209,7 +222,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -218,6 +232,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -235,6 +250,7 @@ final class StartMigrationControllerTest extends TestCase
 
         self::assertTrue($token->hasBeenChecked());
         self::assertNull($enqueue_task->queue_task);
+        self::assertFalse($ongoing_initializations_state->isStarted());
     }
 
     public function testExceptionWhenProjectIsNotReady(): void
@@ -248,7 +264,8 @@ final class StartMigrationControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $enqueue_task = new EnqueueTaskStub();
+        $enqueue_task                  = new EnqueueTaskStub();
+        $ongoing_initializations_state = OngoingInitializationsStateStub::buildSelf();
 
         $controller = new StartMigrationController(
             $token_provider,
@@ -257,6 +274,7 @@ final class StartMigrationControllerTest extends TestCase
             ProjectByIDFactoryStub::buildWith($project),
             $enqueue_task,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
+            $ongoing_initializations_state,
             new NoopSapiEmitter(),
         );
 
@@ -274,5 +292,6 @@ final class StartMigrationControllerTest extends TestCase
 
         self::assertTrue($token->hasBeenChecked());
         self::assertNull($enqueue_task->queue_task);
+        self::assertFalse($ongoing_initializations_state->isStarted());
     }
 }

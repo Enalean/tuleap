@@ -74,7 +74,7 @@ final class CreateInstance
     }
 
     /**
-     * @psalm-return Ok<null>|Err<Fault>
+     * @psalm-return Ok<\Project>|Err<InitializationIssue>
      */
     public function process(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
@@ -105,6 +105,11 @@ final class CreateInstance
                         )
                     };
                 }
+            )->match(
+                /** @psalm-return Ok<\Project> */
+                fn (): Ok => Result::ok($this->project),
+                /** @psalm-return Err<InitializationIssue> */
+                fn (Fault $fault): Err => Result::err(new InitializationIssue($fault, $this->project)),
             );
     }
 
