@@ -67,10 +67,3 @@ ignoreUntil = 2023-07-10
 id = "GHSA-p8p7-x288-28g6" # CVE-2023-28155
 reason = "No outbound HTTP request in our situation. To be investigated/reported upstream/ignored."
 ignoreUntil = 2023-07-10
-
-# src/additional-packages/tuleap-realtime/pnpm-lock.yaml
-## simple-get
-[[IgnoredVulns]]
-id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
-reason = "To be investigated."
-ignoreUntil = 2023-07-10
