@@ -6,7 +6,7 @@
   "bin": "src/server.js",
   "dependencies": {
     "body-parser": "1.14.1",
-    "console-stamp": "0.2.6",
+    "console-stamp": "3.1.1",
     "express": "4.16.3",
     "jsonwebtoken": "9.0.0",
     "lodash": "4.17.21",

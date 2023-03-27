@@ -158,18 +158,6 @@ id = "GHSA-gxpj-cx7g-858c" # CVE-2017-16137
 reason = "To be investigated."
 ignoreUntil = 2023-05-08
 
-## merge
-[[IgnoredVulns]]
-id = "GHSA-7wpw-2hjm-89gp" # CVE-2020-28499
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-## minimist
-[[IgnoredVulns]]
-id = "GHSA-vh95-rmgr-6w4m" # CVE-2020-7598
-reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
 ## qs
 [[IgnoredVulns]]
 id = "GHSA-gqgv-6jq5-jjj9" # CVE-2017-1000048
@@ -180,10 +168,4 @@ ignoreUntil = 2023-05-08
 [[IgnoredVulns]]
 id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
 reason = "To be investigated."
-ignoreUntil = 2023-05-08
-
-## trim-newlines
-[[IgnoredVulns]]
-id = "GHSA-7p7h-4mm5-852v" # CVE-2021-33623
-reason = "To be investigated. False positive?"
 ignoreUntil = 2023-05-08
