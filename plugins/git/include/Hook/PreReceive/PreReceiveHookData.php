@@ -20,20 +20,47 @@
 
 namespace Tuleap\Git\Hook\PreReceive;
 
+use Psr\Log\LoggerInterface;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+
+/**
+ * @psalm-immutable
+*/
 final class PreReceiveHookData
 {
     /**
-     * @var array<string,PreReceiveHookUpdatedReference>
+     * @param array<string,PreReceiveHookUpdatedReference> $updated_references
      */
-    public array $updated_references;
-
-    public function __construct()
+    private function __construct(public readonly array $updated_references)
     {
-        $this->updated_references = [];
     }
 
-    public function addNewRev(string $ref_name, PreReceiveHookUpdatedReference $oldnew_values): void
+    /**
+     * @psalm-return Ok<self>|Err<Fault>
+     */
+    public static function fromRawStdinHook(string $stdin, LoggerInterface $logger): Ok|Err
     {
-        $this->updated_references[$ref_name] = $oldnew_values;
+        $updated_references = [];
+        $separator          = "\r\n";
+        $line               = strtok($stdin, $separator);
+
+        while ($line !== false) {
+            $revs = explode(' ', trim($line));
+
+            if (count($revs) === 3) {
+                $logger->debug("[pre-receive] - $revs[0] $revs[1] $revs[2]");
+                $updated_references[$revs[2]] = new PreReceiveHookUpdatedReference($revs[0], $revs[1]);
+            } else {
+                $logger->error("[pre-receive] Failed to provide 3 arguments on STDIN");
+                return Result::err(Fault::fromMessage("Wrong number of arguments submitted, three arguments of the form old_rev new_rev refname expected on STDIN"));
+            }
+
+            $line = strtok($separator);
+        }
+
+        return Result::ok(new self($updated_references));
     }
 }

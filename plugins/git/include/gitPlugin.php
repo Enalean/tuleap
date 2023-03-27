@@ -80,9 +80,10 @@ use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
 use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushParser;
 use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
-use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
-use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAction;
+use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\WebAssembly\EmptyWASMCaller;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -479,7 +480,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
-        $event->addConfigClass(PreReceiveAnalyzeCommand::class);
+        $event->addConfigClass(PreReceiveCommand::class);
         $event->addConfigClass(GitoliteAccessURLGenerator::class);
     }
 
@@ -2738,19 +2739,23 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 );
             }
         );
-        if (\ForgeConfig::getFeatureFlag(PreReceiveAnalyzeCommand::FEATURE_FLAG_KEY) === '1') {
-            $commands_collector->addCommand(
-                PreReceiveAnalyzeCommand::NAME,
-                function (): PreReceiveAnalyzeCommand {
-                    return new PreReceiveAnalyzeCommand(
-                        new PreReceiveAnalyzeAction(
-                            $this->getRepositoryFactory(),
-                            new FFIWASMCaller()
-                        )
-                    );
+        $commands_collector->addCommand(
+            PreReceiveCommand::NAME,
+            function (): PreReceiveCommand {
+                if (\ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY) === '1') {
+                    $wasm_caller = new FFIWASMCaller();
+                } else {
+                    $wasm_caller = new EmptyWASMCaller();
                 }
-            );
-        }
+                return new PreReceiveCommand(
+                    new PreReceiveAction(
+                        $this->getRepositoryFactory(),
+                        $wasm_caller,
+                        $this->getLogger()
+                    )
+                );
+            }
+        );
     }
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void

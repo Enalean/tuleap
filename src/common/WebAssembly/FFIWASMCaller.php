@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
+use Tuleap\Option\Option;
+
 final class FFIWASMCaller implements WASMCaller
 {
     /**
@@ -44,12 +46,12 @@ final class FFIWASMCaller implements WASMCaller
         $this->ffi = $ffi_tmp;
     }
 
-    public function call(string $wasm_path, string $json_input): string
+    public function call(string $wasm_path, string $json_input): Option
     {
         $json_output     = $this->ffi->callWasmModule($wasm_path, $json_input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
         $json_output_php = \FFI::string($json_output);
         $this->ffi->freeCallWasmModuleOutput($json_output);
 
-        return $json_output_php;
+        return Option::fromValue($json_output_php);
     }
 }
