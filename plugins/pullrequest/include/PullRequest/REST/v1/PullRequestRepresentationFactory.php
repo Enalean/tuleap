@@ -34,27 +34,12 @@ class PullRequestRepresentationFactory
     public const BUILD_STATUS_FAIL    = 'fail';
     public const BUILD_STATUS_PENDING = 'pending';
 
-    /**
-     * @var AccessControlVerifier
-     */
-    private $access_control_verifier;
-    /**
-     * @var CommitStatusRetriever
-     */
-    private $commit_status_retriever;
-    /**
-     * @var GitoliteAccessURLGenerator
-     */
-    private $gitolite_access_URL_generator;
-
     public function __construct(
-        AccessControlVerifier $access_control_verifier,
-        CommitStatusRetriever $commit_status_retriever,
-        GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        private AccessControlVerifier $access_control_verifier,
+        private CommitStatusRetriever $commit_status_retriever,
+        private GitoliteAccessURLGenerator $gitolite_access_URL_generator,
+        private PullRequestStatusInfoRepresentationBuilder $status_info_representation_builder,
     ) {
-        $this->access_control_verifier       = $access_control_verifier;
-        $this->commit_status_retriever       = $commit_status_retriever;
-        $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
     /**
@@ -101,7 +86,8 @@ class PullRequestRepresentationFactory
             $user_can_update_labels,
             $last_build_status_name,
             $last_build_date,
-            $short_stat_repres
+            $short_stat_repres,
+            $this->status_info_representation_builder->buildPullRequestStatusInfoRepresentation($pull_request)
         );
 
         return $pull_request_representation;

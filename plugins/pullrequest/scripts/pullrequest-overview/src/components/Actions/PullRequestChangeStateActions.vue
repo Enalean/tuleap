@@ -26,6 +26,7 @@
             {{ merge_status_error }}
         </div>
         <pull-request-merge-button v-bind:pull_request="props.pull_request" />
+        <pull-request-already-merged-state v-bind:pull_request="props.pull_request" />
     </div>
 </template>
 
@@ -37,6 +38,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
 
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
+import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
 import {
     isFastForwardMerge,
     isMergeConflicting,

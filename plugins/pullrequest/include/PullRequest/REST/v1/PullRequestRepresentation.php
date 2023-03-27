@@ -131,6 +131,11 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      */
     public bool $user_can_reopen;
 
+    /**
+     * @var PullRequestStatusInfoRepresentation | null {@type PullRequestStatusInfoRepresentation | null}
+     */
+    public ?PullRequestStatusInfoRepresentation $status_info;
+
     public function build(
         PullRequest $pull_request,
         GitRepository $repository,
@@ -143,6 +148,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $last_build_status_name,
         $last_build_date,
         PullRequestShortStatRepresentation $pr_short_stat_representation,
+        ?PullRequestStatusInfoRepresentation $status_info_representation,
     ) {
         $this->buildMinimal($pull_request, $repository, $repository_dest);
 
@@ -164,7 +170,8 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->user_can_reopen        = $user_can_reopen;
         $this->merge_status           = $this->expandMergeStatusName($pull_request->getMergeStatus());
 
-        $this->short_stat = $pr_short_stat_representation;
+        $this->short_stat  = $pr_short_stat_representation;
+        $this->status_info = $status_info_representation;
 
         $this->raw_title       = $pull_request->getTitle();
         $this->raw_description = $pull_request->getDescription();

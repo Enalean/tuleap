@@ -22,7 +22,7 @@ namespace Tuleap\PullRequest\Timeline;
 
 use Tuleap\DB\DataAccessObject;
 
-class Dao extends DataAccessObject
+class Dao extends DataAccessObject implements SearchMergeEvent
 {
     public function searchAllByPullRequestId($pull_request_id)
     {
@@ -50,5 +50,18 @@ class Dao extends DataAccessObject
                 VALUES (?, ?, ?, ?)';
 
         $this->getDB()->run($sql, $pull_request_id, $user_id, $post_date, $type);
+    }
+
+    /**
+     * @psalm-return null|array{type: int, post_date: int, user_id: int}
+     */
+    public function searchMergeEventForPullRequest(int $pull_request_id): ?array
+    {
+        $sql = '
+            SELECT type, post_date, user_id FROM plugin_pullrequest_timeline_event
+            WHERE pull_request_id = ? AND type = ?
+        ';
+
+        return $this->getDB()->row($sql, $pull_request_id, TimelineGlobalEvent::MERGE);
     }
 }

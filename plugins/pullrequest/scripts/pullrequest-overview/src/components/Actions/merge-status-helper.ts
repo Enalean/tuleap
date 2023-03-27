@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest, PullRequestMerged } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
     BUILD_STATUS_SUCCESS,
     PULL_REQUEST_MERGE_STATUS_CONFLICT,
@@ -30,7 +30,7 @@ import {
 export const isPullRequestOpen = (pull_request: PullRequest): boolean =>
     pull_request.status === PULL_REQUEST_STATUS_REVIEW;
 
-export const isAlreadyMerged = (pull_request: PullRequest): boolean =>
+export const isAlreadyMerged = (pull_request: PullRequest): pull_request is PullRequestMerged =>
     pull_request.status === PULL_REQUEST_STATUS_MERGED;
 
 export const isSameReferenceMerge = (pull_request: PullRequest): boolean =>
