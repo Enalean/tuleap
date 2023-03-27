@@ -179,7 +179,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SYSTEM_EVENT_CLASS)]
-    public function getSystemEventClass($params): void // phpcs:ignore
+    public function getSystemEventClass($params): void
     {
         switch ($params['type']) {
             case ProjectOwnerStatusNotificationSystemEvent::NAME:
@@ -192,7 +192,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE)]
-    public function systemEventGetTypesForDefaultQueue(array &$params): void // phpcs:ignore
+    public function systemEventGetTypesForDefaultQueue(array &$params): void
     {
         $params['types'] = array_merge($params['types'], [ProjectOwnerStatusNotificationSystemEvent::NAME]);
     }
