@@ -15,8 +15,8 @@ pkgs.stdenvNoCC.mkDerivation {
   dontBuild = true;
 
   installPhase = ''
-    mkdir $out/
-    mv RPMs/*.rpm $out/
+    mkdir -p $out/centos7/
+    mv RPMs/*.rpm $out/centos7/
   '';
 
   dontFixUp = true;
