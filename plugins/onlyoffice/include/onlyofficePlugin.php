@@ -116,17 +116,7 @@ final class onlyofficePlugin extends Plugin
         return ['docman'];
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(OpenItemHref::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-        $this->addHook(ShouldDisplaySourceColumnForFileVersions::NAME);
-        $this->addHook(NewItemAlternativeCollector::NAME);
-        $this->addHook(ProjectStatusUpdate::NAME);
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function newItemAlternativeCollector(NewItemAlternativeCollector $collector): void
     {
         $only_office_availability_checker = new OnlyOfficeAvailabilityChecker(
@@ -163,11 +153,13 @@ final class onlyofficePlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function shouldDisplaySourceColumnForFileVersions(ShouldDisplaySourceColumnForFileVersions $event): void
     {
         $event->enableDisplayOfSourceColumn();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
         $route_collector = $routes->getRouteCollector();
@@ -298,6 +290,7 @@ final class onlyofficePlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function openItemHref(OpenItemHref $open_item_href): void
     {
         $servers_retriever = new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory()));
@@ -483,6 +476,7 @@ final class onlyofficePlugin extends Plugin
         return new CSRFSynchronizerToken(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
@@ -493,6 +487,7 @@ final class onlyofficePlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
