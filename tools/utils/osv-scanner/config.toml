@@ -46,6 +46,15 @@ reason = "Only used when targetting macOS."
 
 ### TO BE FIXED
 
+# plugins/agiledashboard/pnpm-lock.yaml
+# plugins/graphontrackersv5/pnpm-lock.yaml
+# plugins/testmanagement/pnpm-lock.yaml
+## d3-color
+[[IgnoredVulns]]
+id = "GHSA-36jr-mh4h-2g58"
+reason = "ReDos. To be investigated."
+ignoreUntil = 2023-05-08
+
 # Dev tools
 ## minimatch
 [[IgnoredVulns]]
@@ -98,6 +107,12 @@ id = "GHSA-mc8h-8q98-g5hr" # RUSTSEC-2023-0018
 reason = "Only used at build time."
 ignoreUntil = 2023-05-08
 
+## nth-check
+[[IgnoredVulns]]
+id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
+reason = "ReDoS. To be investigated."
+ignoreUntil = 2023-05-08
+
 # plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
 ## jsdom
 [[IgnoredVulns]]
@@ -111,33 +126,10 @@ id = "GHSA-w9mr-4mfr-499f" # CVE-2017-20162
 reason = "ReDoS. To be investigated/reported upstream/ignored."
 ignoreUntil = 2023-05-08
 
-## nth-check
-[[IgnoredVulns]]
-id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
-reason = "ReDoS. To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-05-08
-
 ## requestretry
 [[IgnoredVulns]]
 id = "GHSA-hjp8-2cm3-cc45" # CVE-2022-0654
 reason = "No external call in our setup. To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-05-08
-
-## swagger-ui-dist
-[[IgnoredVulns]]
-id = "GHSA-6c9x-mj3g-h47x" # CVE-2021-46708
-reason = "Not exposed (CLI usage only). To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-05-08
-
-[[IgnoredVulns]]
-id = "GHSA-qrmm-w75w-3wpx"
-reason = "Not exposed (CLI usage only). To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-05-08
-
-## d3-color
-[[IgnoredVulns]]
-id = "GHSA-36jr-mh4h-2g58"
-reason = "ReDos. To be investigated."
 ignoreUntil = 2023-05-08
 
 ## request
