@@ -14,6 +14,9 @@
       "require": "./dist/core-rest-api-types.umd.cjs"
     }
   },
+  "dependencies": {
+    "@tuleap/core-constants": "workspace:*"
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   },

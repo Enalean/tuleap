@@ -17,31 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type ColorName =
-    | "inca-silver"
-    | "chrome-silver"
-    | "firemist-silver"
-    | "red-wine"
-    | "fiesta-red"
-    | "coral-pink"
-    | "teddy-brown"
-    | "clockwork-orange"
-    | "graffiti-yellow"
-    | "army-green"
-    | "neon-green"
-    | "acid-green"
-    | "sherwood-green"
-    | "ocean-turquoise"
-    | "surf-green"
-    | "deep-blue"
-    | "lake-placid-blue"
-    | "daphne-blue"
-    | "plum-crazy"
-    | "ultra-violet"
-    | "lilac-purple"
-    | "panther-pink"
-    | "peggy-pink"
-    | "flamingo-pink";
+import type { ColorName } from "@tuleap/core-constants";
 
 export type ProjectReference = {
     readonly id: number;
@@ -63,6 +39,7 @@ export type Badge = {
 type EntryType = "artifact" | "kanban";
 
 export const ARTIFACT_TYPE = "artifact";
+export const KANBAN_TYPE = "kanban";
 
 export type UserHistoryEntry = {
     readonly xref: string | null;
