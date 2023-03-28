@@ -224,6 +224,13 @@ msgstr ""
 "base de la méthodologie Scrum. Ce modèle doit être utilisé avec \"Essential "
 "SAFe(R) - Train Agile\""
 
+msgid ""
+"In order to access program administration you must be able to access <b>all</"
+"b> aggregated projects. You cannot access %s."
+msgstr ""
+"Pour accéder à l'administration du programme, vous devez avoir accès à "
+"<b>tous</b>les projets regroupés. Vous n'avez pas accès à %s."
+
 msgid "Iteration configuration is incorrect:"
 msgstr "La configuration de l'itération est incorrecte :"
 
@@ -576,8 +583,8 @@ msgstr ""
 "Programme #%d"
 
 #, php-format
-msgid "User #%d cannot see one of the teams of Program #%d"
-msgstr "L'utilisateur #%d ne peut pas voir une des équipes du program #%d"
+msgid "User #%d cannot see the team %s of Program #%d"
+msgstr "L'utilisateur #%d ne peut pas voir l'équipe %s du programme #%d"
 
 #, php-format
 msgid ""
