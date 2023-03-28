@@ -70,19 +70,6 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         return self::SERVICE_SHORTNAME;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(UserCanAccessToServiceEvent::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(GetHistoryKeyLabel::NAME);
-        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents');
-        $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -92,6 +79,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function userCanAccessToService(UserCanAccessToServiceEvent $event): void
     {
         if ($event->getService()->getShortName() !== self::SERVICE_SHORTNAME) {
@@ -215,6 +203,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
@@ -236,15 +225,14 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         );
     }
 
-    /**
-     * @see REST_RESOURCES
-     */
-    public function rest_resources($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new BaselineRestResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
     {
         $label = RoleAssignmentsHistorySaver::getLabelFromKey($event->getKey());
@@ -253,11 +241,13 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
     public function fillProjectHistorySubEvents(array $params): void
     {
         RoleAssignmentsHistorySaver::fillProjectHistorySubEvents($params);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
     {
         $project = $event->getProject();
@@ -291,6 +281,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $event->addPane($admin_permission_pane, $rank_in_project);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
         NavigationDropdownQuickLinksCollector $quick_links_collector,
     ): void {
