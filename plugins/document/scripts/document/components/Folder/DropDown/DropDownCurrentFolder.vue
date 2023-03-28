@@ -59,12 +59,12 @@ import DropDownItemTitle from "./DropDownItemTitle.vue";
 import type { State } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
-import { useState } from "vuex-composition-helpers";
+import { useState, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 
 const { current_folder } = useState<Pick<State, "current_folder">>(["current_folder"]);
-const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
+const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
     Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
 >("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 

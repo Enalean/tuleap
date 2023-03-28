@@ -89,13 +89,13 @@ import {
 } from "../../../../constants";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import type { Route } from "vue-router/types/router";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import SearchItemDropdown from "./SearchItemDropdown.vue";
 
 const { current_folder } = useState<{ current_folder: Folder }>(["current_folder"]);
 
-const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
     "project_id",
 ]);
 

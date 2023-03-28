@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Item } from "../../type";
 
-const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
     "project_id",
 ]);
 

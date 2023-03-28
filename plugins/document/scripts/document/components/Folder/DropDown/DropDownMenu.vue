@@ -118,13 +118,13 @@ import DropDownSeparator from "./DropDownSeparator.vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
 import { isFolder, isEmpty, isFile, isLink, isEmbedded } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed, inject } from "vue";
 
 const props = defineProps<{ item: Item }>();
 
-const { project_id, is_deletion_allowed } = useState<
+const { project_id, is_deletion_allowed } = useNamespacedState<
     Pick<ConfigurationState, "project_id" | "is_deletion_allowed">
 >("configuration", ["project_id", "is_deletion_allowed"]);
 

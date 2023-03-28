@@ -126,13 +126,13 @@ import {
     ICON_FOLDER_ICON,
 } from "../../../../constants";
 import emitter from "../../../../helpers/emitter";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { inject } from "vue";
 import type { NewItemAlternativeArray } from "../../../../type";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 
-const { embedded_are_allowed, user_can_create_wiki } = useState<
+const { embedded_are_allowed, user_can_create_wiki } = useNamespacedState<
     Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki">
 >("configuration", ["embedded_are_allowed", "user_can_create_wiki"]);
 

@@ -41,14 +41,15 @@ import { computed, onMounted, ref } from "vue";
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import type { RestUser } from "../../../api/rest-querier";
 import { retrieveSelectedOwner } from "../../../helpers/owner/retrieve-selected-owner";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 
 const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
-const { project_name } = useState<Pick<ConfigurationState, "project_name">>("configuration", [
-    "project_name",
-]);
+const { project_name } = useNamespacedState<Pick<ConfigurationState, "project_name">>(
+    "configuration",
+    ["project_name"]
+);
 
 const owner_input = ref<InstanceType<typeof HTMLElement>>();
 const select2_people_picker = ref<(Select2Plugin & { trigger(event: string): void }) | undefined>();

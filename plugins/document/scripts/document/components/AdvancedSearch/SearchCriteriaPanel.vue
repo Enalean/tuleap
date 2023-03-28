@@ -55,14 +55,14 @@
 import type { AdvancedSearchParams } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
-const { root_id, criteria } = useState<Pick<ConfigurationState, "root_id" | "criteria">>(
+const { root_id, criteria } = useNamespacedState<Pick<ConfigurationState, "root_id" | "criteria">>(
     "configuration",
     ["root_id", "criteria"]
 );

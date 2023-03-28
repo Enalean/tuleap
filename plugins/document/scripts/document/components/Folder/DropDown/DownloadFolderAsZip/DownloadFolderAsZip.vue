@@ -41,14 +41,14 @@ import { redirectToUrl } from "../../../../helpers/location-helper";
 import emitter from "../../../../helpers/emitter";
 import type { Folder } from "../../../../type";
 import { isPlatformOSX } from "../../../../helpers/platform-detector";
-import { useNamespacedActions, useState } from "vuex-composition-helpers";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, ref } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 
 const props = defineProps<{ item: Folder }>();
 
-const { project_name, max_archive_size, warning_threshold } = useState<
+const { project_name, max_archive_size, warning_threshold } = useNamespacedState<
     Pick<ConfigurationState, "project_name" | "max_archive_size" | "warning_threshold">
 >("configuration", ["project_name", "max_archive_size", "warning_threshold"]);
 

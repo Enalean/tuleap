@@ -101,7 +101,7 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 import { isEmpty, isFile, isFolder } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
@@ -112,7 +112,7 @@ import NewVersionEmptySubmenu from "./NewVersion/NewVersionEmptySubmenu.vue";
 
 const props = defineProps<{ item: Item }>();
 
-const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
+const { forbid_writers_to_update, forbid_writers_to_delete } = useNamespacedState<
     Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
 >("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 

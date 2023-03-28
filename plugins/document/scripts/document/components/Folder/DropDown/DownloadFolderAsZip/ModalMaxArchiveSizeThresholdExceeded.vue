@@ -73,11 +73,11 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState } from "vuex-composition-helpers";
 
 const props = defineProps<{ size: number }>();
 
-const { max_archive_size } = useState<Pick<ConfigurationState, "max_archive_size">>(
+const { max_archive_size } = useNamespacedState<Pick<ConfigurationState, "max_archive_size">>(
     "configuration",
     ["max_archive_size"]
 );
