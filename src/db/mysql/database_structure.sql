@@ -1608,6 +1608,23 @@ CREATE TABLE oauth2_authorization_code_scope (
     scope_key VARCHAR(255) NOT NULL,
     PRIMARY KEY (auth_code_id, scope_key)
 ) ENGINE=InnoDB;
+
+CREATE TABLE webauthn_credential_source (
+    public_key_credential_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    type VARCHAR(32) NOT NULL,
+    transports TEXT NOT NULL,
+    attestation_type VARCHAR(32) NOT NULL,
+    trust_path TEXT NOT NULL,
+    aaguid VARCHAR(64) NOT NULL,
+    credential_public_key TEXT NOT NULL,
+    user_id INT NOT NULL,
+    counter INT UNSIGNED NOT NULL,
+    other_ui TEXT,
+    name VARCHAR(255) NOT NULL DEFAULT '',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_use DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id)
+) ENGINE=InnoDB;
 #
 # EOF
 #
