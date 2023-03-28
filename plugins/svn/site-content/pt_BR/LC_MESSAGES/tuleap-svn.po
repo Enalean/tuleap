@@ -352,6 +352,9 @@ msgstr "Cabeçalho do assunto"
 msgid "Subversion"
 msgstr ""
 
+msgid "Subversion (legacy) service was deleted at platform upgrade"
+msgstr ""
+
 #, php-format
 msgid ""
 "The default policy is to allow read-write access to all project members on "

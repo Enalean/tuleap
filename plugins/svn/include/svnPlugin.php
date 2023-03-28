@@ -41,6 +41,7 @@ use Tuleap\Layout\HomePage\StatisticsCollectorSVN;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -1314,5 +1315,13 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $params['logger'],
             $this->getBackendSVN(),
         ))->restoreAllMissingHooks();
+    }
+
+    #[ListeningToEventClass]
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        if ($event->getKey() === 'svn_core_removal') {
+            $event->setLabel(dgettext('tuleap-svn', 'Subversion (legacy) service was deleted at platform upgrade'));
+        }
     }
 }
