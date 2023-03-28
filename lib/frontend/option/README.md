@@ -20,12 +20,28 @@ function getOptionalDataset(element: HTMLElement): Option<string> {
 }
 ```
 
-You can then use the resulting value using `.apply()`:
+You can then use the resulting option using `.apply()`:
+
 ```typescript
-const value = getOptionalDataset(mount_point);
-value.apply((dataset: string): void => {
+const option = getOptionalDataset(mount_point);
+option.apply((dataset: string): void => {
    // dataset is defined, do something with it
 });
+```
+
+You can transform the "inner type" (and do nothing when it is `nothing`) using `.map()`:
+
+```typescript
+type DerivedState = {
+    derived_value: string;
+};
+
+const option = getOptionalDataset(mount_point);
+const mapped_option = option.map((dataset: string): DerivedState => {
+    return { derived_value: dataset };
+});
+// if option was `nothing`, mapped_option is still `nothing`.
+// if option has a value, mapped_option is a new `Option<DerivedState>`.
 ```
 
 At the end of a processing pipeline, you might want to retrieve the unwrapped value with `.mapOr()`:
@@ -35,8 +51,8 @@ import { Fault } from "@tuleap/fault";
 import { ok, err } from "neverthrow";
 import type { Ok } from "neverthrow";
 
-const value = getOptionalDataset(mount_point);
-value.mapOr(
+const option = getOptionalDataset(mount_point);
+option.mapOr(
     (dataset: string): Ok => ok(dataset),
     err(Fault.fromMessage("Dataset is missing")),
 );
@@ -45,8 +61,8 @@ value.mapOr(
 In unit tests when the inner value is a primitive or an array, and you want to run assertions, use `.unwrapOr()`:
 
 ```typescript
-const value = getOptionalDataset(mount_point);
-expect(value.unwrapOr(null)).toBe("dataset-value");
+const option = getOptionalDataset(mount_point);
+expect(option.unwrapOr(null)).toBe("dataset-value");
 ```
 
 ## Links

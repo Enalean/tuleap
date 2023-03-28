@@ -29,8 +29,8 @@ import {
     getUserHistoryErrorMessage,
 } from "../../../gettext-catalog";
 
-export type FaultFeedbackPresenter = {
-    readonly message: string;
+export type ErrorMessageFormatter = {
+    format(fault: Fault): string;
 };
 
 const isLinkRetrievalFault = (fault: Fault): boolean =>
@@ -48,30 +48,29 @@ const isSearchArtifacts = (fault: Fault): boolean =>
 const isCommentsRetrieval = (fault: Fault): boolean =>
     "isCommentsRetrieval" in fault && fault.isCommentsRetrieval() === true;
 
-export const FaultFeedbackPresenter = {
-    buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
-    fromFault: (fault: Fault): FaultFeedbackPresenter => {
+export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
+    format: (fault): string => {
         if (isLinkRetrievalFault(fault)) {
-            return { message: sprintf(getLinkFieldFetchErrorMessage(), fault) };
+            return sprintf(getLinkFieldFetchErrorMessage(), fault);
         }
         if (isParentRetrievalFault(fault)) {
-            return { message: sprintf(getParentFetchErrorMessage(), fault) };
+            return sprintf(getParentFetchErrorMessage(), fault);
         }
         if (isMatchingArtifactRetrievalFault(fault)) {
-            return { message: sprintf(getMatchingArtifactErrorMessage(), fault) };
+            return sprintf(getMatchingArtifactErrorMessage(), fault);
         }
         if (isPossibleParentsRetrievalFault(fault)) {
-            return { message: sprintf(getPossibleParentErrorMessage(), fault) };
+            return sprintf(getPossibleParentErrorMessage(), fault);
         }
         if (isUserHistoryFault(fault)) {
-            return { message: sprintf(getUserHistoryErrorMessage(), fault) };
+            return sprintf(getUserHistoryErrorMessage(), fault);
         }
         if (isSearchArtifacts(fault)) {
-            return { message: sprintf(getSearchArtifactsErrorMessage(), fault) };
+            return sprintf(getSearchArtifactsErrorMessage(), fault);
         }
         if (isCommentsRetrieval(fault)) {
-            return { message: sprintf(getCommentsRetrievalErrorMessage(), fault) };
+            return sprintf(getCommentsRetrievalErrorMessage(), fault);
         }
-        return { message: String(fault) };
+        return String(fault);
     },
-};
+});

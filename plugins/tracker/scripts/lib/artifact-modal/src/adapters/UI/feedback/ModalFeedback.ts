@@ -24,12 +24,12 @@ import { Option } from "@tuleap/option";
 import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 import type { ParentFeedbackControllerType } from "../../../domain/parent/ParentFeedbackController";
-import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
-import type { FaultFeedbackControllerType } from "./FaultFeedbackController";
+import { ErrorMessageFormatter } from "./ErrorMessageFormatter";
+import type { FaultFeedbackControllerType } from "../../../domain/common/FaultFeedbackController";
 
 export type ModalFeedback = {
     parent_option: Option<ParentArtifact>;
-    fault_presenter: FaultFeedbackPresenter;
+    error_message_option: Option<string>;
     readonly parentController: ParentFeedbackControllerType;
     readonly faultController: FaultFeedbackControllerType;
     content(): HTMLElement;
@@ -48,17 +48,16 @@ const displayParentIfNeeded = (
     );
 };
 
-const displayFaultIfNeeded = (presenter: FaultFeedbackPresenter): UpdateFunction<ModalFeedback> => {
-    if (presenter.message === "") {
-        return html``;
-    }
-    return html`
-        <div class="tlp-alert-danger" data-test="fault-feedback">${presenter.message}</div>
-    `;
+const displayFaultIfNeeded = (message_option: Option<string>): UpdateFunction<ModalFeedback> => {
+    return message_option.mapOr(
+        (message) =>
+            html`<div class="tlp-alert-danger" data-test="fault-feedback">${message}</div>`,
+        html``
+    );
 };
 
 const noFeedbackToShow = (host: ModalFeedback): boolean =>
-    host.fault_presenter.message === "" && host.parent_option.isNothing();
+    host.error_message_option.isNothing() && host.parent_option.isNothing();
 
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
@@ -72,7 +71,10 @@ export const ModalFeedback = define<ModalFeedback>({
     },
     faultController: {
         set(host, controller: FaultFeedbackControllerType) {
-            controller.registerFaultListener((presenter) => (host.fault_presenter = presenter));
+            const formatter = ErrorMessageFormatter();
+            controller.registerFaultListener((fault_option) => {
+                host.error_message_option = fault_option.map(formatter.format);
+            });
             return controller;
         },
     },
@@ -80,8 +82,8 @@ export const ModalFeedback = define<ModalFeedback>({
         get: (host, last_value) => last_value ?? Option.nothing(),
         set: (host, new_value) => new_value,
     },
-    fault_presenter: {
-        get: (host, last_value) => last_value ?? FaultFeedbackPresenter.buildEmpty(),
+    error_message_option: {
+        get: (host, last_value) => last_value ?? Option.nothing(),
         set: (host, presenter) => presenter,
     },
     content: (host) => {
@@ -91,7 +93,7 @@ export const ModalFeedback = define<ModalFeedback>({
         return html`
             <div class="tlp-modal-feedback">
                 ${displayParentIfNeeded(host.parent_option)}
-                ${displayFaultIfNeeded(host.fault_presenter)}
+                ${displayFaultIfNeeded(host.error_message_option)}
             </div>
         `;
     },

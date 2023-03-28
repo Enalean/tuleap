@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
-import type { EventDispatcher } from "../../../domain/EventDispatcher";
+import { Option } from "@tuleap/option";
+import type { Fault } from "@tuleap/fault";
+import type { EventDispatcher } from "../EventDispatcher";
 
-export type OnFaultHandler = (presenter: FaultFeedbackPresenter) => void;
+export type OnFaultHandler = (fault_option: Option<Fault>) => void;
 
 export type FaultFeedbackControllerType = {
     registerFaultListener(handler: OnFaultHandler): void;
@@ -28,16 +29,13 @@ export type FaultFeedbackControllerType = {
 
 export const FaultFeedbackController = (
     event_dispatcher: EventDispatcher
-): FaultFeedbackControllerType => {
-    let _handler: OnFaultHandler | undefined;
-    event_dispatcher.addObserver("WillNotifyFault", (event) => {
-        _handler?.(FaultFeedbackPresenter.fromFault(event.fault));
-    });
-    event_dispatcher.addObserver("WillClearFaultNotification", () => {
-        _handler?.(FaultFeedbackPresenter.buildEmpty());
-    });
-
-    return {
-        registerFaultListener: (handler: OnFaultHandler) => (_handler = handler),
-    };
-};
+): FaultFeedbackControllerType => ({
+    registerFaultListener: (handler: OnFaultHandler): void => {
+        event_dispatcher.addObserver("WillNotifyFault", (event) => {
+            handler(Option.fromValue(event.fault));
+        });
+        event_dispatcher.addObserver("WillClearFaultNotification", () => {
+            handler(Option.nothing());
+        });
+    },
+});

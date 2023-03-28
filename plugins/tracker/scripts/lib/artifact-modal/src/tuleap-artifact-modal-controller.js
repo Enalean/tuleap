@@ -43,7 +43,7 @@ import { FileUploadQuotaController } from "./domain/common/FileUploadQuotaContro
 import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
 import { FileFieldController } from "./domain/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
-import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
+import { FaultFeedbackController } from "./domain/common/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/dropdown/ArtifactLinkSelectorAutoCompleter";
 import { NewLinksStore } from "./adapters/Memory/fields/link-field/NewLinksStore";
