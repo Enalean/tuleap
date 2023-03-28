@@ -32,3 +32,29 @@ export type LocaleString = "fr_FR" | "en_US" | "pt_BR";
 export const en_US_LOCALE = "en_US";
 export const fr_FR_LOCALE = "fr_FR";
 export const pt_BR_LOCALE = "pt_BR";
+
+export type ColorName =
+    | "inca-silver"
+    | "chrome-silver"
+    | "firemist-silver"
+    | "red-wine"
+    | "fiesta-red"
+    | "coral-pink"
+    | "teddy-brown"
+    | "clockwork-orange"
+    | "graffiti-yellow"
+    | "army-green"
+    | "neon-green"
+    | "acid-green"
+    | "sherwood-green"
+    | "ocean-turquoise"
+    | "surf-green"
+    | "deep-blue"
+    | "lake-placid-blue"
+    | "daphne-blue"
+    | "plum-crazy"
+    | "ultra-violet"
+    | "lilac-purple"
+    | "panther-pink"
+    | "peggy-pink"
+    | "flamingo-pink";

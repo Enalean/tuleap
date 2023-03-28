@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export type { ColorName } from "@tuleap/core-constants";
+
 export type ArtifactIdFieldIdentifier = "aid";
 export type ArtifactIdInTrackerFieldIdentifier = "atid";
 export type ArtifactLinkFieldIdentifier = "art_link";
@@ -160,29 +162,3 @@ export const IS_CHILD_LINK_TYPE: IsChildLinkType = "_is_child";
 
 export type MirroredMilestoneLinkType = "_mirrored_milestone";
 export const MIRRORED_MILESTONE_LINK_TYPE: MirroredMilestoneLinkType = "_mirrored_milestone";
-
-export type ColorName =
-    | "inca-silver"
-    | "chrome-silver"
-    | "firemist-silver"
-    | "red-wine"
-    | "fiesta-red"
-    | "coral-pink"
-    | "teddy-brown"
-    | "clockwork-orange"
-    | "graffiti-yellow"
-    | "army-green"
-    | "neon-green"
-    | "acid-green"
-    | "sherwood-green"
-    | "ocean-turquoise"
-    | "surf-green"
-    | "deep-blue"
-    | "lake-placid-blue"
-    | "daphne-blue"
-    | "plum-crazy"
-    | "ultra-violet"
-    | "lilac-purple"
-    | "panther-pink"
-    | "peggy-pink"
-    | "flamingo-pink";
