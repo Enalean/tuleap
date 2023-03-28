@@ -15,6 +15,7 @@
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/link-selector": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
+    "@tuleap/option": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",

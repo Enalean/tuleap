@@ -23,18 +23,15 @@ const ARTIFACT_ID = 19;
 
 describe(`ParentArtifactIdentifierProxy`, () => {
     it(`builds an identifier from the parent artifact id given by the caller of the Modal`, () => {
-        const identifier = ParentArtifactIdentifierProxy.fromCallerArgument(ARTIFACT_ID);
-        if (identifier === null) {
-            throw new Error("Identifier should not be null");
-        }
-        expect(identifier.id).toBe(ARTIFACT_ID);
+        const option = ParentArtifactIdentifierProxy.fromCallerArgument(ARTIFACT_ID);
+        expect(option.unwrapOr(null)?.id).toBe(ARTIFACT_ID);
     });
 
-    it(`returns null when the Modal was called with a null parent artifact id`, () => {
-        expect(ParentArtifactIdentifierProxy.fromCallerArgument(null)).toBeNull();
+    it(`returns nothing when the Modal was called with a null parent artifact id`, () => {
+        expect(ParentArtifactIdentifierProxy.fromCallerArgument(null).isNothing()).toBe(true);
     });
 
-    it(`returns null when the Modal is in edition mode and its parent artifact id is undefined`, () => {
-        expect(ParentArtifactIdentifierProxy.fromCallerArgument(undefined)).toBeNull();
+    it(`returns nothing when the Modal is in edition mode and its parent artifact id is undefined`, () => {
+        expect(ParentArtifactIdentifierProxy.fromCallerArgument(undefined).isNothing()).toBe(true);
     });
 });
