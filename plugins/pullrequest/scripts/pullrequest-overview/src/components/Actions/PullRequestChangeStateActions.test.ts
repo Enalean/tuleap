@@ -102,32 +102,50 @@ describe("PullRequestChangeStateActions", () => {
         });
     });
 
-    describe("it displays a warning", () => {
-        it("when the merge destination is unknown", () => {
+    describe("Warnings", () => {
+        it("displays a warning when the merge destination is unknown", () => {
             const wrapper = getWrapper({ merge_status: PULL_REQUEST_MERGE_STATUS_UNKNOWN });
             expect(wrapper.find("[data-test=merge-status-warning]").exists()).toBe(true);
         });
 
-        it("when the source and destination are the same reference", () => {
+        it("displays a warning when the source and destination are the same reference", () => {
             const wrapper = getWrapper({
                 reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
                 reference_dest: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
             });
             expect(wrapper.find("[data-test=merge-status-warning]").exists()).toBe(true);
         });
+
+        it("does not display a warning when the pull-request is not in review", () => {
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_ABANDON,
+                merge_status: PULL_REQUEST_MERGE_STATUS_UNKNOWN,
+                reference_src: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
+                reference_dest: "d592fa08f3604c6fc81c69c1a3b4426cff83a73b",
+            });
+            expect(wrapper.find("[data-test=merge-status-warning]").exists()).toBe(false);
+        });
     });
 
-    describe("it displays an error", () => {
-        it("when the merge is not fast forward and merge commits are forbidden", () => {
+    describe("Errors", () => {
+        it("displays an error when the merge is not fast forward and merge commits are forbidden", () => {
             are_merge_commits_allowed_in_repository = false;
 
             const wrapper = getWrapper({ merge_status: PULL_REQUEST_MERGE_STATUS_NOT_FF });
             expect(wrapper.find("[data-test=merge-status-error]").exists()).toBe(true);
         });
 
-        it("when there is a merge conflict", () => {
+        it("displays an error when there is a merge conflict", () => {
             const wrapper = getWrapper({ merge_status: PULL_REQUEST_MERGE_STATUS_CONFLICT });
             expect(wrapper.find("[data-test=merge-status-error]").exists()).toBe(true);
+        });
+
+        it("does not display errors when the pull-request is not in review", () => {
+            const wrapper = getWrapper({
+                status: PULL_REQUEST_STATUS_ABANDON,
+                merge_status: PULL_REQUEST_MERGE_STATUS_CONFLICT,
+            });
+            expect(wrapper.find("[data-test=merge-status-error]").exists()).toBe(false);
         });
     });
 

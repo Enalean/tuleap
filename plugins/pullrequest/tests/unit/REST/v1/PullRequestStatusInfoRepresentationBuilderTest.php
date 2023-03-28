@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
+use Tuleap\PullRequest\Tests\Stub\SearchAbandonEventStub;
 use Tuleap\PullRequest\Tests\Stub\SearchMergeEventStub;
 use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 use Tuleap\REST\JsonCast;
@@ -41,6 +42,10 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
         $builder              = new PullRequestStatusInfoRepresentationBuilder(
             SearchMergeEventStub::withMergeEvent(
                 $merge_date_timestamp,
+                self::USER_ID
+            ),
+            SearchAbandonEventStub::withAbandonEvent(
+                167990000,
                 self::USER_ID
             ),
             RetrieveUserByIdStub::withUser($user),
@@ -67,6 +72,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
                 1679910276,
                 666
             ),
+            SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withNoUser(),
         );
 
@@ -81,6 +87,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
     {
         $builder = new PullRequestStatusInfoRepresentationBuilder(
             SearchMergeEventStub::withNoMergeEvent(),
+            SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withUser($this->buildUser()),
         );
 
@@ -95,6 +102,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
     {
         $builder = new PullRequestStatusInfoRepresentationBuilder(
             SearchMergeEventStub::withNoMergeEvent(),
+            SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withNoUser(),
         );
 
@@ -105,11 +113,57 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
         );
     }
 
-    public function testItReturnsNullWhenThePullRequestHasBeenAbandoned(): void
+    public function testItReturnsARepresentationWhenThePullRequestHasBeenAbandoned(): void
+    {
+        $merge_date_timestamp = 1679910276;
+        $user                 = $this->buildUser();
+        $builder              = new PullRequestStatusInfoRepresentationBuilder(
+            SearchMergeEventStub::withNoMergeEvent(),
+            SearchAbandonEventStub::withAbandonEvent(
+                $merge_date_timestamp,
+                self::USER_ID
+            ),
+            RetrieveUserByIdStub::withUser($user),
+        );
+
+        $representation = $builder->buildPullRequestStatusInfoRepresentation(
+            PullRequestTestBuilder::anAbandonedPullRequest()->build()
+        );
+
+        self::assertEquals(
+            new PullRequestStatusInfoRepresentation(
+                PullRequestStatusTypeConverter::fromIntStatusToStringStatus(TimelineGlobalEvent::ABANDON),
+                JsonCast::toDate($merge_date_timestamp),
+                MinimalUserRepresentation::build($user)
+            ),
+            $representation
+        );
+    }
+
+    public function testItReturnsNullWhenThePullRequestHasBeenAbandonedButTheUserThatDidTheActionIsNotFound(): void
     {
         $builder = new PullRequestStatusInfoRepresentationBuilder(
             SearchMergeEventStub::withNoMergeEvent(),
+            SearchAbandonEventStub::withAbandonEvent(
+                1679910276,
+                666
+            ),
             RetrieveUserByIdStub::withNoUser(),
+        );
+
+        self::assertNull(
+            $builder->buildPullRequestStatusInfoRepresentation(
+                PullRequestTestBuilder::anAbandonedPullRequest()->build()
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenThePullRequestHasBeenAbandonedButNoAbandonEventExists(): void
+    {
+        $builder = new PullRequestStatusInfoRepresentationBuilder(
+            SearchMergeEventStub::withNoMergeEvent(),
+            SearchAbandonEventStub::withNoAbandonEvent(),
+            RetrieveUserByIdStub::withUser($this->buildUser()),
         );
 
         self::assertNull(
