@@ -27,6 +27,7 @@
         <directory name="tests/unit/Tuleap/" />
         <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/xml/" />
+        <directory name="tests/unit/common/WebAuthn" />
         <directory name="tests/integration/tests/SVNCore/" />
         <directory name="tests/integration/tests/InviteBuddy/" />
         <directory name="tests/integration/tests/WebAuthn" />

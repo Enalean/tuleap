@@ -61,6 +61,7 @@ use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Config\ConfigDao;
+use Tuleap\Config\ConfigurationVariables;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
@@ -174,6 +175,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
+use Tuleap\ServerHostname;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
@@ -232,11 +234,15 @@ use Tuleap\User\SessionManager;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
+use Tuleap\WebAuthn\Controllers\PostRegistrationController;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
+use Tuleap\WebAuthn\WebAuthnRegistration;
 use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
+use Webauthn\PublicKeyCredentialRpEntity;
 
 class RouteCollector
 {
@@ -1218,7 +1224,6 @@ class RouteCollector
         );
 
 
-
         return new RegisterFormProcessor(
             new \Tuleap\User\Account\Register\RegisterFormHandler(
                 new AccountRegister(
@@ -1272,6 +1277,22 @@ class RouteCollector
                 ),
                 $include_core_assets,
             ),
+        );
+    }
+
+    public static function postWebAuthnRegistration(): DispatchablePSR15Compatible
+    {
+        return new PostRegistrationController(
+            \UserManager::instance(),
+            new WebAuthnCredentialSourceDao(),
+            new PublicKeyCredentialRpEntity(
+                \ForgeConfig::get(ConfigurationVariables::NAME),
+                ServerHostname::rawHostname()
+            ),
+            WebAuthnRegistration::getCredentialParameters(),
+            HTTPFactoryBuilder::responseFactory(),
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter()
         );
     }
 
@@ -1454,6 +1475,10 @@ class RouteCollector
         );
 
         $r->post('/collect-frontend-errors', [self::class, 'postFrontendErrorCollectorController']);
+
+        $r->addGroup('/webauthn', function (FastRoute\RouteCollector $r) {
+            $r->post('/registration', [self::class, 'postWebAuthnRegistration']);
+        });
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');
 
