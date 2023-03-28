@@ -49,6 +49,7 @@ be added.
 * Fábio F. Silva
 * Florian Caillol
 * Thomas Piras
+* Kevin Traini
 
 ### Previous contributors (no longer active commiters)
 
