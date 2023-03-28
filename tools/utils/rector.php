@@ -24,6 +24,9 @@ declare(strict_types=1);
 use Rector\Config\RectorConfig;
 use TuleapDev\Rector\ConvertAddHookToAttributesRule;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->rule(ConvertAddHookToAttributesRule::class);
+return static function (RectorConfig $config): void {
+    $config->bootstrapFiles(
+        glob(__DIR__ . '/../../plugins/*/vendor/autoload.php')
+    );
+    $config->rule(ConvertAddHookToAttributesRule::class);
 };
