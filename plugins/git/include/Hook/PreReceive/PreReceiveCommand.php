@@ -58,13 +58,15 @@ final class PreReceiveCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        return $this->action->preReceiveExecute($input->getArgument('repository_path'))
-            ->match(
-                fn(): int => self::SUCCESS,
-                function (Fault $fault) use ($output): int {
-                    $output->writeln(OutputFormatter::escape((string) $fault));
-                    return self::FAILURE;
-                },
-            );
+        return $this->action->preReceiveExecute(
+            $input->getArgument('repository_path'),
+            stream_get_contents(STDIN),
+        )->match(
+            fn(): int => self::SUCCESS,
+            function (Fault $fault) use ($output): int {
+                $output->writeln(OutputFormatter::escape((string) $fault));
+                return self::FAILURE;
+            },
+        );
     }
 }

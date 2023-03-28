@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
 
 interface WASMCaller
 {
     /**
-     * @psalm-return Option<string>
+     * @psalm-return Option<\Tuleap\NeverThrow\Ok<string>|\Tuleap\NeverThrow\Err<Fault>>
      */
-    public function call(string $wasm_path, string $json_input): Option;
+    public function call(string $wasm_path, string $input): Option;
 }

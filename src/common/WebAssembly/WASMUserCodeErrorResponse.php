@@ -22,17 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
-
-final class EmptyWASMCaller implements WASMCaller
+final class WASMUserCodeErrorResponse
 {
-    public function __construct()
-    {
-    }
-
-    public function call(string $wasm_path, string $input): Option
-    {
-        return Option::nothing(Ok::class);
-    }
+    public readonly string $user_error;
 }

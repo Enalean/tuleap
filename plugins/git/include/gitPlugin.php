@@ -2742,8 +2742,9 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         $commands_collector->addCommand(
             PreReceiveCommand::NAME,
             function (): PreReceiveCommand {
+                $mapper = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper();
                 if (\ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY) === '1') {
-                    $wasm_caller = new FFIWASMCaller();
+                    $wasm_caller = new FFIWASMCaller($mapper);
                 } else {
                     $wasm_caller = new EmptyWASMCaller();
                 }
@@ -2751,6 +2752,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     new PreReceiveAction(
                         $this->getRepositoryFactory(),
                         $wasm_caller,
+                        $mapper,
                         $this->getLogger()
                     )
                 );

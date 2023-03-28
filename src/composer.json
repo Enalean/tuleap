@@ -47,6 +47,7 @@
   "require": {
     "azjezz/psl": "^2.4",
     "cocur/slugify": "^4.0",
+    "cuyz/valinor": "^1.3",
     "embed/embed": "^4.3",
     "ezyang/htmlpurifier": "^4.10",
     "graylog2/gelf-php": "^1.6",

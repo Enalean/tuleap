@@ -24,7 +24,7 @@ use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wasmtime_wasi::WasiCtx;
-use wire::{InternalErrorJson, UserErrorJson};
+use wire::{SuccessResponseJson, InternalErrorJson, UserErrorJson};
 
 mod wire;
 
@@ -49,8 +49,7 @@ pub extern "C" fn callWasmModule(
     };
     match compile_and_exec(filename, input, &limits) {
         Ok(s) => {
-            let c_str = CString::new(s).unwrap();
-            return CString::into_raw(c_str);
+            return success_response(s);
         }
         Err(e) => {
             return match e.downcast_ref::<Trap>() {
@@ -74,6 +73,14 @@ pub extern "C" fn freeCallWasmModuleOutput(json_ptr: *mut c_char) -> () {
     unsafe {
         let _ = CString::from_raw(json_ptr);
     };
+}
+
+fn success_response(wasm_stdout: String) -> *mut c_char {
+    let response = SuccessResponseJson {
+        data: wasm_stdout,
+    };
+    let c_str = CString::new(serde_json::to_string(&response).unwrap()).unwrap();
+    return CString::into_raw(c_str);
 }
 
 fn internal_error(error_message: String) -> *mut c_char {
@@ -202,7 +209,7 @@ mod tests {
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        assert_eq!("Hello world !", str_out);
+        assert_eq!("{\"data\":\"Hello world !\"}", str_out);
     }
 
     #[test]
