@@ -236,7 +236,7 @@ function KanbanService(
     }
 
     function deleteKanban(kanban_id) {
-        return $q.when(del(encodeURI(`/api/v1/kanban/${kanban_id}`)));
+        return $q.when(del(encodeURI(`/api/v1/kanban/${kanban_id}`, { headers })));
     }
 
     function expandColumn(kanban_id, column_id) {
