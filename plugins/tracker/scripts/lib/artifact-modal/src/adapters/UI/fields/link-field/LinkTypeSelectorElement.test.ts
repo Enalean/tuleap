@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { Option } from "@tuleap/option";
 import { LinkTypeSelectorElement } from "./LinkTypeSelectorElement";
 import { setCatalog } from "../../../../gettext-catalog";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION, LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import { selectOrThrow } from "@tuleap/dom";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import type { HostElement } from "./LinkTypeSelectorElement";
 
@@ -36,7 +37,7 @@ const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupEleme
 describe("LinkTypeSelectorElement", () => {
     let host: HostElement,
         allowed_link_types: CollectionOfAllowedLinksTypesPresenters,
-        cross_reference: ArtifactCrossReference | null,
+        cross_reference: Option<ArtifactCrossReference>,
         dispatchEvent: jest.SpyInstance;
 
     beforeEach(() => {
@@ -47,7 +48,7 @@ describe("LinkTypeSelectorElement", () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 LinkTypesCollectionStub.withParentPair()
             );
-        cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
+        cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #150"));
     });
 
     const render = (): HTMLSelectElement => {
@@ -104,7 +105,7 @@ describe("LinkTypeSelectorElement", () => {
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {
-        cross_reference = null;
+        cross_reference = Option.nothing();
         const select = render();
 
         expect(getSelectMainOptionsGroup(select).label).toBe("New artifact");

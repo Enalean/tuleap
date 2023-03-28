@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Option } from "@tuleap/option";
+import type { Fault } from "@tuleap/fault";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
-import type { Fault } from "@tuleap/fault";
 import type {
     LinkedArtifact,
     LinkedArtifactIdentifier,
@@ -58,6 +59,7 @@ import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/Cha
 import type { ChangeLinkType } from "../../../../domain/fields/link-field/ChangeLinkType";
 
 export type LinkFieldControllerType = {
+    getCurrentArtifactReference(): Option<ArtifactCrossReference>;
     displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): PromiseLike<LinkedArtifactCollectionPresenter>;
     displayAllowedTypes(): CollectionOfAllowedLinksTypesPresenters;
@@ -114,11 +116,12 @@ export const LinkFieldController = (
     field: ArtifactLinkFieldInfo,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
-    current_artifact_reference: ArtifactCrossReference | null,
+    current_artifact_reference: Option<ArtifactCrossReference>,
     allowed_links_types_collection: LinkTypesCollection
 ): LinkFieldControllerType => ({
-    displayField: () =>
-        LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
+    getCurrentArtifactReference: () => current_artifact_reference,
+
+    displayField: () => LinkFieldPresenter.fromField(field),
 
     getCurrentLinkType: (has_possible_parents: boolean): LinkType => {
         const reverse_child_type = allowed_links_types_collection.getReverseChildType();

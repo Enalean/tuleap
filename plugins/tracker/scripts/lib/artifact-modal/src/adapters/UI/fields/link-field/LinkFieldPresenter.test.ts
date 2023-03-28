@@ -18,38 +18,23 @@
  */
 
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
 const FIELD_ID = 920;
 const FIELD_LABEL = "Artifact link";
 
 describe(`LinkFieldPresenter`, () => {
-    let cross_reference: ArtifactCrossReference | null;
-
-    beforeEach(() => {
-        cross_reference = ArtifactCrossReferenceStub.withRef("story #62");
-    });
-
     const build = (): LinkFieldPresenter =>
-        LinkFieldPresenter.fromFieldAndCrossReference(
-            ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID, label: FIELD_LABEL }),
-            cross_reference
+        LinkFieldPresenter.fromField(
+            ArtifactLinkFieldInfoStub.withDefaults({
+                field_id: FIELD_ID,
+                label: FIELD_LABEL,
+            })
         );
 
-    it(`builds from a field representation and the current artifact's cross-reference`, () => {
+    it(`builds from a field representation`, () => {
         const presenter = build();
-
         expect(presenter.field_id).toBe(FIELD_ID);
         expect(presenter.label).toBe(FIELD_LABEL);
-        expect(presenter.current_artifact_reference?.ref).toBe("story #62");
-    });
-
-    it(`builds with a null cross reference (creation mode)`, () => {
-        cross_reference = null;
-        const presenter = build();
-
-        expect(presenter.current_artifact_reference).toBeNull();
     });
 });

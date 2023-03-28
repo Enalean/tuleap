@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
+import { selectOrThrow } from "@tuleap/dom";
+import { Option } from "@tuleap/option";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement, LinkField } from "./LinkField";
 import {
@@ -40,13 +43,11 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import { selectOrThrow } from "@tuleap/dom";
 import { MatchingArtifactsGroup } from "./dropdown/MatchingArtifactsGroup";
 import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGroup";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
@@ -62,19 +63,19 @@ describe("LinkField", () => {
     });
 
     describe("Display", () => {
-        let target: ShadowRoot, artifact_cross_reference: ArtifactCrossReference | null;
+        let target: ShadowRoot, current_artifact_reference: Option<ArtifactCrossReference>;
 
         function getHost(): HostElement {
             return {
-                field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
-                    ArtifactLinkFieldInfoStub.withDefaults(),
-                    artifact_cross_reference
+                field_presenter: LinkFieldPresenter.fromField(
+                    ArtifactLinkFieldInfoStub.withDefaults()
                 ),
-            } as unknown as HostElement;
+                current_artifact_reference,
+            } as HostElement;
         }
 
         beforeEach(() => {
-            artifact_cross_reference = null;
+            current_artifact_reference = Option.nothing();
             target = document.implementation
                 .createHTMLDocument()
                 .createElement("div") as unknown as ShadowRoot;
@@ -133,9 +134,8 @@ describe("LinkField", () => {
 
         describe("getLinkFieldCanOnlyHaveOneParentNote", () => {
             it("When the modal is open in creation mode, Then it defaults to a generic note", () => {
+                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(current_artifact_reference);
                 const host = getHost();
-                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(host);
-
                 renderNote(host, target);
 
                 expect(target.textContent?.trim()).toBe(
@@ -144,14 +144,12 @@ describe("LinkField", () => {
             });
 
             it("When the modal is open in edition mode, Then the note displays the artifact reference in a badge", () => {
-                artifact_cross_reference = ArtifactCrossReferenceStub.withRefAndColor(
-                    "story #123",
-                    "red-wine"
+                current_artifact_reference = Option.fromValue(
+                    ArtifactCrossReferenceStub.withRefAndColor("story #123", "red-wine")
                 );
 
+                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(current_artifact_reference);
                 const host = getHost();
-                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(host);
-
                 renderNote(host, target);
 
                 const badge = selectOrThrow(target, "[data-test=artifact-cross-ref-badge]");

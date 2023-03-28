@@ -19,19 +19,20 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import type { Option } from "@tuleap/option";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type {
     AllowedLinkTypesPresenterContainer,
     CollectionOfAllowedLinksTypesPresenters,
 } from "./CollectionOfAllowedLinksTypesPresenters";
 import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettext-catalog";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { LinkTypeProxy } from "./LinkTypeProxy";
 
 export type LinkTypeSelectorElement = {
     readonly value: LinkType;
-    readonly current_artifact_reference: ArtifactCrossReference | null;
+    readonly current_artifact_reference: Option<ArtifactCrossReference>;
     readonly available_types: CollectionOfAllowedLinksTypesPresenters;
     content(): HTMLElement;
 };
@@ -85,10 +86,10 @@ export const LinkTypeSelectorElement = define<LinkTypeSelectorElement>({
     current_artifact_reference: undefined,
     available_types: undefined,
     content: (host) => {
-        const current_artifact_xref =
-            host.current_artifact_reference === null
-                ? getNewArtifactLabel()
-                : host.current_artifact_reference.ref;
+        const current_artifact_xref = host.current_artifact_reference.mapOr(
+            (reference) => reference.ref,
+            getNewArtifactLabel()
+        );
 
         return html`<select
             class="tlp-select tlp-select-small"

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { selectOrThrow } from "@tuleap/dom";
+import { Option } from "@tuleap/option";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
 import {
@@ -48,7 +50,6 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
-import { selectOrThrow } from "@tuleap/dom";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -66,9 +67,9 @@ describe(`LinkedArtifactTemplate`, () => {
 
     const render = (linked_artifact_presenter: LinkedArtifactPresenter): void => {
         const host = {
-            field_presenter: {
-                current_artifact_reference: ArtifactCrossReferenceStub.withRef("art #136"),
-            },
+            current_artifact_reference: Option.fromValue(
+                ArtifactCrossReferenceStub.withRef("art #136")
+            ),
             controller: {
                 canMarkForRemoval: () => true,
                 canChangeType: () => true,
@@ -172,7 +173,9 @@ describe(`LinkedArtifactTemplate`, () => {
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
-            const current_artifact_reference = ArtifactCrossReferenceStub.withRef("story #72");
+            const current_artifact_reference = Option.fromValue(
+                ArtifactCrossReferenceStub.withRef("story #72")
+            );
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -198,9 +201,7 @@ describe(`LinkedArtifactTemplate`, () => {
             );
 
             return {
-                field_presenter: {
-                    current_artifact_reference,
-                },
+                current_artifact_reference,
                 linked_artifacts_presenter: LinkedArtifactCollectionPresenter.buildLoadingState(),
                 controller,
             } as unknown as HostElement;

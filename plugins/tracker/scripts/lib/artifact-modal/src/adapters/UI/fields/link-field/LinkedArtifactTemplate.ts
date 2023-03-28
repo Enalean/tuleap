@@ -66,7 +66,7 @@ export const getTypeTemplate = (
 
     return html`<tuleap-artifact-modal-link-type-selector
         value="${artifact.link_type}"
-        current_artifact_reference="${host.field_presenter.current_artifact_reference}"
+        current_artifact_reference="${host.current_artifact_reference}"
         available_types="${host.allowed_link_types}"
         onvalue-changed="${onValueChanged}"
         data-test="type-selector"
