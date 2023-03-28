@@ -62,24 +62,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(NavigationPresenter::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(ProjectUGroupMemberUpdatable::NAME);
-        $this->addHook(ApproveProjectAdministratorRemoval::NAME);
-        $this->addHook(ProjectImportCleanupUserCreatorFromAdministrators::NAME);
-        $this->addHook(UserWithStarBadgeCollector::NAME);
-        $this->addHook(ProjectStatusUpdate::NAME);
-
-        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $dao = new ProjectOwnerDAO();
@@ -89,15 +72,14 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    /**
-     * @see \Event::REST_RESOURCES
-     */
-    public function restResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
         $params['restler']->addAPIClass(ProjectOwnershipResource::class, 'project_ownership');
     }
 
-    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter): void
     {
         $project_id = $presenter->getProjectId();
         $html_url   = $this->getPluginPath() . '/project/' . urlencode($project_id) . '/admin';
@@ -115,7 +97,8 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         return IndexController::buildSelf();
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $routes)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
         $routes->getRouteCollector()->addGroup(
             $this->getPluginPath(),
@@ -128,7 +111,8 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function projectUGroupMemberUpdatable(ProjectUGroupMemberUpdatable $ugroup_member_update)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function projectUGroupMemberUpdatable(ProjectUGroupMemberUpdatable $ugroup_member_update): void
     {
         $ugroup = $ugroup_member_update->getGroup();
         if (
@@ -153,7 +137,8 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function approveProjectAdministratorRemoval(ApproveProjectAdministratorRemoval $project_administrator_removal)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function approveProjectAdministratorRemoval(ApproveProjectAdministratorRemoval $project_administrator_removal): void
     {
         $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance());
         $project_owner           = $project_owner_retriever->getProjectOwner(
@@ -171,6 +156,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectImportCleanupUserCreatorFromAdministrators(
         ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators,
     ): void {
@@ -184,14 +170,16 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $xml_project_user_creator_project_owner_updater->updateProjectOwnership($cleanup_user_creator_from_administrators);
     }
 
-    public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector): void
     {
         $dao    = new ProjectOwnerDAO();
         $finder = new UserWithStarBadgeFinder($dao);
         $finder->findBadgedUser($collector);
     }
 
-    public function get_system_event_class($params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SYSTEM_EVENT_CLASS)]
+    public function getSystemEventClass($params): void // phpcs:ignore
     {
         switch ($params['type']) {
             case ProjectOwnerStatusNotificationSystemEvent::NAME:
@@ -203,11 +191,13 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function system_event_get_types_for_default_queue(array &$params) // phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE)]
+    public function systemEventGetTypesForDefaultQueue(array &$params): void // phpcs:ignore
     {
         $params['types'] = array_merge($params['types'], [ProjectOwnerStatusNotificationSystemEvent::NAME]);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         $this->getSystemEventManager()->queueNotifyProjectStatusChange(
