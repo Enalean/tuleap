@@ -26,7 +26,12 @@ import type {
     GlobalComment,
     User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { EVENT_TYPE_MERGE, PULL_REQUEST_STATUS_MERGED } from "@tuleap/plugin-pullrequest-constants";
+import {
+    EVENT_TYPE_MERGE,
+    PULL_REQUEST_STATUS_ABANDON,
+    PULL_REQUEST_STATUS_MERGED,
+    PULL_REQUEST_STATUS_REVIEW,
+} from "@tuleap/plugin-pullrequest-constants";
 import {
     fetchPullRequestInfo,
     fetchPullRequestTimelineItems,
@@ -34,6 +39,8 @@ import {
     fetchUserInfo,
     patchTitle,
     mergePullRequest,
+    reopenPullRequest,
+    abandonPullRequest,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
@@ -162,6 +169,44 @@ describe("tuleap-rest-querier", () => {
             expect(fetch_result.patchJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}`,
                 { status: PULL_REQUEST_STATUS_MERGED }
+            );
+        });
+    });
+
+    describe("reopenPullRequest", () => {
+        it("Given a pull-request id, Then it should reopen the pull-request", async () => {
+            const pull_request_id = 50;
+
+            vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
+                okAsync({
+                    status: PULL_REQUEST_STATUS_REVIEW,
+                })
+            );
+
+            await reopenPullRequest(pull_request_id);
+
+            expect(fetch_result.patchJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}`,
+                { status: PULL_REQUEST_STATUS_REVIEW }
+            );
+        });
+    });
+
+    describe("abandonPullRequest", () => {
+        it("Given a pull-request id, Then it should abandon the pull-request", async () => {
+            const pull_request_id = 50;
+
+            vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
+                okAsync({
+                    status: PULL_REQUEST_STATUS_ABANDON,
+                })
+            );
+
+            await abandonPullRequest(pull_request_id);
+
+            expect(fetch_result.patchJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}`,
+                { status: PULL_REQUEST_STATUS_ABANDON }
             );
         });
     });

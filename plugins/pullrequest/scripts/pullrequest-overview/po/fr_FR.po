@@ -12,6 +12,15 @@ msgstr ""
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Abandon"
+msgstr "Abandonner"
+
+msgid "Abandoned"
+msgstr "Abandonnée"
+
+msgid "Abandoned on"
+msgstr "Abandonnée le"
+
 msgid "An error occurred while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’une de vos dernières actions."
 
@@ -154,6 +163,9 @@ msgstr ""
 
 msgid "References"
 msgstr "Références"
+
+msgid "Reopen"
+msgstr "Réouvrir"
 
 msgid "Reviewers"
 msgstr "Relecteurs"

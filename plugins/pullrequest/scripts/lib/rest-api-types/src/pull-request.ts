@@ -56,6 +56,8 @@ interface CommonPullRequest {
     readonly description: string;
     readonly raw_description: string;
     readonly user_can_merge: boolean;
+    readonly user_can_reopen: boolean;
+    readonly user_can_abandon: boolean;
     readonly status: PullRequestStatusType;
     readonly merge_status: PullRequestMergeStatusType;
     readonly status_info: PullRequestStatusInfo | null;
@@ -75,7 +77,9 @@ export type PullRequestMerged = CommonPullRequest & {
 
 export type PullRequestAbandoned = CommonPullRequest & {
     readonly status: PullRequestStatusAbandonedType;
-    readonly status_info: null;
+    readonly status_info: PullRequestStatusInfo & {
+        readonly status_type: PullRequestStatusAbandonedType;
+    };
 };
 
 export type PullRequest = PullRequestInReview | PullRequestMerged | PullRequestAbandoned;

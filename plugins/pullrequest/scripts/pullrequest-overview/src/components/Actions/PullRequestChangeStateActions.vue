@@ -29,8 +29,12 @@
         <div v-if="merge_status_error" class="tlp-alert-danger" data-test="merge-status-error">
             {{ merge_status_error }}
         </div>
-        <pull-request-merge-button v-bind:pull_request="props.pull_request" />
+        <div class="pull-request-state-buttons">
+            <pull-request-merge-button v-bind:pull_request="props.pull_request" />
+            <pull-request-abandon-button v-bind:pull_request="props.pull_request" />
+        </div>
         <pull-request-already-merged-state v-bind:pull_request="props.pull_request" />
+        <pull-request-abandoned-state v-bind:pull_request="props.pull_request" />
     </section>
 </template>
 
@@ -42,7 +46,9 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
 
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
+import PullRequestAbandonButton from "./PullRequestAbandonButton.vue";
 import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
+import PullRequestAbandonedState from "./PullRequestAbandonedState.vue";
 import {
     isPullRequestAlreadyMerged,
     isFastForwardMerge,
@@ -62,6 +68,10 @@ const props = defineProps<{
 }>();
 
 const merge_status_warning = computed(() => {
+    if (!isPullRequestInReview(props.pull_request)) {
+        return "";
+    }
+
     if (isUnknownMerge(props.pull_request)) {
         return $gettext(
             "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
@@ -78,6 +88,10 @@ const merge_status_warning = computed(() => {
 });
 
 const merge_status_error = computed(() => {
+    if (!isPullRequestInReview(props.pull_request)) {
+        return "";
+    }
+
     if (!isFastForwardMerge(props.pull_request) && !are_merge_commits_allowed_in_repository) {
         return $gettext(
             "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request."
@@ -108,5 +122,10 @@ const is_section_displayed = computed(
     padding: var(--tlp-x-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
         var(--tlp-medium-spacing);
     border-top: 1px solid var(--tlp-neutral-light-color);
+}
+
+.pull-request-state-buttons {
+    display: flex;
+    gap: var(--tlp-small-spacing);
 }
 </style>

@@ -26,7 +26,11 @@ import type {
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import { PULL_REQUEST_STATUS_MERGED } from "@tuleap/plugin-pullrequest-constants";
+import {
+    PULL_REQUEST_STATUS_ABANDON,
+    PULL_REQUEST_STATUS_MERGED,
+    PULL_REQUEST_STATUS_REVIEW,
+} from "@tuleap/plugin-pullrequest-constants";
 
 interface TimelineItemsCollection {
     collection: ReadonlyArray<TimelineItem>;
@@ -71,5 +75,19 @@ export const mergePullRequest = (pull_request_id: number): ResultAsync<PullReque
     return patchJSON<PullRequest>(
         uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
         { status: PULL_REQUEST_STATUS_MERGED }
+    );
+};
+
+export const reopenPullRequest = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
+    return patchJSON<PullRequest>(
+        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
+        { status: PULL_REQUEST_STATUS_REVIEW }
+    );
+};
+
+export const abandonPullRequest = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
+    return patchJSON<PullRequest>(
+        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
+        { status: PULL_REQUEST_STATUS_ABANDON }
     );
 };

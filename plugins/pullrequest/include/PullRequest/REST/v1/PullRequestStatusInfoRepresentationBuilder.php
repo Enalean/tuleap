@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Timeline\SearchAbandonEvent;
 use Tuleap\PullRequest\Timeline\SearchMergeEvent;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -32,29 +33,42 @@ final class PullRequestStatusInfoRepresentationBuilder
 {
     public function __construct(
         private SearchMergeEvent $search_merge_event,
+        private SearchAbandonEvent $search_abandon_event,
         private RetrieveUserById $retrieve_user_by_id,
     ) {
     }
 
     public function buildPullRequestStatusInfoRepresentation(PullRequest $pull_request): ?PullRequestStatusInfoRepresentation
     {
-        if ($pull_request->getStatus() === PullRequest::STATUS_REVIEW) {
+        if ($pull_request->getStatus() === PullRequest::STATUS_MERGED) {
+            return $this->buildRepresentationFromEvent(
+                $this->search_merge_event->searchMergeEventForPullRequest($pull_request->getId())
+            );
+        }
+
+        if ($pull_request->getStatus() === PullRequest::STATUS_ABANDONED) {
+            return $this->buildRepresentationFromEvent(
+                $this->search_abandon_event->searchAbandonEventForPullRequest($pull_request->getId())
+            );
+        }
+
+        return null;
+    }
+
+    private function buildRepresentationFromEvent(?array $close_pr_event): ?PullRequestStatusInfoRepresentation
+    {
+        if (! $close_pr_event) {
             return null;
         }
 
-        $merge_event = $this->search_merge_event->searchMergeEventForPullRequest($pull_request->getId());
-        if (! $merge_event) {
-            return null;
-        }
-
-        $status_updater = $this->retrieve_user_by_id->getUserById($merge_event['user_id']);
+        $status_updater = $this->retrieve_user_by_id->getUserById($close_pr_event['user_id']);
         if (! $status_updater) {
             return null;
         }
 
         return new PullRequestStatusInfoRepresentation(
-            PullRequestStatusTypeConverter::fromIntStatusToStringStatus($merge_event['type']),
-            JsonCast::toDate($merge_event['post_date']),
+            PullRequestStatusTypeConverter::fromIntStatusToStringStatus($close_pr_event['type']),
+            JsonCast::toDate($close_pr_event['post_date']),
             MinimalUserRepresentation::build($status_updater),
         );
     }
