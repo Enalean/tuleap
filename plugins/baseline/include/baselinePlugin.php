@@ -226,7 +226,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     }
 
     #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
-    public function restResources($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function restResources($params): void
     {
         $injector = new BaselineRestResourcesInjector();
         $injector->populate($params['restler']);

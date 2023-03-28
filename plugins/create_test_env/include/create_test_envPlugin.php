@@ -63,25 +63,7 @@ class create_test_envPlugin extends Plugin
         return ['tracker'];
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        $this->addHook(UserAuthenticationSucceeded::NAME);
-        $this->addHook(UserConnectionUpdateEvent::NAME);
-        $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(ArtifactCreated::NAME);
-        $this->addHook(ArtifactUpdated::NAME);
-        $this->addHook(ServiceAccessEvent::NAME);
-
-        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
-
-        $this->addHook('codendi_daily_start');
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $create_test_env_injector = new CreateTestEnvResourcesInjector();
@@ -110,6 +92,7 @@ class create_test_envPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
@@ -118,6 +101,7 @@ class create_test_envPlugin extends Plugin
         });
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
         $request      = HTTPRequest::instance();
@@ -130,6 +114,7 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #" . $artifact->getId());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
         $request      = HTTPRequest::instance();
@@ -142,6 +127,7 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #" . $artifact->getId());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
     {
         $current_user = $event->user;
@@ -151,6 +137,7 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Login');
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function userConnectionUpdateEvent(UserConnectionUpdateEvent $event): void
     {
         $current_user = $event->getUser();
@@ -160,7 +147,8 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Connexion');
     }
 
-    public function service_is_used(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SERVICE_IS_USED)]
+    public function serviceIsUsed(array $params): void
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
@@ -172,7 +160,8 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'project_admin', "$verb service {$params['shortname']}");
     }
 
-    public function serviceAccessEvent(ServiceAccessEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function serviceAccessEvent(ServiceAccessEvent $event): void
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
@@ -187,14 +176,16 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), "Access");
     }
 
-    public function codendi_daily_start(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
     {
         $one_year_ago = (new DateTimeImmutable())->sub(new DateInterval('P1Y'));
         $dao          = new ActivityLoggerDao();
         $dao->purgeOldData($one_year_ago->getTimestamp());
     }
 
-    public function get_permission_delegation(array &$params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION)]
+    public function getPermissionDelegation(array &$params): void
     {
         $params['plugins_permission'][DisplayUserActivities::ID] = new DisplayUserActivities();
     }
