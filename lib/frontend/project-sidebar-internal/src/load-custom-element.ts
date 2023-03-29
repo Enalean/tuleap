@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import type { ConcreteComponent } from "vue";
 import { defineComponent, VueElement } from "vue";
 import ProjectSidebar from "./ProjectSidebar.vue";
 
@@ -36,7 +37,7 @@ function defineSidebarCustomElement(): CustomElementConstructor {
         constructor() {
             // See https://github.com/vuejs/vue-next/blob/eb721d49c004abf5eff0a4e7da71bad904aa6bac/packages/runtime-dom/src/apiCustomElement.ts#L127
             // eslint-disable-next-line @typescript-eslint/consistent-type-assertions,@typescript-eslint/no-explicit-any
-            super(defineComponent(ProjectSidebar as any));
+            super(defineComponent(ProjectSidebar as any) as unknown as ConcreteComponent);
         }
 
         override connectedCallback(): void {
