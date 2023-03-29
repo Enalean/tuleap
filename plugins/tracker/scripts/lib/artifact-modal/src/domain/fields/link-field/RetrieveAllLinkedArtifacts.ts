@@ -18,12 +18,9 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import type { LinkedArtifact } from "./LinkedArtifact";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
+import type { LinkedArtifact } from "./LinkedArtifact";
 
 export interface RetrieveAllLinkedArtifacts {
-    getLinkedArtifacts(
-        current_artifact_identifier: CurrentArtifactIdentifier | null
-    ): ResultAsync<readonly LinkedArtifact[], Fault>;
+    getLinkedArtifacts(): ResultAsync<readonly LinkedArtifact[], Fault>;
 }

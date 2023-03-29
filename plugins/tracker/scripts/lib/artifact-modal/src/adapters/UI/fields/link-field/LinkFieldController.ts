@@ -21,7 +21,6 @@ import type { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type {
     LinkedArtifact,
     LinkedArtifactIdentifier,
@@ -113,7 +112,6 @@ export const LinkFieldController = (
     link_verifier: VerifyIsAlreadyLinked,
     event_dispatcher: DispatchEvents,
     field: ArtifactLinkFieldInfo,
-    current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     parent_tracker_identifier: Option<ParentTrackerIdentifier>,
     current_artifact_reference: Option<ArtifactCrossReference>,
@@ -141,7 +139,7 @@ export const LinkFieldController = (
 
     displayLinkedArtifacts: (): PromiseLike<LinkedArtifactCollectionPresenter> => {
         event_dispatcher.dispatch(WillDisableSubmit(getSubmitDisabledForLinksReason()));
-        return links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
+        return links_retriever.getLinkedArtifacts().match(
             (artifacts) => {
                 event_dispatcher.dispatch(WillEnableSubmit());
                 const presenters = artifacts.map((linked_artifact) =>

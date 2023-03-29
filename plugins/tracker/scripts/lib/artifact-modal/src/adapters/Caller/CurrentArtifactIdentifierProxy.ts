@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 
 export const CurrentArtifactIdentifierProxy = {
-    fromModalArtifactId: (id: number | undefined): CurrentArtifactIdentifier | null => {
+    fromModalArtifactId: (id: number | undefined): Option<CurrentArtifactIdentifier> => {
         if (id !== undefined) {
-            return {
+            const identifier: CurrentArtifactIdentifier = {
                 _type: "CurrentArtifactIdentifier",
                 id,
             };
+            return Option.fromValue(identifier);
         }
-        return null;
+        return Option.nothing();
     },
 };

@@ -19,6 +19,7 @@
 
 import type { GroupCollection, GroupOfItems } from "@tuleap/lazybox";
 import type { Fault } from "@tuleap/fault";
+import type { Option } from "@tuleap/option";
 import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
@@ -63,7 +64,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
     user_history_retriever: RetrieveUserHistory,
     artifacts_searcher: SearchArtifacts,
     event_dispatcher: DispatchEvents,
-    current_artifact_identifier: CurrentArtifactIdentifier | null,
+    current_artifact_option: Option<CurrentArtifactIdentifier>,
     user: UserIdentifier
 ): ArtifactLinkSelectorAutoCompleterType => {
     const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
@@ -130,7 +131,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             host.search_results_section = [];
             host.possible_parents_section = [];
 
-            LinkableNumberProxy.fromQueryString(query, current_artifact_identifier).apply(
+            LinkableNumberProxy.fromQueryString(query, current_artifact_option).apply(
                 (linkable_number) => {
                     host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
                     getMatchingArtifactsGroup(linkable_number).then((group) => {

@@ -20,6 +20,7 @@
 import { getAllJSON, getJSON, postJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import type { Option } from "@tuleap/option";
 import type {
     ChangesetWithCommentRepresentation,
     PostFileResponse,
@@ -77,7 +78,7 @@ type AllLinkTypesResponse = {
 };
 
 export const TuleapAPIClient = (
-    current_artifact_identifier: CurrentArtifactIdentifier | null
+    current_artifact_option: Option<CurrentArtifactIdentifier>
 ): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         getJSON<ParentArtifact>(uri`/api/v1/artifacts/${artifact_id.id}`).mapErr(
@@ -151,10 +152,7 @@ export const TuleapAPIClient = (
             (history) => {
                 return history.entries
                     .filter((entry) =>
-                        LinkableArtifactRESTFilter.filterArtifact(
-                            entry,
-                            current_artifact_identifier
-                        )
+                        LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option)
                     )
                     .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
             }
@@ -167,7 +165,7 @@ export const TuleapAPIClient = (
         }).map((results) => {
             return results
                 .filter((entry) =>
-                    LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_identifier)
+                    LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option)
                 )
                 .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
         });

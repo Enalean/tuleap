@@ -18,13 +18,14 @@
  */
 
 import type { ResultAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
+import { Option } from "@tuleap/option";
 import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact } from "./LinkedArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
-import { Fault } from "@tuleap/fault";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
@@ -39,13 +40,13 @@ describe(`LinksRetriever`, () => {
         second_child: LinkedArtifact,
         first_parent: LinkedArtifact,
         second_parent: LinkedArtifact,
-        artifact_identifier: CurrentArtifactIdentifier | null,
+        current_artifact_option: Option<CurrentArtifactIdentifier>,
         types_retriever: RetrieveLinkTypes,
         linked_artifacts_retriever: RetrieveLinkedArtifactsByType,
         links_adder: AddLinkedArtifactCollectionStub;
 
     beforeEach(() => {
-        artifact_identifier = CurrentArtifactIdentifierStub.withId(64);
+        current_artifact_option = Option.fromValue(CurrentArtifactIdentifierStub.withId(64));
 
         const child_type = LinkTypeStub.buildChildLinkType();
         const parent_type = LinkTypeStub.buildParentLinkType();
@@ -74,8 +75,13 @@ describe(`LinksRetriever`, () => {
     });
 
     const getLinkedArtifacts = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
-        const retriever = LinksRetriever(types_retriever, linked_artifacts_retriever, links_adder);
-        return retriever.getLinkedArtifacts(artifact_identifier);
+        const retriever = LinksRetriever(
+            types_retriever,
+            linked_artifacts_retriever,
+            links_adder,
+            current_artifact_option
+        );
+        return retriever.getLinkedArtifacts();
     };
 
     it(`fetches all types of links from the given artifact id
@@ -83,7 +89,7 @@ describe(`LinksRetriever`, () => {
         const result = await getLinkedArtifacts();
 
         if (!result.isOk()) {
-            throw new Error("Expected an Ok");
+            throw Error("Expected an Ok");
         }
         const artifacts = result.value;
         expect(artifacts).toHaveLength(4);
@@ -95,10 +101,10 @@ describe(`LinksRetriever`, () => {
     });
 
     it(`when the modal is in creation mode, it will return a Fault`, async () => {
-        artifact_identifier = null;
+        current_artifact_option = Option.nothing();
         const result = await getLinkedArtifacts();
         if (!result.isErr()) {
-            throw new Error("Expected an Err");
+            throw Error("Expected an Err");
         }
         expect(isCreationMode(result.error)).toBe(true);
     });

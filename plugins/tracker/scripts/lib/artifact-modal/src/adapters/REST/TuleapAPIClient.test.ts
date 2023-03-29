@@ -21,8 +21,10 @@ import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
+import { uri } from "@tuleap/fetch-result";
 import type { GetAllOptions } from "@tuleap/fetch-result";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import { Option } from "@tuleap/option";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
@@ -40,7 +42,7 @@ import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload
 import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
-import { uri } from "@tuleap/fetch-result";
+import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -55,9 +57,15 @@ const TRACKER_ID = 36;
 const PROJECT = { id: 179, label: "Guinea Pig", icon: "🐹" };
 
 describe(`TuleapAPIClient`, () => {
+    let current_artifact_option: Option<CurrentArtifactIdentifier>;
+
+    beforeEach(() => {
+        current_artifact_option = Option.nothing();
+    });
+
     describe(`getParent()`, () => {
         const getParent = (): ResultAsync<ParentArtifact, Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
@@ -77,7 +85,7 @@ describe(`TuleapAPIClient`, () => {
 
     describe(`getMatchingArtifact()`, () => {
         const getMatching = (): ResultAsync<LinkableArtifact, Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getMatchingArtifact(LinkableNumberStub.withId(ARTIFACT_ID));
         };
 
@@ -107,7 +115,7 @@ describe(`TuleapAPIClient`, () => {
 
     describe(`getAllLinkTypes()`, () => {
         const getAllLinkTypes = (): ResultAsync<readonly LinkType[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
@@ -149,7 +157,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getLinkedArtifactsByLinkType(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
                 link_type
@@ -199,7 +207,7 @@ describe(`TuleapAPIClient`, () => {
 
     describe(`getPossibleParents()`, () => {
         const getPossibleParents = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getPossibleParents(CurrentTrackerIdentifierStub.withId(TRACKER_ID));
         };
 
@@ -248,7 +256,7 @@ describe(`TuleapAPIClient`, () => {
                 file_handle: { name: FILE_NAME, size: FILE_SIZE } as File,
             };
 
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.createFileUpload(new_file_upload);
         };
 
@@ -284,7 +292,7 @@ describe(`TuleapAPIClient`, () => {
     describe("getUserArtifactHistory()", () => {
         const USER_ID = 102;
         const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getUserArtifactHistory(UserIdentifierStub.fromUserId(USER_ID));
         };
         it(`will return user history entries which are "artifact" type as linkable artifact`, async () => {
@@ -312,7 +320,7 @@ describe(`TuleapAPIClient`, () => {
         const SEARCH_QUERY = "bookwright";
 
         const searchArtifacts = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.searchArtifacts(SEARCH_QUERY);
         };
 
@@ -350,7 +358,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
-            const client = TuleapAPIClient(null);
+            const client = TuleapAPIClient(current_artifact_option);
             return client.getComments(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
                 is_order_inverted

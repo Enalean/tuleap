@@ -24,17 +24,21 @@ import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArt
 export const LinkableNumberProxy = {
     fromQueryString: (
         query_string: string,
-        current_artifact_identifier: CurrentArtifactIdentifier | null
+        current_artifact_option: Option<CurrentArtifactIdentifier>
     ): Option<LinkableNumber> => {
         if (query_string === "") {
             return Option.nothing();
         }
         const query_number = Number.parseInt(query_string, 10);
-        const is_invalid =
+        const is_invalid_number =
             Number.isNaN(query_number) ||
             Number(query_string) !== query_number ||
-            Math.abs(query_number) !== query_number ||
-            query_number === current_artifact_identifier?.id;
+            Math.abs(query_number) !== query_number;
+        const is_invalid = current_artifact_option.mapOr(
+            (current_artifact_identifier) =>
+                is_invalid_number || query_number === current_artifact_identifier.id,
+            is_invalid_number
+        );
 
         if (is_invalid) {
             return Option.nothing();

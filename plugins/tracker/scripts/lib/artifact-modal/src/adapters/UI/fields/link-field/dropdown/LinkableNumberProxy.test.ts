@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Option } from "@tuleap/option";
+import { Option } from "@tuleap/option";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import { CurrentArtifactIdentifierStub } from "../../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import type { LinkableNumber } from "../../../../../domain/fields/link-field/LinkableNumber";
 
 describe("LinkableNumberProxy", () => {
-    let current_artifact_identifier: CurrentArtifactIdentifier | null;
+    let current_artifact_option: Option<CurrentArtifactIdentifier>;
 
     beforeEach(() => {
-        current_artifact_identifier = null;
+        current_artifact_option = Option.nothing();
     });
 
     const build = (query: string): Option<LinkableNumber> =>
-        LinkableNumberProxy.fromQueryString(query, current_artifact_identifier);
+        LinkableNumberProxy.fromQueryString(query, current_artifact_option);
 
     it.each([
         "abcd",
@@ -51,7 +51,7 @@ describe("LinkableNumberProxy", () => {
     });
 
     it("should return nothing when the user has entered the current artifact_id", () => {
-        current_artifact_identifier = CurrentArtifactIdentifierStub.withId(105);
+        current_artifact_option = Option.fromValue(CurrentArtifactIdentifierStub.withId(105));
         expect(build("105").isNothing()).toBe(true);
     });
 

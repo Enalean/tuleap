@@ -33,7 +33,6 @@ import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/Retr
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
@@ -140,7 +139,6 @@ describe(`NewLinkTemplate`, () => {
 
     describe(`action button`, () => {
         const getHost = (new_link: NewLink): HostElement => {
-            const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
             const current_artifact_reference = Option.fromValue(
                 ArtifactCrossReferenceStub.withRef("bug #22")
@@ -162,7 +160,6 @@ describe(`NewLinkTemplate`, () => {
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 ArtifactLinkFieldInfoStub.withDefaults(),
-                current_artifact_identifier,
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
