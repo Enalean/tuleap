@@ -22,6 +22,9 @@ import angular from "angular";
 import "angular-mocks";
 import BaseController from "./execution-list-controller.js";
 import * as feedback_state from "../feedback-state.js";
+import io from "socket.io-client";
+
+jest.mock("socket.io-client");
 
 describe("ExecutionListController -", () => {
     let $ctrl,
@@ -33,6 +36,11 @@ describe("ExecutionListController -", () => {
         setError;
 
     beforeEach(() => {
+        io.mockReturnValue({
+            on: () => {
+                // Empty mock on purpose
+            },
+        });
         angular.mock.module(execution_module);
 
         let $controller;
