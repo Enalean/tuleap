@@ -21,6 +21,9 @@ import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./app-kanban-controller.js";
+import io from "socket.io-client";
+
+jest.mock("socket.io-client");
 
 describe("KanbanCtrl", function () {
     let $rootScope,
@@ -45,6 +48,12 @@ describe("KanbanCtrl", function () {
     }
 
     beforeEach(function () {
+        io.mockReturnValue({
+            on: () => {
+                // Empty mock on purpose
+            },
+        });
+
         angular.mock.module(kanban_module);
 
         angular.mock.inject(function (

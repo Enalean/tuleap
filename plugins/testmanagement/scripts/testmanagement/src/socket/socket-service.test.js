@@ -1,11 +1,15 @@
 import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import io from "socket.io-client";
+
+jest.mock("socket.io-client");
 
 describe("SocketService -", () => {
     let SocketService, SocketFactory, ExecutionService;
 
     beforeEach(() => {
+        io.mockReturnValue({});
         angular.mock.module(testmanagement_module);
 
         angular.mock.inject(function (_SocketFactory_, _SocketService_, _ExecutionService_) {
@@ -13,8 +17,6 @@ describe("SocketService -", () => {
             SocketService = _SocketService_;
             ExecutionService = _ExecutionService_;
         });
-        // eslint-disable-next-line jest/prefer-spy-on
-        SocketFactory.on = jest.fn();
     });
 
     describe("listenToArtifactLinked() -", () => {
