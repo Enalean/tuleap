@@ -32,7 +32,7 @@ final class FFIWASMCaller implements WASMCaller
     private \FFI $ffi;
     private const MAX_EXEC_TIME_IN_MS      = 80;
     private const MAX_MEMORY_SIZE_IN_BYTES = 3145728; /* 3 Mo */
-    private const HEADER_PATH              = __DIR__ . '/../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
+    private const HEADER_PATH              = '/usr/lib/tuleap/wasm/libwasmtimewrapper.h';
 
     public function __construct()
     {
