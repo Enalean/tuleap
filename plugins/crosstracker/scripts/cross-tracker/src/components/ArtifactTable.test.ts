@@ -25,7 +25,8 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../api/rest-querier";
-import type { State } from "../type";
+import type { ArtifactsCollection, Artifact, State } from "../type";
+import ArtifactTableRow from "./ArtifactTableRow.vue";
 
 describe("ArtifactTable", () => {
     let writingCrossTrackerReport: WritingCrossTrackerReport,
@@ -63,7 +64,7 @@ describe("ArtifactTable", () => {
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", async () => {
-            mockFetchSuccess(getReportContent);
+            mockFetchSuccess(getQueryResult);
             await instantiateComponent({ is_report_saved: false } as State);
             expect(getQueryResult).toHaveBeenCalled();
         });
@@ -97,6 +98,43 @@ describe("ArtifactTable", () => {
                 "setErrorMessage",
                 "Error while parsing the query"
             );
+        });
+
+        it(`Given the user does not have the permission to see all the matching artifacts on a call,
+    then a load more button is displayed to retrieve the next ones.`, async () => {
+            getReportContent.mockImplementation(function (
+                report_id: number,
+                limit: number,
+                offset: number
+            ): Promise<ArtifactsCollection> {
+                if (offset === 0) {
+                    return Promise.resolve({
+                        artifacts: [{ id: 123 } as Artifact],
+                        total: "32",
+                    });
+                } else if (offset === 30) {
+                    return Promise.resolve({
+                        artifacts: [{ id: 124 } as Artifact],
+                        total: "32",
+                    });
+                }
+                throw Error("Unexpected offset " + offset);
+            });
+            const wrapper = await instantiateComponent({ is_report_saved: true } as State);
+
+            // Wait for artifacts to be retrieved
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(1);
+
+            await wrapper.find("[data-test=load-more]").trigger("click");
+
+            // Wait for artifacts to be retrieved
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(2);
+            expect(wrapper.find("[data-test=load-more]").exists()).toBe(false);
         });
     });
 });

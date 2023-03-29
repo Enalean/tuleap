@@ -60,6 +60,7 @@
                 v-if="is_load_more_displayed === true"
                 v-on:click="loadMoreArtifacts()"
                 v-bind:disabled="is_loading_more"
+                data-test="load-more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fas fa-circle-notch fa-spin"></i>
                 <translate>Load more</translate>
@@ -141,7 +142,7 @@ export default class ArtifactTable extends Vue {
         try {
             const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
 
-            this.current_offset += artifacts.length;
+            this.current_offset += this.limit;
             this.is_load_more_displayed = this.current_offset < parseInt(total, 10);
 
             const new_artifacts = this.formatArtifacts(artifacts);
