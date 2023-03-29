@@ -22,17 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
 
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
 
-final class EmptyWASMCaller implements WASMCaller
+final class WASMExecutionException extends \RuntimeException
 {
-    public function __construct()
+    private function __construct(string $message, ?\Throwable $previous = null)
     {
+        parent::__construct($message, 0, $previous);
     }
 
-    public function call(string $wasm_path, string $input): Option
+    public static function internalError(WASMInternalErrorResponse $error_response): self
     {
-        return Option::nothing(Ok::class);
+        return new self($error_response->internal_error);
+    }
+
+    public static function malformedResponse(\Throwable $error): self
+    {
+        return new self('Received a malformed response from the WASM call', $error);
     }
 }

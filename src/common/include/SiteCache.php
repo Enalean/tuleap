@@ -29,7 +29,7 @@ class SiteCache
         $this->logger = $logger ? $logger : BackendLogger::getDefaultLogger();
     }
 
-    public function invalidatePluginBasedCaches()
+    public function invalidatePluginBasedCaches(): void
     {
         $this->invalidateTemplateEngine();
         $this->invalidateRestler();
@@ -38,6 +38,7 @@ class SiteCache
         $this->invalidateWSDL();
         $this->invalidatePlugin();
         $this->invalidateCustomizedLogoCache();
+        $this->invalidateValinorCache();
     }
 
     private function invalidateTemplateEngine()
@@ -143,5 +144,11 @@ class SiteCache
     {
         $this->logger->info('Invalidate customized logo cache');
         \Tuleap\Layout\Logo\CachedCustomizedLogoDetector::invalidateCache();
+    }
+
+    private function invalidateValinorCache(): void
+    {
+        $this->logger->info('Invalidate Valinor cache');
+        \Tuleap\Mapper\ValinorMapperBuilderFactory::invalidateCache();
     }
 }

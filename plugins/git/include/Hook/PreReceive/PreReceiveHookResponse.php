@@ -20,19 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\WebAssembly;
+namespace Tuleap\Git\Hook\PreReceive;
 
-use Tuleap\NeverThrow\Ok;
-use Tuleap\Option\Option;
-
-final class EmptyWASMCaller implements WASMCaller
+/**
+ * @psalm-immutable
+ */
+final class PreReceiveHookResponse
 {
-    public function __construct()
-    {
-    }
-
-    public function call(string $wasm_path, string $input): Option
-    {
-        return Option::nothing(Ok::class);
+    public function __construct(
+        public readonly ?string $rejection_message,
+    ) {
     }
 }

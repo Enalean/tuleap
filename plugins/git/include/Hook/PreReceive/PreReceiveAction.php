@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\PreReceive;
 
+use CuyZ\Valinor\Mapper\MappingError;
+use CuyZ\Valinor\Mapper\Source\Source;
+use CuyZ\Valinor\Mapper\TreeMapper;
 use ForgeConfig;
 use GitRepositoryFactory;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
+use Psr\Log\LogLevel;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -34,8 +37,12 @@ use Tuleap\WebAssembly\WASMCaller;
 
 final class PreReceiveAction
 {
-    public function __construct(private GitRepositoryFactory $git_repository_factory, private WASMCaller $wasm_caller, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly GitRepositoryFactory $git_repository_factory,
+        private readonly WASMCaller $wasm_caller,
+        private readonly TreeMapper $mapper,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -51,7 +58,7 @@ final class PreReceiveAction
      * @psalm-return Ok<null>|Err<Fault>
      * @throws PreReceiveRepositoryNotFoundException
      */
-    public function preReceiveExecute(string $repository_path): Ok|Err
+    public function preReceiveExecute(string $repository_path, string $input_data): Ok|Err
     {
         if (ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY) !== '1') {
             return Result::ok(null);
@@ -67,8 +74,6 @@ final class PreReceiveAction
             return Result::ok(null);
         }
 
-        $input_data = stream_get_contents(STDIN);
-
         $this->logger->debug("[pre-receive] Monitoring updated refs for: '$repository_path'");
         return PreReceiveHookData::fromRawStdinHook($input_data, $this->logger)
             ->andThen(
@@ -76,46 +81,52 @@ final class PreReceiveAction
                 function (PreReceiveHookData $hook_result) use ($wasm_path): Ok|Err {
                     $json_in = json_encode($hook_result, JSON_THROW_ON_ERROR);
                     return $this->wasm_caller->call($wasm_path, $json_in)->mapOr(
-                        /** @psalm-return Ok<null>|Err<Fault> */
-                        function (string $wasm_data): Ok|Err {
-                            return $this->processResponse($wasm_data);
-                        },
+                        $this->processResponse(...),
                         Result::ok(null)
                     );
                 }
             );
     }
 
-    /** @psalm-return Ok<null>|Err<Fault> */
-    private function processResponse(string $wasm_data): Ok|Err
+    /**
+     * @psalm-param Ok<string>|Err<Fault> $wasm_response
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    private function processResponse(Ok|Err $wasm_response): Ok|Err
     {
-        try {
-            $json = json_decode($wasm_data, true, 2, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $exception) {
-            return Result::err(Fault::fromThrowableWithMessage($exception, 'The JSON returned by the WASM module is invalid or malformed.'));
-        }
-
-        if (array_key_exists('internal_error', $json)) {
-            $this->logger->error('[pre-receive] Internal error: ' . $json['internal_error']);
-            throw new RuntimeException("An error occurred in wasmtime-wrapper-lib !");
-        }
-
-        if (array_key_exists('user_error', $json)) {
-            return Result::err(Fault::fromMessage('Error: ' . $json['user_error']));
-        }
-
-        if (! array_key_exists('rejection_message', $json)) {
-            return Result::err(Fault::fromMessage('The JSON returned by the WASM module does not contain a valid `rejection_message` key'));
-        }
-
-        if ($json['rejection_message'] === null) {
-            return Result::ok(null);
-        }
-
-        if (! is_string($json['rejection_message'])) {
-            return Result::err(Fault::fromMessage('Error: the rejection message returned by the WASM module is not a string.'));
-        }
-
-        return Result::err(Fault::fromMessage('Rejection message: ' . $json['rejection_message']));
+        return $wasm_response->match(
+            /** @psalm-return Ok<PreReceiveHookResponse>|Err<Fault> */
+            function (string $prereceive_json_response): Ok|Err {
+                try {
+                    return Result::ok(
+                        $this->mapper->map(
+                            PreReceiveHookResponse::class,
+                            Source::json($prereceive_json_response)
+                        )
+                    );
+                } catch (MappingError | \RuntimeException $mapping_error) {
+                    return Result::err(
+                        Fault::fromThrowableWithMessage(
+                            $mapping_error,
+                            'An invalid response has been received from the pre-receive hook, please contact your administrator for more information'
+                        )
+                    );
+                }
+            },
+            /** @psalm-return Err<Fault> */
+            function (Fault $wasm_call_fault): Err {
+                Fault::writeToLogger($wasm_call_fault, $this->logger, LogLevel::WARNING);
+                return Result::err(
+                    Fault::fromMessage("An error has occurred while running the pre-receive hook, please contact your administrator for more information")
+                );
+            }
+        )->andThen(
+            function (PreReceiveHookResponse $pre_receive_hook_response): Ok|Err {
+                if ($pre_receive_hook_response->rejection_message === null) {
+                    return Result::ok(null);
+                }
+                return Result::err(Fault::fromMessage($pre_receive_hook_response->rejection_message));
+            }
+        );
     }
 }
