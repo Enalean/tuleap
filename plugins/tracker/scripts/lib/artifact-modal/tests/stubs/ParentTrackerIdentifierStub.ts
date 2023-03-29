@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { VerifyIsTrackerInAHierarchy } from "./VerifyIsTrackerInAHierarchy";
-import type { ParentTracker } from "./ParentTracker";
+import type { ParentTrackerIdentifier } from "../../src/domain/fields/link-field/ParentTrackerIdentifier";
 
-export const TrackerInAHierarchyVerifier = (
-    parent_tracker: ParentTracker | null
-): VerifyIsTrackerInAHierarchy => ({
-    isTrackerInAHierarchy(): boolean {
-        return parent_tracker !== null;
-    },
-});
+export const ParentTrackerIdentifierStub = {
+    withId: (id: number): ParentTrackerIdentifier => ({ _type: "ParentTrackerIdentifier", id }),
+};

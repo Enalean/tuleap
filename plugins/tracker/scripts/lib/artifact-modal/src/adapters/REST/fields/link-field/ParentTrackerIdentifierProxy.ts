@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ParentTracker {
+import { Option } from "@tuleap/option";
+import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
+
+type ParentTrackerRepresentation = {
     readonly id: number;
-}
+};
+
+export const ParentTrackerIdentifierProxy = {
+    fromTrackerModel: (
+        tracker: ParentTrackerRepresentation | null
+    ): Option<ParentTrackerIdentifier> => {
+        if (tracker === null) {
+            return Option.nothing();
+        }
+        const identifier: ParentTrackerIdentifier = {
+            _type: "ParentTrackerIdentifier",
+            id: tracker.id,
+        };
+        return Option.fromValue(identifier);
+    },
+};
