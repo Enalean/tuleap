@@ -1220,4 +1220,24 @@ class GitActions extends PluginActions
 
         return true;
     }
+
+    public function restoreRepository(int $repo_id, int $project_id): never
+    {
+        $repository = $this->factory->getDeletedRepository($repo_id);
+        $url        = '/admin/show_pending_documents.php?group_id=' . urlencode((string) $project_id);
+        (new CSRFSynchronizerToken($url))->check();
+        assert($GLOBALS['Response'] instanceof \Tuleap\Layout\BaseLayout);
+        if (! $repository) {
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Unable to restore Git repository : Invalid repository id'));
+            $GLOBALS['Response']->redirect($url);
+        }
+        $active_repository = $this->factory->getRepositoryByPath($project_id, $repository->getPath());
+        if ($active_repository instanceof GitRepository) {
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Unable to restore Git repository : repository with the same name already exist'));
+        } else {
+            $this->git_system_event_manager->queueRepositoryRestore($repository);
+            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'System event created to restore repository') . ' : ' . $repository->getName());
+        }
+        $GLOBALS['Response']->redirect($url . '&focus=git_repository');
+    }
 }

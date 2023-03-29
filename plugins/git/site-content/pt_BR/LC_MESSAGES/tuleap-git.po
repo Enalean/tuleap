@@ -960,6 +960,9 @@ msgstr ""
 msgid "Successfully forked"
 msgstr ""
 
+msgid "System event created to restore repository"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
@@ -1216,6 +1219,14 @@ msgid "Unable to delete repository: it has child(ren)"
 msgstr ""
 
 msgid "Unable to delete repository: path outside project repository root"
+msgstr ""
+
+msgid "Unable to restore Git repository : Invalid repository id"
+msgstr ""
+
+msgid ""
+"Unable to restore Git repository : repository with the same name already "
+"exist"
 msgstr ""
 
 msgid "Unable to update Repository data"

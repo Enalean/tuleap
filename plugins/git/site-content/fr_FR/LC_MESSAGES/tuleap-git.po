@@ -1050,6 +1050,9 @@ msgstr "Les projets soumis ne pourront plus utiliser ce serveur Gerrit."
 msgid "Successfully forked"
 msgstr "Fork créé avec succès"
 
+msgid "System event created to restore repository"
+msgstr "Tâche crée pour restorer le dépôt"
+
 msgid "Tags"
 msgstr "Étiquettes"
 
@@ -1366,6 +1369,15 @@ msgid "Unable to delete repository: path outside project repository root"
 msgstr ""
 "Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire "
 "root du projet"
+
+msgid "Unable to restore Git repository : Invalid repository id"
+msgstr "Impossible de restorer le dépôt Git : Identifiant invalide"
+
+msgid ""
+"Unable to restore Git repository : repository with the same name already "
+"exist"
+msgstr ""
+"Impossible de restorer le dépôt Git : un dépôt avec le même nom existe déjà"
 
 msgid "Unable to update Repository data"
 msgstr "Impossible d'enregistrer les données du dépôt"
