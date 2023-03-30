@@ -16,103 +16,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class SVN_AccessFile_DAO extends DataAccessObject
 {
-    private function addNewVersion(int $group_id, string $content)
-    {
-        $new_version_number  = 0;
-        $last_version_number = $this->getLastVersionNumber($group_id);
-        $group_id            = $this->da->escapeInt($group_id);
-        $content             = $this->da->quoteSmart($content);
-        $current_timestamp   = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
-
-        if ($last_version_number) {
-            $new_version_number = $last_version_number + 1;
-        }
-
-        $sql = "INSERT INTO svn_accessfile_history (
-                    version_number,
-                    group_id,
-                    content,
-                    version_date
-                )
-                VALUES (
-                    $new_version_number,
-                    $group_id,
-                    $content,
-                    $current_timestamp
-                )";
-
-        $result = $this->updateAndGetLastId($sql);
-
-        if (! $result) {
-            throw new SVN_SQLRequestNotSuccededException();
-        }
-
-        return $result;
-    }
-
-    public function updateAccessFileVersionInProject($group_id, $version_id)
-    {
-        try {
-            return $this->linkNewVersionIdToProject($group_id, $version_id);
-        } catch (SVN_SQLRequestNotSuccededException $exception) {
-            return false;
-        }
-    }
-
-    public function saveNewAccessFileVersionInProject($group_id, $content)
-    {
-        try {
-            $this->startTransaction();
-
-            $version_id = $this->addNewVersion($group_id, $content);
-            $this->linkNewVersionIdToProject($group_id, $version_id);
-
-            $this->commit();
-            return true;
-        } catch (SVN_SQLRequestNotSuccededException $exception) {
-            $this->rollBack();
-            return false;
-        }
-    }
-
-    public function getLastVersionNumber(int $group_id)
-    {
-        $group_id = $this->da->escapeInt($group_id);
-
-        $sql = "SELECT max(version_number) as version_number
-                FROM svn_accessfile_history
-                WHERE group_id = $group_id";
-
-        $result = $this->retrieve($sql);
-
-        if (! $result) {
-            return null;
-        }
-
-        $row = $result->getRow();
-        return $row['version_number'];
-    }
-
-    private function linkNewVersionIdToProject(int $group_id, int $version_id)
-    {
-        $group_id   = $this->da->escapeInt($group_id);
-        $version_id = $this->da->escapeInt($version_id);
-
-        $sql = "UPDATE `groups`
-                SET svn_accessfile_version_id = $version_id
-                WHERE group_id = $group_id";
-
-        $result = $this->update($sql);
-
-        if (! $result) {
-            throw new SVN_SQLRequestNotSuccededException();
-        }
-
-        return $result;
-    }
-
     public function getAllVersions($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
@@ -143,24 +49,5 @@ class SVN_AccessFile_DAO extends DataAccessObject
         $row = $result->getRow();
 
         return $row['version_number'];
-    }
-
-    public function getVersionContent($version_id)
-    {
-        $version_id = $this->da->escapeInt($version_id);
-
-        $sql = "SELECT content
-                FROM svn_accessfile_history
-                WHERE id = $version_id";
-
-        $result = $this->retrieve($sql);
-
-        if (! $result) {
-            return null;
-        }
-
-        $row = $result->getRow();
-
-        return $row['content'];
     }
 }
