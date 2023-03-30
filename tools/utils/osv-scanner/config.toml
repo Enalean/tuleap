@@ -19,32 +19,6 @@ reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-qwqh-hm9m-p5hr" # CVE-2023-26118
 reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 
-# plugins/git/composer.lock
-## smarty/smarty
-[[IgnoredVulns]]
-id = "GHSA-29gp-2c3m-3j6m" # CVE-2021-29454
-reason = "No usage of the math function."
-
-[[IgnoredVulns]]
-id = "GHSA-3rpf-5rqv-689q"  # CVE-2021-26120
-reason = "All templates content are trusted."
-
-[[IgnoredVulns]]
-id = "GHSA-4h9c-v5vg-5m6m" # CVE-2021-21408
-reason = "All templates content are trusted."
-
-[[IgnoredVulns]]
-id = "GHSA-634x-pc3q-cf4c" # CVE-2022-29221
-reason = "All templates content are trusted."
-
-[[IgnoredVulns]]
-id = "GHSA-w5hr-jm4j-9jvq" # CVE-2021-26119
-reason = "All templates content are trusted."
-
-[[IgnoredVulns]]
-id = "GHSA-hwq7-5vv9-c6cf" # CVE-2018-25047
-reason = "No usage of smarty_function_mailto."
-
 # src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
 ## atty
 [[IgnoredVulns]]

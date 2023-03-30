@@ -151,11 +151,12 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
             new CommitStatusRetriever(new CommitStatusDAO()),
             UserManager::instance()
         );
+        $tuleap_repository         = $this->getTuleapGitRepository();
         $commit_metadata           = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
             $this->getTuleapGitRepository(),
             $commit
         );
-        $commit_presenter          = new CommitPresenter($commit, $commit_metadata[0], $treediff);
+        $commit_presenter          = new CommitPresenter($commit, $commit_metadata[0], $treediff, (int) $tuleap_repository->getProjectId());
         $this->tpl->assign('commit_presenter', $commit_presenter);
     }
 }

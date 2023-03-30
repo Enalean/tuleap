@@ -7,7 +7,7 @@
     "classmap": ["include/"]
   },
   "require": {
-    "smarty/smarty": "^2.6",
+    "smarty/smarty": "^4.3",
     "smarty-gettext/smarty-gettext": "^1.5"
   },
   "autoload-dev": {

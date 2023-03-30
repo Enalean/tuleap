@@ -20,15 +20,7 @@
 <div class="tlp-pane-header git-repository-commit-header">
     <h2 class="git-repository-commit-title">
         <span>
-            {php}
-                $commit_presenter = $this->get_template_vars('commit_presenter');
-                $commit           = $this->get_template_vars('commit');
-                echo $commit_presenter->purifier->purify(
-                    $commit->GetTitle(),
-                    CODENDI_PURIFIER_BASIC_NOBR,
-                    HTTPRequest::instance()->getProject()->getID()
-                );
-            {/php}
+            {$commit_presenter->title_purified}
         </span>
         {include file='tuleap/refs-badges.tpl' commit=$commit}
     </h2>
@@ -50,16 +42,7 @@
 
 <section class="tlp-pane-section git-repository-commit-info">
     {if $commit_presenter->has_description}
-        <p class="git-repository-commit-description">{php}
-    $commit_presenter = $this->get_template_vars('commit_presenter');
-    $description      = $commit_presenter->description;
-    echo $commit_presenter->purifier->purify(
-        $description,
-        CODENDI_PURIFIER_BASIC_NOBR,
-        HTTPRequest::instance()->getProject()->getID()
-    );
-{/php}
-        </p>
+        <p class="git-repository-commit-description">{$commit_presenter->description_purified}</p>
     {/if}
     <div class="git-repository-commit-metadata">
         <div class="git-repository-commit-metadata-changes">

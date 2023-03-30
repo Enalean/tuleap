@@ -68,10 +68,31 @@ abstract class ControllerBase
      */
     public function __construct()
     {
-        $this->tpl                = new \Smarty();
-        $this->tpl->plugins_dir[] = __DIR__ . '/../smartyplugins';
-        $this->tpl->plugins_dir[] = __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext';
-        $this->tpl->template_dir  = __DIR__ . '/../../../templates/gitphp/';
+        $this->tpl = new \Smarty();
+        $this->tpl->addPluginsDir([
+            __DIR__ . '/../smartyplugins',
+            __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext',
+        ]);
+        $this->tpl->setTemplateDir(__DIR__ . '/../../../templates/gitphp/');
+        $this->tpl->registerPlugin('modifier', 'urlencode', urlencode(...));
+        $this->tpl->registerPlugin('modifier', 'substr', substr(...));
+        $this->tpl->registerPlugin(
+            'function',
+            'display_potentially_dangerous_bidirectional_text_warning',
+            function (array $params): string {
+                if (! isset($params['diff']) || ! is_array($params['diff'])) {
+                    return '';
+                }
+                $warning = \Tuleap\Git\Unicode\DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning(
+                    implode($params['diff'])
+                );
+                if ($warning === null) {
+                    return '';
+                }
+                $html_purifier = \Codendi_HTMLPurifier::instance();
+                return '<div class="tlp-alert-warning">' . $html_purifier->purify($warning) . '</div>';
+            }
+        );
 
         // Use a dedicated directory for smarty temporary files if needed.
         if (Config::GetInstance()->HasKey('smarty_tmp')) {
@@ -84,13 +105,13 @@ abstract class ControllerBase
             if (! is_dir($templates_c)) {
                 mkdir($templates_c, 0755, true);
             }
-            $this->tpl->compile_dir = $templates_c;
+            $this->tpl->setCompileDir($templates_c);
 
             $cache = $smarty_tmp . '/cache';
             if (! is_dir($cache)) {
                 mkdir($cache, 0755, true);
             }
-            $this->tpl->cache_dir = $cache;
+            $this->tpl->setCacheDir($cache);
         }
 
         $this->project               = ProjectList::GetInstance()->GetProject();
@@ -236,7 +257,7 @@ abstract class ControllerBase
      */
     public function Render() // @codingStandardsIgnoreLine
     {
-        $this->tpl->clear_all_assign();
+        $this->tpl->clearAllAssign();
         $this->LoadCommonData();
         $this->LoadData();
 

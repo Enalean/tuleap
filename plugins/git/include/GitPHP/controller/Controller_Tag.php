@@ -119,5 +119,9 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('purifier', \Codendi_HTMLPurifier::instance());
 
         $this->tpl->assign("tag", $tag);
+        $html_purifier        = \Codendi_HTMLPurifier::instance();
+        $project_id           = (int) $this->getTuleapGitRepository()->getProjectId();
+        $tag_comment_purified = $html_purifier->purify(implode(PHP_EOL, $tag->GetComment()), CODENDI_PURIFIER_BASIC_NOBR, $project_id);
+        $this->tpl->assign("tag_comment_purified", $tag_comment_purified);
     }
 }

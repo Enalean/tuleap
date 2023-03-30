@@ -150,11 +150,12 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
             new CommitStatusRetriever(new CommitStatusDAO()),
             UserManager::instance()
         );
+        $tuleap_repository         = $this->getTuleapGitRepository();
         $commit_metadata           = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
-            $this->getTuleapGitRepository(),
+            $tuleap_repository,
             $commit
         );
-        $commit_presenter          = new CommitPresenter($commit, $commit_metadata[0], $treediff);
+        $commit_presenter          = new CommitPresenter($commit, $commit_metadata[0], $treediff, (int) $tuleap_repository->getProjectId());
         $this->tpl->assign('commit_presenter', $commit_presenter);
         $this->tpl->assign('treediff', $treediff);
     }
