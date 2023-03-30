@@ -110,9 +110,6 @@ function svn_header_admin($params)
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'admin'),
         'url'   => '/svn/admin/?group_id=' . $group_id,
     ];
-    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'gen_sett'),
-        'url'   => '/svn/admin/?func=general_settings&group_id=' . $group_id,
-    ];
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'immutable_tags'),
         'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id,
     ];

@@ -102,7 +102,7 @@ class ImmutableTagController
             } catch (CannotCreateImmuableTagException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('svn_admin_general_settings', 'upd_fail')
+                    dgettext('tuleap-svn', 'Unable to save immutable tags.')
                 );
             }
 

@@ -57,7 +57,6 @@ class SystemEventManager
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
             Event::MASSMAIL,
-            Event::SVN_UPDATE_HOOKS,
             Event::SVN_AUTH_CACHE_CHANGE,
             Event::UPDATE_ALIASES,
             'approve_pending_project',
@@ -355,14 +354,6 @@ class SystemEventManager
                 );
                 break;
 
-            case Event::SVN_UPDATE_HOOKS:
-                $this->createEvent(
-                    SystemEvent::TYPE_SVN_UPDATE_HOOKS,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-
             case Event::SVN_AUTH_CACHE_CHANGE:
                 $this->createEvent(
                     SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE,
@@ -522,7 +513,6 @@ class SystemEventManager
                 $klass        = $this->getClassForType($row['type']);
                 $klass_params = [new UpdateProjectAccessFilesScheduler($this)];
                 break;
-            case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
             case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
                 $klass        = $this->getClassForType($row['type']);
                 $klass_params = [Backend::instance(Backend::SVN)];

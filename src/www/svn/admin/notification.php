@@ -105,7 +105,7 @@ if (! $project->isSVNTracked()) {
 
 // Display the form
 svn_header_admin([
-    'title' => $Language->getText('svn_admin_general_settings', 'gen_settings'),
+    'title' => '',
     'help' => 'svn.html#subversion-email-notification',
 ]);
 
