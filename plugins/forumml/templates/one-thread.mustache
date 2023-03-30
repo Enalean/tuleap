@@ -2,6 +2,14 @@
     {{ thread_name }}
 </h1>
 
+<div class="tlp-alert-warning forumml-deprecation-warning">
+    <i class="fa fa-power-off"></i>
+    {{# dgettext }}
+        tuleap-forumml |
+        This plugin will be removed in september 2023
+    {{/dgettext}}
+</div>
+
 <div class="tlp-framed">
     {{# messages }}
         <div class="forumml-thread-message" id="message-{{ id }}">

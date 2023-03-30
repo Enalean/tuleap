@@ -118,6 +118,9 @@ msgstr ""
 "ne voyez pas votre message, merci de rafraichir la page dans quelques "
 "instants."
 
+msgid "This plugin will be removed in september 2023"
+msgstr "Ce plugin sera supprimé en septembre 2023"
+
 msgid "Threads"
 msgstr "Fils"
 
