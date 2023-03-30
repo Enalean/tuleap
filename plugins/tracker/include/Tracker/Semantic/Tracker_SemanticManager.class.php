@@ -35,6 +35,26 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 class Tracker_SemanticManager
 {
+    /**
+     * Fetch the semantics used by other plugins
+     *
+     * Parameters:
+     * 'semantics' => @var Tracker_SemanticCollection A collection of semantics that needs adding to.
+     * 'tracker'   => @var Tracker                    The Tracker the semantics are defined upon
+     *
+     * Expected results
+     * The semantics parameter is populated with additional semantic fields
+     */
+    public final const TRACKER_EVENT_MANAGE_SEMANTICS = 'tracker_event_manage_semantics';
+
+    /**
+     * Fetches all the semantic names
+     *
+     * Parameters:
+     * 'semantic' => @var array of semantic name strings
+     */
+    public final const TRACKER_EVENT_GET_SEMANTICS_NAMES = 'tracker_event_get_semantics_names';
+
     /** @var Tracker */
     protected $tracker;
 
@@ -208,7 +228,7 @@ class Tracker_SemanticManager
     private function addOtherSemantics(Tracker_SemanticCollection $semantics)
     {
          EventManager::instance()->processEvent(
-             TRACKER_EVENT_MANAGE_SEMANTICS,
+             self::TRACKER_EVENT_MANAGE_SEMANTICS,
              [
                  'semantics'   => $semantics,
                  'tracker'     => $this->tracker,
@@ -253,7 +273,7 @@ class Tracker_SemanticManager
     {
         $order = ['title', 'description', 'status', 'contributor', SemanticTimeframe::NAME, SemanticProgress::NAME];
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_GET_SEMANTICS_NAMES,
+            self::TRACKER_EVENT_GET_SEMANTICS_NAMES,
             [
                 'semantics' => &$order,
             ]

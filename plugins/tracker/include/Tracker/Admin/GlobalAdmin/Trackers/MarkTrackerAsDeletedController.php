@@ -39,6 +39,15 @@ use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
 class MarkTrackerAsDeletedController implements DispatchableWithRequest
 {
+    /**
+     * Event emitted to delete tracker
+     *
+     * Parameters:
+     *  'tracker_id'      int (IN)
+     *  'key'             string  (IN)
+     */
+    public final const TRACKER_EVENT_DELETE_TRACKER = 'tracker_event_delete_tracker';
+
     public const DELETION_URL = "delete-tracker";
     /**
      * @var TrackerFactory
@@ -154,7 +163,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
             return;
         }
 
-        $this->event_manager->processEvent(TRACKER_EVENT_DELETE_TRACKER, ['tracker_id' => $tracker->getId()]);
+        $this->event_manager->processEvent(self::TRACKER_EVENT_DELETE_TRACKER, ['tracker_id' => $tracker->getId()]);
 
         $layout->addFeedback(
             Feedback::INFO,

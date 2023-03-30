@@ -37,6 +37,29 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 class Tracker_SemanticFactory
 {
     /**
+     * Create a semantic from xml in other plugins
+     *
+     * Parameters:
+     * 'xml'           => @var SimpleXMLElement
+     * 'xml_mapping'   => @var array
+     * 'tracker'       => @var Tracker
+     * 'semantic'      => @var array
+     * 'type'          => @var string
+     *
+     * Expected results
+     * The semantic parameter is populated with a Tracker_Semantic object if it exists for the given type
+     */
+    public final const TRACKER_EVENT_SEMANTIC_FROM_XML = 'tracker_event_semantic_from_xml';
+
+    /**
+     * Get the various duplicators that can duplicate semantics
+     *
+     * Parameters:
+     *  'duplicators' => \Tuleap\Tracker\Semantic\IDuplicateSemantic[]
+     */
+    public final const TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS = 'tracker_event_get_semantic_duplicators';
+
+    /**
      * Hold an instance of the class
      * @var self|null
      */
@@ -127,7 +150,7 @@ class Tracker_SemanticFactory
         $semantic = null;
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_SEMANTIC_FROM_XML,
+            self::TRACKER_EVENT_SEMANTIC_FROM_XML,
             [
                 'xml'               => $xml,
                 'full_semantic_xml' => $full_semantic_xml,
@@ -242,7 +265,7 @@ class Tracker_SemanticFactory
         ];
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS,
+            self::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS,
             ['duplicators' => &$duplicators]
         );
 

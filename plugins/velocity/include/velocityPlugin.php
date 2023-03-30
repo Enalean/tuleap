@@ -61,11 +61,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook('cssfile');
-        $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
+        $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS);
         $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
         $this->addHook(BeforeEvent::NAME);
         $this->addHook(DetailsChartPresentersRetriever::NAME);
-        $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
+        $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent::NAME);
@@ -92,7 +92,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     /**
-     * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
+     * @see Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
      */
     public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
     {

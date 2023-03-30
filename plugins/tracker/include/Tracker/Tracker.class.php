@@ -149,6 +149,32 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private const TRACKER_NOT_USE_PRIVATE_COMMENTS_EXPORT_XML = "0";
 
+    /**
+     * Event emitted to check if a tracker can be deleted
+     *
+     * Parameters:
+     *   'tracker'                Tracker (IN)
+     *   'result'                 Array (OUT)
+     */
+    public final const TRACKER_USAGE = 'tracker_usage';
+
+    /**
+     * Event emitted to display tracker admin buttons
+     *
+     * Parameters:
+     *  'tracker_id'      int (IN)
+     */
+    public final const TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
+
+    /**
+     * Getting informations from agile dashboard plugin about the tracker affilitaion to an agile dashboard
+     *
+     * Parameters:
+     *  'cannot_configure_instantiate_for_new_projects' Boolean
+     *  'tracker'                                       Tracker
+     */
+    public final const TRACKER_EVENT_GENERAL_SETTINGS = 'tracker_event_general_settings';
+
     public $id;
     public $group_id;
     public $name;
@@ -1305,7 +1331,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
-        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
         $presenter = new HeaderPresenter($this, $current_item, array_values($items));
         $this->renderer->renderToPage('admin-header', $presenter);
@@ -1322,7 +1348,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
-        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
         $presenter = new HeaderPresenter($this, $current_item, array_values($items));
         $this->renderer->renderToPage('admin-header-bp', $presenter);
@@ -1381,7 +1407,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminItemHeader($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
         $cannot_configure_instantiate_for_new_projects = false;
         $params                                        = ['cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker' => $this];
-        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_GENERAL_SETTINGS, $params);
         $this->renderer->renderToPage(
             'tracker-general-settings',
             new Tracker_GeneralSettings_Presenter(
@@ -1586,7 +1612,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             'cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects,
             'tracker'                                       => $this,
         ];
-        EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_GENERAL_SETTINGS, $params);
 
         $this->name            = $validated_public_name;
         $request_tracker_color = $validated_tracker_color;
@@ -2004,7 +2030,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $result['can_be_deleted'] = true;
 
         EventManager::instance()->processEvent(
-            TRACKER_USAGE,
+            self::TRACKER_USAGE,
             [
                 'tracker'   => $this,
                 'result'    => &$result,

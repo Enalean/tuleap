@@ -21,6 +21,7 @@
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -39,9 +40,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(TRACKER_EVENT_DELETE_TRACKER);
+            $this->addHook(MarkTrackerAsDeletedController::TRACKER_EVENT_DELETE_TRACKER);
             $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
-            $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+            $this->addHook(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
         }
 
         $this->addHook('fill_project_history_sub_events');

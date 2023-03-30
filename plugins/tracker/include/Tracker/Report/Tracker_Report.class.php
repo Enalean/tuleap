@@ -66,6 +66,35 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface
 {
+    /**
+     * Get the various criteria that may enhance a report
+     *
+     * Parameters:
+     *  'array_of_html_criteria' string[]                (OUT) html code to be included in the criteria list
+     *  'tracker'                Tracker                 (IN)  the current tracker
+     *  'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+     *  'user'                   PFUser                  (IN)  the current user
+     */
+    public final const TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA = 'tracker_event_report_display_additional_criteria';
+
+    /**
+     * We want to save in database additional criteria
+     *
+     * Parameters:
+     * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+     * 'report'                 Tracker_Report                       (IN)
+     */
+    public final const TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA = 'tracker_event_report_save_additional_criteria';
+
+    /**
+     * We want to save in database additional criteria
+     *
+     * Parameters:
+     * 'additional_criteria_values'    array($key => $value) (OUT)
+     * 'report'                        Tracker_Report        (IN)
+     */
+    public final const TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA = 'tracker_event_report_load_additional_criteria';
+
     public const ACTION_SAVE            = 'report-save';
     public const ACTION_SAVEAS          = 'report-saveas';
     public const ACTION_REPLACE         = 'report-replace';
@@ -521,7 +550,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $this->getCommentCriterionHtmlContent($additional_criteria, $array_of_html_criteria);
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA,
+            self::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA,
             [
                 'array_of_html_criteria' => &$array_of_html_criteria,
                 'tracker'                => $this->getTracker(),
@@ -1608,7 +1637,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $this->saveCommentCriterion($additional_criteria);
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA,
+            self::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA,
             [
                 'additional_criteria' => $additional_criteria,
                 'report'              => $this,
@@ -1787,7 +1816,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             ];
 
             EventManager::instance()->processEvent(
-                TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA,
+                self::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA,
                 [
                     'additional_criteria_values' => &$additional_criteria_values,
                     'report'                     => $this,

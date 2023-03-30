@@ -48,6 +48,29 @@ use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 class TrackerFactory implements RetrieveTracker
 {
+    /**
+     * Get the trackers required by agile dashboard
+     *
+     * Parameters:
+     *  'project_id'        project_id
+     *  'tracker_ids_list'  array containing tracker ids
+     */
+    public final const TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED = 'tracker_event_project_creation_trackers_required';
+
+    /**
+     * The trackers from a project have been duplicated in another project
+     *
+     * Parameters:
+     * 'tracker_mapping'   => The mapping between source and target project trackers
+     * 'field_mapping'     => The mapping between source and target fields
+     * 'group_id'          => The id of the target project
+     * 'ugroups_mapping'   => The mapping between source and target ugroups
+     * 'source_project_id' => The id of the source project
+     *
+     * No expected results
+     */
+    public final const TRACKER_EVENT_TRACKERS_DUPLICATED = 'tracker_event_trackers_duplicated';
+
     public const LEGACY_SUFFIX       = '_from_tv3';
     public const TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
 
@@ -528,7 +551,7 @@ class TrackerFactory implements RetrieveTracker
 
         $tracker_ids_list = [];
         $params           = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
-        EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
         foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
@@ -565,7 +588,7 @@ class TrackerFactory implements RetrieveTracker
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
-        EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, [
+        EventManager::instance()->processEvent(self::TRACKER_EVENT_TRACKERS_DUPLICATED, [
             'tracker_mapping'   => $tracker_mapping,
             'field_mapping'     => $field_mapping,
             'report_mapping'    => $report_mapping,

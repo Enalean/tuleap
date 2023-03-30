@@ -83,7 +83,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->listenToCollectRouteEventWithDefaultController();
 
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+            $this->addHook(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
             $this->addHook(TrackerEventExportFullXML::NAME);
             $this->addHook(ImportXMLProjectTrackerDone::NAME);
@@ -129,7 +129,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     }
 
     /**
-     * @see TRACKER_EVENT_FETCH_ADMIN_BUTTONS
+     * @see Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS
      */
     public function trackerEventFetchAdminButtons($params)
     {
