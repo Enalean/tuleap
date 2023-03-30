@@ -3963,6 +3963,9 @@ msgid ""
 "automatically a project member."
 msgstr ""
 
+msgid "This plugin will be removed in september 2023"
+msgstr ""
+
 msgid "This project doesn't allow short name edition."
 msgstr "Este projeto não permite a edição de nomes reduzidos."
 

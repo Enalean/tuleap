@@ -4024,6 +4024,9 @@ msgstr ""
 "Cette personne sera toujours en mesure de s'enregistrer par elle-même, mais "
 "ne sera plus automatiquement ajoutée en tant que membre de projet."
 
+msgid "This plugin will be removed in september 2023"
+msgstr "Ce plugin sera supprimé en septembre 2023"
+
 msgid "This project doesn't allow short name edition."
 msgstr "Ce projet n'autorise pas l'édition du nom court."
 
