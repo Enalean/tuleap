@@ -24,12 +24,15 @@ use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wasmtime_wasi::WasiCtx;
-use wire::{SuccessResponseJson, InternalErrorJson, UserErrorJson};
+use wire::{InternalErrorJson, SuccessResponseJson, UserErrorJson};
 
 mod wire;
 
+/// # Safety
+///
+/// This function must be called with valid pointers (filename_ptr and json_ptr)
 #[no_mangle]
-pub extern "C" fn callWasmModule(
+pub unsafe extern "C" fn callWasmModule(
     filename_ptr: *const c_char,
     json_ptr: *const c_char,
     max_exec_time_in_ms: u64,
@@ -48,9 +51,7 @@ pub extern "C" fn callWasmModule(
         max_memory: max_memory_size_in_bytes,
     };
     match compile_and_exec(filename, input, &limits) {
-        Ok(s) => {
-            return success_response(s);
-        }
+        Ok(s) => success_response(s),
         Err(e) => {
             return match e.downcast_ref::<Trap>() {
                 Some(&Trap::Interrupt) => user_error(format!(
@@ -61,26 +62,27 @@ pub extern "C" fn callWasmModule(
                     "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
                     limits.max_memory
                 )),
-                None => internal_error(format!("{}", e.to_string())),
+                None => internal_error(format!("{}", e)),
                 _ => user_error(format!("{}", e.root_cause())),
             };
         }
-    };
+    }
 }
 
+/// # Safety
+///
+/// This function must only be called with a valid pointer (json_ptr)
 #[no_mangle]
-pub extern "C" fn freeCallWasmModuleOutput(json_ptr: *mut c_char) -> () {
+pub unsafe extern "C" fn freeCallWasmModuleOutput(json_ptr: *mut c_char) {
     unsafe {
         let _ = CString::from_raw(json_ptr);
     };
 }
 
 fn success_response(wasm_stdout: String) -> *mut c_char {
-    let response = SuccessResponseJson {
-        data: wasm_stdout,
-    };
+    let response = SuccessResponseJson { data: wasm_stdout };
     let c_str = CString::new(serde_json::to_string(&response).unwrap()).unwrap();
-    return CString::into_raw(c_str);
+    CString::into_raw(c_str)
 }
 
 fn internal_error(error_message: String) -> *mut c_char {
@@ -88,7 +90,7 @@ fn internal_error(error_message: String) -> *mut c_char {
         internal_error: error_message,
     };
     let c_str = CString::new(serde_json::to_string(&err).unwrap()).unwrap();
-    return CString::into_raw(c_str);
+    CString::into_raw(c_str)
 }
 
 fn user_error(error_message: String) -> *mut c_char {
@@ -96,7 +98,7 @@ fn user_error(error_message: String) -> *mut c_char {
         error: error_message,
     };
     let c_str = CString::new(serde_json::to_string(&err).unwrap()).unwrap();
-    return CString::into_raw(c_str);
+    CString::into_raw(c_str)
 }
 
 fn load_module(engine: &Engine, path: &String) -> Result<Module> {
@@ -118,7 +120,7 @@ fn compile_and_exec(
     input: String,
     limits: &Limitations,
 ) -> Result<String, anyhow::Error> {
-    let stdin = ReadPipe::from(input.to_owned());
+    let stdin = ReadPipe::from(input);
     let stdout = WritePipe::new_in_memory();
 
     let my_state = StoreState {
@@ -127,7 +129,7 @@ fn compile_and_exec(
             .instances(1)
             .build(),
         wasi: WasiCtxBuilder::new()
-            .stdin(Box::new(stdin.clone()))
+            .stdin(Box::new(stdin))
             .stdout(Box::new(stdout.clone()))
             .build(),
     };
@@ -174,13 +176,13 @@ fn compile_and_exec(
                 .into_inner();
 
             let str = match String::from_utf8(raw_output) {
-                Ok(s) => s.to_owned(),
+                Ok(s) => s,
                 Err(e) => return Err(anyhow!(e)),
             };
 
             Ok(str)
         }
-        Err(e) => return Err(e),
+        Err(e) => Err(e),
     }
 }
 
@@ -205,7 +207,8 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -231,7 +234,8 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -249,7 +253,8 @@ mod tests {
 
         let json_c_world = ptr::null();
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -275,7 +280,8 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -292,7 +298,8 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -316,7 +323,8 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
+        let c_out =
+            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
