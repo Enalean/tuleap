@@ -1,11 +1,11 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "outDir": "dist",
-    "sourceMap": false,
-    "esModuleInterop": true,
-    "allowJs": true
-  },
-  "include": ["src/main.ts", "src/webpack/webpack.d.ts", "src/jest/*.js"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "dist",
+        "sourceMap": false,
+        "esModuleInterop": true,
+        "allowJs": true
+    },
+    "include": ["src/main.ts", "src/webpack/webpack.d.ts", "src/jest/*.js"]
 }

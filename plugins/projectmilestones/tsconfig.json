@@ -1,9 +1,4 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "module": "esnext" //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
-    },
-    "include": [
-        "scripts/projectmilestones/**/*"
-    ]
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
+    "include": ["scripts/projectmilestones/**/*"]
 }

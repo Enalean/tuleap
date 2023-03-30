@@ -18,6 +18,7 @@
  */
 
 import { getCurrentInstance } from "vue";
+export type * from "./shims";
 
 interface Language {
     $gettext: (msgid: string) => string;

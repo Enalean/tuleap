@@ -1,9 +1,8 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "ES2022",
-    "outDir": "dist",
-    "sourceMap": false
-  },
-  "include": ["src/po-gettext-plugin.ts"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": false
+    },
+    "include": ["src/po-gettext-plugin.ts"]
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openTargetModalIdOnClick } from "tlp";
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import App from "./new-thread/src/components/App.vue";
 import Vue from "vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";

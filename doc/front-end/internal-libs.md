@@ -187,7 +187,7 @@ Once you have a `package.json` file, you will also need a
 ``` JavaScript
 // tuleap/plugins/my-plugin/scripts/lib/my-lib-name/tsconfig.json
 {
-    "extends": "../../../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": [],          // Add values like "DOM" if your lib interacts with the DOM
         "types": ["jest"],  // Add global types needed by your lib

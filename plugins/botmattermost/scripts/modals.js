@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
     initModalAddBot();

@@ -1,7 +1,6 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "module": "esnext",
         "incremental": false,
         "skipLibCheck": true
     },

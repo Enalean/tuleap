@@ -1,4 +1,4 @@
 {
-    "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
-    "include": ["src/**/*"]
+    "extends": "./tsc/tsconfig-for-libraries.json",
+    "include": ["src/**/*"],
 }

@@ -1,17 +1,17 @@
 {
-    "author": "Enalean Team",
-    "name": "@tuleap/plugin-botmattermost",
-    "homepage": "https://tuleap.org",
-    "license": "GPL-2.0-or-later",
-    "private": true,
-    "dependencies": {
-        "@tuleap/tlp": "workspace:*"
-    },
-    "devDependencies": {
-        "@tuleap/build-system-configurator": "workspace:*"
-    },
-    "scripts": {
-        "build": "webpack --config webpack.prod.js",
-        "watch": "webpack --config webpack.dev.js --watch"
-    }
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-botmattermost",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp-modal": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  }
 }
