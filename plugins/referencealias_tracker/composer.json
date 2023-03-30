@@ -1,8 +1,0 @@
-{
-  "name": "tuleap/plugin-referencealias-tracker",
-  "autoload": {
-    "psr-4": {
-      "Tuleap\\ReferenceAliasTracker\\": "include/ReferenceAliasTracker/"
-    }
-  }
-}

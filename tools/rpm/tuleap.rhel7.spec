@@ -331,13 +331,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-mediawiki
 %description plugin-referencealias-mediawiki
 This plugin allows to use wikiXXXX references to point to mediawiki pages
 
-%package plugin-referencealias-tracker
-Summary: Reference aliases for tracker plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
-%description plugin-referencealias-tracker
-This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
-
 %package plugin-artifactsfolders
 Summary: Artifacts Folders
 Group: Development/Tools
@@ -1450,10 +1443,6 @@ fi
 %files plugin-referencealias-mediawiki
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/referencealias_mediawiki
-
-%files plugin-referencealias-tracker
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/referencealias_tracker
 
 %files plugin-artifactsfolders
 %defattr(-,root,root,-)
