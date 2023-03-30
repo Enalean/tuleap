@@ -23,7 +23,6 @@ pub struct SuccessResponseJson {
     pub data: String,
 }
 
-
 #[derive(Serialize)]
 pub struct InternalErrorJson {
     pub internal_error: String,

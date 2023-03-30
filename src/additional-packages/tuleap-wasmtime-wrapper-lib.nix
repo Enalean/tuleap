@@ -8,6 +8,7 @@ let
   buildTargetRust = "${baseArchTarget}-unknown-linux-gnu";
   rust = pkgs.rust-bin.stable.latest.minimal.override {
     targets = [ "wasm32-wasi" buildTargetRust ];
+    extensions = [ "cargo" "rustc" "clippy" ];
   };
   tuleapWasmtimeWrapperLib = pkgs.stdenvNoCC.mkDerivation rec {
     name = "tuleap-wasmtime-wrapper-lib";
@@ -41,6 +42,7 @@ let
     doCheck = true;
     checkPhase = ''
       runHook preCheck
+      cargo clippy
       cargo test --release
       runHook postCheck
     '';
