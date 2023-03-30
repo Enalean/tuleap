@@ -317,13 +317,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
 %description plugin-referencealias-git
 This plugin allows to use cmmtXXX as aliases for git references
 
-%package plugin-referencealias-svn
-Summary: Reference aliases for svn plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-svn
-%description plugin-referencealias-svn
-This plugin allows to use cmmtXXX references as aliases for svn plugin commit references
-
 %package plugin-referencealias-mediawiki
 Summary: Reference aliases for mediawiki plugin
 Group: Development/Tools
@@ -1435,10 +1428,6 @@ fi
 %files plugin-referencealias-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/referencealias_git
-
-%files plugin-referencealias-svn
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/referencealias_svn
 
 %files plugin-referencealias-mediawiki
 %defattr(-,root,root,-)
