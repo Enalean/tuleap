@@ -317,13 +317,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
 %description plugin-referencealias-git
 This plugin allows to use cmmtXXX as aliases for git references
 
-%package plugin-referencealias-mediawiki
-Summary: Reference aliases for mediawiki plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-mediawiki
-%description plugin-referencealias-mediawiki
-This plugin allows to use wikiXXXX references to point to mediawiki pages
-
 %package plugin-artifactsfolders
 Summary: Artifacts Folders
 Group: Development/Tools
@@ -1428,10 +1421,6 @@ fi
 %files plugin-referencealias-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/referencealias_git
-
-%files plugin-referencealias-mediawiki
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/referencealias_mediawiki
 
 %files plugin-artifactsfolders
 %defattr(-,root,root,-)
