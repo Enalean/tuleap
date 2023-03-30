@@ -12,7 +12,7 @@
 services:
   web:
     image: tuleap/tuleap-community-edition
-    #command: ["--debug"]
+    command: ["--debug"]
     hostname: ${TULEAP_FQDN}
     ports:
       - "443:443"
