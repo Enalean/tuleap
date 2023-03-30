@@ -2,26 +2,6 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
-#-----------------------------------------------
-# Script: SF/www/svn/admin/access_control.php
-#
-svn_admin_access_control	upd_success	Contrôle d'accès mis à jour avec succès
-svn_admin_access_control	upd_fail	La mise à jour du contrôle d'accès a échoué
-svn_admin_access_control	access_ctrl	Administration de Subversion - Contrôle d'accès
-svn_admin_access_control	def_policy	La politique par défaut de $1 est d'autoriser l'accès en lecture et en écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou même redéfinir les permissions d'accès pour vos besoins.
-svn_admin_access_control	access_ctrl_file	Fichier de contrôle d'accès
-svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été créé. Les permissions d'accès ne peuvent pas encore être définies.
-svn_admin_access_control	no_ugroup	Le groupe "$1" est vide ou n'existe pas
-svn_admin_access_control	invalid_line	La ligne "$1" est invalide
-svn_admin_access_control	button_new_version	Enregistrer une nouvelle version
-svn_admin_access_control	button_other_version	Utiliser la version sélectionnée
-svn_admin_access_control	other_versions	Versions enregistrées :
-svn_admin_access_control	last_version	Vous utilisez la dernière version (# $1)
-svn_admin_access_control	previous_version	Vous utilisez une version antérieure (# $1)
-svn_admin_access_control	saved_on	enregistré le
-svn_admin_access_control	select_version	Choisissez une version
-svn_admin_access_control	permissions_warning	Il est conseillé de toujours utiliser un groupe d'utilisateurs Tuleap pour définir des permissions. Attribuer des permissions à un groupe d'utilisateurs défini manuellement ou à un utilisateur spécifique peut amener à des problèmes de sécurité.
-svn_admin_access_control	ugroup_name_case_sensitivity	Attention, "$1" ne respecte pas la casse. Sa règle a été désactivée.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/general_settings.php
@@ -68,8 +48,6 @@ svn_tokens	default_last_used_by	-
 svn_admin_index	admin	Administration Subversion
 svn_admin_index	gen_sett	Options générales
 svn_admin_index	welcome	Définition du message de bienvenue, suivi dans la base de données...
-svn_admin_index	access	Contrôle d'accès
-svn_admin_index	access_comment	Définition des permissions d'accès des utilisateurs sur le dépôt Subversion.
 svn_admin_index	email_sett	Options de notification e-mail
 svn_admin_index	email_comment	Définition des destinataires des notification e-mail des changements remontés dans le dépôt Subversion.
 svn_admin_index	immutable_tags	Tags non modifiables

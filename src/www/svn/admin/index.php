@@ -53,9 +53,7 @@ $svn_core_access->redirect();
 $vFunc = new Valid_WhiteList('func', [
     'general_settings',
     'immutable_tags',
-    'access_control',
     'notification',
-    'access_control_version',
 ]);
 $vFunc->required();
 if ($request->valid($vFunc)) {
@@ -67,20 +65,6 @@ if ($request->valid($vFunc)) {
             break;
         case 'general_settings':
             require('./general_settings.php');
-            break;
-        case 'access_control':
-            require('./access_control.php');
-            break;
-        case 'access_control_version':
-            if (! $request->exist('accessfile_history_id')) {
-                break;
-            }
-            $version_id = $request->get('accessfile_history_id');
-            $dao        = new SVN_AccessFile_DAO();
-            $result     = $dao->getVersionContent($version_id);
-
-            $GLOBALS['Response']->sendJSON(['content' => $result]);
-
             break;
         case 'notification':
             require('./notification.php');
@@ -108,8 +92,6 @@ if ($request->valid($vFunc)) {
     echo '<H3><a href="/svn/admin/?func=immutable_tags&group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('svn_admin_index', 'immutable_tags') . '</a></H3>';
     echo '<p>' . $Language->getText('svn_admin_index', 'immutable_tags_description') . '</p>';
 
-    echo '<H3><a href="/svn/admin/?func=access_control&group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('svn_admin_index', 'access') . '</a></H3>';
-    echo '<P>' . $Language->getText('svn_admin_index', 'access_comment') . '</P>';
     echo '<H3><a href="/svn/admin/?func=notification&group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('svn_admin_index', 'email_sett') . '</a></H3>';
     echo '<p>' . $Language->getText('svn_admin_index', 'email_comment') . '</P>';
 

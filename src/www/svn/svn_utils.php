@@ -116,9 +116,6 @@ function svn_header_admin($params)
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'immutable_tags'),
         'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id,
     ];
-    $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'access'),
-        'url'   => '/svn/admin/?func=access_control&group_id=' . $group_id,
-    ];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
         'url'   => '/svn/admin/?func=notification&group_id=' . $group_id,
     ];
@@ -569,34 +566,6 @@ function svn_utils_read_svn_access_file($project_svnroot)
     }
     return $buffer;
 }
-
-function svn_utils_write_svn_access_file_with_defaults($project_svnroot, $contents)
-{
-    $buffer = svn_utils_read_svn_access_file_defaults($project_svnroot);
-    return svn_utils_write_svn_access_file($project_svnroot, $buffer . $contents);
-}
-
-function svn_utils_write_svn_access_file($project_svnroot, $contents)
-{
-    global $feedback,$Language;
-
-    $accessfile = new SVN_AccessFile_Writer($project_svnroot);
-    $ret        = $accessfile->write($contents);
-
-    if ($accessfile->isErrorFile()) {
-        $feedback .= $Language->getText('svn_utils', 'file_err', $accessfile->filename());
-    } elseif ($accessfile->isErrorWrite()) {
-        $feedback .= $Language->getText('svn_utils', 'write_err', $accessfile->filename());
-    }
-
-    return $ret;
-}
-
-function svn_utils_svn_repo_exists($project_svnroot)
-{
-    return is_dir("$project_svnroot");
-}
-
 
 $GLOBALS['SVNACCESS'] = "None";
 $GLOBALS['SVNGROUPS'] = "None";
