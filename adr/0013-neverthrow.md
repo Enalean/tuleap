@@ -25,7 +25,8 @@ interface Checker
     public function itCouldFail(): Fault | null;
 }
 
-class Upper {
+class Upper
+{
     private Checker $checker;
 
     public function upper(): Fault | null
@@ -44,7 +45,8 @@ interface Checker
     public function itCouldFail(): Ok|Err;
 }
 
-class Upper {
+class Upper
+{
     private Checker $checker;
 
     public function upper(): Ok|Err

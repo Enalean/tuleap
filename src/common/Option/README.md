@@ -1,15 +1,7 @@
 # `Tuleap\Option`
 
-Tuleap's Option namespace has for goal to bring a PHP implementation of the `Maybe`/`Option` type present in functional
-programming languages. See [Haskell's Maybe](https://wiki.haskell.org/Maybe) or
-[Rust's Option](https://doc.rust-lang.org/std/option/enum.Option.html) for examples.
-
-## Goals
-
-* Bring better clarity to the fact some value may or may not be present
-* Avoid using `null` to indicate a value might not be present. `null` can be a valid value or have a different meaning
-  than "missing" (e.g. it can be a "to be removed")
-* Avoid conditional logic in order to reduce testing efforts
+Tuleap's Option namespace has the goal of bringing a PHP implementation of the `Maybe`/`Option` type present in functional
+programming languages. See [ADR-0022: Option][0] for more context.
 
 ## Usage
 
@@ -44,7 +36,7 @@ $value->apply(function(\PFUser $user): void {
 });
 ```
 
-At the end of a processing pipeline you might want to retrieve the unwrapped value with `::mapOr()`:
+At the end of a processing pipeline, you might want to retrieve the unwrapped value with `::mapOr()`:
 ```php
 $value = getSuperUser($current_user);
 $value->mapOr(
@@ -65,11 +57,8 @@ $some_optional_values = [
 $values = \Tuleap\Option\Options::collect($some_optional_values); // ["a", "b"]
 ```
 
-## Additional notes
+## Links
 
-* An `Option` type exists in `azjezz/psl`, we do not use it for the following reasons:
-  * creating a `None` value with `Psl\Option\none()` gives `Option<never>` so you need to "force" the proper type with
-    an annotation `@var`
-  * our `Option` implementation predates the introduction of `azjezz/psl` in the codebase
-* Java developers: our `Option<T>` is different to your `Optional<T>` since PHP has a decent handling of `null`
-  values. `Optional<T>` means `T` or `null`. `Option<T>` means `T` or the absence of value.
+* [ADR-0022: Option][0]
+
+[0]: ../../../adr/0022-option.md
