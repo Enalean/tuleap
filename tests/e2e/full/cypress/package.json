@@ -3,8 +3,8 @@
   "name": "@tuleap/core-cypress-e2e-full-tests",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "devDependencies": {
+    "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*"
   }
 }
