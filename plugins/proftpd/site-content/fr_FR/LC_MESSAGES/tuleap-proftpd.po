@@ -19,6 +19,9 @@ msgstr ""
 "et sera supprimé prochainement. Merci d'utiliser les services Documents ou "
 "Fichiers à la place."
 
+msgid "(S)FTP Browser is no longer available for project."
+msgstr "Le navigateur (S)FTP n'est plus disponible pour ce projet."
+
 msgid "(S)FTP Browser permissions"
 msgstr "Navigateur (S)FTP"
 

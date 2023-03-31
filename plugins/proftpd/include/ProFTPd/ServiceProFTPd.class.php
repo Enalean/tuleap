@@ -23,6 +23,7 @@ namespace Tuleap\ProFTPd;
 use Service;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -32,6 +33,9 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class ServiceProFTPd extends Service
 {
+    #[FeatureFlagConfigKey("Feature flag to allow users to use the proftpd UI that will be removed soon. Comma separated list of project ids. Please warn us if you activate this flag.")]
+    public const FEATURE_FLAG_PROFTPD = 'allow_temporary_proftpd_ui_that_will_be_removed_soon';
+
     public function getIconName(): string
     {
         return 'fas fa-tlp-folder-globe';
@@ -41,10 +45,18 @@ class ServiceProFTPd extends Service
     {
         $this->displayServiceHeader($request, $title);
 
-        if ($presenter) {
-            $this->getRenderer()->renderToPage($template, $presenter);
+        $comma_separated_project_ids = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_PROFTPD);
+        if ($presenter && $comma_separated_project_ids) {
+            $allowed_project_ids = explode(',', $comma_separated_project_ids);
+
+            if (in_array((string) $request->getProject()->getID(), $allowed_project_ids, true)) {
+                $this->getRenderer()->renderToPage($template, $presenter);
+                $this->displayFooter();
+                exit;
+            }
         }
 
+        $this->getRenderer()->renderToPage("error", []);
         $this->displayFooter();
         exit;
     }
