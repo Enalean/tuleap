@@ -73,7 +73,7 @@
     "stylelint-prettier": "^2.0.0",
     "ts-jest": "^29.0.1",
     "tslib": "^2.5.0",
-    "turbo": "1.5.1",
+    "turbo": "1.8.8",
     "typescript": "^5.0.2",
     "unplugin-vue2-script-setup": "^0.9.2",
     "vite": "^4.2.1",
