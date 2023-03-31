@@ -356,4 +356,11 @@ Cypress.Commands.add(
     }
 );
 
+Cypress.Commands.add(
+    "getContains",
+    (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
+        return cy.get(selector).contains(label).parents(selector);
+    }
+);
+
 export {};

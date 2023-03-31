@@ -31,8 +31,6 @@ declare global {
                 query: string,
                 dropdown_item_label: string
             ): Chainable<JQuery<HTMLElement>>;
-
-            getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
@@ -63,13 +61,5 @@ Cypress.Commands.add("searchItemInLinkSelectorDropdown", (query, dropdown_item_l
             .parents("[data-test=link-selector-item]");
     });
 });
-
-Cypress.Commands.add(
-    "getContains",
-    (selector: string, label: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        // eslint-disable-next-line cypress/require-data-selectors
-        return cy.get(selector).contains(label).parents(selector);
-    }
-);
 
 export {};

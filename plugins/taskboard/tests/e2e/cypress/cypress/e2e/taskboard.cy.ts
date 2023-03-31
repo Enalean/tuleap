@@ -21,29 +21,24 @@ import type { Card, ColumnDefinition } from "../../../../../scripts/taskboard/sr
 
 describe(`Taskboard`, function () {
     before(function () {
-        cy.clearSessionCookie();
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.getProjectId("taskboard-project")
             .then((project_id: number) =>
                 cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
             )
             .then((response) => response.body[0].id)
-            .as("release_id")
-            .then(function () {
-                cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
-            });
-    });
-
-    beforeEach(function () {
-        cy.preserveSessionCookies();
+            .as("release_id");
     });
 
     it(`loads`, function () {
+        cy.projectMemberSession();
+        cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
         cy.get("[data-test=taskboard-body]");
     });
 
     context(`Cell functionalities`, function () {
         before(function () {
+            cy.projectMemberSession();
             cy.getFromTuleapAPI(`/api/taskboard/${this.release_id}/columns`)
                 .then((response) => response.body)
                 .as("taskboard_columns");
@@ -53,10 +48,12 @@ describe(`Taskboard`, function () {
         });
 
         it(`adds a card in a swimlane`, function () {
+            cy.projectMemberSession();
+            cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
             // Wait for the swimlane to be loaded and displayed
             cy.get("[data-test=card-with-remaining-effort]").contains("Quality Sunshine");
             // Wait for children to be loaded and displayed
-            cy.get("[data-test=child-card]").contains("Golden Wrench");
+            cy.get("[data-test=child-card]").contains("Golden Wrench", { timeout: 5000 });
 
             const on_going_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "On Going"
@@ -80,9 +77,9 @@ describe(`Taskboard`, function () {
         });
 
         it(`edits the title of a card`, function () {
-            cy.get("[data-card-id]")
-                .contains("Lonesome Galaxy")
-                .parents("[data-card-id]")
+            cy.projectMemberSession();
+            cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
+            cy.getContains("[data-card-id]", "Lonesome Galaxy")
                 .as("card")
                 .within(() => {
                     cy.get("[data-test=card-edit-button]").click();
@@ -92,14 +89,18 @@ describe(`Taskboard`, function () {
                     });
                 });
             cy.get("[data-card-id]").contains("Deserted Torpedo");
-            // Edit back the name for re-playability
+            // Edit back the name for repeatability
             cy.get("@card").within(() => {
                 cy.get("[data-test=card-edit-button]").click();
                 cy.get("[data-test=label-editor]").clear().type("Lonesome Galaxy{enter}");
             });
         });
 
-        it(`hides the swimlanes and cards that are "Done"`, function () {
+        it(`hide/show the swimlanes and cards that are "Done"`, function () {
+            cy.projectMemberSession();
+            cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
+
+            cy.log(`hide "Done" items`);
             // need to force click because buttons are out of viewport
             cy.get("[data-test=hide-closed-items]").click({ force: true });
             cy.get("[data-card-id]").then(($body) => {
@@ -107,9 +108,8 @@ describe(`Taskboard`, function () {
                 expect($body).not.to.contain("Grim Crayon");
                 expect($body).not.to.contain("Severe Storm");
             });
-        });
 
-        it(`show the swimlanes and cards that are "Done"`, function () {
+            cy.log(`show "Done" items`);
             // need to force click because buttons are out of viewport
             cy.get("[data-test=show-closed-items]").click({ force: true });
             cy.get("[data-card-id]").then(($body) => {
