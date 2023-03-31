@@ -58,20 +58,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
     private $groupIdByName = [];
 
     /**
-     * @var array containing additional regexp to match more reference formats.
-     * it is a list matching: array(
-     *   array(
-     *      'regexp' => PCRE compatible regular expression matching references,
-     *      'cb'     => PHP callback of a function taking a regexp match
-     *                  followed by the project group_id  and returning a
-     *                  Tuleap\Reference\ReferenceInstance (or null if this is not a reference)
-     *   )
-     *   ...
-     * )
-     */
-    private $additional_references = [];
-
-    /**
      * @var EventManager
      */
     private $event_manager;
@@ -108,16 +94,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
     public function __construct()
     {
         $this->event_manager = EventManager::instance();
-        $this->loadExtraFormats();
-    }
-
-    protected function loadExtraFormats()
-    {
-        $this->additional_references = [];
-        $this->event_manager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, [
-            'reference_manager' => $this,
-            'refs'              => &$this->additional_references,
-        ]);
     }
 
     /**
@@ -727,17 +703,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
                 $html
             );
 
-            foreach ($this->additional_references as $reftype) {
-                $self = $this;
-                $html = preg_replace_callback(
-                    $reftype['regexp'],
-                    function ($m) use ($self, $group_id, $reftype) {
-                        return $self->insertCustomRefCallback($m, $group_id, $reftype['cb']);
-                    },
-                    $html
-                );
-            }
-
             $this->insertLinksForMentions($html);
         }
 
@@ -817,16 +782,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
             $ref->setDescription($ref->getResolvedDescription());
 
             $referencesInstances[] = $ref_instance;
-        }
-
-        foreach ($this->additional_references as $reftype) {
-            $match = $this->_extractMatches($html, $reftype['regexp']);
-            if (! empty($match)) {
-                $ref = call_user_func($reftype['cb'], $match[0], $group_id);
-                if (! empty($ref)) {
-                    $referencesInstances[] = $ref;
-                }
-            }
         }
 
         $this->tmpGroupIdForCallbackFunction = null;

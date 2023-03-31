@@ -164,15 +164,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
 
      /**
-      * This event is used to get all extra references.
-      *
-      * Parameters:
-      *  'reference_manager' => the ReferenceManager instance
-      *  'refs'              => result array. See EventManager::additional_references
-      */
-    public const GET_PLUGINS_EXTRA_REFERENCES = 'get_plugins_extra_references';
-
-     /**
       * Allow to define the group_id of an artifact reference
       *
       * Parameters
