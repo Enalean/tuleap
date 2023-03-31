@@ -27,7 +27,6 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
-use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
-class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -75,7 +74,6 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
         $logger                    = Mockery::mock(LoggerInterface::class);
         $xml_fields_mapping        = Mockery::mock(TrackerXmlFieldsMapping::class);
         $artifact_id_mapping       = Mockery::mock(Tracker_XML_Importer_ArtifactImportedMapping::class);
-        $tracker_artifact_factory  = Mockery::mock(Tracker_ArtifactFactory::class);
         $nature_dao                = Mockery::mock(TypeDao::class);
 
         $this->tracker->shouldReceive('getId')->andReturn(111);
@@ -92,7 +90,6 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
                 $logger,
                 $xml_fields_mapping,
                 $artifact_id_mapping,
-                $tracker_artifact_factory,
                 $nature_dao,
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();

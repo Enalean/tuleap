@@ -32,22 +32,9 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      */
     public const TRACKER_ADD_SYSTEM_TYPES = 'tracker_add_system_types';
 
-    /**
-     * Check that type respects rules
-     *
-     * Parameters:
-     *  - tracker_id: input in
-     *  - error : output string
-     *  - artifact: input Tracker_Artifact
-     *  - children_id: input int
-     *  - shortname: input string
-     */
-    public const TRACKER_IS_TYPE_VALID = 'tracker_is_type_valid';
-
     public function __construct(
         private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         private \Psr\Log\LoggerInterface $logger,
-        private Tracker_ArtifactFactory $artifact_factory,
         private TypeDao $type_dao,
     ) {
     }
@@ -58,7 +45,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         PFUser $submitted_by,
         Artifact $artifact,
     ) {
-        $new_values     = $this->extractArtifactLinkFromXml($field_change, $artifact);
+        $new_values     = $this->extractArtifactLinkFromXml($field_change);
         $last_changeset = $artifact->getLastChangeset();
 
         $removed_values = [];
@@ -75,7 +62,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         ];
     }
 
-    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Artifact $artifact)
+    private function extractArtifactLinkFromXml(SimpleXMLElement $field_change)
     {
         $artifact_links = [];
         $types          = [];
@@ -85,7 +72,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
 
             if ($this->artifact_id_mapping->containsSource($linked_artifact_id)) {
                 $link             = $this->artifact_id_mapping->get($linked_artifact_id);
-                $linked_type      = $this->getTypeFromMappedArtifact($artifact, $artifact_link, $link);
+                $linked_type      = $this->getTypeFromMappedArtifact($artifact_link);
                 $types[$link]     = $linked_type;
                 $artifact_links[] = $link;
 
@@ -111,22 +98,9 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         }
     }
 
-    private function getTypeFromMappedArtifact(
-        Artifact $artifact,
-        SimpleXMLElement $xml_element,
-        $mapped_artifact_id,
-    ) {
-        $type         = (string) $xml_element['nature'];
-        $xml_artifact = $this->artifact_factory->getArtifactById($mapped_artifact_id);
-        if ($xml_artifact) {
-            $error_message = $this->isLinkValid($xml_artifact->getTrackerId(), $artifact, $mapped_artifact_id, $type);
-            if ($error_message !== "") {
-                $this->logger->error($error_message);
-                return "";
-            }
-        }
-
-        return $type;
+    private function getTypeFromMappedArtifact(SimpleXMLElement $xml_element)
+    {
+        return (string) $xml_element['nature'];
     }
 
     private function retrieveSystemTypes(array &$types): void
@@ -155,22 +129,5 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         }
 
         return $removed_artifacts;
-    }
-
-    private function isLinkValid($tracker_id, Artifact $artifact, $children_id, $type): string
-    {
-        $error = "";
-        EventManager::instance()->processEvent(
-            self::TRACKER_IS_TYPE_VALID,
-            [
-                'error'       => &$error,
-                'tracker_id'  => $tracker_id,
-                'artifact'    => $artifact,
-                'children_id' => $children_id,
-                'type'        => $type,
-            ]
-        );
-
-        return $error;
     }
 }

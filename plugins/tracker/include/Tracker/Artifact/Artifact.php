@@ -170,16 +170,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public const REFERENCE_NATURE  = 'plugin_tracker_artifact';
     public const STATUS_OPEN       = 'open';
     public const STATUS_CLOSED     = 'closed';
-
-    /**
-     * Display the form to copy an artifact
-     *
-     * Parameters:
-     *  — artifact     => (in) Tracker_Artifact
-     *  — current_user => (in) PFUser
-     */
-    public const DISPLAY_COPY_OF_ARTIFACT = 'display_copy_of_artifact';
-
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;
@@ -911,13 +901,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     'info',
                     sprintf(dgettext('tuleap-tracker', 'You are currently copying the artifact %1$s.'), $art_link),
                     CODENDI_PURIFIER_LIGHT
-                );
-                EventManager::instance()->processEvent(
-                    self::DISPLAY_COPY_OF_ARTIFACT,
-                    [
-                        'artifact'     => $this,
-                        'current_user' => $current_user,
-                    ]
                 );
 
                 $renderer = new Tracker_Artifact_CopyRenderer(

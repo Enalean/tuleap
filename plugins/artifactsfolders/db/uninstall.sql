@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS plugin_artifactsfolders_tracker_usage;

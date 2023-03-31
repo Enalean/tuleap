@@ -193,19 +193,4 @@ class Tracker_ArtifactLinkInfo
     {
         return $this->getLabel();
     }
-
-    public function shouldLinkBeHidden($type)
-    {
-        $hide_artifact = false;
-        $params        = [
-            'type'        => $type,
-            'hide_artifact' => &$hide_artifact,
-        ];
-        EventManager::instance()->processEvent(
-            Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT,
-            $params
-        );
-
-        return $params['hide_artifact'];
-    }
 }

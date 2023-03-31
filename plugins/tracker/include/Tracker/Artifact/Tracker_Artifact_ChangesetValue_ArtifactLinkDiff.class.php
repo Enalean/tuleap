@@ -26,17 +26,6 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfLinksFormatt
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 {
-    /**
-     * Plugin can choose to hide artifacts
-     *
-     * Parameters:
-     *  - type          => (input) String
-     *  - hide_artifact => (output) Bool
-     *  - artifact      => Tracker_Artifact
-     *
-     */
-    public const HIDE_ARTIFACT = 'hide_artifact';
-
     /** @var Tracker_ArtifactLinkInfo[] */
     private $previous;
 
@@ -89,9 +78,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         TypePresenterFactory $type_factory,
         CollectionOfLinksFormatter $formatter,
     ) {
-        if ($artifactlinkinfo->getType() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getType())) {
-            return;
-        }
         $type = $type_factory->getFromShortname($artifactlinkinfo->getType());
         if ($type === null) {
             return;
@@ -126,9 +112,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         }
 
         $type = $this->getTypeFormChangesets($previous_link, $next_link);
-        if ($type !== "" && $previous_link->shouldLinkBeHidden($type)) {
-            return;
-        }
 
         $previous_type = $type_factory->getFromShortname($previous_link->getType());
         $next_type     = $type_factory->getFromShortname($next_link->getType());
