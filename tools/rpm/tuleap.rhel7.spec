@@ -303,13 +303,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
 
-%package plugin-referencealias-core
-Summary: Reference aliases plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-referencealias-core
-This plugin allows to have references defined with "pkgXXX" syntax as an alias for Tuleap FRS refrences.
-
 %package plugin-artifactsfolders
 Summary: Artifacts Folders
 Group: Development/Tools
@@ -1406,10 +1399,6 @@ fi
 %files plugin-frs
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/frs
-
-%files plugin-referencealias-core
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/referencealias_core
 
 %files plugin-artifactsfolders
 %defattr(-,root,root,-)
