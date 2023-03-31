@@ -70,6 +70,7 @@ final class ProgramAdminPresenter
     public ?TrackerErrorPresenter $iteration_error_presenter;
     public ?TrackerErrorPresenter $plannable_error_presenter;
     public bool $is_project_used_in_plan;
+    public string $project_team_access_errors;
 
     private function __construct(ProgramAdmin $program_admin)
     {
@@ -96,6 +97,8 @@ final class ProgramAdminPresenter
         } else {
             $this->synchronize_button_label = dgettext('tuleap-program_management', "Sync open Program Increments");
         }
+
+        $this->project_team_access_errors = $program_admin->project_team_access_errors;
     }
 
     public static function build(ProgramAdmin $program_admin): self

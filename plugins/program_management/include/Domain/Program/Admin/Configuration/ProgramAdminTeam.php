@@ -37,6 +37,8 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MissingMirroredMileston
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -66,6 +68,9 @@ final class ProgramAdminTeam
 
     /**
      * @return self[]
+     *
+     * @throws TeamIsNotVisibleException
+     * @throws TeamIsNotAggregatedByProgramException
      */
     public static function build(
         SearchOpenProgramIncrements $search_open_program_increments,

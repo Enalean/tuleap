@@ -29,13 +29,14 @@ final class TeamIsNotVisibleException extends \Exception
 {
     private string $i18n_message;
 
-    public function __construct(ProgramIdentifier $program, UserIdentifier $user)
+    public function __construct(ProgramIdentifier $program, UserIdentifier $user, public readonly string $team_project_name)
     {
         $this->i18n_message =
             sprintf(
-                dgettext('tuleap-program_management', 'User #%d cannot see one of the teams of Program #%d'),
+                dgettext('tuleap-program_management', 'User #%d cannot see the team %s of Program #%d'),
                 $user->getId(),
-                $program->getId()
+                $team_project_name,
+                $program->getId(),
             );
 
         parent::__construct(

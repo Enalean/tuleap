@@ -1,57 +1,69 @@
 <h1 class="program-management-title-header" id="program-management-administration" data-program-id="{{ program_id }}">{{# dgettext }}
     tuleap-program_management | Program administration{{/ dgettext }}</h1>
 
-{{# has_errors }}
+{{# project_team_access_errors }}
     <div class="tlp-alert-warning program-management-configuration-incorrect">
         {{# dgettext }}
             tuleap-program_management |
-            Configuration is incorrect, you won't be able to create new program increments.
+            In order to access program administration you must be able to access <b>all</b> aggregated projects. You cannot access %s. |
+            {{ project_team_access_errors }}
         {{/ dgettext }}
-        {{# has_program_increment_error }}
-            {{# program_increment_error_presenter }}
-                <ul>
-                    {{# dgettext }}tuleap-program_management | Program increment configuration is incorrect:{{/ dgettext }}
-
-                    {{> configuration-errors/semantic-errors }}
-                    {{> configuration-errors/required-errors }}
-                    {{> configuration-errors/worflow-errors }}
-                    {{> configuration-errors/field-permission-errors }}
-                    {{> configuration-errors/team-permission-errors }}
-                    {{> configuration-errors/semantic-status-value-errors }}
-                    {{> configuration-errors/field-synchronisation-errors }}
-                    {{> configuration-errors/team-errors }}
-                </ul>
-            {{/ program_increment_error_presenter }}
-        {{/ has_program_increment_error }}
-        {{# has_iteration_increment_error }}
-            {{# iteration_error_presenter }}
-                <ul>
-                    {{# dgettext }}tuleap-program_management | Iteration configuration is incorrect:{{/ dgettext }}
-
-                    {{> configuration-errors/semantic-errors }}
-                    {{> configuration-errors/required-errors }}
-                    {{> configuration-errors/worflow-errors }}
-                    {{> configuration-errors/field-permission-errors }}
-                    {{> configuration-errors/team-permission-errors }}
-                    {{> configuration-errors/semantic-status-value-errors }}
-                    {{> configuration-errors/field-synchronisation-errors }}
-                    {{> configuration-errors/team-errors }}
-                </ul>
-            {{/ iteration_error_presenter }}
-        {{/ has_iteration_increment_error }}
-        {{# has_plannable_error }}
-            {{# plannable_error_presenter }}
-                <ul>
-                    {{# dgettext }}tuleap-program_management | Some plannable tracker have incorrect configuration:{{/ dgettext }}
-
-                    {{> configuration-errors/semantic-errors }}
-                </ul>
-            {{/ plannable_error_presenter }}
-        {{/ has_plannable_error }}
     </div>
-{{/ has_errors }}
+{{/ project_team_access_errors }}
 
-{{> teams/admin-aggregated-teams}}
-{{# is_project_used_in_plan }}
-    {{> milestones/admin-configuration-tracker }}
-{{/is_project_used_in_plan}}
+{{^ project_team_access_errors }}
+    {{# has_errors }}
+        <div class="tlp-alert-warning program-management-configuration-incorrect">
+            {{# dgettext }}
+                tuleap-program_management |
+                Configuration is incorrect, you won't be able to create new program increments.
+            {{/ dgettext }}
+            {{# has_program_increment_error }}
+                {{# program_increment_error_presenter }}
+                    <ul>
+                        {{# dgettext }}tuleap-program_management | Program increment configuration is incorrect:{{/ dgettext }}
+
+                        {{> configuration-errors/semantic-errors }}
+                        {{> configuration-errors/required-errors }}
+                        {{> configuration-errors/worflow-errors }}
+                        {{> configuration-errors/field-permission-errors }}
+                        {{> configuration-errors/team-permission-errors }}
+                        {{> configuration-errors/semantic-status-value-errors }}
+                        {{> configuration-errors/field-synchronisation-errors }}
+                        {{> configuration-errors/team-errors }}
+                    </ul>
+                {{/ program_increment_error_presenter }}
+            {{/ has_program_increment_error }}
+            {{# has_iteration_increment_error }}
+                {{# iteration_error_presenter }}
+                    <ul>
+                        {{# dgettext }}tuleap-program_management | Iteration configuration is incorrect:{{/ dgettext }}
+
+                        {{> configuration-errors/semantic-errors }}
+                        {{> configuration-errors/required-errors }}
+                        {{> configuration-errors/worflow-errors }}
+                        {{> configuration-errors/field-permission-errors }}
+                        {{> configuration-errors/team-permission-errors }}
+                        {{> configuration-errors/semantic-status-value-errors }}
+                        {{> configuration-errors/field-synchronisation-errors }}
+                        {{> configuration-errors/team-errors }}
+                    </ul>
+                {{/ iteration_error_presenter }}
+            {{/ has_iteration_increment_error }}
+            {{# has_plannable_error }}
+                {{# plannable_error_presenter }}
+                    <ul>
+                        {{# dgettext }}tuleap-program_management | Some plannable tracker have incorrect configuration:{{/ dgettext }}
+
+                        {{> configuration-errors/semantic-errors }}
+                    </ul>
+                {{/ plannable_error_presenter }}
+            {{/ has_plannable_error }}
+        </div>
+    {{/ has_errors }}
+
+    {{> teams/admin-aggregated-teams}}
+    {{# is_project_used_in_plan }}
+        {{> milestones/admin-configuration-tracker }}
+    {{/is_project_used_in_plan}}
+{{/ project_team_access_errors }}

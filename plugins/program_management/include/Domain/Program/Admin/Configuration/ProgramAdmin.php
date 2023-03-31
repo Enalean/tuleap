@@ -55,6 +55,7 @@ use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
@@ -95,6 +96,7 @@ final class ProgramAdmin
         public bool $has_program_increment_error,
         public bool $has_iteration_error,
         public bool $is_project_used_in_plan,
+        public string $project_team_access_errors,
     ) {
     }
 
@@ -217,20 +219,26 @@ final class ProgramAdmin
         $has_iteration_increment_error = $iteration_error && $iteration_error->has_presenter_errors;
         $has_plannable_error           = $plannable_error && $plannable_error->has_presenter_errors;
 
-        $program_admin_team = ProgramAdminTeam::build(
-            $search_open_program_increments,
-            $timebox_searcher,
-            $program_for_administration_identifier,
-            $user_identifier,
-            $aggregated_teams,
-            $verify_is_synchronization_pending,
-            $team_searcher,
-            $verify_team_synchronization_has_error,
-            $build_program,
-            $plannable_error,
-            $increment_error,
-            $iteration_error
-        );
+        $project_team_access_errors = '';
+        try {
+            $program_admin_team = ProgramAdminTeam::build(
+                $search_open_program_increments,
+                $timebox_searcher,
+                $program_for_administration_identifier,
+                $user_identifier,
+                $aggregated_teams,
+                $verify_is_synchronization_pending,
+                $team_searcher,
+                $verify_team_synchronization_has_error,
+                $build_program,
+                $plannable_error,
+                $increment_error,
+                $iteration_error
+            );
+        } catch (TeamIsNotVisibleException $exception) {
+            $program_admin_team         = [];
+            $project_team_access_errors = $exception->team_project_name;
+        }
 
         return new self(
             $program_for_administration_identifier,
@@ -267,7 +275,8 @@ final class ProgramAdmin
             $has_plannable_error,
             $has_program_increment_error,
             $has_iteration_increment_error,
-            $verify_is_project_used_in_plan->isProjectUsedInPlan($program_for_administration_identifier) || ! empty($program_admin_team)
+            $verify_is_project_used_in_plan->isProjectUsedInPlan($program_for_administration_identifier) || ! empty($program_admin_team),
+            $project_team_access_errors,
         );
     }
 }

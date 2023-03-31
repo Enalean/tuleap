@@ -57,7 +57,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
             try {
                 $this->access_checker->checkUserCanAccessProject($pfuser, $project);
             } catch (\Project_AccessException $e) {
-                throw new TeamIsNotVisibleException($program, $user);
+                throw new TeamIsNotVisibleException($program, $user, (string) $project->getPublicName());
             }
         }
         return $team_ids;
@@ -75,7 +75,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
         try {
             $this->access_checker->checkUserCanAccessProject($pfuser, $project);
         } catch (\Project_AccessException $e) {
-            throw new TeamIsNotVisibleException($program, $user);
+            throw new TeamIsNotVisibleException($program, $user, (string) $project->getPublicName());
         }
 
         return $team_id;
