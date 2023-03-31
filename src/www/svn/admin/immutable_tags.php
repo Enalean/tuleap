@@ -36,7 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
         $immutable_tags_handler->saveImmutableTagsForProject($group_id, $immutable_tags_whitelist, $immutable_tags_path);
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings', 'upd_fail'));
+        $GLOBALS['Response']->addFeedback('error', '');
     }
     $GLOBALS['Response']->redirect('/svn/admin/?func=immutable_tags&group_id=' . $group_id);
 }

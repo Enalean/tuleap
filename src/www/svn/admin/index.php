@@ -51,7 +51,6 @@ $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project
 $svn_core_access->redirect();
 
 $vFunc = new Valid_WhiteList('func', [
-    'general_settings',
     'immutable_tags',
     'notification',
 ]);
@@ -62,9 +61,6 @@ if ($request->valid($vFunc)) {
     switch ($func) {
         case 'immutable_tags':
             require('./immutable_tags.php');
-            break;
-        case 'general_settings':
-            require('./general_settings.php');
             break;
         case 'notification':
             require('./notification.php');
@@ -86,8 +82,6 @@ if ($request->valid($vFunc)) {
     $purifier = Codendi_HTMLPurifier::instance();
 
     echo '<H2>' . $Language->getText('svn_admin_index', 'admin') . '</H2>';
-    echo '<H3><a href="/svn/admin/?func=general_settings&group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('svn_admin_index', 'gen_sett') . '</a></H3>';
-    echo '<p>' . $Language->getText('svn_admin_index', 'welcome') . '</p>';
 
     echo '<H3><a href="/svn/admin/?func=immutable_tags&group_id=' . $purifier->purify(urlencode($group_id)) . '">' . $Language->getText('svn_admin_index', 'immutable_tags') . '</a></H3>';
     echo '<p>' . $Language->getText('svn_admin_index', 'immutable_tags_description') . '</p>';

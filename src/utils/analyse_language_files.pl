@@ -168,22 +168,22 @@ foreach my $my_tab_dir (@lang_tab_dir) {
     close FILE;
   }
 
-
-  if (!$silent_mode) {
-    print "***\n" if ($verbose_mode);
-    print "*** Checking missing keys\n";
-    print "***\n" if ($verbose_mode);
-  }
-  foreach my $key1 (keys %keys) {
-    foreach my $key2 (keys %{ $keys{"$key1"}}) {
-      if (! $tab_keys{"$key1"}{"$key2"}) {
-        print "Missing:  $key1\t$key2\t (".$keys{"$key1"}{"$key2"}.")\n" unless ($silent_mode);
-        $missing_keys++;
+  if ($my_tab_dir eq 'en_US/' || $my_tab_dir eq 'fr_FR/') {
+      if (!$silent_mode) {
+        print "***\n" if ($verbose_mode);
+        print "*** Checking missing keys\n";
+        print "***\n" if ($verbose_mode);
       }
-    }
+      foreach my $key1 (keys %keys) {
+        foreach my $key2 (keys %{ $keys{"$key1"}}) {
+          if (! $tab_keys{"$key1"}{"$key2"}) {
+            print "Missing:  $key1\t$key2\t (".$keys{"$key1"}{"$key2"}.")\n" unless ($silent_mode);
+            $missing_keys++;
+          }
+        }
+      }
+      $missing_keys_array{$my_tab_dir}=$missing_keys;
   }
-  $missing_keys_array{$my_tab_dir}=$missing_keys;
-
 
   if (!$silent_mode) {
     print "***\n" if ($verbose_mode);
@@ -225,7 +225,7 @@ foreach my $lang (keys %missing_keys_array) {
   print "  ".$unused_keys_array{$lang}." \tunused keys\n";
   print "  ".$incorrect_keys_array{$lang}." \tincorrect keys\n";
   print "  -> $percent% complete\n";
-  if ($lang eq 'en_US' || $lang eq 'fr_FR') {
+  if ($lang eq 'en_US/' || $lang eq 'fr_FR/') {
     if ($duplicate_keys_array{$lang} ne 0 || $missing_keys_array{$lang} ne 0 || $incorrect_keys_array{$lang} ne 0) {
       $exit_code = 1;
     }

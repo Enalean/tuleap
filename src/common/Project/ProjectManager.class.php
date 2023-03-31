@@ -726,7 +726,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
             $status = '';
             switch ($group->getStatus()) {
                 case Project::STATUS_DELETED:
-                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_D');
+                    $status = _('This project is deleted');
                     break;
                 case Project::STATUS_PENDING:
                     $status = $GLOBALS['Language']->getText('include_exit', 'project_status_P');
