@@ -149,7 +149,7 @@ Once you have a `package.json` file, you will also need a
 ``` JavaScript
 // tuleap/plugins/my-plugin/scripts/my-vue-app/tsconfig.json
 {
-    "extends": "../../../../tsconfig.json",
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
         "module": "es2020",
         "types": ["jest"], // Add global types needed by your application

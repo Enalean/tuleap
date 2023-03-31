@@ -1,14 +1,9 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "module": "esnext",
-        "types": [
-            "jest"
-        ],
+        "types": ["jest"],
         "incremental": false,
         "skipLibCheck": true
     },
-    "include": [
-        "scripts/test-plan/**/*"
-    ]
+    "include": ["scripts/test-plan/**/*"]
 }

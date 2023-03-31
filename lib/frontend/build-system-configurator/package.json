@@ -4,8 +4,17 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "default": "./dist/main.js"
+    },
+    "./dist/jest/angular-promise-wrapper": "./dist/jest/angular-promise-wrapper.js",
+    "./tsc/tsconfig-for-apps.json": "./tsc/tsconfig-for-apps.json",
+    "./tsc/tsconfig-for-libraries.json": "./tsc/tsconfig-for-libraries.json"
+  },
   "dependencies": {
     "autoprefixer": "^10.4.12",
     "browserslist": "^4.21.4",

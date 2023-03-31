@@ -1,7 +1,4 @@
 {
-    "extends": "../../../../tsconfig.json",
-    "compilerOptions": {
-        "module": "es2015"
-    },
-    "include": ["src/**/*"],
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
+    "include": ["src/**/*"]
 }

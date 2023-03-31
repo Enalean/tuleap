@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import SwitchToFilter from "./SwitchToFilter.vue";
-import type { Modal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
 import { useRootStore } from "../../stores/root";
 import { computed, inject } from "vue";
 import type { SearchForm } from "../../type";

@@ -4,13 +4,12 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/plugin-pullrequest-constants.js",
   "main": "dist/plugin-pullrequest-constants.umd.cjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/plugin-pullrequest-constants.js",
       "require": "./dist/plugin-pullrequest-constants.umd.cjs"
     }

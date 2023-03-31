@@ -1,12 +1,7 @@
 {
-    "extends": "../../../tsconfig.json",
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "compilerOptions": {
-        "module": "ESNext",
-        "target": "ESNext",
-        "types": [
-            "jest",
-        ],
-        "skipLibCheck": true
+        "types": ["jest"],
     },
     "include": ["src/**/*"]
 }

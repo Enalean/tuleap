@@ -26,7 +26,7 @@ import {
     showArtifactClosureModal,
     showCreateBranchPrefixModal,
 } from "./actions";
-import type { ActionContext } from "plugins/document/node_modules/vuex/types";
+import type { ActionContext } from "vuex";
 import type { GitlabState } from "./state";
 import type {
     GitLabCredentials,

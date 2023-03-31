@@ -1,7 +1,4 @@
 {
-    "extends": "../../../../tsconfig.json",
-    "compilerOptions": {
-        "module": "ES2020",
-    },
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
     "include": ["src/**/*"]
 }

@@ -1,18 +1,18 @@
 {
-    "author": "Enalean Team",
-    "name": "@tuleap/plugin-userlog",
-    "homepage": "https://tuleap.org",
-    "license": "GPL-2.0-or-later",
-    "private": true,
-    "scripts": {
-        "typecheck": "tsc --noEmit",
-        "build": "webpack --config webpack.prod.js",
-        "watch": "webpack --config webpack.dev.js --watch"
-    },
-    "dependencies": {
-        "@tuleap/tlp": "workspace:*"
-    },
-    "devDependencies": {
-        "@tuleap/build-system-configurator": "workspace:*"
-    }
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-userlog",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  }
 }
