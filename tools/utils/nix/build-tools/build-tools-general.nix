@@ -1,6 +1,7 @@
 { pkgs }:
 
 [
+    pkgs.coreutils
     pkgs.gnugrep
     pkgs.gnused
     pkgs.gnumake
@@ -13,6 +14,5 @@
     pkgs.which
     pkgs.cosign
     pkgs.cachix
-    pkgs.cpio
-    pkgs.gzip
+    pkgs.cacert
 ] ++ pkgs.lib.optionals (! pkgs.stdenv.isDarwin) [ pkgs.glibc ]

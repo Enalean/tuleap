@@ -15,18 +15,11 @@ pipeline {
         }
 
         stage('Prepare') {
-            agent {
-                dockerfile {
-                    dir 'sources/tools/utils/nix/'
-                    filename 'tools.dockerfile'
-                    reuseNode true
-                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only -v /nix -v /root'
-                }
-            }
             steps {
                 dir ('results') {
                     deleteDir()
                 }
+                script { actions = load 'sources/tests/actions.groovy' }
                 dir ('sources') {
                     withCredentials([
                         usernamePassword(
@@ -36,11 +29,7 @@ pipeline {
                         ),
                         string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
                     ]) {
-                        sh """
-                        # nix-daemon needs root (for now)
-                        su-exec-nixdaemon root sh -c 'TMPDIR=/tmp/tuleap_build/ nix-daemon' &
-                        tools/utils/scripts/generated-files-builder.sh dev
-                        """
+                        script { actions.prepareSources('dev') }
                     }
                 }
             }

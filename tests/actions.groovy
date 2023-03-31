@@ -1,5 +1,21 @@
 #!/usr/bin/env groovy
 
+def runInsideNixDockerEnv(String command, String container_run_args = '', String tool_flavor = 'build') {
+    sh ('mkdir -p "$HOME/nix-content"')
+    def image = docker.build('nix-env', '-f "$(pwd)"/tools/utils/nix/nix.dockerfile "$(pwd)"/tools/utils/nix/');
+    image
+        .inside(container_run_args + ' --tmpfs /tmp/tuleap_build:rw,noexec,nosuid -e TMPDIR=/tmp/tuleap_build/ -v $HOME/nix-content:/nix -v /etc/passwd:/etc/passwd:ro') {
+            sh """
+            export XDG_CACHE_HOME=/tmp/tuleap_build/user_cache
+            nix-shell --pure -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
+            """
+        }
+}
+
+def prepareSources(String prepare_flavor) {
+    runInsideNixDockerEnv("tools/utils/scripts/generated-files-builder.sh ${prepare_flavor}", '--read-only')
+}
+
 def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_verified_files, String verified_files) {
     dir ('sources') {
         sh "tests/files_status_checker/verify.sh '${repository_to_inspect}' '${name_of_verified_files}' ${verified_files}"
@@ -14,18 +30,15 @@ def runPHPUnitTests(String version, Boolean with_coverage = false) {
     sh "make -C $WORKSPACE/sources phpunit-ci PHP_VERSION=${version} COVERAGE_ENABLED=${coverage_enabled}"
 }
 
-def runJSUnitTests(String path, Boolean with_coverage = false) {
+def runJSUnitTests(Boolean with_coverage = false) {
     def coverage_env=''
     if (with_coverage) {
-        coverage_env='export COLLECT_COVERAGE=true'
+        coverage_env='COLLECT_COVERAGE=true'
     }
-    sh """
-    mkdir -p 'results/js-test-results/'
-    export CI_MODE="true"
-    ${coverage_env}
-    timeout 1h pnpm --prefix "sources/${path}" test
-    pnpm -r exec -- \$WORKSPACE/sources/lib/frontend/build-system-configurator/bin/copy-js-test-results.sh \$WORKSPACE/results/js-test-results/
-    """
+    sh("mkdir -p ${WORKSPACE}/results/")
+    dir ('sources') {
+      runInsideNixDockerEnv("${coverage_env} lib/frontend/build-system-configurator/bin/run-js-units-ci.sh", "--network none -v ${WORKSPACE}/results:/results")
+    }
 }
 
 def runRESTTests(String db, String php) {
@@ -62,14 +75,15 @@ def runBuildAndRun(String os) {
 }
 
 def runESLint() {
+    sh("mkdir -p ${WORKSPACE}/results/eslint/")
     dir ('sources') {
-        sh 'pnpm run eslint --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
+        runInsideNixDockerEnv('pnpm run eslint --quiet --format=checkstyle --output-file=/results/eslint/checkstyle.xml .', "--network none -v ${WORKSPACE}/results:/results")
     }
 }
 
 def runStylelint() {
     dir ('sources') {
-        sh 'pnpm run stylelint **/*.scss **/*.vue'
+        runInsideNixDockerEnv('pnpm run stylelint **/*.scss **/*.vue', '--network none')
     }
 }
 

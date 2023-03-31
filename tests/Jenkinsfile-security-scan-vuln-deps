@@ -15,20 +15,12 @@ pipeline {
         }
 
         stage('Scan') {
-            agent {
-                dockerfile {
-                    dir 'sources/tools/utils/nix/'
-                    filename 'tools.dockerfile'
-                    reuseNode true
-                    additionalBuildArgs '--build-arg TOOLS_REQUIRED=dev'
-                    args '--read-only'
-                }
-            }
             steps {
                 dir ('sources') {
-                    sh """
-                    make scan-vuln-deps
-                    """
+                    script {
+                        actions = load 'sources/tests/actions.groovy'
+                        actions.runInsideNixDockerEnv('dev', '--read-only', 'make scan-vuln-deps')
+                    }
                 }
             }
         }

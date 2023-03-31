@@ -43,11 +43,11 @@ help:
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
 	@find . src/themes/ plugins/ tests/ tools/utils plugins/mediawiki_standalone/additional-packages/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
-	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
+	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
 
 preload:
 	@find . src/themes/ plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
-		xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -I{} bash -c 'echo "Generating preload for {}" && cd "`dirname "{}"`" && $(PRELOAD_GENERATOR) composer.json'
+		xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -I{} bash -c 'echo "Generating preload for {}" && cd "`dirname "{}"`" && $(PRELOAD_GENERATOR) composer.json'
 	@echo "Verify preload validity"
 	@$(PHP) \
 		-d error_reporting=2147483647 \
