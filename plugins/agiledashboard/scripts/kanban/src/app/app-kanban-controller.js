@@ -138,7 +138,7 @@ function KanbanCtrl(
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
         if (SharedPropertiesService.getMercureEnabled()) {
-            MercureService.init();
+            MercureService.init(loadColumns);
         } else {
             SocketService.listenNodeJSServer()
                 .then(function () {

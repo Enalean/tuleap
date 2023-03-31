@@ -307,7 +307,9 @@ describe("KanbanService", () => {
 
             const promise = KanbanService.deleteKanban(8);
             await expect(wrapPromise(promise)).resolves.toBeTruthy();
-            expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban/8");
+            expect(tlpDelete).toHaveBeenCalledWith("/api/v1/kanban/8", {
+                headers: expected_headers,
+            });
         });
     });
 
