@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 
 export const ParentArtifactIdentifierProxy = {
-    fromCallerArgument: (id: number | null | undefined): ParentArtifactIdentifier | null => {
+    fromCallerArgument: (id: number | null | undefined): Option<ParentArtifactIdentifier> => {
         if (id !== null && id !== undefined) {
-            return {
-                _type: "ParentArtifactIdentifier",
-                id,
-            };
+            const identifier: ParentArtifactIdentifier = { _type: "ParentArtifactIdentifier", id };
+            return Option.fromValue(identifier);
         }
-        return null;
+        return Option.nothing();
     },
 };

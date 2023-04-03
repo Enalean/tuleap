@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
+import { Option } from "@tuleap/option";
 import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { Fault } from "@tuleap/fault";
 import { NoLinksInCreationModeFault } from "../../../../domain/fields/link-field/NoLinksInCreationModeFault";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
@@ -60,7 +62,6 @@ import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentA
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { okAsync } from "neverthrow";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -82,7 +83,7 @@ describe(`LinkFieldController`, () => {
         new_links_retriever: RetrieveNewLinks,
         new_link_remover: DeleteNewLinkStub,
         parents_retriever: RetrievePossibleParents,
-        parent_identifier: ParentArtifactIdentifier | null,
+        parent_artifact_identifier: Option<ParentArtifactIdentifier>,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
         event_dispatcher: DispatchEventsStub,
         new_link_type_changer: ChangeNewLinkTypeStub,
@@ -101,7 +102,7 @@ describe(`LinkFieldController`, () => {
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
         new_link_remover = DeleteNewLinkStub.withCount();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
-        parent_identifier = null;
+        parent_artifact_identifier = Option.nothing();
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         new_link_type_changer = ChangeNewLinkTypeStub.withCount();
@@ -125,7 +126,11 @@ describe(`LinkFieldController`, () => {
             new_link_remover,
             new_links_retriever,
             new_link_type_changer,
-            ParentLinkVerifier(links_retriever_sync, new_links_retriever, parent_identifier),
+            ParentLinkVerifier(
+                links_retriever_sync,
+                new_links_retriever,
+                parent_artifact_identifier
+            ),
             parents_retriever,
             link_verifier,
             verify_is_tracker_in_a_hierarchy,
@@ -176,7 +181,7 @@ describe(`LinkFieldController`, () => {
         });
 
         it(`When the artifact has already a parent, then it should return a presenter for the untyped link type`, () => {
-            parent_identifier = ParentArtifactIdentifierStub.withId(123);
+            parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(123));
             verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withHierarchy();
 
             const selected_link_type = getController().getCurrentLinkType(true);

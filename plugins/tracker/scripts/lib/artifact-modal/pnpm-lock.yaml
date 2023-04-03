@@ -12,6 +12,7 @@ specifiers:
   '@tuleap/fetch-result': workspace:*
   '@tuleap/link-selector': workspace:*
   '@tuleap/list-picker': workspace:*
+  '@tuleap/option': workspace:*
   '@tuleap/plugin-tracker-constants': workspace:*
   '@tuleap/plugin-tracker-rest-api-types': workspace:*
   '@tuleap/plugin-tracker-rich-text-editor': workspace:*
@@ -42,6 +43,7 @@ dependencies:
   '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
   '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
   '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
+  '@tuleap/option': link:../../../../../lib/frontend/option
   '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/plugin-tracker-rest-api-types': link:../rest-api-types
   '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor

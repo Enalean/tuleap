@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Option } from "@tuleap/option";
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import type { VerifyHasParentLink } from "./VerifyHasParentLink";
@@ -26,10 +27,10 @@ import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdenti
 export const ParentLinkVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
     new_links_retriever: RetrieveNewLinks,
-    parent_identifier: ParentArtifactIdentifier | null
+    parent_artifact_identifier: Option<ParentArtifactIdentifier>
 ): VerifyHasParentLink => ({
     hasParentLink(): boolean {
-        if (parent_identifier) {
+        if (parent_artifact_identifier.isValue()) {
             return true;
         }
         const has_non_removed_parent = links_retriever

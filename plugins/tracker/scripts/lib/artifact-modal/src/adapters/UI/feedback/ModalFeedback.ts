@@ -19,15 +19,16 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import { sprintf } from "sprintf-js";
-import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import type { ParentFeedbackControllerType } from "./ParentFeedbackController";
+import type { Option } from "@tuleap/option";
+import { getLinkedParentFeedback } from "../../../gettext-catalog";
+import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
+import type { ParentFeedbackControllerType } from "../../../domain/parent/ParentFeedbackController";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 import type { FaultFeedbackControllerType } from "./FaultFeedbackController";
 
 export type ModalFeedback = {
-    parent_presenter: ParentFeedbackPresenter;
+    parent_option: Option<ParentArtifact>;
     fault_presenter: FaultFeedbackPresenter;
     readonly parentController: ParentFeedbackControllerType;
     readonly faultController: FaultFeedbackControllerType;
@@ -36,16 +37,15 @@ export type ModalFeedback = {
 export type HostElement = ModalFeedback & HTMLElement;
 
 const displayParentIfNeeded = (
-    presenter: ParentFeedbackPresenter
+    parent_option: Option<ParentArtifact>
 ): UpdateFunction<ModalFeedback> => {
-    if (presenter.parent_artifact === null) {
-        return html``;
-    }
-    return html`
-        <div class="tlp-alert-info" data-test="parent-feedback">
-            ${sprintf(getLinkedParentFeedback(), presenter.parent_artifact.title)}
-        </div>
-    `;
+    return parent_option.mapOr(
+        (parent_artifact) =>
+            html`<div class="tlp-alert-info" data-test="parent-feedback">
+                ${sprintf(getLinkedParentFeedback(), parent_artifact.title)}
+            </div>`,
+        html``
+    );
 };
 
 const displayFaultIfNeeded = (presenter: FaultFeedbackPresenter): UpdateFunction<ModalFeedback> => {
@@ -58,15 +58,15 @@ const displayFaultIfNeeded = (presenter: FaultFeedbackPresenter): UpdateFunction
 };
 
 const noFeedbackToShow = (host: ModalFeedback): boolean =>
-    host.fault_presenter.message === "" && host.parent_presenter.parent_artifact === null;
+    host.fault_presenter.message === "" && host.parent_option.isNothing();
 
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
     parentController: {
         set(host, controller: ParentFeedbackControllerType) {
             controller
-                .displayParentFeedback()
-                .then((presenter) => (host.parent_presenter = presenter));
+                .getParentArtifact()
+                .then((parent_option) => (host.parent_option = parent_option));
             return controller;
         },
     },
@@ -76,10 +76,7 @@ export const ModalFeedback = define<ModalFeedback>({
             return controller;
         },
     },
-    parent_presenter: {
-        get: (host, last_value) => last_value ?? ParentFeedbackPresenter.buildEmpty(),
-        set: (host, presenter) => presenter,
-    },
+    parent_option: undefined,
     fault_presenter: {
         get: (host, last_value) => last_value ?? FaultFeedbackPresenter.buildEmpty(),
         set: (host, presenter) => presenter,
@@ -90,7 +87,7 @@ export const ModalFeedback = define<ModalFeedback>({
         }
         return html`
             <div class="tlp-modal-feedback">
-                ${displayParentIfNeeded(host.parent_presenter)}
+                ${displayParentIfNeeded(host.parent_option)}
                 ${displayFaultIfNeeded(host.fault_presenter)}
             </div>
         `;

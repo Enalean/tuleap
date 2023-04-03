@@ -30,7 +30,7 @@ import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-det
 import { sprintf } from "sprintf-js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
-import { ParentFeedbackController } from "./adapters/UI/feedback/ParentFeedbackController";
+import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
 import { LinkFieldController } from "./adapters/UI/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
@@ -107,7 +107,7 @@ function ArtifactModalController(
     const new_links_store = NewLinksStore();
     const possible_parents_cache = PossibleParentsCache(api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
-    const parent_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
+    const parent_artifact_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
         modal_model.parent_artifact_id
     );
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
@@ -146,7 +146,7 @@ function ArtifactModalController(
         parent_feedback_controller: ParentFeedbackController(
             api_client,
             event_dispatcher,
-            parent_identifier
+            parent_artifact_identifier
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(event_dispatcher),
@@ -176,7 +176,7 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 new_links_store,
-                ParentLinkVerifier(links_store, new_links_store, parent_identifier),
+                ParentLinkVerifier(links_store, new_links_store, parent_artifact_identifier),
                 possible_parents_cache,
                 already_linked_verifier,
                 TrackerInAHierarchyVerifier(modal_model.tracker.parent),

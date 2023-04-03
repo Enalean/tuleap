@@ -18,10 +18,12 @@
  */
 
 import { Fault } from "@tuleap/fault";
+import { Option } from "@tuleap/option";
+import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./ModalFeedback";
 import { ModalFeedback } from "./ModalFeedback";
 import { setCatalog } from "../../../gettext-catalog";
-import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
+import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 
 const PARENT_TITLE = "foreclaw";
@@ -29,7 +31,7 @@ const FAULT_MESSAGE = "An error occurred";
 
 describe(`ModalFeedback`, () => {
     let target: ShadowRoot,
-        parent_presenter: ParentFeedbackPresenter,
+        parent_option: Option<ParentArtifact>,
         fault_presenter: FaultFeedbackPresenter;
 
     beforeEach(() => {
@@ -38,12 +40,12 @@ describe(`ModalFeedback`, () => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        parent_presenter = ParentFeedbackPresenter.fromArtifact({ title: PARENT_TITLE });
+        parent_option = Option.fromValue({ title: PARENT_TITLE });
         fault_presenter = FaultFeedbackPresenter.fromFault(Fault.fromMessage(FAULT_MESSAGE));
     });
 
     const renderTemplate = (): void => {
-        const host = { parent_presenter, fault_presenter } as HostElement;
+        const host = { parent_option, fault_presenter } as HostElement;
         const updateFunction = ModalFeedback.content(host);
         updateFunction(host, target);
     };
@@ -54,17 +56,14 @@ describe(`ModalFeedback`, () => {
     });
 
     it(`when there is no parent, it will show nothing`, () => {
-        parent_presenter = ParentFeedbackPresenter.buildEmpty();
+        parent_option = Option.nothing();
         renderTemplate();
         expect(target.querySelector("[data-test=parent-feedback]")).toBeNull();
     });
 
     it(`when there is a fault, it will show it`, () => {
         renderTemplate();
-        const fault_template = target.querySelector("[data-test=fault-feedback]");
-        if (!fault_template) {
-            throw new Error("An expected element has not been found in template");
-        }
+        const fault_template = selectOrThrow(target, "[data-test=fault-feedback]");
         expect(fault_template.textContent?.trim()).toBe(FAULT_MESSAGE);
     });
 
@@ -75,7 +74,7 @@ describe(`ModalFeedback`, () => {
     });
 
     it(`when there is neither parent nor fault, it will show nothing`, () => {
-        parent_presenter = ParentFeedbackPresenter.buildEmpty();
+        parent_option = Option.nothing();
         fault_presenter = FaultFeedbackPresenter.buildEmpty();
         renderTemplate();
         expect(target.childElementCount).toBe(0);

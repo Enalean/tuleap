@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import { ParentLinkVerifier } from "./ParentLinkVerifier";
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
@@ -31,25 +32,25 @@ import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdenti
 describe(`ParentLinkVerifier`, () => {
     let links_retriever: RetrieveLinkedArtifactsSync,
         new_links_retriever: RetrieveNewLinks,
-        parent_identifier: ParentArtifactIdentifier | null;
+        parent_artifact_identifier: Option<ParentArtifactIdentifier>;
 
     beforeEach(() => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
-        parent_identifier = null;
+        parent_artifact_identifier = Option.nothing();
     });
 
     const hasParentLink = (): boolean => {
         const verifier = ParentLinkVerifier(
             links_retriever,
             new_links_retriever,
-            parent_identifier
+            parent_artifact_identifier
         );
         return verifier.hasParentLink();
     };
 
     it(`returns true when the artifact under creation was given a parent by the caller of the modal`, () => {
-        parent_identifier = ParentArtifactIdentifierStub.withId(318);
+        parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(318));
         expect(hasParentLink()).toBe(true);
     });
 
