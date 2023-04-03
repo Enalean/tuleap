@@ -24,6 +24,7 @@ namespace Tuleap\Option;
 
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
+use function Psl\Type\string;
 
 final class OptionTest extends TestCase
 {
@@ -69,5 +70,11 @@ final class OptionTest extends TestCase
 
         self::assertEquals('callback', Option::fromValue('expected')->mapOr($fn, 'default'));
         self::assertEquals('default', Option::nothing(\stdClass::class)->mapOr($fn, 'default'));
+    }
+
+    public function testCanUnwrapValue(): void
+    {
+        self::assertEquals('value', Option::fromValue('value')->unwrapOr('nothing'));
+        self::assertEquals('nothing', Option::nothing(string())->unwrapOr('nothing'));
     }
 }

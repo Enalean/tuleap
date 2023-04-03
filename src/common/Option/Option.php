@@ -106,6 +106,18 @@ final class Option
         );
     }
 
+    /**
+     * @return Value|mixed
+     */
+    public function unwrapOr(mixed $default)
+    {
+        if (! $this->has_value) {
+            return $default;
+        }
+
+        return $this->value;
+    }
+
     public function isValue(): bool
     {
         return $this->has_value;
