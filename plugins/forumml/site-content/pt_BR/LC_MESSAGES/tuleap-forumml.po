@@ -105,6 +105,9 @@ msgid ""
 "don't see your mail, please refresh the page in a few moment."
 msgstr ""
 
+msgid "This plugin will be removed in september 2023"
+msgstr ""
+
 msgid "Threads"
 msgstr ""
 
