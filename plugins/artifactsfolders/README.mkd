@@ -1,4 +1,0 @@
-Folders plugin
-==============
-
-Add a "Folder" tab in artifact

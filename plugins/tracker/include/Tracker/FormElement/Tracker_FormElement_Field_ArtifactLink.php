@@ -61,38 +61,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
     public const FIELDS_DATA_PARENT_KEY  = 'parent';
 
     /**
-     * Display some information at the top of the artifact link field value
-     *
-     * Parameters:
-     *   'html'                   => output string html
-     *   'artifact'               => input Tracker_Artifact
-     *   'current_user'           => input PFUser
-     *   'read_only'              => input boolean
-     *   'reverse_artifact_links' => input boolean
-     *   'additional_classes'     => input String[]
-     */
-    public const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
-
-    /**
-     * Allow to add command to the queue that is processed after a changeset is created.
-     * Add PostSaveNewChangesetCommand objects to the queue.
-     *
-     * Parameters:
-     *    'queue' => input/output Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
-     *    'field' => input Tracker_FormElement_Field
-     */
-    public const GET_POST_SAVE_NEW_CHANGESET_QUEUE = 'get_post_save_new_changeset_queue';
-
-    /**
-     * Called just after augmentDataFromRequest has been called.
-     *
-     * Parameters:
-     *    'fields_data' => input/output array
-     *    'field'       => input Tracker_FormElement_Field
-     */
-    public const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
-
-    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
@@ -507,18 +475,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         } else {
             $html .= '<div class="artifact-link-value">';
         }
-
-        EventManager::instance()->processEvent(
-            self::PREPEND_ARTIFACTLINK_INFORMATION,
-            [
-                'html'                   => &$html,
-                'artifact'               => $artifact,
-                'current_user'           => $current_user,
-                'read_only'              => $read_only,
-                'reverse_artifact_links' => $reverse_artifact_links,
-                'additional_classes'     => $additional_classes,
-            ]
-        );
 
         $html .= '<h5 class="artifack_link_subtitle">' . $this->getWidgetTitle($reverse_artifact_links) . '</h5>';
 
@@ -1555,14 +1511,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
         $queue->add($this->getProcessChildrenTriggersCommand());
         $queue->add($this->getPostSaveNewChangesetLinkParentArtifact());
-
-        EventManager::instance()->processEvent(
-            self::GET_POST_SAVE_NEW_CHANGESET_QUEUE,
-            [
-                'field' => $this,
-                'queue' => $queue,
-            ]
-        );
 
         return $queue;
     }

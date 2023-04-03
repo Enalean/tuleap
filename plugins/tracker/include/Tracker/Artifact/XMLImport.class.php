@@ -306,7 +306,6 @@ class Tracker_Artifact_XMLImport
             $this->logger,
             $xml_fields_mapping,
             $artifacts_id_mapping,
-            $this->tracker_artifact_factory,
             $this->type_dao
         );
     }

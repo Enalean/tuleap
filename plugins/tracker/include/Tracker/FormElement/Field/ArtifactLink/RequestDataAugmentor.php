@@ -45,14 +45,6 @@ class RequestDataAugmentor
             $this->invertParentRelationship($artifact_link_field, $fields_data);
             $this->addNewValuesInTypesArray($artifact_link_field, $fields_data);
         }
-
-        $this->event_manager->processEvent(
-            Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST,
-            [
-                'fields_data' => &$fields_data,
-                'field'       => $artifact_link_field,
-            ]
-        );
     }
 
     private function invertParentRelationship(

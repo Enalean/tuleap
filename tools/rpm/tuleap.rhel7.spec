@@ -303,13 +303,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-frs
 Add features to the file release system provided by Tuleap
 
-%package plugin-artifactsfolders
-Summary: Artifacts Folders
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
-%description plugin-artifactsfolders
-Add a "Folder" tab in an artifact
-
 %package plugin-captcha
 Summary: Add a captcha protection to sensitive operations
 Group: Development/Tools
@@ -1399,10 +1392,6 @@ fi
 %files plugin-frs
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/frs
-
-%files plugin-artifactsfolders
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/artifactsfolders
 
 %files plugin-captcha
 %defattr(-,root,root,-)

@@ -40,37 +40,22 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     public const FIELDTYPE_LIST              = 'list';
     public const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
     public const FIELDTYPE_COMPUTED          = 'computed';
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Tracker */
-    private $tracker;
-
-    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy[] */
-    private $strategies;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
+    private array $strategies;
 
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
+        private Tracker_FormElementFactory $formelement_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        Tracker $tracker,
+        private Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
         BindStaticValueDao $static_value_dao,
-        \Psr\Log\LoggerInterface $logger,
+        private \Psr\Log\LoggerInterface $logger,
         TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
-        Tracker_ArtifactFactory $tracker_artifact_factory,
         TypeDao $type_dao,
     ) {
-        $this->formelement_factory = $formelement_factory;
-        $this->tracker             = $tracker;
-        $this->logger              = $logger;
-        $alphanum_strategy         = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
-        $this->strategies          = [
+        $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
+        $this->strategies  = [
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
             self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
                 $extraction_path,
@@ -94,7 +79,6 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
             self::FIELDTYPE_ARTIFACT_LINK => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
                 $artifact_id_mapping,
                 $logger,
-                $tracker_artifact_factory,
                 $type_dao,
             ),
             self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed(),

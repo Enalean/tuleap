@@ -208,19 +208,9 @@ class ArtifactLinksToRender
         }
         $artifact_link_tracker                                                               = $artifact_link->getTracker();
         $can_use_artifact_link                                                               = ($artifact_link_tracker !== null && $artifact_link_tracker->isActive() &&
-            $artifact_link->userCanView($user) && ! $this->hideArtifact($artifact_link));
+            $artifact_link->userCanView($user));
         $this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)] = $can_use_artifact_link;
         return $can_use_artifact_link;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hideArtifact(Tracker_ArtifactLinkInfo $artifactlink_info)
-    {
-        return $artifactlink_info->shouldLinkBeHidden(
-            $artifactlink_info->getType()
-        );
     }
 
     /**

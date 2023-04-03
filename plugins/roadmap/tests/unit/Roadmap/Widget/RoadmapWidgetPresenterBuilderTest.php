@@ -22,19 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Tuleap\ArtifactsFolders\Type\TypeInFolderPresenter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Type\TypeCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
-class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAPresenterThatExcludesIsChildFromVisibleNatures(): void
     {
         $nature_presenter_factory = $this->createMock(TypePresenterFactory::class);
         $nature_presenter_factory->method('getOnlyVisibleTypes')->willReturn([
-            new TypeInFolderPresenter(),
             new TypeIsChildPresenter(),
             new TypeCoveredByPresenter(),
         ]);
@@ -50,9 +48,8 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($presenter->should_load_lvl2_iterations);
 
         $natures = \json_decode($presenter->visible_natures, true);
-        self::assertCount(2, $natures);
-        self::assertEquals(TypeInFolderPresenter::TYPE_IN_FOLDER, $natures[0]['shortname']);
-        self::assertEquals(TypeCoveredByPresenter::TYPE_COVERED_BY, $natures[1]['shortname']);
+        self::assertCount(1, $natures);
+        self::assertEquals(TypeCoveredByPresenter::TYPE_COVERED_BY, $natures[0]['shortname']);
     }
 
     public function testItInformsThatIterationsAtLevel1ShouldBeLoaded(): void

@@ -46,17 +46,6 @@ use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
 {
-    /**
-     * Add attributes to tracker
-     *
-     * Parameters:
-     *  - xml_element: input SimpleXMLElement
-     *  - tracker_id:  input int
-     *  - project:     input Project
-     *  - logger:      output Logger
-     */
-    public const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
-
     public const XML_PARENT_ID_EMPTY = "0";
 
     public const DEFAULT_NOTIFICATIONS_LEVEL = 0;
@@ -765,7 +754,6 @@ class TrackerXmlImport
             $settings = new TrackerCreationSettings($is_displayed_in_new_dropdown, $is_private_comment_used);
 
             if ($tracker_id = $this->tracker_factory->saveObject($tracker, $settings)) {
-                $this->addTrackerProperties($tracker_id, $project, $xml_element);
                 $tracker->setId($tracker_id);
             } else {
                 throw new TrackerFromXmlException(
@@ -786,19 +774,6 @@ class TrackerXmlImport
         $this->tracker_factory->clearCaches();
 
         return $tracker;
-    }
-
-    private function addTrackerProperties($tracker_id, Project $project, SimpleXMLElement $xml_element)
-    {
-        $this->event_manager->processEvent(
-            self::ADD_PROPERTY_TO_TRACKER,
-            [
-                'xml_element' => $xml_element,
-                'tracker_id'  => $tracker_id,
-                'project'     => $project,
-                'logger'      => $this->logger,
-            ]
-        );
     }
 
     /**
