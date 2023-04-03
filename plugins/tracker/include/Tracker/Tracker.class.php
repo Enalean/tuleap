@@ -93,6 +93,7 @@ use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
@@ -1682,11 +1683,11 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * @return Tracker_Tooltip
+     * @return SemanticTooltip
      */
     public function getTooltip()
     {
-        return new Tracker_Tooltip($this);
+        return new SemanticTooltip($this);
     }
 
     /**

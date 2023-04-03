@@ -18,10 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Tooltip;
+
+use DataAccessObject;
+use Tracker_Semantic_IRetrieveSemanticDARByTracker;
+
 /**
  *  Data Access Object for Tracker_Tooltip
  */
-class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
+class SemanticTooltipDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
 {
     public function __construct()
     {
@@ -43,7 +48,14 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
-        $rank       = $this->da->escapeInt($this->prepareRanking('tracker_tooltip', 0, (int) $tracker_id, $rank, 'field_id', 'tracker_id'));
+        $rank       = $this->da->escapeInt($this->prepareRanking(
+            'tracker_tooltip',
+            0,
+            (int) $tracker_id,
+            $rank,
+            'field_id',
+            'tracker_id'
+        ));
         $sql        = "REPLACE INTO $this->table_name(tracker_id, field_id, `rank`)
                 VALUES ($tracker_id, $field_id, $rank)";
         return $this->update($sql);

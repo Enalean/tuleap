@@ -19,12 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Tooltip;
+
+use Tracker;
+use Tracker_Semantic;
+use Tracker_Semantic_CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Tracker_TooltipFactory implements IBuildSemanticFromXML
+class SemanticTooltipFactory implements IBuildSemanticFromXML
 {
     /**
      * Hold an instance of the class
+     *
      * @var self|null
      */
     protected static $instance;
@@ -32,7 +38,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
     /**
      * The singleton method
      *
-     * @return Tracker_TooltipFactory an instance of this factory
+     * @return SemanticTooltipFactory an instance of this factory
      */
     public static function instance()
     {
@@ -49,18 +55,18 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      * @param array   $row     The row allowing the construction of a tooltip
      * @param Tracker $tracker The tracker
      *
-     * @return Tracker_Tooltip
+     * @return SemanticTooltip
      */
     public function getInstanceFromRow($row, $tracker)
     {
-        $tooltip = new Tracker_Tooltip($tracker);
+        $tooltip = new SemanticTooltip($tracker);
         $tooltip->setFields($row);
         return $tooltip;
     }
 
     public function getInstanceFromXML(
-        SimpleXMLElement $current_semantic_xml,
-        SimpleXMLElement $all_semantics_xml,
+        \SimpleXMLElement $current_semantic_xml,
+        \SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
@@ -80,11 +86,11 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
     /**
      * Get the dao
      *
-     * @return Tracker_TooltipDao The dao
+     * @return SemanticTooltipDao The dao
      */
     public function getDao()
     {
-        return new Tracker_TooltipDao();
+        return new SemanticTooltipDao();
     }
 
     /**

@@ -50910,7 +50910,7 @@
       <code>getName</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Tooltip/Tracker_Tooltip.class.php">
+  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltip.php">
     <InvalidReturnType>
       <code>bool</code>
     </InvalidReturnType>
@@ -50933,7 +50933,7 @@
       <code><![CDATA[array_search($field->id, $xml_mapping)]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Tooltip/dao/Tracker_TooltipDao.class.php">
+  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltipDao.php">
     <DeprecatedMethod>
       <code>escapeInt</code>
       <code>escapeInt</code>
