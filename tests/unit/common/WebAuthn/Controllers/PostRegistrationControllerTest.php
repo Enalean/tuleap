@@ -30,7 +30,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
-use Tuleap\WebAuthn\WebAuthnCredentialSourceDaoStub;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -82,7 +82,7 @@ final class PostRegistrationControllerTest extends TestCase
     {
         $controller = $this->getController(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
-            WebAuthnCredentialSourceDaoStub::withCredentialSources(['key_id'])
+            WebAuthnCredentialSourceDaoStub::withCredentialSources('key_id')
         );
 
         $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));

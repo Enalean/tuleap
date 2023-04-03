@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\WebAuthn;
+namespace Tuleap\Test\Stubs\WebAuthn;
 
 use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
@@ -39,11 +39,11 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
     }
 
     /**
-     * @param string[] $sources_id
+     * @no-named-arguments
      */
-    public static function withCredentialSources(array $sources_id): self
+    public static function withCredentialSources(string $first_source_id, string ...$other_source_ids): self
     {
-        return new self($sources_id);
+        return new self([$first_source_id, ...$other_source_ids]);
     }
 
     public static function withoutCredentialSources(): self

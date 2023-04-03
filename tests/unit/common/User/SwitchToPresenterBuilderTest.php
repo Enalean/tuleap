@@ -28,7 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\SearchFormPresenter;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ListOfProjectPresentersBuilder;
-use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 
 class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

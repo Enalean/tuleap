@@ -30,7 +30,7 @@ use Project;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 

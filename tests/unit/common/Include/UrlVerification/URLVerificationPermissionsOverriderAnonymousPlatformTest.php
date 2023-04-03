@@ -27,7 +27,7 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tuleap\Test\PHPUnit\TestCase

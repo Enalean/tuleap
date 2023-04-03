@@ -20,15 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\User;
+namespace Tuleap\Test\Stubs;
 
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\ProvideAnonymousUser;
-
-final class AnonymousUserTestProvider implements ProvideAnonymousUser
+final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
 {
-    public function getUserAnonymous(): \PFUser
+    private int $call_count = 0;
+
+    private function __construct(private \Closure $callback)
     {
-        return UserTestBuilder::anAnonymousUser()->build();
+    }
+
+    public static function withCallback(\Closure $callback): self
+    {
+        return new self($callback);
+    }
+
+    public static function withIdentityCallback(): self
+    {
+        return new self(static fn(object $event) => $event);
+    }
+
+    public function dispatch(object $event): object
+    {
+        $this->call_count++;
+        return ($this->callback)($event);
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }
