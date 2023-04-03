@@ -103,6 +103,8 @@ declare global {
             createArtifact(payload: ArtifactCreationPayload): Chainable<number>;
 
             createFRSPackage(project_id: number, package_name: string): void;
+
+            getContains(selector: string, label: string): Chainable<JQuery<HTMLElement>>;
         }
     }
 }
