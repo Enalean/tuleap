@@ -234,6 +234,7 @@ use Tuleap\User\SessionManager;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
+use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 use Tuleap\WebAuthn\Controllers\PostRegistrationController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 use Tuleap\WebAuthn\WebAuthnRegistration;
@@ -1284,6 +1285,7 @@ class RouteCollector
     {
         return new PostRegistrationController(
             \UserManager::instance(),
+            new WebAuthnChallengeDao(),
             new WebAuthnCredentialSourceDao(),
             new PublicKeyCredentialRpEntity(
                 \ForgeConfig::get(ConfigurationVariables::NAME),

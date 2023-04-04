@@ -25,12 +25,15 @@ namespace Tuleap\WebAuthn\Controllers;
 use Cose\Algorithms;
 use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
+use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -44,6 +47,7 @@ final class PostRegistrationControllerTest extends TestCase
     {
         $controller = $this->getController(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anAnonymousUser()->build()),
+            new WebAuthnChallengeDaoStub(),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
@@ -55,6 +59,7 @@ final class PostRegistrationControllerTest extends TestCase
     {
         $controller = $this->getController(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            new WebAuthnChallengeDaoStub(),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
@@ -82,6 +87,7 @@ final class PostRegistrationControllerTest extends TestCase
     {
         $controller = $this->getController(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            new WebAuthnChallengeDaoStub(),
             WebAuthnCredentialSourceDaoStub::withCredentialSources('key_id')
         );
 
@@ -97,6 +103,7 @@ final class PostRegistrationControllerTest extends TestCase
     {
         $controller = $this->getController(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            new WebAuthnChallengeDaoStub(),
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
@@ -107,15 +114,35 @@ final class PostRegistrationControllerTest extends TestCase
         self::assertNotSame($body['challenge'], $body2['challenge']);
     }
 
+    public function testItSaveChallenge(): void
+    {
+        $user          = UserTestBuilder::anActiveUser()->build();
+        $challenge_dao = new WebAuthnChallengeDaoStub();
+        $controller    = $this->getController(
+            ProvideCurrentUserStub::buildWithUser($user),
+            $challenge_dao,
+            WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
+        );
+
+        $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
+        self::assertNotNull($challenge_dao->challenge_saved);
+        self::assertEquals((int) $user->getId(), $challenge_dao->user_id_saved);
+        self::assertNotNull($res);
+        $body = psl_json_decode($res->getBody()->getContents());
+        self::assertSame(Base64UrlSafe::encodeUnpadded($challenge_dao->challenge_saved), $body['challenge']);
+    }
+
     /**
      * @param string[] $sources_id
      */
     private function getController(
         ProvideCurrentUserStub $current_user_stub,
+        SaveWebAuthnChallenge $challenge_dao,
         PublicKeyCredentialSourceRepository $source_repository,
     ): PostRegistrationController {
         return new PostRegistrationController(
             $current_user_stub,
+            $challenge_dao,
             $source_repository,
             new PublicKeyCredentialRpEntity(
                 'tuleap',

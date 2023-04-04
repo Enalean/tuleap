@@ -30,6 +30,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -44,6 +45,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
      */
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
+        private readonly SaveWebAuthnChallenge $challenge_dao,
         private readonly PublicKeyCredentialSourceRepository $source_dao,
         private readonly PublicKeyCredentialRpEntity $relying_party_entity,
         private readonly array $credential_parameters,
@@ -83,6 +85,11 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         )
             ->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE)
             ->excludeCredentials(...$registered_sources);
+
+        $this->challenge_dao->saveChallenge(
+            (int) $current_user->getId(),
+            $challenge
+        );
 
         return $this->response_builder->fromData($options->jsonSerialize())->withStatus(201);
     }
