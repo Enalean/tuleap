@@ -7,6 +7,18 @@ reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-prc3-vjfx-vhm9" # CVE-2022-25869
 reason = "Angular is EOL. XSS can only be trigerred with IE. IE users would not be able to load the JS of Angular app in Tuleap."
 
+[[IgnoredVulns]]
+id = "GHSA-2qqx-w9hr-q5gx" # CVE-2023-26117
+reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
+[[IgnoredVulns]]
+id = "GHSA-2vrf-hf26-jrp5" # CVE-2023-26116
+reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
+[[IgnoredVulns]]
+id = "GHSA-qwqh-hm9m-p5hr" # CVE-2023-26118
+reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
 # plugins/git/composer.lock
 ## smarty/smarty
 [[IgnoredVulns]]
