@@ -35,6 +35,9 @@ describe("PullRequestCheckoutButton", () => {
         const wrapper = mount(PullRequestCheckoutButton, {
             global: {
                 ...getGlobalTestOptions(),
+                stubs: {
+                    "copy-to-clipboard": true,
+                },
             },
             props: {
                 pull_request_info: {
@@ -56,6 +59,9 @@ describe("PullRequestCheckoutButton", () => {
         const wrapper = mount(PullRequestCheckoutButton, {
             global: {
                 ...getGlobalTestOptions(),
+                stubs: {
+                    "copy-to-clipboard": true,
+                },
             },
             props: {
                 pull_request_info: null,

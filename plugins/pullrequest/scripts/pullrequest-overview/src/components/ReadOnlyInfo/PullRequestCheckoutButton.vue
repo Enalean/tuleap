@@ -62,10 +62,18 @@
                     </option>
                 </select>
             </div>
-            <pre class="pull-request-commands" data-test="pull-request-commands"
-                >{{ getCloneInfo }}
-git checkout FETCH_HEAD</pre
-            >
+            <pre class="pull-request-commands" data-test="pull-request-commands">{{ getCloneInfo }}
+git checkout FETCH_HEAD
+                <copy-to-clipboard
+                    class="tlp-append tlp-button-secondary tlp-button-outline tlp-button-mini pull-request-copy-url-button tlp-tooltip tlp-tooltip-left"
+                    v-bind:value="`${getCloneInfo} && git checkout FETCH_HEAD`"
+                    v-bind:data-tlp-tooltip="tooltip_label"
+                    v-on:copied-to-clipboard="copyUrl"
+                    ref="copy_clipboard">
+                    <i class="fa-solid fa-clipboard tlp-button-icon" aria-hidden="true"></i>
+                    {{ $gettext("Copy") }}
+                </copy-to-clipboard>
+            </pre>
         </div>
     </div>
 </template>
@@ -75,6 +83,7 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { computed, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import { createDropdown } from "@tuleap/tlp-dropdown";
+import "@tuleap/copy-to-clipboard";
 
 const { $gettext } = useGettext();
 
@@ -85,6 +94,7 @@ const props = defineProps<{
 const SSH = "ssh";
 const HTTP = "http";
 
+const tooltip_label = ref($gettext("Copy to clipboard"));
 const dropdown_button = ref<HTMLButtonElement | null>(null);
 const checkout_option = ref("");
 
@@ -120,10 +130,17 @@ const getCloneInfo = computed((): string => {
 
     return `git fetch ${props.pull_request_info.repository_dest.clone_ssh_url} ${props.pull_request_info.head_reference}`;
 });
+
+function copyUrl(): void {
+    tooltip_label.value = $gettext("Command lines copied to clipboard");
+}
 </script>
 
 <style lang="scss">
-.tlp-dropdown-menu.pull-request-checkout-dropdown {
+.tlp-dropdown-menu.tlp-dropdown-shown.pull-request-checkout-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-small-spacing);
     padding: var(--tlp-medium-spacing);
 }
 
@@ -136,6 +153,7 @@ const getCloneInfo = computed((): string => {
 }
 
 .pull-request-commands {
-    margin: var(--tlp-small-spacing) 0 0 0;
+    display: flex;
+    align-items: baseline;
 }
 </style>

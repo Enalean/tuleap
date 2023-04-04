@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/copy-to-clipboard": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@tuleap/fault": "workspace:*",

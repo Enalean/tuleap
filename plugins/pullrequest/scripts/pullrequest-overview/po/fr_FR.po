@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid "Abandon"
 msgstr "Abandonner"
@@ -42,8 +42,17 @@ msgstr "Checkout avec"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Command lines copied to clipboard"
+msgstr "Les lignes de commandes on été copiées vers le presse-papiers"
+
 msgid "Commits"
 msgstr "Commits"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Copy to clipboard"
+msgstr "Copier dans le presse-papiers"
 
 msgid "Creation date"
 msgstr "Date de création"
