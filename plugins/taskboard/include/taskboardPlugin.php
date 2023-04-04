@@ -84,27 +84,7 @@ class taskboardPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(GetAdditionalScrumAdminSection::NAME);
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-
-        if (defined('AGILEDASHBOARD_BASE_URL')) {
-            $this->addHook(PaneInfoCollector::NAME);
-            $this->addHook(AlternativeBoardLinkEvent::NAME);
-            $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
-        }
-
-        if (defined('CARDWALL_BASE_URL')) {
-            $this->addHook(CardwallIsAllowedEvent::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
-    /** @see Event::REST_RESOURCES */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
@@ -182,7 +162,8 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
             '/taskboard',
@@ -192,6 +173,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $pane_info = $this->getPaneInfoForMilestone($collector->getMilestone());
@@ -244,6 +226,7 @@ class taskboardPlugin extends Plugin
         return new TaskboardUsage(new TaskboardUsageDao());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
     {
         if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
@@ -251,6 +234,7 @@ class taskboardPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function alternativeBoardLinkEvent(AlternativeBoardLinkEvent $event): void
     {
         $pane = $this->getPaneInfoForMilestone($event->getMilestone());
@@ -265,6 +249,7 @@ class taskboardPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getAdditionalScrumAdminSection(GetAdditionalScrumAdminSection $event): void
     {
         $event->addAdditionalSectionController(
@@ -276,6 +261,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
@@ -285,6 +271,7 @@ class taskboardPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
     {
         $event->add(TaskboardPaneInfo::NAME);
