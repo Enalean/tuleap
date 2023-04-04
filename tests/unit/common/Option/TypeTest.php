@@ -58,4 +58,16 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertInstanceOf(CustomValueType::class, $test->expectation);
     }
+
+    public function testUnwrapOrCanDefaultToADifferentTypeThanTheInitialOption(): void
+    {
+        $option = Option::nothing(\Psl\Type\string());
+
+        $test = new class {
+            public int|string $expectation;
+        };
+
+        $test->expectation = $option->unwrapOr(101);
+        self::assertSame(101, $test->expectation);
+    }
 }

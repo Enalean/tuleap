@@ -30,19 +30,31 @@ If you work on a scalar/array value you can use `::nothing()` this way:
 
 You can then use the resulting value using `::apply()`:
 ```php
-$value = getSuperUser($current_user);
-$value->apply(function(\PFUser $user): void {
+$option = getSuperUser($current_user);
+$option->apply(function(\PFUser $user): void {
     // $current_user is a superuser, do something with it
 });
 ```
 
 At the end of a processing pipeline, you might want to retrieve the unwrapped value with `::mapOr()`:
 ```php
-$value = getSuperUser($current_user);
-$value->mapOr(
+$option = getSuperUser($current_user);
+$option->mapOr(
     fn (\PFUser $user): Ok => \Tuleap\NeverThrow\Result::ok($user),
     \Tuleap\NeverThrow\Result::err(\Tuleap\NeverThrow\Fault::fromMessage('Current user is not a super user')),
 );
+```
+
+In unit tests when the inner value is a primitive or an array, and you want to run assertions, use `::unwrapOr()`:
+
+```php
+/**
+ * @return Option<string>
+ */
+function getOption(): Option;
+
+$option = getOption();
+self::assertSame('a string value', $option->unwrapOr(null));
 ```
 
 If you need to collect the actual values of some optional values:
