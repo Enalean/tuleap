@@ -121,53 +121,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         bindtextdomain('tuleap-testmanagement', TESTMANAGEMENT_GETTEXT_DIR);
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(Event::REST_PROJECT_RESOURCES);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES);
-        $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER);
-        $this->addHook(ImportValidateExternalFields::NAME);
-        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
-        $this->addHook(ImportExternalElement::NAME);
-        $this->addHook(ImportValidateChangesetExternalField::NAME);
-        $this->addHook(ExternalStrategiesGetter::NAME);
-        $this->addHook(GetExternalExporter::NAME);
-
-        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-
-        if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('javascript_file');
-            $this->addHook('cssfile');
-            $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-            $this->addHook(ArtifactLinkValueSaver::TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED);
-            $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-            $this->addHook(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED);
-            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES);
-
-            $this->addHook(ImportXMLProjectTrackerDone::NAME);
-            $this->addHook(GetEditableTypesInProject::NAME);
-            $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
-            $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
-            $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
-            $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
-            $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
-            $this->addHook(TrackerEventExportFullXML::NAME);
-            $this->addHook(Tracker::TRACKER_USAGE);
-            $this->addHook(StatisticsCollectionCollector::NAME);
-            $this->addHook(CheckPostActionsForTracker::NAME);
-            $this->addHook(SwitchToLinksCollection::NAME);
-            $this->addHook(ExcludeTrackersFromArtifactHeartbeats::NAME);
-            $this->addHook(HeartbeatsEntryCollection::NAME);
-            $this->addHook(DisplayingTrackerEvent::NAME);
-            $this->addHook(FieldChangeExternalFieldXMLUpdateEvent::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
-    public function javascript_file(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName('javascript_file')]
+    public function javascriptFile(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($this->canIncludeStepDefinitionAssets()) {
             $layout = $params['layout'];
@@ -176,6 +131,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
     public function cssfile(): void
     {
         if ($this->isTrackerURL()) {
@@ -203,11 +159,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return self::SERVICE_SHORTNAME;
     }
 
-    /**
-     * @see Tracker_FormElementFactory::GET_CLASSNAMES
-     *
-     */
-    public function tracker_formelement_get_classnames(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_FormElementFactory::GET_CLASSNAMES)]
+    public function trackerFormelementGetClassnames(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
         $params['fields'][StepExecution::TYPE]  = StepExecution::class;
@@ -286,6 +239,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         // nothing to do for TTM
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         $template = $event->getTemplateProject();
@@ -310,19 +264,22 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
     }
 
-    public function event_get_artifactlink_types(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES)]
+    public function eventGetArtifactlinkTypes(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['types'][] = new TypeCoveredByPresenter();
     }
 
-    public function event_get_type_presenter(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER)]
+    public function eventGetTypePresenter(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($params['shortname'] === TypeCoveredByPresenter::TYPE_COVERED_BY) {
             $params['presenter'] = new TypeCoveredByPresenter();
         }
     }
 
-    public function tracker_event_artifact_link_type_requested(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(ArtifactLinkValueSaver::TRACKER_EVENT_ARTIFACT_LINK_TYPE_REQUESTED)]
+    public function trackerEventArtifactLinkTypeRequested(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($params['project_id']);
@@ -339,6 +296,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
         $tracker = $event->getArtifact()->getTracker();
@@ -379,7 +337,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
      * @param array $params The project duplication parameters (source project id, tracker ids list)
      *
      */
-    public function tracker_event_project_creation_trackers_required(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED)]
+    public function trackerEventProjectCreationTrackersRequired(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $config  = $this->getConfig();
         $project = ProjectManager::instance()->getProject($params['project_id']);
@@ -405,7 +364,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
      * @param mixed array $params The duplication params (tracker_mapping array, field_mapping array)
      *
      */
-    public function tracker_event_trackers_duplicated(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerFactory::TRACKER_EVENT_TRACKERS_DUPLICATED)]
+    public function trackerEventTrackersDuplicated(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $config       = $this->getConfig();
         $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
@@ -443,10 +403,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
-    /**
-     * @see Tracker::TRACKER_USAGE
-     *
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker::TRACKER_USAGE)]
     public function trackerUsage(array $params): void
     {
         $tracker = $params['tracker'];
@@ -484,6 +441,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
@@ -565,31 +523,27 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
     }
 
-    /**
-     * @see REST_RESOURCES
-     *
-     */
-    public function rest_resources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    /**
-     * @see REST_PROJECT_RESOURCES
-     *
-     */
-    public function rest_project_resources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_PROJECT_RESOURCES)]
+    public function restProjectResources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function tracker_add_system_types(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES)]
+    public function trackerAddSystemTypes(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['types'][] = TypeCoveredByPresenter::TYPE_COVERED_BY;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker(), new ExecutionDao());
@@ -602,7 +556,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
     }
 
-    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerGetEditableTypeInProject(GetEditableTypesInProject $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project = $event->getProject();
 
@@ -611,7 +566,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
-    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerArtifactLinkCanBeUnused(ArtifactLinkTypeCanBeUnused $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $type    = $event->getType();
         $project = $event->getProject();
@@ -625,6 +581,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields): void
     {
         $xml        = $validate_external_fields->getXml();
@@ -635,6 +592,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importExternalElement(ImportExternalElement $event): void
     {
         $xml        = $event->getXml();
@@ -648,6 +606,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
     {
         $xml        = $validate_external_fields->getXml();
@@ -658,11 +617,13 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalStrategies(ExternalStrategiesGetter $event): void
     {
         $event->addStrategies(StepDefinition::TYPE, new TrackerArtifactXMLImportXMLImportFieldStrategySteps());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalExporter(GetExternalExporter $get_external_exporter): void
     {
         $changeset_value = $get_external_exporter->getChangesetValue();
@@ -673,7 +634,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
-    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerXmlImportArtifactLinkCanBeDisabled(XMLImportArtifactLinkTypeCanBeDisabled $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($event->getTypeName() !== TypeCoveredByPresenter::TYPE_COVERED_BY) {
             return;
@@ -689,6 +651,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function filterFormElementsThatCanBeCreatedForTracker(FilterFormElementsThatCanBeCreatedForTracker $event): void
     {
         $project = $event->getTracker()->getProject();
@@ -698,6 +661,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function displayAdminFormElementsWarningsEvent(DisplayAdminFormElementsWarningsEvent $event): void
     {
         $field_usage = $this->getTestmanagementFieldUsageDetector();
@@ -779,6 +743,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
         $project = $event->getProject();
@@ -875,6 +840,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return ! empty($used_step_definition_fields);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
     {
         $dao = new Dao();
@@ -885,12 +851,14 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
         $checker = new PostActionChecker($this->getConfig(), Tracker_FormElementFactory::instance());
         $checker->checkPostActions($event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
@@ -901,6 +869,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return new ImportXMLFromTracker(new XML_RNGValidator());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
     {
         $config  = $this->getConfig();
@@ -932,12 +901,14 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         $collection->setMainUri($url);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void
     {
         $tracker_excluder = new HeartbeatArtifactTrackerExcluder();
         $tracker_excluder->excludeTrackers($this->getConfig(), $event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
     {
         $collector = LatestHeartbeatsCollector::build();
@@ -957,6 +928,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return $attributes && isset($attributes['type']) && ((string) $attributes['type'] === StepDefinition::TYPE || (string) $attributes['type'] === StepExecution::TYPE);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function displayingTrackerEvent(DisplayingTrackerEvent $event): void
     {
         $tracker = $event->getTracker();
@@ -978,6 +950,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function fieldChangeExternalFieldXMLUpdateEvent(FieldChangeExternalFieldXMLUpdateEvent $event): void
     {
         $xml_element = $event->getFieldChangeXML();
