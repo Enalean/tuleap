@@ -92,6 +92,7 @@ class RepositoryHeaderPresenterBuilder
         \EventManager $event_manager,
         DefaultCloneURLSelector $default_clone_url_selector,
         private URLVerification $url_verificator,
+        private readonly RepositoryHeaderTabsURLBuilder $repository_header_tabs_url_builder,
     ) {
         $this->dao                        = $dao;
         $this->url_manager                = $url_manager;
@@ -199,7 +200,7 @@ class RepositoryHeaderPresenterBuilder
 
         return new TabPresenter(
             $is_selected,
-            $this->url_manager->getRepositoryBaseUrl($repository),
+            $this->repository_header_tabs_url_builder->buildFilesTabURL($repository, \HTTPRequest::instance()),
             dgettext("tuleap-git", "Files"),
             self::TAB_FILES,
             false,
@@ -213,11 +214,7 @@ class RepositoryHeaderPresenterBuilder
 
         return new TabPresenter(
             $is_selected,
-            $this->url_manager->getRepositoryBaseUrl($repository) . '?' . http_build_query(
-                [
-                    'a' => 'shortlog',
-                ]
-            ),
+            $this->repository_header_tabs_url_builder->buildCommitsTabURL($repository, \HTTPRequest::instance()),
             dgettext("tuleap-git", "Commits"),
             self::TAB_COMMITS,
             false,
