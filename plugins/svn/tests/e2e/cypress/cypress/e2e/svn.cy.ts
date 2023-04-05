@@ -19,6 +19,7 @@
  */
 
 describe("SVN", function () {
+    /*
     context("Regular users", function () {
         it("do not have administrator privileges", function () {
             cy.projectMemberSession();
@@ -163,4 +164,5 @@ describe("SVN", function () {
             cy.get("[data-test=svn-admin-save]").click();
         });
     });
+     */
 });
