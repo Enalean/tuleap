@@ -46,19 +46,8 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         bindtextdomain('tuleap-projectmilestones', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(GetWidget::NAME);
-        $this->addHook(GetProjectWidgetList::NAME);
-        $this->addHook(GetUserWidgetList::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook(ConfigureAtXMLImport::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
-    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $include_assets = new IncludeAssets(
             __DIR__ . '/../frontend-assets',
@@ -82,16 +71,19 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
-    public function getProjectWidgetList(GetProjectWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectWidgetList(GetProjectWidgetList $event): void
     {
         $event->addWidget(DashboardProjectMilestones::NAME);
     }
 
-    public function getUserWidgetList(GetUserWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserWidgetList(GetUserWidgetList $event): void
     {
         $event->addWidget(MyProjectMilestones::NAME);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
@@ -104,7 +96,8 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
      * Hook: event raised when widget are instanciated
      *
      */
-    public function widgetInstance(GetWidget $get_widget_event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function widgetInstance(GetWidget $get_widget_event): void
     {
         $project_milestones_widget_retriever = new ProjectMilestonesWidgetRetriever(
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
@@ -144,6 +137,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function configureAtXMLImport(ConfigureAtXMLImport $event): void
     {
         (new Tuleap\ProjectMilestones\Widget\ConfigureAtXMLImport())($event);
