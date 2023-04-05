@@ -306,6 +306,15 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "to"         => "10013",
                         "toString"   => "Release 2.0",
                     ],
+                    11 => [
+                        [
+                            "fieldId"    => "components",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10000",
+                            "toString"   => "Comp 01",
+                        ],
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -425,6 +434,17 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fixed in version',
                 'Ffixversions',
                 'fixversions',
+                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
+            )
+        );
+        $collection->addMapping(
+            new ListFieldMapping(
+                'components',
+                'Components',
+                'Fcomponents',
+                'components',
                 \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],

@@ -46,6 +46,7 @@ class JiraToTuleapFieldTypeMapper
 {
     public const JIRA_FIELD_VERSIONS      = 'versions';
     public const JIRA_FIELD_FIXEDVERSIONS = 'fixVersions';
+    public const JIRA_FIELD_COMPONENTS    = 'components';
 
     public function __construct(
         private ErrorCollector $error_collector,
@@ -273,6 +274,7 @@ class JiraToTuleapFieldTypeMapper
 
                 case self::JIRA_FIELD_FIXEDVERSIONS:
                 case self::JIRA_FIELD_VERSIONS:
+                case self::JIRA_FIELD_COMPONENTS:
                     $field = XMLMultiSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRequired($jira_field->isRequired())
@@ -334,7 +336,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:url':
                 case 'environment':
                 case 'resolution':
-                case 'components':
                 case 'progress':
                 case 'com.atlassian.jira.toolkit:assigneedomain':
                 case 'com.atlassian.jira.toolkit:reporterdomain':

@@ -42,10 +42,6 @@ use Tuleap\JiraImport\JiraAgile\JiraEpicFromBoardRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
-use Tuleap\JiraImport\Project\Components\ComponentIssuesRetrieverFromAPI;
-use Tuleap\JiraImport\Project\Components\ComponentsImporter;
-use Tuleap\JiraImport\Project\Components\ComponentsRetrieverFromAPI;
-use Tuleap\JiraImport\Project\Components\ComponentsTrackerBuilder;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
 use Tuleap\JiraImport\Project\GroupMembers\GroupMembersImporter;
 use Tuleap\NeverThrow\Err;
@@ -363,26 +359,6 @@ final class CreateProjectFromJira
 
                         $jira_exporter->appendTrackerXML($trackers_xml, $tracker_xml);
                     }
-
-                    $logger->info("Import project components");
-                    (new ComponentsImporter(
-                        new ComponentsRetrieverFromAPI(
-                            $jira_client,
-                            $logger,
-                        ),
-                        new ComponentIssuesRetrieverFromAPI(
-                            $jira_client,
-                            $logger,
-                        ),
-                        new ComponentsTrackerBuilder(),
-                        $jira_user_retriever,
-                        $logger,
-                    ))->importProjectComponents(
-                        $trackers_xml,
-                        $jira_project,
-                        $field_id_generator,
-                        $import_user,
-                    );
 
                     if ($board && $board_configuration) {
                         $jira_agile_importer = new JiraAgileImporter(

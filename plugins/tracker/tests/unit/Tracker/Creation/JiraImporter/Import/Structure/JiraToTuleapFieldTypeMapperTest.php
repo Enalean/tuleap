@@ -464,7 +464,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             },
         ];
 
-        yield 'Jira version is mapped to a select box field' => [
+        yield 'Jira version is mapped to a multi select box field' => [
             'jira_field' => new JiraFieldAPIRepresentation(
                 'versions',
                 'Identified in version',
@@ -487,6 +487,34 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 self::assertEquals('2.0', $node->bind->items->item[1]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('versions');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
+        yield 'Jira Components is mapped to a multi select box field' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'components',
+                'Components',
+                false,
+                'components',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10109, 'name' => 'Comp 01'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10110, 'name' => 'Comp 02'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="components"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Components', $node->label);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('Comp 01', $node->bind->items->item[0]['label']);
+                self::assertEquals('Comp 02', $node->bind->items->item[1]['label']);
+
+                $mapping = $collection->getMappingFromJiraField('components');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
                 self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
             },
