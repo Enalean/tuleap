@@ -101,7 +101,6 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
             new MailingListHomepagePresenter(
                 $mailing_list_presenters,
                 $current_user->isAdmin((int) $project->getID()),
-                MailingListCreationController::getUrl($project),
                 $purified_overridable_intro,
             )
         );

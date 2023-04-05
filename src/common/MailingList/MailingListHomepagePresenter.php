@@ -42,10 +42,6 @@ final class MailingListHomepagePresenter
     /**
      * @var string
      */
-    public $creation_url;
-    /**
-     * @var string
-     */
     public $purified_overridable_intro;
 
     /**
@@ -54,13 +50,11 @@ final class MailingListHomepagePresenter
     public function __construct(
         array $lists,
         bool $is_project_admin,
-        string $creation_url,
         string $purified_overridable_intro,
     ) {
         $this->lists                      = $lists;
         $this->has_lists                  = ! empty($lists);
         $this->is_project_admin           = $is_project_admin;
-        $this->creation_url               = $creation_url;
         $this->purified_overridable_intro = $purified_overridable_intro;
     }
 }

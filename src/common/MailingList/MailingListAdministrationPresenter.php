@@ -34,10 +34,6 @@ final class MailingListAdministrationPresenter
      */
     public $lists;
     /**
-     * @var string
-     */
-    public $creation_url;
-    /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
@@ -45,10 +41,9 @@ final class MailingListAdministrationPresenter
     /**
      * @param MailingListPresenter[] $lists
      */
-    public function __construct(array $lists, string $creation_url, CSRFSynchronizerToken $csrf_token)
+    public function __construct(array $lists, CSRFSynchronizerToken $csrf_token)
     {
-        $this->lists        = $lists;
-        $this->creation_url = $creation_url;
-        $this->csrf_token   = $csrf_token;
+        $this->lists      = $lists;
+        $this->csrf_token = $csrf_token;
     }
 }

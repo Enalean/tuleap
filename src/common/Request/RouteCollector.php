@@ -111,8 +111,6 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
-use Tuleap\MailingList\MailingListCreationController;
-use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 use Tuleap\MailingList\MailingListDeleteController;
 use Tuleap\MailingList\MailingListDoCreateController;
 use Tuleap\MailingList\MailingListDomainBuilder;
@@ -900,20 +898,6 @@ class RouteCollector
         );
     }
 
-    public static function getMailingListsCreationController(): MailingListCreationController
-    {
-        return new MailingListCreationController(
-            new ProjectRetriever(\ProjectManager::instance()),
-            new ProjectAdministratorChecker(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
-            new MailingListDomainBuilder(),
-            new MailingListCreationPresenterBuilder(
-                new MailingListDao(),
-                \Codendi_HTMLPurifier::instance()
-            )
-        );
-    }
-
     public static function getMailingListsDoCreateController(): MailingListDoCreateController
     {
         return new MailingListDoCreateController(
@@ -1329,8 +1313,6 @@ class RouteCollector
             $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
 
             $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
-            $r->get('/mailing-lists/add', [self::class, 'getMailingListsCreationController']);
-            $r->post('/mailing-lists/add', [self::class, 'getMailingListsDoCreateController']);
             $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
             $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
 
