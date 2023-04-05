@@ -38,6 +38,7 @@ let
           plugins/*/tests
           /lib/
           !src/scripts/*/frontend-assets/
+          /src/scripts/tlp-doc/
           /plugins/*/scripts/lib/
           !plugins/*/backend-assets
           !plugins/*/*/backend-assets
@@ -97,6 +98,16 @@ in pkgs.stdenv.mkDerivation {
 
   dontConfigure = true;
   dontBuild = true;
+  dontPatch = true;
+
+  doCheck = true;
+  checkPhase = ''
+    runHook preCheck
+
+    find src/scripts/ -empty -type d -print -exec sh -c 'echo "Empty folders found, aborting" && false' {} +
+
+    runHook postCheck
+  '';
 
   installPhase = ''
     runHook preInstall
