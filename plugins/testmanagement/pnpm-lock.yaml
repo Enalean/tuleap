@@ -40,7 +40,6 @@ specifiers:
   d3-drag: ^3.0.0
   d3-force: ^3.0.0
   d3-selection: ^3.0.0
-  d3-selection-multi: ^1.0.1
   d3-zoom: ^3.0.0
   docx: ^7.3.0
   dompurify: ^3.0.0
@@ -90,7 +89,6 @@ dependencies:
   d3-drag: 3.0.0
   d3-force: 3.0.0
   d3-selection: 3.0.0
-  d3-selection-multi: 1.0.1
   d3-zoom: 3.0.0
   docx: 7.8.2
   dompurify: 3.0.0
@@ -303,8 +301,9 @@ packages:
     resolution: {integrity: sha1-PPY5FIemYppiR+sMoM4ACBt+Nho=}
     dev: false
 
-  /d3-color/1.0.3:
-    resolution: {integrity: sha1-vHZD/KjlOoNH4vva/6I2eWtYUJs=}
+  /d3-color/3.1.0:
+    resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
+    engines: {node: '>=12'}
     dev: false
 
   /d3-dispatch/1.0.3:
@@ -319,8 +318,9 @@ packages:
       d3-selection: 3.0.0
     dev: false
 
-  /d3-ease/1.0.3:
-    resolution: {integrity: sha1-aL+8NJM4o4DETYrMT7wzBKotjA4=}
+  /d3-ease/3.0.1:
+    resolution: {integrity: sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w==}
+    engines: {node: '>=12'}
     dev: false
 
   /d3-force/3.0.0:
@@ -332,26 +332,16 @@ packages:
       d3-timer: 1.0.7
     dev: false
 
-  /d3-interpolate/1.1.5:
-    resolution: {integrity: sha1-aeCZ/zkhRxblY8muw+qdHqS4p58=}
+  /d3-interpolate/3.0.1:
+    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
+    engines: {node: '>=12'}
     dependencies:
-      d3-color: 1.0.3
+      d3-color: 3.1.0
     dev: false
 
   /d3-quadtree/3.0.1:
     resolution: {integrity: sha512-04xDrxQTDTCFwP5H6hRhsRcb9xxv2RzkcsygFzmkSIOJy3PeRJP7sNk3VRIbKXcog561P9oU0/rVH6vDROAgUw==}
     engines: {node: '>=12'}
-    dev: false
-
-  /d3-selection-multi/1.0.1:
-    resolution: {integrity: sha1-zWwlQT0EosuXRw54byzYd/PjT1g=}
-    dependencies:
-      d3-selection: 1.4.2
-      d3-transition: 1.1.0
-    dev: false
-
-  /d3-selection/1.4.2:
-    resolution: {integrity: sha512-SJ0BqYihzOjDnnlfyeHT0e30k0K1+5sR3d5fNueCNeuhZTnGw4M4o8mqJchSwgKMXCNFo+e2VTChiSJ0vYtXkg==}
     dev: false
 
   /d3-selection/3.0.0:
@@ -363,27 +353,16 @@ packages:
     resolution: {integrity: sha512-vMZXR88XujmG/L5oB96NNKH5lCWwiLM/S2HyyAQLcjWJCloK5shxta4CwOFYLZoY3AWX73v8Lgv4cCAdWtRmOA==}
     dev: false
 
-  /d3-transition/1.1.0:
-    resolution: {integrity: sha1-z8hcdOUjkyQpBUZiNXKZBWDDlm8=}
-    dependencies:
-      d3-color: 1.0.3
-      d3-dispatch: 1.0.3
-      d3-ease: 1.0.3
-      d3-interpolate: 1.1.5
-      d3-selection: 1.4.2
-      d3-timer: 1.0.7
-    dev: false
-
   /d3-transition/3.0.1_d3-selection@3.0.0:
     resolution: {integrity: sha512-ApKvfjsSR6tg06xrL434C0WydLr7JewBB3V+/39RMHsaXTOG0zmt/OAXeng5M5LBm0ojmxJrpomQVZ1aPvBL4w==}
     engines: {node: '>=12'}
     peerDependencies:
       d3-selection: 2 - 3
     dependencies:
-      d3-color: 1.0.3
+      d3-color: 3.1.0
       d3-dispatch: 1.0.3
-      d3-ease: 1.0.3
-      d3-interpolate: 1.1.5
+      d3-ease: 3.0.1
+      d3-interpolate: 3.0.1
       d3-selection: 3.0.0
       d3-timer: 1.0.7
     dev: false
@@ -394,7 +373,7 @@ packages:
     dependencies:
       d3-dispatch: 1.0.3
       d3-drag: 3.0.0
-      d3-interpolate: 1.1.5
+      d3-interpolate: 3.0.1
       d3-selection: 3.0.0
       d3-transition: 3.0.1_d3-selection@3.0.0
     dev: false
