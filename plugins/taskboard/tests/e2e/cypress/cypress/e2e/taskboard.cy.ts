@@ -47,13 +47,15 @@ describe(`Taskboard`, function () {
                 .as("taskboard_swimlanes");
         });
 
+        beforeEach(function () {
+            cy.intercept("/api/v1/taskboard_cards/*/children*").as("getChildrenCards");
+        });
+
         it(`adds a card in a swimlane`, function () {
             cy.projectMemberSession();
             cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
-            // Wait for the swimlane to be loaded and displayed
-            cy.get("[data-test=card-with-remaining-effort]").contains("Quality Sunshine");
-            // Wait for children to be loaded and displayed
-            cy.get("[data-test=child-card]").contains("Golden Wrench", { timeout: 5000 });
+            cy.wait("@getChildrenCards");
+            cy.contains("[data-test=child-card]", "Golden Wrench");
 
             const on_going_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "On Going"
@@ -101,8 +103,7 @@ describe(`Taskboard`, function () {
             cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
 
             cy.log(`hide "Done" items`);
-            // need to force click because buttons are out of viewport
-            cy.get("[data-test=hide-closed-items]").click({ force: true });
+            cy.get("[data-test=hide-closed-items]").click();
             cy.get("[data-card-id]").then(($body) => {
                 expect($body).not.to.contain("Elastic Notorious");
                 expect($body).not.to.contain("Grim Crayon");
@@ -110,8 +111,8 @@ describe(`Taskboard`, function () {
             });
 
             cy.log(`show "Done" items`);
-            // need to force click because buttons are out of viewport
-            cy.get("[data-test=show-closed-items]").click({ force: true });
+            cy.get("[data-test=show-closed-items]").click();
+            cy.wait("@getChildrenCards");
             cy.get("[data-card-id]").then(($body) => {
                 expect($body).to.contain("Elastic Notorious");
                 expect($body).to.contain("Grim Crayon");
