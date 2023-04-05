@@ -17,23 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { EncodedURI } from "@tuleap/fetch-result";
 import { ResponseRetriever } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { GitLabErrorHandler } from "./GitLabErrorHandler";
-import { Querier } from "./Querier";
+import { buildGet } from "./Querier";
 
 export type { GitLabCredentials } from "./Querier";
 
 // Define an unused type alias just so we can import ResultAsync and Fault types for the doc-blocks.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _Unused = ResultAsync<never, Fault>;
+type _Unused = { a: ResultAsync<never, Fault>; b: EncodedURI };
 
-const querier = Querier(ResponseRetriever(window, GitLabErrorHandler()));
+const response_retriever = ResponseRetriever(window);
 
 /**
- * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {EncodedURI} uri The URI destination of the request. URI-encoding is handled automatically.
  * @param {GitLabCredentials} credentials The GitLab access token to authenticate the request.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const get = querier.get;
+export const get = buildGet(response_retriever);

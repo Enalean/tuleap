@@ -33,7 +33,6 @@ import {
     POST_METHOD,
     PUT_METHOD,
 } from "./constants";
-import { RestlerErrorHandler } from "./RestlerErrorHandler";
 import { getEncodedURIString, uri as uriTag } from "./uri-string-template";
 
 const isNetworkFault = (fault: Fault): boolean =>
@@ -45,7 +44,7 @@ describe(`ResponseRetriever`, () => {
     const uri = uriTag`https://example.com/response-retriever-test`;
 
     const retrieve = (): ResultAsync<Response, Fault> => {
-        const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
+        const retriever = ResponseRetriever(fetcher);
         return retriever.retrieveResponse(uri, { method: "GET" });
     };
 
@@ -61,7 +60,7 @@ describe(`ResponseRetriever`, () => {
         `will query the given URI with method %s and return a ResultAsync with the response`,
         async (method: SupportedHTTPMethod) => {
             const fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-            const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
+            const retriever = ResponseRetriever(fetcher);
 
             const result = await retriever.retrieveResponse(uri, { method });
             if (!result.isOk()) {
@@ -79,7 +78,7 @@ describe(`ResponseRetriever`, () => {
 
     it(`will pass credentials, mode, headers and body along to fetch if given in options`, async () => {
         const fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-        const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
+        const retriever = ResponseRetriever(fetcher);
 
         const body = JSON.stringify({ key: "value" });
         const result = await retriever.retrieveResponse(uri, {

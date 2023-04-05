@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,38 +19,38 @@
 
 import { describe, expect, it } from "vitest";
 import type { Fault } from "@tuleap/fault";
-import { decodeJSON } from "./json-decoder";
+import { decodeAsText } from "./text-decoder";
 
-const isJSONParseFault = (fault: Fault): boolean =>
-    "isJSONParseFault" in fault && fault.isJSONParseFault() === true;
+const isTextParseFault = (fault: Fault): boolean =>
+    "isTextParseFault" in fault && fault.isTextParseFault() === true;
 
-describe(`json-decoder`, () => {
-    describe(`decodeJSON`, () => {
-        it(`transforms a response into a ResultAsync with JSON`, async () => {
-            const payload = { value: true };
+describe(`text-decoder`, () => {
+    describe(`decodeAsText()`, () => {
+        it(`transforms a response into a ResultAsync with a string`, async () => {
+            const payload = "photoheliographic pronglike";
             const response = {
                 ok: true,
-                json: () => Promise.resolve(payload),
+                text: () => Promise.resolve(payload),
             } as Response;
 
-            const result = await decodeJSON(response);
+            const result = await decodeAsText(response);
             if (!result.isOk()) {
-                throw new Error("Expected an OK");
+                throw Error("Expected an Ok");
             }
             expect(result.value).toBe(payload);
         });
 
-        it(`if the payload cannot be parsed into JSON, it will return an Err with a JSONParseFault`, async () => {
-            const error_response = {
+        it(`if the payload somehow cannot be parsed as text, it will return an Err with a TextParseFault`, async () => {
+            const response = {
                 ok: true,
-                json: () => Promise.reject(new Error("Could not parse JSON")),
+                text: () => Promise.reject("Could not parse Text"),
             } as Response;
 
-            const result = await decodeJSON(error_response);
+            const result = await decodeAsText(response);
             if (!result.isErr()) {
-                throw new Error("Expected an Err");
+                throw Error("Expected an Err");
             }
-            expect(isJSONParseFault(result.error)).toBe(true);
+            expect(isTextParseFault(result.error)).toBe(true);
         });
     });
 });

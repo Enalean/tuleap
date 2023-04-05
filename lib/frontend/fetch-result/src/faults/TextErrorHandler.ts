@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync, errAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
+import type { ErrorResponseHandler } from "./ErrorResponseHandler";
 import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import { TuleapAPIFault } from "./TuleapAPIFault";
+import { decodeAsText } from "../text-decoder";
 
-export const ResponseStub = {
-    withSuccessfulResponse: (headers?: HeadersInit): ResultAsync<Response, never> =>
-        // This is meant to be a test helper, not production code
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        okAsync({ headers, ok: true } as Response),
-
-    withFault: (fault: Fault): ResultAsync<never, Fault> => errAsync(fault),
-
-    withSuccessfulPayload: <TypeOfJSONPayload>(
-        json_payload: TypeOfJSONPayload
-    ): ResultAsync<TypeOfJSONPayload, never> => okAsync(json_payload),
-};
+export const TextErrorHandler = (): ErrorResponseHandler => ({
+    handleErrorResponse: (response): ResultAsync<Response, Fault> =>
+        response.ok
+            ? okAsync(response)
+            : decodeAsText(response).andThen((error_text) =>
+                  errAsync(TuleapAPIFault.fromCodeAndMessage(response.status, error_text))
+              ),
+});

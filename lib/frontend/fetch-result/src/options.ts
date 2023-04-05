@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { JSONParseFault } from "./faults/JSONParseFault";
+import type { AutoEncodedParameters } from "./auto-encoder";
 
-export const decodeJSON = <TypeOfJSONPayload>(
-    response: Response
-): ResultAsync<TypeOfJSONPayload, Fault> =>
-    ResultAsync.fromPromise<TypeOfJSONPayload, Fault>(response.json(), JSONParseFault.fromError);
+export interface OptionsWithAutoEncodedParameters {
+    readonly params?: AutoEncodedParameters;
+}

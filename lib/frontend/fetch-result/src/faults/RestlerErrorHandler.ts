@@ -20,7 +20,7 @@
 import type { ResultAsync } from "neverthrow";
 import { okAsync, errAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { decodeJSON } from "./json-decoder";
+import { decodeJSON } from "../json-decoder";
 import { TuleapAPIFault } from "./TuleapAPIFault";
 import type { ErrorResponseHandler } from "./ErrorResponseHandler";
 

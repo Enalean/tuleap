@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GetAll } from "./AllGetter";
-import { PAGINATION_SIZE_HEADER, AllGetter } from "./AllGetter";
+import { AllGetter, PAGINATION_SIZE_HEADER } from "./AllGetter";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
 import { ResponseRetriever } from "./ResponseRetriever";
-import { RestlerErrorHandler } from "./RestlerErrorHandler";
 import { uri as uriTag } from "./uri-string-template";
 
 function buildResponse<TypeOfJSONPayload>(payload: TypeOfJSONPayload, total: number): Response {
@@ -44,7 +43,7 @@ describe(`AllGetter`, () => {
     let fetcher: FetchInterfaceStub, json_payload: ReadonlyArray<ArrayItem>;
     const uri = uriTag`https://example.com/all-getter-test`;
 
-    const buildGetter = (): GetAll => AllGetter(ResponseRetriever(fetcher, RestlerErrorHandler()));
+    const buildGetter = (): GetAll => AllGetter(ResponseRetriever(fetcher));
 
     beforeEach(() => {
         json_payload = [{ id: "terrifyingly" }, { id: "mannite" }];

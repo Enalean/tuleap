@@ -20,9 +20,8 @@
 import type { Fault } from "@tuleap/fault";
 import { ResultAsync } from "neverthrow";
 import type { FetchInterface } from "./FetchInterface";
-import { NetworkFault } from "./NetworkFault";
+import { NetworkFault } from "./faults/NetworkFault";
 import type { SupportedHTTPMethod } from "./constants";
-import type { ErrorResponseHandler } from "./ErrorResponseHandler";
 import type { EncodedURI } from "./uri-string-template";
 import { getEncodedURIString } from "./uri-string-template";
 
@@ -46,18 +45,13 @@ export type RetrieveResponse = {
     ): ResultAsync<Response, Fault>;
 };
 
-export const ResponseRetriever = (
-    fetcher: FetchInterface,
-    error_handler: ErrorResponseHandler
-): RetrieveResponse => ({
+export const ResponseRetriever = (fetcher: FetchInterface): RetrieveResponse => ({
     retrieveResponse(
         uri: EncodedURI,
         options: ResponseRetrieverOptions
     ): ResultAsync<Response, Fault> {
         const init: RequestInit = { ...options };
         const fetch_promise = fetcher.fetch(getEncodedURIString(uri), init);
-        return ResultAsync.fromPromise(fetch_promise, NetworkFault.fromError).andThen(
-            error_handler.handleErrorResponse
-        );
+        return ResultAsync.fromPromise(fetch_promise, NetworkFault.fromError);
     },
 });
