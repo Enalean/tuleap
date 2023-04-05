@@ -58,25 +58,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         bindTextDomain('tuleap-velocity', VELOCITY_BASE_DIR . '/site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook('cssfile');
-        $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS);
-        $this->addHook(AdditionalPlanningConfigurationWarningsRetriever::NAME);
-        $this->addHook(BeforeEvent::NAME);
-        $this->addHook(DetailsChartPresentersRetriever::NAME);
-        $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent::NAME);
-
-        if (defined('TULEAP_PLUGIN_JIRA_IMPORT')) {
-            $this->addHook(ScrumTrackerStructureEvent::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getDependencies()
     {
         return ['tracker', 'agiledashboard'];
@@ -91,10 +72,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    /**
-     * @see Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
-     */
-    public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS)]
+    public function trackerEventManageSemantics($parameters): void // @codingStandardsIgnoreLine
     {
         $tracker   = $parameters['tracker'];
         $semantics = $parameters['semantics'];
@@ -119,9 +98,10 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return false;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function additionalPlanningConfigurationWarningsRetriever(
         AdditionalPlanningConfigurationWarningsRetriever $event,
-    ) {
+    ): void {
         $velocity = SemanticVelocity::load($event->getTracker());
 
         if ($velocity->getVelocityField()) {
@@ -139,7 +119,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function cssfile($params)
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
+    public function cssfile($params): void
     {
         if ($this->isInAdminSemantics()) {
             $css_file_url = $this->getAssets()->getFileURL('style-fp.css');
@@ -148,15 +129,16 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function burningParrotGetJavascriptFiles(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array $params): void
     {
         if ($this->isAPlanningOverviewRequest()) {
             $params['javascript_files'][] = $this->getAssets()->getFileURL('velocity-chart.js');
         }
     }
 
-    /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
-    public function burningParrotGetStylesheets(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
+    public function burningParrotGetStylesheets(array $params): void
     {
         if ($this->isAPlanningOverviewRequest()) {
             $params['stylesheets'][] = $this->getAssets()->getFileURL('velocity-style.css');
@@ -170,6 +152,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return $request->exist('planning_id') && $request->get('pane') === 'details';
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function beforeEvent(BeforeEvent $before_event): void
     {
         $tracker         = $before_event->getArtifact()->getTracker();
@@ -223,7 +206,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             && strpos($_SERVER['REQUEST_URI'], 'func=admin-semantic') !== false;
     }
 
-    public function tracker_event_semantic_from_xml(&$parameters) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML)]
+    public function trackerEventSemanticFromXml(&$parameters): void // @codingStandardsIgnoreLine
     {
         $tracker = $parameters['tracker'];
         $type    = $parameters['type'];
@@ -236,7 +220,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event): void
     {
         $builder = new VelocityRepresentationBuilder(
             new SemanticVelocityFactory(),
@@ -260,6 +245,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $event->addEscapedChart($string_representation);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent $event): void
     {
         $semantic_velocity = SemanticVelocity::load($event->getTracker());
@@ -277,6 +263,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function scrumTrackerStructureEvent(ScrumTrackerStructureEvent $event): void
     {
         $event->tracker = (new AddVelocityToScrumTemplate())
