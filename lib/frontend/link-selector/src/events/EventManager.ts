@@ -18,7 +18,7 @@
  */
 import type { ManageDropdown } from "../dropdown/DropdownManager";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import type { ManageSelection } from "../selection/SelectionManager";
+import type { ManageSelection } from "../type";
 import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import type { ClearSearchField } from "./SearchFieldClearer";

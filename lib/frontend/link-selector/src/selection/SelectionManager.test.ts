@@ -28,6 +28,7 @@ import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
+import { selectOrThrow } from "@tuleap/dom";
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -50,7 +51,8 @@ describe("SelectionManager", () => {
                 document.implementation.createHTMLDocument(),
                 source_select_box,
                 "",
-                ""
+                "",
+                false
             ).renderBaseComponent();
 
         selection_container = selection_element;
@@ -74,15 +76,15 @@ describe("SelectionManager", () => {
         items_map_manager.refreshItemsMap(
             GroupCollectionBuilder.withSingleGroup({
                 items: [
-                    { value: { id: 0 }, is_disabled: false },
-                    { value: { id: 1 }, is_disabled: false },
-                    { value: { id: 2 }, is_disabled: false },
-                    { value: { id: 3 }, is_disabled: false },
+                    { id: "value-0", value: { id: 0 }, is_disabled: false },
+                    { id: "value-1", value: { id: 1 }, is_disabled: false },
+                    { id: "value-2", value: { id: 2 }, is_disabled: false },
+                    { id: "value-3", value: { id: 3 }, is_disabled: false },
                 ],
             })
         );
-        item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-1");
-        item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-2");
+        item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value-1");
+        item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value-2");
     });
 
     describe("processSelection", () => {
@@ -156,15 +158,11 @@ describe("SelectionManager", () => {
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(selection_container.contains(placeholder)).toBe(false);
 
-            const remove_item_button = selection_container.querySelector(
-                ".link-selector-selected-value-remove-button"
-            );
-            if (!(remove_item_button instanceof Element)) {
-                throw new Error("No remove button found, something has gone wrong");
-            }
-
             // Now unselect the item
-            remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
+            selectOrThrow(
+                selection_container,
+                "[data-test=clear-current-selection-button]"
+            ).dispatchEvent(new MouseEvent("pointerup"));
             expect(item_1.is_selected).toBe(false);
             expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(selection_container.contains(placeholder)).toBe(true);
@@ -178,13 +176,12 @@ describe("SelectionManager", () => {
             source_select_box.disabled = true;
 
             manager.processSelection(item_1.element);
-            const remove_item_button = selection_container.querySelector(
-                ".link-selector-selected-value-remove-button"
-            );
-            if (!(remove_item_button instanceof Element)) {
-                throw new Error("No remove button found, something has gone wrong");
-            }
-            remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
+
+            selectOrThrow(
+                selection_container,
+                "[data-test=clear-current-selection-button]"
+            ).dispatchEvent(new MouseEvent("pointerup"));
+
             expect(item_1.is_selected).toBe(true);
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(selection_container.contains(placeholder)).toBe(false);
@@ -192,12 +189,12 @@ describe("SelectionManager", () => {
         });
     });
 
-    describe("resetAfterDependenciesUpdate", () => {
+    describe("updateSelectionAfterDropdownContentChange", () => {
         it(`when an item is selected but there is no item in the items map anymore,
             then it should display the placeholder`, () => {
             manager.processSelection(item_1.element);
             items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
-            manager.resetAfterDependenciesUpdate();
+            manager.updateSelectionAfterDropdownContentChange();
 
             expect(item_1.is_selected).toBe(false);
             expect(item_1.element.getAttribute("aria-selected")).toBe("false");
@@ -208,7 +205,7 @@ describe("SelectionManager", () => {
         it(`when no item has been selected and there is no item in the items map anymore,
             then it should do nothing`, () => {
             items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
-            manager.resetAfterDependenciesUpdate();
+            manager.updateSelectionAfterDropdownContentChange();
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
@@ -217,12 +214,12 @@ describe("SelectionManager", () => {
 
             const groups = GroupCollectionBuilder.withSingleGroup({
                 items: [
-                    { value: { id: 0 }, is_disabled: false },
-                    { value: item_1.value, is_disabled: false },
+                    { id: "value-0", value: { id: 0 }, is_disabled: false },
+                    { id: "value-1", value: item_1.value, is_disabled: false },
                 ],
             });
             items_map_manager.refreshItemsMap(groups);
-            manager.resetAfterDependenciesUpdate();
+            manager.updateSelectionAfterDropdownContentChange();
 
             const new_item_1 = items_map_manager.findLinkSelectorItemInItemMap(item_1.id);
             expect(new_item_1.is_selected).toBe(true);

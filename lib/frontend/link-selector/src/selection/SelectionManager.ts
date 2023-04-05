@@ -18,16 +18,12 @@
  */
 
 import type { DropdownManager } from "../dropdown/DropdownManager";
-import type { RenderedItem, LinkSelectorSelectionStateSingle } from "../type";
+import type { RenderedItem, LinkSelectorSelectionStateSingle, ManageSelection } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit/html.js";
 import type { LinkSelectorSelectionCallback } from "../type";
 import type { ClearSearchField } from "../events/SearchFieldClearer";
-
-export interface ManageSelection {
-    processSelection: (item: Element) => void;
-    hasSelection: () => boolean;
-}
+import { buildClearSelectionButtonElement } from "./templates/clear-selection-button-template";
 
 export class SelectionManager implements ManageSelection {
     private selection_state: LinkSelectorSelectionStateSingle | null;
@@ -74,7 +70,7 @@ export class SelectionManager implements ManageSelection {
         throw new Error("Nothing has been selected");
     }
 
-    public resetAfterDependenciesUpdate(): void {
+    public updateSelectionAfterDropdownContentChange(): void {
         const available_items = this.items_map_manager.getLinkSelectorItems();
         if (available_items.length === 0) {
             this.clearSelection();
@@ -152,24 +148,17 @@ export class SelectionManager implements ManageSelection {
     }
 
     private createRemoveCurrentSelectionButton(): Element {
-        const remove_value_button = document.createElement("span");
-        remove_value_button.classList.add("link-selector-selected-value-remove-button");
-        remove_value_button.innerText = "×";
+        return buildClearSelectionButtonElement((event: Event) => {
+            event.stopPropagation();
 
-        if (this.source_select_box.disabled) {
-            return remove_value_button;
-        }
-
-        remove_value_button.addEventListener("pointerdown", (event: Event) => {
-            event.preventDefault();
-            event.cancelBubble = true;
+            if (this.source_select_box.disabled) {
+                return;
+            }
 
             this.search_field_clearer.clearSearchField();
             this.clearSelection();
             this.dropdown_manager.openLinkSelector();
         });
-
-        return remove_value_button;
     }
 
     public clearSelection(): void {
@@ -192,5 +181,9 @@ export class SelectionManager implements ManageSelection {
 
     public hasSelection(): boolean {
         return this.selection_state !== null;
+    }
+
+    public setSelection(): void {
+        // Not implemented yet
     }
 }

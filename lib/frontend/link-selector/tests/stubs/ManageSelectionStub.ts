@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ManageSelection } from "../../src/selection/SelectionManager";
+import type { ManageSelection } from "../../src/type";
 
 export type ManageSelectionStub = ManageSelection & {
     getProcessSelectionCallCount: () => number;
@@ -37,6 +37,10 @@ function buildWithSelectionState(state: { selected_element: Element | null }): M
     let process_selection_call_count = 0,
         currently_selected_element: Element | null = state.selected_element;
 
+    const noop = (): void => {
+        // Do nothing
+    };
+
     return {
         processSelection: (item: Element): void => {
             process_selection_call_count++;
@@ -45,5 +49,8 @@ function buildWithSelectionState(state: { selected_element: Element | null }): M
         hasSelection: () => currently_selected_element !== null,
         getProcessSelectionCallCount: () => process_selection_call_count,
         getCurrentSelection: () => currently_selected_element,
+        updateSelectionAfterDropdownContentChange: noop,
+        clearSelection: noop,
+        setSelection: noop,
     };
 }

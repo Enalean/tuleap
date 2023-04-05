@@ -58,7 +58,7 @@ describe("dropdown-manager", () => {
             dropdown_element,
             dropdown_list_element,
             selection_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "", "").renderBaseComponent();
+        } = new BaseComponentRenderer(doc, source_select_box, "", "", false).renderBaseComponent();
 
         scroll_manager = {
             lockScrolling: vi.fn(),

@@ -228,6 +228,7 @@ export const LinkField = define<LinkField>({
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
+                is_multiple: false,
                 placeholder: getLinkSelectorPlaceholderText(),
                 search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
                 search_field_callback: (query) => {

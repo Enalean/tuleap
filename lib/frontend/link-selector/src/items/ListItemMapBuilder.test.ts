@@ -35,10 +35,10 @@ describe("ListItemBuilder", () => {
         const map = buildMap(
             GroupCollectionBuilder.withSingleGroup({
                 items: [
-                    { value: { id: 0 }, is_disabled: false },
-                    { value: { id: 1 }, is_disabled: false },
-                    { value: { id: 2 }, is_disabled: false },
-                    { value: { id: 3 }, is_disabled: false },
+                    { id: "value-0", value: { id: 0 }, is_disabled: false },
+                    { id: "value-1", value: { id: 1 }, is_disabled: false },
+                    { id: "value-2", value: { id: 2 }, is_disabled: false },
+                    { id: "value-3", value: { id: 3 }, is_disabled: false },
                 ],
             })
         );
@@ -46,9 +46,9 @@ describe("ListItemBuilder", () => {
         expect(map.size).toBe(4);
 
         const [first_entry, second_entry, third_entry, fourth_entry] = Array.from(map.entries());
-        expect(first_entry[0]).toBe("link-selector-item-0");
+        expect(first_entry[0]).toBe("link-selector-item-value-0");
         expect(first_entry[1]).toStrictEqual({
-            id: "link-selector-item-0",
+            id: "link-selector-item-value-0",
             template: expect.anything(),
             value: { id: 0 },
             is_disabled: false,
@@ -56,9 +56,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(second_entry[0]).toBe("link-selector-item-1");
+        expect(second_entry[0]).toBe("link-selector-item-value-1");
         expect(second_entry[1]).toStrictEqual({
-            id: "link-selector-item-1",
+            id: "link-selector-item-value-1",
             template: expect.anything(),
             value: { id: 1 },
             is_disabled: false,
@@ -66,9 +66,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(third_entry[0]).toBe("link-selector-item-2");
+        expect(third_entry[0]).toBe("link-selector-item-value-2");
         expect(third_entry[1]).toStrictEqual({
-            id: "link-selector-item-2",
+            id: "link-selector-item-value-2",
             template: expect.anything(),
             value: { id: 2 },
             is_disabled: false,
@@ -76,9 +76,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(fourth_entry[0]).toBe("link-selector-item-3");
+        expect(fourth_entry[0]).toBe("link-selector-item-value-3");
         expect(fourth_entry[1]).toStrictEqual({
-            id: "link-selector-item-3",
+            id: "link-selector-item-value-3",
             template: expect.anything(),
             value: { id: 3 },
             is_disabled: false,
@@ -97,9 +97,9 @@ describe("ListItemBuilder", () => {
         const [first_entry, second_entry, third_entry, fourth_entry, fifth_entry, sixth_entry] =
             Array.from(map.entries());
 
-        expect(first_entry[0]).toBe("link-selector-item-group1-0");
+        expect(first_entry[0]).toBe("link-selector-item-group1-value-0");
         expect(first_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-0",
+            id: "link-selector-item-group1-value-0",
             template: expect.anything(),
             value: { id: 0 },
             is_disabled: false,
@@ -107,9 +107,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(second_entry[0]).toBe("link-selector-item-group1-1");
+        expect(second_entry[0]).toBe("link-selector-item-group1-value-1");
         expect(second_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-1",
+            id: "link-selector-item-group1-value-1",
             template: expect.anything(),
             value: { id: 1 },
             is_disabled: false,
@@ -117,9 +117,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(third_entry[0]).toBe("link-selector-item-group1-2");
+        expect(third_entry[0]).toBe("link-selector-item-group1-value-2");
         expect(third_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-2",
+            id: "link-selector-item-group1-value-2",
             template: expect.anything(),
             value: { id: 2 },
             is_disabled: false,
@@ -127,9 +127,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(fourth_entry[0]).toBe("link-selector-item-group2-3");
+        expect(fourth_entry[0]).toBe("link-selector-item-group2-value-3");
         expect(fourth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-3",
+            id: "link-selector-item-group2-value-3",
             template: expect.anything(),
             value: { id: 3 },
             is_disabled: false,
@@ -137,9 +137,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(fifth_entry[0]).toBe("link-selector-item-group2-4");
+        expect(fifth_entry[0]).toBe("link-selector-item-group2-value-4");
         expect(fifth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-4",
+            id: "link-selector-item-group2-value-4",
             template: expect.anything(),
             value: { id: 4 },
             is_disabled: false,
@@ -147,9 +147,9 @@ describe("ListItemBuilder", () => {
             is_selected: false,
             element: expect.any(Element),
         });
-        expect(sixth_entry[0]).toBe("link-selector-item-group2-5");
+        expect(sixth_entry[0]).toBe("link-selector-item-group2-value-5");
         expect(sixth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-5",
+            id: "link-selector-item-group2-value-5",
             template: expect.anything(),
             value: { id: 5 },
             is_disabled: true,

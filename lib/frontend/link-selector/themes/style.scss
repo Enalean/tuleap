@@ -79,6 +79,16 @@
             url("@tuleap/tlp/src/images/field-double-arrows.svg") no-repeat;
         background-position: right var(--tlp-form-element-padding-horizontal) center;
     }
+
+    &.link-selector-multiple {
+        position: relative;
+        min-height: var(--tlp-form-element-height);
+        padding: 0 52px 5px 6px;
+        background: var(--tlp-form-element-background)
+            url("@tuleap/tlp/src/images/field-ellipsis.svg") no-repeat;
+        background-position: right 10px top 17px;
+        background-size: 15px 5px;
+    }
 }
 
 .link-selector-placeholder {
@@ -228,6 +238,31 @@
     white-space: nowrap;
 }
 
+.link-selector-multiple > .link-selector-selected-value-remove-button {
+    position: absolute;
+    top: 7px;
+    right: 32px;
+    margin: 2px 0 0;
+}
+
+.link-selector-multiple-search-section {
+    flex: 1;
+
+    > .link-selector-search-field {
+        min-width: 100px;
+        height: 100%;
+        margin: 5px 0 0;
+        padding: 0;
+        border: 0;
+        line-height: 1.5rem;
+        cursor: pointer;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}
+
 .link-selector-selected-value {
     display: flex;
     align-items: center;
@@ -244,6 +279,24 @@
         line-height: 1.5rem;
         cursor: pointer;
     }
+}
+
+.link-selector-selected-value-badge {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 6px 5px 0 0;
+    padding: var(--tlp-badge-padding);
+    border-radius: var(--tlp-small-radius);
+    background: var(--tlp-main-color-transparent-90);
+    color: var(--tlp-main-color);
+    font-size: var(--tlp-badge-font-size);
+    font-weight: var(--tlp-badge-font-weight);
+    line-height: var(--tlp-badge-line-height);
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 .link-selector-component-wrapper {

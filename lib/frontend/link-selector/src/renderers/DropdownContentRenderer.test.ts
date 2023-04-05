@@ -47,7 +47,8 @@ describe("DropDownContentRenderer", () => {
                 document.implementation.createHTMLDocument(),
                 select,
                 "",
-                ""
+                "",
+                false
             ).renderBaseComponent();
 
             dropdown = dropdown_element;
@@ -81,8 +82,8 @@ describe("DropDownContentRenderer", () => {
             const footer_message = "Maybe there are more results";
             const groups = GroupCollectionBuilder.withSingleGroup({
                 items: [
-                    { value: { id: 1 }, is_disabled: false },
-                    { value: { id: 2 }, is_disabled: false },
+                    { id: "value-1", value: { id: 1 }, is_disabled: false },
+                    { id: "value-2", value: { id: 2 }, is_disabled: false },
                 ],
                 footer_message,
             });

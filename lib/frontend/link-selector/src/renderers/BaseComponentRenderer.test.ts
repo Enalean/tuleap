@@ -25,18 +25,25 @@ const PLACEHOLDER = "Create a new artifact or search by id or title";
 const INPUT_PLACEHOLDER = "Id, title...";
 
 describe("base-component-renderer", () => {
-    let select: HTMLSelectElement, doc: Document;
+    let select: HTMLSelectElement, doc: Document, is_multiple: boolean;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         select = document.createElement("select");
         select.id = "source-select-box";
+        is_multiple = false;
 
         doc.body.appendChild(select);
     });
 
     const render = (): LinkSelectorComponent => {
-        const renderer = new BaseComponentRenderer(doc, select, PLACEHOLDER, INPUT_PLACEHOLDER);
+        const renderer = new BaseComponentRenderer(
+            doc,
+            select,
+            PLACEHOLDER,
+            INPUT_PLACEHOLDER,
+            is_multiple
+        );
         return renderer.renderBaseComponent();
     };
 

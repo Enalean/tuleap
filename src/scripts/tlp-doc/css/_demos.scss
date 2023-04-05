@@ -382,6 +382,12 @@ $editor-scrollbar-color: rgb(241 241 241);
     padding: 8px;
 }
 
+.doc-multiple-link-selector-user-with-avatar {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    align-items: center;
+}
+
 .doc-link-selector-badge {
     margin: 0 5px 0 0;
 }

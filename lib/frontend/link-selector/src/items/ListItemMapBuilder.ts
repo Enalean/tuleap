@@ -23,32 +23,28 @@ import type { GroupCollection, LinkSelectorItem } from "./GroupCollection";
 import { getGroupId } from "../helpers/group-id-helper";
 import { html } from "lit/html.js";
 
-const getItemId = (index: number, group_id: string): string => {
+const getItemId = (item: LinkSelectorItem, group_id: string): string => {
     let base_id = "link-selector-item-";
 
     if (group_id !== "") {
         base_id += group_id + "-";
     }
 
-    return base_id + index;
+    return base_id + item.id;
 };
 
 export interface ListItemMapBuilderType {
     buildLinkSelectorItemsMap(groups: GroupCollection): RenderedItemMap;
+    buildRenderedItem(item: LinkSelectorItem, group_id: string): RenderedItem;
 }
 
 export const ListItemMapBuilder = (
     templating_callback: LinkSelectorTemplatingCallback
 ): ListItemMapBuilderType => {
-    const addItemInMap = (
-        index: number,
-        group_id: string,
-        item: LinkSelectorItem,
-        accumulator: RenderedItemMap
-    ): RenderedItemMap => {
-        const id = getItemId(index, group_id);
+    const buildRenderedItem = (item: LinkSelectorItem, group_id: string): RenderedItem => {
+        const id = getItemId(item, group_id);
         const template = templating_callback(html, item);
-        const link_selector_item: RenderedItem = {
+        return {
             id,
             group_id,
             is_disabled: item.is_disabled,
@@ -57,21 +53,29 @@ export const ListItemMapBuilder = (
             template: template,
             element: getRenderedListItem(id, template, item.is_disabled),
         };
-        accumulator.set(id, link_selector_item);
+    };
+
+    const addItemInMap = (
+        group_id: string,
+        item: LinkSelectorItem,
+        accumulator: RenderedItemMap
+    ): RenderedItemMap => {
+        const rendered_item = buildRenderedItem(item, group_id);
+        accumulator.set(rendered_item.id, rendered_item);
         return accumulator;
     };
 
     return {
         buildLinkSelectorItemsMap(groups: GroupCollection): RenderedItemMap {
-            let index = 0;
             return groups.reduce((accumulator: RenderedItemMap, group) => {
                 const group_id = getGroupId(group);
                 return group.items.reduce(
                     (inner_accumulator: RenderedItemMap, item) =>
-                        addItemInMap(index++, group_id, item, inner_accumulator),
+                        addItemInMap(group_id, item, inner_accumulator),
                     accumulator
                 );
             }, new Map());
         },
+        buildRenderedItem,
     };
 };

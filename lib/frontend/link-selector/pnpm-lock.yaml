@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/dom': workspace:*
   '@tuleap/tlp': workspace:*
   lit: ^2.2.3
 
@@ -11,6 +12,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/dom': link:../dom
 
 packages:
 
