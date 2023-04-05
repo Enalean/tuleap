@@ -39,19 +39,6 @@ class labelPlugin extends Plugin
         bindtextdomain('tuleap-label', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_RESOURCES);
-        $this->addHook(RemoveLabel::NAME);
-        $this->addHook(MergeLabels::NAME);
-        $this->addHook(ProjectDashboardIsDisplayed::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     /**
      * @return Tuleap\Label\Plugin\PluginInfo
      */
@@ -63,12 +50,14 @@ class labelPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event): void
     {
         $event->addWidget(ProjectLabeledItems::NAME);
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
         switch ($get_widget_event->getName()) {
             case ProjectLabeledItems::NAME:
@@ -77,30 +66,28 @@ class labelPlugin extends Plugin
         }
     }
 
-    /**
-     * @see Event::REST_RESOURCES
-     */
-    public function restResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    /**
-     * @see Event::REST_PROJECT_RESOURCES
-     */
-    public function restProjectResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_PROJECT_RESOURCES)]
+    public function restProjectResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function removeLabel(RemoveLabel $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function removeLabel(RemoveLabel $event): void
     {
         $this->getDao()->removeLabelById($event->getLabelToDeleteId());
     }
 
-    public function mergeLabel(MergeLabels $merge_labels)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function mergeLabel(MergeLabels $merge_labels): void
     {
         $this->getDao()->mergeLabelInTransaction(
             $merge_labels->getLabelToEditId(),
@@ -116,6 +103,7 @@ class labelPlugin extends Plugin
         return new Dao();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $project_dashboard_is_displayed): void
     {
         $project_dashboard_is_displayed->getLayout()->addJavascriptAsset(
