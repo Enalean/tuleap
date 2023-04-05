@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\Project;
 use Monolog\Handler\PsrHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Project;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -57,6 +58,7 @@ final class CreateProjectFromJiraCommand extends Command
     private const OPT_TULEAP_USER          = 'tuleap-user';
     private const OPT_SHORTNAME            = 'shortname';
     private const OPT_FULLNAME             = 'fullname';
+    private const OPT_VISIBILITY           = 'visibility';
     private const OPT_OUTPUT               = 'output';
     private const OPT_DEBUG                = 'debug';
 
@@ -96,6 +98,13 @@ final class CreateProjectFromJiraCommand extends Command
             ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
             ->addOption(self::OPT_SHORTNAME, '', InputOption::VALUE_REQUIRED, 'Short name of the Tuleap project to create')
             ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create')
+            ->addOption(
+                self::OPT_VISIBILITY,
+                '',
+                InputOption::VALUE_REQUIRED,
+                'The visibility of the Tuleap project to create. It can be "private", "public", "private-wo-restr" or "unrestricted" (regarding your platform configuration)',
+                Project::ACCESS_PRIVATE,
+            )
             ->addOption(self::OPT_OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'Generate the project archive without actually importing it')
             ->addOption(self::OPT_DEBUG, 'd', InputOption::VALUE_REQUIRED, 'Turn on debug mode, will dump content in provided directory');
     }
@@ -186,6 +195,17 @@ final class CreateProjectFromJiraCommand extends Command
             $jira_board_id = null;
         }
 
+        $project_visibility = $input->getOption(self::OPT_VISIBILITY);
+        if (
+            ! in_array(
+                $project_visibility,
+                [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE],
+                true,
+            )
+        ) {
+            throw new InvalidArgumentException('invalid project visibility.');
+        }
+
         $output->writeln(sprintf("Create project %s", $shortname));
 
         try {
@@ -197,6 +217,7 @@ final class CreateProjectFromJiraCommand extends Command
                     $jira_project,
                     $shortname,
                     $fullname,
+                    $project_visibility,
                     $jira_epic_issue_type,
                     $jira_board_id,
                     $archive_path,
@@ -220,6 +241,7 @@ final class CreateProjectFromJiraCommand extends Command
                     $jira_project,
                     $shortname,
                     $fullname,
+                    $project_visibility,
                     $jira_epic_issue_type,
                     $jira_board_id,
                 )->match(

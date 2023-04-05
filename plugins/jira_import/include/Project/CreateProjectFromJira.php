@@ -105,6 +105,7 @@ final class CreateProjectFromJira
         string $jira_project,
         string $shortname,
         string $fullname,
+        string $project_visibility,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
     ): Ok|Err {
@@ -119,6 +120,7 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
+            $project_visibility,
             $jira_epic_issue_type,
             $jira_board_id,
         )->andThen(function (SimpleXMLElement $xml_element) use ($logger) {
@@ -138,6 +140,7 @@ final class CreateProjectFromJira
         string $jira_project,
         string $shortname,
         string $fullname,
+        string $project_visibility,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
         string $archive_path,
@@ -149,6 +152,7 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
+            $project_visibility,
             $jira_epic_issue_type,
             $jira_board_id
         )->andThen(
@@ -173,6 +177,7 @@ final class CreateProjectFromJira
         string $jira_project,
         string $shortname,
         string $fullname,
+        string $project_visibility,
         string $jira_epic_issue_type,
         ?int $jira_board_id,
     ): Ok|Err {
@@ -275,6 +280,7 @@ final class CreateProjectFromJira
                 function (SimpleXMLElement $xml_element) use (
                     $shortname,
                     $fullname,
+                    $project_visibility,
                     $jira_client,
                     $jira_project,
                     $jira_credentials,
@@ -300,7 +306,7 @@ final class CreateProjectFromJira
 
                     $xml_element['unix-name'] = $shortname;
                     $xml_element['full-name'] = $fullname;
-                    $xml_element['access']    = 'private';
+                    $xml_element['access']    = $project_visibility;
 
                     foreach ($xml_element->services->service as $service) {
                         if ((string) $service['shortname'] === \trackerPlugin::SERVICE_SHORTNAME) {
