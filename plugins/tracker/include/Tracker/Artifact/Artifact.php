@@ -439,30 +439,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         }
     }
 
-    /**
-     * Fetch the tooltip displayed on an artifact reference
-     *
-     * @param PFUser $user The user who fetch the tooltip
-     *
-     * @return string html
-     */
-    public function fetchTooltip($user)
+    public function fetchTooltip(PFUser $user): string
     {
-        $tooltip = $this->getTracker()->getTooltip();
-        $html    = '';
-        if ($this->userCanView($user)) {
-            $fields = $tooltip->getFields();
-            if (! empty($fields)) {
-                $html .= '<table>';
-                foreach ($fields as $f) {
-                    //TODO: check field permissions
-                    $html .= $f->fetchTooltip($this);
-                }
-                $html .= '</table>';
-            }
-        }
-
-        return $html;
+        return (new Tuleap\Tracker\Semantic\Tooltip\TooltipFetcher())->fetchArtifactTooltip(
+            $this,
+            $this->getTracker()->getTooltip(),
+            $user,
+        );
     }
 
     /**
