@@ -4,38 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "067c4c2a87f7f07644aefa6fe8b97106",
+    "content-hash": "67212828517782c2904cea9cbce1cbca",
     "packages": [
         {
             "name": "smarty-gettext/smarty-gettext",
-            "version": "1.6.2",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-gettext/smarty-gettext.git",
-                "reference": "22e5b91b642cd643f9acdd8d04ab0e05647b98a7"
+                "reference": "64f0e167f5a021358f9e1e4aaa4b5a1283b71e60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-gettext/smarty-gettext/zipball/22e5b91b642cd643f9acdd8d04ab0e05647b98a7",
-                "reference": "22e5b91b642cd643f9acdd8d04ab0e05647b98a7",
+                "url": "https://api.github.com/repos/smarty-gettext/smarty-gettext/zipball/64f0e167f5a021358f9e1e4aaa4b5a1283b71e60",
+                "reference": "64f0e167f5a021358f9e1e4aaa4b5a1283b71e60",
                 "shasum": ""
             },
             "require": {
                 "ext-gettext": "*",
                 "ext-pcre": "*",
-                "php": "~5.3|~7.0|~8.0"
+                "php": ">=5.3"
             },
             "require-dev": {
                 "azatoth/php-pgettext": "~1.0",
-                "phpunit/phpunit": ">=4.8.36",
+                "phpunit/phpunit": "^4.8.36",
                 "smarty/smarty": "3.1.*"
             },
             "suggest": {
                 "azatoth/php-pgettext": "Support msgctxt for {t} via context parameter"
             },
-            "bin": [
-                "tsmarty2c.php"
-            ],
             "type": "library",
             "autoload": {
                 "files": [
@@ -54,45 +51,47 @@
                 },
                 {
                     "name": "Elan Ruusamäe",
-                    "email": "glen@delfi.ee"
+                    "email": "glen@pld-linux.org"
                 }
             ],
             "description": "Gettext plugin enabling internationalization in Smarty Package files",
             "homepage": "https://github.com/smarty-gettext/smarty-gettext",
             "support": {
                 "issues": "https://github.com/smarty-gettext/smarty-gettext/issues",
-                "source": "https://github.com/smarty-gettext/smarty-gettext/tree/1.6.2"
+                "source": "https://github.com/smarty-gettext/smarty-gettext/tree/1.7.0"
             },
-            "time": "2021-02-23T22:00:29+00:00"
+            "time": "2023-01-15T13:14:50+00:00"
         },
         {
             "name": "smarty/smarty",
-            "version": "v2.6.31",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "4ab9757b492f08a38f68123a6e7c1df7110bbc49"
+                "reference": "e28cb0915b4e3749bf57d4ebae2984e25395cfe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/4ab9757b492f08a38f68123a6e7c1df7110bbc49",
-                "reference": "4ab9757b492f08a38f68123a6e7c1df7110bbc49",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/e28cb0915b4e3749bf57d4ebae2984e25395cfe5",
+                "reference": "e28cb0915b4e3749bf57d4ebae2984e25395cfe5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5 || ^7.5",
+                "smarty/smarty-lexer": "^3.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6.x-dev"
+                    "dev-master": "4.0.x-dev"
                 }
             },
             "autoload": {
                 "classmap": [
-                    "libs/Smarty.class.php",
-                    "libs/Smarty_Compiler.class.php",
-                    "libs/Config_File.class.php"
+                    "libs/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -107,20 +106,27 @@
                 {
                     "name": "Uwe Tews",
                     "email": "uwe.tews@googlemail.com"
+                },
+                {
+                    "name": "Rodney Rehm",
+                    "email": "rodney.rehm@medialize.de"
+                },
+                {
+                    "name": "Simon Wisselink",
+                    "homepage": "https://www.iwink.nl/"
                 }
             ],
             "description": "Smarty - the compiling PHP template engine",
-            "homepage": "http://www.smarty.net",
+            "homepage": "https://smarty-php.github.io/smarty/",
             "keywords": [
                 "templating"
             ],
             "support": {
-                "forum": "http://www.smarty.net/forums/",
-                "irc": "irc://irc.freenode.org/smarty",
-                "issues": "http://code.google.com/p/smarty-php/issues/list",
-                "source": "https://github.com/smarty-php/smarty/tree/Smarty2"
+                "forum": "https://github.com/smarty-php/smarty/discussions",
+                "issues": "https://github.com/smarty-php/smarty/issues",
+                "source": "https://github.com/smarty-php/smarty/tree/v4.3.1"
             },
-            "time": "2017-11-03T06:39:13+00:00"
+            "time": "2023-03-28T19:47:03+00:00"
         }
     ],
     "packages-dev": [],
@@ -131,5 +137,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

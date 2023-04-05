@@ -33,7 +33,8 @@ class CommitPresenter
     public const TYPE_CHANGED_STATUS = "T";
     public const RENAMED_STATUS      = "R";
 
-    public $description;
+    public string $title_purified;
+    public string $description_purified;
     public $has_description;
     public $number_of_parents;
     /**
@@ -50,17 +51,17 @@ class CommitPresenter
     public $author;
     /** @var CommitUserPresenter */
     public $committer;
-    /** @var \Codendi_HTMLPurifier */
-    public $purifier;
 
-    public function __construct(Commit $commit, CommitMetadata $metadata, TreeDiff $tree_diff)
+    public function __construct(Commit $commit, CommitMetadata $metadata, TreeDiff $tree_diff, int $project_id)
     {
         $this->commit                      = $commit;
-        $this->description                 = $this->commit->getDescription();
-        $this->has_description             = ! empty($this->description);
+        $html_purifier                     = \Codendi_HTMLPurifier::instance();
+        $this->title_purified              = $html_purifier->purify($commit->GetTitle() ?? '', \Codendi_HTMLPurifier::CONFIG_BASIC_NOBR, $project_id);
+        $description                       = $this->commit->getDescription();
+        $this->description_purified        = $html_purifier->purify($description, \Codendi_HTMLPurifier::CONFIG_BASIC_NOBR, $project_id);
+        $this->has_description             = ! empty($description);
         $this->number_of_parents           = count($commit->getParents());
         $this->is_diff_between_two_commits = $this->isDiffBetweenTwoCommits();
-        $this->purifier                    = \Codendi_HTMLPurifier::instance();
 
         $this->stats_added   = 0;
         $this->stats_removed = 0;

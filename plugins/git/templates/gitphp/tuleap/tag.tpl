@@ -32,13 +32,8 @@
 
         <section class="tlp-pane-section git-repository-tag-info">
             {if $tag->GetComment()}
-                <p class="git-repository-tag-description">{php}
-                    echo $this->get_template_vars('purifier')->purify(
-                        implode(PHP_EOL, $this->get_template_vars('tag')->GetComment()),
-                        CODENDI_PURIFIER_BASIC_NOBR,
-                        HTTPRequest::instance()->getProject()->getID()
-                    );
-                {/php}
+                <p class="git-repository-tag-description">
+                  {$tag_comment_purified}
                 </p>
             {/if}
             <div class="git-repository-tag-metadata">

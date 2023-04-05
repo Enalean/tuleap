@@ -40,7 +40,7 @@
                                         <div class="git-repository-blame-cell">
                                             {assign var=opened value=true}
                                             <a href="?a=commit&amp;h={$blamecommit->GetHash()|urlencode}"
-                                                title="{$blamecommit->GetTitle()|htmlspecialchars}"
+                                                title="{$blamecommit->GetTitle()|escape}"
                                             >{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d"}</a>
                                             <span title="{$blamecommit->GetAuthor()|escape}">{$blamecommit->GetAuthorName()|escape}</span>
                                     {/if}

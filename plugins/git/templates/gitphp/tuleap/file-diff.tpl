@@ -17,19 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-{php}
-    $this->assign(
-        'potentially_dangerous_bidirectional_text_warning',
-        \Tuleap\Git\Unicode\DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning(
-            implode($this->get_template_vars('diff'))
-        )
-    );
-{/php}
-{if $potentially_dangerous_bidirectional_text_warning}
-    <div class="tlp-alert-warning">
-        {$potentially_dangerous_bidirectional_text_warning}
-    </div>
-{/if}
+{display_potentially_dangerous_bidirectional_text_warning diff=$diff}
 <div class="git-repository-diff">
     {foreach from=$diff item=diffline}
         {if substr($diffline,0,1)=="+"}
