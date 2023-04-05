@@ -1625,6 +1625,13 @@ CREATE TABLE webauthn_credential_source (
     last_use DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE webauthn_challenge (
+    user_id INT NOT NULL PRIMARY KEY,
+    challenge BLOB NOT NULL,
+    expiration_date INT UNSIGNED NOT NULL,
+    INDEX idx_expiration_date (expiration_date)
+) ENGINE=InnoDB;
 #
 # EOF
 #
