@@ -25,7 +25,7 @@ namespace Tuleap\Project\Admin\Access;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class UserCanAccessProjectAdministrationVerifierTest extends TestCase

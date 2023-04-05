@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
-use Tuleap\Test\User\StoreUserPreferenceStub;
+use Tuleap\Test\Stubs\StoreUserPreferenceStub;
 
 class UserTestBuilder
 {

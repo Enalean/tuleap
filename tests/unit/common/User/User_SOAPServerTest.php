@@ -29,18 +29,18 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException(): void
     {
-        $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
+        $this->givenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse'));
-        $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotActiveException())
+        $this->givenAUserManagerThatIsProgrammedToThrow(new UserNotActiveException())
                 ->thenLoginAsReturns(new SoapFault('3302', 'User not active'));
-        $this->GivenAUserManagerThatIsProgrammedToThrow(new SessionNotCreatedException())
+        $this->givenAUserManagerThatIsProgrammedToThrow(new SessionNotCreatedException())
                 ->thenLoginAsReturns(new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
 
     public function testLoginAsReturnsASessionHash(): void
     {
         $admin_session_hash = 'admin_session_hash';
-        $um                 = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
+        $um                 = $this->givenAUserManagerWithValidAdmin($admin_session_hash);
 
         $user_soap_server      = new User_SOAPServer($um);
         $user_name             = 'toto';
@@ -51,7 +51,7 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_session_hash, $user_session_hash);
     }
 
-    private function GivenAUserManagerWithValidAdmin($admin_session_hash)
+    private function givenAUserManagerWithValidAdmin($admin_session_hash)
     {
         $adminUser = \Mockery::spy(\PFUser::class);
         $adminUser->shouldReceive('isAnonymous')->andReturns(false);
@@ -70,7 +70,7 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getCurrentUserWithLoggedInInformation')->andReturns(
-            CurrentUserWithLoggedInInformation::fromAnonymous(new \Tuleap\Test\User\AnonymousUserTestProvider())
+            CurrentUserWithLoggedInInformation::fromAnonymous(new \Tuleap\Test\Stubs\AnonymousUserTestProvider())
         );
 
         $user_soap_server = new User_SOAPServer($um);
@@ -82,7 +82,7 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_soap_server->loginAs($admin_session_hash, $user_name);
     }
 
-    private function GivenAUserManagerThatIsProgrammedToThrow($exception)
+    private function givenAUserManagerThatIsProgrammedToThrow($exception)
     {
         $adminUser = \Mockery::spy(\PFUser::class);
         $adminUser->shouldReceive('isAnonymous')->andReturns(false);

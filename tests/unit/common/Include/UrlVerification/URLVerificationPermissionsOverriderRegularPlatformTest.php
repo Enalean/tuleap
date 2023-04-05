@@ -26,7 +26,7 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tuleap\Test\PHPUnit\TestCase

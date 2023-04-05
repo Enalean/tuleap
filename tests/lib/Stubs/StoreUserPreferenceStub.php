@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\User;
+namespace Tuleap\Test\Stubs;
 
 use Tuleap\User\StoreUserPreference;
 
