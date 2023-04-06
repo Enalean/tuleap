@@ -74,8 +74,8 @@ abstract class ControllerBase
             __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext',
         ]);
         $this->tpl->setTemplateDir(__DIR__ . '/../../../templates/gitphp/');
-        $this->tpl->registerPlugin('modifier', 'urlencode', urlencode(...));
-        $this->tpl->registerPlugin('modifier', 'substr', substr(...));
+        $this->tpl->registerPlugin('modifier', 'urlencode', fn(string $param): string => urlencode($param));
+        $this->tpl->registerPlugin('modifier', 'substr', fn (string $string, int $offset, int $length): string => substr($string, $offset, $length));
         $this->tpl->registerPlugin(
             'function',
             'display_potentially_dangerous_bidirectional_text_warning',
