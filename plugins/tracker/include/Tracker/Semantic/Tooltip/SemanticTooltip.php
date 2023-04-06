@@ -30,7 +30,7 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 
-class SemanticTooltip extends Tracker_Semantic
+class SemanticTooltip extends Tracker_Semantic implements TooltipFields
 {
     public const NAME = 'tooltip';
 
@@ -41,7 +41,7 @@ class SemanticTooltip extends Tracker_Semantic
         $this->fields = $fields;
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         if (empty($this->fields)) {
             $tf           = Tracker_FormElementFactory::instance();
