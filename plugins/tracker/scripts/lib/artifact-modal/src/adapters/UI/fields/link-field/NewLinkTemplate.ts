@@ -69,7 +69,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
             <td class="link-field-table-cell-type">
                 <tuleap-artifact-modal-link-type-selector
                     value="${link.link_type}"
-                    current_artifact_reference="${host.field_presenter.current_artifact_reference}"
+                    current_artifact_reference="${host.current_artifact_reference}"
                     available_types="${host.allowed_link_types}"
                     onvalue-changed="${onValueChanged}"
                 ></tuleap-artifact-modal-link-type-selector>

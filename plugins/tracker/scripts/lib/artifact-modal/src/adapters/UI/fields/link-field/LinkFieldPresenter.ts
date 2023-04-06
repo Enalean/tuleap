@@ -18,21 +18,15 @@
  */
 
 import type { ArtifactLinkFieldInfo } from "../../../../domain/fields/link-field/ArtifactLinkFieldInfo";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 export type LinkFieldPresenter = {
     readonly field_id: number;
     readonly label: string;
-    readonly current_artifact_reference: ArtifactCrossReference | null;
 };
 
 export const LinkFieldPresenter = {
-    fromFieldAndCrossReference: (
-        field: ArtifactLinkFieldInfo,
-        current_artifact_reference: ArtifactCrossReference | null
-    ): LinkFieldPresenter => ({
+    fromField: (field: ArtifactLinkFieldInfo): LinkFieldPresenter => ({
         field_id: field.field_id,
         label: field.label,
-        current_artifact_reference,
     }),
 };

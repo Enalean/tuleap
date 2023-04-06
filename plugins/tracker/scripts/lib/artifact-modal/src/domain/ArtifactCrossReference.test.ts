@@ -23,27 +23,28 @@ import { TrackerShortnameStub } from "../../tests/stubs/TrackerShortnameStub";
 
 describe("ArtifactCrossReference", () => {
     it("builds from an artifact id, a tracker shortname and a tracker color name", () => {
-        const reference = ArtifactCrossReference.fromCurrentArtifact(
+        const option = ArtifactCrossReference.fromCurrentArtifact(
             CurrentArtifactIdentifierStub.withId(150),
             TrackerShortnameStub.withShortname("story"),
             "acid-green"
         );
 
+        const reference = option.unwrapOr(null);
         if (reference === null) {
-            throw new Error("Reference should not be null");
+            throw Error("Reference should not be null");
         }
 
         expect(reference.ref).toBe("story #150");
         expect(reference.color).toBe("acid-green");
     });
 
-    it("Given no artifact id, Then it will return null", () => {
-        const reference = ArtifactCrossReference.fromCurrentArtifact(
+    it("Given no artifact id, Then it will return nothing", () => {
+        const option = ArtifactCrossReference.fromCurrentArtifact(
             null,
             TrackerShortnameStub.withShortname("story"),
             "acid-green"
         );
 
-        expect(reference).toBeNull();
+        expect(option.isNothing()).toBe(true);
     });
 });

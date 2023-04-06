@@ -19,6 +19,9 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
+import type { Option } from "@tuleap/option";
+import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
+import { createLinkSelector } from "@tuleap/link-selector";
 import {
     getLinkFieldCanHaveOnlyOneParent,
     getLinkFieldNoteStartText,
@@ -31,8 +34,6 @@ import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
-import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
-import { createLinkSelector } from "@tuleap/link-selector";
 import {
     getLinkableArtifact,
     getLinkableArtifactTemplate,
@@ -44,6 +45,7 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 import "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -51,6 +53,7 @@ export interface LinkField {
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
     readonly artifact_link_select: HTMLSelectElement;
     link_selector: LinkSelector;
+    current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
@@ -177,31 +180,28 @@ export const current_link_type_descriptor = {
 };
 
 export const getLinkFieldCanOnlyHaveOneParentNote = (
-    host: LinkField
+    current_artifact_option: Option<ArtifactCrossReference>
 ): UpdateFunction<LinkField> => {
-    if (!host.field_presenter.current_artifact_reference) {
+    const default_html = html`
+        <p class="link-field-artifact-can-have-only-one-parent-note">${getLinkFieldNoteText()}</p>
+    `;
+    return current_artifact_option.mapOr((current_artifact_reference) => {
+        const { ref: artifact_reference, color } = current_artifact_reference;
+        const badge_classes = [
+            `tlp-swatch-${color}`,
+            "cross-ref-badge",
+            "link-field-parent-note-xref-badge",
+        ];
         return html`
             <p class="link-field-artifact-can-have-only-one-parent-note">
-                ${getLinkFieldNoteText()}
+                ${getLinkFieldNoteStartText()}
+                <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
+                    ${artifact_reference}
+                </span>
+                ${getLinkFieldCanHaveOnlyOneParent()}
             </p>
         `;
-    }
-
-    const { ref: artifact_reference, color } = host.field_presenter.current_artifact_reference;
-    const badge_classes = [
-        `tlp-swatch-${color}`,
-        "cross-ref-badge",
-        "link-field-parent-note-xref-badge",
-    ];
-    return html`
-        <p class="link-field-artifact-can-have-only-one-parent-note">
-            ${getLinkFieldNoteStartText()}
-            <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
-                ${artifact_reference}
-            </span>
-            ${getLinkFieldCanHaveOnlyOneParent()}
-        </p>
-    `;
+    }, default_html);
 };
 
 export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
@@ -221,6 +221,7 @@ export const LinkField = define<LinkField>({
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
+            host.current_artifact_reference = controller.getCurrentArtifactReference();
             host.field_presenter = controller.displayField();
             host.allowed_link_types = controller.displayAllowedTypes();
             controller.displayLinkedArtifacts().then((artifacts) => {
@@ -255,6 +256,7 @@ export const LinkField = define<LinkField>({
         },
     },
     autocompleter: undefined,
+    current_artifact_reference: undefined,
     field_presenter: undefined,
     allowed_link_types: {
         set: setAllowedTypes,
@@ -275,7 +277,7 @@ export const LinkField = define<LinkField>({
             <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
                 ${host.field_presenter.label}
             </label>
-            ${getLinkFieldCanOnlyHaveOneParentNote(host)}
+            ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
             <table id="tuleap-artifact-modal-link-table" class="tlp-table">
                 <tbody class="link-field-table-body">
                     ${host.linked_artifacts_presenter.linked_artifacts.map((link) =>
@@ -290,8 +292,7 @@ export const LinkField = define<LinkField>({
                         <td class="link-field-table-footer-type">
                             <tuleap-artifact-modal-link-type-selector
                                 value="${host.current_link_type}"
-                                current_artifact_reference="${host.field_presenter
-                                    .current_artifact_reference}"
+                                current_artifact_reference="${host.current_artifact_reference}"
                                 available_types="${host.allowed_link_types}"
                                 onvalue-changed="${onLinkTypeChanged}"
                             ></tuleap-artifact-modal-link-type-selector>

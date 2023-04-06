@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
+import { Option } from "@tuleap/option";
 import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
 import type { TrackerShortname } from "./TrackerShortname";
-import type { ColorName } from "@tuleap/plugin-tracker-constants";
 
 export type ArtifactCrossReference = {
     readonly ref: string;
@@ -31,14 +32,14 @@ export const ArtifactCrossReference = {
         current_artifact_identifier: CurrentArtifactIdentifier | null,
         tracker_shortname: TrackerShortname,
         tracker_color_name: ColorName
-    ): ArtifactCrossReference | null => {
+    ): Option<ArtifactCrossReference> => {
         if (current_artifact_identifier === null) {
-            return null;
+            return Option.nothing();
         }
 
-        return {
+        return Option.fromValue({
             ref: `${tracker_shortname.shortname} #${current_artifact_identifier.id}`,
             color: tracker_color_name,
-        };
+        });
     },
 };
