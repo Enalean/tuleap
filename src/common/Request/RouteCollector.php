@@ -62,6 +62,7 @@ use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigurationVariables;
+use Tuleap\Config\FeatureFlagController;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
@@ -1298,6 +1299,15 @@ class RouteCollector
         );
     }
 
+    public static function getFeatureFlag(): FeatureFlagController
+    {
+        return new FeatureFlagController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new SapiEmitter()
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1310,6 +1320,8 @@ class RouteCollector
         $r->post('/sparklines.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/sparklines.php'));
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
         $r->post('/help_menu_opened', [self::class, 'postHelpMenuOpened']);
+
+        $r->get('/feature_flag', [self::class, 'getFeatureFlag']);
 
         $r->addGroup('/project/{project_id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
