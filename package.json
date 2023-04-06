@@ -52,7 +52,7 @@
     "json-loader": "^0.5.7",
     "lodash.map": "4.6.0",
     "mini-css-extract-plugin": "^2.6.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.8",
     "ng-cache-loader": "0.0.26",
     "po-gettext-loader": "^1.0.0",
     "pofile": "^1.1.0",
