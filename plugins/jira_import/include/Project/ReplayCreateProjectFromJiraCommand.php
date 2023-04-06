@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project;
 
+use Project;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -57,7 +58,14 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             ->addOption('user', '', InputOption::VALUE_REQUIRED, 'Tuleap user login of who is doing the import')
             ->addOption('project', '', InputOption::VALUE_REQUIRED, 'Import in project')
             ->addOption('epic-name', '', InputOption::VALUE_REQUIRED, 'Name of the epic issueType', 'Epic')
-            ->addOption('board-id', '', InputOption::VALUE_REQUIRED, 'Id of the scrum board to import (first one found in project if not provided)', null);
+            ->addOption('board-id', '', InputOption::VALUE_REQUIRED, 'Id of the scrum board to import (first one found in project if not provided)', null)
+            ->addOption(
+                'visibility',
+                '',
+                InputOption::VALUE_REQUIRED,
+                'The visibility of the Tuleap project to create. It can be "private", "public", "private-wo-restr" or "unrestricted" (regarding your platform configuration)',
+                Project::ACCESS_PRIVATE,
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -94,6 +102,17 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             $jira_board_id = null;
         }
 
+        $project_visibility = $input->getOption('visibility');
+        if (
+            ! in_array(
+                $project_visibility,
+                [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE],
+                true,
+            )
+        ) {
+            throw new InvalidArgumentException('invalid project visibility.');
+        }
+
         try {
             return $this->create_project_from_jira->create(
                 $logger,
@@ -102,6 +121,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
                 $jira_project,
                 $tuleap_project_name,
                 $tuleap_project_name,
+                $project_visibility,
                 $input->getOption('epic-name'),
                 $jira_board_id,
             )->match(
