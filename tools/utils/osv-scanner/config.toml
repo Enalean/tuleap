@@ -32,15 +32,6 @@ reason = "Only used when targetting macOS."
 
 ### TO BE FIXED
 
-# plugins/agiledashboard/pnpm-lock.yaml
-# plugins/graphontrackersv5/pnpm-lock.yaml
-# plugins/testmanagement/pnpm-lock.yaml
-## d3-color
-[[IgnoredVulns]]
-id = "GHSA-36jr-mh4h-2g58"
-reason = "ReDos. To be investigated."
-ignoreUntil = 2023-05-08
-
 # Dev tools
 ## minimatch
 [[IgnoredVulns]]
