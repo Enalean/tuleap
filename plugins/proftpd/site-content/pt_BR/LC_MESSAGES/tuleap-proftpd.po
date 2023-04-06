@@ -11,6 +11,9 @@ msgid ""
 "removed soon. Please use Documents and/or Files services instead."
 msgstr ""
 
+msgid "(S)FTP Browser is no longer available for project."
+msgstr ""
+
 msgid "(S)FTP Browser permissions"
 msgstr ""
 

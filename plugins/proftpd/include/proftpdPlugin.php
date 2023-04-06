@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProFTPd\Admin\PermissionsManager as ProftpdPermissionsManager;
 use Tuleap\ProFTPd\PermissionsPerGroup\ProftpdPermissionsPerGroupPresenterBuilder;
 use Tuleap\ProFTPd\Plugin\ProftpdPluginInfo;
+use Tuleap\ProFTPd\ServiceProFTPd;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -34,7 +36,7 @@ use Tuleap\Project\Service\ServiceDisabledCollector;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class proftpdPlugin extends Plugin implements \Tuleap\Project\Service\PluginWithService // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class proftpdPlugin extends Plugin implements \Tuleap\Project\Service\PluginWithService, PluginWithConfigKeys  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const SERVICE_SHORTNAME = 'plugin_proftpd';
 
@@ -328,5 +330,10 @@ class proftpdPlugin extends Plugin implements \Tuleap\Project\Service\PluginWith
     private function isPluginUsedInProject(Project $project)
     {
         return $project->usesService(self::SERVICE_SHORTNAME);
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(ServiceProFTPd::class);
     }
 }
