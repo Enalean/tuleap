@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
-use Tracker_TooltipFactory;
+use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,7 +47,7 @@ class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'F16' => 116,
             'F14' => 114,
         ];
-        $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
+        $tooltip = SemanticTooltipFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
 
         $this->assertEquals(3, count($tooltip->getFields()));
         $fields = $tooltip->getFields();

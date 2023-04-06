@@ -19,7 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Tooltip extends Tracker_Semantic
+namespace Tuleap\Tracker\Semantic\Tooltip;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use PFUser;
+use Tracker_FormElement_Field;
+use Tracker_FormElementFactory;
+use Tracker_Semantic;
+use Tracker_SemanticManager;
+use TrackerManager;
+
+class SemanticTooltip extends Tracker_Semantic
 {
     public const NAME = 'tooltip';
 
@@ -46,7 +57,7 @@ class Tracker_Tooltip extends Tracker_Semantic
 
     private function getDao()
     {
-        return new Tracker_TooltipDao();
+        return new SemanticTooltipDao();
     }
 
     /**
@@ -66,15 +77,19 @@ class Tracker_Tooltip extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager          $tracker_manager  The tracker manager
+     * @param Codendi_Request         $request          The request
+     * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
-    {
+    public function process(
+        Tracker_SemanticManager $semantic_manager,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user,
+    ) {
         if ($request->get('add-field') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();
             //retrieve the field if used
@@ -126,15 +141,19 @@ class Tracker_Tooltip extends Tracker_Semantic
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager          $tracker_manager  The tracker manager
+     * @param Codendi_Request         $request          The request
+     * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
      */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
-    {
+    public function displayAdmin(
+        Tracker_SemanticManager $semantic_manager,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user,
+    ) {
         $hp = Codendi_HTMLPurifier::instance();
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
@@ -148,17 +167,17 @@ class Tracker_Tooltip extends Tracker_Semantic
             $html .= '<table>';
             foreach ($fields as $field) {
                 $html .= '<tr><td>';
-                $html .=  $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
+                $html .= $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
                 $html .= '</td><td>';
                 $html .= '<form method="post" id="tracker-semantic-removal-action" action="' . $hp->purify($this->getUrl()) . '">';
                 $html .= $this->getCSRFToken()->fetchHTMLInput();
-                $html .= '<input type="hidden" name="remove" value="' . $hp->purify($field->getId()) .  '">';
+                $html .= '<input type="hidden" name="remove" value="' . $hp->purify($field->getId()) . '">';
                 $html .= '<button type="submit" class="btn btn-link">';
                 $html .= $GLOBALS['HTML']->getimage(
                     'ic/cross.png',
                     [
                         'alt' => dgettext('tuleap-tracker', 'Remove the field from the tooltip'),
-                    ]
+                    ],
                 );
                 $html .= '</button>';
                 $html .= '</form>';
@@ -178,14 +197,23 @@ class Tracker_Tooltip extends Tracker_Semantic
             $html .= '<select name="field">';
             $html .= $options;
             $html .= '</select>';
-            $html .= '<input type="submit" name="add-field" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+            $html .= '<input type="submit" name="add-field" value="' . $GLOBALS['Language']->getText(
+                'global',
+                'btn_submit'
+            ) . '" />';
             $html .= '</p>';
             $html .= '</form>';
         } else {
-            $html .= '<em>' . dgettext('tuleap-tracker', 'There isn\'t anymore fields left to add to the tooltip') . '</em>';
+            $html .= '<em>' . dgettext(
+                'tuleap-tracker',
+                'There isn\'t anymore fields left to add to the tooltip'
+            ) . '</em>';
         }
 
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext(
+            'tuleap-tracker',
+            'go back to semantic overview'
+        ) . '</a></p>';
         echo $html;
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
@@ -202,7 +230,7 @@ class Tracker_Tooltip extends Tracker_Semantic
             $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
             $html .= '<ul>';
             foreach ($fields as $f) {
-                $html .=  '<li><strong>' . $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
+                $html .= '<li><strong>' . $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
             }
             $html .= '</ul>';
         }
@@ -214,12 +242,12 @@ class Tracker_Tooltip extends Tracker_Semantic
     /**
      * Transforms tooltip into a SimpleXMLElement
      *
-     * @param SimpleXMLElement &$root         the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping  correspondance between real field ids and xml IDs
+     * @param \SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array             $xml_mapping correspondance between real field ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xml_mapping)
+    public function exportToXml(\SimpleXMLElement $root, $xml_mapping)
     {
         $child = $root->addChild('semantic');
         $child->addAttribute('type', $this->getShortName());

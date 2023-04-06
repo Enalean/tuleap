@@ -33,6 +33,8 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
+use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
+use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
 class Tracker_SemanticFactory
 {
@@ -119,7 +121,7 @@ class Tracker_SemanticFactory
             return $this->getSemanticContributorFactory();
         }
 
-        if ($type === \Tracker_Tooltip::NAME) {
+        if ($type === SemanticTooltip::NAME) {
             return $this->getSemanticTooltipFactory();
         }
 
@@ -197,11 +199,11 @@ class Tracker_SemanticFactory
     /**
      * Returns an instance of Tracker_TooltipFactory
      *
-     * @return Tracker_TooltipFactory an instance of the factory
+     * @return SemanticTooltipFactory an instance of the factory
      */
     public function getSemanticTooltipFactory()
     {
-        return Tracker_TooltipFactory::instance();
+        return SemanticTooltipFactory::instance();
     }
 
     /**
