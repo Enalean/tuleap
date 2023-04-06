@@ -229,4 +229,42 @@ describe("MultipleSelectionManager", () => {
             expect(selection_callback.mock.calls[1][0]).toStrictEqual([item_1.value, item_2.value]);
         });
     });
+
+    describe("Pressing the backspace key in the search field", () => {
+        const pressBackspaceKey = (): void => {
+            search_field.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
+        };
+
+        it("should do nothing when there is no selected value", () => {
+            search_field.value = "";
+            pressBackspaceKey();
+
+            expect(selection_callback).not.toHaveBeenCalled();
+        });
+
+        it("should do nothing when there are selected values but something has been written inside the search input", () => {
+            manager.processSelection(item_1.element);
+
+            search_field.value = "Some query being typed";
+            pressBackspaceKey();
+
+            expect(selection_callback).not.toHaveBeenCalledWith([]);
+        });
+
+        it("should remove the last selected value from the selection when the search input is empty", () => {
+            manager.processSelection(item_1.element);
+            manager.processSelection(item_2.element);
+            search_field.value = "";
+
+            pressBackspaceKey();
+            expect(selection_callback.mock.calls[2][0]).toStrictEqual([item_1.value]);
+
+            pressBackspaceKey();
+            expect(selection_callback.mock.calls[3][0]).toStrictEqual([]);
+
+            expect(
+                selection_container.querySelectorAll("[data-test=link-selector-selected-value]")
+            ).toHaveLength(0);
+        });
+    });
 });
