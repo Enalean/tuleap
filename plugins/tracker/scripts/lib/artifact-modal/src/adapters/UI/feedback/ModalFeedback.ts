@@ -20,7 +20,7 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
-import type { Option } from "@tuleap/option";
+import { Option } from "@tuleap/option";
 import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 import type { ParentFeedbackControllerType } from "../../../domain/parent/ParentFeedbackController";
@@ -76,7 +76,10 @@ export const ModalFeedback = define<ModalFeedback>({
             return controller;
         },
     },
-    parent_option: undefined,
+    parent_option: {
+        get: (host, last_value) => last_value ?? Option.nothing(),
+        set: (host, new_value) => new_value,
+    },
     fault_presenter: {
         get: (host, last_value) => last_value ?? FaultFeedbackPresenter.buildEmpty(),
         set: (host, presenter) => presenter,
