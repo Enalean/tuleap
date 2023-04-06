@@ -17,14 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, postJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, getJSON, postJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type {
     ChangesetWithCommentRepresentation,
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import type { UserHistoryResponse, SearchResultEntry } from "@tuleap/core-rest-api-types";
+import type {
+    SearchResultEntry,
+    UserHistoryResponse,
+    FeatureFlagResponse,
+} from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveLinkTypes";
@@ -51,6 +55,7 @@ import type { RetrieveComments } from "../../domain/comments/RetrieveComments";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
 import { LinkableArtifactRESTFilter } from "./fields/link-field/LinkableArtifactRESTFilter";
+import type { RetrieveFeatureFlag } from "../../domain/RetrieveFeatureFlag";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -64,7 +69,8 @@ type TuleapAPIClientType = RetrieveParent &
     CreateFileUpload &
     RetrieveUserHistory &
     SearchArtifacts &
-    RetrieveComments;
+    RetrieveComments &
+    RetrieveFeatureFlag;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -178,5 +184,13 @@ export const TuleapAPIClient = (
                 order: is_order_inverted ? "desc" : "asc",
             },
         }).map((comments) => comments.map(FollowUpCommentProxy.fromRepresentation));
+    },
+
+    getCreateArtifactFeatureFlag(): ResultAsync<boolean, Fault> {
+        return getJSON<FeatureFlagResponse>(
+            uri`/feature_flag?name=feature_flag_create_artifact`
+        ).map((feature_flag) => {
+            return feature_flag.value === "1";
+        });
     },
 });

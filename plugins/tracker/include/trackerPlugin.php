@@ -167,6 +167,7 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\CreateArtifactFeatureFlag;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
@@ -2477,6 +2478,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
+        $event->addConfigClass(CreateArtifactFeatureFlag::class);
         $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(Tracker_ReportDao::class);
