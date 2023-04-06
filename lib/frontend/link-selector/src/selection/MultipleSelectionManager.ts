@@ -25,6 +25,7 @@ import type { LinkSelectorSelectionCallback } from "../type";
 import type { RemoveCurrentSelectionCallback } from "./templates/clear-selection-button-template";
 import { buildClearSelectionButtonElement } from "./templates/clear-selection-button-template";
 import { buildSelectedValueBadgeElement } from "./templates/selected-value-badge-template";
+import { isBackspaceKey } from "../helpers/keys-helper";
 
 export class MultipleSelectionManager implements ManageSelection {
     private readonly selection_state: LinkSelectorSelectionStateMultiple;
@@ -47,6 +48,7 @@ export class MultipleSelectionManager implements ManageSelection {
         this.clear_selection_state_button_element = buildClearSelectionButtonElement(
             this.getOnRemoveAllValuesCallback()
         );
+        this.observeBackspaceKeyPress();
     }
 
     public processSelection(item: Element): void {
@@ -201,6 +203,25 @@ export class MultipleSelectionManager implements ManageSelection {
 
         selection.forEach((item) => {
             this.selectItem(item);
+        });
+    }
+
+    private observeBackspaceKeyPress(): void {
+        this.search_field_element.addEventListener("keydown", (event: KeyboardEvent) => {
+            if (!isBackspaceKey(event)) {
+                return;
+            }
+
+            if (!this.hasSelection() || this.search_field_element.value !== "") {
+                return;
+            }
+
+            const last_selected_item = Array.from(this.selection_state.selected_items.values())[
+                this.selection_state.selected_items.size - 1
+            ];
+
+            this.removeListItemFromSelection(last_selected_item);
+            this.applyChangesPostSelectionStateChange();
         });
     }
 }

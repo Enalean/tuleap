@@ -21,6 +21,7 @@ import { describe, expect, it } from "vitest";
 import {
     isArrowDown,
     isArrowUp,
+    isBackspaceKey,
     isEnterKey,
     isEscapeKey,
     isShiftKey,
@@ -89,6 +90,16 @@ describe("keys-helper", () => {
 
         it("does not recognize Chrome native autofill event as a key", () => {
             expect(isShiftKey(chrome_native_autofill_event)).toBe(false);
+        });
+    });
+
+    describe("isBackspaceKey", () => {
+        it("should return true", () => {
+            expect(isBackspaceKey(new KeyboardEvent("keyup", { key: "Backspace" }))).toBe(true);
+        });
+
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isBackspaceKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 });
