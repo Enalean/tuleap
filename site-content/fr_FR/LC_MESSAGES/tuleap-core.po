@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -29,6 +29,12 @@ msgstr ""
 #, php-format
 msgid "\"%s\" label already exists. Please choose another one."
 msgstr "Le label \"%s\" label exist déjà. Merci de choisir un autre nom."
+
+msgid "\"name\" field is missing from the request body"
+msgstr "Il manque le champs \"name\" dans le corps de la requête"
+
+msgid "\"response\" field is missing from the request body"
+msgstr "Il manque le champs \"response\" dans le corps de la requête"
 
 msgid "## Some notes"
 msgstr "## Du contenu en Markdown"
@@ -3146,6 +3152,12 @@ msgstr "Remplacer le logo actuellement utilisé"
 msgid "Repository History"
 msgstr "Historique du dépôt"
 
+msgid "Request body is empty"
+msgstr "Le corps de la requête est vide"
+
+msgid "Request body is not well formed"
+msgstr "Le corps de la requête n'est pas bien formé"
+
 #, php-format
 msgid ""
 "Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
@@ -3806,6 +3818,9 @@ msgstr ""
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
+
+msgid "The result of passkey is not well formed"
+msgstr "Le résultat de la passkey n'est pas bien formé"
 
 #, php-format
 msgid "The sending of the mail has been <a href=\"%1$s\">put in the queue</a>"

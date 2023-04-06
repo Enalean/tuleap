@@ -30,6 +30,12 @@ msgstr ""
 msgid "\"%s\" label already exists. Please choose another one."
 msgstr "O rótulo \"%s\" já existe. Por favor, escolha outro."
 
+msgid "\"name\" field is missing from the request body"
+msgstr ""
+
+msgid "\"response\" field is missing from the request body"
+msgstr ""
+
 msgid "## Some notes"
 msgstr "## Algumas notas"
 
@@ -3113,6 +3119,12 @@ msgstr "Substitua o logotipo atual"
 msgid "Repository History"
 msgstr "Histórico do Repositório"
 
+msgid "Request body is empty"
+msgstr ""
+
+msgid "Request body is not well formed"
+msgstr ""
+
 #, php-format
 msgid ""
 "Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
@@ -3761,6 +3773,9 @@ msgstr ""
 
 msgid "The requested dashboard does not exist."
 msgstr "O painel solicitado não existe."
+
+msgid "The result of passkey is not well formed"
+msgstr ""
 
 #, php-format
 msgid "The sending of the mail has been <a href=\"%1$s\">put in the queue</a>"

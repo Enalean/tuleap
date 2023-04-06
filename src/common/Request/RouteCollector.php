@@ -237,6 +237,7 @@ use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 use Tuleap\WebAuthn\Controllers\PostRegistrationController;
+use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 use Tuleap\WebAuthn\WebAuthnRegistration;
 use Tuleap\Widget\WidgetFactory;
@@ -244,6 +245,10 @@ use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
+use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 
 class RouteCollector
@@ -1282,9 +1287,9 @@ class RouteCollector
         );
     }
 
-    public static function postWebAuthnRegistration(): DispatchablePSR15Compatible
+    public static function postWebAuthnRegistrationChallenge(): DispatchablePSR15Compatible
     {
-        return new PostRegistrationController(
+        return new PostRegistrationChallengeController(
             \UserManager::instance(),
             new WebAuthnChallengeDao(),
             new WebAuthnCredentialSourceDao(),
@@ -1295,6 +1300,21 @@ class RouteCollector
             WebAuthnRegistration::getCredentialParameters(),
             HTTPFactoryBuilder::responseFactory(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter()
+        );
+    }
+
+    public static function postWebAuthnRegistration(): DispatchablePSR15Compatible
+    {
+        $attestation_statement_manager = new AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+
+        return new PostRegistrationController(
+            \UserManager::instance(),
+            new PublicKeyCredentialLoader(
+                new AttestationObjectLoader($attestation_statement_manager)
+            ),
+            HTTPFactoryBuilder::responseFactory(),
             new SapiEmitter()
         );
     }
@@ -1490,6 +1510,7 @@ class RouteCollector
         $r->post('/collect-frontend-errors', [self::class, 'postFrontendErrorCollectorController']);
 
         $r->addGroup('/webauthn', function (FastRoute\RouteCollector $r) {
+            $r->post('/registration-challenge', [self::class, 'postWebAuthnRegistrationChallenge']);
             $r->post('/registration', [self::class, 'postWebAuthnRegistration']);
         });
 
