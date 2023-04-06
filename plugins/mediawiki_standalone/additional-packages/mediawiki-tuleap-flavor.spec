@@ -31,13 +31,15 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %build
 
 %install
-mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -a * %{buildroot}%{_datadir}/%{name}
-ln -s /etc/tuleap/plugins/mediawiki_standalone/LocalSettings.php %{buildroot}%{_datadir}/%{name}/LocalSettings.php
-ln -s /etc/tuleap/plugins/mediawiki_standalone/LocalSettings.local.php %{buildroot}%{_datadir}/%{name}/LocalSettings.local.php
+mkdir -p %{buildroot}%{_datadir}/%{name}/1.35
+cp -a * %{buildroot}%{_datadir}/%{name}/1.35
+ln -s %{_datadir}/%{name}/1.35 %{buildroot}%{_datadir}/%{name}/current
+ln -s /etc/tuleap/plugins/mediawiki_standalone/LocalSettings.php %{buildroot}%{_datadir}/%{name}/1.35/LocalSettings.php
+ln -s /etc/tuleap/plugins/mediawiki_standalone/LocalSettings.local.php %{buildroot}%{_datadir}/%{name}/1.35/LocalSettings.local.php
 
 %clean
 
 %files
 %defattr(-,root,root)
-%{_datadir}/%{name}
+%{_datadir}/%{name}/1.35
+%{_datadir}/%{name}/current
