@@ -33,6 +33,8 @@ import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
 import { SearchFieldClearer } from "./events/SearchFieldClearer";
+import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
+import type { LinkSelectorItem } from "./items/GroupCollection";
 
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
@@ -40,14 +42,16 @@ export function createLinkSelector(
 ): LinkSelector {
     hideSourceSelectBox(source_select_box);
 
-    const items_map_manager = new ItemsMapManager(ListItemMapBuilder(options.templating_callback));
+    const list_items_builder = ListItemMapBuilder(options.templating_callback);
+    const items_map_manager = new ItemsMapManager(list_items_builder);
 
     items_map_manager.refreshItemsMap([]);
     const base_renderer = new BaseComponentRenderer(
         document,
         source_select_box,
         options.placeholder,
-        options.search_input_placeholder
+        options.search_input_placeholder,
+        options.is_multiple
     );
     const {
         wrapper_element,
@@ -80,16 +84,27 @@ export function createLinkSelector(
     );
 
     const search_field_clearer = SearchFieldClearer(search_field_element);
-    const selection_manager = new SelectionManager(
-        source_select_box,
-        dropdown_element,
-        selection_element,
-        placeholder_element,
-        dropdown_manager,
-        items_map_manager,
-        options.selection_callback,
-        search_field_clearer
-    );
+    const selection_manager = options.is_multiple
+        ? new MultipleSelectionManager(
+              source_select_box,
+              selection_element,
+              search_field_element,
+              options.placeholder,
+              dropdown_manager,
+              items_map_manager,
+              options.selection_callback,
+              search_field_clearer
+          )
+        : new SelectionManager(
+              source_select_box,
+              dropdown_element,
+              selection_element,
+              placeholder_element,
+              dropdown_manager,
+              items_map_manager,
+              options.selection_callback,
+              search_field_clearer
+          );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         dropdown_list_element,
@@ -139,6 +154,12 @@ export function createLinkSelector(
         resetSelection: (): void => {
             search_field_clearer.clearSearchField();
             selection_manager.clearSelection();
+        },
+        setSelection: (selection: ReadonlyArray<LinkSelectorItem>): void => {
+            const rendered_items = selection.map((item_to_select) =>
+                list_items_builder.buildRenderedItem(item_to_select, "")
+            );
+            selection_manager.setSelection(rendered_items);
         },
         destroy: (): void => {
             event_manager.removeEventsListenersOnDocument();

@@ -26,6 +26,7 @@ export const LinkSelectorItemProxy = {
         link_verifier: VerifyIsAlreadyLinked,
         linkable_artifact: LinkableArtifact
     ): LinkSelectorItem => ({
+        id: String(linkable_artifact.id),
         value: linkable_artifact,
         is_disabled: link_verifier.isAlreadyLinked(linkable_artifact),
     }),

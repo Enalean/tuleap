@@ -35,9 +35,11 @@ describe("ItemsMapManager", () => {
 
     describe("findLinkSelectorItemInItemMap", () => {
         it("Given an item map and an item id, Then it should return the corresponding LinkSelectorItem", () => {
-            const item = items_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-2");
+            const item = items_manager.findLinkSelectorItemInItemMap(
+                "link-selector-item-group1-value-2"
+            );
 
-            expect(item.id).toBe("link-selector-item-group1-2");
+            expect(item.id).toBe("link-selector-item-group1-value-2");
         });
 
         it("should throw an error when the given item id does not reference a LinkSelectorItem", () => {
@@ -52,7 +54,7 @@ describe("ItemsMapManager", () => {
             expect(items_manager.getItemWithValue(value_5)).toStrictEqual({
                 element: expect.any(Element),
                 group_id: "group2",
-                id: "link-selector-item-group2-5",
+                id: "link-selector-item-group2-value-5",
                 is_disabled: true,
                 is_selected: false,
                 template: expect.anything(),

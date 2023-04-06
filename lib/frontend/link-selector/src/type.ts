@@ -24,6 +24,7 @@ import type { HTMLTemplateStringProcessor } from "./index";
 export interface LinkSelector {
     setDropdownContent: (groups: GroupCollection) => void;
     resetSelection: () => void;
+    setSelection: (selection: ReadonlyArray<LinkSelectorItem>) => void;
     destroy: () => void;
 }
 
@@ -39,6 +40,7 @@ export type LinkSelectorTemplatingCallback = (
 export interface LinkSelectorOptions {
     readonly placeholder: string;
     readonly search_input_placeholder: string;
+    readonly is_multiple: boolean;
     readonly templating_callback: LinkSelectorTemplatingCallback;
     readonly selection_callback: LinkSelectorSelectionCallback;
     readonly search_field_callback: LinkSelectorSearchFieldCallback;
@@ -71,7 +73,20 @@ export interface LinkSelectorSelectionStateSingle {
     selected_value_element: DocumentFragment;
 }
 
+export interface LinkSelectorSelectionStateMultiple {
+    selected_items: Map<string, RenderedItem>;
+    selected_values_elements: Map<string, Element>;
+}
+
 export interface ScrollCoordinates {
     x_position: number;
     y_position: number;
+}
+
+export interface ManageSelection {
+    processSelection(item: Element): void;
+    hasSelection(): boolean;
+    updateSelectionAfterDropdownContentChange(): void;
+    clearSelection(): void;
+    setSelection(selection: ReadonlyArray<RenderedItem>): void;
 }

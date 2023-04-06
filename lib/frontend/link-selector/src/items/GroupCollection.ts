@@ -18,6 +18,7 @@
  */
 
 export type LinkSelectorItem = {
+    readonly id: string;
     readonly is_disabled: boolean;
     readonly value: unknown;
 };

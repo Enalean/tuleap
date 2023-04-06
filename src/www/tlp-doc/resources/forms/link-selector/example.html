@@ -8,6 +8,7 @@
         import { createLinkSelector } from "@tuleap/link-selector";
 
         const link_selector = createLinkSelector(document.querySelector('#link-selector-sb'), {
+            is_multiple: false,
             placeholder: "Please select an item to link",
             search_input_placeholder: "Type a number",
             templating_callback: (html, item) => html`${item.id}`,
@@ -20,8 +21,49 @@
                     label: "Matching items",
                     empty_message: "No matching item",
                     items: [{
+                        id: "105",
                         value: {id: 105},
                         option_value: "105",
+                    }]
+                }])
+            }
+        });
+    </script>
+</div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="link-selector-msb">Multiple users picker</label>
+    <select id="link-selector-msb" name="list-value" value="" multiple></select>
+    <p class="tlp-text-info"><i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        In this live example, start to type <code class="code-inline">jo</code> in the search field to simulate some content fetched from a remote endpoint.
+    </p>
+    <script type="text/javascript">
+        import { createLinkSelector } from "@tuleap/link-selector";
+
+        const link_selector = createLinkSelector(document.querySelector('#link-selector-sb'), {
+            is_multiple: true,
+            placeholder: "Search users by names",
+            search_input_placeholder: "",
+            templating_callback: (html, item) => html`
+                <span class="doc-multiple-link-selector-user-with-avatar">
+                    <div class="tlp-avatar-mini"></div>
+                    ${item.value.display_name}
+                </span>
+            `,
+            selection_callback: (selected_user) => {
+                console.log("Selected user : " + selected_user);
+            },
+            search_field_callback: (query) => {
+                console.log("Serach query : " + query);
+                link_selector.setDropdownContent([{
+                    label: "Matching users",
+                    empty_message: "No user found",
+                    items: [{
+                        id: "102",
+                        value: {
+                            id: 102,
+                            display_name: "Joe l'Asticot"
+                        },
+                        is_selected: false,
                     }]
                 }])
             }

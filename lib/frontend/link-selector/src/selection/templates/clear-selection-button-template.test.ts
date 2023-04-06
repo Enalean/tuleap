@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelector } from "@tuleap/link-selector";
+import { describe, it, expect, vi } from "vitest";
+import { buildClearSelectionButtonElement } from "./clear-selection-button-template";
 
-export type LinkSelectorStub = LinkSelector;
+describe("clear-selection-button-template", () => {
+    it("should return a button which executes the given callback when it is clicked", () => {
+        const clear_selection_callback = vi.fn();
+        const button = buildClearSelectionButtonElement(clear_selection_callback);
 
-const noop = (): void => {
-    // Do nothing
-};
+        button.dispatchEvent(new Event("pointerup"));
 
-export const LinkSelectorStub = {
-    build: (): LinkSelectorStub => {
-        return {
-            resetSelection: noop,
-            setDropdownContent: noop,
-            setSelection: noop,
-            destroy: noop,
-        };
-    },
-};
+        expect(clear_selection_callback).toHaveBeenCalledOnce();
+    });
+});

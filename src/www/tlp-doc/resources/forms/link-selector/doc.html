@@ -32,6 +32,9 @@
         <li>
             <code class="code-inline">search_input_placeholder: string</code>: A (translated) text that will be shown inside the search input. It is shown when the user didn't write anything yet in the search input. Its purpose is to tell the user the kind of input they are supposed to write, so that their search yields results. For example "Id, title..."
         </li>
+        <li>
+            <code class="code-inline">is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
+        </li>
     </ul>
     <br>
     <br>
@@ -47,14 +50,17 @@
             <li><code class="code-inline">is_loading: boolean</code>: Show a spinner next to the group's label if true.</li>
             <li><code class="code-inline">items: LinkSelectorItem[]</code>: the items of the group.</li>
             <li><code class="code-inline">icon: string</code>: an icon to display at the left of the group label.</li>
+            <li><code class="code-inline">footer_message: string</code>: a message to display below the group of items.</li>
         </ul>
         Each <code class="code-inline">LinkSelectorItem</code> has these properties:
         <ul>
+            <li><code class="code-inline">id: string</code>: A unique string id to differentiate the item from the others.</li>
             <li><code class="code-inline">value: unknown</code>: The value that will be passed to <code class="code-inline">selection_callback</code>. It can be any type, usually it's an object.</li>
             <li><code class="code-inline">is_disabled: boolean</code>: the item cannot be selected if it's false.</li>
         </ul>
     </li>
     <li><code class="code-inline">resetSelection() => void</code>: reset the current selection.</li>
+    <li><code class="code-inline">setSelection(selection: LinkSelectorItem[]) => void</code>: set the current selection.</li>
     <li><code class="code-inline">destroy() => void</code>: destroy link-selector and remove all event handlers.</li>
 </ul>
 </p>

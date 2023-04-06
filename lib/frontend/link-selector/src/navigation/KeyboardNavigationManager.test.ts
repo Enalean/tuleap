@@ -45,7 +45,8 @@ describe("KeyboardNavigationManager", () => {
             doc,
             source_select_box,
             "",
-            ""
+            "",
+            false
         ).renderBaseComponent();
         dropdown_list = dropdown_list_element;
 
@@ -76,7 +77,7 @@ describe("KeyboardNavigationManager", () => {
 
                 expect(
                     item_map_manager
-                        .findLinkSelectorItemInItemMap("link-selector-item-group1-1")
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-value-1")
                         .element.classList.contains("link-selector-item-highlighted")
                 ).toBe(true);
             });
@@ -89,7 +90,7 @@ describe("KeyboardNavigationManager", () => {
 
                 expect(
                     item_map_manager
-                        .findLinkSelectorItemInItemMap("link-selector-item-group2-4")
+                        .findLinkSelectorItemInItemMap("link-selector-item-group2-value-4")
                         .element.classList.contains("link-selector-item-highlighted")
                 ).toBe(true);
             });
@@ -102,7 +103,7 @@ describe("KeyboardNavigationManager", () => {
 
                 expect(
                     item_map_manager
-                        .findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-value-0")
                         .element.classList.contains("link-selector-item-highlighted")
                 ).toBe(true);
             });
@@ -115,7 +116,7 @@ describe("KeyboardNavigationManager", () => {
 
                 expect(
                     item_map_manager
-                        .findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-value-0")
                         .element.classList.contains("link-selector-item-highlighted")
                 ).toBe(true);
             });

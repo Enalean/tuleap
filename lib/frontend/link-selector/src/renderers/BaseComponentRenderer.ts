@@ -24,7 +24,8 @@ export class BaseComponentRenderer {
         private readonly doc: Document,
         private readonly source_select_box: HTMLSelectElement,
         private readonly placeholder: string,
-        private readonly input_placeholder: string
+        private readonly input_placeholder: string,
+        private readonly is_multiple: boolean
     ) {}
 
     public renderBaseComponent(): LinkSelectorComponent {
@@ -38,15 +39,21 @@ export class BaseComponentRenderer {
         const placeholder_element = this.createPlaceholderElement();
         const search_field_element = this.createSearchFieldElement();
 
-        selection_element.appendChild(placeholder_element);
-
         if (!this.source_select_box.disabled) {
             selection_element.setAttribute("tabindex", "0");
         }
 
-        const search_section_element = this.createSearchSectionElement();
-        search_section_element.appendChild(search_field_element);
-        dropdown_element.appendChild(search_section_element);
+        if (this.is_multiple) {
+            search_field_element.setAttribute("placeholder", this.placeholder);
+            const new_search_section = this.createSearchSectionForMultipleListPicker();
+            new_search_section.appendChild(search_field_element);
+            selection_element.appendChild(new_search_section);
+        } else {
+            const search_section_element = this.createSearchSectionElement();
+            search_section_element.appendChild(search_field_element);
+            dropdown_element.appendChild(search_section_element);
+            selection_element.appendChild(placeholder_element);
+        }
 
         link_selector_element.appendChild(selection_element);
         dropdown_element.appendChild(dropdown_list_element);
@@ -97,9 +104,17 @@ export class BaseComponentRenderer {
         const selection_element = document.createElement("span");
         selection_element.classList.add("link-selector-selection");
         selection_element.setAttribute("data-test", "link-selector-selection");
-        selection_element.classList.add("link-selector-single");
-        selection_element.setAttribute("role", "textbox");
-        selection_element.setAttribute("aria-readonly", "true");
+
+        if (this.is_multiple) {
+            selection_element.classList.add("link-selector-multiple");
+            selection_element.setAttribute("aria-haspopup", "true");
+            selection_element.setAttribute("aria-expanded", "false");
+            selection_element.setAttribute("role", "combobox");
+        } else {
+            selection_element.classList.add("link-selector-single");
+            selection_element.setAttribute("role", "textbox");
+            selection_element.setAttribute("aria-readonly", "true");
+        }
 
         return selection_element;
     }
@@ -120,6 +135,13 @@ export class BaseComponentRenderer {
         const search_section = document.createElement("span");
         search_section.classList.add("link-selector-single-dropdown-search-section");
 
+        return search_section;
+    }
+
+    private createSearchSectionForMultipleListPicker(): Element {
+        const search_section = document.createElement("span");
+
+        search_section.classList.add("link-selector-multiple-search-section");
         return search_section;
     }
 
