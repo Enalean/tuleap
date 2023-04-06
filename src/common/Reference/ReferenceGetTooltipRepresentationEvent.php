@@ -25,8 +25,6 @@ use Tuleap\Layout\TooltipJSON;
 
 class ReferenceGetTooltipRepresentationEvent implements Dispatchable
 {
-    public const NAME = 'referenceGetTooltipRepresentationEvent';
-
     /**
      * @var \Reference
      */
