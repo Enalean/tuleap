@@ -13,7 +13,7 @@
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
-    "@tuleap/link-selector": "workspace:*",
+    "@tuleap/lazybox": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",

@@ -26,7 +26,7 @@ import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArt
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
-import type { GroupCollection } from "@tuleap/link-selector";
+import type { GroupCollection } from "@tuleap/lazybox";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { LinkField } from "../LinkField";
 import type { RetrieveUserHistory } from "../../../../../domain/fields/link-field/RetrieveUserHistory";

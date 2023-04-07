@@ -1,0 +1,72 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="lazybox-link-selector">Single item picker</label>
+    <select id="lazybox-link-selector" name="list-value" value=""></select>
+    <p class="tlp-text-info"><i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a remote endpoint.
+    </p>
+    <script type="text/javascript">
+        import { createLazybox } from "@tuleap/lazybox";
+
+        const lazybox = createLazybox(document.querySelector('#lazybox-link-selector'), {
+            is_multiple: false,
+            placeholder: "Please select an item to link",
+            search_input_placeholder: "Type a number",
+            templating_callback: (html, item) => html`${item.id}`,
+            selection_callback: (selected_value) => {
+                console.log("Selected value : " + selected_value);
+            },
+            search_field_callback: (query) => {
+                console.log("Serach query : " + query);
+                lazybox.setDropdownContent([{
+                    label: "Matching items",
+                    empty_message: "No matching item",
+                    items: [{
+                        id: "105",
+                        value: {id: 105},
+                        option_value: "105",
+                    }]
+                }])
+            }
+        });
+    </script>
+</div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="lazybox-users-selector">Multiple items picker</label>
+    <select id="lazybox-users-selector" name="list-value" value="" multiple></select>
+    <p class="tlp-text-info"><i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        In this live example, start to type <code class="code-inline">jo</code> in the search field to simulate some content fetched from a remote endpoint.
+    </p>
+    <script type="text/javascript">
+        import { createLazybox } from "@tuleap/lazybox";
+
+        const lazybox_multiple = createLazybox(document.querySelector('#lazybox-users-selector'), {
+            is_multiple: true,
+            placeholder: "Search users by names",
+            search_input_placeholder: "",
+            templating_callback: (html, item) => html`
+                <span class="doc-multiple-lazybox-user-with-avatar">
+                    <div class="tlp-avatar-mini"></div>
+                    ${item.value.display_name}
+                </span>
+            `,
+            selection_callback: (selected_user) => {
+                console.log("Selected user : " + selected_user);
+            },
+            search_field_callback: (query) => {
+                console.log("Serach query : " + query);
+                lazybox_multiple.setDropdownContent([{
+                    label: "Matching users",
+                    empty_message: "No user found",
+                    items: [{
+                        id: "102",
+                        value: {
+                            id: 102,
+                            display_name: "Joe l'Asticot"
+                        },
+                        is_selected: false,
+                    }]
+                }])
+            }
+        });
+    </script>
+</div>

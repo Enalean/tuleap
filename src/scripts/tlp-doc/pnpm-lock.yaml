@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
   '@tuleap/filter-inline-table': workspace:*
-  '@tuleap/link-selector': workspace:*
+  '@tuleap/lazybox': workspace:*
   '@tuleap/list-picker': workspace:*
   '@tuleap/tlp': workspace:*
   '@tuleap/tlp-dropdown': workspace:*
@@ -16,7 +16,7 @@ specifiers:
 
 dependencies:
   '@tuleap/filter-inline-table': link:../../../lib/frontend/filter-table
-  '@tuleap/link-selector': link:../../../lib/frontend/link-selector
+  '@tuleap/lazybox': link:../../../lib/frontend/lazybox
   '@tuleap/list-picker': link:../../../lib/frontend/list-picker
   '@tuleap/tlp': link:../../themes/tlp
   '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown

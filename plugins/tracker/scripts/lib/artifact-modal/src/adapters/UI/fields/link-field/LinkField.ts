@@ -20,8 +20,8 @@
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import type { Option } from "@tuleap/option";
-import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
-import { createLinkSelector } from "@tuleap/link-selector";
+import type { GroupCollection, Lazybox } from "@tuleap/lazybox";
+import { createLazybox } from "@tuleap/lazybox";
 import {
     getLinkFieldCanHaveOnlyOneParent,
     getLinkFieldNoteStartText,
@@ -52,7 +52,7 @@ export interface LinkField {
     readonly controller: LinkFieldControllerType;
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
     readonly artifact_link_select: HTMLSelectElement;
-    link_selector: LinkSelector;
+    link_selector: Lazybox;
     current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
@@ -228,7 +228,7 @@ export const LinkField = define<LinkField>({
                 host.linked_artifacts_presenter = artifacts;
             });
 
-            host.link_selector = createLinkSelector(host.artifact_link_select, {
+            host.link_selector = createLazybox(host.artifact_link_select, {
                 is_multiple: false,
                 placeholder: getLinkSelectorPlaceholderText(),
                 search_input_placeholder: getLinkSelectorSearchPlaceholderText(),

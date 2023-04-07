@@ -22,7 +22,7 @@ import {
     getMatchingArtifactLabel,
     getNoResultFoundEmptyState,
 } from "../../../../../gettext-catalog";
-import type { GroupOfItems } from "@tuleap/link-selector";
+import type { GroupOfItems } from "@tuleap/lazybox";
 import type { VerifyIsAlreadyLinked } from "../../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 

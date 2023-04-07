@@ -382,7 +382,7 @@ $editor-scrollbar-color: rgb(241 241 241);
     padding: 8px;
 }
 
-.doc-multiple-link-selector-user-with-avatar {
+.doc-multiple-lazybox-user-with-avatar {
     display: flex;
     gap: var(--tlp-small-spacing);
     align-items: center;
@@ -392,6 +392,6 @@ $editor-scrollbar-color: rgb(241 241 241);
     margin: 0 5px 0 0;
 }
 
-.link-selector-dropdown-option-value-disabled > .doc-link-selector-badge {
+.lazybox-dropdown-option-value-disabled > .doc-link-selector-badge {
     opacity: 0.5;
 }

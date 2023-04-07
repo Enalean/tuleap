@@ -22,7 +22,7 @@ import { VerifyIsAlreadyLinkedStub } from "../../../../../../tests/stubs/VerifyI
 import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
-import type { LinkSelectorItem } from "@tuleap/link-selector";
+import type { LazyboxItem } from "@tuleap/lazybox";
 
 describe(`LinkSelectorItemProxy`, () => {
     let link_verifier: VerifyIsAlreadyLinked, linkable_artifact: LinkableArtifact;
@@ -32,7 +32,7 @@ describe(`LinkSelectorItemProxy`, () => {
         linkable_artifact = LinkableArtifactStub.withDefaults();
     });
 
-    const build = (): LinkSelectorItem =>
+    const build = (): LazyboxItem =>
         LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, linkable_artifact);
 
     it(`builds from a linkable artifact`, () => {

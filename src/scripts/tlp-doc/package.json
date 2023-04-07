@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/filter-inline-table": "workspace:*",
-    "@tuleap/link-selector": "workspace:*",
+    "@tuleap/lazybox": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",

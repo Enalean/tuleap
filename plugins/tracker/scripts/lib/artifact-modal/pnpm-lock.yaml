@@ -10,7 +10,7 @@ specifiers:
   '@tuleap/dom': workspace:*
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
-  '@tuleap/link-selector': workspace:*
+  '@tuleap/lazybox': workspace:*
   '@tuleap/list-picker': workspace:*
   '@tuleap/option': workspace:*
   '@tuleap/plugin-tracker-constants': workspace:*
@@ -41,7 +41,7 @@ dependencies:
   '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
   '@tuleap/fault': link:../../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
+  '@tuleap/lazybox': link:../../../../../lib/frontend/lazybox
   '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
   '@tuleap/option': link:../../../../../lib/frontend/option
   '@tuleap/plugin-tracker-constants': link:../constants
