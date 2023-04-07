@@ -30,7 +30,6 @@ use Codendi_Request;
 use EventManager;
 use Feedback;
 use ForgeConfig;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use MustacheRenderer;
 use PermissionsManager;
 use PFUser;
@@ -90,9 +89,6 @@ use trackerPlugin;
 use TransitionFactory;
 use Tuleap;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Http\Response\JSONResponseBuilder;
-use Tuleap\Layout\TooltipJSON;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
@@ -443,10 +439,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         }
     }
 
-    /**
-     * @return Tuleap\Option\Option<TooltipJSON>
-     */
-    public function fetchTooltip(PFUser $user): Tuleap\Option\Option
+    public function fetchTooltip(PFUser $user): string
     {
         return (new Tuleap\Tracker\Semantic\Tooltip\TooltipFetcher())->fetchArtifactTooltip(
             $this,
@@ -922,15 +915,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             default:
                 ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_VIEWED);
                 if ($request->isAjax()) {
-                    $this->fetchTooltip($current_user)->apply(function (TooltipJSON $tooltip): void {
-                        $json_response_builder = new JSONResponseBuilder(
-                            HTTPFactoryBuilder::responseFactory(),
-                            HTTPFactoryBuilder::streamFactory()
-                        );
-                        $emitter               = new SapiEmitter();
-
-                        $emitter->emit($json_response_builder->fromData($tooltip));
-                    });
+                    echo $this->fetchTooltip($current_user);
                 } else {
                     header("Cache-Control: no-store, no-cache, must-revalidate");
                     $renderer = new Tracker_Artifact_ReadOnlyRenderer(
