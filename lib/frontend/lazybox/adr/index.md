@@ -5,6 +5,7 @@ This log lists the architectural decisions for `@tuleap/lazybox`.
 <!-- adrlog -- Regenerate the content by using `pnpm dlx adr-log -e template.md -i` -->
 
 * [ADR-0001](0001-link-selector.md) - Link selector component
+* [ADR-0002](0002-lazybox.md) - Link selector becomes Lazybox, a generic auto-completer.
 
 <!-- adrlogstop -->
 
