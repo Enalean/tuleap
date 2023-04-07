@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2291aeeb27d8dc5a00cb8ba069f2cc65",
+    "content-hash": "63e942576287bc4f71579f8f5be45274",
     "packages": [
         {
             "name": "composer/installers",
@@ -299,11 +299,11 @@
         },
         {
             "name": "mediawiki/math",
-            "version": "1.35.9",
+            "version": "1.35.10",
             "source": {
                 "type": "git",
                 "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
-                "reference": "fd3c11f0b6b7d329577bc5166cf59a2056e59c5c"
+                "reference": "3f42392dca992dfc062782c9b7796c5edccfa41a"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "69d2860810294ba4d01c2213fc52dafa6402e5ca"
+                "reference": "0496864cae0e872882bb679b64bf859cbd3a0d24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/69d2860810294ba4d01c2213fc52dafa6402e5ca",
-                "reference": "69d2860810294ba4d01c2213fc52dafa6402e5ca",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/0496864cae0e872882bb679b64bf859cbd3a0d24",
+                "reference": "0496864cae0e872882bb679b64bf859cbd3a0d24",
                 "shasum": ""
             },
             "require": {
@@ -374,22 +374,22 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.3"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.4"
             },
-            "time": "2023-01-24T07:09:38+00:00"
+            "time": "2023-04-06T07:22:54+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3"
+                "reference": "ec1f0b32329466bbf3e04b92d330231909deb0ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3",
-                "reference": "f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/ec1f0b32329466bbf3e04b92d330231909deb0ef",
+                "reference": "ec1f0b32329466bbf3e04b92d330231909deb0ef",
                 "shasum": ""
             },
             "require": {
@@ -424,9 +424,9 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.4"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.5"
             },
-            "time": "2023-02-06T10:56:34+00:00"
+            "time": "2023-04-06T08:01:00+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
