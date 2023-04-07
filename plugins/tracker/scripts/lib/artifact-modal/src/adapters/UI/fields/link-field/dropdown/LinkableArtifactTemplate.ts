@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    HTMLTemplateStringProcessor,
-    LinkSelectorItem,
-    HTMLTemplateResult,
-} from "@tuleap/link-selector";
+import type { HTMLTemplateStringProcessor, LazyboxItem, HTMLTemplateResult } from "@tuleap/lazybox";
 import type {
     LinkableArtifact,
     Status,
@@ -47,7 +43,7 @@ export const getStatusClasses = (status: Status): string => {
 
 export const getLinkableArtifactTemplate = (
     lit_html: typeof HTMLTemplateStringProcessor,
-    item: LinkSelectorItem
+    item: LazyboxItem
 ): HTMLTemplateResult => {
     const artifact = getLinkableArtifact(item.value);
     if (!artifact) {

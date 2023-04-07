@@ -27,7 +27,7 @@ declare global {
         interface Chainable<Subject> {
             dragAndDrop(source: string, destination: string, position: string): void;
 
-            searchItemInLinkSelectorDropdown(
+            searchItemInLazyboxDropdown(
                 query: string,
                 dropdown_item_label: string
             ): Chainable<JQuery<HTMLElement>>;
@@ -44,21 +44,21 @@ Cypress.Commands.add("dragAndDrop", (source: string, destination: string, positi
     cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
 });
 
-Cypress.Commands.add("searchItemInLinkSelectorDropdown", (query, dropdown_item_label) => {
+Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
     // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
     return cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body).find("[data-test=link-selector]").click();
-        cy.wrap(body).find("[data-test=link-selector-search-field]").type(query);
+        cy.wrap(body).find("[data-test=lazybox]").click();
+        cy.wrap(body).find("[data-test=lazybox-search-field]").type(query);
         // Link field auto-completer waits a delay before loading items
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
-        cy.wrap(body).find("[data-test=link-selector-loading-group-spinner]").should("not.exist");
+        cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
         return cy
             .wrap(body)
-            .find("[data-test=link-selector-item]")
+            .find("[data-test=lazybox-item]")
             .contains(dropdown_item_label)
             .first()
-            .parents("[data-test=link-selector-item]");
+            .parents("[data-test=lazybox-item]");
     });
 });
 

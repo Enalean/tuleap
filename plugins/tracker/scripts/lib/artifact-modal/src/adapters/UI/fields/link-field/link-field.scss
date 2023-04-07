@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/link-selector";
+@use "@tuleap/lazybox";
 
 $link-table-cell-padding: 8px;
 $link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
@@ -74,10 +74,7 @@ $link-table-cell-background: transparent;
     position: relative;
     width: 100%;
 
-    > .link-field-selector-wrapper
-        > .link-selector-component-wrapper
-        > .link-selector
-        > .link-selector-selection {
+    > .link-field-selector-wrapper > .lazybox-component-wrapper > .lazybox > .lazybox-selection {
         height: 32px;
     }
 }

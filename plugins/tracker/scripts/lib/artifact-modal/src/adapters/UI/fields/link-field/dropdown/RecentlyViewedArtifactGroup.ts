@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupOfItems } from "@tuleap/link-selector";
+import type { GroupOfItems } from "@tuleap/lazybox";
 import {
     getNoResultFoundEmptyState,
     getRecentlyViewedArtifactGroupLabel,

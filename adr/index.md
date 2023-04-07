@@ -36,7 +36,7 @@ Plugins and libraries can also have their own ADRs:
 * [Tracker](../plugins/tracker/adr/index.md)
 * [Artifact Modal](../plugins/tracker/scripts/lib/artifact-modal/adr/index.md)
 * [Rich text editor](../plugins/tracker/scripts/lib/rich-text-editor/adr/index.md)
-* [Link selector](../lib/frontend/link-selector/adr/index.md)
+* [Lazybox](../lib/frontend/lazybox/adr/index.md)
 
 For new ADRs, please use [template.md](template.md) as basis.
 More information on MADR is available at <https://adr.github.io/madr/>.

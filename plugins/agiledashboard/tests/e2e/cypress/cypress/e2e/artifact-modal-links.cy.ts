@@ -85,10 +85,10 @@ describe(`Link field of Artifact Modal`, function () {
                     .find("[data-test=link-type-select]")
                     .select("is Linked to");
             });
-            cy.searchItemInLinkSelectorDropdown(
-                HISTORY_ARTIFACT_TITLE,
+            cy.searchItemInLazyboxDropdown(HISTORY_ARTIFACT_TITLE, HISTORY_ARTIFACT_TITLE).should(
+                "contain",
                 HISTORY_ARTIFACT_TITLE
-            ).should("contain", HISTORY_ARTIFACT_TITLE);
+            );
         });
         cy.log("Close the modal");
         cy.get("[data-test=artifact-modal-cancel-button]").click();
@@ -106,14 +106,11 @@ describe(`Link field of Artifact Modal`, function () {
         });
         cy.get("[data-test=artifact-modal-form]").within(() => {
             cy.getContains("[data-test=artifact-link-field]", LINKS_FIELD_NAME).within(() => {
-                cy.searchItemInLinkSelectorDropdown(
-                    String(this.child_artifact_id),
-                    CHILD_TITLE
-                ).click();
+                cy.searchItemInLazyboxDropdown(String(this.child_artifact_id), CHILD_TITLE).click();
                 cy.getContains("[data-test=link-row]", CHILD_TITLE)
                     .find("[data-test=link-type-select]")
                     .select("is Parent of");
-                cy.searchItemInLinkSelectorDropdown(
+                cy.searchItemInLazyboxDropdown(
                     String(this.parent_artifact_id),
                     PARENT_TITLE
                 ).click();

@@ -1,0 +1,26 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/lazybox",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "dist/lazybox.js",
+  "main": "dist/lazybox.umd.cjs",
+  "style": "dist/style.css",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@tuleap/tlp": "workspace:*",
+    "lit": "^2.2.3"
+  },
+  "devDependencies": {
+    "@tuleap/dom": "workspace:*",
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

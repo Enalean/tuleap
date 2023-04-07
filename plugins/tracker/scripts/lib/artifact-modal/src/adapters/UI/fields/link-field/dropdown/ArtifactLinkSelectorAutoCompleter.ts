@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupCollection, GroupOfItems } from "@tuleap/link-selector";
+import type { GroupCollection, GroupOfItems } from "@tuleap/lazybox";
 import type { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";

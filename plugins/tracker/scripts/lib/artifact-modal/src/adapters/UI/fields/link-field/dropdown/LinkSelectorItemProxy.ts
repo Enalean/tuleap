@@ -19,13 +19,13 @@
 
 import type { VerifyIsAlreadyLinked } from "../../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
-import type { LinkSelectorItem } from "@tuleap/link-selector";
+import type { LazyboxItem } from "@tuleap/lazybox";
 
 export const LinkSelectorItemProxy = {
     fromLinkableArtifact: (
         link_verifier: VerifyIsAlreadyLinked,
         linkable_artifact: LinkableArtifact
-    ): LinkSelectorItem => ({
+    ): LazyboxItem => ({
         id: String(linkable_artifact.id),
         value: linkable_artifact,
         is_disabled: link_verifier.isAlreadyLinked(linkable_artifact),

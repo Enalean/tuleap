@@ -28,7 +28,7 @@ import { sanitize } from "dompurify";
 import "@tuleap/tlp-relative-date";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { createListPicker } from "@tuleap/list-picker";
-import { createLinkSelector } from "@tuleap/link-selector";
+import { createLazybox } from "@tuleap/lazybox";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -233,7 +233,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                     },
                 });
             }
-            if (example.id === "example-link-selector-") {
+            if (example.id === "example-lazybox-") {
                 initLinkSelector();
                 initMultiUserLinkSelector();
             }
@@ -368,7 +368,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
         }
 
         function initLinkSelector() {
-            const source_select = document.querySelector("#link-selector-sb");
+            const source_select = document.querySelector("#lazybox-link-selector");
             const ADDITIONAL_ITEM_ID = 105;
 
             const item_105 = {
@@ -420,7 +420,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 items: [],
             };
 
-            const link_selector = createLinkSelector(source_select, {
+            const link_selector = createLazybox(source_select, {
                 is_multiple: false,
                 placeholder: "Please select an item to link",
                 search_input_placeholder: "Type a number",
@@ -503,14 +503,14 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 items: [],
             };
 
-            const link_selector_multiple = createLinkSelector(
-                document.querySelector("#link-selector-msb"),
+            const link_selector_multiple = createLazybox(
+                document.querySelector("#lazybox-users-selector"),
                 {
                     is_multiple: true,
                     placeholder: "Search users by names",
                     search_input_placeholder: "",
                     templating_callback: (html, item) => html`
-                        <span class="doc-multiple-link-selector-user-with-avatar">
+                        <span class="doc-multiple-lazybox-user-with-avatar">
                             <div class="tlp-avatar-mini"></div>
                             ${item.value.display_name}
                         </span>

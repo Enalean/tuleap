@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
+import type { GroupCollection, Lazybox } from "@tuleap/lazybox";
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import { setCatalog } from "../../../../gettext-catalog";
@@ -42,7 +42,7 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
-import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
+import { LazyboxStub } from "../../../../../tests/stubs/LazyboxStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
@@ -161,9 +161,9 @@ describe("LinkField", () => {
 
     describe(`setters`, () => {
         describe("dropdown_section_descriptor", () => {
-            let link_selector: LinkSelectorStub, host: LinkField;
+            let link_selector: LazyboxStub, host: LinkField;
             beforeEach(() => {
-                link_selector = LinkSelectorStub.build();
+                link_selector = LazyboxStub.build();
 
                 const initial_dropdown_content: GroupCollection = [];
                 host = {
@@ -172,7 +172,7 @@ describe("LinkField", () => {
                             //Do nothing
                         },
                     } as unknown as LinkFieldControllerType,
-                    link_selector: link_selector as LinkSelector,
+                    link_selector: link_selector as Lazybox,
                     current_link_type: LinkTypeStub.buildUntyped(),
                     matching_artifact_section: initial_dropdown_content,
                     possible_parents_section: initial_dropdown_content,

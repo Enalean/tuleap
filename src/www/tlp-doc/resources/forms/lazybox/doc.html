@@ -1,0 +1,66 @@
+<p>
+    Lazybox displays heterogeneous groups of items with different behaviours and lets users select an item among them.
+    <br>
+    <br>
+    It looks visually like list-picker, but tailored to a different use-case.
+    <br>
+    <br>
+    Options:
+    <ul>
+        <li>
+            <code class="code-inline">templating_callback: (html: HTMLTemplateStringProcessor, item: LazyboxItem) => HTMLTemplateResult</code>: A callback function returning a lit/html template result to customize item templates
+            <br>
+            It takes two parameters:
+            <ul>
+                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer build a secure HTMLTemplateResult.</li>
+                <li><code class="code-inline">item: LazyboxItem</code> The item for which to build the template. See below for its definition.</li>
+            </ul>
+        </li>
+        <li>
+            <code class="code-inline">selection_callback: (selected_value: unknown | null) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
+            <br>
+            It takes one parameter: <code class="code-inline">selected_value: unknown | null</code>, which holds the <code class="code-inline">value</code> of the item that was just selected or <code class="code-inline">null</code> when the last selection is cleared.
+        </li>
+        <li>
+            <code class="code-inline">search_field_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
+            <br>
+            It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
+        </li>
+        <li>
+            <code class="code-inline">placeholder: string</code>: A (translated) text that will be shown when there is no selection in the lazybox. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact..."
+        </li>
+        <li>
+            <code class="code-inline">search_input_placeholder: string</code>: A (translated) text that will be shown inside the search input. It is shown when the user didn't write anything yet in the search input. Its purpose is to tell the user the kind of input they are supposed to write, so that their search yields results. For example "Id, title..."
+        </li>
+        <li>
+            <code class="code-inline">is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
+        </li>
+    </ul>
+    <br>
+    <br>
+    Methods:
+<ul>
+    <li>
+        <code class="code-inline">setDropdownContent(groups: GroupsOfItems[]) => void</code>: define the contents of the dropdown by giving it a list of <code class="code-inline">GroupOfItems</code>.
+        <br>
+        Each <code class="code-inline">GroupOfItems</code> has these properties:
+        <ul>
+            <li><code class="code-inline">label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.</li>
+            <li><code class="code-inline">empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.</li>
+            <li><code class="code-inline">is_loading: boolean</code>: Show a spinner next to the group's label if true.</li>
+            <li><code class="code-inline">items: LazyboxItem[]</code>: the items of the group.</li>
+            <li><code class="code-inline">icon: string</code>: an icon to display at the left of the group label.</li>
+            <li><code class="code-inline">footer_message: string</code>: a message to display below the group of items.</li>
+        </ul>
+        Each <code class="code-inline">LazyboxItem</code> has these properties:
+        <ul>
+            <li><code class="code-inline">id: string</code>: A unique string id to differentiate the item from the others.</li>
+            <li><code class="code-inline">value: unknown</code>: The value that will be passed to <code class="code-inline">selection_callback</code>. It can be any type, usually it's an object.</li>
+            <li><code class="code-inline">is_disabled: boolean</code>: the item cannot be selected if it's false.</li>
+        </ul>
+    </li>
+    <li><code class="code-inline">resetSelection() => void</code>: reset the current selection.</li>
+    <li><code class="code-inline">setSelection(selection: LazyboxItem[]) => void</code>: set the current selection.</li>
+    <li><code class="code-inline">destroy() => void</code>: destroy lazybox and remove all event handlers.</li>
+</ul>
+</p>

@@ -190,7 +190,7 @@ describe(`Artifact Modal`, function () {
             });
 
             getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
-                cy.searchItemInLinkSelectorDropdown(
+                cy.searchItemInLazyboxDropdown(
                     String(this.artifact_link_id),
                     LINKABLE_ARTIFACT_TITLE
                 ).click();
