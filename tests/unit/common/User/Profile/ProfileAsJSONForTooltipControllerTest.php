@@ -111,7 +111,7 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
                 Mockery::on(
                     static function (ResponseInterface $response): bool {
                         return $response->getStatusCode() === 200
-                            && $response->getBody()->getContents() === '{"title_as_html":"title","body_as_html":"body"}';
+                            && $response->getBody()->getContents() === '{"title_as_html":"title","body_as_html":"body","accent_color":""}';
                     }
                 )
             )->atLeast()->once();

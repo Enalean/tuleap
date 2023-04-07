@@ -940,7 +940,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             if ($artifact && $artifact->getTracker()->isActive()) {
                 $artifact->fetchTooltip($event->getUser())->apply($event->setOutput(...));
             } else {
-                $event->setOutput(new \Tuleap\Layout\TooltipJSON('', dgettext('tuleap-tracker', 'This artifact does not exist.')));
+                $event->setOutput(\Tuleap\Layout\TooltipJSON::fromHtmlBody(dgettext('tuleap-tracker', 'This artifact does not exist.')));
             }
         }
     }

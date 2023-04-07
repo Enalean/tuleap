@@ -22,20 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-class TooltipJSON
+/**
+ * @psalm-immutable
+ */
+final class TooltipJSON
 {
-    /**
-     * @var string
-     */
-    public $title_as_html;
-    /**
-     * @var string
-     */
-    public $body_as_html;
+    private function __construct(
+        public readonly string $title_as_html,
+        public readonly string $body_as_html,
+        public readonly string $accent_color,
+    ) {
+    }
 
-    public function __construct(string $title_as_html, string $body_as_html)
+    public static function fromHtmlBody(string $body_as_html): self
     {
-        $this->title_as_html = $title_as_html;
-        $this->body_as_html  = $body_as_html;
+        return new self('', $body_as_html, '');
+    }
+
+    public static function fromHtmlTitleAndHtmlBody(string $title_as_html, string $body_as_html): self
+    {
+        return new self($title_as_html, $body_as_html, '');
+    }
+
+    public function withAccentColor(string $accent_color): self
+    {
+        return new self($this->title_as_html, $this->body_as_html, $accent_color);
     }
 }

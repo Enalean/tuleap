@@ -44,7 +44,10 @@ final class TooltipFetcher
         }
         $html .= '</table>';
 
-        return Option::fromValue(new TooltipJSON((string) $artifact->getTitle(), $html));
+        return Option::fromValue(
+            TooltipJSON::fromHtmlTitleAndHtmlBody((string) $artifact->getTitle(), $html)
+                ->withAccentColor($artifact->getTracker()->getColor()->getName())
+        );
     }
 
     /**
