@@ -303,6 +303,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id');
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->addHook(Event::BUILD_REFERENCE, 'build_reference');
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::JAVASCRIPT, 'javascript');
         $this->addHook(Event::TOGGLE, 'toggle');
         $this->addHook(GetPublicAreas::NAME);
@@ -931,15 +932,16 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function referenceGetTooltipRepresentationEvent(Tuleap\Reference\ReferenceGetTooltipRepresentationEvent $event): void
+    public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
         if ($event->getReference()->getServiceShortName() === self::SERVICE_SHORTNAME && $event->getReference()->getNature() === Artifact::REFERENCE_NATURE) {
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById((int) $event->getValue());
-            if ($artifact && $artifact->getTracker()->isActive()) {
-                $artifact->fetchTooltip($event->getUser())->apply($event->setOutput(...));
-            } else {
-                $event->setOutput(new \Tuleap\Layout\TooltipJSON('', dgettext('tuleap-tracker', 'This artifact does not exist.')));
+            $aid = (int) $event->getValue();
+            if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid)) {
+                if ($artifact && $artifact->getTracker()->isActive()) {
+                    $event->setOutput($artifact->fetchTooltip($event->getUser()));
+                } else {
+                    $event->setOutput(dgettext('tuleap-tracker', 'This artifact does not exist.'));
+                }
             }
         }
     }

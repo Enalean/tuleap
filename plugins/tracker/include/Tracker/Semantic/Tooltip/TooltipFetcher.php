@@ -22,20 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
-use Tuleap\Layout\TooltipJSON;
-use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class TooltipFetcher
 {
-    /**
-     * @return Option<TooltipJSON>
-     */
-    public function fetchArtifactTooltip(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): Option
+    public function fetchArtifactTooltip(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): string
     {
         $readable_fields = $this->getReadableFields($artifact, $tooltip, $user);
         if (empty($readable_fields)) {
-            return Option::nothing(TooltipJSON::class);
+            return '';
         }
 
         $html = '<table>';
@@ -44,7 +39,7 @@ final class TooltipFetcher
         }
         $html .= '</table>';
 
-        return Option::fromValue(new TooltipJSON((string) $artifact->getTitle(), $html));
+        return $html;
     }
 
     /**

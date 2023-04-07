@@ -29,7 +29,7 @@ use Tuleap\Tracker\Test\Stub\Semantic\Tooltip\TooltipFieldsStub;
 
 final class TooltipFetcherTest extends TestCase
 {
-    public function testNothingWhenArtifactIsNotReadable(): void
+    public function testEmptyStringWhenArtifactIsNotReadable(): void
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(false);
@@ -40,14 +40,13 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        self::assertTrue(
-            (new TooltipFetcher())
-                ->fetchArtifactTooltip($artifact, $tooltip, $user)
-                ->isNothing()
+        self::assertEquals(
+            '',
+            (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user),
         );
     }
 
-    public function testNothingWhenThereIsNoFields(): void
+    public function testEmptyStringWhenThereIsNoFields(): void
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
@@ -56,18 +55,16 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        self::assertTrue(
-            (new TooltipFetcher())
-                ->fetchArtifactTooltip($artifact, $tooltip, $user)
-                ->isNothing()
+        self::assertEquals(
+            '',
+            (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user),
         );
     }
 
-    public function testReturnTheTooltipValueOfEachFields(): void
+    public function testDisplayTheTooltipValueOfEachFields(): void
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
-        $artifact->method('getTitle')->willReturn('The title');
 
         $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
         $field_1->method('userCanRead')->willReturn(true);
@@ -84,17 +81,15 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
-        self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
-        self::assertStringContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
+        $html = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertStringContainsString('avada', $html);
+        self::assertStringContainsString('kedavra', $html);
     }
 
     public function testExcludeUnreadableFields(): void
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
-        $artifact->method('getTitle')->willReturn(null);
 
         $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
         $field_1->method('userCanRead')->willReturn(true);
@@ -111,9 +106,8 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertStringContainsString('', $tooltip->unwrapOr('')->title_as_html);
-        self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
-        self::assertStringNotContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
+        $html = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertStringContainsString('avada', $html);
+        self::assertStringNotContainsString('kedavra', $html);
     }
 }
