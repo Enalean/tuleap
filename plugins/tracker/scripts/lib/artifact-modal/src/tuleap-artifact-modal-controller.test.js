@@ -28,6 +28,8 @@ import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
+import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
 
 const PROJECT_ID = 133;
 
@@ -107,6 +109,9 @@ describe("TuleapArtifactModalController", () => {
                 displayItemCallback: mockCallback,
             };
         });
+
+        const spy_create_artifact_feature_flag = jest.spyOn(fetch_result, "getJSON");
+        spy_create_artifact_feature_flag.mockReturnValue(okAsync("1"));
 
         isInCreationMode = jest.spyOn(modal_create_mode_state, "isInCreationMode");
         createArtifact = jest.spyOn(rest_service, "createArtifact");

@@ -119,6 +119,16 @@ function ArtifactModalController(
 
     const user_locale = document.body.dataset.userLocale ?? "en_US";
 
+    api_client
+        .getCreateArtifactFeatureFlag()
+        .unwrapOr(false)
+        .then((value) => {
+            if (value) {
+                // eslint-disable-next-line no-console
+                console.log("Create artifact feature flag enabled");
+            }
+        });
+
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,

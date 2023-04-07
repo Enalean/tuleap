@@ -68,3 +68,7 @@ export type SearchResultEntry = UserHistoryEntry & {
 export type UserHistoryResponse = {
     readonly entries: ReadonlyArray<UserHistoryEntry>;
 };
+
+export type FeatureFlagResponse = {
+    readonly value: string | number;
+};
