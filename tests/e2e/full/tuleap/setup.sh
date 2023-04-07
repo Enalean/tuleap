@@ -5,6 +5,9 @@ set -euxo pipefail
 export DISPLAY_ERRORS=true
 
 setup_lhs() {
+    # Drop symlink to the file explaining we might to take a look at journalctl
+    # It is a annoyance when we do a `docker compose cp ...:/var/log` at the end
+    rm /var/log/README
     touch /etc/aliases.codendi
 
     cat /etc/passwd
