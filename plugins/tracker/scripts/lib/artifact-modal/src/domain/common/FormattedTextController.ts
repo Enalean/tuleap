@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Option } from "@tuleap/option";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { DispatchEvents } from "../DispatchEvents";
 import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { WillGetFileUploadSetup } from "../fields/file-field/WillGetFileUploadSetup";
 import type { WillDisableSubmit } from "../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../submit/WillEnableSubmit";
 import type { DidUploadImage } from "../fields/file-field/DidUploadImage";
-import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 export type FormattedTextControllerType = {
     getDefaultTextFormat(): TextFieldFormat;
-    getFileUploadSetup(): FileUploadSetup | null;
+    getFileUploadSetup(): Option<FileUploadSetup>;
     onFileUploadStart(event: WillDisableSubmit): void;
     onFileUploadError(): void;
     onFileUploadSuccess(event: DidUploadImage): void;
@@ -39,7 +40,7 @@ export const FormattedTextController = (
 ): FormattedTextControllerType => ({
     getDefaultTextFormat: () => default_text_format,
 
-    getFileUploadSetup(): FileUploadSetup | null {
+    getFileUploadSetup(): Option<FileUploadSetup> {
         const event = WillGetFileUploadSetup();
         event_dispatcher.dispatch(event);
         return event.setup;

@@ -72,7 +72,7 @@ describe(`FileFieldController`, () => {
             const event = WillGetFileUploadSetup();
             event_dispatcher.dispatch(event);
 
-            const setup = event.setup;
+            const setup = event.setup.unwrapOr(null);
             if (setup === null) {
                 throw Error("Expected a file upload setup");
             }

@@ -30,6 +30,7 @@ import {
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { Option } from "@tuleap/option";
 import { setCatalog } from "../gettext-catalog";
 import type { HostElement } from "./RichTextEditor";
 import {
@@ -78,7 +79,7 @@ let format: TextFieldFormat,
     editor_factory: RichTextEditorFactory,
     editor: TextEditorInterface,
     ckeditor: CKEDITOR.editor,
-    upload_setup: FileUploadSetup | null,
+    upload_setup: Option<FileUploadSetup>,
     buildFileUploadHandler: jest.SpyInstance,
     isThereAnImageWithDataURI: jest.SpyInstance,
     event_dispatcher: DispatchEventsStub;
@@ -149,10 +150,10 @@ describe(`RichTextEditor`, () => {
         disabled = false;
         format = "text";
         value = "";
-        upload_setup = {
+        upload_setup = Option.fromValue({
             max_size_upload: 3000,
             file_creation_uri: "https://example.com/upload",
-        };
+        });
     });
 
     describe(`when the editor's format is "html"`, () => {
@@ -260,7 +261,7 @@ describe(`RichTextEditor`, () => {
 
         describe(`when uploading is not possible`, () => {
             beforeEach(() => {
-                upload_setup = null;
+                upload_setup = Option.nothing();
             });
 
             it(`removes the uploadimage plugin from ckeditor's configuration`, () => {

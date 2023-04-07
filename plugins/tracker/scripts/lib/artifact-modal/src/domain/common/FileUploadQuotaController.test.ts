@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import { FileUploadQuotaController } from "./FileUploadQuotaController";
 import { EventDispatcher } from "../EventDispatcher";
 
@@ -36,10 +37,10 @@ describe(`FileUploadQuotaController`, () => {
 
         it(`will dispatch an event and return the max upload size`, async () => {
             event_dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
-                event.setup = {
+                event.setup = Option.fromValue({
                     max_size_upload: MAX_SIZE_UPLOAD,
                     file_creation_uri: "https://example.com/upload",
-                };
+                });
             });
 
             await expect(getMaxUploadSize()).resolves.toBe(MAX_SIZE_UPLOAD);
