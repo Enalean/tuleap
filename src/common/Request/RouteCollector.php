@@ -1302,8 +1302,7 @@ class RouteCollector
     public static function getFeatureFlag(): FeatureFlagController
     {
         return new FeatureFlagController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             new SapiEmitter()
         );
     }

@@ -24,18 +24,16 @@ namespace Tuleap\Config;
 
 use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 
 final class FeatureFlagController extends DispatchablePSR15Compatible
 {
     public function __construct(
-        private readonly ResponseFactoryInterface $response_factory,
-        private readonly StreamFactoryInterface $stream_factory,
+        private readonly JSONResponseBuilder $response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -47,7 +45,7 @@ final class FeatureFlagController extends DispatchablePSR15Compatible
         $params = $request->getQueryParams();
 
         if (! isset($params['name'])) {
-            return $this->formatErrorResponse('Bad request: the query param "name" is missing');
+            return $this->formatErrorResponse('Bad request: the query parameter "name" is missing');
         }
 
         $feature_flag_name = $params['name'];
@@ -61,15 +59,11 @@ final class FeatureFlagController extends DispatchablePSR15Compatible
             return $this->formatErrorResponse('Bad request: the feature flag is not set');
         }
 
-        return $this->response_factory->createResponse()->withHeader('Content-Type', 'application/json; charset=utf-8')->withBody(
-            $this->stream_factory->createStream(json_encode(['value' => $feature_flag_value], JSON_THROW_ON_ERROR))
-        );
+        return $this->response_builder->fromData(['value' => $feature_flag_value]);
     }
 
     private function formatErrorResponse(string $message): ResponseInterface
     {
-        return $this->response_factory->createResponse(400)->withHeader('Content-Type', 'application/json; charset=utf-8')->withBody(
-            $this->stream_factory->createStream(json_encode(['error' => ['message' => $message]], JSON_THROW_ON_ERROR))
-        );
+        return $this->response_builder->fromData(['error' => ['message' => $message]])->withStatus(400, 'Bad request');
     }
 }

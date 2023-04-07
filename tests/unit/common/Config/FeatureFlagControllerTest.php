@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 use ForgeConfig;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,12 +41,15 @@ final class FeatureFlagControllerTest extends TestCase
     protected function setUp(): void
     {
         ForgeConfig::set(ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY, 1);
+    }
 
-        $this->feature_flag_controller = new FeatureFlagController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
+    private function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $controller = new FeatureFlagController(
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             new NoopSapiEmitter(),
         );
+        return $controller->handle($request);
     }
 
     private function expectedJSONError(string $reason): string
@@ -51,53 +57,48 @@ final class FeatureFlagControllerTest extends TestCase
         return json_encode(['error' => ['message' => $reason]], JSON_THROW_ON_ERROR);
     }
 
-    public function testItReturns400IfTheFeatureFlagNameParamIsMissing(): void
+    public function provideInvalidNames(): iterable
     {
-        $request = (new NullServerRequest())->withQueryParams(["some_param" => "feature_flag_not_feature_flag"]);
-
-        $response = $this->feature_flag_controller->handle($request);
-
-        self::assertSame(400, $response->getStatusCode());
-        self::assertSame($this->expectedJSONError('Bad request: the query param "name" is missing'), $response->getBody()->getContents());
+        yield 'Name param is missing' => [['some_param' => 'feature_flag_not_feature_flag'], 'Bad request: the query parameter "name" is missing'];
+        yield 'Name param is empty' => [['name' => ''], 'Bad request: the name given is not a feature flag'];
+        yield 'Name does not have feature flag prefix' => [['name' => 'hehehe'], 'Bad request: the name given is not a feature flag'];
     }
 
-    public function testItReturns400IfTheFeatureFlagNameIsNotGiven(): void
+    /**
+     * @dataProvider provideInvalidNames
+     */
+    public function testItReturnsBadRequestWhenInvalidParameter(array $query_parameters, string $expected_error): void
     {
-        $request = (new NullServerRequest())->withQueryParams(["name" => ""]);
+        $request = (new NullServerRequest())->withQueryParams($query_parameters);
 
-        $response = $this->feature_flag_controller->handle($request);
+        $response = $this->handle($request);
 
         self::assertSame(400, $response->getStatusCode());
-        self::assertSame($this->expectedJSONError('Bad request: the name given is not a feature flag'), $response->getBody()->getContents());
+        self::assertSame($this->expectedJSONError($expected_error), $response->getBody()->getContents());
     }
 
-    public function testItReturns400IfNameGivenIsNotAFeatureFlag(): void
-    {
-        $request = (new NullServerRequest())->withQueryParams(["name" => "hehehe"]);
-
-        $response = $this->feature_flag_controller->handle($request);
-
-        self::assertSame(400, $response->getStatusCode());
-        self::assertSame($this->expectedJSONError('Bad request: the name given is not a feature flag'), $response->getBody()->getContents());
-    }
-
-    public function testItReturns400IfTheGivenFeatureFlagIsNotSet(): void
+    public function testItReturnsBadRequestIfTheGivenFeatureFlagIsNotSet(): void
     {
         ForgeConfig::set(ForgeConfig::FEATURE_FLAG_PREFIX . 'feature_flag_not_feature_flag', null);
 
         $request = (new NullServerRequest())->withQueryParams(["name" => "feature_flag_not_feature_flag"]);
 
-        $response = $this->feature_flag_controller->handle($request);
+        $response = $this->handle($request);
 
         self::assertSame(400, $response->getStatusCode());
-        self::assertSame($this->expectedJSONError('Bad request: the feature flag is not set'), $response->getBody()->getContents());
+        self::assertSame(
+            $this->expectedJSONError('Bad request: the feature flag is not set'),
+            $response->getBody()->getContents()
+        );
     }
 
     public function testItReturnsTheFeatureFlagValue(): void
     {
-        $request = (new NullServerRequest())->withQueryParams(["name" => ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY]);
+        $request = (new NullServerRequest())->withQueryParams(
+            ["name" => ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY]
+        );
 
-        $response = $this->feature_flag_controller->handle($request);
+        $response = $this->handle($request);
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(json_encode(['value' => 1]), $response->getBody()->getContents());
