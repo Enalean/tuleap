@@ -48,7 +48,6 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
-import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import type { DispatchEvents } from "../../../../domain/DispatchEvents";
 import { WillDisableSubmit } from "../../../../domain/submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../../../../domain/submit/WillEnableSubmit";
@@ -57,6 +56,7 @@ import { WillClearFaultNotification } from "../../../../domain/WillClearFaultNot
 import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
 import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/ChangeNewLinkType";
 import type { ChangeLinkType } from "../../../../domain/fields/link-field/ChangeLinkType";
+import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 
 export type LinkFieldControllerType = {
     getCurrentArtifactReference(): Option<ArtifactCrossReference>;
@@ -111,11 +111,11 @@ export const LinkFieldController = (
     parent_verifier: VerifyHasParentLink,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
-    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
     event_dispatcher: DispatchEvents,
     field: ArtifactLinkFieldInfo,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
+    parent_tracker_identifier: Option<ParentTrackerIdentifier>,
     current_artifact_reference: Option<ArtifactCrossReference>,
     allowed_links_types_collection: LinkTypesCollection
 ): LinkFieldControllerType => ({
@@ -125,9 +125,10 @@ export const LinkFieldController = (
 
     getCurrentLinkType: (has_possible_parents: boolean): LinkType => {
         const reverse_child_type = allowed_links_types_collection.getReverseChildType();
+        const is_tracker_in_a_hierarchy = parent_tracker_identifier.isValue();
         return reverse_child_type &&
             !parent_verifier.hasParentLink() &&
-            (tracker_hierarchy_verifier.isTrackerInAHierarchy() || has_possible_parents)
+            (is_tracker_in_a_hierarchy || has_possible_parents)
             ? reverse_child_type
             : LinkType.buildUntyped();
     },

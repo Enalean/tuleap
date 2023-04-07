@@ -59,14 +59,14 @@ import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAl
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
-import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
-import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
+import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
+import { ParentTrackerIdentifierStub } from "../../../../../tests/stubs/ParentTrackerIdentifierStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -84,10 +84,10 @@ describe(`LinkFieldController`, () => {
         new_link_remover: DeleteNewLinkStub,
         parents_retriever: RetrievePossibleParents,
         parent_artifact_identifier: Option<ParentArtifactIdentifier>,
-        verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
         event_dispatcher: DispatchEventsStub,
         new_link_type_changer: ChangeNewLinkTypeStub,
-        link_type_changer: ChangeLinkTypeStub;
+        link_type_changer: ChangeLinkTypeStub,
+        parent_tracker_identifier: Option<ParentTrackerIdentifier>;
 
     beforeEach(() => {
         setCatalog({
@@ -103,7 +103,6 @@ describe(`LinkFieldController`, () => {
         new_link_remover = DeleteNewLinkStub.withCount();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
         parent_artifact_identifier = Option.nothing();
-        verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         new_link_type_changer = ChangeNewLinkTypeStub.withCount();
         link_type_changer = ChangeLinkTypeStub.withCount();
@@ -133,11 +132,11 @@ describe(`LinkFieldController`, () => {
             ),
             parents_retriever,
             link_verifier,
-            verify_is_tracker_in_a_hierarchy,
             event_dispatcher,
             ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID }),
             current_artifact_identifier,
             current_tracker_identifier,
+            parent_tracker_identifier,
             cross_reference,
             LinkTypesCollectionStub.withParentPair()
         );
@@ -152,7 +151,7 @@ describe(`LinkFieldController`, () => {
 
     describe("getCurrentLinkType()", () => {
         it(`When the tracker has a parent, Then it will return a presenter for the reverse child type`, () => {
-            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withHierarchy();
+            parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifierStub.withId(217));
 
             const selected_link_type = getController().getCurrentLinkType(false);
             expect(selected_link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
@@ -162,7 +161,7 @@ describe(`LinkFieldController`, () => {
         it(`When the tracker has no parent,
             And the current artifact has no possible parents
             Then it will return a presenter for the untyped link type`, () => {
-            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
+            parent_tracker_identifier = Option.nothing();
 
             const selected_link_type = getController().getCurrentLinkType(false);
             expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
@@ -172,7 +171,7 @@ describe(`LinkFieldController`, () => {
         it(`When the tracker has no parent,
             And the current artifact has possible parents
             Then it will return a presenter for the reverse child type`, () => {
-            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
+            parent_tracker_identifier = Option.nothing();
 
             const selected_link_type = getController().getCurrentLinkType(true);
 
@@ -182,7 +181,7 @@ describe(`LinkFieldController`, () => {
 
         it(`When the artifact has already a parent, then it should return a presenter for the untyped link type`, () => {
             parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(123));
-            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withHierarchy();
+            parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifierStub.withId(88));
 
             const selected_link_type = getController().getCurrentLinkType(true);
 

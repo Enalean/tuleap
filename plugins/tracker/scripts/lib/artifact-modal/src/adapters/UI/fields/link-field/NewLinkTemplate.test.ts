@@ -41,12 +41,12 @@ import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasPar
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
+import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -160,11 +160,11 @@ describe(`NewLinkTemplate`, () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 RetrievePossibleParentsStub.withoutParents(),
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
                 DispatchEventsStub.buildNoOp(),
                 ArtifactLinkFieldInfoStub.withDefaults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
+                Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair()
             );

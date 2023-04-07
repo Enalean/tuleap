@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface VerifyIsTrackerInAHierarchy {
-    isTrackerInAHierarchy(): boolean;
+import type { Identifier } from "../../Identifier";
+
+/**
+ * I identify the parent tracker of the current tracker (if any).
+ * My presence indicates that there is a Tracker hierarchy between the two.
+ */
+export interface ParentTrackerIdentifier extends Identifier<"ParentTrackerIdentifier"> {
+    readonly id: number;
 }

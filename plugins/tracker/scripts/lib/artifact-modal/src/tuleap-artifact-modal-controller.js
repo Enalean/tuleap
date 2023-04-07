@@ -57,7 +57,6 @@ import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploade
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
 import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesCollector";
-import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
@@ -66,6 +65,7 @@ import { EventDispatcher } from "./domain/EventDispatcher";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { FormattedTextController } from "./domain/common/FormattedTextController";
+import { ParentTrackerIdentifierProxy } from "./adapters/REST/fields/link-field/ParentTrackerIdentifierProxy";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -189,11 +189,11 @@ function ArtifactModalController(
                 ParentLinkVerifier(links_store, new_links_store, parent_artifact_identifier),
                 possible_parents_cache,
                 already_linked_verifier,
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
                 event_dispatcher,
                 field,
                 current_artifact_identifier,
                 current_tracker_identifier,
+                ParentTrackerIdentifierProxy.fromTrackerModel(modal_model.tracker.parent),
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
