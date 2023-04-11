@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance\Migration\Admin;
 
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
@@ -42,13 +41,6 @@ use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class StartMigrationControllerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
-    protected function setUp(): void
-    {
-        \ForgeConfig::setFeatureFlag(StartMigrationController::FEATURE_FLAG, 1);
-    }
-
     public function testStartMigration(): void
     {
         $project = ProjectTestBuilder::aProject()->build();

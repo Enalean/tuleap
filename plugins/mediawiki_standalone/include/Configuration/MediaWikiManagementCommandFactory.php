@@ -30,4 +30,6 @@ interface MediaWikiManagementCommandFactory
     public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand;
 
     public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
+
+    public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
 }

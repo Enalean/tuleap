@@ -460,7 +460,6 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
         $event->addConfigClass(LocalSettingsRepresentation::class);
-        $event->addConfigClass(StartMigrationController::class);
     }
 
     /**
@@ -855,13 +854,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     #[ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void
     {
-        if (StartMigrationController::isEnabled()) {
-            $event->addPluginOption(
-                SiteAdministrationPluginOption::build(
-                    dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone'),
-                    DisplayMigrationController::URL,
-                )
-            );
-        }
+        $event->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone'),
+                DisplayMigrationController::URL,
+            )
+        );
     }
 }
