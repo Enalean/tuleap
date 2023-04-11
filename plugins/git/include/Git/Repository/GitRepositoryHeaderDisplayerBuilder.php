@@ -45,6 +45,7 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Repository\View\DefaultCloneURLSelector;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
+use Tuleap\Git\Repository\View\RepositoryHeaderTabsURLBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
@@ -147,7 +148,10 @@ class GitRepositoryHeaderDisplayerBuilder
             $selected_tab,
             EventManager::instance(),
             new DefaultCloneURLSelector(),
-            new URLVerification()
+            new URLVerification(),
+            new RepositoryHeaderTabsURLBuilder(
+                $this->getGitRepositoryUrlManager($git_plugin),
+            ),
         );
     }
 
