@@ -33,7 +33,7 @@ export const FileUploadQuotaController = (
             setTimeout(() => {
                 const event = WillGetFileUploadSetup();
                 event_dispatcher.dispatch(event);
-                const max_upload_size = event.setup?.max_size_upload ?? 0;
+                const max_upload_size = event.setup.mapOr((setup) => setup.max_size_upload, 0);
                 resolve(max_upload_size);
             });
         });

@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import type { DomainEvent } from "../../DomainEvent";
 import type { FileUploadSetup } from "./FileUploadSetup";
 
 export type WillGetFileUploadSetup = DomainEvent<"WillGetFileUploadSetup"> & {
-    setup: FileUploadSetup | null;
+    setup: Option<FileUploadSetup>;
 };
 
 export const WillGetFileUploadSetup = (): WillGetFileUploadSetup => ({
     type: "WillGetFileUploadSetup",
-    setup: null,
+    setup: Option.nothing(),
 });

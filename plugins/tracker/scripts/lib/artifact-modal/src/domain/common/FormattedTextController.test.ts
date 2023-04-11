@@ -20,11 +20,11 @@
 import { EventDispatcher } from "../EventDispatcher";
 import type { FormattedTextControllerType } from "./FormattedTextController";
 import { FormattedTextController } from "./FormattedTextController";
-import type { FileUploadSetup } from "../fields/file-field/FileUploadSetup";
 import { DispatchEventsStub } from "../../../tests/stubs/DispatchEventsStub";
 import { DidUploadImage } from "../fields/file-field/DidUploadImage";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
+import { Option } from "@tuleap/option";
 
 const DEFAULT_TEXT_FORMAT: TextFieldFormat = TEXT_FORMAT_COMMONMARK;
 
@@ -47,10 +47,10 @@ describe(`FormattedTextController`, () => {
     describe(`getFileUploadSetup()`, () => {
         it(`dispatches an event and returns the contents of that event`, () => {
             dispatcher = EventDispatcher();
-            const upload_setup: FileUploadSetup = {
+            const upload_setup = Option.fromValue({
                 max_size_upload: 7000,
                 file_creation_uri: "https://example.com/upload",
-            };
+            });
             dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
                 event.setup = upload_setup;
             });
@@ -58,8 +58,8 @@ describe(`FormattedTextController`, () => {
             expect(getController().getFileUploadSetup()).toBe(upload_setup);
         });
 
-        it(`when nobody responds, it returns null`, () => {
-            expect(getController().getFileUploadSetup()).toBeNull();
+        it(`when nobody responds, it returns nothing`, () => {
+            expect(getController().getFileUploadSetup().isNothing()).toBe(true);
         });
     });
 

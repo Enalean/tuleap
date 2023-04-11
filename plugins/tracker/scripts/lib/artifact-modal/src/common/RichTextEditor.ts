@@ -24,8 +24,8 @@ import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-edito
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { UploadError } from "@tuleap/ckeditor-image-upload";
 import {
-    isThereAnImageWithDataURI,
     buildFileUploadHandler,
+    isThereAnImageWithDataURI,
     MaxSizeUploadExceededError,
 } from "@tuleap/ckeditor-image-upload";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
@@ -34,6 +34,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
 } from "@tuleap/plugin-tracker-constants";
+import { Option } from "@tuleap/option";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -56,7 +57,7 @@ export interface RichTextEditor {
     textarea: HTMLTextAreaElement | null;
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
-    upload_setup: FileUploadSetup | null;
+    upload_setup: Option<FileUploadSetup>;
     readonly controller: FormattedTextControllerType;
     content: () => HTMLElement;
 }
@@ -107,41 +108,41 @@ function onChange(host: HostElement, ckeditor: CKEDITOR.editor): void {
     dispatch(host, "content-change", { detail: { content: new_content } });
 }
 
-const isUploadPossible = (setup: FileUploadSetup | null): setup is FileUploadSetup =>
-    setup !== null;
-
 export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): void {
-    if (!isUploadPossible(host.upload_setup)) {
+    if (host.upload_setup.isNothing()) {
         disablePasteOfImages(ckeditor);
         return;
     }
-
-    const onStartCallback = (): void =>
-        host.controller.onFileUploadStart(WillDisableSubmit(getSubmitDisabledImageUploadReason()));
-    const onErrorCallback = (error: MaxSizeUploadExceededError | UploadError): void => {
-        if (error instanceof MaxSizeUploadExceededError) {
-            error.loader.message = sprintf(
-                getUploadSizeExceeded(),
-                prettyKibibytes(error.max_size_upload)
+    host.upload_setup.apply((upload_setup) => {
+        const onStartCallback = (): void =>
+            host.controller.onFileUploadStart(
+                WillDisableSubmit(getSubmitDisabledImageUploadReason())
             );
-        } else {
-            error.loader.message = getUploadError();
-        }
-        host.controller.onFileUploadError();
-    };
-    const onSuccessCallback = (id: number, download_href: string): void => {
-        host.controller.onFileUploadSuccess(DidUploadImage({ id, download_href }));
-    };
+        const onErrorCallback = (error: MaxSizeUploadExceededError | UploadError): void => {
+            if (error instanceof MaxSizeUploadExceededError) {
+                error.loader.message = sprintf(
+                    getUploadSizeExceeded(),
+                    prettyKibibytes(error.max_size_upload)
+                );
+            } else {
+                error.loader.message = getUploadError();
+            }
+            host.controller.onFileUploadError();
+        };
+        const onSuccessCallback = (id: number, download_href: string): void => {
+            host.controller.onFileUploadSuccess(DidUploadImage({ id, download_href }));
+        };
 
-    const fileUploadRequestHandler = buildFileUploadHandler({
-        ckeditor_instance: ckeditor,
-        max_size_upload: host.upload_setup.max_size_upload,
-        onStartCallback,
-        onErrorCallback,
-        onSuccessCallback,
+        const fileUploadRequestHandler = buildFileUploadHandler({
+            ckeditor_instance: ckeditor,
+            max_size_upload: upload_setup.max_size_upload,
+            onStartCallback,
+            onErrorCallback,
+            onSuccessCallback,
+        });
+
+        ckeditor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
     });
-
-    ckeditor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
 }
 
 function disablePasteOfImages(ckeditor: CKEDITOR.editor): void {
@@ -165,24 +166,23 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
         locale,
         default_format
     );
-    const upload_setup = host.controller.getFileUploadSetup();
 
     return editor_factory.createRichTextEditor(host.textarea, {
         format_selectbox_id: "format_" + host.identifier,
         format_selectbox_value: host.format,
-        getAdditionalOptions: () => {
-            if (!isUploadPossible(upload_setup)) {
-                return { height: "100px", readOnly: host.disabled };
-            }
-            return {
-                height: "100px",
-                readOnly: host.disabled,
-                extraPlugins: "uploadimage",
-                uploadUrl: "/api/v1/" + upload_setup.file_creation_uri,
-            };
-        },
+        getAdditionalOptions: () =>
+            host.controller.getFileUploadSetup().mapOr(
+                (upload_setup) => ({
+                    height: "100px",
+                    readOnly: host.disabled,
+                    extraPlugins: "uploadimage",
+                    uploadUrl: "/api/v1/" + upload_setup.file_creation_uri,
+                }),
+                { height: "100px", readOnly: host.disabled }
+            ),
         onFormatChange: (new_format) => {
-            host.is_help_shown = isUploadPossible(upload_setup) && new_format === TEXT_FORMAT_HTML;
+            host.is_help_shown =
+                host.controller.getFileUploadSetup().isValue() && new_format === TEXT_FORMAT_HTML;
             if (!host.textarea) {
                 return;
             }
@@ -232,7 +232,10 @@ export const RichTextEditor = define<RichTextEditor>({
         }
         return textarea;
     },
-    upload_setup: undefined,
+    upload_setup: {
+        get: (host, last_value) => last_value ?? Option.nothing(),
+        set: (host, new_value) => new_value,
+    },
     is_help_shown: false,
     controller: {
         set(host, controller: FormattedTextControllerType) {

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import type { FileFieldValueModel } from "./FileFieldValueModel";
 import { NewFileToAttach } from "./NewFileToAttach";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
@@ -48,13 +49,13 @@ export const FileFieldController = (
     let attached_files: AttachedFileCollection = field.file_descriptions;
 
     event_dispatcher.addObserver("WillGetFileUploadSetup", (event) => {
-        if (event.setup !== null) {
+        if (event.setup.isValue()) {
             return;
         }
-        event.setup = {
+        event.setup = Option.fromValue({
             file_creation_uri: field.file_creation_uri,
             max_size_upload: field.max_size_upload,
-        };
+        });
     });
 
     event_dispatcher.addObserver("DidUploadImage", (event) => {
