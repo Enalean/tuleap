@@ -560,12 +560,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $icon_presenter_builder = new DocumentIconPresenterBuilder();
 
         $renderer     = TemplateRendererFactory::build()->getRenderer(__DIR__);
-        $tooltip_json = new TooltipJSON(
+        $tooltip_json = TooltipJSON::fromHtmlTitleAndHtmlBody(
             $renderer->renderToString('tooltip-title', [
                 'icon'  => $icon_presenter_builder->buildForItem($item),
                 'title' => $item->getTitle(),
             ]),
-            $item->getDescription(),
+            $item->getDescription()
         );
         $event->setOutput($tooltip_json);
     }

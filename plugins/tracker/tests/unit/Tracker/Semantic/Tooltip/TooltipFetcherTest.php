@@ -25,7 +25,9 @@ namespace Tuleap\Tracker\Semantic\Tooltip;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Tooltip\TooltipFieldsStub;
+use Tuleap\Tracker\TrackerColor;
 
 final class TooltipFetcherTest extends TestCase
 {
@@ -68,6 +70,11 @@ final class TooltipFetcherTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
         $artifact->method('getTitle')->willReturn('The title');
+        $artifact->method('getTracker')->willReturn(
+            TrackerTestBuilder::aTracker()
+                ->withColor(TrackerColor::fromName('fiesta-red'))
+                ->build()
+        );
 
         $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
         $field_1->method('userCanRead')->willReturn(true);
@@ -85,9 +92,10 @@ final class TooltipFetcherTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
+        self::assertEquals('The title', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
+        self::assertEquals('fiesta-red', $tooltip->unwrapOr('')->accent_color);
     }
 
     public function testExcludeUnreadableFields(): void
@@ -95,6 +103,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
         $artifact->method('getTitle')->willReturn(null);
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
         $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
         $field_1->method('userCanRead')->willReturn(true);
@@ -112,7 +121,7 @@ final class TooltipFetcherTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertStringContainsString('', $tooltip->unwrapOr('')->title_as_html);
+        self::assertEquals('', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringNotContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
     }
