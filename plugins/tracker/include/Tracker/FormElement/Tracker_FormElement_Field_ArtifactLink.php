@@ -1704,9 +1704,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
      */
     public function augmentDataFromRequest(&$fields_data)
     {
-        $request_data_augmentor = new RequestDataAugmentor(
-            EventManager::instance()
-        );
+        $request_data_augmentor = new RequestDataAugmentor();
 
         $request_data_augmentor->augmentDataFromRequest(
             $this,
