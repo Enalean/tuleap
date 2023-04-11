@@ -22,21 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use EventManager;
 use Tracker_FormElement_Field_ArtifactLink;
 
 class RequestDataAugmentor
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(EventManager $event_manager)
-    {
-        $this->event_manager = $event_manager;
-    }
-
     public function augmentDataFromRequest(
         Tracker_FormElement_Field_ArtifactLink $artifact_link_field,
         array &$fields_data,

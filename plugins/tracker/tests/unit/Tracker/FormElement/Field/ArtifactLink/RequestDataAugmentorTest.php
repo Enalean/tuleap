@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
@@ -45,11 +44,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $field;
 
     /**
-     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-
-    /**
      * @var RequestDataAugmentor
      */
     private $augmentor;
@@ -62,11 +56,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field = ArtifactLinkFieldBuilder::anArtifactLinkField($this->art_link_id)->build();
         $this->field->setTracker($this->tracker);
 
-        $this->event_manager = Mockery::mock(\EventManager::class);
-
-        $this->augmentor = new RequestDataAugmentor(
-            $this->event_manager
-        );
+        $this->augmentor = new RequestDataAugmentor();
     }
 
     public function testDoesNothingWhenThereAreNoParentsInRequest(): void
@@ -79,7 +69,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -116,7 +105,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -135,7 +123,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -147,7 +134,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $fields_data = [];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -164,7 +150,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -194,7 +179,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -232,7 +216,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
@@ -270,7 +253,6 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->tracker->shouldReceive('isProjectAllowedToUseType')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $this->augmentor->augmentDataFromRequest($this->field, $fields_data);
 
