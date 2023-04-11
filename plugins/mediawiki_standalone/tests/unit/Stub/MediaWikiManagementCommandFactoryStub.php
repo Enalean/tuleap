@@ -63,4 +63,9 @@ class MediaWikiManagementCommandFactoryStub implements MediaWikiManagementComman
         $this->update_instance_commands_iterator->next();
         return $command;
     }
+
+    public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
+    {
+        return $this->buildUpdateProjectInstanceCommand($project_name);
+    }
 }

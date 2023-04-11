@@ -31,6 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommand;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandFailure;
 use Tuleap\MediawikiStandalone\Instance\InitializationIssue;
@@ -141,7 +142,7 @@ final class MigrateInstance
             function (ResponseInterface $response) use ($client, $request_factory, $stream_factory, $logger, $instance_name): Ok|Err {
                 return match ($response->getStatusCode()) {
                     404 => $this->registerInstance($client, $request_factory, $stream_factory, $logger),
-                    200 => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
+                    200 => $this->performUpgrade($logger),
                     default => Result::err(
                         Fault::fromMessage(
                             sprintf(
@@ -191,21 +192,20 @@ final class MigrateInstance
 
                     return self::processSuccessOnlyRequest($client, $request, $logger)->andThen(
                         /** @return Ok<\Project>|Err<Fault> */
-                        fn () => $this->performUpgrade($client, $request_factory, $stream_factory, $logger)
+                        fn () => $this->performUpgrade($logger)
                     );
                 }
             );
     }
 
     /**
-     * @return Ok<\Project>|Err<Fault>
+     * @return Ok<null>|Err<Fault>
      */
-    private function performUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
+    private function applyManagementCommand(MediaWikiManagementCommand $command): Ok|Err
     {
-        $command = $this->command_factory->buildUpdateProjectInstanceCommand($this->project->getUnixNameLowerCase());
         return $command->wait()->match(
-            /** @return Ok<\Project>|Err<Fault> */
-            fn (): Ok|Err => $this->finishUpgrade($client, $request_factory, $stream_factory, $logger),
+        /** @return Ok<null>|Err<Fault> */
+            fn (): Ok => Result::ok(null),
             fn (MediaWikiManagementCommandFailure $failure): Err => Result::err(Fault::fromMessage((string) $failure))
         );
     }
@@ -213,12 +213,11 @@ final class MigrateInstance
     /**
      * @return Ok<\Project>|Err<Fault>
      */
-    private function finishUpgrade(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
+    private function performUpgrade(LoggerInterface $logger): Ok|Err
     {
-        $request = $request_factory
-            ->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->project->getUnixNameLowerCase()) . '/update')
-            ->withBody($stream_factory->createStream('{}'));
-        return self::processSuccessOnlyRequest($client, $request, $logger)
+        $project_name = $this->project->getUnixNameLowerCase();
+
+        return $this->applyManagementCommand($this->command_factory->buildUpdateToMediaWiki135ProjectInstanceCommand($project_name))
             ->andThen(
                 /** @psalm-return Ok<null>|Err<Fault> */
                 function (): Ok|Err {
@@ -226,6 +225,9 @@ final class MigrateInstance
 
                     return Result::ok(null);
                 }
+            )->andThen(
+                /** @psalm-return Ok<null>|Err<Fault> */
+                fn (): Ok|Err => $this->applyManagementCommand($this->command_factory->buildUpdateProjectInstanceCommand($project_name))
             )->andThen(
                 /** @psalm-return Ok<\Project> */
                 function () use ($logger): Ok {

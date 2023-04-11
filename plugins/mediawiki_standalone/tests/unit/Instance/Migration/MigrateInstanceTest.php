@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -89,19 +89,6 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $this->mediawiki_client->on(
-            new CallbackRequestMatcher(
-                function (RequestInterface $request): bool {
-                    return $request->getMethod() === 'POST' &&
-                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
-                        $request->getBody()->getContents() === '{}';
-                }
-            ),
-            function () {
-                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
-            }
-        );
-
         $switcher                    = SwitchMediawikiServiceStub::buildSelf();
         $db_primer                   = new LegacyMediawikiDBPrimerStub();
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
@@ -110,7 +97,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
-            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
             $switcher,
             $db_primer,
@@ -159,26 +146,13 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $this->mediawiki_client->on(
-            new CallbackRequestMatcher(
-                function (RequestInterface $request): bool {
-                    return $request->getMethod() === 'POST' &&
-                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
-                        $request->getBody()->getContents() === '{}';
-                }
-            ),
-            function () {
-                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
-            }
-        );
-
         $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
-            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -224,26 +198,13 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $this->mediawiki_client->on(
-            new CallbackRequestMatcher(
-                function (RequestInterface $request): bool {
-                    return $request->getMethod() === 'POST' &&
-                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
-                        $request->getBody()->getContents() === '{}';
-                }
-            ),
-            function () {
-                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
-            }
-        );
-
         $switcher = SwitchMediawikiServiceStub::buildSelf();
 
         $migrate_instance_option = MigrateInstance::fromEvent(
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
-            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
             $switcher,
             new LegacyMediawikiDBPrimerStub(),
@@ -276,19 +237,6 @@ final class MigrateInstanceTest extends TestCase
             }
         );
 
-        $this->mediawiki_client->on(
-            new CallbackRequestMatcher(
-                function (RequestInterface $request): bool {
-                    return $request->getMethod() === 'POST' &&
-                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/update' &&
-                        $request->getBody()->getContents() === '{}';
-                }
-            ),
-            function () {
-                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
-            }
-        );
-
         $switcher                    = SwitchMediawikiServiceStub::buildSelf();
         $legacy_permissions_migrator = LegacyPermissionsMigratorStub::buildSelf();
 
@@ -296,7 +244,7 @@ final class MigrateInstanceTest extends TestCase
             new WorkerEvent(new NullLogger(), ['event_name' => MigrateInstance::TOPIC, 'payload' => ['project_id' => 120]]),
             $this->project_factory,
             new MediaWikiCentralDatabaseParameterGeneratorStub(),
-            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing()]),
+            MediaWikiManagementCommandFactoryStub::buildForUpdateInstancesCommandsOnly([new MediaWikiManagementCommandDoNothing(), new MediaWikiManagementCommandDoNothing()]),
             self::buildFlavorUsageWithLegacyMediaWiki(),
             $switcher,
             new LegacyMediawikiDBPrimerStub(),

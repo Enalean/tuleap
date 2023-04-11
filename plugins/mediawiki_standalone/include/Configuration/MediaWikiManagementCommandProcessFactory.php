@@ -79,4 +79,12 @@ final class MediaWikiManagementCommandProcessFactory implements MediaWikiManagem
             [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/current/maintenance/update.php', '--quick', '--sfr', $project_name]
         );
     }
+
+    public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
+    {
+        return new MediaWikiManagementCommandProcess(
+            $this->logger,
+            [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/1.35/extensions/TuleapWikiFarm/maintenance/migrateInstance.php', '--skip-registration', '--projectname', $project_name]
+        );
+    }
 }
