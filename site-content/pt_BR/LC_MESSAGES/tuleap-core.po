@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Fabio Silva <fabio.silva@projectha.com.br>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid " New user"
 msgstr " Novo usuário"
@@ -23,8 +23,8 @@ msgid ""
 "\"%s\" label already exists. If you save your modifications, both labels "
 "will be merged."
 msgstr ""
-"O rótulo \"%s\" já existe. Se você salvar suas modificações, ambas os "
-"rótulos serão fundidos."
+"O rótulo \"%s\" já existe. Se você salvar suas modificações, os rótulos "
+"serão unidos."
 
 #, php-format
 msgid "\"%s\" label already exists. Please choose another one."
@@ -39,9 +39,10 @@ msgstr "%1$s Verificação de senha"
 
 msgid "%1$s invited you to register to %2$s and join the project %3$s."
 msgstr ""
+"%1$s lhe convidou para se registrar em %2$s e participar do projeto %3$s."
 
 msgid "%1$s invited you to register to %2$s."
-msgstr "%1$s convidou você para registrar-se em %2$s."
+msgstr "%1$s lhe convidou para se registrar em %2$s."
 
 #, php-format
 msgid "%1$s message(s) deleted"
@@ -60,8 +61,8 @@ msgstr[1] "%d Projetos agregados"
 #, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
-msgstr[0] "%d Projeto pai"
-msgstr[1] "%d Projetos pai"
+msgstr[0] "%d Projeto Pai"
+msgstr[1] "%d Projetos Pai"
 
 #, php-format
 msgid "%d does not belong to %s (%d) category hierarchy"
@@ -101,7 +102,7 @@ msgstr "%s atrás"
 
 #, php-format
 msgid "%s full project listing"
-msgstr "%s listagem completa de projetos"
+msgstr "%s lista completa de projetos"
 
 #, php-format
 msgid "%s has multiple corresponding users."
@@ -111,10 +112,10 @@ msgid "%s invited you to %s."
 msgstr "%s convidou você para %s."
 
 msgid "%s invited you, so you’re now a fresh member of this platform."
-msgstr ""
+msgstr "%s lhe convidou, então você é um novo membro desta plataforma."
 
 msgid "%s invited you, so you’re now a fresh member of this project."
-msgstr ""
+msgstr "%s lhe convidou, então você é um novo membro deste projeto."
 
 #, php-format
 msgid "%s new projects"
@@ -122,11 +123,11 @@ msgstr "%s novos projetos"
 
 #, php-format
 msgid "%s news"
-msgstr "%s notícias"
+msgstr "%s novidades"
 
 #, php-format
 msgid "%s project news highlights"
-msgstr "cabeçalhos do %s notícias do projeto"
+msgstr "destaques nas %s novidades do projeto"
 
 msgid "%s with email %s created an account on %s."
 msgstr "%s com o email %s criou uma conta em %s."
@@ -152,7 +153,7 @@ msgstr ""
 
 #, php-format
 msgid "- The team at %1$s."
-msgstr "- A equipe em %1$s."
+msgstr "- A equipe %1$s."
 
 msgid "-- None --"
 msgstr "-- Nenhum --"
@@ -214,7 +215,7 @@ msgid "<strong>Monitor this thread</strong>"
 msgstr "<forte>Monitore esta discussão</strong>"
 
 msgid "A deleted project can not be restored."
-msgstr "Um projeto apagado não pode ser restaurado."
+msgstr "Um projeto excluído não pode ser restaurado."
 
 #, php-format
 msgid ""
@@ -264,14 +265,14 @@ msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
 "to available before."
 msgstr ""
-"Um serviço não disponível não pode ser ativado. Para ativar este serviço, "
-"mude-o para Disponível antes."
+"Um serviço não disponibilizado não pode ser ativado. Para ativar este "
+"serviço, mude-o para Disponível antes."
 
 msgid ""
 "A parameter is missing, please press the \"Back\" button and complete the "
 "form"
 msgstr ""
-"Falta um parâmetro, por favor pressione o botão \"Voltar\" e preencha o "
+"Falta um parâmetro, por favor pressione o botão \"Voltar\" e complete o "
 "formulário"
 
 #, php-format
@@ -365,7 +366,7 @@ msgid "Access logs"
 msgstr "Logs de acesso"
 
 msgid "Access to SVN repositories"
-msgstr ""
+msgstr "Acesso aos respositórios do SVN"
 
 msgid "Access to the REST API"
 msgstr "Acesso à API REST"
@@ -404,10 +405,10 @@ msgid "Account must be active to change password"
 msgstr "A conta deve estar ativa para alterar a senha"
 
 msgid "Account status"
-msgstr "Conta"
+msgstr "Situação da conta"
 
 msgid "Action required"
-msgstr ""
+msgstr "Ação requerida"
 
 msgid "Actions"
 msgstr "Ações"
@@ -422,7 +423,7 @@ msgid "Active"
 msgstr "Ativo"
 
 msgid "Active sessions browser statistics"
-msgstr "Estatísticas das sessões ativas do navegador"
+msgstr "Estatísticas das sessões ativas de navegador"
 
 msgid "Add"
 msgstr "Adicionar"
@@ -503,7 +504,7 @@ msgid "Agile Enterprise Planning - Full ALM"
 msgstr "Agile Enterprise Planning - ALM completo"
 
 msgid "All emails are already validated"
-msgstr ""
+msgstr "Todos os emails já estão validados"
 
 msgid "All fields are mandatory."
 msgstr "Todos os campos são de preenchimento obrigatório."
@@ -521,7 +522,7 @@ msgid "All users"
 msgstr "Todos os usuários"
 
 msgid "All users don't need to be validated"
-msgstr ""
+msgstr "Todos os usuários não precisam ser validados"
 
 msgid "All users must be logged in"
 msgstr "Todos os usuários deve estar logados"
@@ -537,13 +538,13 @@ msgstr ""
 "Todos os usuários, independentemente das suas preferências (%1$s usuários)"
 
 msgid "Allow for all projects"
-msgstr "Permitir em todos os projetos"
+msgstr "Permitir para todos os projetos"
 
 msgid ""
 "Allow the app to access resources on your behalf for an extended period of "
 "time even while you are disconnected"
 msgstr ""
-"Permitir ao app acessar recursos em seu nome por um período estendido de "
+"Permitir o app acessar recursos em seu nome por um período estendido de "
 "tempo, mesmo enquanto você estiver desconectado"
 
 msgid "Allow to connect to apps and services using your account"
@@ -693,7 +694,7 @@ msgid "Back"
 msgstr "Voltar"
 
 msgid "Back to the administration"
-msgstr ""
+msgstr "Voltar para a administração"
 
 msgid "Background"
 msgstr "Imagem de Fundo"
@@ -705,7 +706,7 @@ msgid "Banner"
 msgstr "Banner"
 
 msgid "Before you start, you need to know a few things:"
-msgstr ""
+msgstr "Antes de começar, você precisa saber algumas coisas:"
 
 msgid "Best Regards."
 msgstr "Atenciosamente."
@@ -926,7 +927,7 @@ msgid "Choose a forum and you can browse, search, and post messages."
 msgstr "Escolha um fórum e você pode navegar, pesquisar e postar mensagens."
 
 msgid "Choose a timezone"
-msgstr ""
+msgstr "Escolha um fuso-horário"
 
 msgid "Clear history"
 msgstr "Histórico claro"
@@ -977,7 +978,7 @@ msgid "Commits"
 msgstr "Commits"
 
 msgid "Completed invitation"
-msgstr ""
+msgstr "Convite finalizado"
 
 msgid "Compromised password"
 msgstr "Senha comprometida"
@@ -1005,7 +1006,7 @@ msgid "Confirm the account creation"
 msgstr "Confirmar a criação da conta"
 
 msgid "Confirmation link sent"
-msgstr ""
+msgstr "Link de confirmação enviado"
 
 msgid "Congratulations!"
 msgstr "Parabéns!"
@@ -1068,7 +1069,7 @@ msgid "Create label"
 msgstr "Criar rótulo"
 
 msgid "Create my account"
-msgstr ""
+msgstr "Criar minha conta"
 
 msgid "Create new License Agreement"
 msgstr "Criar novo Acordo de Licença"
@@ -1077,12 +1078,14 @@ msgid "Create user group"
 msgstr "Criar grupo de usuários"
 
 msgid "Create your account"
-msgstr ""
+msgstr "Criar sua conta"
 
 msgid ""
 "Creating new SVN tokens is no more possible, personal access keys should be "
 "used instead."
 msgstr ""
+"Não é possível criar novos tokens SVN, devem ser utilizadas as chaves "
+"pessoais de acesso."
 
 msgid "Current and new passwords are identical"
 msgstr "As senhas atuais e novas são idênticas"
@@ -1133,7 +1136,7 @@ msgid "Date"
 msgstr "Data"
 
 msgid "Date of the invitation"
-msgstr ""
+msgstr "Data do convite"
 
 msgid "Dates display"
 msgstr "Formato das datas"
@@ -1264,6 +1267,8 @@ msgstr "Commits de Desenvolvedores (Últimos 7 dias/Total)"
 
 msgid "Didn't get a confirmation email? Check your spam folder."
 msgstr ""
+"Não recebeu um email de confirmação? Verique sua pasta de lixo eletrônico "
+"(spam)"
 
 msgid "Disallow for all projects"
 msgstr "Desautorizar em todos os projetos"
@@ -1384,10 +1389,10 @@ msgid "Email format preference successfully updated"
 msgstr "Preferência de formato de email atualizado com sucesso"
 
 msgid "Email is already validated"
-msgstr ""
+msgstr "Email já está validado"
 
 msgid "Email me a recovery link"
-msgstr ""
+msgstr "Me envie um link de recuperação por email"
 
 msgid "Email not sent"
 msgstr "Email não enviado"
@@ -1677,13 +1682,13 @@ msgid "Headline"
 msgstr "Cabeçalho"
 
 msgid "Heartbeat"
-msgstr "Ritmo do projeto"
+msgstr "Cadência do projeto"
 
 msgid "Hello"
 msgstr "Olá"
 
 msgid "Hello %s,"
-msgstr ""
+msgstr "Olá %s,"
 
 msgid "Hello,"
 msgstr "Olá,"
@@ -1789,7 +1794,7 @@ msgid ""
 msgstr ""
 
 msgid "In the meantime, you can get %sback to the homepage%s."
-msgstr ""
+msgstr "Enquanto isso, você pode %svoltar à pagina inicial%s."
 
 msgid "Inactive service cannot be enabled."
 msgstr "O serviço inativo não pode ser ativado."
@@ -1841,7 +1846,7 @@ msgid "Invalid project was passed in."
 msgstr "O projeto inválido foi aprovado."
 
 msgid "Invalid request"
-msgstr ""
+msgstr "Solicitação inválida"
 
 msgid "Invalid selection of categories"
 msgstr "Seleção inválida de categorias"
@@ -1850,16 +1855,16 @@ msgid "Invitation complete!"
 msgstr "Convite finalizado!"
 
 msgid "Invitation has been resent"
-msgstr ""
+msgstr "Convite foi reenviado"
 
 msgid "Invitation has been withdrawn"
-msgstr ""
+msgstr "Convite foi removido"
 
 msgid "Invitation sent for project %1$s on %2$s"
-msgstr ""
+msgstr "Convite enviado para o projeto %1$s em %2$s"
 
 msgid "Invitation sent on %s"
-msgstr ""
+msgstr "Convite enviado em %s"
 
 #, php-format
 msgid "Invitation to log on to %s"
@@ -1885,7 +1890,7 @@ msgid "Invite"
 msgstr "Convidar"
 
 msgid "Invite a co-worker"
-msgstr ""
+msgstr "Convide um colaborador"
 
 msgid "Invite someone to join %s"
 msgstr "Convidar alguém para %s"
@@ -1910,8 +1915,8 @@ msgstr "Rastreamento de problemas"
 
 msgid "It has just been automatically removed."
 msgid_plural "They have just been automatically removed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Foi automaticamente removido."
+msgstr[1] "Foram automaticamente removidos."
 
 #, php-format
 msgid "JpGraph error for graph \"%s\": %s"
@@ -1988,6 +1993,8 @@ msgid ""
 "Leave it blank to invite people to the platform without making them project "
 "member."
 msgstr ""
+"Deixe em branco para convidar as pessoas para a plataforma sem torná-las "
+"membros do projeto"
 
 msgid "Leave project"
 msgstr "Sair do projeto"
@@ -2049,7 +2056,7 @@ msgid "Login Name"
 msgstr "Nome de Login"
 
 msgid "Login name"
-msgstr ""
+msgstr "Nome de Login"
 
 msgid "Logout"
 msgstr "Logout"
@@ -2210,6 +2217,8 @@ msgstr "Mês"
 
 msgid "Must be project admin to add a project member"
 msgstr ""
+"É necessário ser um administrador do projeto para adicionar um membro ao "
+"projeto"
 
 msgid "Must choose a message first"
 msgstr "Deve escolher uma mensagem primeiro"
@@ -2362,7 +2371,7 @@ msgid "No matching labels"
 msgstr "Sem rótulos correspondentes"
 
 msgid "No need to register, you are already logged in."
-msgstr ""
+msgstr "Não é necessário se registrar, você já está logado."
 
 msgid "No one monitoring"
 msgstr "Ninguém monitorando"
@@ -2380,7 +2389,7 @@ msgid "No template information have been provided to create the project"
 msgstr "Nenhuma informação de modelo foi fornecida para criar o projeto"
 
 msgid "No timezone set. Please select one."
-msgstr ""
+msgstr "Fuso-horário não selecionado. Por favor selecione um."
 
 msgid "No users to validate"
 msgstr "Nenhum usuário para validar"
@@ -2417,8 +2426,8 @@ msgstr "Número de falhas de login:"
 
 msgid "Obsolete invitation removal"
 msgid_plural "Obsolete invitations removal"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Remoção de convite obsoleto"
+msgstr[1] "Remoção de convites obsoletos"
 
 msgid "Offline access"
 msgstr "Acesso offline"
@@ -2485,10 +2494,10 @@ msgid "Password policy"
 msgstr "Políticas de senhas"
 
 msgid "Password recovered"
-msgstr ""
+msgstr "Senha recuperada"
 
 msgid "Password recovery"
-msgstr ""
+msgstr "Recuperação de senha"
 
 msgid "Password robustness"
 msgstr "Robustez da senha"
@@ -2506,7 +2515,7 @@ msgid "Pending"
 msgstr "Pendente"
 
 msgid "Pending invitations"
-msgstr ""
+msgstr "Convites pendentes"
 
 msgid "Pending projects"
 msgstr "Projetos pendentes"
@@ -2555,7 +2564,7 @@ msgid "Permissions per group"
 msgstr "Permissões por grupo"
 
 msgid "Personal access keys"
-msgstr "Chaves de acesso pessoal"
+msgstr "Chaves pessoais de acesso"
 
 msgid ""
 "Personalize your project by adding a background image in the header of "
@@ -2571,7 +2580,7 @@ msgid "Platform administration"
 msgstr "Administração da plataforma"
 
 msgid "Platform administrators have been notified."
-msgstr ""
+msgstr "Os administradores da plataforma foram notificados."
 
 msgid "Platform banner"
 msgstr "Banner da plataforma"
@@ -2615,10 +2624,10 @@ msgid "Please confirm your action."
 msgstr "Por favor, confirme a sua ação."
 
 msgid "Please contact the administrators at:"
-msgstr ""
+msgstr "Por favor, contate os administradores em:"
 
 msgid "Please explain why you are applying for registration on this site"
-msgstr ""
+msgstr "Por favor explique o motivo para você solicitar registro neste site"
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2767,7 +2776,7 @@ msgid "Project announcement"
 msgstr "Anúncios do Projeto"
 
 msgid "Project background"
-msgstr "Histórico do projeto"
+msgstr "Imagem de fundo do projeto"
 
 msgid "Project banner"
 msgstr "Banner do projeto"
@@ -2867,7 +2876,7 @@ msgstr "Configurações do projeto"
 
 #, php-format
 msgid "Project shortname is invalid. The reason is: %s"
-msgstr "O nome curto do projeto é inválido. A razão é: %s"
+msgstr "O nome curto do projeto é inválido. O motivo é: %s"
 
 msgid "Project templates"
 msgstr "Modelos de projetos"
@@ -2898,7 +2907,7 @@ msgid "Projects in category"
 msgstr "Projetos na categoria"
 
 msgid "Projects statistics"
-msgstr "Estatísticas de projetos"
+msgstr "Estatísticas dos projetos"
 
 msgid "Projects visibility"
 msgstr "Visibilidade dos projetos"
@@ -2924,7 +2933,7 @@ msgid "Public incl. restricted"
 msgstr "Público incl. restrito"
 
 msgid "Public including restricted"
-msgstr "Público, incluindo restrito"
+msgstr "Público, incluindo restritos"
 
 msgid "Public information"
 msgstr "Informação pública"
@@ -2937,7 +2946,7 @@ msgstr ""
 "arquivos são públicos"
 
 msgid "Public project categories"
-msgstr "Categorias de projeto públicos"
+msgstr "Categorias públicas de projeto"
 
 msgid "Public?"
 msgstr "Público?"
@@ -2952,7 +2961,7 @@ msgid "REST"
 msgstr "REST"
 
 msgid "REST Read only administrator"
-msgstr "REST Apenas Leitura - Administração"
+msgstr "REST Administrador do modo apenas leitura"
 
 msgid "REST projects management"
 msgstr "Gestão de projetos REST"
@@ -2994,7 +3003,7 @@ msgid "Real name was not updated"
 msgstr "O nome real não foi atualizado"
 
 msgid "Receive Email about Site Updates"
-msgstr ""
+msgstr "Receber Email com Atualizações sobre o Site"
 
 msgid "Receive additional community mailing"
 msgstr "Receber emails adicionais da comunidade"
@@ -3004,13 +3013,13 @@ msgstr ""
 "Receber emails sobre atualizações no site, incluindo avisos de segurança"
 
 msgid "Receive emails for actions I do on the platform:"
-msgstr ""
+msgstr "Receber email a cada ação realizada por mim na plataforma:"
 
 msgid "Recently"
 msgstr "Recentemente"
 
 msgid "Recovery link sent"
-msgstr ""
+msgstr "Link de recuperação enviado"
 
 msgid "Red"
 msgstr "Vermelho"
@@ -3113,10 +3122,10 @@ msgstr ""
 "a>."
 
 msgid "Resend invitation"
-msgstr ""
+msgstr "Reenviar convite"
 
 msgid "Resent invitation"
-msgstr ""
+msgstr "Convite reenviado"
 
 msgid "Restricted user"
 msgstr "Usuário restrito"
@@ -3171,7 +3180,7 @@ msgid "SSH keys"
 msgstr "Chaves SSH"
 
 msgid "SVN"
-msgstr ""
+msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "SVN Commits"
@@ -3213,7 +3222,7 @@ msgid "Save new avatar"
 msgstr "Gravar novo avatar"
 
 msgid "Save password"
-msgstr ""
+msgstr "Gravar senha"
 
 msgid "Save settings"
 msgstr "Gravar configurações"
@@ -3278,7 +3287,7 @@ msgid "Send to"
 msgstr "Enviar para"
 
 msgid "Sent invitation"
-msgstr ""
+msgstr "Convite enviado"
 
 msgid "Service is not allowed in project."
 msgstr "O serviço não é permitido no projeto."
@@ -3314,7 +3323,7 @@ msgid "Short description shouldn't exceed 255 characters."
 msgstr "A descrição resumida não deve exceder 255 caracteres."
 
 msgid "Short name must start with an alphanumeric character."
-msgstr ""
+msgstr "O nome resumido deve começar com um caracter alfanumérico."
 
 msgid "Shortcut"
 msgstr "Atalho"
@@ -3396,7 +3405,7 @@ msgid "Source code management"
 msgstr "Gestão do código fonte"
 
 msgid "Specific project"
-msgstr ""
+msgstr "Projeto específico"
 
 msgid "Specify the nature of the reference, or Other if any."
 msgstr "Especifique a natureza da referência, ou Outra, se houver."
@@ -3559,7 +3568,7 @@ msgid "The %s team."
 msgstr "O time %s."
 
 msgid "The SOAP API is no more accessible, please use the REST API instead"
-msgstr ""
+msgstr "A API SOAP não está mais acessível, por favor use a API REST"
 
 #, php-format
 msgid "The XML template \"%s\" provided is not valid"
@@ -3587,7 +3596,7 @@ msgid "The chosen color is not allowed."
 msgstr "A cor escolhida não é permitida."
 
 msgid "The confirmation email couldn't be sent."
-msgstr ""
+msgstr "O email de confirmação não pode ser enviado."
 
 msgid ""
 "The confirmation key is expired, please renew if needed your request for the "
@@ -3626,8 +3635,9 @@ msgid ""
 "The following invitation has not been completed and becomes obsolete today."
 msgid_plural ""
 "The following invitations have not been completed and become obsolete today."
-msgstr[0] ""
+msgstr[0] "O convite a seguir não foi finalizado e tornou-se obsoleto hoje."
 msgstr[1] ""
+"Os convites a seguir não foram finalizados e tornaram-se obsoletos hoje."
 
 msgid "The given license agreement is not valid for this project"
 msgstr "O acordo de licença não é válido para este projeto"
@@ -3650,6 +3660,7 @@ msgid ""
 "The invitation cannot be found. Maybe it has already been completed or "
 "removed?"
 msgstr ""
+"O convite não foi localizado. Talvez tenha sido finalizado ou removido?"
 
 msgid ""
 "The key will expire at the end of the selected date. Keep it empty if you "
@@ -3766,7 +3777,7 @@ msgid "The submitted language is not supported."
 msgstr "O idioma escolhido não é suportado."
 
 msgid "The user doesn't need to be validated"
-msgstr ""
+msgstr "O usuário não precisa ser validado"
 
 msgid "The user will automatically be added as project member."
 msgstr "O usuário será automaticamente adicionado como membro do projeto."
@@ -3962,9 +3973,11 @@ msgid ""
 "This person will still be able to register by herself but won't be "
 "automatically a project member."
 msgstr ""
+"Esta pessoa ainda será capaz de se registrar sozinha, mas nãoserá "
+"automaticamente um membro do projeto."
 
 msgid "This plugin will be removed in september 2023"
-msgstr ""
+msgstr "Este plugin será removido em setembro de 2023"
 
 msgid "This project doesn't allow short name edition."
 msgstr "Este projeto não permite a edição de nomes reduzidos."
@@ -4128,7 +4141,7 @@ msgid "Tracker email format"
 msgstr "Formato de email do tracker"
 
 msgid "Trackers"
-msgstr "Rastreadores"
+msgstr "Trackers"
 
 msgid "Trackers v3 import"
 msgstr "Importação de Tracker v3"
@@ -4150,7 +4163,7 @@ msgid ""
 "easier.\n"
 "Here you plan, track, code, and collaborate on software projects."
 msgstr ""
-"Tuleap ajuda às equipes produzirem aplicações fantásticas, melhores, mais "
+"Tuleap ajuda as equipes produzirem aplicações fantásticas, melhores e mais "
 "rápidas com facilidade.\n"
 "Aqui você pode planejar, acompanhar, programar e colaborar em projetos de "
 "software."
@@ -4163,7 +4176,7 @@ msgstr "URL apontada pela referência"
 
 #, php-format
 msgid "Unable to add %s as project member"
-msgstr ""
+msgstr "Não foi possível adicionar %s como membro do projeto"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Não foi possível obter as últimas atividades do projeto"
@@ -4183,7 +4196,7 @@ msgid "Unauthorized action for anonymous"
 msgstr "Ação não autorizada para usuários anônimos"
 
 msgid "Understood"
-msgstr ""
+msgstr "Entendido"
 
 msgid ""
 "Unfortunately we couldn't add %1$s as project member because they have "
@@ -4272,7 +4285,7 @@ msgid "User '%s' does not exist"
 msgstr "Usuário '%s' não existe"
 
 msgid "User account created"
-msgstr ""
+msgstr "Conta de usuário criada"
 
 msgid "User added"
 msgstr "Usuário adicionado"
@@ -4309,18 +4322,20 @@ msgid "User is already member of the project"
 msgstr "O usuário já é membro do projeto"
 
 msgid "User is already registered and has been added to project."
-msgstr ""
+msgstr "Usuário já está registrado e foi adicionado ao projeto."
 
 msgid "User is already registered and project member."
-msgstr ""
+msgstr "Usuário já está registrado e é membro do projeto."
 
 msgid "User is already registered but is not active yet."
-msgstr ""
+msgstr "Usuário já está registrado mas ainda não está ativo."
 
 msgid ""
 "User is already registered but is restricted and the project does not accept "
 "restricted users."
 msgstr ""
+"Usuário já está registrado porém é restrito, o projeto não aceita usuários "
+"restritos."
 
 msgid "User name"
 msgstr "Nome do usuário"
@@ -4386,6 +4401,7 @@ msgstr ""
 
 msgid "Very low traffic, includes security notices. Highly Recommended."
 msgstr ""
+"Tráfego muito baixo, incluir avisos de segurança. Altamente Recomendado."
 
 msgid "View all projects"
 msgstr "Ver todos os projetos"
@@ -4436,7 +4452,7 @@ msgid "We cannot find any widgets."
 msgstr "Não localizamos nenhum widget."
 
 msgid "We emailed a confirmation link to <strong>%s</strong>,"
-msgstr ""
+msgstr "Nós enviamos um link de confirmação para <strong>%s</strong>,"
 
 msgid "We need at least one email to send an invitation"
 msgstr "É necessário pelo menos um email para o envio de um convite"
@@ -4462,7 +4478,7 @@ msgid "Welcome to %1$s!"
 msgstr "Bem-vindo à %1$s!"
 
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Bem-vindo à %s"
 
 msgid "Welcome to your new project"
 msgstr "Bem vindo ao seu novo projeto"
@@ -4522,10 +4538,10 @@ msgid "Wiki"
 msgstr "Wiki"
 
 msgid "Withdraw invitation"
-msgstr ""
+msgstr "Remover convite"
 
 msgid "Withdrawn invitation"
-msgstr ""
+msgstr "Convites removidos"
 
 msgid "Without any action from you,"
 msgstr "Sem nenhuma ação da sua parte,"
@@ -4559,10 +4575,10 @@ msgstr ""
 "curta."
 
 msgid "XML content is empty"
-msgstr ""
+msgstr "O arquivo XML está vazio"
 
 msgid "XML content is not valid"
-msgstr ""
+msgstr "O conteúdo do XML não é válido"
 
 msgid "Year"
 msgstr "Ano"
@@ -4793,7 +4809,7 @@ msgid "You can not delete system user groups"
 msgstr "Não é possível excluir grupos de usuários do sistema"
 
 msgid "You can now log in with your new password."
-msgstr ""
+msgstr "Você pode logar agora com sua nova senha."
 
 msgid "You can only edit your own widgets."
 msgstr "Você pode editar apenas seus próprios widgets."
@@ -4801,8 +4817,8 @@ msgstr "Você pode editar apenas seus próprios widgets."
 #, php-format
 msgid "You can only send %s more invitation."
 msgid_plural "You can only send %s more invitations."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Você poden enviar apenas mais %s convite."
+msgstr[1] "Você pode enviar apenas mais %s convites."
 
 msgid ""
 "You can override default names for the two special groups. This only applies "
@@ -4879,7 +4895,7 @@ msgid "You don't have permission to access administration of this project."
 msgstr "Você não tem permissão para acessar a administração deste projeto."
 
 msgid "You don't have permission to manage members of this project."
-msgstr ""
+msgstr "Você não tem permissão para gerenciar os membros deste projeto."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Você não tem permissão para visualizar os grupos de usuários."
@@ -4889,6 +4905,7 @@ msgstr "Você possui uma conta de usuário restrita"
 
 msgid "You have already used your invitation to register, you can now log in."
 msgstr ""
+"Você já utilizou seu convite para se registrar, você pode se logar agora."
 
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
@@ -4911,17 +4928,21 @@ msgstr ""
 "-- A Equipe %s"
 
 msgid "You have successfully recovered your password,"
-msgstr ""
+msgstr "Você recuperou sua senha com sucesso,"
 
 msgid ""
 "You invited %1$s with email %2$s to register to %3$s and join the project "
 "%4$s."
 msgstr ""
+"Você convidou %1$s com o email %2$s para se registrar em %3$s e participar "
+"do projeto %4$s."
 
 msgid ""
 "You may have seen the invitation before but %s just sent you a reminder to "
 "join."
 msgstr ""
+"Você já pode ter visto o convite mas %s acabou de lhe mandar um lembrete "
+"para se registrar."
 
 msgid "You may only have access to private projects you are member of."
 msgstr "Você pode acessar projetos privados apenas se for membro deles."
@@ -5004,10 +5025,10 @@ msgid "You will now be emailed followups to this entire forum."
 msgstr "Agora você receberá por email todos os acompanhamentos deste Fórum."
 
 msgid "You're about to withdraw %s invitation from this project."
-msgstr ""
+msgstr "Você está prestes a remover o convite de %s para este projeto."
 
 msgid "Your account has been created"
-msgstr ""
+msgstr "Sua conta foi criada"
 
 #, php-format
 msgid "Your account has been created on %s"
@@ -5043,6 +5064,8 @@ msgid ""
 "Your current timezone (%s) is not listed in the available timezones. Please "
 "select a new one."
 msgstr ""
+"Seu fuso-horário atual (%s) não está listado entre os fusos disponíveis. Por "
+"favor escolha outro fuso-horário."
 
 #, php-format
 msgid ""
@@ -5058,14 +5081,18 @@ msgid ""
 "Your invitation cannot be found. Maybe it became obsolete and has been "
 "revoked."
 msgstr ""
+"Seu convite não foi localizado. Talvez tenha se tornado obsoleto ou entãofoi "
+"revogado."
 
 msgid "Your invitation link is not valid"
-msgstr ""
+msgstr "O seu link de convite não é válido"
 
 msgid ""
 "Your invitation link is not valid. Maybe you already used it, in that case "
 "you can directly log in."
 msgstr ""
+"Seu link de convite não é válido. Talvez você o tenha utilizado, nesse caso "
+"você pode logar direto no sistema."
 
 msgid "Your place was saved"
 msgstr "O seu lugar foi gravado"
@@ -5112,13 +5139,13 @@ msgid "active last week"
 msgstr "ativo na semana passada"
 
 msgid "but it must be approved by an administrator"
-msgstr ""
+msgstr "mas precisa ser apŕovado por um administrador"
 
 msgid "check your email for the link to activate your account."
-msgstr ""
+msgstr "verifique em seu email o link para ativar sua conta."
 
 msgid "check your email for the link to recover your password."
-msgstr ""
+msgstr "verifique em seu email o link para recuperar sua senha."
 
 msgid "commits at once"
 msgstr "commit imediatamente"
@@ -5140,10 +5167,10 @@ msgid "in %s"
 msgstr "em %s"
 
 msgid "in project %s"
-msgstr ""
+msgstr "no projeto %s"
 
 msgid "in projects:"
-msgstr ""
+msgstr "nos projetos:"
 
 msgid "last<br>month"
 msgstr "ativo no mês passado"
@@ -5221,7 +5248,7 @@ msgid "waiting"
 msgstr "aguardando"
 
 msgid "with a link to activate your account."
-msgstr ""
+msgstr "com um link para ativar sua conta."
 
 msgid "your account will be automatically suspended on {{suspension_date}}."
 msgstr "sua conta será suspensa automaticamente em {{suspension_date}}."
