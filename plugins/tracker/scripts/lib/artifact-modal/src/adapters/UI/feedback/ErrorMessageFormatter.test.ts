@@ -18,7 +18,7 @@
  */
 
 import { Fault } from "@tuleap/fault";
-import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
+import { ErrorMessageFormatter } from "./ErrorMessageFormatter";
 import { setCatalog } from "../../../gettext-catalog";
 import { LinkRetrievalFault } from "../../../domain/fields/link-field/LinkRetrievalFault";
 import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
@@ -30,20 +30,18 @@ import { CommentsRetrievalFault } from "../../../domain/comments/CommentsRetriev
 
 const FAULT_MESSAGE = "An error occurred";
 
-describe(`FaultFeedbackPresenter`, () => {
+describe(`ErrorMessageFormatter`, () => {
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
     });
 
-    it(`builds an empty presenter`, () => {
-        const presenter = FaultFeedbackPresenter.buildEmpty();
-        expect(presenter.message).toBe("");
-    });
+    const format = (fault: Fault): string => {
+        return ErrorMessageFormatter().format(fault);
+    };
 
     it(`casts a Fault to string`, () => {
         const fault = Fault.fromMessage(FAULT_MESSAGE);
-        const presenter = FaultFeedbackPresenter.fromFault(fault);
-        expect(presenter.message).toBe(String(fault));
+        expect(format(fault)).toBe(String(fault));
     });
 
     it.each([
@@ -61,8 +59,8 @@ describe(`FaultFeedbackPresenter`, () => {
         ["SearchArtifactsFault", SearchArtifactsFault(Fault.fromMessage(FAULT_MESSAGE))],
         ["CommentsRetrievalFault", CommentsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
     ])(`translates a message for %s`, (fault_name, fault) => {
-        const presenter = FaultFeedbackPresenter.fromFault(fault);
-        expect(presenter.message).toContain(FAULT_MESSAGE);
-        expect(presenter.message).not.toBe(FAULT_MESSAGE);
+        const message = format(fault);
+        expect(message).toContain(FAULT_MESSAGE);
+        expect(message).not.toBe(FAULT_MESSAGE);
     });
 });

@@ -20,6 +20,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { Option } from "./Option";
 
+type CustomType = {
+    readonly property: string;
+};
+
 describe(`Option`, () => {
     it.each([
         ["Some", Option.fromValue(1), true, false],
@@ -42,6 +46,20 @@ describe(`Option`, () => {
             });
 
             expect(applied_value).toBe(value);
+        });
+
+        it(`map() calls the given function with the inner value and returns a new Some with its result`, () => {
+            const value = "initial";
+            let map_value = null;
+
+            const mapped_option = Option.fromValue(value).map((received_value) => {
+                map_value = received_value;
+                return "callback";
+            });
+
+            expect(mapped_option.isValue()).toBe(true);
+            expect(mapped_option.unwrapOr(null)).toBe("callback");
+            expect(map_value).toBe(value);
         });
 
         it(`mapOr() calls the given function with the inner value and returns its result`, () => {
@@ -67,8 +85,17 @@ describe(`Option`, () => {
     describe(`None`, () => {
         it(`apply() does nothing`, () => {
             const callback = vi.fn();
-            Option.nothing<Record<string, never>>().apply(callback);
+            Option.nothing<CustomType>().apply(callback);
             expect(callback).not.toHaveBeenCalled();
+        });
+
+        it(`map() returns a new None`, () => {
+            const callback = vi.fn();
+            const initial_option = Option.nothing<string>();
+            const mapped_option = initial_option.map(callback);
+
+            expect(callback).not.toHaveBeenCalled();
+            expect(mapped_option).not.toBe(initial_option);
         });
 
         it(`mapOr() returns the given default value`, () => {

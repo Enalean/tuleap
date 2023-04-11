@@ -28,7 +28,7 @@ const CustomType = (property: string): CustomType => ({ property });
 
 describe(`Option type`, () => {
     it(`apply() has correct type for its callback`, () => {
-        const itCouldReturnNothing = (): Option<CustomType> => Option.nothing<CustomType>();
+        const itCouldReturnNothing = (): Option<CustomType> => Option.nothing();
 
         expectTypeOf(
             itCouldReturnNothing().apply((received_value) => {
@@ -37,9 +37,32 @@ describe(`Option type`, () => {
         ).toBeVoid();
     });
 
+    describe(`map()`, () => {
+        it(`has correct type for its callback`, () => {
+            const itCouldReturnNothing = (): Option<string> => Option.nothing();
+
+            const return_value = itCouldReturnNothing().map((received_value) => {
+                expectTypeOf(received_value).toBeString();
+                return "mapped";
+            });
+
+            expectTypeOf(return_value).toMatchTypeOf<Option<string>>();
+        });
+
+        it(`can map to a different type than the Option's initial type`, () => {
+            const itCouldReturnNothing = (): Option<number> => Option.fromValue(123);
+
+            const return_value = itCouldReturnNothing().map(() => {
+                return new Set(["one", "two", "three"]);
+            });
+
+            expectTypeOf(return_value).toMatchTypeOf<Option<Set<string>>>();
+        });
+    });
+
     describe(`mapOr()`, () => {
-        it(`mapOr() has correct type for its callback`, () => {
-            const itCouldReturnNothing = (): Option<string> => Option.nothing<string>();
+        it(`has correct type for its callback`, () => {
+            const itCouldReturnNothing = (): Option<string> => Option.nothing();
 
             const return_value = itCouldReturnNothing().mapOr((received_value) => {
                 expectTypeOf(received_value).toBeString();
@@ -59,7 +82,7 @@ describe(`Option type`, () => {
         });
 
         it(`can return a different type of default value than the mapped type or the Option's initial type`, () => {
-            const itCouldReturnNothing = (): Option<string> => Option.nothing<string>();
+            const itCouldReturnNothing = (): Option<string> => Option.nothing();
 
             const return_value = itCouldReturnNothing().mapOr((received_value) => {
                 return received_value === "argue" ? 994 : 271;
@@ -70,7 +93,7 @@ describe(`Option type`, () => {
 
     describe(`unwrapOr()`, () => {
         it(`can return a different type of default value than the Option's initial type`, () => {
-            const itCouldReturnNothing = (): Option<number> => Option.nothing<number>();
+            const itCouldReturnNothing = (): Option<number> => Option.nothing();
 
             expectTypeOf(itCouldReturnNothing().unwrapOr(CustomType("default"))).toMatchTypeOf<
                 number | CustomType

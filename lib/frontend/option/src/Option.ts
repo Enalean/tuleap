@@ -22,6 +22,7 @@ type IOption<TypeOfValue> = {
 };
 
 type Some<TypeOfValue> = IOption<TypeOfValue> & {
+    map: <TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped) => Some<TypeOfMapped>;
     mapOr: <TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
         default_value: TypeOfDefault
@@ -32,6 +33,7 @@ type Some<TypeOfValue> = IOption<TypeOfValue> & {
 };
 
 type None<TypeOfValue> = IOption<TypeOfValue> & {
+    map: <TypeOfMapped>(fn: (value: TypeOfValue) => TypeOfMapped) => None<TypeOfMapped>;
     mapOr: <TypeOfMapped, TypeOfDefault>(
         fn: (value: TypeOfValue) => TypeOfMapped,
         default_value: TypeOfDefault
@@ -46,6 +48,7 @@ export type Option<TypeOfValue> = Some<TypeOfValue> | None<TypeOfValue>;
 export const Option = {
     fromValue: <TypeOfValue>(value: TypeOfValue): Some<TypeOfValue> => ({
         apply: (fn) => fn(value),
+        map: (fn) => Option.fromValue(fn(value)),
         mapOr: (fn) => fn(value),
         unwrapOr: () => value,
         isNothing: () => false,
@@ -56,6 +59,7 @@ export const Option = {
         apply(): void {
             // Do nothing
         },
+        map: () => Option.nothing(),
         mapOr: (fn, default_value) => default_value,
         unwrapOr: (default_value) => default_value,
         isNothing: () => true,
