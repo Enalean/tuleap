@@ -78,7 +78,7 @@ def runPsalm(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php81 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php81 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
@@ -90,17 +90,6 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
             sh """
             mkdir -p ../results/psalm/
             scl enable php81 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
-            """
-        }
-    }
-}
-
-def runPsalmUnusedCodeDetection(String configPath, String root='.') {
-    withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
-        dir ('sources') {
-            sh """
-            mkdir -p ../results/psalm/
-            scl enable php81 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }

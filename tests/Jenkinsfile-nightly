@@ -125,25 +125,6 @@ pipeline {
                 }
             }
         }
-        stage('Psalm static analysis (unused code)') {
-            agent {
-                docker {
-                    image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php81'
-                    reuseNode true
-                    args '--network none'
-                }
-            }
-            steps {
-                script {
-                    actions.runPsalmUnusedCodeDetection('tests/psalm/psalm.xml', '.')
-                }
-            }
-            post {
-                always {
-                    recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
-                }
-            }
-        }
     }
     post {
         always {
