@@ -39,12 +39,6 @@ id = "GHSA-f8q6-p94x-37v3" # CVE-2022-3517
 reason = "ReDoS. Only used as a dev tool."
 ignoreUntil = 2023-05-08
 
-## async
-[[IgnoredVulns]]
-id = "GHSA-fwr7-v2mv-hh25" # CVE-2021-43138
-reason = "Not exploitable. Only used as a dev tool."
-ignoreUntil = 2023-05-08
-
 ## qs
 [[IgnoredVulns]]
 id = "GHSA-hrpp-h998-j3pp" # CVE-2022-24999
