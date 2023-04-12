@@ -21,16 +21,12 @@
 describe("Time tracking", function () {
     let now: number;
 
-    before(() => {
-        cy.clearSessionCookie();
-    });
-
     beforeEach(function () {
         now = Date.now();
     });
 
     it("Project administrator must be able to configure timetracking", function () {
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
 
         cy.visitProjectService("timetracking", "Trackers");
         cy.get("[data-test=tracker-link-issue]").click();
@@ -52,7 +48,7 @@ describe("Time tracking", function () {
     });
 
     it("regular user should be able to track his time in artifact", function () {
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
 
         // create an artifact
         cy.visitProjectService("timetracking", "Trackers");
@@ -102,7 +98,7 @@ describe("Time tracking", function () {
     });
 
     it("regular user should be able to track his time in his personal widget", function () {
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
 
         cy.visit("/my");
         cy.get("[data-test=dashboard-add-button]").click();
@@ -144,7 +140,7 @@ describe("Time tracking", function () {
     });
 
     it("manager should be able to track time of his subordinates", function () {
-        cy.projectAdministratorLogin();
+        cy.projectAdministratorSession();
         cy.visit("/my");
 
         cy.get("[data-test=dashboard-add-button]").click();
