@@ -15,7 +15,7 @@
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@vue/test-utils": "^1.3.0"
+    "@vue/test-utils": "^1.3"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

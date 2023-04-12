@@ -31,7 +31,7 @@
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@vue/test-utils": "^2.0.2",
+    "@vue/test-utils": "^2.3",
     "vue-loader": "^17.0.0"
   },
   "scripts": {
