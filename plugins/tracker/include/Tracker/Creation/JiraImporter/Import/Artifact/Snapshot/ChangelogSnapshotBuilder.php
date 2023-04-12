@@ -30,7 +30,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -75,18 +74,20 @@ class ChangelogSnapshotBuilder
         $fields_snapshot = [];
         foreach ($changelog_entry->getItemRepresentations() as $item_representation) {
             $field_id = $item_representation->getFieldId();
-            if (
-                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS ||
-                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS ||
-                $field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_COMPONENTS
-            ) {
-                $this->logger->warning('Rebuild of ' . $field_id . ' is not supported yet (weird history), only last value will be found');
+            if (FieldSkippedInSnapshotChecker::mustFieldBeSkippedById($field_id)) {
+                $this->logger->warning('[Changelog] Rebuild of ' . $field_id . ' is not supported yet (weird history), only last value will be found');
                 continue;
             }
             $field_mapping = $jira_field_mapping_collection->getMappingFromJiraField($field_id);
 
             if ($field_mapping === null) {
                 $this->logger->debug("  |_ Field mapping not found for field " . $field_id);
+                continue;
+            }
+
+            $jira_field_schema = $field_mapping->getJiraFieldSchema();
+            if ($jira_field_schema !== null && FieldSkippedInSnapshotChecker::mustFieldBeSkippedByJiraSchema($jira_field_schema)) {
+                $this->logger->warning('[Changelog] Rebuild of ' . $field_id . ' is not supported yet (weird history), only last value will be found');
                 continue;
             }
 

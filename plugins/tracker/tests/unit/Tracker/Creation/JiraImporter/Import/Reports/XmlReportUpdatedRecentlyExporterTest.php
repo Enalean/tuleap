@@ -81,6 +81,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->summary_field_mapping = new ScalarFieldMapping(
             'summary',
             'Summary',
+            null,
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -89,6 +90,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->description_field_mapping = new ScalarFieldMapping(
             'description',
             'Description',
+            null,
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
@@ -97,6 +99,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->status_field_mapping = new ListFieldMapping(
             'status',
             'status',
+            null,
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -107,6 +110,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->priority_field_mapping = new ListFieldMapping(
             'priority',
             'priority',
+            null,
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -117,6 +121,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->jira_issue_url_field_mapping = new ScalarFieldMapping(
             'jira_issue_url',
             'Link to original issue',
+            null,
             'Fjira_issue_url',
             'jira_issue_url',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -125,6 +130,7 @@ final class XmlReportUpdatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
         $this->updated_field_mapping = new ScalarFieldMapping(
             'updated',
             'Updated',
+            null,
             'Fupdated',
             'updated',
             Tracker_FormElementFactory::FIELD_DATE_TYPE,

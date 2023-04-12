@@ -146,6 +146,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 'summary',
                 'Summary',
+                null,
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -155,6 +156,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 'issuetype',
                 'Issue Type',
+                null,
                 'Fissuetype',
                 'issuetype',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -166,6 +168,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 'assignee',
                 'Assignee',
+                null,
                 'Fassignee',
                 'assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -177,6 +180,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 'homies',
                 'Homies',
+                null,
                 'Fhomies',
                 'homies',
                 Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
@@ -195,6 +199,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 'Links',
+                null,
                 'F001',
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
@@ -250,6 +255,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 'Links',
+                null,
                 'F001',
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,

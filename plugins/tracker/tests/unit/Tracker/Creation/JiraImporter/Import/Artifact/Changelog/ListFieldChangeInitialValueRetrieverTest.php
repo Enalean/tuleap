@@ -65,6 +65,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             new ListFieldMapping(
                 'status',
                 'Status',
+                null,
                 'Fstatus',
                 'status',
                 'sb',
@@ -89,6 +90,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             new ListFieldMapping(
                 'assignee',
                 'Assignee',
+                null,
                 'Fassignee',
                 'assignee',
                 'sb',
@@ -118,6 +120,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             new ListFieldMapping(
                 'multiuserpicker',
                 'Multi userpicker',
+                null,
                 'Fmultiuserpicker',
                 'multiuserpicker',
                 'msb',
@@ -155,6 +158,7 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             new ListFieldMapping(
                 'multiuserpicker',
                 'Multi userpicker',
+                null,
                 'Fmultiuserpicker',
                 'multiuserpicker',
                 'msb',

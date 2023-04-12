@@ -32,6 +32,8 @@ interface FieldMapping
 
     public function getJiraFieldLabel(): string;
 
+    public function getJiraFieldSchema(): ?string;
+
     public function getXMLId(): string;
 
     public function getFieldName(): string;

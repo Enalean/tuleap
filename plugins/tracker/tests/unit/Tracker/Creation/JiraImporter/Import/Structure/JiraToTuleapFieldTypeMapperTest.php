@@ -520,6 +520,58 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             },
         ];
 
+        yield 'Jira custom version is mapped to a select box field' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'customfield_10002',
+                'Version',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:version',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10109, 'name' => '1.0'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10110, 'name' => '2.0'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="customfield_10002"]')[0];
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Version', $node->label);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('1.0', $node->bind->items->item[0]['label']);
+                self::assertEquals('2.0', $node->bind->items->item[1]['label']);
+                $mapping = $collection->getMappingFromJiraField('customfield_10002');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
+        yield 'Jira custom multiversion is mapped to a multi select box field' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'customfield_10001',
+                'Version(s)',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:multiversion',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10109, 'name' => '1.0'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 10110, 'name' => '2.0'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="customfield_10001"]')[0];
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Version(s)', $node->label);
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertEquals('1.0', $node->bind->items->item[0]['label']);
+                self::assertEquals('2.0', $node->bind->items->item[1]['label']);
+                $mapping = $collection->getMappingFromJiraField('customfield_10001');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
         yield 'field is available at submit and update' => [
             'jira_field' => new JiraFieldAPIRepresentation(
                 'summary',
