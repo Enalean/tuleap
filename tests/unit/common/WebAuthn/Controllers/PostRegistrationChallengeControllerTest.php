@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Cose\Algorithms;
-use GuzzleHttp\Psr7\ServerRequest;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
@@ -51,8 +51,8 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
-        $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
-        self::assertEquals(401, $res->getStatusCode());
+        $res = $controller->handle(new NullServerRequest());
+        self::assertSame(401, $res->getStatusCode());
     }
 
     public function testItReturnsOptions(): void
@@ -63,8 +63,8 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
-        $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
-        self::assertEquals(201, $res->getStatusCode());
+        $res = $controller->handle(new NullServerRequest());
+        self::assertSame(200, $res->getStatusCode());
         $body = psl_json_decode($res->getBody()->getContents());
         self::assertIsArray($body);
         self::assertArrayHasKey('rp', $body);
@@ -91,8 +91,8 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             WebAuthnCredentialSourceDaoStub::withCredentialSources('key_id')
         );
 
-        $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
-        self::assertEquals(201, $res->getStatusCode());
+        $res = $controller->handle(new NullServerRequest());
+        self::assertSame(200, $res->getStatusCode());
         $body = psl_json_decode($res->getBody()->getContents());
         self::assertArrayHasKey('excludeCredentials', $body);
         self::assertIsArray($body['excludeCredentials']);
@@ -107,9 +107,9 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
-        $res   = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
+        $res   = $controller->handle(new NullServerRequest());
         $body  = psl_json_decode($res->getBody()->getContents());
-        $res2  = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
+        $res2  = $controller->handle(new NullServerRequest());
         $body2 = psl_json_decode($res2->getBody()->getContents());
         self::assertNotSame($body['challenge'], $body2['challenge']);
     }
@@ -124,7 +124,7 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()
         );
 
-        $res = $controller->handle(new ServerRequest('POST', '/webauthn/registration'));
+        $res = $controller->handle(new NullServerRequest());
         self::assertNotNull($challenge_dao->challenge_saved);
         self::assertEquals((int) $user->getId(), $challenge_dao->user_id_saved);
         self::assertNotNull($res);
@@ -153,7 +153,7 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             ],
             HTTPFactoryBuilder::responseFactory(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            new SapiEmitter()
+            new NoopSapiEmitter()
         );
     }
 }
