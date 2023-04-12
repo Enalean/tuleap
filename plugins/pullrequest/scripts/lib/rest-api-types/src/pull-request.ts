@@ -84,6 +84,6 @@ export type PullRequestAbandoned = CommonPullRequest & {
 
 export type PullRequest = PullRequestInReview | PullRequestMerged | PullRequestAbandoned;
 
-export interface Reviewer {
-    readonly users: Array<User>;
+export interface ReviewersCollection {
+    readonly users: ReadonlyArray<User>;
 }

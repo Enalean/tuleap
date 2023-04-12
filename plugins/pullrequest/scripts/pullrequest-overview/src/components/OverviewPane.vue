@@ -37,7 +37,7 @@
                 <section class="tlp-pane-section pullrequest-overview-info">
                     <pull-request-author v-bind:pull_request_author="pull_request_author" />
                     <pull-request-creation-date v-bind:pull_request_info="pull_request_info" />
-                    <pull-request-reviewer-list />
+                    <pull-request-reviewer-list v-bind:pull_request="pull_request_info" />
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
@@ -75,7 +75,7 @@ import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
 import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
 import PullRequestEditTitleModal from "./Modals/PullRequestEditTitleModal.vue";
-import PullRequestReviewerList from "./WriteInfo/PullRequestReviewerList.vue";
+import PullRequestReviewerList from "./Reviewers/PullRequestReviewerList.vue";
 import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActions.vue";
 
 const route = useRoute();
@@ -111,6 +111,8 @@ function handleAPIFault(fault: Fault) {
 </script>
 
 <style lang="scss">
+@use "@tuleap/lazybox/style";
+
 .pull-request-overview-pane {
     display: flex;
     flex: 1 1 auto;

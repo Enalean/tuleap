@@ -17,29 +17,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { SpyInstance } from "vitest";
 import type { VueWrapper, DOMWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import PullRequestReviewerList from "./PullRequestReviewerList.vue";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
-import type { Reviewer, User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    PullRequest,
+    ReviewersCollection,
+    User,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { errAsync, okAsync } from "neverthrow";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import { Fault } from "@tuleap/fault";
+import {
+    PULL_REQUEST_STATUS_ABANDON,
+    PULL_REQUEST_STATUS_MERGED,
+    PULL_REQUEST_STATUS_REVIEW,
+} from "@tuleap/plugin-pullrequest-constants";
+
+const reviewers: ReviewersCollection = {
+    users: [
+        {
+            avatar_url: "/url/to/reviewer_avatar.png",
+            user_url: "/url/to/reviewer_profile_page.html",
+            display_name: "A reviewer",
+        } as User,
+        {
+            avatar_url: "/url/to/other_reviewer_avatar.png",
+            user_url: "/url/to/other_reviewer_profile_page.html",
+            display_name: "An other reviewer",
+        } as User,
+    ],
+};
 
 vi.mock("@tuleap/vue-strict-inject");
-const noop = (): void => {
-    // do nothing
-};
-let api_error_callback: SpyInstance;
+
 describe("PullRequestReviewerList", () => {
+    let api_error_callback: SpyInstance;
+
     beforeEach(() => {
         api_error_callback = vi.fn();
     });
-    const getWrapper = (): VueWrapper => {
+
+    const getWrapper = (pull_request: PullRequest | null = null): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
             switch (key) {
                 case DISPLAY_TULEAP_API_ERROR:
@@ -47,32 +71,27 @@ describe("PullRequestReviewerList", () => {
                 case PULL_REQUEST_ID_KEY:
                     return 1;
                 default:
-                    return noop;
+                    return (): void => {
+                        // do nothing
+                    };
             }
         });
         return mount(PullRequestReviewerList, {
             global: {
+                stubs: {
+                    PullRequestManageReviewersModal: true,
+                },
                 ...getGlobalTestOptions(),
+            },
+            props: {
+                pull_request,
             },
         });
     };
 
-    it(`Should display a skeleton when the reviewer data is loading
-        And display the author data when finished`, async () => {
-        const reviewers: Reviewer = {
-            users: [
-                {
-                    avatar_url: "/url/to/reviewer_avatar.png",
-                    user_url: "/url/to/reviewer_profile_page.html",
-                    display_name: "A reviewer",
-                } as User,
-                {
-                    avatar_url: "/url/to/other_reviewer_avatar.png",
-                    user_url: "/url/to/other_reviewer_profile_page.html",
-                    display_name: "An other reviewer",
-                } as User,
-            ],
-        } as Reviewer;
+    it(`Given that the list of reviewers assigned to the current pull-request is loading
+        Then it should display a skeleton
+        And display it when it's done loading`, async () => {
         vi.spyOn(tuleap_api, "fetchReviewersInfo").mockReturnValue(okAsync(reviewers));
 
         const wrapper = getWrapper();
@@ -95,15 +114,13 @@ describe("PullRequestReviewerList", () => {
     });
 
     it(`Should display an empty state when nobody is reviewing the pull request`, async () => {
-        const reviewers: Reviewer = {
-            users: [],
-        } as Reviewer;
-        vi.spyOn(tuleap_api, "fetchReviewersInfo").mockReturnValue(okAsync(reviewers));
+        vi.spyOn(tuleap_api, "fetchReviewersInfo").mockReturnValue(
+            okAsync({
+                users: [],
+            })
+        );
 
         const wrapper = getWrapper();
-        expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(false);
-
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
@@ -122,5 +139,52 @@ describe("PullRequestReviewerList", () => {
         await wrapper.vm.$nextTick();
 
         expect(api_error_callback).toHaveBeenCalledWith(fault);
+    });
+
+    describe("Manage reviewers button", () => {
+        beforeEach(() => {
+            vi.spyOn(tuleap_api, "fetchReviewersInfo").mockReturnValue(okAsync(reviewers));
+        });
+
+        it("should not be displayed while the pull_request is loading", () => {
+            expect(getWrapper().find("[data-test=edit-reviewers-button]").exists()).toBe(false);
+        });
+
+        it("should not be displayed when the user has not the WRITE permission in the repository", async () => {
+            const wrapper = getWrapper({
+                user_can_merge: false,
+                status: PULL_REQUEST_STATUS_REVIEW,
+            } as PullRequest);
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
+        });
+
+        it.each([[PULL_REQUEST_STATUS_MERGED], [PULL_REQUEST_STATUS_ABANDON]])(
+            "should not be displayed when the pull-request is closed (%s)",
+            async (pull_request_status) => {
+                const wrapper = getWrapper({
+                    user_can_merge: true,
+                    status: pull_request_status,
+                } as PullRequest);
+                await wrapper.vm.$nextTick();
+
+                expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
+            }
+        );
+
+        it("When the user clicks on the edit reviewers button, Then it should display the reviewers management modal", async () => {
+            const wrapper = getWrapper({
+                user_can_merge: true,
+                status: PULL_REQUEST_STATUS_REVIEW,
+            } as PullRequest);
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.find("[data-test=manage-reviewers-modal]").exists()).toBe(false);
+
+            await wrapper.find("[data-test=edit-reviewers-button]").trigger("click");
+
+            expect(wrapper.find("[data-test=manage-reviewers-modal]").exists()).toBe(true);
+        });
     });
 });

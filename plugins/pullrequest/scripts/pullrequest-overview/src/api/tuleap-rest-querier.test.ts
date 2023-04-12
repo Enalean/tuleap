@@ -41,20 +41,23 @@ import {
     mergePullRequest,
     reopenPullRequest,
     abandonPullRequest,
+    fetchMatchingUsers,
+    putReviewers,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
 
+const pull_request_id = 50;
+
 describe("tuleap-rest-querier", () => {
     describe("fetchPullRequestInfo()", () => {
         it("Given the current pull request id, then it should fetch its info", async () => {
-            const pull_request_id = "50";
             const pull_request_info = {
                 title: "My pull request title",
             };
 
             vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(pull_request_info));
-            const result = await fetchPullRequestInfo(pull_request_id);
+            const result = await fetchPullRequestInfo(String(pull_request_id));
 
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
@@ -88,7 +91,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("fetchPullRequestComments", () => {
         it("Given a pull-request id, Then it should fetch all the timeline items of the pull-request", async () => {
-            const pull_request_id = "50";
             const timeline_items = [
                 {
                     id: 12,
@@ -101,7 +103,7 @@ describe("tuleap-rest-querier", () => {
 
             vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(timeline_items));
 
-            const result = await fetchPullRequestTimelineItems(pull_request_id);
+            const result = await fetchPullRequestTimelineItems(String(pull_request_id));
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
             }
@@ -117,8 +119,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("patchTitle", () => {
         it("Given a pull-request id, and a title, then it should update the title", async () => {
-            const pull_request_id = 50;
-
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(okAsync(undefined));
 
             const result = await patchTitle(pull_request_id, "new title");
@@ -137,7 +137,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("fetchReviewersInfo()", () => {
         it("Given a pullrequest id, then it should fetch its info", async () => {
-            const pull_request_id = 102;
             const reviewers = [{ id: 101 } as User, { id: 102 } as User];
 
             vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(reviewers));
@@ -156,8 +155,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("mergePullRequest", () => {
         it("Given a pull-request id, Then it should merge the pull-request", async () => {
-            const pull_request_id = 50;
-
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_MERGED,
@@ -175,8 +172,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("reopenPullRequest", () => {
         it("Given a pull-request id, Then it should reopen the pull-request", async () => {
-            const pull_request_id = 50;
-
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_REVIEW,
@@ -194,8 +189,6 @@ describe("tuleap-rest-querier", () => {
 
     describe("abandonPullRequest", () => {
         it("Given a pull-request id, Then it should abandon the pull-request", async () => {
-            const pull_request_id = 50;
-
             vi.spyOn(fetch_result, "patchJSON").mockReturnValue(
                 okAsync({
                     status: PULL_REQUEST_STATUS_ABANDON,
@@ -207,6 +200,55 @@ describe("tuleap-rest-querier", () => {
             expect(fetch_result.patchJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}`,
                 { status: PULL_REQUEST_STATUS_ABANDON }
+            );
+        });
+    });
+
+    describe("fetchMatchingUsers", () => {
+        it("Given a query, Then it should fetch the matching users", async () => {
+            const users = [{ id: 101, display_name: "Joe l'Asticot" } as User];
+
+            vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(users));
+
+            const query = "Joe l'A";
+            const result = await fetchMatchingUsers(query);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getJSON).toHaveBeenCalledWith(uri`/api/v1/users`, {
+                params: {
+                    query,
+                    limit: 10,
+                    offset: 0,
+                },
+            });
+
+            expect(result.value).toStrictEqual(users);
+        });
+    });
+
+    describe("putReviewers", () => {
+        it("Given a collection of users, then it should set them as reviewers of the pull-request", async () => {
+            vi.spyOn(fetch_result, "put").mockReturnValue(okAsync(new Response()));
+
+            await putReviewers(pull_request_id, [
+                {
+                    id: 101,
+                    display_name: "Joe l'Asticot",
+                } as User,
+                {
+                    id: 102,
+                    display_name: "Joe the hobo",
+                } as User,
+            ]);
+
+            expect(fetch_result.put).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
+                {},
+                {
+                    users: [{ id: 101 }, { id: 102 }],
+                }
             );
         });
     });
