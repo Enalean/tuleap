@@ -98,10 +98,10 @@ function ArtifactModalController(
 
     const event_dispatcher = EventDispatcher();
     const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
-    const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
+    const current_artifact_option = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
-    const api_client = TuleapAPIClient(current_artifact_identifier);
+    const api_client = TuleapAPIClient(current_artifact_option);
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
@@ -132,7 +132,7 @@ function ArtifactModalController(
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
-        current_artifact_identifier,
+        current_artifact_identifier: current_artifact_option.unwrapOr(null), // Fields using it are not allowed in creation mode
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
         ordered_fields: modal_model.ordered_fields,
@@ -163,7 +163,7 @@ function ArtifactModalController(
         comments_controller: CommentsController(
             api_client,
             event_dispatcher,
-            current_artifact_identifier,
+            current_artifact_option.unwrapOr(null), // It is not built in creation mode
             project_identifier,
             {
                 locale: modal_model.user_locale,
@@ -176,7 +176,7 @@ function ArtifactModalController(
         ),
         getLinkFieldController: (field) => {
             return LinkFieldController(
-                LinksRetriever(api_client, api_client, links_store),
+                LinksRetriever(api_client, api_client, links_store, current_artifact_option),
                 links_store,
                 links_store,
                 links_marked_for_removal_store,
@@ -191,11 +191,10 @@ function ArtifactModalController(
                 already_linked_verifier,
                 event_dispatcher,
                 field,
-                current_artifact_identifier,
                 current_tracker_identifier,
                 ParentTrackerIdentifierProxy.fromTrackerModel(modal_model.tracker.parent),
                 ArtifactCrossReference.fromCurrentArtifact(
-                    current_artifact_identifier,
+                    current_artifact_option,
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
@@ -209,7 +208,7 @@ function ArtifactModalController(
                 user_history_cache,
                 api_client,
                 event_dispatcher,
-                current_artifact_identifier,
+                current_artifact_option,
                 UserIdentifierProxy.fromUserId(modal_model.user_id)
             );
         },

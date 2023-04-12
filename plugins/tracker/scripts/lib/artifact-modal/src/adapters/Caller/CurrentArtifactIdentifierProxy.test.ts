@@ -23,14 +23,17 @@ const ARTIFACT_ID = 17;
 
 describe(`CurrentArtifactIdentifierProxy`, () => {
     it(`builds an identifier from the Modal's artifact id when it is in edition mode`, () => {
-        const identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(ARTIFACT_ID);
+        const identifier =
+            CurrentArtifactIdentifierProxy.fromModalArtifactId(ARTIFACT_ID).unwrapOr(null);
         if (identifier === null) {
-            throw new Error("Identifier should not be null");
+            throw Error("Identifier should not be null");
         }
         expect(identifier.id).toBe(ARTIFACT_ID);
     });
 
-    it(`returns null when Modal is in creation mode and its artifact id is undefined`, () => {
-        expect(CurrentArtifactIdentifierProxy.fromModalArtifactId(undefined)).toBeNull();
+    it(`returns nothing when Modal is in creation mode and its artifact id is undefined`, () => {
+        expect(CurrentArtifactIdentifierProxy.fromModalArtifactId(undefined).isNothing()).toBe(
+            true
+        );
     });
 });

@@ -25,7 +25,6 @@ import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
-import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { NoLinksInCreationModeFault } from "../../../../domain/fields/link-field/NoLinksInCreationModeFault";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
@@ -110,7 +109,6 @@ describe(`LinkFieldController`, () => {
 
     const getController = (): LinkFieldControllerType => {
         const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-        const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         const cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #18"));
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(70);
 
@@ -134,7 +132,6 @@ describe(`LinkFieldController`, () => {
             link_verifier,
             event_dispatcher,
             ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID }),
-            current_artifact_identifier,
             current_tracker_identifier,
             parent_tracker_identifier,
             cross_reference,

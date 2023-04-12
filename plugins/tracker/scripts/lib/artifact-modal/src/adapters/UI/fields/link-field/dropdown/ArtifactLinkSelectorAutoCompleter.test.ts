@@ -17,23 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Fault } from "@tuleap/fault";
+import { Option } from "@tuleap/option";
+import type { GroupCollection } from "@tuleap/lazybox";
+import { okAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 import { setCatalog } from "../../../../../gettext-catalog";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactStub } from "../../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
-import type { GroupCollection } from "@tuleap/lazybox";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { LinkField } from "../LinkField";
 import type { RetrieveUserHistory } from "../../../../../domain/fields/link-field/RetrieveUserHistory";
 import { RetrieveUserHistoryStub } from "../../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { UserIdentifierStub } from "../../../../../../tests/stubs/UserIdentifierStub";
-import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../../tests/stubs/SearchArtifactsStub";
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
@@ -62,7 +63,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         second_artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
         artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
-        current_artifact_identifier: CurrentArtifactIdentifier | null,
+        current_artifact_option: Option<CurrentArtifactIdentifier>,
         user_history_retriever: RetrieveUserHistory,
         event_dispatcher: DispatchEventsStub,
         host: LinkField,
@@ -89,7 +90,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         artifacts_searcher = SearchArtifactsStub.withoutResults();
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
-        current_artifact_identifier = null;
+        current_artifact_option = Option.nothing();
 
         const initial_dropdown_content: GroupCollection = [];
 
@@ -113,7 +114,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             user_history_retriever,
             artifacts_searcher,
             event_dispatcher,
-            current_artifact_identifier,
+            current_artifact_option,
             UserIdentifierStub.fromUserId(USER_ID)
         );
         autocompleter.autoComplete(host, query);

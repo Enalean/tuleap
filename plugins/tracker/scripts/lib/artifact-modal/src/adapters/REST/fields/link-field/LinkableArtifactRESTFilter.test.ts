@@ -18,54 +18,60 @@
  */
 
 import { LinkableArtifactRESTFilter } from "./LinkableArtifactRESTFilter";
-import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/core-rest-api-types";
 import type { SearchResultEntry } from "@tuleap/core-rest-api-types/src/main";
+import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 describe("LinkableArtifactRESTFilter", () => {
-    const ARTIFACT_ID = 12;
-    const OTHER_ARTIFACT_ID = 8545;
+    let current_artifact_option: Option<CurrentArtifactIdentifier>, entry: SearchResultEntry;
+    const ARTIFACT_ID = 12,
+        OTHER_ARTIFACT_ID = 8545;
+
+    beforeEach(() => {
+        entry = buildSearchResultEntryStub(ARTIFACT_ID, ARTIFACT_TYPE);
+        current_artifact_option = Option.nothing();
+    });
+
+    const filter = (): boolean =>
+        LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact_option);
 
     describe("filterArtifact", () => {
         it("returns true when the current entry is an artifact and the modal is in creation mode", () => {
-            const entry = {
-                per_type_id: ARTIFACT_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            } as unknown as SearchResultEntry;
-            const current_artifact = null;
-
-            expect(LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact)).toBe(true);
+            expect(filter()).toBe(true);
         });
 
         it("returns false when the current entry is NOT an artifact and the modal is in creation mode", () => {
-            const entry = {
-                per_type_id: ARTIFACT_ID,
-                type: "song",
-                badges: [],
-            } as unknown as SearchResultEntry;
-            const current_artifact = null;
-            expect(LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact)).toBe(false);
+            entry = buildSearchResultEntryStub(41, KANBAN_TYPE);
+            expect(filter()).toBe(false);
         });
 
         it("returns false when the current entry is the same artifact as the current edited artifact", () => {
-            const entry = {
-                per_type_id: ARTIFACT_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            } as unknown as SearchResultEntry;
-            const current_artifact = CurrentArtifactIdentifierStub.withId(ARTIFACT_ID);
-            expect(LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact)).toBe(false);
+            current_artifact_option = Option.fromValue(
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID)
+            );
+            expect(filter()).toBe(false);
         });
 
         it("returns true when the current entry is not the same artifact as the current edited artifact", () => {
-            const entry = {
-                per_type_id: OTHER_ARTIFACT_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            } as unknown as SearchResultEntry;
-            const current_artifact = CurrentArtifactIdentifierStub.withId(ARTIFACT_ID);
-            expect(LinkableArtifactRESTFilter.filterArtifact(entry, current_artifact)).toBe(true);
+            entry = buildSearchResultEntryStub(OTHER_ARTIFACT_ID, ARTIFACT_TYPE);
+            current_artifact_option = Option.fromValue(
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID)
+            );
+            expect(filter()).toBe(true);
         });
     });
 });
+
+function buildSearchResultEntryStub(
+    per_type_id: number,
+    type: "kanban" | "artifact"
+): SearchResultEntry {
+    const project = { id: 102, label: "Cloth Decide", icon: "" };
+    return {
+        per_type_id,
+        type,
+        project,
+    } as SearchResultEntry;
+}

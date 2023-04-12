@@ -37,7 +37,6 @@ import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/Retr
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
@@ -171,7 +170,6 @@ describe(`LinkedArtifactTemplate`, () => {
         });
 
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
-            const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
             const current_artifact_reference = Option.fromValue(
                 ArtifactCrossReferenceStub.withRef("story #72")
@@ -193,7 +191,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 ArtifactLinkFieldInfoStub.withDefaults(),
-                current_artifact_identifier,
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,

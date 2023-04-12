@@ -20,16 +20,18 @@
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { SearchResultEntry, UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import type { Option } from "@tuleap/option";
 
 export const LinkableArtifactRESTFilter = {
     filterArtifact: (
         entry: SearchResultEntry | UserHistoryEntry,
-        current_artifact: CurrentArtifactIdentifier | null
+        current_artifact_option: Option<CurrentArtifactIdentifier>
     ): boolean => {
         const is_artifact_entry = entry.type === ARTIFACT_TYPE;
-        if (!current_artifact) {
-            return is_artifact_entry;
-        }
-        return is_artifact_entry && entry.per_type_id !== current_artifact.id;
+        return current_artifact_option.mapOr(
+            (current_artifact_identifier) =>
+                is_artifact_entry && entry.per_type_id !== current_artifact_identifier.id,
+            is_artifact_entry
+        );
     },
 };

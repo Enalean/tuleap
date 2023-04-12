@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Option } from "@tuleap/option";
 import { ArtifactCrossReference } from "./ArtifactCrossReference";
 import { CurrentArtifactIdentifierStub } from "../../tests/stubs/CurrentArtifactIdentifierStub";
 import { TrackerShortnameStub } from "../../tests/stubs/TrackerShortnameStub";
@@ -24,7 +25,7 @@ import { TrackerShortnameStub } from "../../tests/stubs/TrackerShortnameStub";
 describe("ArtifactCrossReference", () => {
     it("builds from an artifact id, a tracker shortname and a tracker color name", () => {
         const option = ArtifactCrossReference.fromCurrentArtifact(
-            CurrentArtifactIdentifierStub.withId(150),
+            Option.fromValue(CurrentArtifactIdentifierStub.withId(150)),
             TrackerShortnameStub.withShortname("story"),
             "acid-green"
         );
@@ -36,15 +37,5 @@ describe("ArtifactCrossReference", () => {
 
         expect(reference.ref).toBe("story #150");
         expect(reference.color).toBe("acid-green");
-    });
-
-    it("Given no artifact id, Then it will return nothing", () => {
-        const option = ArtifactCrossReference.fromCurrentArtifact(
-            null,
-            TrackerShortnameStub.withShortname("story"),
-            "acid-green"
-        );
-
-        expect(option.isNothing()).toBe(true);
     });
 });
