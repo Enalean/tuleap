@@ -23,34 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psl\Json\Exception\DecodeException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
-use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialParameters;
-use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\PublicKeyCredentialSourceRepository;
-use Webauthn\PublicKeyCredentialUserEntity;
+use Webauthn\AuthenticatorAttestationResponse;
+use Webauthn\Exception\InvalidDataException;
+use Webauthn\PublicKeyCredentialLoader;
+use function Psl\Json\decode as psl_json_decode;
 
 final class PostRegistrationController extends DispatchablePSR15Compatible
 {
-    /**
-     * @param PublicKeyCredentialParameters[] $credential_parameters
-     */
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
-        private readonly SaveWebAuthnChallenge $challenge_dao,
-        private readonly PublicKeyCredentialSourceRepository $source_dao,
-        private readonly PublicKeyCredentialRpEntity $relying_party_entity,
-        private readonly array $credential_parameters,
+        private readonly PublicKeyCredentialLoader $credential_loader,
         private readonly ResponseFactoryInterface $response_factory,
-        private readonly JSONResponseBuilder $response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -64,33 +54,48 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
             return $this->response_factory->createResponse(401);
         }
 
-        $user_entity = new PublicKeyCredentialUserEntity(
-            $current_user->getUserName(),
-            (string) $current_user->getId(),
-            $current_user->getRealName()
-        );
+        if (empty($body = $request->getBody()->getContents())) {
+            return $this->response_factory->createResponse(400, _('Request body is empty'));
+        }
 
-        $challenge = random_bytes(32);
+        try {
+            $request_body = psl_json_decode($body);
+        } catch (DecodeException) {
+            return $this->response_factory->createResponse(400, _('Request body is not well formed'));
+        }
+        if (! array_key_exists('response', $request_body)) {
+            return $this->response_factory->createResponse(400, _('"response" field is missing from the request body'));
+        }
+        if (! array_key_exists('name', $request_body)) {
+            return $this->response_factory->createResponse(400, _('"name" field is missing from the request body'));
+        }
+        $response = $request_body['response'];
+        $name     = $request_body['name'];
+        if (! is_array($response) || ! is_string($name)) {
+            return $this->response_factory->createResponse(400, _('Request body is not well formed'));
+        }
 
-        $registered_sources = array_map(
-            static fn(PublicKeyCredentialSource $source) => $source->getPublicKeyCredentialDescriptor(),
-            $this->source_dao->findAllForUserEntity($user_entity)
-        );
+        try {
+            $public_key_credential = $this->credential_loader->loadArray($response);
+        } catch (InvalidDataException $e) {
+            return $this->response_factory->createResponse(400, _('The result of passkey is not well formed'));
+        }
 
-        $options = PublicKeyCredentialCreationOptions::create(
-            $this->relying_party_entity,
-            $user_entity,
-            $challenge,
-            $this->credential_parameters
-        )
-            ->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE)
-            ->excludeCredentials(...$registered_sources);
+        $authentication_attestation_response = $public_key_credential->getResponse();
+        if (! $authentication_attestation_response instanceof AuthenticatorAttestationResponse) {
+            return $this->response_factory->createResponse(400, _('The result of passkey is not well formed'));
+        }
 
-        $this->challenge_dao->saveChallenge(
-            (int) $current_user->getId(),
-            $challenge
-        );
+        // Get options
+        // - challenge
+        // - user entity
+        // - relying party
+        // - credential parameters
 
-        return $this->response_builder->fromData($options->jsonSerialize())->withStatus(201);
+        // Check attestation response
+
+        // Save source
+
+        return $this->response_factory->createResponse(501);
     }
 }
