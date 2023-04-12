@@ -91,6 +91,6 @@ final class PostRegistrationChallengeController extends DispatchablePSR15Compati
             $challenge
         );
 
-        return $this->response_builder->fromData($options->jsonSerialize())->withStatus(201);
+        return $this->response_builder->fromData($options->jsonSerialize())->withStatus(200);
     }
 }
