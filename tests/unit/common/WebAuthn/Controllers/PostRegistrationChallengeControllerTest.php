@@ -132,9 +132,6 @@ final class PostRegistrationChallengeControllerTest extends TestCase
         self::assertSame(Base64UrlSafe::encodeUnpadded($challenge_dao->challenge_saved), $body['challenge']);
     }
 
-    /**
-     * @param string[] $sources_id
-     */
     private function getController(
         ProvideCurrentUserStub $current_user_stub,
         SaveWebAuthnChallenge $challenge_dao,
