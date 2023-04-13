@@ -60,16 +60,16 @@ import {
     ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
-} from "../../constants";
-import PullRequestMergeWarningModal from "../Modals/PullRequestMergeWarningModal.vue";
-import { mergePullRequest } from "../../api/tuleap-rest-querier";
+} from "../../../constants";
+import PullRequestMergeWarningModal from "../abandon/PullRequestMergeWarningModal.vue";
+import { mergePullRequest } from "../../../api/tuleap-rest-querier";
 import {
     hasUserPermissionToMerge,
     canPullRequestBeMerged,
     isFastForwardMerge,
     isCIHappy,
     isPullRequestInReview,
-} from "./merge-status-helper";
+} from "../merge-status-helper";
 
 const are_merge_commits_allowed_in_repository = strictInject(
     ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY

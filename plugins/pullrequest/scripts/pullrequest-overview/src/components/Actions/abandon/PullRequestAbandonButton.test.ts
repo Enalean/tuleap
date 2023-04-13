@@ -28,15 +28,15 @@ import {
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
 import PullRequestAbandonButton from "./PullRequestAbandonButton.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import * as tuleap_api from "../../api/tuleap-rest-querier";
+import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import {
     DISPLAY_TULEAP_API_ERROR,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
-} from "../../constants";
-import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../constants";
+} from "../../../constants";
+import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 vi.mock("@tuleap/vue-strict-inject");

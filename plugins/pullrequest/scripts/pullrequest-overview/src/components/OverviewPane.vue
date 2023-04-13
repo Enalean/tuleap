@@ -19,7 +19,12 @@
 
 <template>
     <div class="tlp-framed pull-request-overview-pane">
-        <overview-app-header v-bind:pull_request="pull_request_info" />
+        <div class="tlp-pane pullrequest-overview-header">
+            <div class="tlp-pane-container">
+                <pull-request-title v-bind:pull_request="pull_request_info" />
+                <overview-tabs />
+            </div>
+        </div>
 
         <div class="tlp-pane pullrequest-overview-content-pane">
             <div class="tlp-pane-container pullrequest-overview-section-left">
@@ -65,16 +70,17 @@ import {
     POST_PULL_REQUEST_UPDATE_CALLBACK,
 } from "../constants";
 
-import OverviewAppHeader from "./OverviewAppHeader.vue";
+import PullRequestTitle from "./Title/PullRequestTitle.vue";
+import OverviewTabs from "./OverviewTabs.vue";
 import OverviewThreads from "./Threads/OverviewThreads.vue";
 import PullRequestAuthor from "./ReadOnlyInfo/PullRequestAuthor.vue";
 import PullRequestCreationDate from "./ReadOnlyInfo/PullRequestCreationDate.vue";
 import PullRequestStats from "./ReadOnlyInfo/PullRequestStats.vue";
 import PullRequestCiStatus from "./ReadOnlyInfo/PullRequestCIStatus.vue";
 import PullRequestReferences from "./ReadOnlyInfo/PullRequestReferences.vue";
-import PullRequestErrorModal from "./Modals/PullRequestErrorModal.vue";
+import PullRequestErrorModal from "./Errors/PullRequestErrorModal.vue";
 import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.vue";
-import PullRequestEditTitleModal from "./Modals/PullRequestEditTitleModal.vue";
+import PullRequestEditTitleModal from "./Title/PullRequestEditTitleModal.vue";
 import PullRequestReviewerList from "./Reviewers/PullRequestReviewerList.vue";
 import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActions.vue";
 

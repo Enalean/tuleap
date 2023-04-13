@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import OverviewAppHeader from "./OverviewAppHeader.vue";
+import PullRequestTitle from "./PullRequestTitle.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
@@ -31,7 +31,7 @@ vi.mock("@tuleap/tooltip", () => ({
 
 describe("OverviewAppHeader", () => {
     it("should render a skeleton in place of the title when there is no pull request info yet", async () => {
-        const wrapper = shallowMount(OverviewAppHeader, {
+        const wrapper = shallowMount(PullRequestTitle, {
             props: {
                 pull_request: null,
             },

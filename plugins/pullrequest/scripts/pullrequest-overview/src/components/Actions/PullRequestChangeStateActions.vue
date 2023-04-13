@@ -45,10 +45,10 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
 
-import PullRequestMergeButton from "./PullRequestMergeButton.vue";
-import PullRequestAbandonButton from "./PullRequestAbandonButton.vue";
-import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
-import PullRequestAbandonedState from "./PullRequestAbandonedState.vue";
+import PullRequestMergeButton from "./merge/PullRequestMergeButton.vue";
+import PullRequestAbandonButton from "./abandon/PullRequestAbandonButton.vue";
+import PullRequestAlreadyMergedState from "./merge/PullRequestAlreadyMergedState.vue";
+import PullRequestAbandonedState from "./abandon/PullRequestAbandonedState.vue";
 import {
     isPullRequestAlreadyMerged,
     isFastForwardMerge,
