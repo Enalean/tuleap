@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, uri, patchJSON } from "@tuleap/fetch-result";
+import { getJSON, getAllJSON, uri, patchJSON, put } from "@tuleap/fetch-result";
 import type {
     PullRequest,
     User,
     TimelineItem,
-    Reviewer,
+    ReviewersCollection,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
@@ -67,7 +67,9 @@ export const patchTitle = (
     });
 };
 
-export const fetchReviewersInfo = (pull_request_id: number): ResultAsync<Reviewer, Fault> => {
+export const fetchReviewersInfo = (
+    pull_request_id: number
+): ResultAsync<ReviewersCollection, Fault> => {
     return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/reviewers`);
 };
 
@@ -89,5 +91,28 @@ export const abandonPullRequest = (pull_request_id: number): ResultAsync<PullReq
     return patchJSON<PullRequest>(
         uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
         { status: PULL_REQUEST_STATUS_ABANDON }
+    );
+};
+
+export const fetchMatchingUsers = (query: string): ResultAsync<User[], Fault> => {
+    return getJSON(uri`/api/v1/users`, {
+        params: {
+            query,
+            limit: 10,
+            offset: 0,
+        },
+    });
+};
+
+export const putReviewers = (
+    pull_request_id: number,
+    reviewers: ReadonlyArray<User>
+): ResultAsync<Response, Fault> => {
+    return put(
+        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/reviewers`,
+        {},
+        {
+            users: reviewers.map(({ id }) => ({ id })),
+        }
     );
 };

@@ -90,6 +90,12 @@ msgstr "A mis à jour la pull request."
 msgid "Last CI status"
 msgstr "Statut intégration continue"
 
+msgid "Manage reviewers"
+msgstr "Gérer les relecteurs"
+
+msgid "Matching users"
+msgstr "Utilisateurs correspondant"
+
 msgid "Merge"
 msgstr "Intégrer"
 
@@ -109,6 +115,9 @@ msgstr "Intégrée"
 
 msgid "Merged on"
 msgstr "Intégrée le"
+
+msgid "No matching users found"
+msgstr "Aucun utilisateur correspondant trouvé"
 
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
@@ -185,6 +194,9 @@ msgstr "SSH"
 msgid "Save changes"
 msgstr "Sauvegarder les changements"
 
+msgid "Search users by their names"
+msgstr "Rechercher des utilisateurs par leurs noms"
+
 msgid "Show details"
 msgstr "Voir les détails"
 
@@ -197,8 +209,14 @@ msgstr "Succès le"
 msgid "The last CI status is"
 msgstr "Le dernier statut de l'intégration continue est"
 
+msgid "This pull request will be cleared from all of its reviewers."
+msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
+
 msgid "Title"
 msgstr "Titre"
+
+msgid "Type at least 3 characters"
+msgstr "Tapez au moins 3 caractères"
 
 msgid "Unknown"
 msgstr "Inconnu"
