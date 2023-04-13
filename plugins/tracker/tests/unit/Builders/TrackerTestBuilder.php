@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Project;
+use Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerTestBuilder
@@ -123,6 +124,8 @@ final class TrackerTestBuilder
         if ($this->project) {
             $tracker->setProject($this->project);
         }
+
+         $tracker->setParent(Tracker::NO_PARENT);
 
         return $tracker;
     }

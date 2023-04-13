@@ -34,6 +34,7 @@ use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
 use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
+use Tuleap\Tracker\RetrieveTrackersByGroupIdAndUserCanView;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
@@ -46,7 +47,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory implements RetrieveTracker
+class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUserCanView
 {
     /**
      * Get the trackers required by agile dashboard
@@ -207,10 +208,10 @@ class TrackerFactory implements RetrieveTracker
     /**
      * @return Tracker[]
      */
-    public function getTrackersByGroupIdUserCanView($group_id, PFUser $user)
+    public function getTrackersByGroupIdUserCanView(int|string $project_id, PFUser $user): array
     {
         $trackers = [];
-        foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
+        foreach ($this->getDao()->searchByGroupId($project_id) as $row) {
             $tracker_id = $row['id'];
             $tracker    = $this->getCachedInstanceFromRow($row);
             if ($tracker->userCanView($user)) {

@@ -32,6 +32,8 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
 {
     public const ROUTE = 'trackers';
 
+    public const FULL_REPRESENTATION = 'full';
+
     /**
      * @var int
      */

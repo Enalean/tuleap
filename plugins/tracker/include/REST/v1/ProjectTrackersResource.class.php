@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
 use Luracast\Restler\RestException;
-use PFUser;
 use Project;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
@@ -59,8 +59,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class ProjectTrackersResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT              = 50;
-    public const MINIMAL_REPRESENTATION = 'minimal';
+    public const MAX_LIMIT = 50;
 
     /**
      * Get trackers
@@ -86,9 +85,9 @@ class ProjectTrackersResource extends AuthenticatedResource
      * @oauth2-scope read:tracker
      *
      * @param int    $id             Id of the project
-     * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
+     * @param CompleteTrackerRepresentation::FULL_REPRESENTATION|MinimalTrackerRepresentation::MINIMAL_REPRESENTATION $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
      * @param int    $limit          Number of elements displayed per page {@from path} {@min 0} {@max 50}
-     * @param int    $offset         Position of the first element to display {@from path} {@min 0}
+     * @param int $offset         Position of the first element to display {@from path} {@min 0}
      * @param string $query          JSON object of search criteria properties {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
@@ -97,7 +96,7 @@ class ProjectTrackersResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0, $query = '')
+    public function getTrackers(int $id, string $representation = CompleteTrackerRepresentation::FULL_REPRESENTATION, int $limit = 10, int $offset = 0, string $query = '')
     {
         $this->checkAccess();
         $this->optionsTrackers($id);
@@ -112,8 +111,65 @@ class ProjectTrackersResource extends AuthenticatedResource
         $json_query                                  = $json_decoder->decodeAsAnArray('query', $query);
         $filter_on_tracker_administration_permission = $this->mustFilterOnTrackerAdministration($json_decoder, $query);
 
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
+        $tracker_permission_wrapper =  new PermissionsFunctionsWrapper();
+
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                TransitionFactory::instance(),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                $form_element_factory
+            )
+        );
+
+        $builder = new Tracker_REST_TrackerRestBuilder(
+            $form_element_factory,
+            new FormElementRepresentationsBuilder(
+                $form_element_factory,
+                new PermissionsExporter(
+                    $frozen_fields_detector
+                ),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(
+                            new HiddenFieldsetsDao(),
+                            $form_element_factory
+                        ),
+                        $form_element_factory
+                    ),
+                    new FieldsExtractor()
+                ),
+                new PermissionsForGroupsBuilder(
+                    new \UGroupManager(),
+                    $frozen_fields_detector,
+                    $tracker_permission_wrapper
+                ),
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao()
+                )
+            ),
+            new PermissionsRepresentationBuilder(
+                new \UGroupManager(),
+                $tracker_permission_wrapper
+            ),
+            new WorkflowRestBuilder()
+        );
+
+        $representation_builder = new TrackerRepresentationBuilder(TrackerFactory::instance(), $builder);
+
         if (empty($json_query) || isset($json_query["is_tracker_admin"])) {
-            return $this->getTrackerRepresentations(
+            $all_trackers = $representation_builder->buildTrackerRepresentations(
                 $user,
                 $project,
                 $representation,
@@ -121,6 +177,11 @@ class ProjectTrackersResource extends AuthenticatedResource
                 $offset,
                 $filter_on_tracker_administration_permission
             );
+
+            $this->sendAllowHeaders();
+            $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
+
+            return $all_trackers;
         }
 
         return $this->getTrackersWithCriteria($project, $representation, $limit, $offset, $json_query);
@@ -184,96 +245,5 @@ class ProjectTrackersResource extends AuthenticatedResource
         $this->sendPaginationHeaders($limit, $offset, $get_projects->getTotalTrackers());
 
         return $all_trackers;
-    }
-
-    /**
-     * @param String  $representation
-     * @param int     $limit
-     * @param int     $offset
-     * @param         $filter_on_tracker_administration_permission
-     * @return array
-     */
-    private function getTrackerRepresentations(
-        PFUser $user,
-        Project $project,
-        $representation,
-        $limit,
-        $offset,
-        $filter_on_tracker_administration_permission,
-    ) {
-        $all_trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
-            $project->getId(),
-            $user
-        );
-        $trackers     = array_slice($all_trackers, $offset, $limit);
-
-        $transition_retriever = new TransitionRetriever(
-            new StateFactory(
-                TransitionFactory::instance(),
-                new SimpleWorkflowDao()
-            ),
-            new TransitionExtractor()
-        );
-
-        $frozen_fields_detector = new FrozenFieldDetector(
-            $transition_retriever,
-            new FrozenFieldsRetriever(
-                new FrozenFieldsDao(),
-                Tracker_FormElementFactory::instance()
-            )
-        );
-
-        $builder                 = new Tracker_REST_TrackerRestBuilder(
-            Tracker_FormElementFactory::instance(),
-            new FormElementRepresentationsBuilder(
-                Tracker_FormElementFactory::instance(),
-                new PermissionsExporter(
-                    $frozen_fields_detector
-                ),
-                new HiddenFieldsetChecker(
-                    new HiddenFieldsetsDetector(
-                        $transition_retriever,
-                        new HiddenFieldsetsRetriever(
-                            new HiddenFieldsetsDao(),
-                            Tracker_FormElementFactory::instance()
-                        ),
-                        Tracker_FormElementFactory::instance()
-                    ),
-                    new FieldsExtractor()
-                ),
-                new PermissionsForGroupsBuilder(
-                    new \UGroupManager(),
-                    $frozen_fields_detector,
-                    new PermissionsFunctionsWrapper()
-                ),
-                new TypePresenterFactory(
-                    new TypeDao(),
-                    new ArtifactLinksUsageDao()
-                )
-            ),
-            new PermissionsRepresentationBuilder(
-                new \UGroupManager(),
-                new PermissionsFunctionsWrapper()
-            ),
-            new WorkflowRestBuilder()
-        );
-        $tracker_representations = [];
-
-        foreach ($trackers as $tracker) {
-            if ($filter_on_tracker_administration_permission && ! $tracker->userIsAdmin($user)) {
-                continue;
-            }
-            if ($representation === self::MINIMAL_REPRESENTATION) {
-                $tracker_minimal_representation = MinimalTrackerRepresentation::build($tracker);
-                $tracker_representations[]      = $tracker_minimal_representation;
-            } else {
-                $tracker_representations[] = $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
-            }
-        }
-
-        $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
-
-        return $tracker_representations;
     }
 }
