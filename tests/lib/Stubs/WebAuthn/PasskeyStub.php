@@ -1,0 +1,106 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Test\Stubs\WebAuthn;
+
+use CBOR\IndefiniteLengthByteStringObject;
+use CBOR\IndefiniteLengthMapObject;
+use CBOR\MapObject;
+use CBOR\TextStringObject;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Psl\Hash\Algorithm;
+use Webauthn\AttestationStatement\AttestationStatement;
+use function Psl\Encoding\Base64\encode;
+use function Psl\Json\encode as psl_json_encode;
+
+/**
+ * This class aims to simulate behavior of a passkey
+ */
+final class PasskeyStub
+{
+    public function __construct(
+        private readonly string $passkey_id = 'passkey id',
+        private readonly string $relying_party = 'https://example.com',
+    ) {
+    }
+
+    public function generateAttestationResponse(string $challenge): array
+    {
+        $crypted_challenge     = $challenge;
+        $client_data_json      = Base64UrlSafe::encodeUnpadded(psl_json_encode([
+            'type' => 'webauthn.create',
+            'challenge' => Base64UrlSafe::encodeUnpadded($crypted_challenge),
+            'origin' => $this->relying_party,
+        ]));
+        $relying_party_id_hash = hex2bin(\Psl\Hash\hash($this->relying_party, Algorithm::SHA256));
+        $flags                 = (string) 0b0000101;
+        $sign_count            = '0000';
+        // see https://www.w3.org/TR/webauthn-2/#attestation-object
+        $attestation_object = IndefiniteLengthMapObject::create()
+            ->add(TextStringObject::create('fmt'), TextStringObject::create(AttestationStatement::TYPE_NONE))
+            ->add(TextStringObject::create('attStmt'), MapObject::create([]))
+            ->add(
+                TextStringObject::create('authData'),
+                IndefiniteLengthByteStringObject::create()
+                    // see https://www.w3.org/TR/webauthn-2/#authenticator-data
+                    ->append($relying_party_id_hash)
+                    ->append($flags)
+                    ->append($sign_count)
+            );
+
+        return [
+            'id' => Base64UrlSafe::encodeUnpadded($this->passkey_id),
+            'rawId' => encode($this->passkey_id),
+            'type' => 'public-key',
+            'response' => [
+                'clientDataJSON' => $client_data_json,
+                'attestationObject' => encode((string) $attestation_object),
+            ],
+        ];
+    }
+
+    public function generateAssertionResponse(string $challenge): array
+    {
+        $crypted_challenge     = $challenge;
+        $client_data_json      = Base64UrlSafe::encodeUnpadded(psl_json_encode([
+            'type' => 'webauthn.get',
+            'challenge' => Base64UrlSafe::encodeUnpadded($crypted_challenge),
+            'origin' => $this->relying_party,
+        ]));
+        $relying_party_id_hash = hex2bin(\Psl\Hash\hash($this->relying_party, Algorithm::SHA256));
+        $flags                 = (string) 0b0000101;
+        $sign_count            = '0000';
+        // see https://www.w3.org/TR/webauthn-2/#authenticator-data
+        $authenticator_data = $relying_party_id_hash . $flags . $sign_count;
+
+        return [
+            'id' => Base64UrlSafe::encodeUnpadded($this->passkey_id),
+            'rawId' => encode($this->passkey_id),
+            'type' => 'public-key',
+            'response' => [
+                'clientDataJSON' => $client_data_json,
+                'authenticatorData' => Base64UrlSafe::encodeUnpadded($authenticator_data),
+                'signature' => encode('signature'),
+            ],
+        ];
+    }
+}

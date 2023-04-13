@@ -83,7 +83,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
 
         $authentication_attestation_response = $public_key_credential->getResponse();
         if (! $authentication_attestation_response instanceof AuthenticatorAttestationResponse) {
-            return $this->response_factory->createResponse(400, _('The result of passkey is not well formed'));
+            return $this->response_factory->createResponse(400, _('The result of passkey is not for registration'));
         }
 
         // Get options
