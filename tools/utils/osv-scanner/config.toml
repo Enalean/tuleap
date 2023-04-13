@@ -33,12 +33,6 @@ reason = "Only used when targetting macOS."
 ### TO BE FIXED
 
 # Dev tools
-## qs
-[[IgnoredVulns]]
-id = "GHSA-hrpp-h998-j3pp" # CVE-2022-24999
-reason = "Not exploitable. Only used as a dev tool."
-ignoreUntil = 2023-05-08
-
 ## nth-check
 [[IgnoredVulns]]
 id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
