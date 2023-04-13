@@ -23,6 +23,7 @@ import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("dropdown-manager", () => {
     let doc: Document,
@@ -58,7 +59,11 @@ describe("dropdown-manager", () => {
             dropdown_element,
             dropdown_list_element,
             selection_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "", "", false).renderBaseComponent();
+        } = new BaseComponentRenderer(
+            doc,
+            source_select_box,
+            OptionsBuilder.withoutNewItem().build()
+        ).renderBaseComponent();
 
         scroll_manager = {
             lockScrolling: vi.fn(),

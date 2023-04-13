@@ -29,6 +29,7 @@ import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuil
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 import { selectOrThrow } from "@tuleap/dom";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -50,9 +51,7 @@ describe("SelectionManager", () => {
             new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
                 source_select_box,
-                "",
-                "",
-                false
+                OptionsBuilder.withoutNewItem().build()
             ).renderBaseComponent();
 
         selection_container = selection_element;

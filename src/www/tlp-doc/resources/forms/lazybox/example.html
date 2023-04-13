@@ -6,11 +6,14 @@
     </p>
     <script type="text/javascript">
         import { createLazybox } from "@tuleap/lazybox";
-
-        const lazybox = createLazybox(document.querySelector('#lazybox-link-selector'), {
+        const lazybox = createLazybox(document.querySelector("#lazybox-link-selector"), {
             is_multiple: false,
             placeholder: "Please select an item to link",
             search_input_placeholder: "Type a number",
+            new_item_button_label: "→ Create a new item…",
+            new_item_callback: () => {
+                console.log("Clicked on new item");
+            },
             templating_callback: (html, item) => html`${item.id}`,
             selection_callback: (selected_value) => {
                 console.log("Selected value : " + selected_value);

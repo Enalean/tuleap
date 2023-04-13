@@ -46,13 +46,7 @@ export function createLazybox(
     const items_map_manager = new ItemsMapManager(list_items_builder);
 
     items_map_manager.refreshItemsMap([]);
-    const base_renderer = new BaseComponentRenderer(
-        document,
-        source_select_box,
-        options.placeholder,
-        options.search_input_placeholder,
-        options.is_multiple
-    );
+    const base_renderer = new BaseComponentRenderer(document, source_select_box, options);
     const {
         wrapper_element,
         lazybox_element,

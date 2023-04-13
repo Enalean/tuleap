@@ -26,6 +26,7 @@ import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import type { GroupCollection } from "../items/GroupCollection";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("DropDownContentRenderer", () => {
     let dropdown: Element, dropdown_list: HTMLElement;
@@ -46,9 +47,7 @@ describe("DropDownContentRenderer", () => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
                 select,
-                "",
-                "",
-                false
+                OptionsBuilder.withoutNewItem().build()
             ).renderBaseComponent();
 
             dropdown = dropdown_element;

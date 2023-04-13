@@ -37,14 +37,25 @@ export type LazyboxTemplatingCallback = (
     item: LazyboxItem
 ) => HTMLTemplateResult;
 
-export interface LazyboxOptions {
+export type LazyboxNewItemCallback = () => void;
+
+export type LazyBoxWithNewItemButton = {
+    readonly new_item_button_label: string;
+    readonly new_item_callback: LazyboxNewItemCallback;
+};
+
+type LazyBoxWithoutNewItemButton = {
+    readonly new_item_callback?: undefined;
+};
+
+export type LazyboxOptions = (LazyBoxWithoutNewItemButton | LazyBoxWithNewItemButton) & {
     readonly placeholder: string;
     readonly search_input_placeholder: string;
     readonly is_multiple: boolean;
     readonly templating_callback: LazyboxTemplatingCallback;
     readonly selection_callback: LazyboxSelectionCallback;
     readonly search_field_callback: LazyboxSearchFieldCallback;
-}
+};
 
 export type RenderedItemMap = Map<string, RenderedItem>;
 

@@ -367,183 +367,182 @@ import { createLazybox } from "@tuleap/lazybox";
                 .forEach((trigger) => createDropdown(trigger));
         }
 
-        function initLinkSelector() {
-            const source_select = document.querySelector("#lazybox-link-selector");
-            const ADDITIONAL_ITEM_ID = 105;
-
-            const item_105 = {
-                id: String(ADDITIONAL_ITEM_ID),
-                value: {
-                    id: ADDITIONAL_ITEM_ID,
-                    color: "graffiti-yellow",
-                    xref: "story #105",
-                    title: "Do more stuff",
-                },
-                is_disabled: false,
-            };
-            const items = [
-                {
-                    id: "101",
-                    value: {
-                        id: 101,
-                        color: "acid-green",
-                        xref: "story #101",
-                        title: "Do this",
-                    },
-                    is_disabled: false,
-                },
-                {
-                    id: "102",
-                    value: {
-                        id: 102,
-                        color: "fiesta-red",
-                        xref: "story #102",
-                        title: "Do that",
-                    },
-                    is_disabled: false,
-                },
-                {
-                    id: "103",
-                    value: {
-                        id: 103,
-                        color: "deep-blue",
-                        xref: "story #103",
-                        title: "And that too",
-                    },
-                    is_disabled: true,
-                },
-            ];
-            const group = {
-                label: "Matching items",
-                empty_message: "No matching item",
-                is_loading: false,
-                items: [],
-            };
-
-            const link_selector = createLazybox(source_select, {
-                is_multiple: false,
-                placeholder: "Please select an item to link",
-                search_input_placeholder: "Type a number",
-                templating_callback: (html, item) =>
-                    html`
-                        <span class="tlp-badge-${item.value.color} doc-link-selector-badge">
-                            ${item.value.xref}
-                        </span>
-                        ${item.value.title}
-                    `,
-                selection_callback: () => {
-                    // Do nothing
-                },
-                search_field_callback: (query) => {
-                    if (query === "") {
-                        link_selector.setDropdownContent([{ ...group, items }]);
-                        return;
-                    }
-                    const lowercase_query = query.toLowerCase();
-
-                    if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
-                        link_selector.setDropdownContent([{ ...group, items: [item_105] }]);
-                        return;
-                    }
-                    const filtered_items = items.filter(
-                        (item) =>
-                            String(item.value.id).includes(lowercase_query) ||
-                            item.value.title.toLowerCase().includes(lowercase_query)
-                    );
-                    if (filtered_items.length > 0) {
-                        link_selector.setDropdownContent([{ ...group, items: filtered_items }]);
-                        return;
-                    }
-                    link_selector.setDropdownContent([group]);
-                },
-            });
-            link_selector.setDropdownContent([{ ...group, items }]);
-        }
-
-        function initMultiUserLinkSelector() {
-            const users = [
-                {
-                    id: "101",
-                    value: {
-                        id: 102,
-                        display_name: "Johnny Cash (jocash)",
-                    },
-                    is_disabled: false,
-                },
-                {
-                    id: "102",
-                    value: {
-                        id: 102,
-                        display_name: "Joe l'Asticot (jolasti)",
-                    },
-                    is_disabled: false,
-                },
-                {
-                    id: "103",
-                    value: {
-                        id: 103,
-                        display_name: "John doe (jdoe)",
-                    },
-                    is_disabled: false,
-                },
-                {
-                    id: "104",
-                    value: {
-                        id: 104,
-                        display_name: "Joe the hobo (johobo)",
-                    },
-                    is_disabled: true,
-                },
-            ];
-
-            const user_autocompleter_group = {
-                label: "Matching users",
-                empty_message: "No user found",
-                is_loading: false,
-                items: [],
-            };
-
-            const link_selector_multiple = createLazybox(
-                document.querySelector("#lazybox-users-selector"),
-                {
-                    is_multiple: true,
-                    placeholder: "Search users by names",
-                    search_input_placeholder: "",
-                    templating_callback: (html, item) => html`
-                        <span class="doc-multiple-lazybox-user-with-avatar">
-                            <div class="tlp-avatar-mini"></div>
-                            ${item.value.display_name}
-                        </span>
-                    `,
-                    selection_callback: () => {
-                        // Do nothing
-                    },
-                    search_field_callback: (query) => {
-                        if (query === "") {
-                            link_selector_multiple.setDropdownContent([
-                                { ...user_autocompleter_group },
-                            ]);
-                            return;
-                        }
-                        const lowercase_query = query.toLowerCase();
-                        const matching_users = users.filter((user) =>
-                            user.value.display_name.toLowerCase().includes(lowercase_query)
-                        );
-                        if (matching_users) {
-                            link_selector_multiple.setDropdownContent([
-                                { ...user_autocompleter_group, items: matching_users },
-                            ]);
-                            return;
-                        }
-
-                        link_selector_multiple.setDropdownContent([user_autocompleter_group]);
-                    },
-                }
-            );
-            link_selector_multiple.setDropdownContent([{ ...user_autocompleter_group }]);
-            link_selector_multiple.setSelection([users[0]]);
-        }
-
         setTimeout(updatePreview, 10);
     });
 })();
+
+function initLinkSelector() {
+    const source_select = document.querySelector("#lazybox-link-selector");
+    const ADDITIONAL_ITEM_ID = 105;
+
+    const item_105 = {
+        id: String(ADDITIONAL_ITEM_ID),
+        value: {
+            id: ADDITIONAL_ITEM_ID,
+            color: "graffiti-yellow",
+            xref: "story #105",
+            title: "Do more stuff",
+        },
+        is_disabled: false,
+    };
+    const items = [
+        {
+            id: "101",
+            value: {
+                id: 101,
+                color: "acid-green",
+                xref: "story #101",
+                title: "Do this",
+            },
+            is_disabled: false,
+        },
+        {
+            id: "102",
+            value: {
+                id: 102,
+                color: "fiesta-red",
+                xref: "story #102",
+                title: "Do that",
+            },
+            is_disabled: false,
+        },
+        {
+            id: "103",
+            value: {
+                id: 103,
+                color: "deep-blue",
+                xref: "story #103",
+                title: "And that too",
+            },
+            is_disabled: true,
+        },
+    ];
+    const group = {
+        label: "Matching items",
+        empty_message: "No matching item",
+        is_loading: false,
+        items: [],
+    };
+
+    const link_selector = createLazybox(source_select, {
+        is_multiple: false,
+        placeholder: "Please select an item to link",
+        search_input_placeholder: "Type a number",
+        new_item_button_label: "→ Create a new item…",
+        new_item_callback: () => {
+            // Do nothing
+        },
+        templating_callback: (html, item) =>
+            html`
+                <span class="tlp-badge-${item.value.color} doc-link-selector-badge">
+                    ${item.value.xref}
+                </span>
+                ${item.value.title}
+            `,
+        selection_callback: () => {
+            // Do nothing
+        },
+        search_field_callback: (query) => {
+            if (query === "") {
+                link_selector.setDropdownContent([{ ...group, items }]);
+                return;
+            }
+            const lowercase_query = query.toLowerCase();
+
+            if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
+                link_selector.setDropdownContent([{ ...group, items: [item_105] }]);
+                return;
+            }
+            const filtered_items = items.filter(
+                (item) =>
+                    String(item.value.id).includes(lowercase_query) ||
+                    item.value.title.toLowerCase().includes(lowercase_query)
+            );
+            if (filtered_items.length > 0) {
+                link_selector.setDropdownContent([{ ...group, items: filtered_items }]);
+                return;
+            }
+            link_selector.setDropdownContent([group]);
+        },
+    });
+    link_selector.setDropdownContent([{ ...group, items }]);
+}
+
+function initMultiUserLinkSelector() {
+    const users = [
+        {
+            id: "101",
+            value: {
+                id: 102,
+                display_name: "Johnny Cash (jocash)",
+            },
+            is_disabled: false,
+        },
+        {
+            id: "102",
+            value: {
+                id: 102,
+                display_name: "Joe l'Asticot (jolasti)",
+            },
+            is_disabled: false,
+        },
+        {
+            id: "103",
+            value: {
+                id: 103,
+                display_name: "John doe (jdoe)",
+            },
+            is_disabled: false,
+        },
+        {
+            id: "104",
+            value: {
+                id: 104,
+                display_name: "Joe the hobo (johobo)",
+            },
+            is_disabled: true,
+        },
+    ];
+
+    const user_autocompleter_group = {
+        label: "Matching users",
+        empty_message: "No user found",
+        is_loading: false,
+        items: [],
+    };
+
+    const users_lazybox = createLazybox(document.querySelector("#lazybox-users-selector"), {
+        is_multiple: true,
+        placeholder: "Search users by names",
+        search_input_placeholder: "",
+        templating_callback: (html, item) => html`
+            <span class="doc-multiple-lazybox-user-with-avatar">
+                <div class="tlp-avatar-mini"></div>
+                ${item.value.display_name}
+            </span>
+        `,
+        selection_callback: () => {
+            // Do nothing
+        },
+        search_field_callback: (query) => {
+            if (query === "") {
+                users_lazybox.setDropdownContent([user_autocompleter_group]);
+                return;
+            }
+            const lowercase_query = query.toLowerCase();
+            const matching_users = users.filter((user) =>
+                user.value.display_name.toLowerCase().includes(lowercase_query)
+            );
+            if (matching_users) {
+                users_lazybox.setDropdownContent([
+                    { ...user_autocompleter_group, items: matching_users },
+                ]);
+                return;
+            }
+
+            users_lazybox.setDropdownContent([user_autocompleter_group]);
+        },
+    });
+    users_lazybox.setDropdownContent([user_autocompleter_group]);
+    users_lazybox.setSelection([users[0]]);
+}

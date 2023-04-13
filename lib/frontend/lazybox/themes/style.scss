@@ -21,6 +21,7 @@
 * We can't just display: none or add the attribute type="hidden" because we need the <select> for accessibility purpose.
 * Hence, we shrink it at the maximum.
 */
+
 .lazybox-hidden-accessible {
     position: absolute;
     width: 1px;
@@ -145,7 +146,7 @@
 }
 
 .lazybox-single-dropdown-search-section {
-    padding: var(--tlp-form-element-padding-horizontal);
+    padding: 4px;
 
     .lazybox-search-field {
         height: var(--tlp-form-element-small-height);
@@ -155,6 +156,8 @@
 }
 
 .lazybox-dropdown-option-value {
+    cursor: pointer;
+
     &.lazybox-item-highlighted {
         background-color: var(--tlp-main-color);
         color: var(--tlp-white-color);
@@ -192,6 +195,33 @@
     }
 }
 
+%dropdown-item {
+    font-size: 14px;
+    line-height: normal;
+}
+
+%unset-button-style {
+    border: unset;
+    background: unset;
+    text-align: unset;
+}
+
+.lazybox-new-item-button {
+    @extend %unset-button-style;
+    @extend %dropdown-item;
+
+    padding: 8px 12px 9px;
+    color: var(--tlp-dark-color);
+    font-family: var(--tlp-font-family);
+    cursor: pointer;
+
+    &:focus,
+    &:hover {
+        background-color: var(--tlp-main-color);
+        color: var(--tlp-white-color);
+    }
+}
+
 .lazybox-dropdown-values-list {
     max-height: 250px;
     margin: 0;
@@ -202,12 +232,11 @@
 
 .lazybox-dropdown-option-value,
 .lazybox-dropdown-option-value-disabled {
+    @extend %dropdown-item;
+
     display: flex;
     align-items: baseline;
     padding: 6px 12px 6px 32px;
-    font-size: 14px;
-    line-height: normal;
-    cursor: pointer;
     user-select: none;
 }
 

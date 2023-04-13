@@ -26,6 +26,7 @@ import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,
@@ -44,9 +45,7 @@ describe("KeyboardNavigationManager", () => {
         const { dropdown_list_element } = new BaseComponentRenderer(
             doc,
             source_select_box,
-            "",
-            "",
-            false
+            OptionsBuilder.withoutNewItem().build()
         ).renderBaseComponent();
         dropdown_list = dropdown_list_element;
 

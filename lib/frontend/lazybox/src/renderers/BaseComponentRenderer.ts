@@ -16,20 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { LazyboxComponent } from "../type";
+import type { LazyboxComponent, LazyboxOptions } from "../type";
 import { isLazyboxInAModal } from "../helpers/lazybox-in-modals-helper";
+import { getNewItemTemplate } from "../dropdown/new-item-template";
 
 export class BaseComponentRenderer {
     constructor(
         private readonly doc: Document,
         private readonly source_select_box: HTMLSelectElement,
-        private readonly placeholder: string,
-        private readonly input_placeholder: string,
-        private readonly is_multiple: boolean
+        private readonly options: LazyboxOptions
     ) {}
 
     public renderBaseComponent(): LazyboxComponent {
-        const wrapper_element = document.createElement("span");
+        const wrapper_element = this.doc.createElement("span");
         wrapper_element.classList.add("lazybox-component-wrapper");
 
         const lazybox_element = this.createLazyboxElement();
@@ -43,15 +42,15 @@ export class BaseComponentRenderer {
             selection_element.setAttribute("tabindex", "0");
         }
 
-        if (this.is_multiple) {
-            search_field_element.setAttribute("placeholder", this.placeholder);
+        if (this.options.is_multiple) {
+            search_field_element.setAttribute("placeholder", this.options.placeholder);
             const new_search_section = this.createSearchSectionForMultipleListPicker();
             new_search_section.appendChild(search_field_element);
             selection_element.appendChild(new_search_section);
         } else {
             const search_section_element = this.createSearchSectionElement();
             search_section_element.appendChild(search_field_element);
-            dropdown_element.appendChild(search_section_element);
+            dropdown_element.insertAdjacentElement("afterbegin", search_section_element);
             selection_element.appendChild(placeholder_element);
         }
 
@@ -78,7 +77,7 @@ export class BaseComponentRenderer {
     }
 
     private createDropdownListElement(): HTMLElement {
-        const dropdown_list_element = document.createElement("ul");
+        const dropdown_list_element = this.doc.createElement("ul");
         dropdown_list_element.classList.add("lazybox-dropdown-values-list");
         dropdown_list_element.setAttribute("role", "listbox");
         dropdown_list_element.setAttribute("aria-expanded", "false");
@@ -87,25 +86,31 @@ export class BaseComponentRenderer {
     }
 
     private createDropdownElement(): HTMLElement {
-        const dropdown_element = document.createElement("span");
+        const dropdown_element = this.doc.createElement("span");
         dropdown_element.classList.add("lazybox-dropdown");
         dropdown_element.setAttribute("data-test", "lazybox-dropdown");
+
+        if (this.options.new_item_callback !== undefined) {
+            const new_item_button = getNewItemTemplate(this.doc, this.options);
+            dropdown_element.append(new_item_button);
+        }
+
         return dropdown_element;
     }
 
     private createPlaceholderElement(): Element {
-        const placeholder_element = document.createElement("span");
+        const placeholder_element = this.doc.createElement("span");
         placeholder_element.classList.add("lazybox-placeholder");
-        placeholder_element.appendChild(document.createTextNode(this.placeholder));
+        placeholder_element.appendChild(this.doc.createTextNode(this.options.placeholder));
         return placeholder_element;
     }
 
     private createSelectionElement(): HTMLElement {
-        const selection_element = document.createElement("span");
+        const selection_element = this.doc.createElement("span");
         selection_element.classList.add("lazybox-selection");
         selection_element.setAttribute("data-test", "lazybox-selection");
 
-        if (this.is_multiple) {
+        if (this.options.is_multiple) {
             selection_element.classList.add("lazybox-multiple");
             selection_element.setAttribute("aria-haspopup", "true");
             selection_element.setAttribute("aria-expanded", "false");
@@ -120,7 +125,7 @@ export class BaseComponentRenderer {
     }
 
     private createLazyboxElement(): Element {
-        const lazybox_element = document.createElement("span");
+        const lazybox_element = this.doc.createElement("span");
         lazybox_element.classList.add("lazybox");
         lazybox_element.setAttribute("data-test", "lazybox");
 
@@ -132,21 +137,21 @@ export class BaseComponentRenderer {
     }
 
     private createSearchSectionElement(): Element {
-        const search_section = document.createElement("span");
+        const search_section = this.doc.createElement("span");
         search_section.classList.add("lazybox-single-dropdown-search-section");
 
         return search_section;
     }
 
     private createSearchSectionForMultipleListPicker(): Element {
-        const search_section = document.createElement("span");
+        const search_section = this.doc.createElement("span");
 
         search_section.classList.add("lazybox-multiple-search-section");
         return search_section;
     }
 
     private createSearchFieldElement(): HTMLInputElement {
-        const search_field_element = document.createElement("input");
+        const search_field_element = this.doc.createElement("input");
         if (this.source_select_box.disabled) {
             search_field_element.setAttribute("disabled", "disabled");
         }
@@ -161,7 +166,7 @@ export class BaseComponentRenderer {
         search_field_element.setAttribute("role", "searchbox");
         search_field_element.setAttribute("aria-autocomplete", "list");
         search_field_element.setAttribute("aria-controls", "lazybox-dropdown-values-list");
-        search_field_element.setAttribute("placeholder", this.input_placeholder);
+        search_field_element.setAttribute("placeholder", this.options.search_input_placeholder);
 
         return search_field_element;
     }

@@ -27,6 +27,7 @@ import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 import { ManageSelectionStub } from "../../tests/stubs/ManageSelectionStub";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("event manager", () => {
     let doc: Document,
@@ -82,7 +83,11 @@ describe("event manager", () => {
             dropdown_element,
             dropdown_list_element,
             search_field_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "", "", false).renderBaseComponent();
+        } = new BaseComponentRenderer(
+            doc,
+            source_select_box,
+            OptionsBuilder.withoutNewItem().build()
+        ).renderBaseComponent();
 
         component_wrapper = wrapper_element;
         lazybox_input = lazybox_element;

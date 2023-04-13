@@ -20,18 +20,18 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import type { LazyboxComponent } from "../type";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 const PLACEHOLDER = "Create a new artifact or search by id or title";
 const INPUT_PLACEHOLDER = "Id, title...";
 
 describe("base-component-renderer", () => {
-    let select: HTMLSelectElement, doc: Document, is_multiple: boolean;
+    let select: HTMLSelectElement, doc: Document;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         select = document.createElement("select");
         select.id = "source-select-box";
-        is_multiple = false;
 
         doc.body.appendChild(select);
     });
@@ -40,9 +40,10 @@ describe("base-component-renderer", () => {
         const renderer = new BaseComponentRenderer(
             doc,
             select,
-            PLACEHOLDER,
-            INPUT_PLACEHOLDER,
-            is_multiple
+            OptionsBuilder.withoutNewItem()
+                .withPlaceholder(PLACEHOLDER)
+                .withSearchInputPlaceholder(INPUT_PLACEHOLDER)
+                .build()
         );
         return renderer.renderBaseComponent();
     };
