@@ -355,6 +355,70 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
 
+    public function testItExportsTheSelectedValuesInACheckboxField(): void
+    {
+        $jira_value_id_1       = 10009;
+        $jira_value_id_2       = 10010;
+        $generated_tuleap_id_1 = 15;
+        $generated_tuleap_id_2 = 16;
+
+        $mapping = new ListFieldMapping(
+            'cb',
+            'CheckBox',
+            null,
+            'Fcb',
+            'cb',
+            'cb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id_1,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id_1)
+                ),
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id_2,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id_2)
+                ),
+            ],
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    [
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10009',
+                            'value' => 'multi1',
+                            'id' => (string) $jira_value_id_1,
+                        ],
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10010',
+                            'value' => 'multi2',
+                            'id' => (string) $jira_value_id_2,
+                        ],
+
+                    ],
+                    null
+                ),
+            ],
+            null
+        );
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertCount(2, $field_change_node->value);
+        $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
+        $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
+    }
+
     public function testItExportsTheStatusValuesInASelectboxFieldWithTransformedIDs(): void
     {
         $jira_value_id       = 10001;

@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\XML\XMLFloatField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLCheckBoxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLMultiSelectBoxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLOpenListField;
@@ -44,11 +45,12 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraToTuleapFieldTypeMapper
 {
-    public const JIRA_FIELD_VERSIONS            = 'versions';
-    public const JIRA_FIELD_FIXEDVERSIONS       = 'fixVersions';
-    public const JIRA_FIELD_COMPONENTS          = 'components';
-    public const JIRA_FIELD_CUSTOM_MULTIVERSION = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion';
-    public const JIRA_FIELD_CUSTOM_VERSION      = 'com.atlassian.jira.plugin.system.customfieldtypes:version';
+    public const JIRA_FIELD_VERSIONS               = 'versions';
+    public const JIRA_FIELD_FIXEDVERSIONS          = 'fixVersions';
+    public const JIRA_FIELD_COMPONENTS             = 'components';
+    public const JIRA_FIELD_CUSTOM_MULTIVERSION    = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion';
+    public const JIRA_FIELD_CUSTOM_VERSION         = 'com.atlassian.jira.plugin.system.customfieldtypes:version';
+    public const JIRA_FIELD_CUSTOM_MULTICHECKBOXES = 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes';
 
     public function __construct(
         private ErrorCollector $error_collector,
@@ -309,6 +311,16 @@ class JiraToTuleapFieldTypeMapper
 
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
 
+                case self::JIRA_FIELD_CUSTOM_MULTICHECKBOXES:
+                    $field = XMLCheckBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
+                        ->withLabel($jira_field->getLabel())
+                        ->withRequired($jira_field->isRequired())
+                        ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
                 case 'attachment':
                 case 'status':
                 case 'creator':
@@ -319,7 +331,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'resolutiondate': // this field is not always displayed in issue view, always created.
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:grouppicker':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes':
                 case 'com.atlassian.jira.toolkit:attachments':
                 case 'comment':
                 case 'updated': // this is not a Tuleap field, handled during artifact import.

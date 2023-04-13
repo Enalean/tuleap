@@ -181,6 +181,15 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $initial_snapshot->getFieldInSnapshot('customfield_10101')->getValue()
         );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10030' ],
+                [ 'id' => '10031' ],
+                [ 'id' => '10032' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('customfield_10102')->getValue()
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection
@@ -278,6 +287,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping($this->getFixVersionsMapping());
         $collection->addMapping($this->getCustomMultiversionMapping());
         $collection->addMapping($this->getCustomVersionMapping());
+        $collection->addMapping($this->getCustomMulticheckboxesMapping());
 
         return $collection;
     }
@@ -572,6 +582,26 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ]
             ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "112",
+                    "created" => "2020-03-25T14:15:21.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "customfield_10102",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10033",
+                            "toString"   => "[test1]",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
         ];
     }
 
@@ -722,6 +752,15 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                     null,
                 ),
+                new FieldSnapshot(
+                    $this->getCustomMulticheckboxesMapping(),
+                    [
+                        [ 'id' => '10030' ],
+                        [ 'id' => '10031' ],
+                        [ 'id' => '10032' ],
+                    ],
+                    null,
+                ),
             ],
             null
         );
@@ -792,6 +831,20 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "Fcustomfield_10101",
             "customfield_10101",
             \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomMulticheckboxesMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10102',
+            'Multi Checkboxes',
+            'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes',
+            "Fcustomfield_10102",
+            "customfield_10102",
+            \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
