@@ -22,12 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
-use CBOR\IndefiniteLengthByteStringObject;
-use CBOR\IndefiniteLengthMapObject;
-use CBOR\MapObject;
-use CBOR\TextStringObject;
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use Psl\Hash\Algorithm;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -35,13 +29,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\User\ProvideCurrentUser;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
-use Webauthn\AttestationStatement\AttestationStatement;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\PublicKeyCredentialLoader;
-use function Psl\Encoding\Base64\encode;
 use function Psl\Json\encode as psl_json_encode;
 
 final class PostRegistrationControllerTest extends TestCase
@@ -72,10 +65,11 @@ final class PostRegistrationControllerTest extends TestCase
 
     public function testItReturns501(): void
     {
+        $passkey  = new PasskeyStub();
         $response = $this->handle(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
             [
-                'response' => $this->generateResponse('challenge'),
+                'response' => $passkey->generateAttestationResponse('challenge'),
                 'name' => 'name of passkey',
             ]
         );
@@ -160,42 +154,12 @@ final class PostRegistrationControllerTest extends TestCase
             ],
             'error_message' => 'The result of passkey is not well formed',
         ];
-    }
-
-    private function generateResponse(string $challenge): array
-    {
-        $id                    = 'passkey id';
-        $crypted_challenge     = $challenge;
-        $relying_party_id      = 'https://example.com';
-        $client_data_json      = Base64UrlSafe::encodeUnpadded(psl_json_encode([
-            'type' => 'webauthn.create',
-            'challenge' => Base64UrlSafe::encodeUnpadded($crypted_challenge),
-            'origin' => $relying_party_id,
-        ]));
-        $relying_party_id_hash = hex2bin(\Psl\Hash\hash($relying_party_id, Algorithm::SHA256));
-        $flags                 = (string) 0b0000101;
-        $sign_count            = '0000';
-        // see https://w3c.github.io/webauthn/#attestation-object
-        $attestation_object = IndefiniteLengthMapObject::create()
-            ->add(TextStringObject::create('fmt'), TextStringObject::create(AttestationStatement::TYPE_NONE))
-            ->add(TextStringObject::create('attStmt'), MapObject::create([]))
-            ->add(
-                TextStringObject::create('authData'),
-                IndefiniteLengthByteStringObject::create()
-                    // see https://w3c.github.io/webauthn/#authenticator-data
-                    ->append($relying_party_id_hash)
-                    ->append($flags)
-                    ->append($sign_count)
-            );
-
-        return [
-            'id' => Base64UrlSafe::encodeUnpadded($id),
-            'rawId' => encode($id),
-            'type' => 'public-key',
-            'response' => [
-                'attestationObject' => encode((string) $attestation_object),
-                'clientDataJSON' => $client_data_json,
+        yield 'It returns 400 when response is assertion' => [
+            'body' => [
+                'response' => (new PasskeyStub())->generateAssertionResponse('challenge'),
+                'name' => 'name of passkey',
             ],
+            'error_message' => 'The result of passkey is not for registration',
         ];
     }
 }

@@ -3819,6 +3819,9 @@ msgstr ""
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
+msgid "The result of passkey is not for registration"
+msgstr "Le résultat de la passkey n'est pas pour l'enregistrement"
+
 msgid "The result of passkey is not well formed"
 msgstr "Le résultat de la passkey n'est pas bien formé"
 
