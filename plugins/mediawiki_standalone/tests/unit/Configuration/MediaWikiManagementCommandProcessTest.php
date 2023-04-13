@@ -31,7 +31,7 @@ final class MediaWikiManagementCommandProcessTest extends TestCase
 {
     public function testGivesAnOkWhenCommandDoesNotFail(): void
     {
-        $command = new MediaWikiManagementCommandProcess(new NullLogger(), ['true']);
+        $command = new MediaWikiManagementCommandProcess(new NullLogger(), 'true');
         $result  = $command->wait();
 
         self::assertTrue(Result::isOk($result));
@@ -39,7 +39,7 @@ final class MediaWikiManagementCommandProcessTest extends TestCase
 
     public function testGivesAnErrorWhenCommandFails(): void
     {
-        $command = new MediaWikiManagementCommandProcess(new NullLogger(), ['false']);
+        $command = new MediaWikiManagementCommandProcess(new NullLogger(), 'false');
 
         $result = $command->wait();
         self::assertTrue(Result::isErr($result));

@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -34,11 +35,12 @@ final class MediaWikiManagementCommandProcess implements MediaWikiManagementComm
     private Process $process;
 
     /**
-     * @param string[] $command
+     * @param array<string, string|ConcealedString> $parameters
      */
-    public function __construct(private LoggerInterface $logger, array $command)
+    public function __construct(private LoggerInterface $logger, string $commandline, array $parameters = [])
     {
-        $this->process = new Process($command);
+        $this->process = Process::fromShellCommandline($commandline);
+        $this->process->setEnv($parameters);
         $this->process->setTimeout(null);
         $this->process->start();
     }

@@ -27,7 +27,7 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 /**
  * @psalm-immutable
  */
-final class ConcealedString
+final class ConcealedString implements \Stringable
 {
     /**
      * @var string
