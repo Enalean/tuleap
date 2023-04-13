@@ -33,7 +33,7 @@ import {
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAbandonedState from "./PullRequestAbandonedState.vue";
-import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import {
     PULL_REQUEST_STATUS_ABANDON,
     PULL_REQUEST_STATUS_MERGED,

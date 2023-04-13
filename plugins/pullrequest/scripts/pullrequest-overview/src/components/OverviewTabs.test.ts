@@ -20,7 +20,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 import OverviewTabs from "./OverviewTabs.vue";
-import { getGlobalTestOptions } from "../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../tests/helpers/global-options-for-tests";
 import { OVERVIEW_APP_BASE_URL_KEY, PULL_REQUEST_ID_KEY, VIEW_OVERVIEW_NAME } from "../constants";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 

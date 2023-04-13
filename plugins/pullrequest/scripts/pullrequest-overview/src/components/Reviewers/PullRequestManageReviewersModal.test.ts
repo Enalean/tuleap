@@ -27,9 +27,9 @@ import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { LazyboxStub } from "../../../test/stubs/LazyboxStub";
+import { LazyboxStub } from "../../../tests/stubs/LazyboxStub";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestManageReviewersModal from "./PullRequestManageReviewersModal.vue";
 

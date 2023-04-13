@@ -19,7 +19,7 @@
 
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import PullRequestCreationDate from "./PullRequestCreationDate.vue";
 
 describe("PullRequestCreationDate", () => {

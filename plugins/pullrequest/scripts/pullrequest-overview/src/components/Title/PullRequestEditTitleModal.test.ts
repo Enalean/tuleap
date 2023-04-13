@@ -22,7 +22,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import PullRequestEditTitleModal from "./PullRequestEditTitleModal.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";

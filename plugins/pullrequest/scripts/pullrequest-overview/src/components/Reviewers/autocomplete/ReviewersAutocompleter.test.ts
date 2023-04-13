@@ -22,7 +22,7 @@ import { okAsync, errAsync } from "neverthrow";
 import type { GroupOfItems } from "@tuleap/lazybox";
 import { Fault } from "@tuleap/fault";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { LazyboxStub } from "../../../../test/stubs/LazyboxStub";
+import { LazyboxStub } from "../../../../tests/stubs/LazyboxStub";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import { ReviewersAutocompleter } from "./ReviewersAutocompleter";
 import type { AutocompleteReviewers } from "./ReviewersAutocompleter";

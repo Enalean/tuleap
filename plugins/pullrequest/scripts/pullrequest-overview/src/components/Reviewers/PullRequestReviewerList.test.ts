@@ -22,7 +22,7 @@ import type { SpyInstance } from "vitest";
 import type { VueWrapper, DOMWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import PullRequestReviewerList from "./PullRequestReviewerList.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type {
     PullRequest,
     ReviewersCollection,
