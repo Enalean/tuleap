@@ -33,18 +33,18 @@ import {
     PULL_REQUEST_STATUS_MERGED,
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
-import * as tuleap_api from "../../api/tuleap-rest-querier";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import * as tuleap_api from "../../../api/tuleap-rest-querier";
+import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
-import PullRequestMergeWarningModal from "../Modals/PullRequestMergeWarningModal.vue";
+import PullRequestMergeWarningModal from "../abandon/PullRequestMergeWarningModal.vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../constants";
+import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import {
     DISPLAY_TULEAP_API_ERROR,
     ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
-} from "../../constants";
+} from "../../../constants";
 
 const current_pull_request_id = 15;
 

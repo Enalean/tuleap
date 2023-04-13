@@ -88,8 +88,8 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
-import { isCIHappy, isFastForwardMerge } from "../Actions/merge-status-helper";
+import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../../constants";
+import { isCIHappy, isFastForwardMerge } from "../merge-status-helper";
 import {
     BUILD_STATUS_FAILED,
     BUILD_STATUS_PENDING,

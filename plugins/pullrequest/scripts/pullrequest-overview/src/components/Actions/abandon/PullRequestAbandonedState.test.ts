@@ -23,7 +23,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import * as tuleap_api from "../../api/tuleap-rest-querier";
+import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import {
     PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
@@ -33,7 +33,7 @@ import {
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAbandonedState from "./PullRequestAbandonedState.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
 import {
     PULL_REQUEST_STATUS_ABANDON,
     PULL_REQUEST_STATUS_MERGED,
@@ -44,9 +44,9 @@ import {
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-} from "../../constants";
+} from "../../../constants";
 
-import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../constants";
+import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 
 vi.mock("@tuleap/vue-strict-inject");
 vi.mock("./tuleap-rest-querier");

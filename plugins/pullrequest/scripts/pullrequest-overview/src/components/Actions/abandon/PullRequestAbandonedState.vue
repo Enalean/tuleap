@@ -65,17 +65,17 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import PullRequestRelativeDate from "../ReadOnlyInfo/PullRequestRelativeDate.vue";
+import PullRequestRelativeDate from "../../ReadOnlyInfo/PullRequestRelativeDate.vue";
 import {
     DISPLAY_TULEAP_API_ERROR,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-} from "../../constants";
+} from "../../../constants";
 
-import { isPullRequestAbandoned } from "./merge-status-helper";
-import { isPreferenceAbsoluteDateFirst } from "../../helpers/relative-dates-preference-helper";
-import { reopenPullRequest } from "../../api/tuleap-rest-querier";
+import { isPullRequestAbandoned } from "../merge-status-helper";
+import { isPreferenceAbsoluteDateFirst } from "../../../helpers/relative-dates-preference-helper";
+import { reopenPullRequest } from "../../../api/tuleap-rest-querier";
 
 const { $gettext } = useGettext();
 const is_reopening_in_progress = ref(false);

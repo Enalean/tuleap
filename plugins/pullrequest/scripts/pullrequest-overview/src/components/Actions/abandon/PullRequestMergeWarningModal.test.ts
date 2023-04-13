@@ -21,7 +21,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import PullRequestMergeWarningModal from "./PullRequestMergeWarningModal.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
     BUILD_STATUS_FAILED,
@@ -34,7 +34,7 @@ import {
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
-import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
+import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../../constants";
 
 vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({

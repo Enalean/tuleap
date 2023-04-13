@@ -34,7 +34,7 @@ import {
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
 import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
 
 vi.mock("@tuleap/vue-strict-inject");

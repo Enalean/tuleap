@@ -18,27 +18,20 @@
   -->
 
 <template>
-    <div class="tlp-pane pullrequest-overview-header">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header pull-request-header">
-                <h2
-                    v-if="props.pull_request"
-                    data-test="pullrequest-title"
-                    v-dompurify-html="props.pull_request.title"
-                    ref="pull_request_title"
-                ></h2>
-                <h2 v-if="props.pull_request === null">
-                    <span class="tlp-skeleton-text" data-test="pullrequest-title-skeleton"></span>
-                </h2>
-            </div>
-
-            <overview-tabs />
-        </div>
+    <div class="tlp-pane-header pull-request-header">
+        <h2
+            v-if="props.pull_request"
+            data-test="pullrequest-title"
+            v-dompurify-html="props.pull_request.title"
+            ref="pull_request_title"
+        ></h2>
+        <h2 v-if="props.pull_request === null">
+            <span class="tlp-skeleton-text" data-test="pullrequest-title-skeleton"></span>
+        </h2>
     </div>
 </template>
 
 <script setup lang="ts">
-import OverviewTabs from "./OverviewTabs.vue";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { loadTooltips } from "@tuleap/tooltip";
 import { watch, ref } from "vue";
@@ -62,3 +55,5 @@ watch(
     }
 );
 </script>
+
+<styles lang="scss"></styles>

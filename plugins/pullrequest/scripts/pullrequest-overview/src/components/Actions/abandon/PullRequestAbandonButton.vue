@@ -44,14 +44,14 @@
 import { ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { isPullRequestInReview } from "./merge-status-helper";
-import { abandonPullRequest } from "../../api/tuleap-rest-querier";
+import { isPullRequestInReview } from "../merge-status-helper";
+import { abandonPullRequest } from "../../../api/tuleap-rest-querier";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     DISPLAY_TULEAP_API_ERROR,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
-} from "../../constants";
+} from "../../../constants";
 
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const updatePullRequest = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);

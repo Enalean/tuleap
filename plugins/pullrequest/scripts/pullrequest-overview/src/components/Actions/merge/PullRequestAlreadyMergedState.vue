@@ -51,10 +51,10 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import PullRequestRelativeDate from "../ReadOnlyInfo/PullRequestRelativeDate.vue";
-import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../constants";
-import { isPreferenceAbsoluteDateFirst } from "../../helpers/relative-dates-preference-helper";
-import { isPullRequestAlreadyMerged } from "./merge-status-helper";
+import PullRequestRelativeDate from "../../ReadOnlyInfo/PullRequestRelativeDate.vue";
+import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../../constants";
+import { isPreferenceAbsoluteDateFirst } from "../../../helpers/relative-dates-preference-helper";
+import { isPullRequestAlreadyMerged } from "../merge-status-helper";
 
 const { $gettext } = useGettext();
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
