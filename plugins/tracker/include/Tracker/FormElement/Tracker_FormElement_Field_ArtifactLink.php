@@ -42,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStr
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\ValueFormatter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -621,10 +622,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         $html              = '';
         $template_renderer = $this->getTemplateRenderer();
         foreach ($artifact_links_to_render->getArtifactLinksForPerTypeDisplay() as $artifact_links_per_type) {
-            $event = EventManager::instance()->dispatch(
-                new DisplayArtifactLinkEvent($artifact_links_per_type->getTypePresenter())
-            );
-
             $html .= $template_renderer->renderToString(
                 'artifactlink-type-table',
                 new TypeTablePresenter(
@@ -632,12 +629,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                     $artifact_links_per_type->getArtifactLinks(),
                     $is_reverse_artifact_links,
                     $this,
-                    $event->canLinkBeModified()
+                    $this->areLinksDeletable(
+                        $artifact_links_per_type->getTypePresenter(),
+                        $is_reverse_artifact_links,
+                    )
                 )
             );
         }
         $type_tables_cache[spl_object_hash($artifact_links_to_render)][$is_reverse_artifact_links] = $html;
         return $html;
+    }
+
+    private function areLinksDeletable(TypePresenter $type_presenter, bool $is_reverse_artifact_links): bool
+    {
+        $event = EventManager::instance()->dispatch(
+            new DisplayArtifactLinkEvent($type_presenter)
+        );
+
+        return (! $is_reverse_artifact_links && $event->canLinkBeModified());
     }
 
     /**
@@ -729,7 +738,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
                     }
                 }
 
-                $this->appendTypeTable($request, $result);
+                $this->appendTypeTable($request, $result, $is_reverse);
                 if ($result) {
                     $head = [];
                     $rows = [];
@@ -1730,7 +1739,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
     }
 
-    private function appendTypeTable(Codendi_Request $request, array &$result)
+    private function appendTypeTable(Codendi_Request $request, array &$result, bool $is_reverse_artifact_links)
     {
         if (! $this->getTracker()->isProjectAllowedToUseType()) {
             return;
@@ -1752,22 +1761,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field /
         foreach (explode(',', $ids) as $id) {
             $artifact = $art_factory->getArtifactById(trim($id));
 
+            $are_links_deletable = $this->areLinksDeletable(
+                $type_presenter,
+                $is_reverse_artifact_links,
+            );
+
             if (! is_null($artifact) && $artifact->getTracker()->isActive()) {
                 $type_html .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-type-table-row',
-                    new ArtifactInTypeTablePresenter($artifact, $artifact_html_classes, $this)
+                    new ArtifactInTypeTablePresenter(
+                        $artifact,
+                        $artifact_html_classes,
+                        $this,
+                        $are_links_deletable,
+                    )
                 );
             }
         }
 
         if ($type_html !== '') {
-            $event = EventManager::instance()->dispatch(
-                new DisplayArtifactLinkEvent($type_presenter)
-            );
-
             $head_html = $this->getTemplateRenderer()->renderToString(
                 'artifactlink-type-table-head',
-                TypeTablePresenter::buildForHeader($type_presenter, $this, $event->canLinkBeModified())
+                TypeTablePresenter::buildForHeader($type_presenter, $this, $are_links_deletable)
             );
 
             $result[$key] = ['head' => $head_html, 'rows' => $type_html];
