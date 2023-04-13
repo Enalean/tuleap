@@ -42,6 +42,7 @@ import {
 import type { Folder, Item } from "../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { useClipboardStore } from "../../../stores/clipboard";
+import { ref } from "vue";
 
 describe("PasteItem", () => {
     const destination = {
@@ -64,21 +65,25 @@ describe("PasteItem", () => {
             state: {
                 current_folder,
                 folder_content: [],
+                configuration: {
+                    user_id: "1",
+                    project_id: "1",
+                },
             },
         });
 
         pinia = createTestingPinia({
             initialState: {
                 clipboard: {
-                    operation_type,
-                    item_title,
-                    pasting_in_progress,
-                    item_type,
-                    item_id: 123,
+                    operation_type: ref(operation_type),
+                    item_title: ref(item_title),
+                    pasting_in_progress: ref(pasting_in_progress),
+                    item_type: ref(item_type),
+                    item_id: ref(123),
                 },
             },
         });
-        store = useClipboardStore(pinia);
+        store = useClipboardStore("1", "1", pinia);
 
         return shallowMount(PasteItem, {
             mocks: {

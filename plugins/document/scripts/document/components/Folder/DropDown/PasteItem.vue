@@ -56,9 +56,10 @@ import {
     doesFolderNameAlreadyExist,
 } from "../../../helpers/properties-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
-import { useState } from "vuex-composition-helpers";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
 import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
+import type { ConfigurationState } from "../../../store/configuration";
 
 const props = defineProps<{ destination: Folder }>();
 
@@ -66,7 +67,10 @@ const { folder_content, current_folder } = useState<
     Pick<State, "folder_content" | "current_folder">
 >(["folder_content", "current_folder"]);
 
-const clipboard = useClipboardStore();
+const { project_id, user_id } = useNamespacedState<
+    Pick<ConfigurationState, "project_id" | "user_id">
+>("configuration", ["project_id", "user_id"]);
+const clipboard = useClipboardStore(project_id.value, user_id.value);
 
 const can_item_be_pasted = computed((): boolean => {
     if (

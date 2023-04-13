@@ -33,6 +33,8 @@ import localVue from "../../../helpers/local-vue";
 import CopyItem from "./CopyItem.vue";
 import type { Item } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { ref } from "vue";
 
 describe("CopyItem", () => {
     let pinia: TestingPinia;
@@ -42,16 +44,23 @@ describe("CopyItem", () => {
         pinia = createTestingPinia({
             initialState: {
                 clipboard: {
-                    pasting_in_progress,
-                    item_id: 123,
+                    pasting_in_progress: ref(pasting_in_progress),
+                    item_id: ref(item.id),
                 },
             },
         });
-        store = useClipboardStore(pinia);
+        const vuex_state = {
+            configuration: {
+                user_id: "1",
+                project_id: "1",
+            },
+        };
+        store = useClipboardStore("1", "1", pinia);
         return shallowMount(CopyItem, {
             localVue: localVue,
             propsData: { item },
             pinia,
+            mocks: { $store: createStoreMock({ state: vuex_state }) },
         });
     }
 

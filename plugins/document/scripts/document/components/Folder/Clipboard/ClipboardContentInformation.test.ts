@@ -26,6 +26,8 @@ import { useClipboardStore } from "../../../stores/clipboard";
 import type { ClipboardState } from "../../../stores/types";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
+import { ref } from "vue";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 let pinia: TestingPinia;
 
@@ -35,11 +37,18 @@ function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformat
             clipboard,
         },
     });
-    useClipboardStore(pinia);
+    useClipboardStore("1", "1", pinia);
+    const vuex_state = {
+        configuration: {
+            user_id: "1",
+            project_id: "1",
+        },
+    };
 
     return shallowMount(ClipboardContentInformation, {
         localVue,
         pinia,
+        mocks: { $store: createStoreMock({ state: vuex_state }) },
     });
 }
 
@@ -47,11 +56,11 @@ describe("ClipboardContentInformation", () => {
     it(`Given there is no item in the clipboard
         Then no information is displayed`, () => {
         const wrapper = getWrapper({
-            item_id: null,
-            item_type: null,
-            item_title: null,
-            operation_type: null,
-            pasting_in_progress: false,
+            item_id: ref(null),
+            item_type: ref(null),
+            item_title: ref(null),
+            operation_type: ref(null),
+            pasting_in_progress: ref(false),
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -60,11 +69,11 @@ describe("ClipboardContentInformation", () => {
     it(`Given there is an item in the clipboard
         Then information is displayed`, async () => {
         const wrapper = getWrapper({
-            item_id: 123,
-            item_type: "folder",
-            item_title: "My item",
-            operation_type: CLIPBOARD_OPERATION_COPY,
-            pasting_in_progress: false,
+            item_id: ref(123),
+            item_type: ref("folder"),
+            item_title: ref("My item"),
+            operation_type: ref(CLIPBOARD_OPERATION_COPY),
+            pasting_in_progress: ref(false),
         });
 
         const result_copy = wrapper.html();
