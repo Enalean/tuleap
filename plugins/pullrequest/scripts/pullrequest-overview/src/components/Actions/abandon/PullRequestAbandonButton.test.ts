@@ -28,7 +28,7 @@ import {
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
 import PullRequestAbandonButton from "./PullRequestAbandonButton.vue";
-import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import {

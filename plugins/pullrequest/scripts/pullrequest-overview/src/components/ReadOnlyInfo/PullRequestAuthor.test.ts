@@ -22,7 +22,7 @@ import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAuthor from "./PullRequestAuthor.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 
 describe("PullRequestAuthor", () => {
     const getWrapper = (): VueWrapper => {

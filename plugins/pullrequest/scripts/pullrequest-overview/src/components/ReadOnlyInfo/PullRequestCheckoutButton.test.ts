@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestCheckoutButton from "./PullRequestCheckoutButton.vue";
 import { nextTick } from "vue";

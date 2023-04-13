@@ -34,7 +34,7 @@ import {
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
-import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
 import PullRequestMergeWarningModal from "../abandon/PullRequestMergeWarningModal.vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";

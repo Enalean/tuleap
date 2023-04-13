@@ -20,7 +20,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import { PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME } from "@tuleap/plugin-pullrequest-comments";
 import {
     CURRENT_USER_AVATAR_URL,

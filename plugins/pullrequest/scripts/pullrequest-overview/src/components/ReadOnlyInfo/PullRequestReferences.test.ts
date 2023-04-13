@@ -20,7 +20,7 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import PullRequestReferences from "./PullRequestReferences.vue";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
 describe("PullRequestReferences", () => {

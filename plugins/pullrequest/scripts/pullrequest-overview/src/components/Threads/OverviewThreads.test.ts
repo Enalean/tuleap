@@ -30,7 +30,7 @@ import {
     PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
 } from "@tuleap/plugin-pullrequest-comments";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import {
     CURRENT_USER_AVATAR_URL,
     CURRENT_USER_ID,

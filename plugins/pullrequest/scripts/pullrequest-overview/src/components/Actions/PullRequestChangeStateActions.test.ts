@@ -32,7 +32,7 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 
 import PullRequestChangeStateActions from "./PullRequestChangeStateActions.vue";
 

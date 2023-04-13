@@ -21,7 +21,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import PullRequestMergeWarningModal from "./PullRequestMergeWarningModal.vue";
-import { getGlobalTestOptions } from "../../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
     BUILD_STATUS_FAILED,
