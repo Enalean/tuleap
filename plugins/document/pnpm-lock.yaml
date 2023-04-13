@@ -47,7 +47,6 @@ specifiers:
   vuex: ^3.6.2
   vuex-class: ^0.3.2
   vuex-composition-helpers: ^1.2.0
-  vuex-persistedstate: ^4.1.0
 
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
@@ -83,7 +82,6 @@ dependencies:
   vue-router: 3.5.3_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
   vuex-composition-helpers: 1.2.0_vue@2.7.8
-  vuex-persistedstate: 4.1.0_vuex@3.6.2
 
 devDependencies:
   '@pinia/testing': 0.0.14_pinia@2.0.33+vue@2.7.8
@@ -253,11 +251,6 @@ packages:
 
   /custom-error-instance/2.1.1:
     resolution: {integrity: sha1-PPY5FIemYppiR+sMoM4ACBt+Nho=}
-    dev: false
-
-  /deepmerge/4.2.2:
-    resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
-    engines: {node: '>=0.10.0'}
     dev: false
 
   /dom-event-types/1.1.0:
@@ -611,10 +604,6 @@ packages:
     hasBin: true
     dev: true
 
-  /shvl/2.0.3:
-    resolution: {integrity: sha512-V7C6S9Hlol6SzOJPnQ7qzOVEWUQImt3BNmmzh40wObhla3XOYMe4gGiYzLrJd5TFa+cI2f9LKIRJTTKZSTbWgw==}
-    dev: false
-
   /sigmund/1.0.1:
     resolution: {integrity: sha512-fCvEXfh6NWpm+YSuY2bpXb/VIihqWA6hLsgboC+0nl71Q7N7o2eaCW8mJa/NLvQhs6jpd3VZV4UiUQlV6+lc8g==}
     dev: true
@@ -743,16 +732,6 @@ packages:
       vue: ^2.7.0
     dependencies:
       vue: 2.7.8
-    dev: false
-
-  /vuex-persistedstate/4.1.0_vuex@3.6.2:
-    resolution: {integrity: sha512-3SkEj4NqwM69ikJdFVw6gObeB0NHyspRYMYkR/EbhR0hbvAKyR5gksVhtAfY1UYuWUOCCA0QNGwv9pOwdj+XUQ==}
-    peerDependencies:
-      vuex: ^3.0 || ^4.0.0-rc
-    dependencies:
-      deepmerge: 4.2.2
-      shvl: 2.0.3
-      vuex: 3.6.2_vue@2.7.8
     dev: false
 
   /vuex/3.6.2_vue@2.7.8:
