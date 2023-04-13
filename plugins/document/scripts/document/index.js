@@ -30,7 +30,6 @@ import { createPinia, PiniaVuePlugin } from "pinia";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
-import { configurePinia } from "./pinia-configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -144,8 +143,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     Vue.use(PiniaVuePlugin);
     const pinia = createPinia();
-
-    configurePinia(pinia);
 
     new AppComponent({
         store,

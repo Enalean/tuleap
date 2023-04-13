@@ -47,8 +47,13 @@ import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 import { useClipboardStore } from "../../../stores/clipboard";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
 
-const clipboard = useClipboardStore();
+const { project_id, user_id } = useNamespacedState<
+    Pick<ConfigurationState, "project_id" | "user_id">
+>("configuration", ["project_id", "user_id"]);
+const clipboard = useClipboardStore(project_id.value, user_id.value);
 
 const { interpolate, $gettext } = useGettext();
 

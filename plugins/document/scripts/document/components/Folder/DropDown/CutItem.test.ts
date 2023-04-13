@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+
 const emitMock = jest.fn();
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -32,6 +34,7 @@ import type { Item } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
+import { ref } from "vue";
 
 describe("CutItem", () => {
     let pinia: TestingPinia;
@@ -41,16 +44,23 @@ describe("CutItem", () => {
         pinia = createTestingPinia({
             initialState: {
                 clipboard: {
-                    pasting_in_progress,
-                    item_id: item.id,
+                    pasting_in_progress: ref(pasting_in_progress),
+                    item_id: ref(item.id),
                 },
             },
         });
-        store = useClipboardStore(pinia);
+        const vuex_state = {
+            configuration: {
+                user_id: "1",
+                project_id: "1",
+            },
+        };
+        store = useClipboardStore("1", "1", pinia);
         return shallowMount(CutItem, {
             pinia,
             localVue: localVue,
             propsData: { item },
+            mocks: { $store: createStoreMock({ state: vuex_state }) },
         });
     }
 

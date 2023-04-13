@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Ref } from "vue";
+
 export interface ClipboardState {
-    item_id: null | number;
-    item_title: null | string;
-    item_type: null | string;
-    operation_type: null | string;
-    pasting_in_progress: boolean;
+    item_id: Ref<null | number>;
+    item_title: Ref<null | string>;
+    item_type: Ref<null | string>;
+    operation_type: Ref<null | string>;
+    pasting_in_progress: Ref<boolean>;
 }
