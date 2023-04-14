@@ -38,8 +38,8 @@ interface TimelineItemsCollection {
     collection: ReadonlyArray<TimelineItem>;
 }
 
-export const fetchPullRequestInfo = (pullrequest_id: string): ResultAsync<PullRequest, Fault> => {
-    return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pullrequest_id)}`);
+export const fetchPullRequestInfo = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
+    return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`);
 };
 
 export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
@@ -47,10 +47,10 @@ export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
 };
 
 export const fetchPullRequestTimelineItems = (
-    pullrequest_id: string
+    pull_request_id: number
 ): ResultAsync<readonly TimelineItem[], Fault> => {
     return getAllJSON<TimelineItemsCollection, TimelineItem>(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pullrequest_id)}/timeline`,
+        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/timeline`,
         {
             params: { limit: 50, offset: 0 },
             getCollectionCallback: (

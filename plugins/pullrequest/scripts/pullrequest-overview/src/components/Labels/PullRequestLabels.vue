@@ -55,7 +55,7 @@ import PropertySkeleton from "../ReadOnlyInfo/PropertySkeleton.vue";
 
 const { $gettext } = useGettext();
 
-const pull_request_id = parseInt(strictInject(PULL_REQUEST_ID_KEY), 10);
+const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const labels = ref<ReadonlyArray<PullRequestLabel>>([]);
 const are_labels_loading = ref(true);

@@ -37,7 +37,7 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 
 const $gettext = (msgid: string): string => msgid;
-const pull_request_id = "15";
+const pull_request_id = 15;
 const user = {
     id: 102,
     user_url: "url/to/user_profile.html",

@@ -71,9 +71,7 @@ describe("PullRequestReviewerList", () => {
                 case PULL_REQUEST_ID_KEY:
                     return 1;
                 default:
-                    return (): void => {
-                        // do nothing
-                    };
+                    throw new Error("Tried to strictInject a value while it was not mocked");
             }
         });
         return mount(PullRequestReviewerList, {

@@ -73,7 +73,7 @@ describe("PullRequestAbandonedState", () => {
                 case POST_PULL_REQUEST_UPDATE_CALLBACK:
                     return post_update_callback;
                 case PULL_REQUEST_ID_KEY:
-                    return String(current_pull_request_id);
+                    return current_pull_request_id;
                 case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
                     return relative_date_preference;
                 default:

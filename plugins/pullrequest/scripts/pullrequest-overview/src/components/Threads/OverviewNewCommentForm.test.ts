@@ -47,7 +47,7 @@ describe("OverviewNewCommentForm", () => {
                 case CURRENT_USER_ID:
                     return current_user_id;
                 case PULL_REQUEST_ID_KEY:
-                    return "15";
+                    return 15;
                 case OVERVIEW_APP_BASE_URL_KEY:
                     return new URL("https://example.com");
                 case CURRENT_USER_AVATAR_URL:
@@ -55,6 +55,8 @@ describe("OverviewNewCommentForm", () => {
                 case DISPLAY_TULEAP_API_ERROR:
                 case DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT:
                     return noop;
+                default:
+                    throw new Error("Tried to strictInject a value while it was not mocked");
             }
         });
         const wrapper = shallowMount(OverviewNewCommentForm, {

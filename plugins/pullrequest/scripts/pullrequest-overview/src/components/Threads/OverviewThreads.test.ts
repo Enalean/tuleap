@@ -75,7 +75,7 @@ describe("OverviewThreads", () => {
                 case DISPLAY_TULEAP_API_ERROR:
                     return display_error_callback;
                 case PULL_REQUEST_ID_KEY:
-                    return "15";
+                    return 15;
                 case CURRENT_USER_ID:
                     return 102;
                 case CURRENT_USER_AVATAR_URL:
@@ -86,6 +86,8 @@ describe("OverviewThreads", () => {
                     return "fr_FR";
                 case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
                     return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
+                default:
+                    throw new Error("Tried to strictInject a value while it was not mocked");
             }
         });
         return shallowMount(OverviewThreads, {

@@ -63,6 +63,7 @@
 import { provide, ref } from "vue";
 import { useRoute } from "vue-router";
 import { fetchPullRequestInfo, fetchUserInfo } from "../api/tuleap-rest-querier";
+import { extractPullRequestIdFromRouteParams } from "../helpers/pull-request-id-extractor";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import {
@@ -87,7 +88,7 @@ import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActio
 import PullRequestLabels from "./Labels/PullRequestLabels.vue";
 
 const route = useRoute();
-const pull_request_id = String(route.params.id);
+const pull_request_id = extractPullRequestIdFromRouteParams(route.params);
 const pull_request_info = ref<PullRequest | null>(null);
 const pull_request_author = ref<User | null>(null);
 const error = ref<Fault | null>(null);

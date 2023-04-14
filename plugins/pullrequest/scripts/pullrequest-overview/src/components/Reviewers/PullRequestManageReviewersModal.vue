@@ -103,7 +103,7 @@ import {
 
 const { $gettext } = useGettext();
 
-const pull_request_id = Number.parseInt(strictInject(PULL_REQUEST_ID_KEY), 10);
+const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
 const props = defineProps<{

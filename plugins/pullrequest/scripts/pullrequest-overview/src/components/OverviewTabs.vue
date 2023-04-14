@@ -42,7 +42,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 const { $gettext } = useGettext();
 
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
-const pull_request_id: string = strictInject(PULL_REQUEST_ID_KEY);
+const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 
 const buildUrlForView = (view_name: string) => {
     const view_url = new URL("", base_url.toString());

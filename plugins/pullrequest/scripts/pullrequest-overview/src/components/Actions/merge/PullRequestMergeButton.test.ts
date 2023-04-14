@@ -89,7 +89,7 @@ describe("PullRequestMergeButton", () => {
                 case POST_PULL_REQUEST_UPDATE_CALLBACK:
                     return post_update_callback;
                 case PULL_REQUEST_ID_KEY:
-                    return String(current_pull_request_id);
+                    return current_pull_request_id;
                 default:
                     throw new Error("Tried to strictInject a value while it was not mocked");
             }

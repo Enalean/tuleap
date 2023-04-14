@@ -46,7 +46,7 @@ import { PullRequestCommentTextareaFocusHelper } from "@tuleap/plugin-pullreques
 const { $gettext } = useGettext();
 
 const user_id: number = strictInject(CURRENT_USER_ID);
-const pull_request_id: string = strictInject(PULL_REQUEST_ID_KEY);
+const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const displayNewlyCreatedGlobalComment = strictInject(DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT);
@@ -66,7 +66,7 @@ const controller = NewCommentFormController(
     NewCommentSaver({
         user_id,
         type: TYPE_GLOBAL_COMMENT,
-        pull_request_id: Number.parseInt(pull_request_id, 10),
+        pull_request_id: pull_request_id,
     }),
     PullRequestCommentTextareaFocusHelper(),
     { avatar_url },

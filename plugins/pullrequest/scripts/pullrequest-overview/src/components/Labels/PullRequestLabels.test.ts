@@ -55,7 +55,7 @@ describe("PullRequestLabels", () => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
             switch (key) {
                 case PULL_REQUEST_ID_KEY:
-                    return String(pull_request_id);
+                    return pull_request_id;
                 case DISPLAY_TULEAP_API_ERROR:
                     return display_error_callback;
                 default:

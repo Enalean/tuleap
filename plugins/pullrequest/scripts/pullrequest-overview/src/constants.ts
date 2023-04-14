@@ -30,7 +30,7 @@ export type PostPullRequestUpdateCallback = (updated_pull_request: PullRequest) 
 export type PostPullRequestUpdateReviewersCallback = (updated_reviewers: Array<User>) => void;
 
 export const OVERVIEW_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("overview_app_base_url");
-export const PULL_REQUEST_ID_KEY: StrictInjectionKey<string> = Symbol("pull_request_id");
+export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_local");
 export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
     Symbol("user_date_time_format");

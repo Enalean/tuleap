@@ -36,6 +36,8 @@ describe("OverviewTabs", () => {
                     return APP_BASE_URL;
                 case PULL_REQUEST_ID_KEY:
                     return PULLREQUEST_ID;
+                default:
+                    throw new Error("Tried to strictInject a value while it was not mocked");
             }
         });
         const wrapper = shallowMount(OverviewTabs, {
