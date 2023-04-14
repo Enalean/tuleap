@@ -26,7 +26,7 @@ import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import type { PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
-import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PullRequestLabels from "./PullRequestLabels.vue";
 
