@@ -29,6 +29,7 @@ import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { selectOrThrow } from "@tuleap/dom";
+import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -48,9 +49,7 @@ describe("MultipleSelectionManager", () => {
         const { selection_element, search_field_element } = new BaseComponentRenderer(
             document.implementation.createHTMLDocument(),
             source_select_box,
-            "",
-            "",
-            true
+            OptionsBuilder.withoutNewItem().withIsMultiple().build()
         ).renderBaseComponent();
 
         selection_container = selection_element;
