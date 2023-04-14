@@ -47,9 +47,11 @@
                 data-test="edit-reviewers-button"
                 class="tlp-button-primary tlp-button-outline pull-request-edit-reviewers-button"
                 v-on:click="openModal"
+                v-bind:aria-label="$gettext(`Manage pull-request's reviewers`)"
             >
                 <i
                     class="tlp-button-icon fa-solid fa-pencil pull-request-edit-reviewers-button-icon"
+                    aria-hidden="true"
                 ></i>
             </button>
             <pull-request-manage-reviewers-modal
@@ -127,6 +129,7 @@ const on_cancel_callback = (): void => {
     width: 32px;
     height: 32px;
     margin: 0 0 0 8px;
+    padding: 0;
     border-radius: 50%;
 
     .pull-request-edit-reviewers-button-icon {

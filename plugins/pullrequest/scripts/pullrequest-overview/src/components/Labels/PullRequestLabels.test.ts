@@ -24,7 +24,7 @@ import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import type { PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest, PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../tests-helpers/global-options-for-tests";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
@@ -49,7 +49,7 @@ const labels: PullRequestLabel[] = [
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("PullRequestLabels", () => {
-    let display_error_callback: SpyInstance;
+    let display_error_callback: SpyInstance, user_can_update_labels: boolean;
 
     const getWrapper = (): VueWrapper => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
@@ -67,11 +67,17 @@ describe("PullRequestLabels", () => {
             global: {
                 ...getGlobalTestOptions(),
             },
+            props: {
+                pull_request: {
+                    user_can_update_labels,
+                } as PullRequest,
+            },
         });
     };
 
     beforeEach(() => {
         display_error_callback = vi.fn();
+        user_can_update_labels = true;
     });
 
     it("should display a skeleton while the labels are loading, and display them when it is done loading", async () => {
@@ -108,6 +114,23 @@ describe("PullRequestLabels", () => {
 
         expect(wrapper.find("[data-test=no-labels-yet-text]").exists()).toBe(true);
     });
+
+    it.each([[false], [true]])(
+        "should display the button to edit the labels only when the user_can_update_labels is %s",
+        async (can_update_labels) => {
+            vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
+
+            user_can_update_labels = can_update_labels;
+
+            const wrapper = getWrapper();
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.find("[data-test=manage-labels-button]").exists()).toBe(
+                can_update_labels
+            );
+        }
+    );
 
     it("When an error occurres while retrieving the labels, then it should trigger the display error callback", async () => {
         const tuleap_api_fault = Fault.fromMessage("Forbidden");

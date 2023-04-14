@@ -39,6 +39,17 @@
             >
                 {{ $gettext("No tags have been assigned yet") }}
             </span>
+            <button
+                v-if="can_user_manage_labels"
+                data-test="manage-labels-button"
+                class="tlp-button-primary tlp-button-outline pull-request-manage-labels-button"
+                v-bind:aria-label="$gettext(`Manage pull-request's tags`)"
+            >
+                <i
+                    class="tlp-button-icon fa-solid fa-pencil pull-request-manage-labels-button-icon"
+                    aria-hidden="true"
+                ></i>
+            </button>
         </div>
         <property-skeleton v-if="are_labels_loading" />
     </div>
@@ -48,18 +59,25 @@
 import { ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest, PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { fetchPullRequestLabels } from "../../api/tuleap-rest-querier";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PropertySkeleton from "../ReadOnlyInfo/PropertySkeleton.vue";
 
 const { $gettext } = useGettext();
 
+const props = defineProps<{
+    pull_request: PullRequest | null;
+}>();
+
 const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const labels = ref<ReadonlyArray<PullRequestLabel>>([]);
 const are_labels_loading = ref(true);
 const has_no_labels = computed(() => labels.value.length === 0 && !are_labels_loading.value);
+const can_user_manage_labels = computed(
+    () => props.pull_request && props.pull_request.user_can_update_labels
+);
 
 const getBadgeClasses = (label: PullRequestLabel): string[] => {
     const classes = [`tlp-badge-${label.color}`];
@@ -90,5 +108,17 @@ fetchPullRequestLabels(pull_request_id)
 .pull-request-no-labels-empty-state-text {
     color: var(--tlp-dark-color);
     font-style: italic;
+}
+
+.pull-request-manage-labels-button {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 50%;
+
+    .pull-request-manage-labels-button-icon {
+        margin: 0;
+        font-size: 0.5em;
+    }
 }
 </style>

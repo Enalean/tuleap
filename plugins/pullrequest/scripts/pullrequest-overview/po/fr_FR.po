@@ -90,6 +90,12 @@ msgstr "A mis à jour la pull request."
 msgid "Last CI status"
 msgstr "Statut intégration continue"
 
+msgid "Manage pull-request's reviewers"
+msgstr "Gérer les relecteurs de la pull-request"
+
+msgid "Manage pull-request's tags"
+msgstr "Gérer les tags de la pull-request"
+
 msgid "Manage reviewers"
 msgstr "Gérer les relecteurs"
 
