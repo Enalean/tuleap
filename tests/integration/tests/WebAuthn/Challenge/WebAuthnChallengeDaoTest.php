@@ -32,6 +32,10 @@ final class WebAuthnOptionsDaoTest extends TestCase
     private WebAuthnChallengeDao $dao;
     private EasyDB $db;
 
+    private const USER_ID_WITH_CHALLENGE_1  = 101;
+    private const USER_ID_WITH_CHALLENGE_2  = 102;
+    private const USER_ID_WITHOUT_CHALLENGE = 103;
+
     public function setUp(): void
     {
         $this->dao = new WebAuthnChallengeDao();
@@ -45,16 +49,14 @@ final class WebAuthnOptionsDaoTest extends TestCase
         $db->run('DELETE FROM webauthn_challenge');
     }
 
-    public function testItCanSave(): void
+    public function testItCanSaveThenRetrieve(): void
     {
         $challenge = random_bytes(32);
-        $this->dao->saveChallenge(101, $challenge);
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, $challenge);
 
-        $row = $this->db->row('SELECT challenge FROM webauthn_challenge WHERE user_id = ?', 101);
-        self::assertIsArray($row);
-        $retrieved = $row['challenge'];
-        self::assertIsString($retrieved);
-        self::assertSame($challenge, $retrieved);
+        $retrieved = $this->dao->searchChallenge(self::USER_ID_WITH_CHALLENGE_1);
+        self::assertTrue($retrieved->isValue());
+        self::assertSame($challenge, $retrieved->unwrapOr(null));
     }
 
     public function testUserCanSaveOnlyOneChallenge(): void
@@ -62,10 +64,10 @@ final class WebAuthnOptionsDaoTest extends TestCase
         $challenge  = random_bytes(32);
         $challenge2 = random_bytes(32);
 
-        $this->dao->saveChallenge(104, $challenge);
-        $this->dao->saveChallenge(104, $challenge2);
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, $challenge);
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, $challenge2);
 
-        $rows = $this->db->run('SELECT challenge FROM webauthn_challenge WHERE user_id = ?', 104);
+        $rows = $this->db->run('SELECT challenge FROM webauthn_challenge WHERE user_id = ?', self::USER_ID_WITH_CHALLENGE_1);
         self::assertCount(1, $rows);
         self::assertSame($challenge2, $rows[0]['challenge']);
     }
@@ -75,16 +77,46 @@ final class WebAuthnOptionsDaoTest extends TestCase
         $challenge  = random_bytes(32);
         $challenge2 = random_bytes(32);
 
-        $this->dao->saveChallenge(105, $challenge);
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, $challenge);
         $this->db->update(
             'webauthn_challenge',
             ['expiration_date' => '1680700000'],
-            ['user_id' => 105]
+            ['user_id' => self::USER_ID_WITH_CHALLENGE_1]
         );
 
-        $this->dao->saveChallenge(106, $challenge2);
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_2, $challenge2);
 
-        $row = $this->db->row('SELECT challenge FROM webauthn_challenge WHERE user_id = ?', 105);
+        $row = $this->db->row('SELECT challenge FROM webauthn_challenge WHERE user_id = ?', self::USER_ID_WITH_CHALLENGE_1);
         self::assertNull($row);
+    }
+
+    public function testItCannotRetrieveNotSavedChallenge(): void
+    {
+        $retrieved = $this->dao->searchChallenge(self::USER_ID_WITHOUT_CHALLENGE);
+        self::assertTrue($retrieved->isNothing());
+    }
+
+    public function testItCannotRetrieveExpiredChallenge(): void
+    {
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, random_bytes(32));
+        $this->db->update(
+            'webauthn_challenge',
+            ['expiration_date' => '1680700000'],
+            ['user_id' => self::USER_ID_WITH_CHALLENGE_1]
+        );
+
+        $retrieved = $this->dao->searchChallenge(self::USER_ID_WITH_CHALLENGE_1);
+        self::assertTrue($retrieved->isNothing());
+    }
+
+    public function testItCannotRetrieveSameChallengeTwice(): void
+    {
+        $this->dao->saveChallenge(self::USER_ID_WITH_CHALLENGE_1, random_bytes(32));
+
+        $retrieved = $this->dao->searchChallenge(self::USER_ID_WITH_CHALLENGE_1);
+        self::assertTrue($retrieved->isValue());
+
+        $retrieved2 = $this->dao->searchChallenge(self::USER_ID_WITH_CHALLENGE_1);
+        self::assertTrue($retrieved2->isNothing());
     }
 }

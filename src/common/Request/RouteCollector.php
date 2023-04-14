@@ -1311,6 +1311,12 @@ class RouteCollector
 
         return new PostRegistrationController(
             \UserManager::instance(),
+            new WebAuthnChallengeDao(),
+            new PublicKeyCredentialRpEntity(
+                \ForgeConfig::get(ConfigurationVariables::NAME),
+                ServerHostname::rawHostname()
+            ),
+            WebAuthnRegistration::getCredentialParameters(),
             new PublicKeyCredentialLoader(
                 new AttestationObjectLoader($attestation_statement_manager)
             ),

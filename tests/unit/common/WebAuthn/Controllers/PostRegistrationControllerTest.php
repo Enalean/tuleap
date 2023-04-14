@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use Cose\Algorithms;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -30,11 +31,16 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialParameters;
+use Webauthn\PublicKeyCredentialRpEntity;
 use function Psl\Json\encode as psl_json_encode;
 
 final class PostRegistrationControllerTest extends TestCase
@@ -65,13 +71,19 @@ final class PostRegistrationControllerTest extends TestCase
 
     public function testItReturns501(): void
     {
+        $challenge_dao = new WebAuthnChallengeDaoStub();
+        $user_provider = ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build());
+        $challenge     = 'challenge';
+        $challenge_dao->saveChallenge((int) $user_provider->getCurrentUser()->getId(), $challenge);
+
         $passkey  = new PasskeyStub();
         $response = $this->handle(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
             [
-                'response' => $passkey->generateAttestationResponse('challenge'),
+                'response' => $passkey->generateAttestationResponse($challenge),
                 'name' => 'name of passkey',
-            ]
+            ],
+            $challenge_dao
         );
 
         self::assertSame('Not Implemented', $response->getReasonPhrase());
@@ -85,8 +97,9 @@ final class PostRegistrationControllerTest extends TestCase
     private function handle(
         ProvideCurrentUser $provide_current_user,
         string|array $body = '',
+        RetrieveWebAuthnChallenge $challenge_dao = new WebAuthnChallengeDaoStub(),
     ): ResponseInterface {
-        $controller = $this->getController($provide_current_user);
+        $controller = $this->getController($provide_current_user, $challenge_dao);
 
         if (is_array($body)) {
             $body = psl_json_encode($body);
@@ -99,12 +112,16 @@ final class PostRegistrationControllerTest extends TestCase
 
     private function getController(
         ProvideCurrentUser $provide_current_user,
+        RetrieveWebAuthnChallenge $challenge_dao,
     ): PostRegistrationController {
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
 
         return new PostRegistrationController(
             $provide_current_user,
+            $challenge_dao,
+            new PublicKeyCredentialRpEntity('tuleap', 'https://example.com'),
+            [new PublicKeyCredentialParameters(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, Algorithms::COSE_ALGORITHM_ES256)],
             new PublicKeyCredentialLoader(
                 new AttestationObjectLoader($attestation_statement_manager)
             ),
@@ -160,6 +177,13 @@ final class PostRegistrationControllerTest extends TestCase
                 'name' => 'name of passkey',
             ],
             'error_message' => 'The result of passkey is not for registration',
+        ];
+        yield 'It returns 400 when there is not stored challenge' => [
+            'body' => [
+                'response' => (new PasskeyStub())->generateAttestationResponse('challenge'),
+                'name' => 'name of passkey',
+            ],
+            'error_message' => 'The registration cannot be checked',
         ];
     }
 }

@@ -22,16 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Stubs\WebAuthn;
 
+use Tuleap\Option\Option;
+use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
 use Tuleap\WebAuthn\Challenge\SaveWebAuthnChallenge;
+use function Psl\Type\string;
 
-final class WebAuthnChallengeDaoStub implements SaveWebAuthnChallenge
+final class WebAuthnChallengeDaoStub implements SaveWebAuthnChallenge, RetrieveWebAuthnChallenge
 {
-    public int $user_id_saved       = -1;
+    public int $user_id_saved = -1;
+
     public ?string $challenge_saved = null;
 
     public function saveChallenge(int $user_id, string $challenge): void
     {
         $this->user_id_saved   = $user_id;
         $this->challenge_saved = $challenge;
+    }
+
+    public function searchChallenge(int $user_id): Option
+    {
+        if ($user_id === $this->user_id_saved && is_string($this->challenge_saved)) {
+            return Option::fromValue($this->challenge_saved);
+        }
+
+        return Option::nothing(string());
     }
 }

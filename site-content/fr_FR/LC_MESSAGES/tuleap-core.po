@@ -3816,6 +3816,9 @@ msgstr ""
 "La visibilité du projet ne peut pas être choisie par l'administrateur de "
 "projet, seul le niveau d'accès \"%s\" peut être utilisé"
 
+msgid "The registration cannot be checked"
+msgstr "L'enregistrement ne peut être vérifié"
+
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
