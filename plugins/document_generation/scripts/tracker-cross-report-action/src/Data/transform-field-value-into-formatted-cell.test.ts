@@ -25,6 +25,11 @@ import type {
     ArtifactReportResponseUserGroupRepresentation,
 } from "@tuleap/plugin-docgen-docx";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
+import type {
+    LastUpdateByChangesetValue,
+    SubmittedByChangesetValue,
+} from "@tuleap/plugin-tracker-rest-api-types/src/artifacts";
+import type { UserWithEmailAndStatus } from "@tuleap/plugin-tracker-rest-api-types/src/users";
 
 describe("transform-field-value-into-formatted-cell", () => {
     it("transforms string value into TextCell", (): void => {
@@ -553,6 +558,32 @@ describe("transform-field-value-into-formatted-cell", () => {
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
         expect(formatted_cell).toStrictEqual(new EmptyCell());
+    });
+    it("transforms submitted by value into TextCell", (): void => {
+        const field_value: SubmittedByChangesetValue = {
+            field_id: 1,
+            type: "subby",
+            label: "Submitted by",
+            value: {
+                real_name: "User01",
+            } as UserWithEmailAndStatus,
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01"));
+    });
+    it("transforms last updated by value into TextCell", (): void => {
+        const field_value: LastUpdateByChangesetValue = {
+            field_id: 1,
+            type: "luby",
+            label: "Submitted by",
+            value: {
+                real_name: "User01",
+            } as UserWithEmailAndStatus,
+        };
+        const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
+
+        expect(formatted_cell).toStrictEqual(new TextCell("User01"));
     });
     it("transforms all other fields into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
