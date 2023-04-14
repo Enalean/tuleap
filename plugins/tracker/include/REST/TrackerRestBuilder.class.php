@@ -23,14 +23,16 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
+use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
+use Tuleap\Tracker\REST\WorkflowRestBuilder;
 
-class Tracker_REST_TrackerRestBuilder
+class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation
 {
     public function __construct(
         private Tracker_FormElementFactory $formelement_factory,
         private FormElementRepresentationsBuilder $form_element_representations_builder,
         private PermissionsRepresentationBuilder $permissions_representation_builder,
-        private \Tuleap\Tracker\REST\WorkflowRestBuilder $workflow_rest_builder,
+        private WorkflowRestBuilder $workflow_rest_builder,
     ) {
     }
 
