@@ -46,6 +46,7 @@
                     <pull-request-stats v-bind:pull_request_info="pull_request_info" />
                     <pull-request-ci-status v-bind:pull_request_info="pull_request_info" />
                     <pull-request-references v-bind:pull_request_info="pull_request_info" />
+                    <pull-request-labels />
                 </section>
 
                 <pull-request-change-state-actions
@@ -83,6 +84,7 @@ import PullRequestCheckoutButton from "./ReadOnlyInfo/PullRequestCheckoutButton.
 import PullRequestEditTitleModal from "./Title/PullRequestEditTitleModal.vue";
 import PullRequestReviewerList from "./Reviewers/PullRequestReviewerList.vue";
 import PullRequestChangeStateActions from "./Actions/PullRequestChangeStateActions.vue";
+import PullRequestLabels from "./Labels/PullRequestLabels.vue";
 
 const route = useRoute();
 const pull_request_id = String(route.params.id);

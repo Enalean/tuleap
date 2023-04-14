@@ -23,6 +23,8 @@ import type {
     User,
     TimelineItem,
     ReviewersCollection,
+    PullRequestLabelsCollection,
+    PullRequestLabel,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
@@ -115,4 +117,18 @@ export const putReviewers = (
             users: reviewers.map(({ id }) => ({ id })),
         }
     );
+};
+
+export const fetchPullRequestLabels = (
+    pull_request_id: number
+): ResultAsync<readonly PullRequestLabel[], Fault> => {
+    return getAllJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/labels`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (payload: PullRequestLabelsCollection) => {
+            return payload.labels;
+        },
+    });
 };

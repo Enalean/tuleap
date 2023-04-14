@@ -119,6 +119,9 @@ msgstr "Intégrée le"
 msgid "No matching users found"
 msgstr "Aucun utilisateur correspondant trouvé"
 
+msgid "No tags have been assigned yet"
+msgstr "Aucun tag n'a été encore assigné"
+
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
 
@@ -205,6 +208,9 @@ msgstr "Succès"
 
 msgid "Success on"
 msgstr "Succès le"
+
+msgid "Tags"
+msgstr "Tags"
 
 msgid "The last CI status is"
 msgstr "Le dernier statut de l'intégration continue est"

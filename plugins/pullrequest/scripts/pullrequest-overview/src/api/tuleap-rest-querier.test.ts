@@ -24,6 +24,7 @@ import * as fetch_result from "@tuleap/fetch-result";
 import type {
     ActionOnPullRequestEvent,
     GlobalComment,
+    PullRequestLabel,
     User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
@@ -37,11 +38,12 @@ import {
     fetchPullRequestTimelineItems,
     fetchReviewersInfo,
     fetchUserInfo,
+    fetchPullRequestLabels,
+    fetchMatchingUsers,
     patchTitle,
     mergePullRequest,
     reopenPullRequest,
     abandonPullRequest,
-    fetchMatchingUsers,
     putReviewers,
 } from "./tuleap-rest-querier";
 
@@ -250,6 +252,38 @@ describe("tuleap-rest-querier", () => {
                     users: [{ id: 101 }, { id: 102 }],
                 }
             );
+        });
+    });
+
+    describe("fetchPullRequestLabels", () => {
+        it("Given a pull-request id, Then it should fetch its labels", async () => {
+            const labels: PullRequestLabel[] = [
+                {
+                    id: 1,
+                    label: "Emergency",
+                    is_outline: false,
+                    color: "red-wine",
+                },
+                {
+                    id: 2,
+                    label: "Easy fix",
+                    is_outline: true,
+                    color: "acid-green",
+                },
+            ];
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(labels));
+
+            const result = await fetchPullRequestLabels(pull_request_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                expect.any(Object)
+            );
+
+            expect(result.value).toStrictEqual(labels);
         });
     });
 });
