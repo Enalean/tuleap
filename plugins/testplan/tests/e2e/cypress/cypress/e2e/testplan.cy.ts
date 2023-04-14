@@ -18,111 +18,69 @@
  */
 
 describe("Test plan", function () {
-    before(() => {
-        cy.clearSessionCookie();
-    });
+    it("shows the release test campaigns", () => {
+        const now = Date.now();
+        cy.projectMemberSession();
 
-    beforeEach(function () {
-        cy.preserveSessionCookies();
-    });
+        cy.log("Displays no campaign nor backlog items if release does not have one");
+        goToTestPlanOfMilestone("Release without campaigns");
+        cy.contains("There is no test campaign yet");
+        cy.contains("There is no backlog item yet");
 
-    context("As project member", () => {
-        let now: number;
-        before(() => {
-            cy.projectMemberLogin();
-            now = Date.now();
-        });
+        cy.log("In a release with campaigns and backlog items");
+        goToTestPlanOfMilestone("Release with campaigns");
 
-        it("Displays no campaign nor backlog items if release does not have one", () => {
-            goToTestPlanOfMilestone("Release without campaigns");
+        cy.log("Displays the campaigns");
+        cy.contains("Campaign 1");
+        cy.contains("9 tests");
 
-            cy.contains("There is no test campaign yet");
-            cy.contains("There is no backlog item yet");
-        });
+        cy.log("Adds new campaign");
+        cy.get("[data-test=new-campaign]").click();
+        cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
+        cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
+        cy.get("[data-test=new-campaign-submit-button]").click();
+        cy.contains("Campaign " + now);
+        cy.contains("8 tests");
 
-        context("In a release with campaigns and backlog items", () => {
-            before(() => {
-                goToTestPlanOfMilestone("Release with campaigns");
-            });
-
-            context("Test campaigns", () => {
-                it("Displays the campaigns", () => {
-                    cy.contains("Campaign 1");
-                    cy.contains("9 tests");
-                });
-
-                it("Adds new campaign", () => {
-                    cy.get("[data-test=new-campaign]").click();
-                    cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
-                    cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
-                    cy.get("[data-test=new-campaign-submit-button]").click();
-                    cy.contains("Campaign " + now);
-                    cy.contains("8 tests");
-                });
-            });
-
-            context("Test plan", () => {
-                it("Display the backlog items", () => {
-                    cy.contains("Display list of backlog items with their tests definition");
-                    cy.contains("Create new campaign in new “Test” screen").within(() => {
-                        cy.get("[data-test=nb-tests]").contains("3 planned tests");
-                        cy.get("[data-test=backlog-item-icon]").should(($icon) => {
-                            expect($icon).to.have.length(1);
-                            expect($icon[0].className).to.match(
-                                /test-plan-backlog-item-coverage-icon-/
-                            );
-                        });
-                    });
-                });
-
-                it("Expand a backlog items to see its test coverage", () => {
-                    cy.contains(
-                        "Display list of backlog items with their tests definition"
-                    ).click();
-                    cy.contains("Update artifact")
-                        .parent()
-                        .within(() => {
-                            cy.get("[data-test=test-status-icon]").should(($icon) => {
-                                expect($icon).to.have.length(1);
-                                expect($icon[0].className).to.match(
-                                    /test-plan-test-definition-icon-status-/
-                                );
-                            });
-                        });
-                    cy.contains("Send beeper notification")
-                        .parent()
-                        .within(() => {
-                            cy.get("[data-test=automated-test-icon]");
-                        });
-                });
-
-                it("Marks a test as failed", () => {
-                    assertStatusOfTestReflectsCurrentStatus(now, "failed");
-                });
-
-                it("Marks a test as blocked", () => {
-                    assertStatusOfTestReflectsCurrentStatus(now, "blocked");
-                });
-
-                it("Marks a test as notrun", () => {
-                    assertStatusOfTestReflectsCurrentStatus(now, "notrun");
-                });
-
-                it("Marks a test as passed", () => {
-                    assertStatusOfTestReflectsCurrentStatus(now, "passed");
-                });
-
-                it("Creates a new test", () => {
-                    const new_test_summary = "New test " + now;
-                    cy.get("[data-test=add-test-button]").click();
-                    cy.get("[data-test=summary]").type(new_test_summary + "{enter}");
-                    cy.contains("Display list of backlog items with their tests definition");
-                    cy.contains("Update artifact");
-                    cy.contains("Send beeper notification");
-                    cy.contains(new_test_summary);
-                });
+        cy.log("Display the backlog items");
+        cy.contains("Display list of backlog items with their tests definition");
+        cy.contains("Create new campaign in new “Test” screen").within(() => {
+            cy.get("[data-test=nb-tests]").contains("3 planned tests");
+            cy.get("[data-test=backlog-item-icon]").should(($icon) => {
+                expect($icon).to.have.length(1);
+                expect($icon[0].className).to.match(/test-plan-backlog-item-coverage-icon-/);
             });
         });
+
+        cy.log("Expand a backlog items to see its test coverage");
+        cy.contains("Display list of backlog items with their tests definition").click();
+        cy.contains("Update artifact")
+            .parent()
+            .within(() => {
+                cy.get("[data-test=test-status-icon]").should(($icon) => {
+                    expect($icon).to.have.length(1);
+                    expect($icon[0].className).to.match(/test-plan-test-definition-icon-status-/);
+                });
+            });
+        cy.contains("Send beeper notification")
+            .parent()
+            .within(() => {
+                cy.get("[data-test=automated-test-icon]");
+            });
+
+        assertStatusOfTestReflectsCurrentStatus(now, "failed");
+        assertStatusOfTestReflectsCurrentStatus(now, "blocked");
+        assertStatusOfTestReflectsCurrentStatus(now, "notrun");
+        assertStatusOfTestReflectsCurrentStatus(now, "passed");
+
+        cy.log("Creates a new test");
+        const new_test_summary = "New test " + now;
+        cy.get("[data-test=add-test-button]").click();
+        cy.get("[data-test=summary]").type(new_test_summary + "{enter}");
+        cy.contains("Display list of backlog items with their tests definition");
+        cy.contains("Update artifact");
+        cy.contains("Send beeper notification");
+        cy.contains(new_test_summary);
     });
 });
 
@@ -138,6 +96,7 @@ function goToTestPlanOfMilestone(milestone_label: string): void {
 }
 
 function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string): void {
+    cy.log("Marks a test as " + new_status);
     cy.contains("Campaign " + now).click();
     cy.contains("Update artifact").click();
     cy.get(`[data-test=mark-test-as-${new_status}]`).click();
