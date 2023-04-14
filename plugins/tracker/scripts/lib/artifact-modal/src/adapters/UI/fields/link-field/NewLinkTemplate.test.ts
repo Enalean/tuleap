@@ -46,6 +46,7 @@ import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkT
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
+import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -159,6 +160,7 @@ describe(`NewLinkTemplate`, () => {
                 RetrievePossibleParentsStub.withoutParents(),
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
+                RetrieveFeatureFlagStub.withEnabledFlag(),
                 ArtifactLinkFieldInfoStub.withDefaults(),
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),

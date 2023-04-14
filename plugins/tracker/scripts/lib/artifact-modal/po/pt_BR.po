@@ -239,3 +239,6 @@ msgstr ""
 
 msgid "is Parent of"
 msgstr ""
+
+msgid "→ Create new artifact…"
+msgstr ""

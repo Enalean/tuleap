@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupCollection, Lazybox } from "@tuleap/lazybox";
+import type { GroupCollection } from "@tuleap/lazybox";
 import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import { setCatalog } from "../../../../gettext-catalog";
@@ -167,12 +167,8 @@ describe("LinkField", () => {
 
                 const initial_dropdown_content: GroupCollection = [];
                 host = {
-                    controller: {
-                        autoComplete(): void {
-                            //Do nothing
-                        },
-                    } as unknown as LinkFieldControllerType,
-                    link_selector: link_selector as Lazybox,
+                    controller: {} as LinkFieldControllerType,
+                    link_selector: Option.fromValue(link_selector),
                     current_link_type: LinkTypeStub.buildUntyped(),
                     matching_artifact_section: initial_dropdown_content,
                     possible_parents_section: initial_dropdown_content,
