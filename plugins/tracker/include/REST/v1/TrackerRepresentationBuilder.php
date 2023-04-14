@@ -22,22 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use Project;
-use Tuleap\Tracker\RetrieveTrackersByGroupIdAndUserCanView;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\RetrieveTrackersByGroupIdAndUserCanView;
+use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
+use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 
 final class TrackerRepresentationBuilder
 {
-    public function __construct(private readonly RetrieveTrackersByGroupIdAndUserCanView $tracker_retriever, private readonly BuildCompleteTrackerRESTRepresentation $full_representation_builder)
+    public function __construct(private readonly RetrieveTrackersByGroupIdAndUserCanView $tracker_retriever, private readonly BuildCompleteTrackerRESTRepresentation $full_representation_builder, private readonly ArtifactCannotBeCreatedReasonsGetter $creation_semantic_checker)
     {
     }
 
     /**
      * @param CompleteTrackerRepresentation::FULL_REPRESENTATION | MinimalTrackerRepresentation::MINIMAL_REPRESENTATION $tracker_representation
      * @return TrackerRepresentation[]
+     * @throws RestException
      */
     public function buildTrackerRepresentations(
         PFUser $user,
@@ -46,7 +50,12 @@ final class TrackerRepresentationBuilder
         int $limit,
         int $offset,
         bool $filter_on_tracker_administration_permission,
+        CollectionOfCreationSemanticToCheck $with_creation_semantic_check,
     ): array {
+        if (! $with_creation_semantic_check->isEmpty() && $tracker_representation === CompleteTrackerRepresentation::FULL_REPRESENTATION) {
+            throw new RestException(400, "'with_creation_semantic_check' is not available when 'full' tracker representation is chosen");
+        }
+
         $all_trackers = $this->tracker_retriever->getTrackersByGroupIdUserCanView(
             $project->getId(),
             $user
@@ -60,7 +69,10 @@ final class TrackerRepresentationBuilder
                 continue;
             }
             if ($tracker_representation === MinimalTrackerRepresentation::MINIMAL_REPRESENTATION) {
-                $tracker_minimal_representation = MinimalTrackerRepresentation::build($tracker);
+                $tracker_minimal_representation = MinimalTrackerRepresentation::withCannotCreateArtifactReasons(
+                    $tracker,
+                    $this->creation_semantic_checker->getCannotCreateArtifactReasons($with_creation_semantic_check, $tracker, $user)
+                );
                 $tracker_representations[]      = $tracker_minimal_representation;
             } else {
                 $tracker_representations[] = $this->full_representation_builder->getTrackerRepresentationInTrackerContext($user, $tracker);

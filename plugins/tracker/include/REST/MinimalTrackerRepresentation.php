@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Semantic\CollectionOfCannotCreateArtifactReason;
 
 /**
  * @psalm-immutable
@@ -56,13 +57,19 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
      */
     public $project;
 
-    private function __construct(int $id, string $uri, string $label, string $color_name, ProjectReference $project)
+    /**
+     * @var string[]|null
+     */
+    public ?array $cannot_create_reasons;
+
+    private function __construct(int $id, string $uri, string $label, string $color_name, ProjectReference $project, ?array $cannot_create_reasons)
     {
-        $this->id         = $id;
-        $this->uri        = $uri;
-        $this->label      = $label;
-        $this->color_name = $color_name;
-        $this->project    = $project;
+        $this->id                    = $id;
+        $this->uri                   = $uri;
+        $this->label                 = $label;
+        $this->color_name            = $color_name;
+        $this->project               = $project;
+        $this->cannot_create_reasons = $cannot_create_reasons;
     }
 
     public static function build(Tracker $tracker): self
@@ -73,7 +80,21 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
             CompleteTrackerRepresentation::ROUTE . '/' . $tracker_id,
             $tracker->getName(),
             $tracker->getColor()->getName(),
-            new ProjectReference($tracker->getProject())
+            new ProjectReference($tracker->getProject()),
+            null
+        );
+    }
+
+    public static function withCannotCreateArtifactReasons(Tracker $tracker, CollectionOfCannotCreateArtifactReason $reasons): self
+    {
+        $tracker_id = $tracker->getId();
+        return new self(
+            JsonCast::toInt($tracker_id),
+            CompleteTrackerRepresentation::ROUTE . '/' . $tracker_id,
+            $tracker->getName(),
+            $tracker->getColor()->getName(),
+            new ProjectReference($tracker->getProject()),
+            $reasons->toStringArray()
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST;
+namespace Tuleap\Tracker\Semantic;
 
-use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
-use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
-use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
 
-final class FaultMapper
+/**
+ * @psalm-immutable
+ */
+final class SemanticNotSupportedFault extends Fault
 {
-    /**
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): never
+    public static function fromSemanticName(string $semantic): Fault
     {
-        $status_code = match ($fault::class) {
-            ArtifactDoesNotExistFault::class , ArtifactLinkFieldDoesNotExistFault::class, SemanticNotSupportedFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+        return new self(sprintf('Semantic "%s" not supported', $semantic));
     }
 }
