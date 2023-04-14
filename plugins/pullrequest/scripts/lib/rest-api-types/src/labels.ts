@@ -17,12 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User } from "@tuleap/core-rest-api-types";
+import type { ColorName } from "@tuleap/core-constants";
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
+export interface PullRequestLabel {
+    readonly id: number;
+    readonly label: string;
+    readonly is_outline: boolean;
+    readonly color: ColorName;
+}
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
-export * from "./labels";
+export interface PullRequestLabelsCollection {
+    readonly labels: ReadonlyArray<PullRequestLabel>;
+}
