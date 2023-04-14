@@ -48,8 +48,6 @@ declare global {
 
             projectMemberLogin(): void;
 
-            platformAdminLogin(): void;
-
             restrictedMemberSession(): void;
 
             restrictedRegularUserSession(): void;

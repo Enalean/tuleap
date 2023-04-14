@@ -190,7 +190,8 @@
               <name><![CDATA[effort_col2]]></name>
               <label><![CDATA[effort_col2]]></label>
               <formElements>
-                <formElement type="computed" ID="F71245" rank="0" id="71245" tracker_id="3182" parent_id="71134" required="1">
+                <formElement type="computed" ID="F71245" rank="0" id="71245" tracker_id="3182" parent_id="71134"
+                             required="0">
                   <name><![CDATA[remaining_effort]]></name>
                   <label><![CDATA[remaining_effort]]></label>
                 </formElement>

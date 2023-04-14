@@ -40,13 +40,9 @@ describe("Artifact link usage", () => {
     let parent_artifact: string;
     let child_artifact: string;
     describe("Site administrator", () => {
-        before(() => {
-            cy.clearSessionCookie();
-            cy.platformAdminLogin();
-        });
-
         it("must be able to create and delete new types of link", () => {
-            cy.get("[data-test=platform-administration-link]").click();
+            cy.siteAdministratorSession();
+            cy.visit("/admin/");
             cy.get("[data-test=admin-tracker]").click();
             cy.get("[data-test=artifact-link-types]").click();
 
@@ -84,8 +80,7 @@ describe("Artifact link usage", () => {
 
     describe("Tracker administration", function () {
         before(function () {
-            cy.clearSessionCookie();
-            cy.projectAdministratorLogin();
+            cy.projectAdministratorSession();
             cy.getProjectId("tracker-artifact").as("project_id");
 
             createArtifact("Fixed By");
@@ -109,11 +104,8 @@ describe("Artifact link usage", () => {
             });
         });
 
-        beforeEach(function () {
-            cy.preserveSessionCookies();
-        });
-
         it("can enable/disable artifact links", function () {
+            cy.projectAdministratorSession();
             project_id = this.project_id;
             disableArtifactLinkUsage(project_id);
 
@@ -144,6 +136,7 @@ describe("Artifact link usage", () => {
         });
 
         it("can use _is_child nature", function () {
+            cy.projectAdministratorSession();
             cy.visitProjectService("tracker-artifact", "Trackers");
             cy.visit("/plugins/tracker/?&aid=" + child_artifact);
             cy.get("[data-test=edit-field-links]").click();

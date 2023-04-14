@@ -76,8 +76,7 @@ describe("Report expert queries", () => {
     let summary_column_id: string;
 
     before(() => {
-        cy.clearSessionCookie();
-        cy.projectMemberLogin();
+        cy.projectMemberSession();
         cy.getProjectId("tracker-project").as("project_id");
 
         getTrackerIdFromTrackerListPage()
@@ -92,146 +91,101 @@ describe("Report expert queries", () => {
             });
     });
 
-    beforeEach(function () {
-        cy.preserveSessionCookies();
+    it("TQL queries", () => {
+        cy.log("bug1 for summary='bug1'");
+        cy.projectMemberSession();
+        cy.visitProjectService("tql", "Trackers");
+        cy.get("[data-test=tracker-link-tql]").click();
+        findArtifactsWithExpertQuery("summary='bug1'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+
+        findArtifactsWithExpertQuery("summary='bug'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+
+        findArtifactsWithExpertQuery("summary='bug' and details='original2'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+
+        findArtifactsWithExpertQuery("remaining_effort between(1, 42)");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+
+        findArtifactsWithExpertQuery("remaining_effort > 3.14");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+
+        findArtifactsWithExpertQuery("story_points <= 21");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+
+        findArtifactsWithExpertQuery("story_points = ''");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug3"]);
+
+        findArtifactsWithExpertQuery("story_points != ''");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+
+        findArtifactsWithExpertQuery("due_date = '2017-01-10'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
+
+        findArtifactsWithExpertQuery("timesheeting < '2017-01-18 14:36'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+
+        findArtifactsWithExpertQuery("last_update_date between(now() - 1w, now())");
+        checkNoArtifactsAreListed();
+
+        findArtifactsWithExpertQuery("submitted_by = MYSELF()");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+
+        findArtifactsWithExpertQuery("submitted_by != MYSELF()");
+        checkNoArtifactsAreListed();
+
+        findArtifactsWithExpertQuery("submitted_by IN(MYSELF())");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+
+        findArtifactsWithExpertQuery("submitted_by NOT IN(MYSELF())");
+        checkNoArtifactsAreListed();
+
+        findArtifactsWithExpertQuery(
+            "status IN ('todo', 'doing') OR ugroups = 'Membres du projet'"
+        );
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
+
+        findArtifactsWithExpertQuery("status = ''");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2", "bug3"]);
+
+        findArtifactsWithExpertQuery("ugroups = 'FRS_Admin'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
+
+        findArtifactsWithExpertQuery("@comments = 'Lorem ipsum'");
+        checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
     });
 
-    describe("Report table shows", () => {
-        it("bug1 for summary='bug1'", () => {
-            findArtifactsWithExpertQuery("summary='bug1'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
-        });
+    it("Shows error", () => {
+        cy.projectMemberSession();
+        cy.visitProjectService("tql", "Trackers");
+        cy.get("[data-test=tracker-link-tql]").click();
+        findArtifactsWithExpertQuery('summary="bug1');
 
-        it("bug1, bug2 & bug3 for summary='bug'", () => {
-            findArtifactsWithExpertQuery("summary='bug'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
-        });
+        cy.get("[data-test=feedback]").contains("Error during parsing expert query");
 
-        it("bug2 for summary='bug' and details='original2'", () => {
-            findArtifactsWithExpertQuery("summary='bug' and details='original2'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
-        });
+        findArtifactsWithExpertQuery('submitted_by="username"');
 
-        it("bug1 for remaining_effort between(1, 42)", () => {
-            findArtifactsWithExpertQuery("remaining_effort between(1, 42)");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
-        });
+        cy.get("[data-test=feedback]").contains(
+            "Error with the field 'submitted_by'. The user 'username' does not exist."
+        );
 
-        it("bug2 for remaining_effort > 3.14", () => {
-            findArtifactsWithExpertQuery("remaining_effort > 3.14");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
-        });
+        findArtifactsWithExpertQuery('test="bug1"');
 
-        it("bug1 & bug2 for story_points <= 21", () => {
-            findArtifactsWithExpertQuery("story_points <= 21");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
-        });
+        cy.get("[data-test=feedback]").contains(
+            "We cannot search on 'test', we don't know what it refers to. Please refer to the documentation for the allowed comparisons."
+        );
 
-        it("bug3 for story_points = ''", () => {
-            findArtifactsWithExpertQuery("story_points = ''");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug3"]);
-        });
+        findArtifactsWithExpertQuery('due_date = "2017-01-10 12:12"');
 
-        it("bug1 & bug2 for story_points != ''", () => {
-            findArtifactsWithExpertQuery("story_points != ''");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
-        });
+        cy.get("[data-test=feedback]").contains(
+            "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'"
+        );
 
-        it("bug2 for due_date = '2017-01-10'", () => {
-            findArtifactsWithExpertQuery("due_date = '2017-01-10'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2"]);
-        });
+        findArtifactsWithExpertQuery('ugroups = "unknown"');
 
-        it("bug1 for timesheeting < '2017-01-18 14:36'", () => {
-            findArtifactsWithExpertQuery("timesheeting < '2017-01-18 14:36'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
-        });
-
-        it("nothing for last_update_date between(now() - 1w, now())", () => {
-            findArtifactsWithExpertQuery("last_update_date between(now() - 1w, now())");
-            checkNoArtifactsAreListed();
-        });
-
-        it("bug1, bug2 & bug3 for submitted_by = MYSELF()", () => {
-            findArtifactsWithExpertQuery("submitted_by = MYSELF()");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
-        });
-
-        it("nothing for submitted_by != MYSELF()", () => {
-            findArtifactsWithExpertQuery("submitted_by != MYSELF()");
-            checkNoArtifactsAreListed();
-        });
-
-        it("bug1, bug2 & bug3 for submitted_by IN(MYSELF())", () => {
-            findArtifactsWithExpertQuery("submitted_by IN(MYSELF())");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
-        });
-
-        it("nothing for submitted_by NOT IN(MYSELF())", () => {
-            findArtifactsWithExpertQuery("submitted_by NOT IN(MYSELF())");
-            checkNoArtifactsAreListed();
-        });
-
-        it("bug1 & bug2 for status IN ('todo', 'doing') OR ugroups = 'Membres du projet'", () => {
-            findArtifactsWithExpertQuery(
-                "status IN ('todo', 'doing') OR ugroups = 'Membres du projet'"
-            );
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2"]);
-        });
-
-        it("bug2 & bug3 for status = ''", () => {
-            findArtifactsWithExpertQuery("status = ''");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug2", "bug3"]);
-        });
-
-        it("bug1 for ugroups = 'FRS_Admin'", () => {
-            findArtifactsWithExpertQuery("ugroups = 'FRS_Admin'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
-        });
-
-        it("bug1 for @comments = 'Lorem ipsum'", () => {
-            findArtifactsWithExpertQuery("@comments = 'Lorem ipsum'");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
-        });
-    });
-
-    describe("Feedback error when", () => {
-        it('summary="bug1', () => {
-            findArtifactsWithExpertQuery('summary="bug1');
-
-            cy.get("[data-test=feedback]").contains("Error during parsing expert query");
-        });
-
-        it('submitted_by="username"', () => {
-            findArtifactsWithExpertQuery('submitted_by="username"');
-
-            cy.get("[data-test=feedback]").contains(
-                "Error with the field 'submitted_by'. The user 'username' does not exist."
-            );
-        });
-
-        it('test="bug1"', () => {
-            findArtifactsWithExpertQuery('test="bug1"');
-
-            cy.get("[data-test=feedback]").contains(
-                "We cannot search on 'test', we don't know what it refers to. Please refer to the documentation for the allowed comparisons."
-            );
-        });
-
-        it('due_date = "2017-01-10 12:12"', () => {
-            findArtifactsWithExpertQuery('due_date = "2017-01-10 12:12"');
-
-            cy.get("[data-test=feedback]").contains(
-                "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'"
-            );
-        });
-
-        it('ugroups = "unknown"', () => {
-            findArtifactsWithExpertQuery('ugroups = "unknown"');
-
-            cy.get("[data-test=feedback]").contains(
-                "The value 'unknown' doesn't exist for the list field 'ugroups'."
-            );
-        });
+        cy.get("[data-test=feedback]").contains(
+            "The value 'unknown' doesn't exist for the list field 'ugroups'."
+        );
     });
 });
