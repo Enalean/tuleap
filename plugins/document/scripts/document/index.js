@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const AppComponent = Vue.extend(App);
-    const store = createStore(user_id, project_id, configuration_state);
+    const store = createStore(configuration_state);
     const router = createRouter(store, project_name);
 
     Vue.use(PiniaVuePlugin);

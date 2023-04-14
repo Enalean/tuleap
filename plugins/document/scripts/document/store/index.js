@@ -19,8 +19,6 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import createPersistedState from "vuex-persistedstate";
-import { expiringLocalStorage } from "./store-persistence/storage";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters";
 import * as actions from "./actions";
@@ -36,7 +34,7 @@ Vue.use(Vuex);
 
 export let store;
 
-export function createStore(user_id, project_id, configuration_state) {
+export function createStore(configuration_state) {
     const configuration = createConfigurationModule(configuration_state);
 
     store = new Vuex.Store({
@@ -52,13 +50,6 @@ export function createStore(user_id, project_id, configuration_state) {
             permissions,
             configuration,
         },
-        plugins: [
-            createPersistedState({
-                key: `document_clipboard_${user_id}_${project_id}`,
-                storage: expiringLocalStorage(900),
-                paths: ["clipboard"],
-            }),
-        ],
     });
 
     return store;
