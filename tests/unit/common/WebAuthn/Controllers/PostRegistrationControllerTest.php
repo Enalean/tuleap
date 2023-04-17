@@ -32,11 +32,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
+use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialParameters;
@@ -62,11 +65,33 @@ final class PostRegistrationControllerTest extends TestCase
     ): void {
         $response = $this->handle(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
-            $body
+            $body,
+            new WebAuthnChallengeDaoStub()
         );
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame($error_message, $response->getReasonPhrase());
+    }
+
+    public function testItReturns400WhenResponseIsWrong(): void
+    {
+        $challenge_dao = new WebAuthnChallengeDaoStub();
+        $user_provider = ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build());
+        $challenge     = 'challenge';
+        $challenge_dao->saveChallenge((int) $user_provider->getCurrentUser()->getId(), $challenge);
+
+        $passkey  = new PasskeyStub();
+        $response = $this->handle(
+            $user_provider,
+            [
+                'response' => $passkey->generateAttestationResponse('wrong challenge'),
+                'name' => 'name of passkey',
+            ],
+            $challenge_dao
+        );
+
+        self::assertSame(400, $response->getStatusCode());
+        self::assertSame('The result of passkey is invalid', $response->getReasonPhrase());
     }
 
     public function testItReturns501(): void
@@ -78,7 +103,7 @@ final class PostRegistrationControllerTest extends TestCase
 
         $passkey  = new PasskeyStub();
         $response = $this->handle(
-            ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
+            $user_provider,
             [
                 'response' => $passkey->generateAttestationResponse($challenge),
                 'name' => 'name of passkey',
@@ -120,10 +145,16 @@ final class PostRegistrationControllerTest extends TestCase
         return new PostRegistrationController(
             $provide_current_user,
             $challenge_dao,
-            new PublicKeyCredentialRpEntity('tuleap', 'https://example.com'),
+            new PublicKeyCredentialRpEntity('tuleap', 'example.com'),
             [new PublicKeyCredentialParameters(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, Algorithms::COSE_ALGORITHM_ES256)],
             new PublicKeyCredentialLoader(
                 new AttestationObjectLoader($attestation_statement_manager)
+            ),
+            new AuthenticatorAttestationResponseValidator(
+                $attestation_statement_manager,
+                WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
+                null,
+                new ExtensionOutputCheckerHandler()
             ),
             HTTPFactoryBuilder::responseFactory(),
             new NoopSapiEmitter()

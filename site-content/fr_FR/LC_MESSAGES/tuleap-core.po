@@ -3822,6 +3822,9 @@ msgstr "L'enregistrement ne peut être vérifié"
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
+msgid "The result of passkey is invalid"
+msgstr "Le résultat de la passkey est invalide"
+
 msgid "The result of passkey is not for registration"
 msgstr "Le résultat de la passkey n'est pas pour l'enregistrement"
 

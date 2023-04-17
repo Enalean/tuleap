@@ -25,9 +25,12 @@ namespace Tuleap\Test\Stubs\WebAuthn;
 use CBOR\IndefiniteLengthByteStringObject;
 use CBOR\IndefiniteLengthMapObject;
 use CBOR\MapObject;
+use CBOR\NegativeIntegerObject;
 use CBOR\TextStringObject;
+use Cose\Algorithms;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Psl\Hash\Algorithm;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\AttestationStatement\AttestationStatement;
 use function Psl\Encoding\Base64\encode;
 use function Psl\Json\encode as psl_json_encode;
@@ -45,19 +48,29 @@ final class PasskeyStub
 
     public function generateAttestationResponse(string $challenge): array
     {
-        $crypted_challenge     = $challenge;
-        $client_data_json      = Base64UrlSafe::encodeUnpadded(psl_json_encode([
+        $crypted_challenge = $challenge;
+        $client_data_json  = Base64UrlSafe::encodeUnpadded(psl_json_encode([
             'type' => 'webauthn.create',
             'challenge' => Base64UrlSafe::encodeUnpadded($crypted_challenge),
             'origin' => $this->relying_party,
         ]));
-        $relying_party_id_hash = hex2bin(\Psl\Hash\hash($this->relying_party, Algorithm::SHA256));
-        $flags                 = (string) 0b0000101;
+
+        $relying_party_id_hash = hex2bin(\Psl\Hash\hash(parse_url($this->relying_party)['host'] ?? 'example.com', Algorithm::SHA256));
+        $flags                 = hex2bin((string) 0b01000101);
         $sign_count            = '0000';
+
+        $aaguid                   = Uuid::v4()->toBinary();
+        $credential_id_length     = pack('n', (string) 16);
+        $credential_id            = 'credential-id123';
+        $credential_public_key    = (string) MapObject::create()
+            ->add(TextStringObject::create('kty'), TextStringObject::create('EC2'))
+            ->add(TextStringObject::create('alg'), NegativeIntegerObject::create(Algorithms::COSE_ALGORITHM_ES256));
+        $attested_credential_data = $aaguid . $credential_id_length . $credential_id . $credential_public_key;
+
         // see https://www.w3.org/TR/webauthn-2/#attestation-object
         $attestation_object = IndefiniteLengthMapObject::create()
             ->add(TextStringObject::create('fmt'), TextStringObject::create(AttestationStatement::TYPE_NONE))
-            ->add(TextStringObject::create('attStmt'), MapObject::create([]))
+            ->add(TextStringObject::create('attStmt'), MapObject::create())
             ->add(
                 TextStringObject::create('authData'),
                 IndefiniteLengthByteStringObject::create()
@@ -65,6 +78,7 @@ final class PasskeyStub
                     ->append($relying_party_id_hash)
                     ->append($flags)
                     ->append($sign_count)
+                    ->append($attested_credential_data)
             );
 
         return [

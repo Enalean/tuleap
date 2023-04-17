@@ -32,6 +32,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
 use Webauthn\AuthenticatorAttestationResponse;
+use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\Exception\InvalidDataException;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialLoader;
@@ -47,6 +48,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         private readonly PublicKeyCredentialRpEntity $relying_party_entity,
         private readonly array $credential_parameters,
         private readonly PublicKeyCredentialLoader $credential_loader,
+        private readonly AuthenticatorAttestationResponseValidator $attestation_response_validator,
         private readonly ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -96,7 +98,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         return $this->challenge_dao
             ->searchChallenge((int) $current_user->getId())
             ->mapOr(
-                function (string $challenge) use ($current_user) {
+                function (string $challenge) use ($current_user, $authentication_attestation_response) {
                     $user_entity = new PublicKeyCredentialUserEntity(
                         $current_user->getUserName(),
                         (string) $current_user->getId(),
@@ -110,7 +112,15 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
                         $this->credential_parameters
                     )->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE);
 
-                    // Check attestation response
+                    try {
+                        $credential_source = $this->attestation_response_validator->check(
+                            $authentication_attestation_response,
+                            $options,
+                            $this->relying_party_entity->getId() ?? ''
+                        );
+                    } catch (\Throwable $e) {
+                        return $this->response_factory->createResponse(400, _('The result of passkey is invalid'));
+                    }
 
                     // Save source
 
