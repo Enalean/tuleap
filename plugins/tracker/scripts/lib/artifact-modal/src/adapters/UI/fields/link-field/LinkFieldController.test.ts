@@ -66,6 +66,8 @@ import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStu
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { ParentTrackerIdentifierStub } from "../../../../../tests/stubs/ParentTrackerIdentifierStub";
+import type { RetrieveFeatureFlag } from "../../../../domain/RetrieveFeatureFlag";
+import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -86,6 +88,7 @@ describe(`LinkFieldController`, () => {
         event_dispatcher: DispatchEventsStub,
         new_link_type_changer: ChangeNewLinkTypeStub,
         link_type_changer: ChangeLinkTypeStub,
+        flag_retriever: RetrieveFeatureFlag,
         parent_tracker_identifier: Option<ParentTrackerIdentifier>;
 
     beforeEach(() => {
@@ -105,6 +108,7 @@ describe(`LinkFieldController`, () => {
         event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
         new_link_type_changer = ChangeNewLinkTypeStub.withCount();
         link_type_changer = ChangeLinkTypeStub.withCount();
+        flag_retriever = RetrieveFeatureFlagStub.withEnabledFlag();
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -131,6 +135,7 @@ describe(`LinkFieldController`, () => {
             parents_retriever,
             link_verifier,
             event_dispatcher,
+            flag_retriever,
             ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID }),
             current_tracker_identifier,
             parent_tracker_identifier,
@@ -436,6 +441,19 @@ describe(`LinkFieldController`, () => {
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(parents).toHaveLength(0);
+        });
+    });
+
+    describe(`getFeatureFlag()`, () => {
+        const getFeatureFlag = (): PromiseLike<boolean> => getController().getFeatureFlag();
+
+        it(`will return true when the feature flag is active`, async () => {
+            await expect(getFeatureFlag()).resolves.toBe(true);
+        });
+
+        it(`when there is an error during the retrieval of the flag, it will return false`, async () => {
+            flag_retriever = RetrieveFeatureFlagStub.withFault(Fault.fromMessage("Ooops"));
+            await expect(getFeatureFlag()).resolves.toBe(false);
         });
     });
 });

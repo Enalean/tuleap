@@ -19,10 +19,11 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
-import type { Option } from "@tuleap/option";
-import type { GroupCollection, Lazybox } from "@tuleap/lazybox";
+import { Option } from "@tuleap/option";
+import type { GroupCollection, Lazybox, LazyboxOptions } from "@tuleap/lazybox";
 import { createLazybox } from "@tuleap/lazybox";
 import {
+    getCreateNewArtifactButtonInLinkLabel,
     getLinkFieldCanHaveOnlyOneParent,
     getLinkFieldNoteStartText,
     getLinkFieldNoteText,
@@ -52,7 +53,7 @@ export interface LinkField {
     readonly controller: LinkFieldControllerType;
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
     readonly artifact_link_select: HTMLSelectElement;
-    link_selector: Lazybox;
+    link_selector: Option<Lazybox>;
     current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
@@ -158,12 +159,14 @@ export const dropdown_section_descriptor = {
     set: (host: LinkField, collection: GroupCollection | undefined): GroupCollection =>
         collection ?? [],
     observe: (host: LinkField): void => {
-        host.link_selector.setDropdownContent([
-            ...host.matching_artifact_section,
-            ...host.recently_viewed_section,
-            ...host.search_results_section,
-            ...host.possible_parents_section,
-        ]);
+        host.link_selector.apply((lazybox) => {
+            lazybox.setDropdownContent([
+                ...host.matching_artifact_section,
+                ...host.recently_viewed_section,
+                ...host.search_results_section,
+                ...host.possible_parents_section,
+            ]);
+        });
     },
 };
 
@@ -208,6 +211,42 @@ export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChang
     host.current_link_type = event.detail.new_link_type;
 };
 
+const createLazyBox = (host: LinkField, is_feature_flag_enabled: boolean): void => {
+    const options_with_feature_flag = is_feature_flag_enabled
+        ? {
+              new_item_callback: (): void => {
+                  // Actual functionality will be added by next contributions
+                  // eslint-disable-next-line no-console
+                  console.log("Clicked on Create new item");
+              },
+              new_item_button_label: getCreateNewArtifactButtonInLinkLabel(),
+          }
+        : {};
+
+    const options: LazyboxOptions = {
+        is_multiple: false,
+        placeholder: getLinkSelectorPlaceholderText(),
+        search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
+        search_field_callback: (query) => {
+            host.controller.clearFaultNotification();
+            return host.autocompleter.autoComplete(host, query);
+        },
+        templating_callback: getLinkableArtifactTemplate,
+        selection_callback: (value) => {
+            const artifact = getLinkableArtifact(value);
+            if (artifact) {
+                host.link_selector.apply((lazybox) => lazybox.resetSelection());
+                host.new_links_presenter = host.controller.addNewLink(
+                    artifact,
+                    host.current_link_type
+                );
+            }
+        },
+        ...options_with_feature_flag,
+    };
+    host.link_selector = Option.fromValue(createLazybox(host.artifact_link_select, options));
+};
+
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field",
     artifact_link_select: ({ content }) => {
@@ -218,7 +257,9 @@ export const LinkField = define<LinkField>({
 
         return select;
     },
-    link_selector: undefined,
+    link_selector: {
+        set: (host, new_value) => new_value ?? Option.nothing(),
+    },
     controller: {
         set(host, controller: LinkFieldControllerType) {
             host.current_artifact_reference = controller.getCurrentArtifactReference();
@@ -227,28 +268,9 @@ export const LinkField = define<LinkField>({
             controller.displayLinkedArtifacts().then((artifacts) => {
                 host.linked_artifacts_presenter = artifacts;
             });
-
-            host.link_selector = createLazybox(host.artifact_link_select, {
-                is_multiple: false,
-                placeholder: getLinkSelectorPlaceholderText(),
-                search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
-                search_field_callback: (query) => {
-                    host.controller.clearFaultNotification();
-                    return host.autocompleter.autoComplete(host, query);
-                },
-                templating_callback: getLinkableArtifactTemplate,
-                selection_callback: (value) => {
-                    const artifact = getLinkableArtifact(value);
-                    if (artifact) {
-                        host.link_selector.resetSelection();
-                        host.new_links_presenter = controller.addNewLink(
-                            artifact,
-                            host.current_link_type
-                        );
-                    }
-                },
+            controller.getFeatureFlag().then((is_feature_flag_enabled) => {
+                createLazyBox(host, is_feature_flag_enabled);
             });
-
             controller.getPossibleParents().then((parents) => {
                 host.current_link_type = controller.getCurrentLinkType(parents.length > 0);
                 host.allowed_link_types = controller.displayAllowedTypes();

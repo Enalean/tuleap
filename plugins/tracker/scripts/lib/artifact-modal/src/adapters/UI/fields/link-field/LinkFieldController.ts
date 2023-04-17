@@ -56,6 +56,7 @@ import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
 import type { ChangeNewLinkType } from "../../../../domain/fields/link-field/ChangeNewLinkType";
 import type { ChangeLinkType } from "../../../../domain/fields/link-field/ChangeLinkType";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
+import type { RetrieveFeatureFlag } from "../../../../domain/RetrieveFeatureFlag";
 
 export type LinkFieldControllerType = {
     getCurrentArtifactReference(): Option<ArtifactCrossReference>;
@@ -74,6 +75,7 @@ export type LinkFieldControllerType = {
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     changeNewLinkType(link: NewLink, new_link_type: LinkType): NewLinkCollectionPresenter;
     getPossibleParents(): PromiseLike<ReadonlyArray<LinkableArtifact>>;
+    getFeatureFlag(): PromiseLike<boolean>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
 };
@@ -111,6 +113,7 @@ export const LinkFieldController = (
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     event_dispatcher: DispatchEvents,
+    flag_retriever: RetrieveFeatureFlag,
     field: ArtifactLinkFieldInfo,
     current_tracker_identifier: CurrentTrackerIdentifier,
     parent_tracker_identifier: Option<ParentTrackerIdentifier>,
@@ -208,5 +211,9 @@ export const LinkFieldController = (
                 return [];
             }
         );
+    },
+
+    getFeatureFlag(): PromiseLike<boolean> {
+        return flag_retriever.getCreateArtifactFeatureFlag().unwrapOr(false);
     },
 });
