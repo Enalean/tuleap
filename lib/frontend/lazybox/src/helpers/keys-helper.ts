@@ -37,10 +37,6 @@ export function isTabKey(event: KeyboardEvent): boolean {
     return event.key === "Tab";
 }
 
-export function isShiftKey(event: KeyboardEvent): boolean {
-    return event.key === "Shift";
-}
-
 export function isBackspaceKey(event: KeyboardEvent): boolean {
     return event.key === "Backspace";
 }

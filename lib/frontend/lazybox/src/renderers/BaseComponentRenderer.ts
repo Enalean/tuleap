@@ -19,6 +19,11 @@
 import type { LazyboxComponent, LazyboxOptions } from "../type";
 import { isLazyboxInAModal } from "../helpers/lazybox-in-modals-helper";
 import { getNewItemTemplate } from "../dropdown/new-item-template";
+import type { SearchInput } from "../SearchInput";
+import { TAG as SEARCH_INPUT_TAG } from "../SearchInput";
+
+const isSearchInput = (element: HTMLElement): element is HTMLElement & SearchInput =>
+    element.tagName === SEARCH_INPUT_TAG.toUpperCase();
 
 export class BaseComponentRenderer {
     constructor(
@@ -43,7 +48,6 @@ export class BaseComponentRenderer {
         }
 
         if (this.options.is_multiple) {
-            search_field_element.setAttribute("placeholder", this.options.placeholder);
             const new_search_section = this.createSearchSectionForMultipleListPicker();
             new_search_section.appendChild(search_field_element);
             selection_element.appendChild(new_search_section);
@@ -150,24 +154,16 @@ export class BaseComponentRenderer {
         return search_section;
     }
 
-    private createSearchFieldElement(): HTMLInputElement {
-        const search_field_element = this.doc.createElement("input");
-        if (this.source_select_box.disabled) {
-            search_field_element.setAttribute("disabled", "disabled");
+    private createSearchFieldElement(): HTMLElement & SearchInput {
+        const element = this.doc.createElement(SEARCH_INPUT_TAG);
+        if (!isSearchInput(element)) {
+            throw Error("Could not create search input");
         }
-        search_field_element.setAttribute("data-test", "lazybox-search-field");
-        search_field_element.classList.add("lazybox-search-field");
-        search_field_element.setAttribute("type", "search");
-        search_field_element.setAttribute("tabindex", "0");
-        search_field_element.setAttribute("autocomplete", "off");
-        search_field_element.setAttribute("autocorrect", "off");
-        search_field_element.setAttribute("autocapitalize", "none");
-        search_field_element.setAttribute("spellcheck", "none");
-        search_field_element.setAttribute("role", "searchbox");
-        search_field_element.setAttribute("aria-autocomplete", "list");
-        search_field_element.setAttribute("aria-controls", "lazybox-dropdown-values-list");
-        search_field_element.setAttribute("placeholder", this.options.search_input_placeholder);
-
-        return search_field_element;
+        element.disabled = this.source_select_box.disabled;
+        element.placeholder = this.options.is_multiple
+            ? this.options.placeholder
+            : this.options.search_input_placeholder;
+        element.search_callback = this.options.search_field_callback;
+        return element;
     }
 }

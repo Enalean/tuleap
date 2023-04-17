@@ -24,22 +24,28 @@ import {
     isBackspaceKey,
     isEnterKey,
     isEscapeKey,
-    isShiftKey,
     isTabKey,
 } from "./keys-helper";
 
 const chrome_native_autofill_event = {} as KeyboardEvent;
 
 describe("keys-helper", () => {
+    it.each([
+        ["isEscapeKey", isEscapeKey],
+        ["isEnterKey", isEnterKey],
+        ["isArrowDown", isArrowDown],
+        ["isArrowUp", isArrowUp],
+        ["isTabKey", isTabKey],
+        ["isBackspaceKey", isBackspaceKey],
+    ])(`%s does not recognize Chrome native autofill event`, (_method_name, method_under_test) => {
+        expect(method_under_test(chrome_native_autofill_event)).toBe(false);
+    });
+
     describe("isEscapeKey", () => {
         it("should return true", () => {
             [{ key: "Escape" }, { key: "Esc" }].forEach((event_init: KeyboardEventInit) => {
                 expect(isEscapeKey(new KeyboardEvent("keyup", event_init))).toBe(true);
             });
-        });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isEscapeKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -47,19 +53,11 @@ describe("keys-helper", () => {
         it("should return true", () => {
             expect(isEnterKey(new KeyboardEvent("keyup", { key: "Enter" }))).toBe(true);
         });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isEnterKey(chrome_native_autofill_event)).toBe(false);
-        });
     });
 
     describe("isArrowDown", () => {
         it("should return true", () => {
             expect(isArrowDown(new KeyboardEvent("keyup", { key: "ArrowDown" }))).toBe(true);
-        });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isArrowDown(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -67,39 +65,17 @@ describe("keys-helper", () => {
         it("should return true", () => {
             expect(isArrowUp(new KeyboardEvent("keyup", { key: "ArrowUp" }))).toBe(true);
         });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isArrowUp(chrome_native_autofill_event)).toBe(false);
-        });
     });
 
     describe("isTabKey", () => {
         it("should return true", () => {
             expect(isTabKey(new KeyboardEvent("keyup", { key: "Tab" }))).toBe(true);
         });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isTabKey(chrome_native_autofill_event)).toBe(false);
-        });
-    });
-
-    describe("isShiftKey", () => {
-        it("should return true", () => {
-            expect(isShiftKey(new KeyboardEvent("keyup", { key: "Shift" }))).toBe(true);
-        });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isShiftKey(chrome_native_autofill_event)).toBe(false);
-        });
     });
 
     describe("isBackspaceKey", () => {
         it("should return true", () => {
             expect(isBackspaceKey(new KeyboardEvent("keyup", { key: "Backspace" }))).toBe(true);
-        });
-
-        it("does not recognize Chrome native autofill event as a key", () => {
-            expect(isBackspaceKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 });

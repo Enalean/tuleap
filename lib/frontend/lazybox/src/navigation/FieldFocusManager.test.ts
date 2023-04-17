@@ -21,25 +21,21 @@ import { describe, it, beforeEach, expect, vi } from "vitest";
 import { FieldFocusManager } from "./FieldFocusManager";
 
 describe("FieldFocusManager", () => {
-    let selection_element: HTMLElement,
-        source_select_box: HTMLSelectElement,
-        search_field_element: HTMLInputElement;
+    let selection_element: HTMLElement, source_select_box: HTMLSelectElement;
 
-    function getDocumentWithActiveElement(active_element: HTMLElement): HTMLDocument {
+    function getDocumentWithActiveElement(active_element: HTMLElement): Document {
         return {
             activeElement: active_element,
-        } as unknown as HTMLDocument;
+        } as unknown as Document;
     }
 
     beforeEach(() => {
         selection_element = document.createElement("span");
         source_select_box = document.createElement("select");
-        search_field_element = document.createElement("input");
 
         source_select_box.setAttribute("tabindex", "-1");
 
         vi.spyOn(selection_element, "focus");
-        vi.spyOn(search_field_element, "focus");
     });
 
     describe("init", () => {
@@ -48,8 +44,7 @@ describe("FieldFocusManager", () => {
             new FieldFocusManager(
                 document.implementation.createHTMLDocument(),
                 source_select_box,
-                selection_element,
-                search_field_element
+                selection_element
             ).init();
 
             source_select_box.dispatchEvent(new Event("focus"));
@@ -63,8 +58,7 @@ describe("FieldFocusManager", () => {
             const focus_manager = new FieldFocusManager(
                 document.implementation.createHTMLDocument(),
                 source_select_box,
-                selection_element,
-                search_field_element
+                selection_element
             );
 
             focus_manager.init();
@@ -81,8 +75,7 @@ describe("FieldFocusManager", () => {
             const focus_manager = new FieldFocusManager(
                 getDocumentWithActiveElement(document.createElement("body")),
                 source_select_box,
-                selection_element,
-                search_field_element
+                selection_element
             );
 
             expect(focus_manager.doesSelectionElementHaveTheFocus()).toBe(false);
@@ -92,8 +85,7 @@ describe("FieldFocusManager", () => {
             const focus_manager = new FieldFocusManager(
                 getDocumentWithActiveElement(selection_element),
                 source_select_box,
-                selection_element,
-                search_field_element
+                selection_element
             );
 
             expect(focus_manager.doesSelectionElementHaveTheFocus()).toBe(true);
@@ -107,28 +99,13 @@ describe("FieldFocusManager", () => {
             focus_manager = new FieldFocusManager(
                 getDocumentWithActiveElement(selection_element),
                 source_select_box,
-                selection_element,
-                search_field_element
+                selection_element
             );
         });
 
         it("should apply the focus on the selection element", () => {
             focus_manager.applyFocusOnLazybox();
             expect(selection_element.focus).toHaveBeenCalled();
-        });
-    });
-
-    describe("applyFocusOnSearchField", () => {
-        it("should apply the focus on the search field element", () => {
-            const focus_manager = new FieldFocusManager(
-                getDocumentWithActiveElement(selection_element),
-                source_select_box,
-                selection_element,
-                search_field_element
-            );
-
-            focus_manager.applyFocusOnSearchField();
-            expect(search_field_element.focus).toHaveBeenCalled();
         });
     });
 });

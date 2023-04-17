@@ -277,7 +277,7 @@
 .lazybox-multiple-search-section {
     flex: 1;
 
-    > .lazybox-search-field {
+    .lazybox-search-field {
         min-width: 100px;
         height: 100%;
         margin: 5px 0 0;
@@ -301,13 +301,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: default;
-
-    > .lazybox-search-field {
-        width: 100%;
-        border: 0;
-        line-height: 1.5rem;
-        cursor: pointer;
-    }
 }
 
 .lazybox-selected-value-badge {

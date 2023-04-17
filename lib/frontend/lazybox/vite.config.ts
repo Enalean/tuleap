@@ -28,10 +28,11 @@ export default vite.defineLibConfig({
             name: "Lazybox",
         },
         rollupOptions: {
-            external: ["lit/html.js"],
+            external: ["lit/html.js", "hybrids"],
             output: {
                 globals: {
                     "lit/html.js": "lit/html.js",
+                    hybrids: "hybrids",
                 },
             },
         },

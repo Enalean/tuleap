@@ -4,10 +4,12 @@ specifiers:
   '@tuleap/build-system-configurator': workspace:*
   '@tuleap/dom': workspace:*
   '@tuleap/tlp': workspace:*
+  hybrids: 8.1.8
   lit: ^2.2.3
 
 dependencies:
   '@tuleap/tlp': link:../../../src/themes/tlp
+  hybrids: 8.1.8
   lit: 2.2.3
 
 devDependencies:
@@ -22,6 +24,11 @@ packages:
 
   /@types/trusted-types/2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
+    dev: false
+
+  /hybrids/8.1.8:
+    resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
+    hasBin: true
     dev: false
 
   /lit-element/3.2.0:

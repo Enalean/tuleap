@@ -18,6 +18,8 @@
  */
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
+import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
+import type { SearchInput } from "../SearchInput";
 
 export interface ManageDropdown {
     isDropdownOpen: () => boolean;
@@ -37,7 +39,9 @@ export class DropdownManager implements ManageDropdown {
         private readonly dropdown_list_element: Element,
         private readonly selection_element: HTMLElement,
         private readonly scrolling_manager: ScrollingManager,
-        private readonly field_focus_manager: FieldFocusManager
+        private readonly field_focus_manager: FieldFocusManager,
+        private readonly highlighter: ListItemHighlighter,
+        private readonly search_field: SearchInput
     ) {
         const resize_dropdown_callback = (entries: readonly ResizeObserverEntry[]): void => {
             if (!this.isDropdownOpen()) {
@@ -69,6 +73,7 @@ export class DropdownManager implements ManageDropdown {
         }
 
         this.scrolling_manager.unlockScrolling();
+        this.highlighter.resetHighlight();
 
         this.dropdown_element.classList.remove("lazybox-dropdown-shown");
         this.lazybox_element.classList.remove("lazybox-with-open-dropdown");
@@ -95,7 +100,7 @@ export class DropdownManager implements ManageDropdown {
             this.setAriaExpandedAttribute(this.selection_element, true);
         }
 
-        this.field_focus_manager.applyFocusOnSearchField();
+        this.search_field.setFocus();
     }
 
     public destroy(): void {

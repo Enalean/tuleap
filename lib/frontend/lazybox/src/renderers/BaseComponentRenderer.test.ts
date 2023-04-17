@@ -78,13 +78,13 @@ describe("base-component-renderer", () => {
         const { lazybox_element, search_field_element } = render();
 
         expect(lazybox_element.classList.contains("lazybox-disabled")).toBe(true);
-        expect(search_field_element.hasAttribute("disabled")).toBe(true);
+        expect(search_field_element.disabled).toBe(true);
     });
 
     it(`Given an input_placeholder option; it will set the "placeholder" attribute on the search input`, () => {
         const { search_field_element } = render();
 
-        expect(search_field_element.getAttribute("placeholder")).toBe(INPUT_PLACEHOLDER);
+        expect(search_field_element.placeholder).toBe(INPUT_PLACEHOLDER);
     });
 
     describe("placeholder element", () => {

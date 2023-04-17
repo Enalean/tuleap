@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`DropDownContentRenderer > rendering > renders grouped list items 1`] = `
-<span class="lazybox-single-dropdown-search-section"><input data-test="lazybox-search-field" class="lazybox-search-field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="none" role="searchbox" aria-autocomplete="list" aria-controls="lazybox-dropdown-values-list" placeholder=""></span>
+<span class="lazybox-single-dropdown-search-section"><tuleap-lazybox-search></tuleap-lazybox-search></span>
 <ul class="lazybox-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="lazybox-item-group">
     <strong class="lazybox-group-label">Group 1</strong>
