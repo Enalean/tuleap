@@ -91,6 +91,14 @@ export function transformFieldValueIntoAFormattedCell(
             }
             return new TextCell(formatted_open_values.join(", "));
         }
+        case "subby":
+        case "luby": {
+            if (field_value.value === null) {
+                return new EmptyCell();
+            }
+
+            return new TextCell(field_value.value.real_name ?? "");
+        }
         default:
             return new EmptyCell();
     }
