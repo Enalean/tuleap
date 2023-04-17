@@ -17,6 +17,7 @@ UNIQUE_NAME=$(echo "$JOB_NAME-$BUILD_NUMBER-$OS" | tr '[:upper:]' '[:lower:]')
 function cleanup {
     docker rm -fv "$UNIQUE_NAME-rpm-builder" || true
     docker rm -fv "$UNIQUE_NAME-rpm-installer" || true
+    docker volume rm -f "$UNIQUE_NAME-rpm-volume" || true
 }
 trap cleanup EXIT
 
@@ -31,20 +32,29 @@ else
     exit 1
 fi
 
-docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/tools.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
+docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/nix/nix.dockerfile "$WORKSPACE"/sources/tools/utils/nix/
+
+docker volume create "$UNIQUE_NAME-rpm-volume"
+docker run --rm -v "$UNIQUE_NAME-rpm-volume":/rpms "$UNIQUE_NAME-rpm-builder" chown "$(id -u)":"$(id -g)" /rpms
 
 docker run -i \
-    -e "OS=${OS}" \
     --name "$UNIQUE_NAME-rpm-builder" \
-    -v /rpms \
+    -v "$UNIQUE_NAME-rpm-volume":/rpms \
     -v "$WORKSPACE/sources":/tuleap:ro \
+    --tmpfs /tmp/tuleap_build:rw,noexec,nosuid \
+    -e TMPDIR=/tmp/tuleap_build/ \
+    -e XDG_CACHE_HOME=/tmp/tuleap_build/user_cache \
+    -v "$HOME/nix-content":/nix \
+    -v /etc/passwd:/etc/passwd:ro \
     -w /tuleap \
+    -u "$(id -u)":"$(id -g)" \
     "$UNIQUE_NAME-rpm-builder" \
-    tools/rpm/build_rpm_inside_container.sh
+    nix-shell --pure -I nixpkgs="/tuleap/tools/utils/nix/pinned-nixpkgs.nix" "/tuleap/tools/utils/nix/build-tools/" \
+        --run "OS=${OS} XDG_CACHE_HOME=/tmp/tuleap_build/user_cache tools/rpm/build_rpm_inside_container.sh"
 
 docker run -t \
     --name "$UNIQUE_NAME-rpm-installer" \
-    --volumes-from "$UNIQUE_NAME-rpm-builder" \
+    -v "$UNIQUE_NAME-rpm-volume":/rpms \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     --mount type=tmpfs,destination=/run \
     --cap-add=sys_nice \

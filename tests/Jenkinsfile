@@ -28,18 +28,11 @@ pipeline {
         }
 
         stage('Prepare') {
-            agent {
-                dockerfile {
-                    dir 'sources/tools/utils/nix/'
-                    filename 'tools.dockerfile'
-                    reuseNode true
-                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only -v /nix -v /root'
-                }
-            }
             steps {
                 dir ('results') {
                     deleteDir()
                 }
+                script { actions = load 'sources/tests/actions.groovy' }
                 dir ('sources') {
                     withCredentials([
                         usernamePassword(
@@ -49,11 +42,7 @@ pipeline {
                         ),
                         string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
                     ]) {
-                        sh """
-                        # nix-daemon needs root (for now)
-                        su-exec-nixdaemon root sh -c 'TMPDIR=/tmp/tuleap_build/ nix-daemon' &
-                        tools/utils/scripts/generated-files-builder.sh dev
-                        """
+                        script { actions.prepareSources('dev') }
                     }
                 }
             }
@@ -61,7 +50,6 @@ pipeline {
 
         stage('Check lockfiles') {
             steps { script {
-                actions = load 'sources/tests/actions.groovy'
                 actions.runFilesStatusChangesDetection('.', 'lockfiles', 'composer.lock')
             } }
             post {
@@ -160,14 +148,6 @@ pipeline {
                     post { failure { junit 'results/deptrac/*.xml' } }
                 }
                 stage('ESLint static analysis') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
                     steps { script { execTestWithLimitedConcurrency({ actions.runESLint() }) } }
                     post {
                         always {
@@ -176,26 +156,10 @@ pipeline {
                     }
                 }
                 stage('SCSS coding standards') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
                     steps { script { execTestWithLimitedConcurrency({ actions.runStylelint() }) } }
                 }
                 stage ('JS Unit tests') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none --tmpfs /tmp/js_test_cache:rw,noexec,nosuid -e TMPDIR=/tmp/js_test_cache/'
-                        }
-                    }
-                    steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests('.') }) } }
+                    steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests() }) } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }
                 }
             }
