@@ -49,6 +49,7 @@ describe("PullRequestErrorModal", () => {
         modal_instance = {
             show: vi.fn(),
             addEventListener: vi.fn(),
+            is_shown: false,
         } as unknown as Modal;
 
         vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
@@ -87,5 +88,18 @@ describe("PullRequestErrorModal", () => {
         expect(
             wrapper.find("[data-test=pullrequest-error-modal-details-message]").text()
         ).toStrictEqual(String(fault));
+    });
+
+    it("When the modal is already open and the fault has changed, Then it should ignore it", async () => {
+        const wrapper = getWrapper(Fault.fromMessage("Something wrong has occurred."));
+
+        modal_instance.is_shown = true;
+
+        wrapper.setProps({
+            fault: Fault.fromMessage("Something wrong has occurred (again)."),
+        });
+
+        await wrapper.vm.$nextTick();
+        expect(modal_instance.show).not.toHaveBeenCalled();
     });
 });

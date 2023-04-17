@@ -91,7 +91,7 @@ describe("PullRequestManageReviewersModal", () => {
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
             switch (key) {
                 case PULL_REQUEST_ID_KEY:
-                    return String(pull_request_id);
+                    return pull_request_id;
                 case DISPLAY_TULEAP_API_ERROR:
                     return display_api_error_callback;
                 default:

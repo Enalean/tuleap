@@ -108,7 +108,7 @@ const props = defineProps<{
 
 const base_url: URL = strictInject(OVERVIEW_APP_BASE_URL_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
-const pull_request_id: string = strictInject(PULL_REQUEST_ID_KEY);
+const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const user_id: number = strictInject(CURRENT_USER_ID);
 const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
 const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
@@ -131,7 +131,7 @@ const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
     preferred_relative_date_display: relative_date_display,
 });
 const current_pull_request_presenter = ref<PullRequestPresenter>({
-    pull_request_id: Number.parseInt(pull_request_id, 10),
+    pull_request_id,
 });
 const description_comment_presenter = ref<null | PullRequestDescriptionCommentPresenter>(null);
 const description_comment_controller = ref<ControlPullRequestDescriptionComment>(

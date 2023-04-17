@@ -96,11 +96,15 @@ onMounted(() => {
 watch(
     () => props.fault,
     () => {
-        if (props.fault === null) {
+        if (
+            props.fault === null ||
+            modal_instance.value === null ||
+            modal_instance.value.is_shown
+        ) {
             return;
         }
 
-        modal_instance.value?.show();
+        modal_instance.value.show();
     }
 );
 

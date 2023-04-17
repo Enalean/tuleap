@@ -41,7 +41,7 @@ export const CommentPresenterBuilder = {
     fromPayload: (
         payload: SupportedTimelineItem,
         base_url: URL,
-        pull_request_id: string,
+        pull_request_id: number,
         $gettext: (msgid: string) => string
     ): PullRequestCommentPresenter => {
         const common = {
@@ -88,7 +88,7 @@ function getThreadData(payload: SupportedTimelineItem): {
 function buildFilePresenter(
     payload: CommentOnFile,
     base_url: URL,
-    pull_request_id: string
+    pull_request_id: number
 ): PullRequestCommentFile {
     const file_url = new URL(base_url);
     const formatted_file_path = formatFilePathForUIRouter(payload.file_path);

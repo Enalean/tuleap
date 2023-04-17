@@ -36,7 +36,7 @@ vi.mock("@tuleap/tooltip", () => ({
     },
 }));
 
-const pull_request_id = "15";
+const pull_request_id = 15;
 const user_id = 102;
 const mockFetchPullRequestSuccess = (): void => {
     vi.spyOn(tuleap_api, "fetchPullRequestInfo").mockReturnValue(
@@ -57,7 +57,7 @@ describe("OverviewPane", () => {
             () =>
                 ({
                     params: {
-                        id: pull_request_id,
+                        id: String(pull_request_id),
                     },
                 } as unknown as RouteLocationNormalizedLoaded)
         );

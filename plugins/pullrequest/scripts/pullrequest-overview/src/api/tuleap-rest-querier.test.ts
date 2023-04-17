@@ -59,7 +59,7 @@ describe("tuleap-rest-querier", () => {
             };
 
             vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(pull_request_info));
-            const result = await fetchPullRequestInfo(String(pull_request_id));
+            const result = await fetchPullRequestInfo(pull_request_id);
 
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
@@ -105,7 +105,7 @@ describe("tuleap-rest-querier", () => {
 
             vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(timeline_items));
 
-            const result = await fetchPullRequestTimelineItems(String(pull_request_id));
+            const result = await fetchPullRequestTimelineItems(pull_request_id);
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
             }

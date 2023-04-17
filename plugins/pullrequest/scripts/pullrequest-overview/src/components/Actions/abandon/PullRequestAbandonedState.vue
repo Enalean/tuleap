@@ -82,7 +82,7 @@ const is_reopening_in_progress = ref(false);
 
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const updatePullRequest = strictInject(POST_PULL_REQUEST_UPDATE_CALLBACK);
-const pull_request_id: number = Number.parseInt(strictInject(PULL_REQUEST_ID_KEY), 10);
+const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY
 );
