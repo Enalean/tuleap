@@ -74,8 +74,8 @@ export function useClipboardStore(
             item_id: useLocalStorage(`${base_storage_key}item_id`, null),
             item_title: useLocalStorage(`${base_storage_key}item_title`, null),
             item_type: useLocalStorage(`${base_storage_key}item_type`, null),
-            operation_type: useLocalStorage(`${base_storage_key}item_type`, null),
-            pasting_in_progress: useLocalStorage(`${base_storage_key}item_type`, false),
+            operation_type: useLocalStorage(`${base_storage_key}operation_type`, null),
+            pasting_in_progress: useLocalStorage(`${base_storage_key}pasting_in_progress`, false),
         }),
         actions: {
             async pasteItem(payload: PastePayload): Promise<void> {
@@ -98,7 +98,7 @@ export function useClipboardStore(
                         default:
                             this.emptyClipboard();
                             throw new Error(
-                                "Cannot paste from an unknown operation " + this.item_type
+                                "Cannot paste from an unknown operation " + this.operation_type
                             );
                     }
                     this.emptyClipboard();
