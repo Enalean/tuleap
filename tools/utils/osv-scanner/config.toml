@@ -19,6 +19,12 @@ reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-qwqh-hm9m-p5hr" # CVE-2023-26118
 reason = "Angular is EOL. Nothing in the codebase can trigger this ReDoS issue."
 
+# angular-gettext-cli / angular-gettext-loader
+## nth-check
+[[IgnoredVulns]]
+id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
+reason = "Angular and associated tools are EOL. Only used at build time. ReDoS."
+
 # src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
 ## atty
 [[IgnoredVulns]]
@@ -31,13 +37,6 @@ id = "RUSTSEC-2020-0168"
 reason = "Only used when targetting macOS."
 
 ### TO BE FIXED
-
-# Dev tools
-## nth-check
-[[IgnoredVulns]]
-id = "GHSA-rp65-9cf3-cjxr" # CVE-2021-3803
-reason = "ReDoS. To be investigated."
-ignoreUntil = 2023-05-08
 
 # plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
 ## jsdom
