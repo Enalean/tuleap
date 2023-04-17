@@ -24,8 +24,10 @@ namespace Tuleap\WebAuthn\Challenge;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
-final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuthnChallenge
+final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuthnChallenge, RetrieveWebAuthnChallenge
 {
     private const VALIDITY_TIME_IN_SECONDS = 60 * 2;
 
@@ -44,6 +46,28 @@ final class WebAuthnChallengeDao extends DataAccessObject implements SaveWebAuth
                     ],
                     ['challenge', 'expiration_date']
                 );
+            }
+        );
+    }
+
+    public function searchChallenge(int $user_id): Option
+    {
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($user_id) {
+                $this->deleteExpiredChallenge();
+
+                $sql = 'SELECT challenge
+                        FROM webauthn_challenge
+                        WHERE user_id = ?';
+                $row = $db->row($sql, $user_id);
+
+                if ($row) {
+                    $db->delete('webauthn_challenge', ['user_id' => $user_id]);
+
+                    return Option::fromValue($row['challenge']);
+                }
+
+                return Option::nothing(string());
             }
         );
     }

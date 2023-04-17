@@ -3771,6 +3771,9 @@ msgstr ""
 "A visibilidade do projeto não pode ser escolhida pelo administrador do "
 "projeto, somente o nível de acesso \"%s\" pode ser usado"
 
+msgid "The registration cannot be checked"
+msgstr ""
+
 msgid "The requested dashboard does not exist."
 msgstr "O painel solicitado não existe."
 

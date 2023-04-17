@@ -30,15 +30,22 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\Exception\InvalidDataException;
+use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
 use function Psl\Json\decode as psl_json_decode;
 
 final class PostRegistrationController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
+        private readonly RetrieveWebAuthnChallenge $challenge_dao,
+        private readonly PublicKeyCredentialRpEntity $relying_party_entity,
+        private readonly array $credential_parameters,
         private readonly PublicKeyCredentialLoader $credential_loader,
         private readonly ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
@@ -86,16 +93,30 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
             return $this->response_factory->createResponse(400, _('The result of passkey is not for registration'));
         }
 
-        // Get options
-        // - challenge
-        // - user entity
-        // - relying party
-        // - credential parameters
+        return $this->challenge_dao
+            ->searchChallenge((int) $current_user->getId())
+            ->mapOr(
+                function (string $challenge) use ($current_user) {
+                    $user_entity = new PublicKeyCredentialUserEntity(
+                        $current_user->getUserName(),
+                        (string) $current_user->getId(),
+                        $current_user->getRealName()
+                    );
 
-        // Check attestation response
+                    $options = PublicKeyCredentialCreationOptions::create(
+                        $this->relying_party_entity,
+                        $user_entity,
+                        $challenge,
+                        $this->credential_parameters
+                    )->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE);
 
-        // Save source
+                    // Check attestation response
 
-        return $this->response_factory->createResponse(501);
+                    // Save source
+
+                    return $this->response_factory->createResponse(501);
+                },
+                $this->response_factory->createResponse(400, _('The registration cannot be checked'))
+            );
     }
 }
