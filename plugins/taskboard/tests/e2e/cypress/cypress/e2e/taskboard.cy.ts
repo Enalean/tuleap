@@ -113,6 +113,9 @@ describe(`Taskboard`, function () {
             cy.log(`show "Done" items`);
             cy.get("[data-test=show-closed-items]").click();
             cy.wait("@getChildrenCards");
+
+            cy.contains("Grim Crayon");
+
             cy.get("[data-card-id]").then(($body) => {
                 expect($body).to.contain("Elastic Notorious");
                 expect($body).to.contain("Grim Crayon");
