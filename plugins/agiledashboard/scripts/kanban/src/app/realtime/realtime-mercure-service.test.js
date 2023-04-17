@@ -21,6 +21,15 @@ import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
+
+class FetchWrapperErrorMock extends Error {
+    response;
+    constructor(response) {
+        super();
+        this.response = response;
+    }
+}
 
 describe("MercureService -", function () {
     let $q,
@@ -28,12 +37,14 @@ describe("MercureService -", function () {
         ColumnCollectionService,
         MercureService,
         KanbanItemRestService,
+        SharedPropertiesService,
+        KanbanService,
         $rootScope,
         wrapPromise;
     beforeEach(function () {
         angular.mock.module(kanban_module, function ($provide) {
             $provide.decorator("SharedPropertiesService", function ($delegate) {
-                jest.spyOn($delegate, "getKanban").mockReturnValue({ id: 1 });
+                jest.spyOn($delegate, "getKanban").mockReturnValue({ id: 1, columns: [] });
                 jest.spyOn($delegate, "doesUserPrefersCompactCards").mockReturnValue(true);
                 jest.spyOn($delegate, "getUUID").mockReturnValue(1234);
                 return $delegate;
@@ -51,7 +62,9 @@ describe("MercureService -", function () {
             _MercureService_,
             _ColumnCollectionService_,
             _KanbanColumnService_,
-            _KanbanItemRestService_
+            _KanbanItemRestService_,
+            _KanbanService_,
+            _SharedPropertiesService_
         ) {
             $rootScope = _$rootScope_;
             $q = _$q_;
@@ -59,6 +72,8 @@ describe("MercureService -", function () {
             KanbanItemRestService = _KanbanItemRestService_;
             KanbanColumnService = _KanbanColumnService_;
             ColumnCollectionService = _ColumnCollectionService_;
+            KanbanService = _KanbanService_;
+            SharedPropertiesService = _SharedPropertiesService_;
         });
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
@@ -74,7 +89,20 @@ describe("MercureService -", function () {
     function mockMessageItemCreate() {
         return { data: { artifact_id: 1 } };
     }
-
+    function mockFetchSucess(spy_function, { headers, return_json } = {}) {
+        spy_function.mockReturnValue(
+            $q.when({
+                headers,
+                json: () => $q.when(return_json),
+            })
+        );
+    }
+    function mockKanbanGet() {
+        return { status: 200, kanban: { name: "test", columns: [] } };
+    }
+    function mockKanban() {
+        return { label: "test", columns: [] };
+    }
     function mockColumn() {
         return { content: [{ id: 1 }, { id: 2 }, { id: 3 }] };
     }
@@ -112,7 +140,10 @@ describe("MercureService -", function () {
             let message = mockMessageItemUpdate();
 
             KanbanItemRestService.getItem.mockReturnValue(wrapPromise($q.when()));
-            jest.spyOn(ColumnCollectionService, "findItemById").mockReturnValue({ id: 1 });
+            jest.spyOn(ColumnCollectionService, "findItemById").mockReturnValue({
+                id: 1,
+                columns: [],
+            });
             jest.spyOn(ColumnCollectionService, "getColumn").mockReturnValue(mockColumn());
             jest.spyOn(KanbanColumnService, "updateItemContent").mockImplementation(function () {});
             jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(function () {});
@@ -182,6 +213,47 @@ describe("MercureService -", function () {
             await MercureService.listenKanbanItemCreate(message);
             expect(KanbanColumnService.addItem).not.toHaveBeenCalled();
             expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
+        });
+    });
+    describe("getKanban", () => {
+        it("will get the kanban from the api", async () => {
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
+            mockFetchSucess(tlpGet, { return_json: mockKanbanGet() });
+            const promise = MercureService.getKanban();
+            const response = await wrapPromise(promise);
+            expect(response).toEqual(mockKanbanGet());
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/kanban/1");
+        });
+    });
+    describe("updateKanban", () => {
+        it("will update the currently displayed kanban given a new object representation of one", async () => {
+            let updateColumns = jest.fn(() => {});
+            jest.spyOn(KanbanService, "updateKanbanName").mockImplementation(() => {});
+            jest.spyOn(MercureService, "getToken").mockReturnValue($q.reject());
+            MercureService.init(updateColumns);
+            await MercureService.updateKanban(mockKanban());
+            expect(KanbanService.updateKanbanName).toHaveBeenCalled();
+            expect(SharedPropertiesService.getKanban).toHaveBeenCalledTimes(3);
+            expect(updateColumns).toHaveBeenCalled();
+        });
+    });
+    describe("checkResponseKanban", () => {
+        it("will get a correct response  , and call updateKanban", async () => {
+            let updateColumns = jest.fn(() => {});
+            const kanban = mockKanban();
+            jest.spyOn(MercureService, "getToken").mockReturnValue($q.reject());
+            MercureService.init(updateColumns);
+            jest.spyOn(KanbanService, "removeKanban").mockReturnValue($q.reject());
+            await MercureService.checkResponseKanban(wrapPromise($q.when(kanban)));
+            expect(KanbanService.removeKanban).not.toHaveBeenCalled();
+            expect(updateColumns).toHaveBeenCalled();
+        });
+        it("will get a 404 response, and call removeKanban", async () => {
+            const error = new FetchWrapperErrorMock({ status: 404 });
+            jest.spyOn(KanbanService, "removeKanban").mockImplementation(() => {});
+            const promise = wrapPromise($q.reject(error));
+            await MercureService.checkResponseKanban(promise);
+            expect(KanbanService.removeKanban).toHaveBeenCalled();
         });
     });
 });

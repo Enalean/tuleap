@@ -1,7 +1,7 @@
 import { post } from "@tuleap/tlp-fetch";
 import { RealtimeMercure } from "./realtime-mercure";
 import { buildEventDispatcher } from "./buildEventDispatcher";
-
+import { get } from "@tuleap/tlp-fetch";
 export default MercureService;
 
 MercureService.$inject = [
@@ -13,6 +13,7 @@ MercureService.$inject = [
     "SharedPropertiesService",
     "jwtHelper",
     "KanbanItemRestService",
+    "KanbanService",
 ];
 function MercureService(
     $timeout,
@@ -22,20 +23,26 @@ function MercureService(
     DroppedService,
     SharedPropertiesService,
     jwtHelper,
-    KanbanItemRestService
+    KanbanItemRestService,
+    KanbanService
 ) {
     const self = this;
     let realtime_mercure;
     let realtime_token;
+    let loadColumnsFunction;
     Object.assign(self, {
         init,
         listenTokenExpired,
         listenKanbanItemUpdate,
         listenKanbanItemMoved,
         listenKanbanItemCreate,
+        getKanban,
+        updateKanban,
+        getToken,
+        checkResponseKanban,
     });
-    function init() {
-        getToken(SharedPropertiesService.getKanban().id).then((data) => {
+    function init(loadColumns) {
+        this.getToken(SharedPropertiesService.getKanban().id).then((data) => {
             realtime_token = data;
             realtime_mercure = new RealtimeMercure(
                 realtime_token,
@@ -43,11 +50,13 @@ function MercureService(
                 buildEventDispatcher(
                     listenKanbanItemUpdate,
                     listenKanbanItemMoved,
-                    listenKanbanItemCreate
+                    listenKanbanItemCreate,
+                    listenKanbanStructuralUpdate
                 )
             );
             listenTokenExpired();
         });
+        loadColumnsFunction = loadColumns;
     }
     function getToken(id) {
         return $q.when(
@@ -148,5 +157,45 @@ function MercureService(
             destination_column,
             event.data.ordered_destination_column_items_ids
         );
+    }
+    function callLoadColumn() {
+        loadColumnsFunction();
+    }
+    function getKanban() {
+        return $q.when(
+            get(encodeURI("/api/v1/kanban/" + SharedPropertiesService.getKanban().id)).then(
+                (response) => {
+                    return response.json();
+                }
+            )
+        );
+    }
+    function listenKanbanStructuralUpdate() {
+        const kanban = getKanban();
+        checkResponseKanban(kanban);
+    }
+
+    function checkResponseKanban(response) {
+        return response
+            .then((kanban) => {
+                updateKanban(kanban);
+            })
+            .catch((error) => {
+                if (error.response !== undefined && error.response.status === 404) {
+                    KanbanService.removeKanban();
+                } else {
+                    throw error;
+                }
+            });
+    }
+    function updateKanban(kanban) {
+        KanbanService.updateKanbanName(kanban.label);
+        SharedPropertiesService.getKanban().columns.length = 0;
+        SharedPropertiesService.getKanban().columns.splice(
+            0,
+            kanban.columns.length,
+            ...kanban.columns
+        );
+        callLoadColumn();
     }
 }
