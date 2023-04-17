@@ -91,7 +91,7 @@ msgstr "Projets du programme"
 
 msgid "Projects using similar technology or sharing resources"
 msgstr ""
-"Projets utilisant des technologies similiares ou partagant des ressources"
+"Projets utilisant des technologies similaires ou partageant des ressources"
 
 msgid "Re-Synchronise Project Links with Template"
 msgstr "Re-synchroniser les liens avec le patron"
