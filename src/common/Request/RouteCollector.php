@@ -236,8 +236,8 @@ use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
-use Tuleap\WebAuthn\Controllers\PostRegistrationController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
+use Tuleap\WebAuthn\Controllers\PostRegistrationController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 use Tuleap\WebAuthn\WebAuthnRegistration;
 use Tuleap\Widget\WidgetFactory;
@@ -248,6 +248,8 @@ use User_ForgeUserGroupPermissionsManager;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 
@@ -1319,6 +1321,12 @@ class RouteCollector
             WebAuthnRegistration::getCredentialParameters(),
             new PublicKeyCredentialLoader(
                 new AttestationObjectLoader($attestation_statement_manager)
+            ),
+            new AuthenticatorAttestationResponseValidator(
+                $attestation_statement_manager,
+                new WebAuthnCredentialSourceDao(),
+                null,
+                new ExtensionOutputCheckerHandler()
             ),
             HTTPFactoryBuilder::responseFactory(),
             new SapiEmitter()
