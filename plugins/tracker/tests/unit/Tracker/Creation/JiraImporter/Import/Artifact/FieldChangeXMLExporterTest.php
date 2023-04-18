@@ -116,6 +116,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ScalarFieldMapping(
             'description',
             'Description',
+            null,
             'Fdescription',
             'description',
             'text',
@@ -157,6 +158,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'sb',
             'Select Box',
+            null,
             'Fsb',
             'sb',
             'sb',
@@ -205,6 +207,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'sb',
             'Select Box',
+            null,
             'Fsb',
             'sb',
             'sb',
@@ -246,6 +249,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'rb',
             'Radio Buttons',
+            null,
             'Frb',
             'rb',
             'rb',
@@ -297,6 +301,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'msb',
             'Multi Select Box',
+            null,
             'Fmsb',
             'msb',
             'msb',
@@ -358,6 +363,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'status',
             'Status',
+            null,
             'Fstatus',
             'status',
             'sb',
@@ -413,6 +419,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'assignee',
             'Assignee',
+            null,
             'Fassignee',
             'assignee',
             'sb',
@@ -456,6 +463,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'homies',
             'Homies',
+            null,
             'Fhomies',
             'homies',
             'msb',
@@ -510,6 +518,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
             '?',
+            null,
             '?',
             '?',
             \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
@@ -569,6 +578,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
             '?',
+            null,
             '?',
             '?',
             \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
@@ -626,6 +636,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
             '?',
+            null,
             '?',
             '?',
             \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
@@ -678,6 +689,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
             '?',
+            null,
             '?',
             '?',
             \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
@@ -750,6 +762,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'labels',
             'Labels',
+            null,
             'Flabels',
             'labels',
             'tbl',
@@ -797,6 +810,7 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping = new ListFieldMapping(
             'labels',
             'Labels',
+            null,
             'Flabels',
             'labels',
             'tbl',

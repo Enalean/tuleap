@@ -34,7 +34,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChan
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class InitialSnapshotBuilder
@@ -209,23 +208,26 @@ class InitialSnapshotBuilder
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
             $changed_field_id = $changed_field->getFieldId();
-            if (
-                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_VERSIONS ||
-                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_FIXEDVERSIONS ||
-                $changed_field_id === JiraToTuleapFieldTypeMapper::JIRA_FIELD_COMPONENTS
-            ) {
-                $this->logger->warning('Rebuild of ' . $changed_field_id . ' is not supported yet (weird history), only last value will be found');
+            if (FieldSkippedInSnapshotChecker::mustFieldBeSkippedById($changed_field_id)) {
+                $this->logger->warning('[Initial] Rebuild of ' . $changed_field_id . ' is not supported yet (weird history), only last value will be found');
                 continue;
             }
 
             $current_snapshot_field = $current_snapshot->getFieldInSnapshot($changed_field_id);
             if ($this->mustFieldBeCheckedInChangelog($current_snapshot_field, $already_parsed_fields_keys)) {
-                $already_parsed_fields_keys[$changed_field_id] = true;
-
                 if ($current_snapshot_field === null) {
+                    $already_parsed_fields_keys[$changed_field_id] = true;
                     $this->logger->debug(" |_ Current snapshot field is null for " . $changed_field_id);
                     continue;
                 }
+
+                $jira_field_schema = $current_snapshot_field->getFieldMapping()->getJiraFieldSchema();
+                if ($jira_field_schema !== null && FieldSkippedInSnapshotChecker::mustFieldBeSkippedByJiraSchema($jira_field_schema)) {
+                    $this->logger->warning('[Initial] Rebuild of ' . $changed_field_id . ' is not supported yet (weird history), only last value will be found');
+                    continue;
+                }
+
+                $already_parsed_fields_keys[$changed_field_id] = true;
 
                 $changed_field_from        = $changed_field->getFrom();
                 $changed_field_from_string = $changed_field->getFromString();

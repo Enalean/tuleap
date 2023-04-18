@@ -56,6 +56,7 @@ class ScalarFieldMapping implements FieldMapping
     public function __construct(
         string $jira_field_id,
         string $jira_field_label,
+        private readonly ?string $jira_field_schema,
         string $xml_id,
         string $field_name,
         string $type,
@@ -72,6 +73,7 @@ class ScalarFieldMapping implements FieldMapping
         return new self(
             $jira_field->getId(),
             $jira_field->getLabel(),
+            $jira_field->getSchema(),
             $tuleap_field->id,
             $tuleap_field->name,
             $tuleap_field->type,
@@ -106,5 +108,10 @@ class ScalarFieldMapping implements FieldMapping
     public function getJiraFieldLabel(): string
     {
         return $this->jira_field_label;
+    }
+
+    public function getJiraFieldSchema(): ?string
+    {
+        return $this->jira_field_schema;
     }
 }

@@ -166,6 +166,21 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $initial_snapshot->getFieldInSnapshot('components')->getValue()
         );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10010' ],
+                [ 'id' => '10011' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('customfield_10100')->getValue()
+        );
+
+        self::assertEquals(
+            [
+                [ 'id' => '10012' ],
+            ],
+            $initial_snapshot->getFieldInSnapshot('customfield_10101')->getValue()
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection
@@ -175,6 +190,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "status",
                 "Status",
+                null,
                 "Fstatus",
                 "status",
                 "sb",
@@ -186,6 +202,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "customfield_10040",
                 "Field 02",
+                null,
                 "Fcustomfield_10040",
                 "customfield_10040",
                 "msb",
@@ -197,6 +214,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "customfield_10041",
                 "Start date",
+                null,
                 "Fcustomfield_10041",
                 "customfield_10041",
                 "date",
@@ -206,6 +224,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "description",
                 "Description",
+                null,
                 "Fdescription",
                 "description",
                 "text",
@@ -215,6 +234,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "jira_issue_url",
                 "Link to original issue",
+                null,
                 "Fjira_issue_url",
                 "jira_issue_url",
                 "string",
@@ -224,6 +244,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "attachment",
                 "Attachment",
+                null,
                 "Fattachment",
                 "attachments",
                 "file",
@@ -233,6 +254,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "assignee",
                 "Assignee",
+                null,
                 "Fassignee",
                 "assignee",
                 "sb",
@@ -244,6 +266,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "homies",
                 "Homies",
+                null,
                 "Fhomies",
                 "homies",
                 "msb",
@@ -253,6 +276,8 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $collection->addMapping($this->getVersionMapping());
         $collection->addMapping($this->getFixVersionsMapping());
+        $collection->addMapping($this->getCustomMultiversionMapping());
+        $collection->addMapping($this->getCustomVersionMapping());
 
         return $collection;
     }
@@ -507,6 +532,46 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                 ]
             ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "112",
+                    "created" => "2020-03-25T14:15:19.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "customfield_10100",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10020",
+                            "toString"   => "[v1]",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
+            JiraCloudChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "112",
+                    "created" => "2020-03-25T14:15:20.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "customfield_10101",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10020",
+                            "toString"   => "[v1]",
+                        ],
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com',
+                    ],
+                ]
+            ),
         ];
     }
 
@@ -520,6 +585,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         "status",
                         "Status",
+                        null,
                         "Fstatus",
                         "status",
                         "sb",
@@ -535,6 +601,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         "customfield_10040",
                         "Field 02",
+                        null,
                         "Fcustomfield_10040",
                         "customfield_10040",
                         "msb",
@@ -550,6 +617,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "customfield_10045",
                         "Start Date",
+                        null,
                         "Fcustomfield_10045",
                         "customfield_10045",
                         "date",
@@ -561,6 +629,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "description",
                         "Description",
+                        null,
                         "Fdescription",
                         "description",
                         "text",
@@ -572,6 +641,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "attachment",
                         "Attachment",
+                        null,
                         "Fattachment",
                         "attachments",
                         "file",
@@ -585,6 +655,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         "assignee",
                         "Assignee",
+                        null,
                         "Fassignee",
                         "assignee",
                         "sb",
@@ -600,6 +671,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         "homies",
                         "Homies",
+                        null,
                         "Fhomies",
                         "homies",
                         "msb",
@@ -635,6 +707,21 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     ],
                     null,
                 ),
+                new FieldSnapshot(
+                    $this->getCustomMultiversionMapping(),
+                    [
+                        [ 'id' => '10010' ],
+                        [ 'id' => '10011' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getCustomVersionMapping(),
+                    [
+                        [ 'id' => '10012' ],
+                    ],
+                    null,
+                ),
             ],
             null
         );
@@ -645,6 +732,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ListFieldMapping(
             'versions',
             'Affected versions',
+            null,
             'Fversions',
             'versions',
             \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
@@ -658,6 +746,7 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ListFieldMapping(
             'fixVersions',
             'Fixed in versions',
+            null,
             'Ffixversions',
             'fixversions',
             \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
@@ -671,9 +760,38 @@ class InitialSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ListFieldMapping(
             'components',
             'Components',
+            null,
             'Fcomponents',
             'components',
             \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomMultiversionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10100',
+            'Multi versions',
+            'com.atlassian.jira.plugin.system.customfieldtypes:multiversion',
+            "Fcustomfield_10100",
+            "customfield_10100",
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomVersionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10101',
+            'Version',
+            'com.atlassian.jira.plugin.system.customfieldtypes:version',
+            "Fcustomfield_10101",
+            "customfield_10101",
+            \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );

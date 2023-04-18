@@ -58,6 +58,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 $jira_story_points_field_id,
                 $jira_story_points_field_label,
+                null,
                 $xml_story_points_id,
                 'story_points',
                 \Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
@@ -113,6 +114,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 $jira_story_points_field_id,
                 $jira_story_points_field_label,
+                null,
                 $xml_story_points_id,
                 'story_points',
                 \Tracker_FormElementFactory::FIELD_FLOAT_TYPE,

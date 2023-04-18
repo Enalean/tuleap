@@ -48,6 +48,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 'summary',
                 'Summary',
+                null,
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -57,6 +58,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 'description',
                 'Description',
+                null,
                 'Fdescription',
                 'description',
                 Tracker_FormElementFactory::FIELD_TEXT_TYPE,
@@ -66,6 +68,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 'status',
                 'status',
+                null,
                 'Fstatus',
                 'status',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -77,6 +80,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 'assignee',
                 'assignee',
+                null,
                 'Fassignee',
                 'Assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,

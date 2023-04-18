@@ -142,6 +142,12 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $snapshot->getFieldInSnapshot('homies')->getValue()
         );
+
+        $this->assertNull($snapshot->getFieldInSnapshot('versions'));
+        $this->assertNull($snapshot->getFieldInSnapshot('fixVersions'));
+        $this->assertNull($snapshot->getFieldInSnapshot('components'));
+        $this->assertNull($snapshot->getFieldInSnapshot('customfield_10100'));
+        $this->assertNull($snapshot->getFieldInSnapshot('customfield_10101'));
     }
 
     private function buildCurrentSnapshot(PFUser $user): Snapshot
@@ -154,6 +160,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "description",
                         "Description",
+                        null,
                         "Fdescription",
                         "description",
                         "text",
@@ -165,6 +172,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "textfield",
                         "Text Field",
+                        null,
                         "Ftextfield",
                         "textfield",
                         "text",
@@ -176,6 +184,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ScalarFieldMapping(
                         "attachment",
                         "Attachment",
+                        null,
                         "Fattachment",
                         "attachments",
                         "file",
@@ -191,6 +200,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         'assignee',
                         'Assignee',
+                        null,
                         'Fassignee',
                         'assignee',
                         'sb',
@@ -204,6 +214,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     new ListFieldMapping(
                         'homies',
                         'Homies',
+                        null,
                         'Fhomies',
                         'homies',
                         'msb',
@@ -215,6 +226,44 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         ['id' => '106'],
                     ],
                     null
+                ),
+                new FieldSnapshot(
+                    $this->getVersionMapping(),
+                    [
+                        [ 'id' => '10003' ],
+                        [ 'id' => '10004' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getFixVersionsMapping(),
+                    [
+                        [ 'id' => '10005' ],
+                        [ 'id' => '10006' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getComponentsMapping(),
+                    [
+                        [ 'id' => '10005' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getCustomMultiversionMapping(),
+                    [
+                        [ 'id' => '10010' ],
+                        [ 'id' => '10011' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getCustomVersionMapping(),
+                    [
+                        [ 'id' => '10012' ],
+                    ],
+                    null,
                 ),
             ],
             null
@@ -315,6 +364,24 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "toString"   => "Comp 01",
                         ],
                     ],
+                    12 => [
+                        [
+                            "fieldId"    => "customfield_10100",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10020",
+                            "toString"   => "[v1]",
+                        ],
+                    ],
+                    13 => [
+                        [
+                            "fieldId"    => "customfield_10101",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10020",
+                            "toString"   => "[v1]",
+                        ],
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -332,6 +399,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "customfield_10036",
                 "Field 01",
+                null,
                 "Fcustomfield_10036",
                 "customfield_10036",
                 "float",
@@ -341,6 +409,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "status",
                 "status",
+                null,
                 "Fstatus",
                 "status",
                 "sb",
@@ -352,6 +421,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "customfield_10040",
                 "customfield_10040",
+                null,
                 "Fcustomfield_10040",
                 "Field 02",
                 "msb",
@@ -363,6 +433,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "description",
                 "Description",
+                null,
                 "Fdescription",
                 "description",
                 "text",
@@ -372,6 +443,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "textfield",
                 "Text Field",
+                null,
                 "Ftextfield",
                 "textfield",
                 "text",
@@ -381,6 +453,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "attachment",
                 "Attachment",
+                null,
                 "Fattachment",
                 "attachments",
                 "file",
@@ -390,6 +463,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "assignee",
                 "Assignee",
+                null,
                 "Fassignee",
                 "assignee",
                 "sb",
@@ -401,6 +475,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ListFieldMapping(
                 "homies",
                 "Homies",
+                null,
                 "Fhomies",
                 "homies",
                 "msb",
@@ -412,45 +487,88 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ScalarFieldMapping(
                 "datepicker",
                 "Date Picker",
+                null,
                 "Fdatepicker",
                 "patepicker",
                 "date",
             ),
         );
-        $collection->addMapping(
-            new ListFieldMapping(
-                'versions',
-                'Affected versions',
-                'Fversions',
-                'versions',
-                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-                [],
-            )
-        );
-        $collection->addMapping(
-            new ListFieldMapping(
-                'fixVersions',
-                'Fixed in version',
-                'Ffixversions',
-                'fixversions',
-                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-                [],
-            )
-        );
-        $collection->addMapping(
-            new ListFieldMapping(
-                'components',
-                'Components',
-                'Fcomponents',
-                'components',
-                \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
-                [],
-            )
-        );
+
+        $collection->addMapping($this->getVersionMapping());
+        $collection->addMapping($this->getFixVersionsMapping());
+        $collection->addMapping($this->getCustomMultiversionMapping());
+        $collection->addMapping($this->getCustomVersionMapping());
 
         return $collection;
+    }
+
+    private function getVersionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'versions',
+            'Affected versions',
+            null,
+            'Fversions',
+            'versions',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getFixVersionsMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'fixVersions',
+            'Fixed in versions',
+            null,
+            'Ffixversions',
+            'fixversions',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getComponentsMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'components',
+            'Components',
+            null,
+            'Fcomponents',
+            'components',
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomMultiversionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10100',
+            'Multi versions',
+            'com.atlassian.jira.plugin.system.customfieldtypes:multiversion',
+            "Fcustomfield_10100",
+            "customfield_10100",
+            \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomVersionMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10101',
+            'Version',
+            'com.atlassian.jira.plugin.system.customfieldtypes:version',
+            "Fcustomfield_10101",
+            "customfield_10101",
+            \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
     }
 }

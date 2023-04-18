@@ -106,6 +106,28 @@
       <name><![CDATA[custom_fieldset]]></name>
       <label><![CDATA[Custom Fields]]></label>
       <formElements>
+        <formElement type="msb" ID="bug_customfield_10072" rank="1">
+          <name><![CDATA[customfield_10072]]></name>
+          <label><![CDATA[[mag] verion picker multi]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10072_release_01" label="Release 01"/>
+              <item ID="Vbug_customfield_10072_release_2_0" label="Release 2.0"/>
+              <item ID="Vbug_customfield_10072_release_3_0" label="Release 3.0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10073" rank="1">
+          <name><![CDATA[customfield_10073]]></name>
+          <label><![CDATA[[mag] version picker single]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10073_release_01" label="Release 01"/>
+              <item ID="Vbug_customfield_10073_release_2_0" label="Release 2.0"/>
+              <item ID="Vbug_customfield_10073_release_3_0" label="Release 3.0"/>
+            </items>
+          </bind>
+        </formElement>
         <formElement type="msb" ID="bug_fixversions" rank="1">
           <name><![CDATA[fixversions]]></name>
           <label><![CDATA[Fix versions]]></label>
@@ -466,6 +488,12 @@
     <permission scope="field" REF="bug_reporter" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_reporter" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_reporter" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10072" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10072" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10072" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

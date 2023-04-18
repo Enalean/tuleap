@@ -44,9 +44,11 @@ use Tuleap\Tracker\XML\XMLTracker;
 
 class JiraToTuleapFieldTypeMapper
 {
-    public const JIRA_FIELD_VERSIONS      = 'versions';
-    public const JIRA_FIELD_FIXEDVERSIONS = 'fixVersions';
-    public const JIRA_FIELD_COMPONENTS    = 'components';
+    public const JIRA_FIELD_VERSIONS            = 'versions';
+    public const JIRA_FIELD_FIXEDVERSIONS       = 'fixVersions';
+    public const JIRA_FIELD_COMPONENTS          = 'components';
+    public const JIRA_FIELD_CUSTOM_MULTIVERSION = 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion';
+    public const JIRA_FIELD_CUSTOM_VERSION      = 'com.atlassian.jira.plugin.system.customfieldtypes:version';
 
     public function __construct(
         private ErrorCollector $error_collector,
@@ -275,11 +277,23 @@ class JiraToTuleapFieldTypeMapper
                 case self::JIRA_FIELD_FIXEDVERSIONS:
                 case self::JIRA_FIELD_VERSIONS:
                 case self::JIRA_FIELD_COMPONENTS:
+                case self::JIRA_FIELD_CUSTOM_MULTIVERSION:
                     $field = XMLMultiSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
                         ->withLabel($jira_field->getLabel())
                         ->withRequired($jira_field->isRequired())
                         ->withPermissions(... $permissions);
                     $field = $this->addBoundStaticValues($field, $jira_field);
+                    $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
+
+                    return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
+
+                case self::JIRA_FIELD_CUSTOM_VERSION:
+                    $field = XMLSelectBoxField::fromTrackerAndName($xml_tracker, $jira_field->getId())
+                        ->withLabel($jira_field->getLabel())
+                        ->withRequired($jira_field->isRequired())
+                        ->withPermissions(... $permissions);
+                    $field = $this->addBoundStaticValues($field, $jira_field);
+
                     $jira_field_mapping_collection->addMappingBetweenTuleapAndJiraField($jira_field, $field);
 
                     return $xml_tracker->appendFormElement(AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME, $field);
@@ -343,8 +357,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.servicedesk.assets-plugin:assetfield':
                 case 'com.atlassian.jira.toolkit:userproperty': // ???
                 case 'com.atlassian.jira.toolkit:lastupdaterorcommenter':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion': //version somthing internal to jira
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:version':
                 case 'com.atlassian.jira.toolkit:participants':
                 case 'com.atlassian.teams:rm-teams-custom-field-team':
                 case 'aggregatetimeoriginalestimate':
