@@ -128,6 +128,15 @@
             </items>
           </bind>
         </formElement>
+        <formElement type="cb" ID="bug_customfield_10032" rank="1">
+          <name><![CDATA[customfield_10032]]></name>
+          <label><![CDATA[[mag] checkbox]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10032_test" label="test"/>
+            </items>
+          </bind>
+        </formElement>
         <formElement type="msb" ID="bug_fixversions" rank="1">
           <name><![CDATA[fixversions]]></name>
           <label><![CDATA[Fix versions]]></label>
@@ -494,6 +503,9 @@
     <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_customfield_10073" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

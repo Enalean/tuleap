@@ -149,7 +149,10 @@ class FieldChangeXMLExporter
                 $mapping->getBindType(),
                 $value_ids,
             );
-        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE) {
+        } elseif (
+            $mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE ||
+            $mapping->getType() === Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE
+        ) {
             assert(is_array($value));
             if (! $mapping instanceof ListFieldMapping) {
                 throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);

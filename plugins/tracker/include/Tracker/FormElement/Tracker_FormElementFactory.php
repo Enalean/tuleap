@@ -46,6 +46,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
     public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
+    public const FIELD_CHECKBOX_TYPE         = 'cb';
     public const FIELD_OPEN_LIST_TYPE        = 'tbl';
     public const FIELD_FILE_TYPE             = 'file';
     public const FIELD_ARTIFACT_LINKS        = 'art_link';
@@ -83,7 +84,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_RADIO_BUTTON_TYPE     => Tracker_FormElement_Field_Radiobutton::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
         self::FIELD_FILE_TYPE             => Tracker_FormElement_Field_File::class,
-        'cb'                              => Tracker_FormElement_Field_Checkbox::class,
+        self::FIELD_CHECKBOX_TYPE         => Tracker_FormElement_Field_Checkbox::class,
         self::FIELD_INTEGER_TYPE          => Tracker_FormElement_Field_Integer::class,
         self::FIELD_OPEN_LIST_TYPE        => Tracker_FormElement_Field_OpenList::class,
         self::FIELD_ARTIFACT_LINKS        => Tracker_FormElement_Field_ArtifactLink::class,
@@ -720,7 +721,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      */
     public function getUsedListFields($tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, ['sb', 'msb', 'tbl', 'cb', 'rb']);
+        return $this->getUsedFormElementsByType($tracker, ['sb', 'msb', 'tbl', self::FIELD_CHECKBOX_TYPE, 'rb']);
     }
 
     /**
@@ -729,7 +730,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      */
     public function getUsedClosedListFields($tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, ['sb', 'msb', 'cb', 'rb', self::FIELD_SUBMITTED_BY_TYPE, self::FIELD_LAST_MODIFIED_BY]);
+        return $this->getUsedFormElementsByType($tracker, ['sb', 'msb', self::FIELD_CHECKBOX_TYPE, 'rb', self::FIELD_SUBMITTED_BY_TYPE, self::FIELD_LAST_MODIFIED_BY]);
     }
 
     /**

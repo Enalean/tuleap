@@ -37,6 +37,7 @@ final class FieldSkippedInSnapshotChecker
     public static function mustFieldBeSkippedByJiraSchema(string $jira_field_schema): bool
     {
         return $jira_field_schema === JiraToTuleapFieldTypeMapper::JIRA_FIELD_CUSTOM_MULTIVERSION ||
-            $jira_field_schema === JiraToTuleapFieldTypeMapper::JIRA_FIELD_CUSTOM_VERSION;
+            $jira_field_schema === JiraToTuleapFieldTypeMapper::JIRA_FIELD_CUSTOM_VERSION ||
+            $jira_field_schema === JiraToTuleapFieldTypeMapper::JIRA_FIELD_CUSTOM_MULTICHECKBOXES;
     }
 }

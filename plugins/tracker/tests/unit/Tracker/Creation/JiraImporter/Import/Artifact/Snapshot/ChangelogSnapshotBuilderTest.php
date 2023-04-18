@@ -148,6 +148,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($snapshot->getFieldInSnapshot('components'));
         $this->assertNull($snapshot->getFieldInSnapshot('customfield_10100'));
         $this->assertNull($snapshot->getFieldInSnapshot('customfield_10101'));
+        $this->assertNull($snapshot->getFieldInSnapshot('customfield_10102'));
     }
 
     private function buildCurrentSnapshot(PFUser $user): Snapshot
@@ -262,6 +263,15 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->getCustomVersionMapping(),
                     [
                         [ 'id' => '10012' ],
+                    ],
+                    null,
+                ),
+                new FieldSnapshot(
+                    $this->getCustomMulticheckboxesMapping(),
+                    [
+                        [ 'id' => '10030' ],
+                        [ 'id' => '10031' ],
+                        [ 'id' => '10032' ],
                     ],
                     null,
                 ),
@@ -382,6 +392,15 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             "toString"   => "[v1]",
                         ],
                     ],
+                    13 => [
+                        [
+                            "fieldId"    => "customfield_10102",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10030",
+                            "toString"   => "[test1]",
+                        ],
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -498,6 +517,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping($this->getFixVersionsMapping());
         $collection->addMapping($this->getCustomMultiversionMapping());
         $collection->addMapping($this->getCustomVersionMapping());
+        $collection->addMapping($this->getCustomMulticheckboxesMapping());
 
         return $collection;
     }
@@ -567,6 +587,20 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "Fcustomfield_10101",
             "customfield_10101",
             \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
+        );
+    }
+
+    private function getCustomMulticheckboxesMapping(): ListFieldMapping
+    {
+        return new ListFieldMapping(
+            'customfield_10102',
+            'Multi Checkboxes',
+            'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes',
+            "Fcustomfield_10102",
+            "customfield_10102",
+            \Tracker_FormElementFactory::FIELD_CHECKBOX_TYPE,
             \Tracker_FormElement_Field_List_Bind_Static::TYPE,
             [],
         );
