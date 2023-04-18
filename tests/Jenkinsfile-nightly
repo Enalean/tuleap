@@ -41,7 +41,7 @@ pipeline {
         }
 
         stage ('Unit tests JS/TS with coverage') {
-            steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests(true) }) } }
+            steps { script { actions.runJSUnitTests(true) } }
             post {
                 always {
                     junit 'results/js-test-results/junit-*.xml'
