@@ -31,9 +31,8 @@ describe(`Tracker Workflow`, () => {
     const REMAINING_EFFORT_FIELD_LABEL = "Remaining Effort";
     const INITIAL_EFFORT_FIELD_LABEL = "Initial Effort";
 
-    before(function () {
-        cy.clearSessionCookie();
-        cy.projectAdministratorLogin();
+    it(`has an empty state`, function () {
+        cy.projectAdministratorSession();
         cy.getProjectId("tracker-project").as("project_id");
         getTrackerIdFromTrackerListPage()
             .as("workflow_tracker_id")
@@ -43,17 +42,18 @@ describe(`Tracker Workflow`, () => {
     });
 
     beforeEach(function () {
-        cy.preserveSessionCookies();
         cy.intercept("/api/tracker_workflow_transitions").as("createTransitions");
         cy.intercept("/api/tracker_workflow_transitions/*").as("updateTransitions");
     });
 
-    it(`has an empty state`, function () {
-        cy.get("[data-test=tracker-workflow-first-configuration]");
-    });
-
     context("Simple mode", () => {
         it(`can create and configure a workflow`, function () {
+            cy.projectAdministratorSession();
+            getTrackerIdFromTrackerListPage()
+                .as("workflow_tracker_id")
+                .then((workflow_tracker_id: Cypress.ObjectLike) => {
+                    cy.visit(`/plugins/tracker/workflow/${workflow_tracker_id}/transitions`);
+                });
             /* Create the workflow */
             cy.get("[data-test=tracker-workflow-first-configuration]").within(() => {
                 cy.get("[data-test=list-fields]").select(STATUS_FIELD_LABEL);
@@ -112,6 +112,7 @@ describe(`Tracker Workflow`, () => {
                 cy.get("[data-test=matrix-row]")
                     .contains("(New artifact)")
                     .parent("[data-test=matrix-row]")
+                    .and("contain", "(New artifact)")
                     .within(() => {
                         cy.get("[data-test-action=delete-transition]").first().click();
                         // Making sure the transition deletion is visible in the UI (aka there is no more a delete button) before continuing
@@ -128,6 +129,7 @@ describe(`Tracker Workflow`, () => {
 
         context("Workflow switch mode", () => {
             it(`User can switch mode to use simple mode`, function () {
+                cy.projectAdministratorSession();
                 cy.visitProjectService("workflow", "Trackers");
                 cy.get("[data-test=tracker-link-workflow_simple_mode]").click();
                 cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
@@ -197,12 +199,8 @@ describe(`Tracker Workflow`, () => {
     });
 
     context("Project member", () => {
-        before(function () {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-        });
-
         it(`Workflow hidden fieldset`, function () {
+            cy.projectMemberSession();
             cy.log("Everything is visible at artifact creation");
             cy.visitProjectService("workflow", "Trackers");
             cy.get('[data-test="tracker-link-bugs_hidden"]').click();
@@ -228,6 +226,7 @@ describe(`Tracker Workflow`, () => {
         });
 
         it(`Workflow frozen fields`, function () {
+            cy.projectMemberSession();
             cy.log("Every field can be updated at artifact creation");
             cy.visitProjectService("workflow", "Trackers");
             cy.get("[data-test=tracker-link-frozen_fields]").click();
@@ -245,6 +244,7 @@ describe(`Tracker Workflow`, () => {
         });
 
         it(`Workflow required comment`, function () {
+            cy.projectMemberSession();
             cy.log("Comment is not required at creation");
             cy.visitProjectService("workflow", "Trackers");
             cy.get("[data-test=tracker-link-required]").click();
@@ -270,6 +270,7 @@ describe(`Tracker Workflow`, () => {
         });
 
         it(`Workflow required fields`, function () {
+            cy.projectMemberSession();
             cy.log("Fields are not required a submission");
             cy.visitProjectService("workflow", "Trackers");
             cy.get("[data-test=tracker-link-required_fields]").click();

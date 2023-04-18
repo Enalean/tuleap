@@ -65,10 +65,6 @@ Cypress.Commands.add("projectMemberLogin", () => {
     loginThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
 });
 
-Cypress.Commands.add("platformAdminLogin", () => {
-    loginThroughWebUI("admin", "welcome0");
-});
-
 Cypress.Commands.add("restrictedMemberSession", () => {
     sessionThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
 });
