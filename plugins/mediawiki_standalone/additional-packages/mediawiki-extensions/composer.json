@@ -73,7 +73,7 @@
     "mediawiki/mpdf": "^1.0",
     "mediawiki/tuleap-integration": "1.0.4",
     "mediawiki/tuleap-skin": "^1.0.5",
-    "mediawiki/tuleap-wiki-farm": "1.1.3"
+    "mediawiki/tuleap-wiki-farm": "^1.1"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
