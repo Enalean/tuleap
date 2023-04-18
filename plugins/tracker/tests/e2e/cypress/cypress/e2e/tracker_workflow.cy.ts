@@ -44,6 +44,8 @@ describe(`Tracker Workflow`, () => {
 
     beforeEach(function () {
         cy.preserveSessionCookies();
+        cy.intercept("/api/tracker_workflow_transitions").as("createTransitions");
+        cy.intercept("/api/tracker_workflow_transitions/*").as("updateTransitions");
     });
 
     it(`has an empty state`, function () {
@@ -68,6 +70,7 @@ describe(`Tracker Workflow`, () => {
                             cy.wrap($button).click();
                         });
                         // Making sure the transition has been created by checking if we can delete it before continuing the test
+                        cy.wait("@createTransitions");
                         cy.get("[data-test-action=confirm-delete-transition]");
                     });
 
@@ -112,6 +115,7 @@ describe(`Tracker Workflow`, () => {
                     .within(() => {
                         cy.get("[data-test-action=delete-transition]").first().click();
                         // Making sure the transition deletion is visible in the UI (aka there is no more a delete button) before continuing
+                        cy.wait("@updateTransitions");
                         cy.get("[data-test-action=confirm-delete-transition]").should("not.exist");
                     });
             });
