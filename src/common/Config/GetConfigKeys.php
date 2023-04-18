@@ -31,6 +31,7 @@ use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
+use Tuleap\Http\Client\OutboundHTTPRequestSettings;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationPurger;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
@@ -84,6 +85,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         InvitationPurger::class,
         DisableSOAPEndpoints::class,
         \ThemeVariant::class,
+        OutboundHTTPRequestSettings::class,
     ];
 
     /**
