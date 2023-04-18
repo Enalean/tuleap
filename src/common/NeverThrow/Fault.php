@@ -31,14 +31,14 @@ use Psr\Log\LogLevel;
  * For example: A User cannot see a Project.
  * @psalm-immutable
  */
-class Fault
+class Fault implements \Stringable
 {
     /** Internal Exception used only to record stack traces. It is never thrown */
-    private \Throwable $exception;
+    private readonly \Throwable $exception;
 
     /** @param string $message Error message to be logged or showed on-screen. */
     protected function __construct(
-        private string $message,
+        private readonly string $message,
         ?\Throwable $exception = null,
     ) {
         $this->exception = $exception ?? new \Exception();
