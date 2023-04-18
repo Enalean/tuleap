@@ -23,18 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs\WebAuthn;
 
 use Symfony\Component\Uid\Uuid;
+use Tuleap\WebAuthn\Source\ChangeCredentialSourceName;
+use Tuleap\WebAuthn\Source\SaveCredentialSourceWithName;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
-final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository
+final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName
 {
+    /**
+     * @var array<string, string>
+     */
+    public array $sources_name = [];
+
     /**
      * @param string[] $sources_id
      */
     private function __construct(
-        private readonly array $sources_id,
+        public array $sources_id,
     ) {
     }
 
@@ -76,5 +83,18 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
+        $this->sources_id[] = $publicKeyCredentialSource->getPublicKeyCredentialId();
+    }
+
+    public function changeCredentialSourceName(string $public_key_credential_id, string $name): void
+    {
+        $this->sources_name[$public_key_credential_id] = $name;
+    }
+
+    public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
+    {
+        $this->sources_id[] = $publicKeyCredentialSource->getPublicKeyCredentialId();
+
+        $this->sources_name[$publicKeyCredentialSource->getPublicKeyCredentialId()] = $name;
     }
 }

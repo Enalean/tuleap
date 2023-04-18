@@ -1310,10 +1310,12 @@ class RouteCollector
     {
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $source_dao = new WebAuthnCredentialSourceDao();
 
         return new PostRegistrationController(
             \UserManager::instance(),
             new WebAuthnChallengeDao(),
+            $source_dao,
             new PublicKeyCredentialRpEntity(
                 \ForgeConfig::get(ConfigurationVariables::NAME),
                 ServerHostname::rawHostname()
@@ -1324,7 +1326,7 @@ class RouteCollector
             ),
             new AuthenticatorAttestationResponseValidator(
                 $attestation_statement_manager,
-                new WebAuthnCredentialSourceDao(),
+                $source_dao,
                 null,
                 new ExtensionOutputCheckerHandler()
             ),

@@ -34,7 +34,7 @@ use function Psl\Encoding\Base64\encode;
 use function Psl\Json\decode as psl_json_decode;
 use function Psl\Json\encode as psl_json_encode;
 
-final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository
+final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName
 {
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
@@ -90,6 +90,17 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
     // Above, functions from interface PublicKeyCredentialSourceRepository. Used by WebAuthn library
     // _.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-._.-.
     // Below, functions for Tuleap usage
+
+    public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
+    {
+        $this->getDB()->insert(
+            'webauthn_credential_source',
+            [
+                ...$this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
+                'name' => $name,
+            ]
+        );
+    }
 
     public function changeCredentialSourceName(string $public_key_credential_id, string $name): void
     {
