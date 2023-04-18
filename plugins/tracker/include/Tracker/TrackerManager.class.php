@@ -21,6 +21,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
@@ -808,13 +809,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     /**
      * On project creation, copy template trackers to destination project
-     *
-     * @param int $from_project_id
-     * @param int $to_project_id
      */
-    public function duplicate($from_project_id, $to_project_id, MappingRegistry $mapping_registry)
+    public function duplicate(DBTransactionExecutor $transaction_executor, int $from_project_id, int $to_project_id, MappingRegistry $mapping_registry): void
     {
-        $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $mapping_registry);
+        $this->getTrackerFactory()->duplicate($transaction_executor, $from_project_id, $to_project_id, $mapping_registry);
         $this->duplicateReferences($from_project_id);
     }
 

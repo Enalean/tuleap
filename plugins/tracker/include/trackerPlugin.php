@@ -692,9 +692,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
             $tracker_manager = new TrackerManager();
             $tracker_manager->duplicate(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 (int) $template->getID(),
                 (int) $project->getID(),
-                $event->getMappingRegistry()
+                $event->getMappingRegistry(),
             );
 
             $legacy_services = $event->getLegacyServiceUsage();
@@ -1219,21 +1220,22 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
      */
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
-        if (! $this->checkTypesExistsOnPlateform($event->getXmlElement())) {
+        $missing_types = $this->checkTypesExistsOnPlatform($event->getXmlElement());
+        if (! empty($missing_types)) {
             throw new ImportNotValidException(
-                "Some natures used in trackers are not created on plateform."
+                "Some natures used in trackers are not created on platform: " . implode(', ', $missing_types)
             );
         }
     }
 
-    private function checkTypesExistsOnPlateform(SimpleXMLElement $xml)
+    private function checkTypesExistsOnPlatform(SimpleXMLElement $xml): array
     {
         if (! isset($xml->trackers['use-natures'][0]) || ! $xml->trackers['use-natures'][0]) {
-            return true;
+            return [];
         }
 
         if (! (array) $xml->natures) {
-            return true;
+            return [];
         }
 
         $platform_types = [Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD];
@@ -1243,13 +1245,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addCustomTypes($platform_types);
 
+        $missing_types = [];
         foreach ($xml->natures->nature as $type) {
             if (! in_array((string) $type, $platform_types, true)) {
-                return false;
+                $missing_types[] = $type;
             }
         }
 
-        return true;
+        return $missing_types;
     }
 
     private function addCustomTypes(array &$types): void
