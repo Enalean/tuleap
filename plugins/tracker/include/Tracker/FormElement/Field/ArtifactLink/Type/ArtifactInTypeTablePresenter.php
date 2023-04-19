@@ -36,8 +36,12 @@ class ArtifactInTypeTablePresenter
     public $html_classes;
     public $artifactlink_field_id;
 
-    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact, $html_classes, Tracker_FormElement_Field_ArtifactLink $field)
-    {
+    public function __construct(
+        \Tuleap\Tracker\Artifact\Artifact $artifact,
+        $html_classes,
+        Tracker_FormElement_Field_ArtifactLink $field,
+        public readonly bool $are_links_deletable,
+    ) {
         $this->html_classes = $html_classes;
         $tracker            = $artifact->getTracker();
         $project            = $tracker->getProject();
