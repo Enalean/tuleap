@@ -102,7 +102,8 @@ $CLI_command_collector->addCommand(
             new \Tuleap\Config\ConfigSet(
                 $event_manager,
                 new ConfigDao(),
-            )
+            ),
+            $event_manager,
         );
     }
 );
