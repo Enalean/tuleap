@@ -20,12 +20,11 @@
 import type { ManageSelection, LazyboxSelectionStateMultiple, RenderedItem } from "../type";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
-import type { ClearSearchField } from "../events/SearchFieldClearer";
 import type { LazyboxSelectionCallback } from "../type";
 import type { RemoveCurrentSelectionCallback } from "./templates/clear-selection-button-template";
 import { buildClearSelectionButtonElement } from "./templates/clear-selection-button-template";
 import { buildSelectedValueBadgeElement } from "./templates/selected-value-badge-template";
-import { isBackspaceKey } from "../helpers/keys-helper";
+import type { SearchInput } from "../SearchInput";
 
 export class MultipleSelectionManager implements ManageSelection {
     private readonly selection_state: LazyboxSelectionStateMultiple;
@@ -34,12 +33,11 @@ export class MultipleSelectionManager implements ManageSelection {
     constructor(
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_element: Element,
-        private readonly search_field_element: HTMLInputElement,
+        private readonly search_field: HTMLElement & SearchInput,
         private readonly placeholder_text: string,
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly callback: LazyboxSelectionCallback,
-        private readonly search_field_clearer: ClearSearchField
+        private readonly callback: LazyboxSelectionCallback
     ) {
         this.selection_state = {
             selected_items: new Map(),
@@ -66,7 +64,7 @@ export class MultipleSelectionManager implements ManageSelection {
         }
         if (list_item.is_selected) {
             // We won't unselect it
-            this.search_field_clearer.clearSearchField();
+            this.search_field.clear();
 
             return;
         }
@@ -75,21 +73,21 @@ export class MultipleSelectionManager implements ManageSelection {
         const badge = this.createItemBadgeElement(list_item);
         this.selection_state.selected_values_elements.set(list_item.id, badge);
 
-        this.selection_element.insertBefore(badge, this.search_field_element.parentElement);
+        this.selection_element.insertBefore(badge, this.search_field.parentElement);
         list_item.is_selected = true;
         list_item.element.setAttribute("aria-selected", "true");
 
         this.applyChangesPostSelectionStateChange();
-        this.search_field_clearer.clearSearchField();
+        this.search_field.clear();
     }
 
     private togglePlaceholder(): void {
         if (!this.hasSelection()) {
-            this.search_field_element.setAttribute("placeholder", this.placeholder_text);
+            this.search_field.placeholder = this.placeholder_text;
             return;
         }
 
-        this.search_field_element.removeAttribute("placeholder");
+        this.search_field.placeholder = "";
     }
 
     private toggleClearValuesButton(): void {
@@ -207,15 +205,10 @@ export class MultipleSelectionManager implements ManageSelection {
     }
 
     private observeBackspaceKeyPress(): void {
-        this.search_field_element.addEventListener("keydown", (event: KeyboardEvent) => {
-            if (!isBackspaceKey(event)) {
+        this.search_field.addEventListener("backspace-pressed", () => {
+            if (!this.hasSelection()) {
                 return;
             }
-
-            if (!this.hasSelection() || this.search_field_element.value !== "") {
-                return;
-            }
-
             const last_selected_item = Array.from(this.selection_state.selected_items.values())[
                 this.selection_state.selected_items.size - 1
             ];

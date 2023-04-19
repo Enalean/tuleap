@@ -30,9 +30,7 @@ import { ItemsMapManager } from "./items/ItemsMapManager";
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
-import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
-import { SearchFieldClearer } from "./events/SearchFieldClearer";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import type { LazyboxItem } from "./items/GroupCollection";
 
@@ -61,11 +59,11 @@ export function createLazybox(
     const field_focus_manager = new FieldFocusManager(
         document,
         source_select_box,
-        selection_element,
-        search_field_element
+        selection_element
     );
     field_focus_manager.init();
 
+    const highlighter = new ListItemHighlighter(dropdown_list_element);
     const dropdown_manager = new DropdownManager(
         document,
         wrapper_element,
@@ -74,10 +72,14 @@ export function createLazybox(
         dropdown_list_element,
         selection_element,
         scrolling_manager,
-        field_focus_manager
+        field_focus_manager,
+        highlighter,
+        search_field_element
     );
+    search_field_element.addEventListener("search-input", () => {
+        dropdown_manager.openLazybox();
+    });
 
-    const search_field_clearer = SearchFieldClearer(search_field_element);
     const selection_manager = options.is_multiple
         ? new MultipleSelectionManager(
               source_select_box,
@@ -86,8 +88,7 @@ export function createLazybox(
               options.placeholder,
               dropdown_manager,
               items_map_manager,
-              options.selection_callback,
-              search_field_clearer
+              options.selection_callback
           )
         : new SelectionManager(
               source_select_box,
@@ -97,7 +98,7 @@ export function createLazybox(
               dropdown_manager,
               items_map_manager,
               options.selection_callback,
-              search_field_clearer
+              search_field_element
           );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
@@ -105,7 +106,6 @@ export function createLazybox(
         items_map_manager
     );
 
-    const highlighter = new ListItemHighlighter(dropdown_list_element);
     const keyboard_navigation_manager = new KeyboardNavigationManager(
         dropdown_list_element,
         highlighter
@@ -122,8 +122,7 @@ export function createLazybox(
         dropdown_content_renderer,
         keyboard_navigation_manager,
         highlighter,
-        field_focus_manager,
-        search_field_clearer
+        field_focus_manager
     );
     const dropdown_content_refresher = DropdownContentRefresher(
         items_map_manager,
@@ -135,18 +134,12 @@ export function createLazybox(
 
     event_manager.attachEvents();
 
-    const search_event_handler = SearchFieldEventCallbackHandler(
-        search_field_element,
-        options.search_field_callback
-    );
-    search_event_handler.init();
-
     return {
         setDropdownContent: (groups): void => {
             dropdown_content_refresher.refresh(groups);
         },
         resetSelection: (): void => {
-            search_field_clearer.clearSearchField();
+            search_field_element.clear();
             selection_manager.clearSelection();
         },
         setSelection: (selection: ReadonlyArray<LazyboxItem>): void => {

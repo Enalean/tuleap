@@ -21,10 +21,9 @@ export class FieldFocusManager {
     private steal_focus_event_from_source_select_box_handler!: (event: Event) => void;
 
     constructor(
-        private readonly doc: HTMLDocument,
+        private readonly doc: Document,
         private readonly source_select_box: HTMLSelectElement,
-        private readonly selection_element: HTMLElement,
-        private readonly search_field_element: HTMLInputElement
+        private readonly selection_element: HTMLElement
     ) {}
 
     public init(): void {
@@ -52,9 +51,5 @@ export class FieldFocusManager {
 
     public applyFocusOnLazybox(): void {
         this.selection_element.focus();
-    }
-
-    public applyFocusOnSearchField(): void {
-        this.search_field_element.focus();
     }
 }

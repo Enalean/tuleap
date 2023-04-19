@@ -22,7 +22,6 @@ import type { MockedFunction } from "vitest";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { LazyboxSelectionCallback, RenderedItem } from "../type";
-import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
@@ -30,35 +29,42 @@ import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuil
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { selectOrThrow } from "@tuleap/dom";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
+import type { SearchInput } from "../SearchInput";
+
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
         selection_container: Element,
-        search_field: HTMLInputElement,
+        search_field: HTMLElement & SearchInput,
         manager: MultipleSelectionManager,
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
         item_1: RenderedItem,
         item_2: RenderedItem,
-        selection_callback: MockedFunction<LazyboxSelectionCallback>,
-        clear_search_field: ClearSearchFieldStub;
+        selection_callback: MockedFunction<LazyboxSelectionCallback>;
 
     beforeEach(() => {
-        source_select_box = document.createElement("select");
+        const doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
 
-        const { selection_element, search_field_element } = new BaseComponentRenderer(
-            document.implementation.createHTMLDocument(),
+        const { selection_element } = new BaseComponentRenderer(
+            doc,
             source_select_box,
             OptionsBuilder.withoutNewItem().withIsMultiple().build()
         ).renderBaseComponent();
 
         selection_container = selection_element;
-        search_field = search_field_element;
+        search_field = Object.assign(doc.createElement("span"), {
+            placeholder: "",
+            clear: noop,
+        }) as HTMLElement & SearchInput;
 
         selection_callback = vi.fn();
         items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         dropdown_manager = { openLazybox: vi.fn() } as unknown as DropdownManager;
-        clear_search_field = ClearSearchFieldStub();
         manager = new MultipleSelectionManager(
             source_select_box,
             selection_container,
@@ -66,8 +72,7 @@ describe("MultipleSelectionManager", () => {
             "Please select some values",
             dropdown_manager,
             items_map_manager,
-            selection_callback,
-            clear_search_field
+            selection_callback
         );
         items_map_manager.refreshItemsMap(
             GroupCollectionBuilder.withSingleGroup({
@@ -85,6 +90,7 @@ describe("MultipleSelectionManager", () => {
 
     describe("processSelection", () => {
         it("does nothing if item is already selected", () => {
+            const clear = vi.spyOn(search_field, "clear");
             item_1.element.setAttribute("aria-selected", "true");
             item_1.is_selected = true;
 
@@ -92,7 +98,7 @@ describe("MultipleSelectionManager", () => {
 
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(selection_callback).not.toHaveBeenCalled();
-            expect(clear_search_field.getCallsCount()).toBe(1);
+            expect(clear).toHaveBeenCalled();
         });
 
         it("does nothing if item is disabled", () => {
@@ -107,14 +113,15 @@ describe("MultipleSelectionManager", () => {
         it(`when a first value has been selected, it:
             - removes the placeholder text from the search field
             - displays the [Clear all values] button`, () => {
-            expect(search_field.hasAttribute("placeholder")).toBe(true);
+            search_field.placeholder = "I am holding the place";
+
             expect(
                 selection_container.querySelector("[data-test=clear-current-selection-button]")
             ).toBeNull();
 
             manager.processSelection(item_1.element);
 
-            expect(search_field.hasAttribute("placeholder")).toBe(false);
+            expect(search_field.placeholder).toBe("");
             expect(
                 selection_container.querySelector("[data-test=clear-current-selection-button]")
             ).not.toBeNull();
@@ -172,7 +179,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector("[data-test=clear-current-selection-button]")
             ).toBeNull();
-            expect(search_field.hasAttribute("placeholder")).toBe(true);
+            expect(search_field.placeholder).not.toBe("");
         });
 
         it(`Given that the user has selected some values
@@ -192,7 +199,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector("[data-test=clear-current-selection-button]")
             ).toBeNull();
-            expect(search_field.hasAttribute("placeholder")).toBe(true);
+            expect(search_field.placeholder).not.toBe("");
         });
     });
 
@@ -231,29 +238,18 @@ describe("MultipleSelectionManager", () => {
 
     describe("Pressing the backspace key in the search field", () => {
         const pressBackspaceKey = (): void => {
-            search_field.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace" }));
+            search_field.dispatchEvent(new CustomEvent("backspace-pressed"));
         };
 
         it("should do nothing when there is no selected value", () => {
-            search_field.value = "";
             pressBackspaceKey();
 
             expect(selection_callback).not.toHaveBeenCalled();
         });
 
-        it("should do nothing when there are selected values but something has been written inside the search input", () => {
-            manager.processSelection(item_1.element);
-
-            search_field.value = "Some query being typed";
-            pressBackspaceKey();
-
-            expect(selection_callback).not.toHaveBeenCalledWith([]);
-        });
-
         it("should remove the last selected value from the selection when the search input is empty", () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
-            search_field.value = "";
 
             pressBackspaceKey();
             expect(selection_callback.mock.calls[2][0]).toStrictEqual([item_1.value]);

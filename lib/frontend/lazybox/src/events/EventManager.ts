@@ -21,22 +21,14 @@ import type { DropdownContentRenderer } from "../renderers/DropdownContentRender
 import type { ManageSelection } from "../type";
 import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
-import type { ClearSearchField } from "./SearchFieldClearer";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import {
-    isArrowDown,
-    isArrowUp,
-    isEnterKey,
-    isEscapeKey,
-    isShiftKey,
-    isTabKey,
-} from "../helpers/keys-helper";
+import { isEnterKey, isEscapeKey, isTabKey } from "../helpers/keys-helper";
+import type { SearchInput } from "../SearchInput";
 
 export class EventManager {
     private escape_key_handler!: (event: KeyboardEvent) => void;
     private click_outside_handler!: (event: Event) => void;
     private keyboard_events_handler!: (event: KeyboardEvent) => void;
-    private prevent_form_submit_on_enter_handler!: (event: KeyboardEvent) => void;
     private has_keyboard_selection_occurred = false;
 
     constructor(
@@ -44,15 +36,14 @@ export class EventManager {
         private readonly wrapper_element: Element,
         private readonly lazybox_element: Element,
         private readonly dropdown_element: Element,
-        private readonly search_field_element: HTMLInputElement,
+        private readonly search_field: SearchInput,
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: ManageSelection,
         private readonly dropdown_manager: ManageDropdown,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
         private readonly list_item_highlighter: ListItemHighlighter,
-        private readonly field_focus_manager: FieldFocusManager,
-        private readonly search_field_clearer: ClearSearchField
+        private readonly field_focus_manager: FieldFocusManager
     ) {}
 
     public attachEvents(): void {
@@ -62,19 +53,15 @@ export class EventManager {
 
         this.attachOpenCloseEvent();
         this.attachItemListEvent();
-        this.attachSourceSelectBoxChangeEvent();
         this.escape_key_handler = this.attachEscapeKeyPressedEvent();
         this.click_outside_handler = this.attachClickOutsideEvent();
         this.keyboard_events_handler = this.attachKeyboardNavigationEvents();
-        this.prevent_form_submit_on_enter_handler = this.preventEnterKeyInSearchFieldToSubmitForm();
-        this.attachSearchEvent(this.search_field_element);
     }
 
     public removeEventsListenersOnDocument(): void {
         this.doc.removeEventListener("keyup", this.escape_key_handler);
         this.doc.removeEventListener("pointerup", this.click_outside_handler);
         this.doc.removeEventListener("keydown", this.keyboard_events_handler);
-        this.doc.removeEventListener("keypress", this.prevent_form_submit_on_enter_handler);
     }
 
     private attachEscapeKeyPressedEvent(): (event: KeyboardEvent) => void {
@@ -106,19 +93,9 @@ export class EventManager {
                 return;
             }
 
-            if (
-                event.target instanceof Element &&
-                event.target.classList.contains("lazybox-search-field")
-            ) {
-                this.dropdown_manager.openLazybox();
-                return;
-            }
-
             if (this.dropdown_manager.isDropdownOpen()) {
-                this.resetHighlight();
                 this.dropdown_manager.closeLazybox();
             } else {
-                this.list_item_highlighter.resetHighlight();
                 this.dropdown_manager.openLazybox();
             }
         });
@@ -139,7 +116,6 @@ export class EventManager {
         items.forEach((item) => {
             item.addEventListener("pointerup", () => {
                 this.selection_manager.processSelection(item);
-                this.resetHighlight();
                 this.dropdown_manager.closeLazybox();
             });
 
@@ -158,32 +134,6 @@ export class EventManager {
         });
     }
 
-    private attachSearchEvent(search_field_element: HTMLInputElement): void {
-        search_field_element.addEventListener("keyup", (event: KeyboardEvent) => {
-            if (isArrowUp(event) || isArrowDown(event) || isTabKey(event) || isShiftKey(event)) {
-                return;
-            }
-
-            if (isEnterKey(event)) {
-                if (this.has_keyboard_selection_occurred) {
-                    this.has_keyboard_selection_occurred = false;
-                } else {
-                    this.list_item_highlighter.resetHighlight();
-                    this.dropdown_manager.openLazybox();
-                }
-                return;
-            }
-
-            this.dropdown_manager.openLazybox();
-        });
-
-        search_field_element.addEventListener("keydown", (event: KeyboardEvent) => {
-            if (isTabKey(event)) {
-                this.resetHighlight();
-            }
-        });
-    }
-
     private handleClicksOutsideListPicker(event: Event): void {
         const target_element = event.target;
 
@@ -192,7 +142,6 @@ export class EventManager {
             (!this.wrapper_element.contains(target_element) &&
                 !this.dropdown_element.contains(target_element))
         ) {
-            this.resetHighlight();
             this.has_keyboard_selection_occurred = false;
             this.dropdown_manager.closeLazybox();
             this.clearSearchFieldIfNeeded();
@@ -203,35 +152,15 @@ export class EventManager {
         if (!this.dropdown_manager.isDropdownOpen() && this.selection_manager.hasSelection()) {
             return;
         }
-        this.search_field_clearer.clearSearchField();
-    }
-
-    private resetHighlight(): void {
-        if (!this.dropdown_manager.isDropdownOpen()) {
-            return;
-        }
-
-        this.list_item_highlighter.resetHighlight();
+        this.search_field.clear();
     }
 
     private handleEscapeKey(event: KeyboardEvent): void {
         if (isEscapeKey(event)) {
-            this.resetHighlight();
             this.dropdown_manager.closeLazybox();
             this.has_keyboard_selection_occurred = false;
             event.stopPropagation();
         }
-    }
-
-    private attachSourceSelectBoxChangeEvent(): void {
-        this.source_select_box.addEventListener("change", () => {
-            const is_valid = this.source_select_box.checkValidity();
-            if (!is_valid) {
-                this.wrapper_element.classList.add("lazybox-error");
-            } else {
-                this.wrapper_element.classList.remove("lazybox-error");
-            }
-        });
     }
 
     private attachKeyboardNavigationEvents(): (event: KeyboardEvent) => void {
@@ -247,7 +176,6 @@ export class EventManager {
                 isEnterKey(event) &&
                 this.field_focus_manager.doesSelectionElementHaveTheFocus()
             ) {
-                this.list_item_highlighter.resetHighlight();
                 this.dropdown_manager.openLazybox();
                 this.has_keyboard_selection_occurred = false;
                 return;
@@ -260,29 +188,14 @@ export class EventManager {
             const highlighted_item = this.list_item_highlighter.getHighlightedItem();
             if (isEnterKey(event) && highlighted_item) {
                 this.selection_manager.processSelection(highlighted_item);
-                this.resetHighlight();
                 this.dropdown_manager.closeLazybox();
+                this.search_field.clear();
                 this.has_keyboard_selection_occurred = true;
             } else {
                 this.keyboard_navigation_manager.navigate(event);
             }
         };
         this.doc.addEventListener("keydown", handler);
-        return handler;
-    }
-
-    private preventEnterKeyInSearchFieldToSubmitForm(): (event: KeyboardEvent) => void {
-        const handler = (event: KeyboardEvent): void => {
-            if (
-                event.target &&
-                event.target instanceof HTMLElement &&
-                event.target.classList.contains("lazybox-search-field") &&
-                isEnterKey(event)
-            ) {
-                event.preventDefault();
-            }
-        };
-        this.doc.addEventListener("keypress", handler);
         return handler;
     }
 }

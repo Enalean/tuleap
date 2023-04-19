@@ -22,8 +22,8 @@ import type { RenderedItem, LazyboxSelectionStateSingle, ManageSelection } from 
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit/html.js";
 import type { LazyboxSelectionCallback } from "../type";
-import type { ClearSearchField } from "../events/SearchFieldClearer";
 import { buildClearSelectionButtonElement } from "./templates/clear-selection-button-template";
+import type { SearchInput } from "../SearchInput";
 
 export class SelectionManager implements ManageSelection {
     private selection_state: LazyboxSelectionStateSingle | null;
@@ -36,7 +36,7 @@ export class SelectionManager implements ManageSelection {
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
         private readonly callback: LazyboxSelectionCallback,
-        private readonly search_field_clearer: ClearSearchField
+        private readonly search_field: SearchInput
     ) {
         this.selection_state = null;
     }
@@ -151,7 +151,7 @@ export class SelectionManager implements ManageSelection {
                 return;
             }
 
-            this.search_field_clearer.clearSearchField();
+            this.search_field.clear();
             this.clearSelection();
             this.dropdown_manager.openLazybox();
         });

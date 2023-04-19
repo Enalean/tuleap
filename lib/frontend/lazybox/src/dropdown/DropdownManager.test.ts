@@ -24,6 +24,12 @@ import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
+import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
+import type { SearchInput } from "../SearchInput";
+
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("dropdown-manager", () => {
     let doc: Document,
@@ -35,6 +41,8 @@ describe("dropdown-manager", () => {
         dropdown_manager: DropdownManager,
         scroll_manager: ScrollingManager,
         field_focus_manager: FieldFocusManager,
+        highlighter: ListItemHighlighter,
+        search_field: SearchInput,
         ResizeObserverSpy: SpyInstance,
         disconnect: SpyInstance;
 
@@ -75,11 +83,16 @@ describe("dropdown-manager", () => {
             applyFocusOnSearchField: vi.fn(),
         } as unknown as FieldFocusManager;
 
+        highlighter = new ListItemHighlighter(dropdown_list_element);
+
         wrapper = wrapper_element;
         lazybox = lazybox_element;
         dropdown = dropdown_element;
         list = dropdown_list_element;
         selection_container = selection_element;
+        search_field = {
+            setFocus: noop,
+        } as SearchInput;
 
         dropdown_manager = new DropdownManager(
             doc,
@@ -89,7 +102,9 @@ describe("dropdown-manager", () => {
             list,
             selection_element,
             scroll_manager,
-            field_focus_manager
+            field_focus_manager,
+            highlighter,
+            search_field
         );
     });
 
@@ -98,13 +113,14 @@ describe("dropdown-manager", () => {
     });
 
     it("opens the dropdown by appending a 'shown' class to the dropdown element, focuses the search input and moves it under the lazybox", () => {
+        const focus = vi.spyOn(search_field, "setFocus");
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.openLazybox();
 
         expect(lazybox.classList.contains("lazybox-with-open-dropdown")).toBe(true);
         expect(dropdown.classList.contains("lazybox-dropdown-shown")).toBe(true);
         expect(list.getAttribute("aria-expanded")).toBe("true");
-        expect(field_focus_manager.applyFocusOnSearchField).toHaveBeenCalled();
+        expect(focus).toHaveBeenCalled();
         expect(scroll_manager.lockScrolling).toHaveBeenCalled();
         expect(dropdown.style.top.length).toBeGreaterThan(0);
         expect(dropdown.style.left.length).toBeGreaterThan(0);
@@ -152,6 +168,14 @@ describe("dropdown-manager", () => {
         expect(selection_container.getAttribute("aria-expanded")).toBe("false");
     });
 
+    it(`resets the highlight when the dropdown is closed`, () => {
+        const highlight = vi.spyOn(highlighter, "resetHighlight");
+        dropdown_manager.openLazybox();
+        dropdown_manager.closeLazybox();
+
+        expect(highlight).toHaveBeenCalled();
+    });
+
     it("should unlock scrolling and stop observing items resize", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.destroy();
@@ -179,7 +203,9 @@ describe("dropdown-manager", () => {
                 list,
                 selection_container,
                 scroll_manager,
-                field_focus_manager
+                field_focus_manager,
+                highlighter,
+                search_field
             );
         }
 

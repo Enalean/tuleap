@@ -27,9 +27,13 @@ import type { LazyboxSelectionCallback, RenderedItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
-import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 import { selectOrThrow } from "@tuleap/dom";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
+import type { SearchInput } from "../SearchInput";
+
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -42,7 +46,7 @@ describe("SelectionManager", () => {
         item_1: RenderedItem,
         item_2: RenderedItem,
         selection_callback: MockedFunction<LazyboxSelectionCallback>,
-        clear_search_field: ClearSearchFieldStub;
+        search_field: SearchInput;
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -61,7 +65,9 @@ describe("SelectionManager", () => {
         selection_callback = vi.fn();
         items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         dropdown_manager = { openLazybox: vi.fn() } as unknown as DropdownManager;
-        clear_search_field = ClearSearchFieldStub();
+        search_field = {
+            clear: noop,
+        } as SearchInput;
         manager = new SelectionManager(
             source_select_box,
             dropdown,
@@ -70,7 +76,7 @@ describe("SelectionManager", () => {
             dropdown_manager,
             items_map_manager,
             selection_callback,
-            clear_search_field
+            search_field
         );
         items_map_manager.refreshItemsMap(
             GroupCollectionBuilder.withSingleGroup({
@@ -142,6 +148,7 @@ describe("SelectionManager", () => {
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
         it(`should replace the currently selected value with the placeholder
             and remove the selected attribute on the source corresponding dropdown element`, () => {
+            const clear = vi.spyOn(search_field, "clear");
             selection_container.appendChild(placeholder);
 
             // First select the item
@@ -162,7 +169,7 @@ describe("SelectionManager", () => {
             expect(dropdown_manager.openLazybox).toHaveBeenCalled();
 
             expect(selection_callback).toHaveBeenCalledWith(null);
-            expect(clear_search_field.getCallsCount()).toBe(1);
+            expect(clear).toHaveBeenCalled();
         });
 
         it("should not remove the current selection when the source <select> is disabled", () => {
