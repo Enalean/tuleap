@@ -235,10 +235,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         site_project_footer($params);
     }
 
-    public function duplicate(int $to_project_id, array $ugroup_mapping): void
-    {
-    }
-
     public function isOpenedInNewTab(): bool
     {
         return false;

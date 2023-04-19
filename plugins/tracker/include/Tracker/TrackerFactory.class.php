@@ -18,6 +18,7 @@
  */
 
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -534,16 +535,12 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
      * Duplicate all trackers from a project to another one
      *
      * Duplicate among others:
-     * - the trackers definition
+     * - the tracker's definition
      * - the hierarchy
      * - the shared fields
      * - etc.
-     *
-     * @param int $from_project_id
-     * @param int $to_project_id
-     *
      */
-    public function duplicate($from_project_id, $to_project_id, MappingRegistry $mapping_registry)
+    public function duplicate(DBTransactionExecutor $transaction_executor, int $from_project_id, int $to_project_id, MappingRegistry $mapping_registry): void
     {
         $tracker_mapping        = [];
         $field_mapping          = [];
@@ -554,25 +551,28 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
         $params           = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
-        foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
-            if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
-                $trackers_from_template[]                           = $tracker;
-                [$tracker_mapping, $field_mapping, $report_mapping] = $this->duplicateTracker(
-                    $tracker_mapping,
-                    $field_mapping,
-                    $report_mapping,
-                    $tracker,
-                    $mapping_registry,
-                    $to_project_id,
-                    $mapping_registry->getUgroupMapping()
-                );
-                /*
-                 * @todo
-                 * Unless there is some odd dependency on the last tracker meeting
-                 * the requirement of the if() condition then there should be a break here.
-                 */
+
+        $transaction_executor->execute(function () use ($from_project_id, $tracker_ids_list, &$trackers_from_template, &$tracker_mapping, &$field_mapping, &$report_mapping, $mapping_registry, $to_project_id) {
+            foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
+                if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
+                    $trackers_from_template[]                           = $tracker;
+                    [$tracker_mapping, $field_mapping, $report_mapping] = $this->duplicateTracker(
+                        $tracker_mapping,
+                        $field_mapping,
+                        $report_mapping,
+                        $tracker,
+                        $mapping_registry,
+                        $to_project_id,
+                        $mapping_registry->getUgroupMapping()
+                    );
+                    /*
+                     * @todo
+                     * Unless there is some odd dependency on the last tracker meeting
+                     * the requirement of the if() condition then there should be a break here.
+                     */
+                }
             }
-        }
+        });
 
         if (! empty($tracker_mapping)) {
             $mapping_registry->setCustomMapping(self::TRACKER_MAPPING_KEY, $tracker_mapping);

@@ -21,6 +21,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 
@@ -88,7 +89,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
 
-        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
     }
 
     public function testDuplicateDuplicatesSharedFields(): void
@@ -158,7 +159,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
 
-        $this->tracker_factory->duplicate($from_project_id, $to_project_id, $mapping_registry);
+        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), $from_project_id, $to_project_id, $mapping_registry);
     }
 
     public function testDuplicateIgnoresNonDuplicatableTrackers(): void
@@ -171,7 +172,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_factory->shouldReceive('create')->never();
 
-        $this->tracker_factory->duplicate(100, 999, new MappingRegistry([]));
+        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, new MappingRegistry([]));
     }
 
     private function givenADuplicatableTracker($tracker_id): Tracker
@@ -207,7 +208,7 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
 
-        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
     }
 
     public function testDuplicateDuplicatesAllTrackersWithSemanticTimeframe(): void
@@ -235,6 +236,6 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with([], [1234 => 555]);
 
-        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
     }
 }

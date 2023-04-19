@@ -251,6 +251,6 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $rm->shouldReceive('createReference')->with($r2)->once();
 
-        $tm->duplicate($source_project_id, $destinatnion_project_id, new MappingRegistry($u_group_mapping));
+        $tm->duplicate(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(), $source_project_id, $destinatnion_project_id, new MappingRegistry($u_group_mapping));
     }
 }
