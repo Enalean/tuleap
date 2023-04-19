@@ -33,12 +33,6 @@ declare global {
         // Be consistent with Cypress declaration
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
-            clearSessionCookie(): void;
-
-            preserveSessionCookies(): void;
-
-            projectAdministratorLogin(): void;
-
             projectAdministratorSession(): void;
 
             projectMemberSession(): void;
@@ -46,13 +40,9 @@ declare global {
             anonymousSession(): void;
             regularUserSession(): void;
 
-            projectMemberLogin(): void;
-
             restrictedMemberSession(): void;
 
             restrictedRegularUserSession(): void;
-
-            userLogout(): void;
 
             switchProjectVisibility(visibility: string): void;
 
@@ -67,8 +57,6 @@ declare global {
             visitProjectAdministration(project_unixname: string): void;
 
             visitProjectAdministrationInCurrentProject(): void;
-
-            visitServiceInCurrentProject(service_label: string): void;
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;

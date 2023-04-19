@@ -26,14 +26,6 @@ import type {
 
 export const WEB_UI_SESSION = "WebUI";
 
-Cypress.Commands.add("clearSessionCookie", () => {
-    cy.clearCookie("__Host-TULEAP_session_hash");
-});
-
-Cypress.Commands.add("preserveSessionCookies", () => {
-    Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-});
-
 Cypress.Commands.add("projectAdministratorSession", () => {
     sessionThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
 });
@@ -57,14 +49,6 @@ Cypress.Commands.add("anonymousSession", () => {
     });
 });
 
-Cypress.Commands.add("projectAdministratorLogin", () => {
-    loginThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
-});
-
-Cypress.Commands.add("projectMemberLogin", () => {
-    loginThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
-});
-
 Cypress.Commands.add("restrictedMemberSession", () => {
     sessionThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
 });
@@ -84,10 +68,6 @@ function sessionThroughWebUI(username: string, password: string): void {
         loginThroughWebUI(username, password);
     });
 }
-
-Cypress.Commands.add("userLogout", () => {
-    cy.get("[data-test=user_logout]").click({ force: true });
-});
 
 interface CacheServiceUrls {
     [key: string]: string;
@@ -126,11 +106,6 @@ Cypress.Commands.add("visitProjectAdministration", (project_unixname: string) =>
 
 Cypress.Commands.add("visitProjectAdministrationInCurrentProject", () => {
     cy.get('[data-test="project-administration-link"]', { includeShadowDom: true }).click();
-});
-
-Cypress.Commands.add("visitServiceInCurrentProject", (service_label: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    visitServiceInCurrentProject(service_label, () => {});
 });
 
 function visitServiceInCurrentProject(
