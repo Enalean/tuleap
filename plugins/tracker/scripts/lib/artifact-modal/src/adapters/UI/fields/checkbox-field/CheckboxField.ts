@@ -76,7 +76,7 @@ export const CheckboxField = define<CheckboxField>({
     },
     field_presenter: undefined,
     content: (host) => html`
-        <div class="tlp-form-element" data-test="checkbox-field">
+        <div class="tlp-form-element">
             <label class="tlp-label">
                 ${host.field_presenter.field_label}
                 ${host.field_presenter.is_field_required &&
