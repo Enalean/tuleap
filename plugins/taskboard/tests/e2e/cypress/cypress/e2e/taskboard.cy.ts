@@ -74,28 +74,33 @@ describe(`Taskboard`, function () {
                         cy.get("[data-test=label-editor]").type("Discarded Epsilon{enter}");
                     });
 
-                cy.get("[data-card-id]").contains("Discarded Epsilon");
+                cy.get("[data-test=child-card]").contains("Discarded Epsilon");
             });
         });
 
         it(`edits the title of a card`, function () {
             cy.projectMemberSession();
             cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
-            cy.getContains("[data-card-id]", "Lonesome Galaxy")
-                .as("card")
-                .within(() => {
-                    cy.get("[data-test=card-edit-button]").click();
-                    cy.get("[data-test=label-editor]").then(($label_editor) => {
-                        expect($label_editor.val()).to.equal("Lonesome Galaxy");
-                        cy.wrap($label_editor).clear().type("Deserted Torpedo{enter}");
-                    });
+            cy.getContains("[data-test=card-with-remaining-effort]", "Lonesome Galaxy")
+                .then((card) => {
+                    cy.wrap(card).find("[data-test=card-edit-button]").click();
+                    return cy.wrap(card).find("[data-test=label-editor]");
+                })
+                .then(($label_editor) => {
+                    expect($label_editor.val()).to.equal("Lonesome Galaxy");
+                    cy.wrap($label_editor).clear().type("Deserted Torpedo{enter}");
                 });
-            cy.get("[data-card-id]").contains("Deserted Torpedo");
+
             // Edit back the name for repeatability
-            cy.get("@card").within(() => {
-                cy.get("[data-test=card-edit-button]").click();
-                cy.get("[data-test=label-editor]").clear().type("Lonesome Galaxy{enter}");
-            });
+            cy.getContains("[data-test=card-with-remaining-effort]", "Deserted Torpedo").then(
+                (card) => {
+                    cy.wrap(card).find("[data-test=card-edit-button]").click();
+                    cy.wrap(card)
+                        .find("[data-test=label-editor]")
+                        .clear()
+                        .type("Lonesome Galaxy{enter}");
+                }
+            );
         });
 
         it(`hide/show the swimlanes and cards that are "Done"`, function () {

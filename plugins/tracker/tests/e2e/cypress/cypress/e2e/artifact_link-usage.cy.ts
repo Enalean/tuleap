@@ -67,7 +67,6 @@ describe("Artifact link usage", () => {
         cy.get("[data-test=artifact-links]").click();
         // tlp switch made input not visible, need to force the uncheck action
         cy.get("[data-test=toggle-fixed_in-link]").uncheck({ force: true });
-        cy.get("[data-test=artifact-link-form-fixed_in]").submit();
     }
 
     function enableArtifactLinkUsage(project_id: string): void {
@@ -75,7 +74,6 @@ describe("Artifact link usage", () => {
         cy.get("[data-test=artifact-links]").click();
         // tlp switch made input not visible, need to force the uncheck action
         cy.get("[data-test=toggle-fixed_in-link]").check({ force: true });
-        cy.get("[data-test=artifact-link-form-fixed_in]").submit();
     }
 
     describe("Tracker administration", function () {
