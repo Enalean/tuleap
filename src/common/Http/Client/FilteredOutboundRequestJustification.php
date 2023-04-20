@@ -22,26 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Client;
 
-use Tuleap\ForgeConfigSandbox;
-use Tuleap\Test\PHPUnit\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Tuleap\Option\Option;
 
-final class OutboundHTTPRequestProxyTest extends TestCase
+/**
+ * @psalm-readonly
+ */
+final class FilteredOutboundRequestJustification
 {
-    use ForgeConfigSandbox;
+    private const SMOKESCREEN_ERROR_HEADER = 'X-Smokescreen-Error';
 
-    public function testUsesAdminDefinedProxy(): void
+    private function __construct(public readonly string $reason)
     {
-        \ForgeConfig::set('sys_proxy', 'my-proxy.test:8080');
-
-        self::assertTrue(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('my-proxy.test:8080', OutboundHTTPRequestProxy::getProxy());
     }
 
-    public function testUsesDefaultFilteringProxyWhenAdministratorsHaveNotDefinedTheirOwnProxy(): void
+    /**
+     * @psalm-return Option<self>
+     */
+    public static function fromResponse(ResponseInterface $response): Option
     {
-        \ForgeConfig::set('sys_proxy', ' ');
+        $filtered_request_header = $response->getHeaderLine(self::SMOKESCREEN_ERROR_HEADER);
+        if ($filtered_request_header === '') {
+            return Option::nothing(self::class);
+        }
 
-        self::assertFalse(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('localhost:4750', OutboundHTTPRequestProxy::getProxy());
+        return Option::fromValue(
+            new self(
+                $filtered_request_header,
+            )
+        );
     }
 }

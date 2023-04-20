@@ -92,8 +92,8 @@ else
         chown codendiadm:codendiadm /etc/tuleap/plugins/prometheus_metrics/etc/metrics_secret.key
     fi
 
-    # Disable SSRF protection in dev environment, avoid this in production
-    tuleap config-set http_outbound_requests_allow_ranges '0.0.0.0/0,::/0'
+    # Disable SSRF protection in dev environment for RFC1918 ranges, avoid this in production
+    tuleap config-set http_outbound_requests_allow_ranges '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
 fi
 
 systemctl restart nginx
@@ -102,3 +102,4 @@ systemctl start tuleap-process-system-events-default.timer
 systemctl start tuleap-launch-system-check.timer
 systemctl start tuleap-process-system-events-git.timer
 systemctl start httpd
+systemctl restart tuleap

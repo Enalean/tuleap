@@ -24,6 +24,7 @@ namespace Tuleap\Http\Client;
 
 use Exception;
 use Http\Client\Common\Plugin;
+use Http\Client\Exception\HttpException;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -105,19 +106,38 @@ final class HTTPOutboundResponseMetricCollector implements Plugin
     {
         return $next($request)->then(
             function (ResponseInterface $response): ResponseInterface {
-                $http_status_code     = 'invalid';
-                $response_status_code = $response->getStatusCode();
-                if (isset(self::VALID_HTTP_STATUS_CODE[$response_status_code])) {
-                    $http_status_code = (string) $response_status_code;
-                }
-
-                $this->prometheus->increment(self::METRIC_NAME, self::METRIC_DESCRIPTION, ['status' => 'fulfilled', 'http_status_code' => $http_status_code]);
+                $this->processResponse($response);
                 return $response;
             },
             function (Exception $exception): void {
-                $this->prometheus->increment(self::METRIC_NAME, self::METRIC_DESCRIPTION, ['status' => 'failure']);
+                if ($exception instanceof HttpException) {
+                    $this->processResponse($exception->getResponse());
+                    throw $exception;
+                }
+                $this->prometheus->increment(self::METRIC_NAME, self::METRIC_DESCRIPTION, ['status' => 'failure', 'http_status_code' => 'invalid']);
                 throw $exception;
             }
         );
+    }
+
+    private function processResponse(ResponseInterface $response): ResponseInterface
+    {
+        $http_status_code     = 'invalid';
+        $response_status_code = $response->getStatusCode();
+        if (isset(self::VALID_HTTP_STATUS_CODE[$response_status_code])) {
+            $http_status_code = (string) $response_status_code;
+        }
+
+        $is_request_ssrf_filtered = FilteredOutboundRequestJustification::fromResponse($response)->isValue();
+
+        $this->prometheus->increment(
+            self::METRIC_NAME,
+            self::METRIC_DESCRIPTION,
+            [
+                'status'           => ($is_request_ssrf_filtered ? 'ssrf_filtered' : 'fulfilled'),
+                'http_status_code' => $http_status_code,
+            ]
+        );
+        return $response;
     }
 }

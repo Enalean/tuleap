@@ -31,7 +31,8 @@ final class OutboundHTTPRequestProxy
 {
     #[ConfigKey('Proxy used by outbound HTTP requests')]
     #[ConfigKeyString('')]
-    public const PROXY = "sys_proxy";
+    public const PROXY                    = "sys_proxy";
+    private const DEFAULT_FILTERING_PROXY = 'localhost:4750';
 
     private function __construct()
     {
@@ -39,7 +40,11 @@ final class OutboundHTTPRequestProxy
 
     public static function getProxy(): string
     {
-        return self::getProxyDefinedByAdministrators();
+        if (self::isProxyDefinedByAdministrators()) {
+            return self::getProxyDefinedByAdministrators();
+        }
+
+        return self::DEFAULT_FILTERING_PROXY;
     }
 
     public static function isProxyDefinedByAdministrators(): bool

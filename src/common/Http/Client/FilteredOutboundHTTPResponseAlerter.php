@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Http\Client;
 
 use Http\Client\Common\Plugin;
+use Http\Client\Exception\HttpException;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,7 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
     public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE        = 'never';
     public const ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE = 'system-check';
 
+
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly FilteredOutboundHTTPResponseAlerterDAO $alerter_dao,
@@ -54,17 +56,32 @@ final class FilteredOutboundHTTPResponseAlerter implements Plugin
 
         return $next($request)->then(
             function (ResponseInterface $response) use ($request): ResponseInterface {
-                if ($response->getStatusCode() !== 407) {
-                    return $response;
+                $this->processResponse($request, $response);
+                return $response;
+            },
+            function (\Exception $exception) use ($request): void {
+                if ($exception instanceof HttpException) {
+                    $this->processResponse($request, $exception->getResponse());
                 }
-                $this->logger->error("A possible SSRF attempt was blocked, URL: " . (string) $request->getUri());
+                throw $exception;
+            }
+        );
+    }
+
+    private function processResponse(RequestInterface $request, ResponseInterface $response): void
+    {
+        FilteredOutboundRequestJustification::fromResponse($response)->apply(
+            function (FilteredOutboundRequestJustification $filtering_justification) use ($request): void {
+                $this->logger->error(
+                    sprintf(
+                        "A possible SSRF attempt was blocked: %s (%s)",
+                        (string) $request->getUri(),
+                        $filtering_justification->reason,
+                    ),
+                );
                 if (\ForgeConfig::get(self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST) !== self::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_NEVER_VALUE) {
                     $this->alerter_dao->markNewFilteredRequest();
                 }
-                return $response;
-            },
-            function (\Exception $exception): void {
-                throw $exception;
             }
         );
     }

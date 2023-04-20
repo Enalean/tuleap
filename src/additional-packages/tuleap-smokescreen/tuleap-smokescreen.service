@@ -1,0 +1,25 @@
+[Unit]
+Description=Tuleap Smokescreen (proxy filtering outbound HTTP requests)
+Documentation=https://docs.tuleap.org
+After=tuleap.service
+PartOf=tuleap.service
+
+[Service]
+Type=simple
+User=tuleap-smokescreen
+Group=tuleap-smokescreen
+PermissionsStartOnly=yes
+ExecStartPre=/bin/sh -c '/usr/bin/tuleap smokescreen-configuration-dump > %t/tuleap-smokescreen-config.json'
+ExecStart=/usr/bin/tuleap-smokescreen --config-file=%t/tuleap-smokescreen-config.json
+RestartSec=5
+Restart=on-failure
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+DevicePolicy=closed
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=tuleap.service
