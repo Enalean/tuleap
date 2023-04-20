@@ -456,6 +456,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $progress_dao    = new SemanticProgressDao();
         $tooltip_fetcher = new Tuleap\Tracker\Semantic\Tooltip\TooltipFetcher(
+            TemplateRendererFactory::build(),
             new Tuleap\Tracker\Semantic\Tooltip\OtherSemantic\ProgressTooltipEntry(
                 new SemanticProgressBuilder(
                     $progress_dao,

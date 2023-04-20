@@ -33,8 +33,10 @@ final class TooltipFetcher
      */
     private readonly array $other_semantic_tooltip_entry_fetchers;
 
-    public function __construct(OtherSemanticTooltipEntryFetcher ...$other_semantic_tooltip_entry_fetchers)
-    {
+    public function __construct(
+        private readonly \TemplateRendererFactory $renderer_factory,
+        OtherSemanticTooltipEntryFetcher ...$other_semantic_tooltip_entry_fetchers,
+    ) {
         $this->other_semantic_tooltip_entry_fetchers = $other_semantic_tooltip_entry_fetchers;
     }
 
@@ -58,8 +60,12 @@ final class TooltipFetcher
         $html .= '</table>';
 
         return Option::fromValue(
-            TooltipJSON::fromHtmlTitleAndHtmlBody((string) $artifact->getTitle(), $html)
-                ->withAccentColor($artifact->getTracker()->getColor()->getName())
+            TooltipJSON::fromHtmlTitleAndHtmlBody(
+                $this->renderer_factory
+                    ->getRenderer(__DIR__ . '/../../../../templates/tooltip/')
+                    ->renderToString('artifact-tooltip-title', ['title' => $artifact->getTitle()]),
+                $html
+            )->withAccentColor($artifact->getTracker()->getColor()->getName())
         );
     }
 
