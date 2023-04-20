@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@fortawesome/fontawesome-free': ^6.1.1
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/tlp-badge': workspace:*
   '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-modal': workspace:*
   '@tuleap/tlp-popovers': workspace:*
@@ -14,6 +15,7 @@ specifiers:
 
 dependencies:
   '@fortawesome/fontawesome-free': 6.1.1
+  '@tuleap/tlp-badge': link:../../../lib/frontend/tlp-badge
   '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers

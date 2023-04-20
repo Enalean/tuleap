@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/tlp-swatch-colors': workspace:*
+
+dependencies:
+  '@tuleap/tlp-swatch-colors': link:../tlp-swatch-colors

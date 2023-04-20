@@ -19,13 +19,13 @@
 
 @use "../../default/css/style";
 @use "./tracker-creation";
-@use "~@tuleap/mention";
-@use "~@tuleap/plugin-tracker-rich-text-editor";
-@use "../../../../../src/themes/tlp/src/scss/components/switch";
-@use "../../../../../src/themes/tlp/src/scss/components/panes";
-@use "../../../../../src/themes/tlp/src/scss/components/cards";
-@use "../../../../../src/themes/tlp/src/scss/components/badges";
-@use "../../../../../src/themes/tlp/src/scss/components/tables";
+@use "@tuleap/mention";
+@use "@tuleap/tlp-badge";
+@use "@tuleap/plugin-tracker-rich-text-editor";
+@use "@tuleap/tlp/src/scss/components/switch";
+@use "@tuleap/tlp/src/scss/components/panes";
+@use "@tuleap/tlp/src/scss/components/cards";
+@use "@tuleap/tlp/src/scss/components/tables";
 
 /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
 .widget_content #tracker_report_table > thead > tr > th {
@@ -224,9 +224,8 @@ body.tracker-administration {
     margin: 0 6px 0 0;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--tlp-neutral-normal-color)
-        url("../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg") no-repeat center
-        center;
+    background: var(--tlp-neutral-normal-color) url("@tuleap/tlp/src/images/tlp-default-avatar.svg")
+        no-repeat center center;
     background-size: contain;
     vertical-align: top;
 

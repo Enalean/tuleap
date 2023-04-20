@@ -21,14 +21,14 @@
 @use "sass:map";
 @use "@tuleap/tlp-swatch-colors";
 
-$tlp-badge-radius: var(--tlp-small-radius);
-$tlp-badge-color: var(--tlp-white-color);
+$-tlp-badge-radius: var(--tlp-small-radius);
+$-tlp-badge-color: var(--tlp-white-color);
 
-%tlp-badge {
+@mixin -badge {
     display: inline-block;
     padding: var(--tlp-badge-padding);
-    border-radius: $tlp-badge-radius;
-    color: $tlp-badge-color;
+    border-radius: $-tlp-badge-radius;
+    color: $-tlp-badge-color;
     font-size: var(--tlp-badge-font-size);
     font-weight: var(--tlp-badge-font-weight);
     line-height: var(--tlp-badge-line-height);
@@ -43,10 +43,14 @@ $tlp-badge-color: var(--tlp-white-color);
     &.tlp-badge-rounded {
         border-radius: var(--tlp-medium-spacing);
     }
+}
 
-    &.tlp-badge-outline.tlp-badge-on-dark-background {
-        font-weight: normal;
-    }
+%-tlp-badge {
+    @include -badge;
+}
+
+@mixin -outline-on-dark-background {
+    font-weight: normal;
 }
 
 .tlp-badge-icon {
@@ -55,7 +59,7 @@ $tlp-badge-color: var(--tlp-white-color);
 }
 
 .tlp-badge-primary {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-main-color);
 
@@ -64,14 +68,24 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-main-color);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-main-color-transparent-80);
             color: var(--tlp-main-color-lighter-50);
         }
     }
 }
 
+// Used by select2 choices
+@mixin tlp-primary-outline-badge {
+    @include -badge;
+
+    background: var(--tlp-main-color-transparent-90);
+    color: var(--tlp-main-color);
+}
+
 .tlp-badge-secondary {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-neutral-dark-color);
     color: var(--tlp-dimmed-color-darker-10);
@@ -81,6 +95,8 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-dimmed-color-darker-10);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-neutral-normal-color-transparent-80);
             color: var(--tlp-neutral-dark-color);
         }
@@ -88,7 +104,7 @@ $tlp-badge-color: var(--tlp-white-color);
 }
 
 .tlp-badge-info {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-info-color);
 
@@ -97,6 +113,8 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-info-dark-color);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-info-color-transparent-85);
             color: var(--tlp-info-color-lighter-35);
         }
@@ -104,7 +122,7 @@ $tlp-badge-color: var(--tlp-white-color);
 }
 
 .tlp-badge-success {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-success-color);
 
@@ -113,6 +131,8 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-success-dark-color);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-success-color-transparent-85);
             color: var(--tlp-success-color-lighter-35);
         }
@@ -120,7 +140,7 @@ $tlp-badge-color: var(--tlp-white-color);
 }
 
 .tlp-badge-warning {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-warning-color);
 
@@ -129,6 +149,8 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-warning-dark-color);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-warning-color-transparent-85);
             color: var(--tlp-warning-color-lighter-20);
         }
@@ -136,7 +158,7 @@ $tlp-badge-color: var(--tlp-white-color);
 }
 
 .tlp-badge-danger {
-    @extend %tlp-badge;
+    @extend %-tlp-badge;
 
     background: var(--tlp-danger-color);
 
@@ -145,6 +167,8 @@ $tlp-badge-color: var(--tlp-white-color);
         color: var(--tlp-danger-dark-color);
 
         &.tlp-badge-on-dark-background {
+            @include -outline-on-dark-background;
+
             background: var(--tlp-danger-color-transparent-75);
             color: var(--tlp-danger-color-lighter-60);
         }
@@ -153,7 +177,7 @@ $tlp-badge-color: var(--tlp-white-color);
 
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
     .tlp-badge-#{$color-name} {
-        @extend %tlp-badge;
+        @extend %-tlp-badge;
 
         background: map.get($colors, "text");
 
@@ -162,6 +186,8 @@ $tlp-badge-color: var(--tlp-white-color);
             color: map.get($colors, "text");
 
             &.tlp-badge-on-dark-background {
+                @include -outline-on-dark-background;
+
                 background: map.get($colors, "badge-background-on-dark");
                 color: map.get($colors, "badge-color-on-dark");
             }

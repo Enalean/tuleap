@@ -18,7 +18,7 @@
  */
 
 @use "forms";
-@use "badges";
+@use "@tuleap/tlp-badge";
 
 .tlp-form-element {
     &.tlp-form-element-disabled {
@@ -175,9 +175,7 @@
 
             // stylelint-disable-next-line selector-class-pattern
             .select2-selection__choice {
-                @extend %tlp-badge;
-                // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
-                @extend .tlp-badge-primary, .tlp-badge-outline;
+                @include tlp-badge.tlp-primary-outline-badge;
 
                 flex: 0 0 auto;
                 margin: 6px 5px 0 0;
