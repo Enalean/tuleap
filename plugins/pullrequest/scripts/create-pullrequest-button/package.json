@@ -7,18 +7,20 @@
   "type": "module",
   "dependencies": {
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/vue2-gettext-init": "workspace:*",
-    "vue": "^2.7.8",
-    "vue-gettext": "^2.1.12",
+    "@tuleap/vue3-gettext-init": "workspace:*",
+    "@vue/compat": "^3.2.47",
+    "vue": "^3.2.47",
+    "vue3-gettext": "2.5.0-alpha.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:*"
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "vue-loader": "^17.0.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest"
   }
 }

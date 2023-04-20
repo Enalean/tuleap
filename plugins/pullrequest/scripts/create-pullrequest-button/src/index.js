@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./components/App.vue";
-import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const is_anonymous = document.body.dataset.userId === "0";
@@ -42,20 +43,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
 
-    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
-        import(`../po/${getPOFileFromLocale(locale)}`)
+    const gettext = await initVueGettext(createGettext, (locale) =>
+        import(`./${getPOFileFromLocale(locale)}`)
     );
 
-    const RootComponent = Vue.extend(App);
+    const app = createApp(App, {
+        repository_id,
+        project_id,
+        parent_repository_id,
+        parent_repository_name,
+        parent_project_id,
+        user_can_see_parent_repository,
+    });
 
-    new RootComponent({
-        propsData: {
-            repository_id,
-            project_id,
-            parent_repository_id,
-            parent_repository_name,
-            parent_project_id,
-            user_can_see_parent_repository,
-        },
-    }).$mount(mount_point);
+    app.use(gettext);
+    app.mount(mount_point);
 });
