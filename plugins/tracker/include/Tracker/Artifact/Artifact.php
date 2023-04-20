@@ -99,6 +99,7 @@ use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
@@ -138,7 +139,9 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
@@ -147,6 +150,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -448,7 +454,25 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function fetchTooltip(PFUser $user): Tuleap\Option\Option
     {
-        return (new Tuleap\Tracker\Semantic\Tooltip\TooltipFetcher())->fetchArtifactTooltip(
+        $progress_dao    = new SemanticProgressDao();
+        $tooltip_fetcher = new Tuleap\Tracker\Semantic\Tooltip\TooltipFetcher(
+            new Tuleap\Tracker\Semantic\Tooltip\OtherSemantic\ProgressTooltipEntry(
+                new SemanticProgressBuilder(
+                    $progress_dao,
+                    new MethodBuilder(
+                        $this->getFormElementFactory(),
+                        $progress_dao,
+                        new TypePresenterFactory(
+                            new TypeDao(),
+                            new ArtifactLinksUsageDao()
+                        )
+                    )
+                ),
+                TemplateRendererFactory::build(),
+            )
+        );
+
+        return $tooltip_fetcher->fetchArtifactTooltip(
             $this,
             $this->getTracker()->getTooltip(),
             $user,

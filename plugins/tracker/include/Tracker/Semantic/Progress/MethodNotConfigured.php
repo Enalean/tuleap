@@ -53,6 +53,11 @@ class MethodNotConfigured implements IComputeProgression
         return new ProgressionResult(null, "");
     }
 
+    public function isConfiguredAndValid(): bool
+    {
+        return false;
+    }
+
     public function isConfigured(): bool
     {
         return false;

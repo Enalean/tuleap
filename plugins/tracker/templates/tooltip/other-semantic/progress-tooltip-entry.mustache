@@ -1,0 +1,13 @@
+<tr>
+    <td>
+        <label>{{# dgettext }}tuleap-tracker | Progress{{/ dgettext }}</label>
+    </td>
+    <td {{# progress_error_message }}class="crossref-tooltip-value-error"{{/ progress_error_message }}>
+        {{# progress_error_message }}
+            {{ progress_error_message }}
+        {{/ progress_error_message }}
+        {{^ progress_error_message }}
+            {{ percentage }}%
+        {{/ progress_error_message }}
+    </td>
+</tr>

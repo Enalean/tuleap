@@ -98,6 +98,54 @@ final class TooltipFetcherTest extends TestCase
         self::assertEquals('fiesta-red', $tooltip->unwrapOr('')->accent_color);
     }
 
+    public function testIncludesOtherSemanticsEntries(): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getTitle')->willReturn('The title');
+        $artifact->method('getTracker')->willReturn(
+            TrackerTestBuilder::aTracker()
+                ->withColor(TrackerColor::fromName('fiesta-red'))
+                ->build()
+        );
+
+        $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_1->method('userCanRead')->willReturn(true);
+        $field_1->method('fetchTooltip')->willReturn('avada');
+
+        $field_2 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_2->method('userCanRead')->willReturn(true);
+        $field_2->method('fetchTooltip')->willReturn('kedavra');
+
+        $tooltip = TooltipFieldsStub::withFields(
+            $field_1,
+            $field_2,
+        );
+
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $tooltip = (new TooltipFetcher(
+            new class implements OtherSemanticTooltipEntryFetcher {
+                public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
+                {
+                    return 'Susan';
+                }
+            },
+            new class implements OtherSemanticTooltipEntryFetcher {
+                public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
+                {
+                    return 'Dennis';
+                }
+            },
+        ))->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertEquals('The title', $tooltip->unwrapOr('')->title_as_html);
+        self::assertStringContainsString('Susan', $tooltip->unwrapOr('')->body_as_html);
+        self::assertStringContainsString('Dennis', $tooltip->unwrapOr('')->body_as_html);
+        self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
+        self::assertStringContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
+        self::assertEquals('fiesta-red', $tooltip->unwrapOr('')->accent_color);
+    }
+
     public function testExcludeUnreadableFields(): void
     {
         $artifact = $this->createMock(Artifact::class);

@@ -36,6 +36,8 @@ interface IComputeProgression
 
     public function isConfigured(): bool;
 
+    public function isConfiguredAndValid(): bool;
+
     public function getErrorMessage(): string;
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticProgress;

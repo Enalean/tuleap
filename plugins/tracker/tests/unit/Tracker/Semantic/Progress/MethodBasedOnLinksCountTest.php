@@ -189,7 +189,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIsConfigured(): void
     {
-        $this->assertTrue($this->method->isConfigured());
+        $this->assertTrue($this->method->isConfiguredAndValid());
     }
 
     public function testItExportsToREST(): void

@@ -177,6 +177,10 @@
     line-height: 12px;
 }
 
+.crossref-tooltip-value-error {
+    color: var(--tlp-danger-color-on-dark-background);
+}
+
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;

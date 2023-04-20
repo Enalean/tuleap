@@ -173,7 +173,7 @@ class SemanticProgress extends \Tracker_Semantic
 
     public function isDefined(): bool
     {
-        return $this->method->isConfigured();
+        return $this->method->isConfiguredAndValid();
     }
 
     public function getComputationMethod(): IComputeProgression
