@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63e942576287bc4f71579f8f5be45274",
+    "content-hash": "2a71a6e00709e6dd0584b6bde6f124f8",
     "packages": [
         {
             "name": "composer/installers",
@@ -380,16 +380,16 @@
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "ec1f0b32329466bbf3e04b92d330231909deb0ef"
+                "reference": "e8cbfc28d8698b5fab8c50de90257cae35244b85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/ec1f0b32329466bbf3e04b92d330231909deb0ef",
-                "reference": "ec1f0b32329466bbf3e04b92d330231909deb0ef",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/e8cbfc28d8698b5fab8c50de90257cae35244b85",
+                "reference": "e8cbfc28d8698b5fab8c50de90257cae35244b85",
                 "shasum": ""
             },
             "require": {
@@ -424,22 +424,22 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.5"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.6"
             },
-            "time": "2023-04-06T08:01:00+00:00"
+            "time": "2023-04-17T14:19:37+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.1.3",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "42cdefffdb0af18715d0ffd29d822930a5310fcd"
+                "reference": "2b2397ef60293cd90f1bd7177d43c3411ac4d14c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/42cdefffdb0af18715d0ffd29d822930a5310fcd",
-                "reference": "42cdefffdb0af18715d0ffd29d822930a5310fcd",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/2b2397ef60293cd90f1bd7177d43c3411ac4d14c",
+                "reference": "2b2397ef60293cd90f1bd7177d43c3411ac4d14c",
                 "shasum": ""
             },
             "require": {
@@ -477,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.3"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.5"
             },
-            "time": "2023-04-06T07:15:56+00:00"
+            "time": "2023-04-20T06:15:53+00:00"
         },
         {
             "name": "mpdf/mpdf",
