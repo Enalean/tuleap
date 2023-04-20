@@ -21,31 +21,31 @@
 
 namespace Tuleap\CLI\Command;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\InvalidConfigKeyException;
 use Tuleap\Config\InvalidConfigKeyValueException;
+use Tuleap\Option\Option;
 
 class ConfigSetCommand extends Command
 {
     public const NAME = 'config-set';
 
-    /**
-     * @var ConfigSet
-     */
-    private $config_set;
-
-    public function __construct(ConfigSet $config_set)
-    {
+    public function __construct(
+        private readonly ConfigSet $config_set,
+        private readonly EventDispatcherInterface $event_dispatcher,
+    ) {
         parent::__construct(self::NAME);
-        $this->config_set = $config_set;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Set configuration values')
             ->addArgument('key', InputArgument::REQUIRED, 'Variable key')
@@ -54,12 +54,21 @@ class ConfigSetCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        try {
-            $key = $input->getArgument('key');
-            assert(is_string($key));
-            $value = $input->getArgument('value');
-            assert(is_string($value));
+        $key = $input->getArgument('key');
+        assert(is_string($key));
 
+        $config_keys  = $this->event_dispatcher->dispatch(new GetConfigKeys());
+        $key_metadata = $config_keys->getKeyMetadata($key);
+        if ($key_metadata->is_secret) {
+            $current_value = Option::nothing(\Psl\Type\string());
+        } else {
+            $current_value = Option::fromValue(\ForgeConfig::get($key));
+        }
+
+        $value = $input->getArgument('value');
+        assert(is_string($value));
+
+        try {
             $this->config_set->set($key, $value);
         } catch (InvalidConfigKeyException $exception) {
             $keys = $exception->getConfigKeys();
@@ -68,6 +77,22 @@ class ConfigSetCommand extends Command
         } catch (InvalidConfigKeyValueException $exception) {
             throw new InvalidArgumentException($exception->getMessage());
         }
-        return 0;
+
+        $success_message = $current_value->mapOr(
+            fn (mixed $current_value_raw): string => sprintf(
+                "%s has been successfully updated from '%s' to '%s'",
+                OutputFormatter::escape($key),
+                OutputFormatter::escape($current_value_raw),
+                OutputFormatter::escape($value),
+            ),
+            sprintf(
+                "%s has been successfully updated",
+                OutputFormatter::escape($key)
+            ),
+        );
+
+        $output->writeln('<info>' . $success_message . '</info>');
+
+        return self::SUCCESS;
     }
 }
