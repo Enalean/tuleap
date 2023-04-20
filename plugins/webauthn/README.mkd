@@ -1,0 +1,4 @@
+WebAuthn plugin
+===============
+
+Allow users to register and use passkeys with WebAuthn protocol

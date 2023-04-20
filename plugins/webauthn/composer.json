@@ -1,0 +1,16 @@
+{
+  "name": "tuleap/plugin-webauthn",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\WebAuthn\\": ["include/", "include/WebAuthn/"]
+    },
+    "classmap": ["include/"]
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
+  }
+}
