@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
@@ -52,6 +53,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         private readonly PublicKeyCredentialLoader $credential_loader,
         private readonly AuthenticatorAttestationResponseValidator $attestation_response_validator,
         private readonly ResponseFactoryInterface $response_factory,
+        private readonly RestlerErrorResponseBuilder $error_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -62,39 +64,39 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
     {
         $current_user = $this->user_manager->getCurrentUser();
         if ($current_user->isAnonymous()) {
-            return $this->response_factory->createResponse(401);
+            return $this->error_response_builder->build(401);
         }
 
         if (empty($body = $request->getBody()->getContents())) {
-            return $this->response_factory->createResponse(400, _('Request body is empty'));
+            return $this->error_response_builder->build(400, _('Request body is empty'));
         }
 
         try {
             $request_body = psl_json_decode($body);
         } catch (DecodeException) {
-            return $this->response_factory->createResponse(400, _('Request body is not well formed'));
+            return $this->error_response_builder->build(400, _('Request body is not well formed'));
         }
         if (! array_key_exists('response', $request_body)) {
-            return $this->response_factory->createResponse(400, _('"response" field is missing from the request body'));
+            return $this->error_response_builder->build(400, _('"response" field is missing from the request body'));
         }
         if (! array_key_exists('name', $request_body)) {
-            return $this->response_factory->createResponse(400, _('"name" field is missing from the request body'));
+            return $this->error_response_builder->build(400, _('"name" field is missing from the request body'));
         }
         $response = $request_body['response'];
         $name     = $request_body['name'];
         if (! is_array($response) || ! is_string($name)) {
-            return $this->response_factory->createResponse(400, _('Request body is not well formed'));
+            return $this->error_response_builder->build(400, _('Request body is not well formed'));
         }
 
         try {
             $public_key_credential = $this->credential_loader->loadArray($response);
         } catch (InvalidDataException $e) {
-            return $this->response_factory->createResponse(400, _('The result of passkey is not well formed'));
+            return $this->error_response_builder->build(400, _('The result of passkey is not well formed'));
         }
 
         $authentication_attestation_response = $public_key_credential->getResponse();
         if (! $authentication_attestation_response instanceof AuthenticatorAttestationResponse) {
-            return $this->response_factory->createResponse(400, _('The result of passkey is not for registration'));
+            return $this->error_response_builder->build(400, _('The result of passkey is not for registration'));
         }
 
         return $this->challenge_dao
@@ -121,14 +123,14 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
                             $this->relying_party_entity->getId() ?? ''
                         );
                     } catch (\Throwable $e) {
-                        return $this->response_factory->createResponse(400, _('The result of passkey is invalid'));
+                        return $this->error_response_builder->build(400, _('The result of passkey is invalid'));
                     }
 
                     $this->source_dao->saveCredentialSourceWithName($credential_source, $name);
 
                     return $this->response_factory->createResponse(200);
                 },
-                $this->response_factory->createResponse(400, _('The registration cannot be checked'))
+                $this->error_response_builder->build(400, _('The registration cannot be checked'))
             );
     }
 }

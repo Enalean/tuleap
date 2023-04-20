@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
@@ -49,8 +49,8 @@ final class PostRegistrationChallengeController extends DispatchablePSR15Compati
         private readonly PublicKeyCredentialSourceRepository $source_dao,
         private readonly PublicKeyCredentialRpEntity $relying_party_entity,
         private readonly array $credential_parameters,
-        private readonly ResponseFactoryInterface $response_factory,
         private readonly JSONResponseBuilder $response_builder,
+        private readonly RestlerErrorResponseBuilder $error_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -61,7 +61,7 @@ final class PostRegistrationChallengeController extends DispatchablePSR15Compati
     {
         $current_user = $this->user_manager->getCurrentUser();
         if ($current_user->isAnonymous()) {
-            return $this->response_factory->createResponse(401);
+            return $this->error_response_builder->build(401);
         }
 
         $user_entity = new PublicKeyCredentialUserEntity(

@@ -89,6 +89,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\AccountCreationFeedback;
@@ -1291,6 +1292,8 @@ class RouteCollector
 
     public static function postWebAuthnRegistrationChallenge(): DispatchablePSR15Compatible
     {
+        $json_response_builder = new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+
         return new PostRegistrationChallengeController(
             \UserManager::instance(),
             new WebAuthnChallengeDao(),
@@ -1300,8 +1303,8 @@ class RouteCollector
                 ServerHostname::rawHostname()
             ),
             WebAuthnRegistration::getCredentialParameters(),
-            HTTPFactoryBuilder::responseFactory(),
-            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            $json_response_builder,
+            new RestlerErrorResponseBuilder($json_response_builder),
             new SapiEmitter()
         );
     }
@@ -1310,7 +1313,9 @@ class RouteCollector
     {
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
-        $source_dao = new WebAuthnCredentialSourceDao();
+        $source_dao            = new WebAuthnCredentialSourceDao();
+        $response_factory      = HTTPFactoryBuilder::responseFactory();
+        $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
 
         return new PostRegistrationController(
             \UserManager::instance(),
@@ -1330,7 +1335,8 @@ class RouteCollector
                 null,
                 new ExtensionOutputCheckerHandler()
             ),
-            HTTPFactoryBuilder::responseFactory(),
+            $response_factory,
+            new RestlerErrorResponseBuilder($json_response_builder),
             new SapiEmitter()
         );
     }
