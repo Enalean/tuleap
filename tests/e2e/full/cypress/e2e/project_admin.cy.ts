@@ -54,7 +54,6 @@ context("Suspended users", function () {
         cy.get("[data-test=project-admin-ugroups-members-list]")
             .contains("Suspended")
             .should("have.attr", "data-user-id")
-            .as("user_id")
             .then((user_id) => {
                 cy.get(`[data-test=remove-user-${user_id}]`).click();
                 cy.get("[data-test=remove-from-ugroup]").click();
@@ -66,7 +65,6 @@ context("Suspended users", function () {
         cy.get("[data-test=project-admin-members-list]")
             .contains("Suspended")
             .should("have.attr", "data-user-id")
-            .as("user_id")
             .then((user_id) => {
                 cy.get(`[data-test=remove-user-${user_id}]`).click();
                 cy.get("[data-test=remove-from-member]").click();
@@ -302,7 +300,6 @@ context("Membership management", function () {
         cy.get("[data-test=project-admin-members-list]")
             .contains("RestrictedMember (RestrictedMember)")
             .should("have.attr", "data-user-id")
-            .as("user_id")
             .then((user_id) => {
                 cy.get(`[data-test=remove-user-${user_id}]`).click();
                 cy.get(`[data-test=remove-from-member]`).click();

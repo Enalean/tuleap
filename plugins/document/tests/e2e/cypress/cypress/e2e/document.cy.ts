@@ -29,10 +29,6 @@ describe("Document new UI", () => {
                 project_unixname = `docman-${now}`;
                 cy.projectAdministratorSession();
                 cy.createNewPublicProject(project_unixname, "issues").as("project_id");
-            });
-
-            it("can access to admin section", function () {
-                cy.projectAdministratorSession();
                 cy.visit(`${"/plugins/document/" + project_unixname + "/admin-search"}`);
                 cy.contains("Properties").should("have.attr", "href").as("manage_properties_url");
             });
@@ -73,44 +69,42 @@ describe("Document new UI", () => {
             });
 
             function createProjectWithAVersionnedEmbededFile(): void {
-                cy.createNewPublicProject(`doc-version-${now}`, "issues")
-                    .as("project_id")
-                    .then((project_id) =>
-                        cy
-                            .getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
-                            .then((response) => {
-                                const root_folder_id = response.body.root_item.id;
-                                const embedded_payload = {
-                                    title: "test",
-                                    description: "",
-                                    type: "embedded",
-                                    embedded_properties: {
-                                        content: "<p>embedded</p>\n",
-                                    },
-                                    should_lock_file: false,
-                                };
-                                return cy.postFromTuleapApi(
-                                    `api/docman_folders/${root_folder_id}/embedded_files`,
-                                    embedded_payload
-                                );
-                            })
-                            .then((response) => response.body.id)
-                            .then((item) => {
-                                const updated_embedded_payload = {
-                                    embedded_properties: {
-                                        content: "<p>updated content</p>\n",
-                                    },
-                                    should_lock_file: false,
-                                };
-                                cy.postFromTuleapApi(
-                                    `api/docman_embedded_files/${item}/versions`,
-                                    updated_embedded_payload
-                                );
-                                cy.visit(
-                                    `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`
-                                );
-                            })
-                    );
+                cy.createNewPublicProject(`doc-version-${now}`, "issues").then((project_id) =>
+                    cy
+                        .getFromTuleapAPI(`api/projects/${project_id}/docman_service`)
+                        .then((response) => {
+                            const root_folder_id = response.body.root_item.id;
+                            const embedded_payload = {
+                                title: "test",
+                                description: "",
+                                type: "embedded",
+                                embedded_properties: {
+                                    content: "<p>embedded</p>\n",
+                                },
+                                should_lock_file: false,
+                            };
+                            return cy.postFromTuleapApi(
+                                `api/docman_folders/${root_folder_id}/embedded_files`,
+                                embedded_payload
+                            );
+                        })
+                        .then((response) => response.body.id)
+                        .then((item) => {
+                            const updated_embedded_payload = {
+                                embedded_properties: {
+                                    content: "<p>updated content</p>\n",
+                                },
+                                should_lock_file: false,
+                            };
+                            cy.postFromTuleapApi(
+                                `api/docman_embedded_files/${item}/versions`,
+                                updated_embedded_payload
+                            );
+                            cy.visit(
+                                `plugins/docman/?group_id=${project_id}&id=${item}&action=details&section=history`
+                            );
+                        })
+                );
             }
 
             it("document versioning", function () {

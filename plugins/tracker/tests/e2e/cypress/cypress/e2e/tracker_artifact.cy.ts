@@ -327,7 +327,6 @@ describe("Tracker artifacts", function () {
 
             cy.get("[data-test=current-artifact-id]")
                 .should("have.attr", "data-artifact-id")
-                .as("artifact_id")
                 .then((artifact_id) => {
                     // Add a follow-up comment to the artifact via the REST API
                     cy.putFromTuleapApi(`https://tuleap/api/artifacts/${artifact_id}`, {
