@@ -223,9 +223,6 @@ $sys_file_deletion_delay = 3;
 // are also configured to allow this size.
 $sys_max_size_upload = 67108864;
 
-//Proxy used to access to Internet. "host:port"
-$sys_proxy = "";
-
 // Enable trove categorization (project tree/software map)
 // (1 to enable, 0 to disable)
 $sys_use_trove = 1;
