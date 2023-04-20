@@ -26,6 +26,7 @@ use Cose\Algorithms;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
@@ -137,6 +138,8 @@ final class PostRegistrationChallengeControllerTest extends TestCase
         SaveWebAuthnChallenge $challenge_dao,
         PublicKeyCredentialSourceRepository $source_repository,
     ): PostRegistrationChallengeController {
+        $json_response_builder = new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+
         return new PostRegistrationChallengeController(
             $current_user_stub,
             $challenge_dao,
@@ -148,8 +151,8 @@ final class PostRegistrationChallengeControllerTest extends TestCase
             [
                 new PublicKeyCredentialParameters(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, Algorithms::COSE_ALGORITHM_ES256),
             ],
-            HTTPFactoryBuilder::responseFactory(),
-            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            $json_response_builder,
+            new RestlerErrorResponseBuilder($json_response_builder),
             new NoopSapiEmitter()
         );
     }

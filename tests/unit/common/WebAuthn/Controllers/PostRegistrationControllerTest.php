@@ -25,6 +25,8 @@ namespace Tuleap\WebAuthn\Controllers;
 use Cose\Algorithms;
 use Psr\Http\Message\ResponseInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
@@ -60,7 +62,6 @@ final class PostRegistrationControllerTest extends TestCase
         $response = $this->handle(ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anAnonymousUser()->build()));
 
         self::assertSame(401, $response->getStatusCode());
-        self::assertSame('Unauthorized', $response->getReasonPhrase());
     }
 
     /**
@@ -68,7 +69,6 @@ final class PostRegistrationControllerTest extends TestCase
      */
     public function testItReturnsError400(
         string|array $body,
-        string $error_message,
     ): void {
         $response = $this->handle(
             ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build()),
@@ -77,7 +77,6 @@ final class PostRegistrationControllerTest extends TestCase
         );
 
         self::assertSame(400, $response->getStatusCode());
-        self::assertSame($error_message, $response->getReasonPhrase());
     }
 
     public function testItReturns400WhenResponseIsWrong(): void
@@ -98,7 +97,6 @@ final class PostRegistrationControllerTest extends TestCase
         );
 
         self::assertSame(400, $response->getStatusCode());
-        self::assertSame('The result of passkey is invalid', $response->getReasonPhrase());
     }
 
     public function testItReturns200(): void
@@ -153,6 +151,8 @@ final class PostRegistrationControllerTest extends TestCase
     ): PostRegistrationController {
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $response_factory      = HTTPFactoryBuilder::responseFactory();
+        $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
 
         return new PostRegistrationController(
             $provide_current_user,
@@ -169,7 +169,8 @@ final class PostRegistrationControllerTest extends TestCase
                 null,
                 new ExtensionOutputCheckerHandler()
             ),
-            HTTPFactoryBuilder::responseFactory(),
+            $response_factory,
+            new RestlerErrorResponseBuilder($json_response_builder),
             new NoopSapiEmitter()
         );
     }
@@ -178,56 +179,47 @@ final class PostRegistrationControllerTest extends TestCase
     {
         yield 'It returns 400 when no body' => [
             'body' => '',
-            'error_message' => 'Request body is empty',
         ];
         yield 'It returns 400 when invalid json body' => [
             'body' => '{',
-            'error_message' => 'Request body is not well formed',
         ];
         yield 'It returns 400 when missing response' => [
             'body' => ['my_body'],
-            'error_message' => '"response" field is missing from the request body',
         ];
         yield 'It returns 400 when missing name' => [
             'body' => [
                 'response' => ['some data'],
             ],
-            'error_message' => '"name" field is missing from the request body',
         ];
         yield 'It returns 400 when response is not array' => [
             'body' => [
                 'response' => 'not an array',
                 'name' => 'name of passkey',
             ],
-            'error_message' => 'Request body is not well formed',
         ];
         yield 'It returns 400 when name is not string' => [
             'body' => [
                 'response' => [],
                 'name' => -1,
             ],
-            'error_message' => 'Request body is not well formed',
         ];
         yield 'It returns 400 when invalid response' => [
             'body' => [
                 'response' => ['invalid data'],
                 'name' => 'name of passkey',
             ],
-            'error_message' => 'The result of passkey is not well formed',
         ];
         yield 'It returns 400 when response is assertion' => [
             'body' => [
                 'response' => (new PasskeyStub())->generateAssertionResponse('challenge'),
                 'name' => 'name of passkey',
             ],
-            'error_message' => 'The result of passkey is not for registration',
         ];
         yield 'It returns 400 when there is not stored challenge' => [
             'body' => [
                 'response' => (new PasskeyStub())->generateAttestationResponse('challenge'),
                 'name' => 'name of passkey',
             ],
-            'error_message' => 'The registration cannot be checked',
         ];
     }
 }
