@@ -29,6 +29,16 @@ use Tuleap\Tracker\Artifact\Artifact;
 final class TooltipFetcher
 {
     /**
+     * @var OtherSemanticTooltipEntryFetcher[]
+     */
+    private readonly array $other_semantic_tooltip_entry_fetchers;
+
+    public function __construct(OtherSemanticTooltipEntryFetcher ...$other_semantic_tooltip_entry_fetchers)
+    {
+        $this->other_semantic_tooltip_entry_fetchers = $other_semantic_tooltip_entry_fetchers;
+    }
+
+    /**
      * @return Option<TooltipJSON>
      */
     public function fetchArtifactTooltip(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): Option
@@ -39,6 +49,9 @@ final class TooltipFetcher
         }
 
         $html = '<table>';
+        foreach ($this->other_semantic_tooltip_entry_fetchers as $other_semantic) {
+            $html .= $other_semantic->fetchTooltipEntry($artifact, $user);
+        }
         foreach ($readable_fields as $field) {
             $html .= $field->fetchTooltip($artifact);
         }

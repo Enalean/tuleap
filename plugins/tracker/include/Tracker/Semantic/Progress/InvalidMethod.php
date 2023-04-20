@@ -63,9 +63,14 @@ class InvalidMethod implements IComputeProgression
         return new ProgressionResult(null, $this->error_message);
     }
 
-    public function isConfigured(): bool
+    public function isConfiguredAndValid(): bool
     {
         return false;
+    }
+
+    public function isConfigured(): bool
+    {
+        return true;
     }
 
     public function getErrorMessage(): string

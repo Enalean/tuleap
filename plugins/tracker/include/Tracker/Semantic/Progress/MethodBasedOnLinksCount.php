@@ -123,6 +123,11 @@ class MethodBasedOnLinksCount implements IComputeProgression
         return new ProgressionResult($nb_closed / $nb_total, '');
     }
 
+    public function isConfiguredAndValid(): bool
+    {
+        return true;
+    }
+
     public function isConfigured(): bool
     {
         return true;
