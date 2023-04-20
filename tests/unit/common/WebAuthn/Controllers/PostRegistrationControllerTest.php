@@ -48,6 +48,13 @@ use function Psl\Json\encode as psl_json_encode;
 
 final class PostRegistrationControllerTest extends TestCase
 {
+    private WebAuthnCredentialSourceDaoStub $source_dao;
+
+    protected function setUp(): void
+    {
+        $this->source_dao = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
+    }
+
     public function testItReturns401WhenNoAuth(): void
     {
         $response = $this->handle(ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anAnonymousUser()->build()));
@@ -94,25 +101,30 @@ final class PostRegistrationControllerTest extends TestCase
         self::assertSame('The result of passkey is invalid', $response->getReasonPhrase());
     }
 
-    public function testItReturns501(): void
+    public function testItReturns200(): void
     {
         $challenge_dao = new WebAuthnChallengeDaoStub();
         $user_provider = ProvideCurrentUserStub::buildWithUser(UserTestBuilder::anActiveUser()->build());
         $challenge     = 'challenge';
         $challenge_dao->saveChallenge((int) $user_provider->getCurrentUser()->getId(), $challenge);
+        $passkey_name = 'My-awesome-key';
 
         $passkey  = new PasskeyStub();
         $response = $this->handle(
             $user_provider,
             [
                 'response' => $passkey->generateAttestationResponse($challenge),
-                'name' => 'name of passkey',
+                'name' => $passkey_name,
             ],
             $challenge_dao
         );
 
-        self::assertSame('Not Implemented', $response->getReasonPhrase());
-        self::assertSame(501, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('OK', $response->getReasonPhrase());
+        self::assertCount(1, $this->source_dao->sources_id);
+        self::assertCount(1, $this->source_dao->sources_name);
+        $key = array_keys($this->source_dao->sources_name)[0];
+        self::assertSame($passkey_name, $this->source_dao->sources_name[$key]);
     }
 
     // Above, tests functions
@@ -145,6 +157,7 @@ final class PostRegistrationControllerTest extends TestCase
         return new PostRegistrationController(
             $provide_current_user,
             $challenge_dao,
+            $this->source_dao,
             new PublicKeyCredentialRpEntity('tuleap', 'example.com'),
             [new PublicKeyCredentialParameters(PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY, Algorithms::COSE_ALGORITHM_ES256)],
             new PublicKeyCredentialLoader(

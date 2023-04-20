@@ -33,12 +33,14 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
 {
     private WebAuthnCredentialSourceDao $dao;
 
+    private const USER_ID = 101;
+
     protected function setUp(): void
     {
         $this->dao = new WebAuthnCredentialSourceDao();
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
 
@@ -47,17 +49,16 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
 
     public function testSaveAndRetrieve(): void
     {
-        $user_id = 102;
-        $source  = $this->generateSource($user_id);
+        $source = $this->generateSource(self::USER_ID);
 
         // It does not find before saving
         $retrieved = $this->dao->findOneByCredentialId('gbleskefe');
         self::assertNull($retrieved);
         $sources = $this->dao->findAllForUserEntity(
-            PublicKeyCredentialUserEntity::create('Marianna Deberry', (string) $user_id, 'mdeberry')
+            PublicKeyCredentialUserEntity::create('Marianna Deberry', (string) self::USER_ID, 'mdeberry')
         );
         self::assertEmpty($sources);
-        $sources = $this->dao->getAllByUserId($user_id);
+        $sources = $this->dao->getAllByUserId(self::USER_ID);
         self::assertEmpty($sources);
 
         $this->dao->saveCredentialSource($source);
@@ -77,10 +78,21 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
 
     public function testSaveEditNameThenFind(): void
     {
-        $source = $this->generateSource(103);
+        $source = $this->generateSource(self::USER_ID);
 
         $this->dao->saveCredentialSource($source);
         $this->dao->changeCredentialSourceName($source->getPublicKeyCredentialId(), 'MyAwesomeKey');
+
+        $sources = $this->dao->getAllByUserId((int) $source->getUserHandle());
+        self::assertCount(1, $sources);
+        self::assertSame('MyAwesomeKey', $sources[0]->getName());
+    }
+
+    public function testSaveWithNameThenFind(): void
+    {
+        $source = $this->generateSource(self::USER_ID);
+
+        $this->dao->saveCredentialSourceWithName($source, 'MyAwesomeKey');
 
         $sources = $this->dao->getAllByUserId((int) $source->getUserHandle());
         self::assertCount(1, $sources);

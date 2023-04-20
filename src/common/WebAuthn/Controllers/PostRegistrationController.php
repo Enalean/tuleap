@@ -31,6 +31,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
+use Tuleap\WebAuthn\Source\SaveCredentialSourceWithName;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\Exception\InvalidDataException;
@@ -45,6 +46,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
         private readonly RetrieveWebAuthnChallenge $challenge_dao,
+        private readonly SaveCredentialSourceWithName $source_dao,
         private readonly PublicKeyCredentialRpEntity $relying_party_entity,
         private readonly array $credential_parameters,
         private readonly PublicKeyCredentialLoader $credential_loader,
@@ -98,7 +100,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         return $this->challenge_dao
             ->searchChallenge((int) $current_user->getId())
             ->mapOr(
-                function (string $challenge) use ($current_user, $authentication_attestation_response) {
+                function (string $challenge) use ($current_user, $authentication_attestation_response, $name) {
                     $user_entity = new PublicKeyCredentialUserEntity(
                         $current_user->getUserName(),
                         (string) $current_user->getId(),
@@ -122,9 +124,9 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
                         return $this->response_factory->createResponse(400, _('The result of passkey is invalid'));
                     }
 
-                    // Save source
+                    $this->source_dao->saveCredentialSourceWithName($credential_source, $name);
 
-                    return $this->response_factory->createResponse(501);
+                    return $this->response_factory->createResponse(200);
                 },
                 $this->response_factory->createResponse(400, _('The registration cannot be checked'))
             );
