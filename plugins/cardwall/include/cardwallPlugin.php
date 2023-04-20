@@ -32,6 +32,7 @@ use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\XML\Template\CompleteIssuesTemplate;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
@@ -39,6 +40,7 @@ use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 /**
@@ -128,6 +130,26 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         $this->getAgileDashboardExporter()->exportFull(
+            $event->getProject(),
+            $xml_content,
+            $plannings
+        );
+
+        $this->getCardwallXmlExporter($project_id)->export($xml_content);
+    }
+
+    #[ListeningToEventClass]
+    public function trackerEventExportStructureXML(TrackerEventExportStructureXML $event): void
+    {
+        $project_id  = (int) $event->getProject()->getID();
+        $xml_content = $event->getXmlElement();
+
+        $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker(
+            $event->getUser(),
+            $project_id
+        );
+
+        $this->getAgileDashboardExporter()->export(
             $event->getProject(),
             $xml_content,
             $plannings
