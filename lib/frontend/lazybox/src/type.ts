@@ -21,6 +21,7 @@ import type { HTMLTemplateResult, TemplateResult } from "lit/html.js";
 import type { GroupCollection, LazyboxItem } from "./items/GroupCollection";
 import type { HTMLTemplateStringProcessor } from "./index";
 import type { SearchInput } from "./SearchInput";
+import type { SelectionBadge } from "./selection/SelectionBadge";
 
 export interface Lazybox {
     setDropdownContent: (groups: GroupCollection) => void;
@@ -40,6 +41,8 @@ export type LazyboxTemplatingCallback = (
 
 export type LazyboxNewItemCallback = () => void;
 
+export type LazyboxSelectionBadgeCallback = (item: RenderedItem) => SelectionBadge & HTMLElement;
+
 export type LazyBoxWithNewItemButton = {
     readonly new_item_button_label: string;
     readonly new_item_callback: LazyboxNewItemCallback;
@@ -56,6 +59,7 @@ export type LazyboxOptions = (LazyBoxWithoutNewItemButton | LazyBoxWithNewItemBu
     readonly templating_callback: LazyboxTemplatingCallback;
     readonly selection_callback: LazyboxSelectionCallback;
     readonly search_field_callback: LazyboxSearchFieldCallback;
+    readonly selection_badge_callback?: LazyboxSelectionBadgeCallback;
 };
 
 export type RenderedItemMap = Map<string, RenderedItem>;

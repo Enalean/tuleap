@@ -2,13 +2,17 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/core-constants': workspace:^
   '@tuleap/dom': workspace:*
   '@tuleap/tlp': workspace:*
+  '@tuleap/tlp-badge': workspace:*
   hybrids: 8.1.8
   lit: ^2.2.3
 
 dependencies:
+  '@tuleap/core-constants': link:../constants
   '@tuleap/tlp': link:../../../src/themes/tlp
+  '@tuleap/tlp-badge': link:../tlp-badge
   hybrids: 8.1.8
   lit: 2.2.3
 

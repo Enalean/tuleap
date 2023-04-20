@@ -7,7 +7,7 @@
   "type": "module",
   "module": "dist/core-constants.js",
   "main": "dist/core-constants.umd.cjs",
-  "types": "dist/main.d.ts",
+  "types": "src/main.ts",
   "exports": {
     ".": {
       "import": "./dist/core-constants.js",

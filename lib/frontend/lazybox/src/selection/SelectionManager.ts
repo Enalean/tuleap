@@ -94,9 +94,7 @@ export class SelectionManager implements ManageSelection {
         const document_fragment = document.createDocumentFragment();
         render(
             html`
-                <span class="lazybox-selected-value" data-item-id="${item.id}" aria-readonly="true">
-                    ${item.template}
-                </span>
+                <span class="lazybox-selected-value" aria-readonly="true">${item.template}</span>
             `,
             document_fragment
         );

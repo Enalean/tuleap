@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ManageSelection, LazyboxSelectionStateMultiple, RenderedItem } from "../type";
+import type {
+    ManageSelection,
+    LazyboxSelectionStateMultiple,
+    RenderedItem,
+    LazyboxSelectionBadgeCallback,
+} from "../type";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { LazyboxSelectionCallback } from "../type";
 import type { RemoveCurrentSelectionCallback } from "./templates/clear-selection-button-template";
 import { buildClearSelectionButtonElement } from "./templates/clear-selection-button-template";
-import { buildSelectedValueBadgeElement } from "./templates/selected-value-badge-template";
 import type { SearchInput } from "../SearchInput";
 
 export class MultipleSelectionManager implements ManageSelection {
@@ -37,7 +41,8 @@ export class MultipleSelectionManager implements ManageSelection {
         private readonly placeholder_text: string,
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly callback: LazyboxSelectionCallback
+        private readonly callback: LazyboxSelectionCallback,
+        private readonly selection_badge_callback: LazyboxSelectionBadgeCallback
     ) {
         this.selection_state = {
             selected_items: new Map(),
@@ -133,17 +138,20 @@ export class MultipleSelectionManager implements ManageSelection {
     }
 
     private createItemBadgeElement(list_item: RenderedItem): Element {
-        return buildSelectedValueBadgeElement(list_item, (event: Event): void => {
+        const badge = this.selection_badge_callback(list_item);
+        badge.setAttribute("data-test", "selected-value-badge");
+
+        badge.addEventListener("remove-badge", (): void => {
             if (this.source_select_box.disabled) {
                 return;
             }
-            event.preventDefault();
-            event.cancelBubble = true;
 
             this.removeListItemFromSelection(list_item);
             this.applyChangesPostSelectionStateChange();
             this.dropdown_manager.openLazybox();
         });
+
+        return badge;
     }
 
     private removeListItemFromSelection(list_item: RenderedItem): void {

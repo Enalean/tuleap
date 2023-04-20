@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "./common";
+
 /**
 * We can't just display: none or add the attribute type="hidden" because we need the <select> for accessibility purpose.
 * Hence, we shrink it at the maximum.
@@ -207,8 +209,8 @@
 }
 
 .lazybox-new-item-button {
-    @extend %unset-button-style;
     @extend %dropdown-item;
+    @include common.unset-button-style;
 
     padding: 8px 12px 9px;
     color: var(--tlp-dark-color);
@@ -303,42 +305,16 @@
     cursor: default;
 }
 
-.lazybox-selected-value-badge {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    margin: 6px 5px 0 0;
-    padding: var(--tlp-badge-padding);
-    border-radius: var(--tlp-small-radius);
-    background: var(--tlp-main-color-transparent-90);
-    color: var(--tlp-main-color);
-    font-size: var(--tlp-badge-font-size);
-    font-weight: var(--tlp-badge-font-weight);
-    line-height: var(--tlp-badge-line-height);
-    text-decoration: none;
-    vertical-align: middle;
-    white-space: nowrap;
-    cursor: pointer;
-}
-
 .lazybox-component-wrapper {
     display: inline-block;
     width: 100%;
 }
 
 .lazybox:not(.lazybox-disabled) {
-    .lazybox-selected-value-remove-button:hover,
-    .lazybox-value-remove-button:hover {
+    .lazybox-selected-value-remove-button:hover {
         opacity: 0.5;
         cursor: pointer;
     }
-}
-
-.lazybox-value-remove-button {
-    margin: 0 5px 0 0;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-align: center;
 }
 
 :is(.lazybox-search-field, .lazybox-selection) {
