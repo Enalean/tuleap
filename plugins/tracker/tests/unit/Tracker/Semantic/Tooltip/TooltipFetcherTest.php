@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
+use TemplateRendererFactory;
+use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,8 +44,12 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+        $template_factory = new TemplateRendererFactory($template_cache);
+
         self::assertTrue(
-            (new TooltipFetcher())
+            (new TooltipFetcher($template_factory))
                 ->fetchArtifactTooltip($artifact, $tooltip, $user)
                 ->isNothing()
         );
@@ -58,8 +64,12 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+        $template_factory = new TemplateRendererFactory($template_cache);
+
         self::assertTrue(
-            (new TooltipFetcher())
+            (new TooltipFetcher($template_factory))
                 ->fetchArtifactTooltip($artifact, $tooltip, $user)
                 ->isNothing()
         );
@@ -91,8 +101,12 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertEquals('The title', $tooltip->unwrapOr('')->title_as_html);
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+        $template_factory = new TemplateRendererFactory($template_cache);
+
+        $tooltip = (new TooltipFetcher($template_factory))->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
         self::assertEquals('fiesta-red', $tooltip->unwrapOr('')->accent_color);
@@ -124,7 +138,12 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+        $template_factory = new TemplateRendererFactory($template_cache);
+
         $tooltip = (new TooltipFetcher(
+            $template_factory,
             new class implements OtherSemanticTooltipEntryFetcher {
                 public function fetchTooltipEntry(Artifact $artifact, \PFUser $user): string
                 {
@@ -138,7 +157,7 @@ final class TooltipFetcherTest extends TestCase
                 }
             },
         ))->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertEquals('The title', $tooltip->unwrapOr('')->title_as_html);
+        self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('Susan', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('Dennis', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
@@ -168,8 +187,12 @@ final class TooltipFetcherTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tooltip = (new TooltipFetcher())->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertEquals('', $tooltip->unwrapOr('')->title_as_html);
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+        $template_factory = new TemplateRendererFactory($template_cache);
+
+        $tooltip = (new TooltipFetcher($template_factory))->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertEquals('', trim($tooltip->unwrapOr('')->title_as_html));
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringNotContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
     }
