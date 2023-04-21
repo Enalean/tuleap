@@ -84,7 +84,6 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
 
         $prepare_result = $legacy_mw_db_migration_primer->prepareDBForMigration(
             ProjectTestBuilder::aProject()->withId($project_id)->build(),
-            null,
             $db_name,
             self::DB_PREFIX
         );
@@ -122,7 +121,6 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
 
         $prepare_result = $legacy_mw_db_migration_primer->prepareDBForMigration(
             ProjectTestBuilder::aProject()->withId($project_id)->build(),
-            $db_name,
             $db_name,
             self::DB_PREFIX
         );

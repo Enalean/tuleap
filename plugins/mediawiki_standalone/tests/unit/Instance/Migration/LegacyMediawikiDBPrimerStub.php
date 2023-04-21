@@ -43,7 +43,7 @@ final class LegacyMediawikiDBPrimerStub implements LegacyMediawikiDBPrimer
         $this->db_prefix_used = Option::nothing(\Psl\Type\string());
     }
 
-    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok
+    public function prepareDBForMigration(\Project $project, string $db_name, string $db_prefix): Ok
     {
         $this->db_name_used   = Option::fromValue($db_name);
         $this->db_prefix_used = Option::fromValue($db_prefix);
