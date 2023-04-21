@@ -63,7 +63,10 @@ final class TooltipFetcher
             TooltipJSON::fromHtmlTitleAndHtmlBody(
                 $this->renderer_factory
                     ->getRenderer(__DIR__ . '/../../../../templates/tooltip/')
-                    ->renderToString('artifact-tooltip-title', ['title' => $artifact->getTitle()]),
+                    ->renderToString(
+                        'artifact-tooltip-title',
+                        ['title' => $artifact->getTitle(), 'xref' => $artifact->getXRef()]
+                    ),
                 $html
             )->withAccentColor($artifact->getTracker()->getColor()->getName())
         );

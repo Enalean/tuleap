@@ -148,6 +148,19 @@
     margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
+.crossref-tooltip-header-prefix-xref-and-title {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+}
+
+.crossref-tooltip-header-prefix-xref {
+    display: block;
+    margin: 0 0 2px;
+    color: var(--text-on-dark-color);
+    font-size: 0.625rem;
+    line-height: 0.75rem;
+}
+
 .crossref-tooltip-body {
     padding: var(--tlp-medium-spacing);
     font-size: 12px;
