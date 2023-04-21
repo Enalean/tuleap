@@ -31,9 +31,13 @@ describe(`Tracker Workflow`, () => {
     const REMAINING_EFFORT_FIELD_LABEL = "Remaining Effort";
     const INITIAL_EFFORT_FIELD_LABEL = "Initial Effort";
 
-    it(`has an empty state`, function () {
+    before(function () {
         cy.projectAdministratorSession();
         cy.getProjectId("tracker-project").as("project_id");
+    });
+
+    it(`has an empty state`, function () {
+        cy.projectAdministratorSession();
         getTrackerIdFromTrackerListPage()
             .as("workflow_tracker_id")
             .then((workflow_tracker_id: Cypress.ObjectLike) => {
@@ -68,9 +72,9 @@ describe(`Tracker Workflow`, () => {
                     .within(() => {
                         cy.get("[data-test-action=create-transition]").each(($button) => {
                             cy.wrap($button).click();
+                            cy.wait("@createTransitions");
                         });
                         // Making sure the transition has been created by checking if we can delete it before continuing the test
-                        cy.wait("@createTransitions");
                         cy.get("[data-test-action=confirm-delete-transition]");
                     });
 
