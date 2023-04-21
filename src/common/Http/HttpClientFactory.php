@@ -30,8 +30,6 @@ use Http\Client\HttpAsyncClient;
 use Psr\Http\Client\ClientInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyString;
-use Tuleap\Http\Client\HTTPOutboundResponseMetricCollector;
-use Tuleap\Instrument\Prometheus\Prometheus;
 
 class HttpClientFactory
 {
@@ -72,16 +70,18 @@ class HttpClientFactory
                 'timeout' => $timeout,
                 'proxy'   => \ForgeConfig::get(self::PROXY),
             ],
-            new HTTPOutboundResponseMetricCollector(Prometheus::instance()),
-            ...$plugins,
+            ...$plugins
         );
     }
 
     private static function createClientWithStandardConfig(Plugin ...$plugins): HttpAsyncClient&ClientInterface
     {
-        return self::createClientWithCustomTimeout(
-            self::TIMEOUT,
-            ...$plugins,
+        return self::createClientWithConfig(
+            [
+                'timeout' => self::TIMEOUT,
+                'proxy'   => \ForgeConfig::get(self::PROXY),
+            ],
+            ...$plugins
         );
     }
 
