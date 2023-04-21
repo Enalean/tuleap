@@ -24,6 +24,10 @@ export type ManageDropdownStub = ManageDropdown & {
     getOpenLazyboxCallCount: () => number;
 };
 
+const noop = (): void => {
+    // Do nothing
+};
+
 export const ManageDropdownStub = {
     withOpenDropdown: (): ManageDropdownStub => buildWithDropdownState({ is_open: true }),
     withClosedDropdown: (): ManageDropdownStub => buildWithDropdownState({ is_open: false }),
@@ -52,5 +56,7 @@ function buildWithDropdownState(state: { is_open: boolean }): ManageDropdownStub
         getOpenLazyboxCallCount(): number {
             return open_call_count;
         },
+        onClose: noop,
+        onOpen: noop,
     };
 }

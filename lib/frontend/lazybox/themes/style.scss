@@ -202,12 +202,6 @@
     line-height: normal;
 }
 
-%unset-button-style {
-    border: unset;
-    background: unset;
-    text-align: unset;
-}
-
 .lazybox-new-item-button {
     @extend %dropdown-item;
     @include common.unset-button-style;
@@ -261,6 +255,9 @@
 }
 
 .lazybox-selected-value-remove-button {
+    @include common.unset-button-style;
+    @include common.focusable-button;
+
     position: relative;
     top: -1px;
     float: right;

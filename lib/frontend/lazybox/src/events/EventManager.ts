@@ -29,7 +29,6 @@ export class EventManager {
     private escape_key_handler!: (event: KeyboardEvent) => void;
     private click_outside_handler!: (event: Event) => void;
     private keyboard_events_handler!: (event: KeyboardEvent) => void;
-    private has_keyboard_selection_occurred = false;
 
     constructor(
         private readonly doc: Document,
@@ -61,7 +60,7 @@ export class EventManager {
     public removeEventsListenersOnDocument(): void {
         this.doc.removeEventListener("keyup", this.escape_key_handler);
         this.doc.removeEventListener("pointerup", this.click_outside_handler);
-        this.doc.removeEventListener("keydown", this.keyboard_events_handler);
+        this.doc.removeEventListener("keyup", this.keyboard_events_handler);
     }
 
     private attachEscapeKeyPressedEvent(): (event: KeyboardEvent) => void {
@@ -142,23 +141,16 @@ export class EventManager {
             (!this.wrapper_element.contains(target_element) &&
                 !this.dropdown_element.contains(target_element))
         ) {
-            this.has_keyboard_selection_occurred = false;
             this.dropdown_manager.closeLazybox();
-            this.clearSearchFieldIfNeeded();
+            if (!this.selection_manager.hasSelection()) {
+                this.search_field.clear();
+            }
         }
-    }
-
-    private clearSearchFieldIfNeeded(): void {
-        if (!this.dropdown_manager.isDropdownOpen() && this.selection_manager.hasSelection()) {
-            return;
-        }
-        this.search_field.clear();
     }
 
     private handleEscapeKey(event: KeyboardEvent): void {
         if (isEscapeKey(event)) {
             this.dropdown_manager.closeLazybox();
-            this.has_keyboard_selection_occurred = false;
             event.stopPropagation();
         }
     }
@@ -177,7 +169,6 @@ export class EventManager {
                 this.field_focus_manager.doesSelectionElementHaveTheFocus()
             ) {
                 this.dropdown_manager.openLazybox();
-                this.has_keyboard_selection_occurred = false;
                 return;
             }
 
@@ -190,12 +181,11 @@ export class EventManager {
                 this.selection_manager.processSelection(highlighted_item);
                 this.dropdown_manager.closeLazybox();
                 this.search_field.clear();
-                this.has_keyboard_selection_occurred = true;
             } else {
                 this.keyboard_navigation_manager.navigate(event);
             }
         };
-        this.doc.addEventListener("keydown", handler);
+        this.doc.addEventListener("keyup", handler);
         return handler;
     }
 }

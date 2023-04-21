@@ -19,14 +19,14 @@
 
 import { describe, expect, it, beforeEach } from "vitest";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
-import type { LazyboxComponent } from "../type";
+import type { LazyboxComponent, LazyboxOptions } from "../type";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 
 const PLACEHOLDER = "Create a new artifact or search by id or title";
 const INPUT_PLACEHOLDER = "Id, title...";
 
 describe("base-component-renderer", () => {
-    let select: HTMLSelectElement, doc: Document;
+    let select: HTMLSelectElement, doc: Document, options: LazyboxOptions;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
@@ -34,26 +34,21 @@ describe("base-component-renderer", () => {
         select.id = "source-select-box";
 
         doc.body.appendChild(select);
+
+        options = OptionsBuilder.withoutNewItem().build();
     });
 
     const render = (): LazyboxComponent => {
-        const renderer = new BaseComponentRenderer(
-            doc,
-            select,
-            OptionsBuilder.withoutNewItem()
-                .withPlaceholder(PLACEHOLDER)
-                .withSearchInputPlaceholder(INPUT_PLACEHOLDER)
-                .build()
-        );
+        const renderer = new BaseComponentRenderer(doc, select, options);
         return renderer.renderBaseComponent();
     };
 
     it("should render the base component and append it right after the source <select>", () => {
+        options = OptionsBuilder.withoutNewItem().withIsMultiple().build();
         const {
             lazybox_element,
             dropdown_element,
-            selection_element,
-            placeholder_element,
+            multiple_selection_element,
             dropdown_list_element,
         } = render();
 
@@ -66,8 +61,7 @@ describe("base-component-renderer", () => {
         }
 
         expect(base_component.contains(lazybox_element)).toBe(true);
-        expect(base_component.contains(selection_element)).toBe(true);
-        expect(base_component.contains(placeholder_element)).toBe(true);
+        expect(base_component.contains(multiple_selection_element)).toBe(true);
         expect(doc.body.contains(dropdown_element)).toBe(true);
         expect(dropdown_element.contains(dropdown_list_element)).toBe(true);
     });
@@ -82,15 +76,12 @@ describe("base-component-renderer", () => {
     });
 
     it(`Given an input_placeholder option; it will set the "placeholder" attribute on the search input`, () => {
+        options = OptionsBuilder.withoutNewItem()
+            .withPlaceholder(PLACEHOLDER)
+            .withSearchInputPlaceholder(INPUT_PLACEHOLDER)
+            .build();
         const { search_field_element } = render();
 
         expect(search_field_element.placeholder).toBe(INPUT_PLACEHOLDER);
-    });
-
-    describe("placeholder element", () => {
-        it("Should display the placeholder text", () => {
-            const { placeholder_element } = render();
-            expect(placeholder_element.textContent).toBe(PLACEHOLDER);
-        });
     });
 });

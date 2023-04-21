@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,15 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin unset-button-style {
-    border: unset;
-    background: unset;
-    color: unset;
-    text-align: unset;
-}
+import { html } from "lit/html.js";
+import type { RenderedItem } from "../../src/type";
 
-@mixin focusable-button {
-    &:focus {
-        box-shadow: var(--tlp-shadow-focus);
-    }
-}
+const doc = document.implementation.createHTMLDocument();
+
+export const RenderedItemStub = {
+    withDefaults: (data?: Partial<RenderedItem>): RenderedItem => {
+        const element = doc.createElement("span");
+        element.setAttribute("aria-selected", "false");
+        return {
+            id: "lazybox-item-1",
+            group_id: "",
+            value: "value-1",
+            is_disabled: false,
+            is_selected: false,
+            template: html``,
+            element,
+            ...data,
+        };
+    },
+};

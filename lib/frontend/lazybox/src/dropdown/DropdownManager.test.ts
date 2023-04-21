@@ -21,11 +21,7 @@ import type { SpyInstance } from "vitest";
 import { describe, beforeEach, afterEach, it, expect, vi } from "vitest";
 import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import type { ScrollingManager } from "../events/ScrollingManager";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
-import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import type { SearchInput } from "../SearchInput";
 
 const noop = (): void => {
     //Do nothing
@@ -37,12 +33,7 @@ describe("dropdown-manager", () => {
         lazybox: Element,
         dropdown: HTMLElement,
         list: Element,
-        selection_container: HTMLElement,
         dropdown_manager: DropdownManager,
-        scroll_manager: ScrollingManager,
-        field_focus_manager: FieldFocusManager,
-        highlighter: ListItemHighlighter,
-        search_field: SearchInput,
         ResizeObserverSpy: SpyInstance,
         disconnect: SpyInstance;
 
@@ -60,39 +51,18 @@ describe("dropdown-manager", () => {
         });
 
         doc = document.implementation.createHTMLDocument();
-        const source_select_box = document.createElement("select");
-        const {
-            wrapper_element,
-            lazybox_element,
-            dropdown_element,
-            dropdown_list_element,
-            selection_element,
-        } = new BaseComponentRenderer(
-            doc,
-            source_select_box,
-            OptionsBuilder.withoutNewItem().build()
-        ).renderBaseComponent();
-
-        scroll_manager = {
-            lockScrolling: vi.fn(),
-            unlockScrolling: vi.fn(),
-        } as unknown as ScrollingManager;
-
-        field_focus_manager = {
-            applyFocusOnLazybox: vi.fn(),
-            applyFocusOnSearchField: vi.fn(),
-        } as unknown as FieldFocusManager;
-
-        highlighter = new ListItemHighlighter(dropdown_list_element);
+        const source_select_box = doc.createElement("select");
+        const { wrapper_element, lazybox_element, dropdown_element, dropdown_list_element } =
+            new BaseComponentRenderer(
+                doc,
+                source_select_box,
+                OptionsBuilder.withoutNewItem().build()
+            ).renderBaseComponent();
 
         wrapper = wrapper_element;
         lazybox = lazybox_element;
         dropdown = dropdown_element;
         list = dropdown_list_element;
-        selection_container = selection_element;
-        search_field = {
-            setFocus: noop,
-        } as SearchInput;
 
         dropdown_manager = new DropdownManager(
             doc,
@@ -100,11 +70,8 @@ describe("dropdown-manager", () => {
             lazybox,
             dropdown,
             list,
-            selection_element,
-            scroll_manager,
-            field_focus_manager,
-            highlighter,
-            search_field
+            noop,
+            noop
         );
     });
 
@@ -112,22 +79,23 @@ describe("dropdown-manager", () => {
         dropdown_manager.destroy();
     });
 
-    it("opens the dropdown by appending a 'shown' class to the dropdown element, focuses the search input and moves it under the lazybox", () => {
-        const focus = vi.spyOn(search_field, "setFocus");
+    it(`opens the dropdown by appending a "shown" class to the dropdown element,
+        and moves it under the lazybox`, () => {
+        const onOpen = vi.spyOn(dropdown_manager, "onOpen");
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.openLazybox();
 
         expect(lazybox.classList.contains("lazybox-with-open-dropdown")).toBe(true);
         expect(dropdown.classList.contains("lazybox-dropdown-shown")).toBe(true);
         expect(list.getAttribute("aria-expanded")).toBe("true");
-        expect(focus).toHaveBeenCalled();
-        expect(scroll_manager.lockScrolling).toHaveBeenCalled();
         expect(dropdown.style.top.length).toBeGreaterThan(0);
         expect(dropdown.style.left.length).toBeGreaterThan(0);
         expect(dropdown.style.width.length).toBeGreaterThan(0);
+        expect(onOpen).toHaveBeenCalled();
     });
 
-    it("closes the dropdown by removing the 'shown' class to the dropdown element", () => {
+    it(`closes the dropdown by removing the "shown" class to the dropdown element`, () => {
+        const onClose = vi.spyOn(dropdown_manager, "onClose");
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.openLazybox();
         dropdown_manager.closeLazybox();
@@ -135,11 +103,11 @@ describe("dropdown-manager", () => {
         expect(lazybox.classList.contains("lazybox-with-open-dropdown")).toBe(false);
         expect(dropdown.classList.contains("lazybox-dropdown-shown")).toBe(false);
         expect(list.getAttribute("aria-expanded")).toBe("false");
-        expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
-        expect(field_focus_manager.applyFocusOnLazybox).toHaveBeenCalled();
+        expect(onClose).toHaveBeenCalled();
     });
 
     it("should not open the lazybox if it's already open", () => {
+        const onOpen = vi.spyOn(dropdown_manager, "onOpen");
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown.classList.add("lazybox-dropdown-shown");
 
@@ -147,41 +115,24 @@ describe("dropdown-manager", () => {
         dropdown_manager.openLazybox();
 
         expect(dropdown.classList.add).not.toHaveBeenCalled();
-        expect(scroll_manager.lockScrolling).not.toHaveBeenCalled();
+        expect(onOpen).not.toHaveBeenCalled();
     });
 
     it("should not close the lazybox if it's already closed", () => {
+        const onClose = vi.spyOn(dropdown_manager, "onClose");
         expect(ResizeObserverSpy).toHaveBeenCalled();
         vi.spyOn(dropdown.classList, "remove");
         dropdown_manager.closeLazybox();
 
         expect(dropdown.classList.remove).not.toHaveBeenCalled();
-        expect(scroll_manager.unlockScrolling).not.toHaveBeenCalled();
+        expect(onClose).not.toHaveBeenCalled();
     });
 
-    it("sets the aria-expanded attribute on the selection element when needed", () => {
-        expect(ResizeObserverSpy).toHaveBeenCalled();
-        selection_container.setAttribute("aria-expanded", "false");
-        dropdown_manager.openLazybox();
-        expect(selection_container.getAttribute("aria-expanded")).toBe("true");
-        dropdown_manager.closeLazybox();
-        expect(selection_container.getAttribute("aria-expanded")).toBe("false");
-    });
-
-    it(`resets the highlight when the dropdown is closed`, () => {
-        const highlight = vi.spyOn(highlighter, "resetHighlight");
-        dropdown_manager.openLazybox();
-        dropdown_manager.closeLazybox();
-
-        expect(highlight).toHaveBeenCalled();
-    });
-
-    it("should unlock scrolling and stop observing items resize", () => {
+    it("should stop observing items resize", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.destroy();
 
         expect(disconnect).toHaveBeenCalled();
-        expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
     });
 
     describe("dropdown positioning", () => {
@@ -195,18 +146,7 @@ describe("dropdown-manager", () => {
                 body: document.createElement("body"),
             } as unknown as Document;
 
-            return new DropdownManager(
-                mocked_doc,
-                wrapper,
-                lazybox,
-                dropdown,
-                list,
-                selection_container,
-                scroll_manager,
-                field_focus_manager,
-                highlighter,
-                search_field
-            );
+            return new DropdownManager(mocked_doc, wrapper, lazybox, dropdown, list, noop, noop);
         }
 
         beforeEach(() => {
