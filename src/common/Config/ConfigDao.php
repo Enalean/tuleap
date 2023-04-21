@@ -50,4 +50,9 @@ class ConfigDao extends DataAccessObject
     {
         $this->save($name, (string) $value);
     }
+
+    public function delete(string $name): void
+    {
+        $this->getDB()->run('DELETE FROM forgeconfig WHERE name = ?', $name);
+    }
 }

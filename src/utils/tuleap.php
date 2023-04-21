@@ -26,6 +26,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigDumpCommand;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigListCommand;
+use Tuleap\CLI\Command\ConfigResetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\DailyJobCommand;
 use Tuleap\CLI\Command\HealthCheckCommand;
@@ -111,6 +112,11 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     ConfigDumpCommand::NAME,
     static fn () => new ConfigDumpCommand($event_manager)
+);
+
+$CLI_command_collector->addCommand(
+    ConfigResetCommand::NAME,
+    static fn () => new ConfigResetCommand($event_manager, new ConfigDao())
 );
 
 $CLI_command_collector->addCommand(

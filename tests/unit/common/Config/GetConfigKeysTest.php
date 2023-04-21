@@ -37,6 +37,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
                 true,
                 false,
                 false,
+                false,
                 null,
                 null,
                 null
@@ -113,6 +114,20 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $get_config_keys->addConfigClass($class::class);
 
         self::assertFalse($get_config_keys->canBeModified('foo'));
+    }
+
+    public function testDetectsIfConfigHasADefaultValue(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary')]
+            #[ConfigKeyString('')]
+            public const SOME_STUFF = 'foo';
+        };
+
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
+
+        self::assertTrue($get_config_keys->getKeyMetadata('foo')->has_default_value);
     }
 
     public function testConfigKeyHasCategory(): void
