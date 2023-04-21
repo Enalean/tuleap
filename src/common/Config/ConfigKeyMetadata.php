@@ -33,6 +33,7 @@ final class ConfigKeyMetadata
         public bool $can_be_modified,
         public bool $is_secret,
         public bool $is_hidden,
+        public readonly bool $has_default_value,
         public ?SecretValidator $secret_validator,
         public ?ValueValidator $value_validator,
         public ?string $category,

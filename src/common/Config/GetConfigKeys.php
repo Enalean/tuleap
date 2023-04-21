@@ -175,13 +175,14 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         $reflected_class = new \ReflectionClass($class_name);
         $category        = $this->getClassCategory($reflected_class);
         foreach ($reflected_class->getReflectionConstants(\ReflectionClassConstant::IS_PUBLIC) as $const) {
-            $key              = '';
-            $summary          = '';
-            $can_be_modified  = true;
-            $is_secret        = false;
-            $is_hidden        = false;
-            $secret_validator = null;
-            $value_validator  = null;
+            $key               = '';
+            $summary           = '';
+            $can_be_modified   = true;
+            $is_secret         = false;
+            $is_hidden         = false;
+            $has_default_value = false;
+            $secret_validator  = null;
+            $value_validator   = null;
             foreach ($const->getAttributes() as $attribute) {
                 $attribute_object = $attribute->newInstance();
                 if ($attribute_object instanceof ConfigKey) {
@@ -213,6 +214,9 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 if ($attribute_object instanceof ConfigKeyHidden) {
                     $is_hidden = true;
                 }
+                if ($attribute_object instanceof ConfigKeyType) {
+                    $has_default_value = $attribute_object->hasDefaultValue();
+                }
             }
             if (! $key) {
                 continue;
@@ -222,6 +226,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 $can_be_modified,
                 $is_secret,
                 $is_hidden,
+                $has_default_value,
                 $secret_validator,
                 $value_validator,
                 $category,
