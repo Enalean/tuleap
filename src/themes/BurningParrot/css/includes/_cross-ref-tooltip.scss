@@ -180,6 +180,11 @@
             padding: 0;
             font-weight: 600;
             vertical-align: top;
+
+            /* stylelint-disable selector-no-qualifying-type */
+            &.crossref-tooltip-value-undefined {
+                font-weight: 400;
+            }
         }
     }
 }
@@ -192,6 +197,10 @@
 
 .crossref-tooltip-value-error {
     color: var(--tlp-danger-color-on-dark-background);
+}
+
+.crossref-tooltip-value-undefined {
+    color: var(--tlp-dimmed-color-on-dark-background);
 }
 
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
