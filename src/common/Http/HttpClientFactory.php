@@ -28,9 +28,14 @@ use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Psr\Http\Client\ClientInterface;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyString;
 
 class HttpClientFactory
 {
+    #[ConfigKey('Proxy used by outbound HTTP requests')]
+    #[ConfigKeyString('')]
+    public const PROXY    = "sys_proxy";
     private const TIMEOUT = 5;
 
     public static function createClient(Plugin ...$plugins): ClientInterface
@@ -63,7 +68,7 @@ class HttpClientFactory
         return self::createClientWithConfig(
             [
                 'timeout' => $timeout,
-                'proxy'   => \ForgeConfig::get('sys_proxy'),
+                'proxy'   => \ForgeConfig::get(self::PROXY),
             ],
             ...$plugins
         );
@@ -74,7 +79,7 @@ class HttpClientFactory
         return self::createClientWithConfig(
             [
                 'timeout' => self::TIMEOUT,
-                'proxy'   => \ForgeConfig::get('sys_proxy'),
+                'proxy'   => \ForgeConfig::get(self::PROXY),
             ],
             ...$plugins
         );
