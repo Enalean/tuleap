@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use PasswordHandlerFactory;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,10 +43,14 @@ use TuleapCfg\Command\Docker\Tuleap;
 use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 final class StartCommunityEditionContainerCommand extends Command
 {
-    private const OPTION_DEBUG = 'debug';
+    private const OPTION_NO_SUPERVISORD   = 'no-supervisord';
+    private const OPTION_EXEC             = 'exec';
+    private const OPTION_DEBUG            = 'debug';
+    private const OPTION_SKIP_INSTALL_ALL = 'do-not-install-all-plugins';
 
     private const PERSISTENT_DATA = [
         '/etc/pki/tls/private/localhost.key.pem',
@@ -75,7 +81,10 @@ final class StartCommunityEditionContainerCommand extends Command
         $this
             ->setName('docker:tuleap-run')
             ->setDescription('Run Tuleap in the context of `tuleap/tuleap-community-edition` image')
-            ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug');
+            ->addOption(self::OPTION_NO_SUPERVISORD, '', InputOption::VALUE_NONE, 'Do not run supervisord at the end of the setup')
+            ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)')
+            ->addOption(self::OPTION_DEBUG, '', InputOption::VALUE_NONE, 'If something is failing, container will hang, available for debug')
+            ->addOption(self::OPTION_SKIP_INSTALL_ALL, '', InputOption::VALUE_NONE, 'Do not install all plugins (default is to auto install and activate all plugins)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -84,12 +93,17 @@ final class StartCommunityEditionContainerCommand extends Command
             $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
             $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
 
+            $post_install = fn (): Process => $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun();
+            if ($input->getOption(self::OPTION_SKIP_INSTALL_ALL) === true) {
+                $post_install = null;
+            }
+
             $tuleap      = new Tuleap($this->process_factory, new DatabaseConfigurator(PasswordHandlerFactory::getPasswordHandler(), new ConnectionManager()));
             $tuleap_fqdn = $tuleap->setupOrUpdate(
                 new SymfonyStyle($input, $output),
                 $this->data_persistence,
                 new VariableProviderFromEnvironment(),
-                fn () => $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun()
+                $post_install,
             );
 
             $rsyslog = new Rsyslog();
@@ -99,7 +113,18 @@ final class StartCommunityEditionContainerCommand extends Command
             $postfix->setup($output, $tuleap_fqdn);
 
             $supervisord = new Supervisord();
-            $supervisord->run($output);
+            $supervisord->configure($output);
+
+            $option_exec = $input->getOption(self::OPTION_EXEC);
+            if ($option_exec !== null && is_string($option_exec)) {
+                $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+                $this->exec($console_logger, $option_exec);
+            }
+
+            if ($input->getOption(self::OPTION_NO_SUPERVISORD) !== true) {
+                $supervisord->run($output);
+            }
+
             return Command::SUCCESS;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
@@ -115,5 +140,19 @@ final class StartCommunityEditionContainerCommand extends Command
             }
         }
         return Command::FAILURE;
+    }
+
+    private function exec(LoggerInterface $logger, string $command): void
+    {
+        $logger->info("Execute command `$command`");
+        $process = Process::fromShellCommandline($command);
+        $process->setTimeout(0);
+        $process->mustRun(function (string $type, string $cmd_output) use ($logger) {
+            if ($type == Process::ERR) {
+                $logger->error($cmd_output);
+            } else {
+                $logger->info($cmd_output);
+            }
+        });
     }
 }
