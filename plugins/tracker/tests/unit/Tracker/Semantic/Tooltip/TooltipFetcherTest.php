@@ -79,6 +79,7 @@ final class TooltipFetcherTest extends TestCase
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getXRef')->willReturn('art #123');
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
@@ -106,6 +107,7 @@ final class TooltipFetcherTest extends TestCase
         $template_factory = new TemplateRendererFactory($template_cache);
 
         $tooltip = (new TooltipFetcher($template_factory))->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertStringContainsString('art #123', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
@@ -116,6 +118,7 @@ final class TooltipFetcherTest extends TestCase
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getXRef')->willReturn('art #123');
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
@@ -157,6 +160,7 @@ final class TooltipFetcherTest extends TestCase
                 }
             },
         ))->fetchArtifactTooltip($artifact, $tooltip, $user);
+        self::assertStringContainsString('art #123', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('The title', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('Susan', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringContainsString('Dennis', $tooltip->unwrapOr('')->body_as_html);
@@ -169,6 +173,7 @@ final class TooltipFetcherTest extends TestCase
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('userCanView')->willReturn(true);
+        $artifact->method('getXRef')->willReturn('art #123');
         $artifact->method('getTitle')->willReturn(null);
         $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
@@ -192,7 +197,7 @@ final class TooltipFetcherTest extends TestCase
         $template_factory = new TemplateRendererFactory($template_cache);
 
         $tooltip = (new TooltipFetcher($template_factory))->fetchArtifactTooltip($artifact, $tooltip, $user);
-        self::assertEquals('', trim($tooltip->unwrapOr('')->title_as_html));
+        self::assertStringContainsString('art #123', $tooltip->unwrapOr('')->title_as_html);
         self::assertStringContainsString('avada', $tooltip->unwrapOr('')->body_as_html);
         self::assertStringNotContainsString('kedavra', $tooltip->unwrapOr('')->body_as_html);
     }
