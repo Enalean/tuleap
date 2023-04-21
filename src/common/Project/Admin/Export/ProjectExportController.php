@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Export;
 
 use Project;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -38,9 +37,6 @@ use Tuleap\Request\ProjectRetriever;
 
 final class ProjectExportController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    #[FeatureFlagConfigKey("Feature flag to allow project admin to export the XML structure of their project.")]
-    public const FEATURE_FLAG_KEY = 'allow_project_structure_xml_export';
-
     public function __construct(
         private ProjectRetriever $project_retriever,
         private ProjectAdministratorChecker $administrator_checker,
@@ -54,10 +50,6 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
      */
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        if (! \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
-            throw new NotFoundException();
-        }
-
         $project = $this->getProject($variables);
         $user    = $request->getCurrentUser();
         try {

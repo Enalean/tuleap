@@ -29,7 +29,9 @@ use Tracker_Artifact_XMLExport;
 use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -59,6 +61,8 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $external_field_extractor;
 
+    private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
+
     public function setUp(): void
     {
         $this->tracker1 = Mockery::mock(Tracker::class);
@@ -86,20 +90,22 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
+        $this->event_manager = $this->createMock(\EventManager::class);
+
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
             $trigger_rules_manager,
             $rng_validator,
             $this->tracker_artifact_XMLexport,
             Mockery::mock(\UserXMLExporter::class),
-            Mockery::mock(\EventManager::class),
+            $this->event_manager,
             $this->type_presenter_factory,
             $this->artifact_link_dao,
             $this->external_field_extractor
         );
     }
 
-    public function testExportToXml()
+    public function testExportToXml(): void
     {
         $xml_content = new SimpleXMLElement('<project/>');
         $project     = Mockery::mock(Project::class);
@@ -120,14 +126,16 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
+        $this->event_manager->method("dispatch");
+
         $this->xml_export->exportToXMl(
             $project,
             $xml_content,
-            Mockery::mock(\PFUser::class)
+            UserTestBuilder::aUser()->build(),
         );
     }
 
-    public function testExportToXmlDoNotIncludeDeletedTrackers()
+    public function testExportToXmlDoNotIncludeDeletedTrackers(): void
     {
         $xml_content = new SimpleXMLElement('<project/>');
         $project     = Mockery::mock(Project::class);
@@ -148,18 +156,20 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
 
+        $this->event_manager->method("dispatch");
+
         $this->xml_export->exportToXMl(
             $project,
             $xml_content,
-            Mockery::mock(\PFUser::class)
+            UserTestBuilder::aUser()->build(),
         );
     }
 
-    public function testExportSingleTracker()
+    public function testExportSingleTracker(): void
     {
         $xml_content = new SimpleXMLElement('<project/>');
         $tracker_id  = 456;
-        $user        = Mockery::mock(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
 
         $this->tracker1->shouldReceive('isActive')->andReturn(true);
 
@@ -172,5 +182,37 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $archive = Mockery::mock(ArchiveInterface::class);
 
         $this->xml_export->exportSingleTrackerToXml($xml_content, $tracker_id, $user, $archive);
+    }
+
+    public function testFullExportTracker(): void
+    {
+        $xml_content = new SimpleXMLElement('<project/>');
+        $project     = Mockery::mock(Project::class);
+        $project->shouldReceive('getId')->andReturn(123);
+
+        $this->tracker1->shouldReceive('isActive')->andReturn(true);
+        $this->tracker2->shouldReceive('isActive')->andReturn(true);
+
+        $this->tracker1->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
+        $this->tracker2->shouldReceive('exportToXML')->once()->andReturn('<tracker>');
+
+        $this->tracker1->shouldReceive('getXMLId');
+        $this->tracker2->shouldReceive('getXMLId');
+
+        $this->external_field_extractor->shouldReceive("extractExternalFieldsFromTracker")->twice();
+        $this->tracker_artifact_XMLexport->shouldReceive('export')->times(2);
+
+        $type = new TypePresenter('fixed_in', '', '', true);
+
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([$type]);
+
+        $this->event_manager->method("processEvent");
+
+        $this->xml_export->exportToXmlFull(
+            $project,
+            $xml_content,
+            UserTestBuilder::aUser()->build(),
+            new NoArchive(),
+        );
     }
 }

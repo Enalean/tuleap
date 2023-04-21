@@ -24,6 +24,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
+use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 
 class TrackerXmlExport
 {
@@ -151,6 +152,15 @@ class TrackerXmlExport
                 $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
             }
         }
+
+        $this->event_manager->dispatch(
+            new TrackerEventExportStructureXML(
+                $user,
+                $xml_content,
+                $project,
+                $exported_trackers,
+            )
+        );
 
         $this->exportTriggers($xml_trackers, $xml_field_mapping, $exported_trackers);
         $this->validateTrackerExport($xml_trackers);
