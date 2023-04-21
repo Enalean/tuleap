@@ -18,7 +18,9 @@
     "./style": "./dist/style.css"
   },
   "dependencies": {
+    "@tuleap/core-constants": "workspace:^",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-badge": "workspace:*",
     "hybrids": "8.1.8",
     "lit": "^2.2.3"
   },

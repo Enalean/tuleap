@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-
-export default vite.defineLibConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/main.ts"),
-            name: "TuleapCoreConstants",
-        },
-    },
-});
+declare module "*.scss" {
+    const scss: string;
+    export default scss;
+}

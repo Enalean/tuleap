@@ -30,6 +30,7 @@ import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { selectOrThrow } from "@tuleap/dom";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 import type { SearchInput } from "../SearchInput";
+import { getSelectionBadgeCallback } from "../SelectionBadgeCallbackDefaulter";
 
 const noop = (): void => {
     //Do nothing
@@ -50,10 +51,11 @@ describe("MultipleSelectionManager", () => {
         const doc = document.implementation.createHTMLDocument();
         source_select_box = doc.createElement("select");
 
+        const options = OptionsBuilder.withoutNewItem().withIsMultiple().build();
         const { selection_element } = new BaseComponentRenderer(
             doc,
             source_select_box,
-            OptionsBuilder.withoutNewItem().withIsMultiple().build()
+            options
         ).renderBaseComponent();
 
         selection_container = selection_element;
@@ -72,7 +74,8 @@ describe("MultipleSelectionManager", () => {
             "Please select some values",
             dropdown_manager,
             items_map_manager,
-            selection_callback
+            selection_callback,
+            getSelectionBadgeCallback(options)
         );
         items_map_manager.refreshItemsMap(
             GroupCollectionBuilder.withSingleGroup({
@@ -134,7 +137,7 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_2.element);
 
             const displayed_values = selection_container.querySelectorAll(
-                "[data-test=lazybox-selected-value]"
+                "[data-test=selected-value-badge]"
             );
             expect(displayed_values).toHaveLength(2);
 
@@ -156,19 +159,11 @@ describe("MultipleSelectionManager", () => {
             Then it should unselect consecutively these values
             And display back the placeholder + remove the [Clear all values] button`, () => {
             const displayed_values = selection_container.querySelectorAll(
-                "[data-test=lazybox-selected-value]"
-            );
-            const item_1_remove_button = selectOrThrow(
-                displayed_values[0],
-                "[data-test=remove-value-button]"
-            );
-            const item_2_remove_button = selectOrThrow(
-                displayed_values[1],
-                "[data-test=remove-value-button]"
+                "[data-test=selected-value-badge]"
             );
 
-            item_1_remove_button.dispatchEvent(new Event("pointerup"));
-            item_2_remove_button.dispatchEvent(new Event("pointerup"));
+            displayed_values[0].dispatchEvent(new CustomEvent("remove-badge"));
+            displayed_values[1].dispatchEvent(new CustomEvent("remove-badge"));
 
             expect(selection_callback.mock.calls[2][0]).toStrictEqual([item_2.value]);
             expect(selection_callback.mock.calls[3][0]).toStrictEqual([]);

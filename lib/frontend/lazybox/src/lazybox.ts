@@ -33,6 +33,7 @@ import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import type { LazyboxItem } from "./items/GroupCollection";
+import { getSelectionBadgeCallback } from "./SelectionBadgeCallbackDefaulter";
 
 export function createLazybox(
     source_select_box: HTMLSelectElement,
@@ -88,7 +89,8 @@ export function createLazybox(
               options.placeholder,
               dropdown_manager,
               items_map_manager,
-              options.selection_callback
+              options.selection_callback,
+              getSelectionBadgeCallback(options)
           )
         : new SelectionManager(
               source_select_box,

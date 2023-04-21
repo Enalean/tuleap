@@ -58,3 +58,7 @@ export type ColorName =
     | "panther-pink"
     | "peggy-pink"
     | "flamingo-pink";
+
+export type UserInterfaceColorName = "info" | "success" | "warning" | "danger";
+export type EmphasisColorName = "primary" | "secondary";
+export type ColorVariant = ColorName | UserInterfaceColorName | EmphasisColorName;

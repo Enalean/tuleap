@@ -27,6 +27,14 @@
             It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
         </li>
         <li>
+            <code class="code-inline">selection_badge_callback: (item: RenderedItem) => SelectionBadge &amp; HTMLElement</code>: An optional callback function returning an instance of custom element representing a selected item badge. The custom element has a <code class="code-inline">&lt;slot&gt;</code>, you can pass any content in it to be rendered inside the badge. It has two properties:
+            <ul>
+                <li><code class="code-inline">outline: boolean</code>: when true, the badge will have outline style. Defaults to false.</li>
+                <li><code class="code-inline">color: ColorVariant</code>: when given, the badge will have this color. Defaults to &quot;primary&quot;.</li>
+            </ul>
+            It takes one parameter: <code class="code-inline">item: RenderedItem</code>: The item for which to build the template.
+        </li>
+        <li>
             <code class="code-inline">placeholder: string</code>: A (translated) text that will be shown when there is no selection in the lazybox. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact..."
         </li>
         <li>
