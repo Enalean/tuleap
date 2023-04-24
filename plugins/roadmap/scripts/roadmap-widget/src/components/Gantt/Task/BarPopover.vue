@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <section class="tlp-popover roadmap-gantt-task-popover" v-bind:class="popover_class" v-once>
+    <section
+        class="tlp-popover crossref-tooltip roadmap-gantt-task-popover"
+        v-bind:class="popover_class"
+        ref="popover"
+    >
         <div class="tlp-popover-arrow roadmap-gantt-task-popover-arrow"></div>
         <div
             class="tlp-popover-header roadmap-gantt-task-popover-header"
@@ -30,134 +34,72 @@
                 <span class="roadmap-gantt-task-popover-task">{{ task.title }}</span>
             </h1>
         </div>
-        <div class="tlp-popover-body roadmap-gantt-task-popover-body">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <p class="roadmap-gantt-task-popover-label" v-translate>Start date</p>
-                        </td>
-                        <td>
-                            <p v-if="task.start" class="roadmap-gantt-task-popover-value">
-                                {{ start_date }}
-                            </p>
-                            <p v-else class="roadmap-gantt-task-popover-value-undefined">
-                                <translate>Undefined</translate>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="roadmap-gantt-task-popover-label" v-translate>End date</p>
-                        </td>
-                        <td>
-                            <p v-if="task.end" class="roadmap-gantt-task-popover-value">
-                                {{ end_date }}
-                                <template v-if="is_end_date_in_error">
-                                    <br />
-                                    <translate class="roadmap-gantt-task-popover-value-error">
-                                        End date is lesser than start date!
-                                    </translate>
-                                </template>
-                            </p>
-                            <p v-else class="roadmap-gantt-task-popover-value-undefined">
-                                <translate>Undefined</translate>
-                                <template v-if="is_time_period_in_error">
-                                    <br />
-                                    <span class="roadmap-gantt-task-popover-value-error">
-                                        {{ task.time_period_error_message }}
-                                    </span>
-                                </template>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr v-if="is_progress_in_error || percentage" data-test="progress">
-                        <td>
-                            <p class="roadmap-gantt-task-popover-label" v-translate>Progress</p>
-                        </td>
-                        <td>
-                            <p
-                                class="roadmap-gantt-task-popover-value roadmap-gantt-task-popover-value-error"
-                                v-if="is_progress_in_error"
-                            >
-                                {{ task.progress_error_message }}
-                            </p>
-                            <p class="roadmap-gantt-task-popover-value" v-else>
-                                {{ percentage }}
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div
+            class="tlp-popover-body crossref-tooltip-body roadmap-gantt-task-popover-body"
+            v-if="is_loading"
+        >
+            <p>
+                <span class="tlp-skeleton-text"></span>
+                <span class="tlp-skeleton-text"></span>
+            </p>
         </div>
+        <div
+            class="tlp-popover-body crossref-tooltip-body roadmap-gantt-task-popover-body"
+            v-else
+            v-dompurify-html="body"
+        ></div>
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import type { Task } from "../../../type";
-import { State } from "vuex-class";
-import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
+import { retrieveTooltipData } from "@tuleap/tooltip";
+import { useMutationObserver } from "@vueuse/core";
 
-@Component
-export default class BarPopover extends Vue {
-    @Prop({ required: true })
-    readonly task!: Task;
+const props = defineProps<{ task: Task }>();
 
-    @State
-    private readonly locale_bcp47!: string;
+const header_class = computed(
+    (): string => "roadmap-gantt-task-popover-header-" + props.task.color_name
+);
 
-    private formatter!: Intl.DateTimeFormat;
+const popover_class = computed((): string =>
+    props.task.is_milestone ? "roadmap-gantt-task-milestone-popover" : ""
+);
 
-    created(): void {
-        this.formatter = new Intl.DateTimeFormat(this.locale_bcp47, {
-            dateStyle: "long",
-        });
+const is_loading = ref(true);
+const can_load = ref(false);
+const body = ref("");
+const popover = ref<HTMLElement | null>(null);
+
+watch(can_load, async (can_load) => {
+    if (!can_load) {
+        return;
     }
 
-    get start_date(): string {
-        return this.formatDate(this.task.start);
+    const url = new URL("/plugins/tracker/", window.location.href);
+    url.searchParams.append("aid", String(props.task.id));
+    const data = await retrieveTooltipData(url);
+    is_loading.value = false;
+    if (data) {
+        body.value = typeof data === "string" ? data : data.body_as_html;
     }
+});
 
-    get end_date(): string {
-        return this.formatDate(this.task.end);
-    }
-
-    get popover_class(): string {
-        return this.task.is_milestone ? "roadmap-gantt-task-milestone-popover" : "";
-    }
-
-    get header_class(): string {
-        return "roadmap-gantt-task-popover-header-" + this.task.color_name;
-    }
-
-    formatDate(date: Date | null): string {
-        if (!date) {
-            return "";
+const observer = useMutationObserver(
+    popover,
+    (mutations) => {
+        for (const mutation of mutations) {
+            const target = mutation.target;
+            if (target instanceof HTMLElement && target.classList.contains("tlp-popover-shown")) {
+                can_load.value = true;
+                observer.stop();
+            }
         }
-
-        return this.formatter.format(date);
+    },
+    {
+        attributes: true,
+        attributeFilter: ["class"],
     }
-
-    get is_end_date_in_error(): boolean {
-        return !doesTaskHaveEndDateGreaterOrEqualToStartDate(this.task);
-    }
-
-    get is_progress_in_error(): boolean {
-        return this.task.progress_error_message.length > 0;
-    }
-
-    get is_time_period_in_error(): boolean {
-        return this.task.time_period_error_message.length > 0;
-    }
-
-    get percentage(): string | null {
-        if (this.task.progress === null) {
-            return null;
-        }
-
-        return Math.round(Math.max(0, Math.min(100, this.task.progress * 100))) + "%";
-    }
-}
+);
 </script>

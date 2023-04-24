@@ -17,4 +17,11 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+interface SemiStructuredContent {
+    readonly title_as_html: string;
+    readonly accent_color: string;
+    readonly body_as_html: string;
+}
+
 export function loadTooltips(element?: HTMLElement, at_cursor_position?: boolean): void;
+export function retrieveTooltipData(url: URL): Promise<string | SemiStructuredContent | undefined>;

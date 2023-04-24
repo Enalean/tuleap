@@ -107,33 +107,3 @@
         padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     }
 }
-
-.roadmap-gantt-task-popover-label,
-.roadmap-gantt-task-popover-value,
-.roadmap-gantt-task-popover-value-undefined {
-    font-size: 0.75rem;
-    line-height: 1.25rem;
-}
-
-.roadmap-gantt-task-popover-label,
-.roadmap-gantt-task-popover-label:last-child {
-    margin: 0 var(--tlp-small-spacing) 0 0;
-    color: var(--tlp-dimmed-color-on-dark-background);
-    font-weight: 600;
-    text-align: right;
-    white-space: nowrap;
-}
-
-.roadmap-gantt-task-popover-value {
-    color: var(--tlp-white-color);
-    font-weight: 600;
-    line-height: normal;
-}
-
-.roadmap-gantt-task-popover-value-error {
-    color: var(--tlp-danger-color-on-dark-background);
-}
-
-.roadmap-gantt-task-popover-value-undefined {
-    color: var(--tlp-dimmed-color-on-dark-background);
-}

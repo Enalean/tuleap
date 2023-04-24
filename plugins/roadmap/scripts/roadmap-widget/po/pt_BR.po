@@ -15,12 +15,6 @@ msgstr ""
 msgid "Displayed artifacts don't have any links to each other."
 msgstr ""
 
-msgid "End date"
-msgstr ""
-
-msgid "End date is lesser than start date!"
-msgstr ""
-
 msgid "Linked to"
 msgstr ""
 
@@ -42,9 +36,6 @@ msgstr ""
 msgid "Please come back later."
 msgstr ""
 
-msgid "Progress"
-msgstr ""
-
 msgid "Q%{ quarter }"
 msgstr ""
 
@@ -57,9 +48,6 @@ msgstr ""
 msgid "Show closed items"
 msgstr ""
 
-msgid "Start date"
-msgstr ""
-
 msgid "There is no data to show."
 msgstr ""
 
@@ -67,9 +55,6 @@ msgid "Timescale"
 msgstr ""
 
 msgid "Today: %{ date }"
-msgstr ""
-
-msgid "Undefined"
 msgstr ""
 
 msgid "W%{ week }"

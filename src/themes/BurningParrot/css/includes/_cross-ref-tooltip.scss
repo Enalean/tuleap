@@ -58,52 +58,38 @@
             padding: 0;
         }
     }
+}
 
-    label {
-        display: block;
-        margin: 0 var(--tlp-small-spacing) 0 0;
-        color: var(--tlp-dimmed-color-on-dark-background);
-        font-size: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-        text-align: right;
+.cross-ref-tooltip-collection {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 calc(-1 * var(--tlp-small-spacing));
+
+    > img {
+        margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+        object-fit: cover;
     }
 
-    img {
-        border-radius: var(--tlp-medium-radius);
-    }
+    > .cross-ref-tooltip-collection-item {
+        flex: 0 0 auto;
+        width: 150px;
+        margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
+        text-align: center;
 
-    .cross-ref-tooltip-collection {
-        display: flex;
-        flex-wrap: wrap;
-        margin: 0 0 calc(-1 * var(--tlp-small-spacing));
-
-        > img {
-            margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
-            object-fit: cover;
+        > .fa {
+            margin: var(--tlp-small-spacing) 0;
+            font-size: 26px;
         }
 
-        > .cross-ref-tooltip-collection-item {
-            flex: 0 0 auto;
-            width: 150px;
-            margin: 0 var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
-            text-align: center;
-
-            > .fa {
-                margin: var(--tlp-small-spacing) 0;
-                font-size: 26px;
-            }
-
-            > p {
-                font-size: inherit;
-                line-height: inherit;
-                word-break: break-all;
-            }
+        > p {
+            font-size: inherit;
+            line-height: inherit;
+            word-break: break-all;
         }
     }
 }
 
-.codendi-tooltip.crossref-tooltip {
+.crossref-tooltip {
     padding: 0;
 
     &::before {
@@ -178,6 +164,7 @@
 
         > td {
             padding: 0;
+            color: var(--tlp-white-color);
             font-weight: 600;
             vertical-align: top;
 
@@ -186,6 +173,17 @@
                 font-weight: 400;
             }
         }
+    }
+
+    label {
+        display: block;
+        margin: 0 var(--tlp-small-spacing) 0 0;
+        color: var(--tlp-dimmed-color-on-dark-background);
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: right;
+        white-space: nowrap;
     }
 }
 
