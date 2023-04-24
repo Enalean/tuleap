@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -1398,6 +1398,12 @@ msgstr "Autoriser la création/réponse à des artéfacts par courriel"
 
 msgid "End"
 msgstr "Fin"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "End date is lesser than start date!"
+msgstr "La date de fin est antérieure à la date de début !"
 
 msgid "Enter artifact ids separated with a comma"
 msgstr "Entrez des ids d'artéfacts séparés par une virgule"
@@ -2806,6 +2812,9 @@ msgstr "L'id source n'existe pas."
 msgid "Start"
 msgstr "Début"
 
+msgid "Start date"
+msgstr "Date de début"
+
 msgid "Start using my tracker"
 msgstr "Commencer à utiliser mon outil de suivi"
 
@@ -4116,6 +4125,9 @@ msgstr "Impossible de mettre à jour l'artéfact"
 
 msgid "Unchanged"
 msgstr "Inchangé"
+
+msgid "Undefined"
+msgstr "Indéfini"
 
 #, php-format
 msgid "Unknown artifact %1$s"

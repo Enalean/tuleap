@@ -189,6 +189,11 @@ $dimmed-white-over-dark-background: color.adjust(#ffffff, $alpha: - 0.2);
     color: var(--tlp-danger-color-on-dark-background);
 }
 
+.crossref-tooltip-value-undefined {
+    color: var(--tlp-dimmed-color-on-dark-background);
+    font-weight: 400;
+}
+
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;

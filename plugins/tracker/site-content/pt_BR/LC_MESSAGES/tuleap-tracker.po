@@ -1230,6 +1230,12 @@ msgstr ""
 msgid "End"
 msgstr ""
 
+msgid "End date"
+msgstr ""
+
+msgid "End date is lesser than start date!"
+msgstr ""
+
 msgid "Enter artifact ids separated with a comma"
 msgstr ""
 
@@ -2508,6 +2514,9 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
+msgid "Start date"
+msgstr ""
+
 msgid "Start using my tracker"
 msgstr ""
 
@@ -3626,6 +3635,9 @@ msgid "Unable to update the artifact"
 msgstr ""
 
 msgid "Unchanged"
+msgstr ""
+
+msgid "Undefined"
 msgstr ""
 
 #, php-format
