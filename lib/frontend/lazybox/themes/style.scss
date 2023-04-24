@@ -276,7 +276,7 @@
 .lazybox-multiple-search-section {
     flex: 1;
 
-    .lazybox-search-field {
+    > .lazybox-search-field {
         min-width: 100px;
         height: 100%;
         margin: 5px 0 0;

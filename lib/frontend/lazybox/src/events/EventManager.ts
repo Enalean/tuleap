@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ManageDropdown } from "../dropdown/DropdownManager";
-import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { ManageSelection } from "../type";
 import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import { isEnterKey, isEscapeKey, isTabKey } from "../helpers/keys-helper";
+import { isEnterKey, isEscapeKey } from "../helpers/keys-helper";
 import type { SearchInput } from "../SearchInput";
+import type { KeyboardSelector } from "../selection/KeyboardSelector";
 
 export class EventManager {
     private escape_key_handler!: (event: KeyboardEvent) => void;
@@ -39,10 +38,9 @@ export class EventManager {
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: ManageSelection,
         private readonly dropdown_manager: ManageDropdown,
-        private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
         private readonly list_item_highlighter: ListItemHighlighter,
-        private readonly field_focus_manager: FieldFocusManager
+        private readonly keyboard_selector: KeyboardSelector
     ) {}
 
     public attachEvents(): void {
@@ -116,6 +114,7 @@ export class EventManager {
             item.addEventListener("pointerup", () => {
                 this.selection_manager.processSelection(item);
                 this.dropdown_manager.closeLazybox();
+                this.search_field.clear();
             });
 
             item.addEventListener("pointerenter", () => {
@@ -157,33 +156,14 @@ export class EventManager {
 
     private attachKeyboardNavigationEvents(): (event: KeyboardEvent) => void {
         const handler = (event: KeyboardEvent): void => {
-            const is_dropdown_open = this.dropdown_manager.isDropdownOpen();
-            if (isTabKey(event) && is_dropdown_open) {
-                this.dropdown_manager.closeLazybox();
+            if (!this.dropdown_manager.isDropdownOpen()) {
                 return;
             }
-
-            if (
-                !is_dropdown_open &&
-                isEnterKey(event) &&
-                this.field_focus_manager.doesSelectionElementHaveTheFocus()
-            ) {
-                this.dropdown_manager.openLazybox();
+            if (isEnterKey(event)) {
+                this.keyboard_selector.handleEnter();
                 return;
             }
-
-            if (!(event instanceof KeyboardEvent) || !is_dropdown_open) {
-                return;
-            }
-
-            const highlighted_item = this.list_item_highlighter.getHighlightedItem();
-            if (isEnterKey(event) && highlighted_item) {
-                this.selection_manager.processSelection(highlighted_item);
-                this.dropdown_manager.closeLazybox();
-                this.search_field.clear();
-            } else {
-                this.keyboard_navigation_manager.navigate(event);
-            }
+            this.keyboard_navigation_manager.navigate(event);
         };
         this.doc.addEventListener("keyup", handler);
         return handler;

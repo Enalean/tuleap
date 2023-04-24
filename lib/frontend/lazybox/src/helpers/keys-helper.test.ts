@@ -18,14 +18,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import {
-    isArrowDown,
-    isArrowUp,
-    isBackspaceKey,
-    isEnterKey,
-    isEscapeKey,
-    isTabKey,
-} from "./keys-helper";
+import { isArrowDown, isArrowUp, isBackspaceKey, isEnterKey, isEscapeKey } from "./keys-helper";
 
 const chrome_native_autofill_event = {} as KeyboardEvent;
 
@@ -35,7 +28,6 @@ describe("keys-helper", () => {
         ["isEnterKey", isEnterKey],
         ["isArrowDown", isArrowDown],
         ["isArrowUp", isArrowUp],
-        ["isTabKey", isTabKey],
         ["isBackspaceKey", isBackspaceKey],
     ])(`%s does not recognize Chrome native autofill event`, (_method_name, method_under_test) => {
         expect(method_under_test(chrome_native_autofill_event)).toBe(false);
@@ -64,12 +56,6 @@ describe("keys-helper", () => {
     describe("isArrowUp", () => {
         it("should return true", () => {
             expect(isArrowUp(new KeyboardEvent("keyup", { key: "ArrowUp" }))).toBe(true);
-        });
-    });
-
-    describe("isTabKey", () => {
-        it("should return true", () => {
-            expect(isTabKey(new KeyboardEvent("keyup", { key: "Tab" }))).toBe(true);
         });
     });
 

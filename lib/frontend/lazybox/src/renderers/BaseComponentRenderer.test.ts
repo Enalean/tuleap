@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it, beforeEach } from "vitest";
+import { selectOrThrow } from "@tuleap/dom";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import type { LazyboxComponent, LazyboxOptions } from "../type";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
@@ -45,23 +46,16 @@ describe("base-component-renderer", () => {
 
     it("should render the base component and append it right after the source <select>", () => {
         options = OptionsBuilder.withoutNewItem().withIsMultiple().build();
-        const {
-            lazybox_element,
-            dropdown_element,
-            multiple_selection_element,
-            dropdown_list_element,
-        } = render();
+        const { lazybox_element, dropdown_element, selection_element, dropdown_list_element } =
+            render();
 
-        const base_component = doc.body.querySelector(
+        const base_component = selectOrThrow(
+            doc.body,
             "#source-select-box + .lazybox-component-wrapper"
         );
 
-        if (!base_component) {
-            throw new Error("Can't find the lazybox in the DOM");
-        }
-
         expect(base_component.contains(lazybox_element)).toBe(true);
-        expect(base_component.contains(multiple_selection_element)).toBe(true);
+        expect(base_component.contains(selection_element)).toBe(true);
         expect(doc.body.contains(dropdown_element)).toBe(true);
         expect(dropdown_element.contains(dropdown_list_element)).toBe(true);
     });

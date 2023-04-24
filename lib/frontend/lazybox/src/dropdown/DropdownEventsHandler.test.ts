@@ -20,7 +20,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { SearchInput } from "../SearchInput";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import { DropdownEventsHandler } from "./DropdownEventsHandler";
 import type { SelectionElement } from "../selection/SelectionElement";
@@ -33,7 +32,6 @@ describe("DropdownEventsHandler", () => {
     let scrolling_manager: ScrollingManager,
         search_field: SearchInput,
         single_selection_element: SelectionElement,
-        field_focus_manager: FieldFocusManager,
         highlighter: ListItemHighlighter;
 
     beforeEach(() => {
@@ -43,7 +41,6 @@ describe("DropdownEventsHandler", () => {
         } as ScrollingManager;
         search_field = { setFocus: noop } as SearchInput;
         single_selection_element = { setFocus: noop } as SelectionElement;
-        field_focus_manager = { applyFocusOnLazybox: noop } as FieldFocusManager;
         highlighter = { resetHighlight: noop } as ListItemHighlighter;
     });
 
@@ -52,7 +49,6 @@ describe("DropdownEventsHandler", () => {
             scrolling_manager,
             search_field,
             single_selection_element,
-            field_focus_manager,
             highlighter
         );
 
@@ -73,14 +69,12 @@ describe("DropdownEventsHandler", () => {
         - give the focus to the lazybox wrapper
         - and reset highlight`, () => {
         const unlock = vi.spyOn(scrolling_manager, "unlockScrolling");
-        const focus = vi.spyOn(field_focus_manager, "applyFocusOnLazybox");
         const setFocus = vi.spyOn(single_selection_element, "setFocus");
         const reset = vi.spyOn(highlighter, "resetHighlight");
 
         getHandler().onDropdownClosed();
 
         expect(unlock).toHaveBeenCalledOnce();
-        expect(focus).toHaveBeenCalledOnce();
         expect(setFocus).toHaveBeenCalledOnce();
         expect(reset).toHaveBeenCalledOnce();
     });

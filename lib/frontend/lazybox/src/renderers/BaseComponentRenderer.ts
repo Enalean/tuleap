@@ -46,23 +46,18 @@ export class BaseComponentRenderer {
         const lazybox_element = this.createLazyboxElement();
         const dropdown_element = this.createDropdownElement();
         const dropdown_list_element = this.createDropdownListElement();
-        const multiple_selection_element = this.createMultipleSelectionElement();
         const search_field_element = this.createSearchFieldElement();
-        const single_selection_element = this.createSingleSelectionElement();
+        const selection_element = this.createSelectionElement();
 
-        multiple_selection_element.setAttribute("tabindex", "0");
-
+        selection_element.search_input = search_field_element;
         if (this.options.is_multiple) {
-            const new_search_section = this.createSearchSectionForMultipleListPicker();
-            new_search_section.appendChild(search_field_element);
-            multiple_selection_element.appendChild(new_search_section);
-            lazybox_element.appendChild(multiple_selection_element);
+            search_field_element.classList.add("lazybox-multiple-search-section");
         } else {
             const search_section_element = this.createSearchSectionElement();
             search_section_element.appendChild(search_field_element);
             dropdown_element.insertAdjacentElement("afterbegin", search_section_element);
-            lazybox_element.appendChild(single_selection_element);
         }
+        lazybox_element.appendChild(selection_element);
 
         dropdown_element.appendChild(dropdown_list_element);
         wrapper_element.appendChild(lazybox_element);
@@ -76,12 +71,11 @@ export class BaseComponentRenderer {
 
         return {
             wrapper_element,
-            lazybox_element: lazybox_element,
+            lazybox_element,
             dropdown_element,
             dropdown_list_element,
             search_field_element,
-            single_selection_element,
-            multiple_selection_element,
+            selection_element,
         };
     }
 
@@ -107,23 +101,12 @@ export class BaseComponentRenderer {
         return dropdown_element;
     }
 
-    private createMultipleSelectionElement(): HTMLElement {
-        const selection_element = this.doc.createElement("span");
-        selection_element.classList.add("lazybox-selection");
-        selection_element.setAttribute("data-test", "lazybox-selection");
-        selection_element.classList.add("lazybox-multiple");
-        selection_element.setAttribute("aria-haspopup", "true");
-        selection_element.setAttribute("aria-expanded", "false");
-        selection_element.setAttribute("role", "combobox");
-
-        return selection_element;
-    }
-
-    private createSingleSelectionElement(): HTMLElement & SelectionElement {
+    private createSelectionElement(): HTMLElement & SelectionElement {
         const selection_element = this.doc.createElement(SELECTION_ELEMENT_TAG);
         if (!isSelectionElement(selection_element)) {
             throw new Error("Could not create the SelectionElement");
         }
+        selection_element.multiple = this.options.is_multiple;
         selection_element.placeholder_text = this.options.placeholder;
         selection_element.onSelection = this.options.selection_callback;
 
@@ -146,13 +129,6 @@ export class BaseComponentRenderer {
         const search_section = this.doc.createElement("span");
         search_section.classList.add("lazybox-single-dropdown-search-section");
 
-        return search_section;
-    }
-
-    private createSearchSectionForMultipleListPicker(): Element {
-        const search_section = this.doc.createElement("span");
-
-        search_section.classList.add("lazybox-multiple-search-section");
         return search_section;
     }
 
