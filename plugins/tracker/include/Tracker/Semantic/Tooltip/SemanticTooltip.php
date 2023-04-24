@@ -27,8 +27,16 @@ use PFUser;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
+use Tracker_Semantic_Title;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class SemanticTooltip extends Tracker_Semantic implements TooltipFields
 {
@@ -139,6 +147,43 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
     }
 
     /**
+     * @return string[]
+     */
+    private function getOtherSemanticsLabels(): array
+    {
+        $others = [];
+
+        $title = Tracker_Semantic_Title::load($this->tracker);
+        if ($title->getField()) {
+            $others[] = $title->getLabel();
+        }
+
+        $progress_dao     = new SemanticProgressDao();
+        $progress_builder = new SemanticProgressBuilder(
+            $progress_dao,
+            new MethodBuilder(
+                Tracker_FormElementFactory::instance(),
+                $progress_dao,
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao()
+                )
+            )
+        );
+        $progress         = $progress_builder->getSemantic($this->tracker);
+        if ($progress->isDefined()) {
+            $others[] = $progress->getLabel();
+        }
+
+        $timeframe = SemanticTimeframeBuilder::build()->getSemantic($this->tracker);
+        if ($timeframe->isDefined()) {
+            $others[] = $timeframe->getLabel();
+        }
+
+        return $others;
+    }
+
+    /**
      * Display the form to let the admin change the semantic
      *
      * @param Tracker_SemanticManager $semantic_manager The semantic manager
@@ -157,7 +202,23 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
         $hp = Codendi_HTMLPurifier::instance();
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
-        $html   = '';
+        $html = '';
+
+        $other_semantics = $this->getOtherSemanticsLabels();
+        if ($other_semantics) {
+            $html .= '<div class="alert alert-info">';
+            $html .= sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    'The semantic %s is used. It will be automatically displayed at the beginning of the tooltip.',
+                    'The following semantics are used: %s. They will be automatically displayed at the beginning of the tooltip.',
+                    count($other_semantics)
+                ),
+                implode(', ', $other_semantics),
+            );
+            $html .= '</div>';
+        }
+
         $fields = $this->getFields();
         if (! count($fields)) {
             $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');

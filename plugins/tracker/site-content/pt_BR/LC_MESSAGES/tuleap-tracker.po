@@ -3103,6 +3103,16 @@ msgstr ""
 msgid "The selected values will define the artifact as done:"
 msgstr ""
 
+#, php-format
+msgid ""
+"The semantic %s is used. It will be automatically displayed at the beginning "
+"of the tooltip."
+msgid_plural ""
+"The following semantics are used: %s. They will be automatically displayed "
+"at the beginning of the tooltip."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "The semantic done cannot be defined because the semantic status is not "
 "defined."
