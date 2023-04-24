@@ -76,10 +76,18 @@ function formatExistingValue(field, artifact_value) {
         case "sb":
         case "msb":
         case "rb":
-            value_obj.bind_value_ids =
-                artifact_value.bind_value_ids && artifact_value.bind_value_ids.length > 0
-                    ? artifact_value.bind_value_ids
-                    : [100];
+            if (artifact_value.bind_value_ids && field.values) {
+                const filtered_artifact_values = artifact_value.bind_value_ids.filter((value_id) =>
+                    field.values.some((value) => value.id === value_id)
+                );
+                if (filtered_artifact_values.length > 0) {
+                    value_obj.bind_value_ids = filtered_artifact_values;
+                } else {
+                    value_obj.bind_value_ids = [100];
+                }
+            } else {
+                value_obj.bind_value_ids = [100];
+            }
             break;
         case "text":
             value_obj.value = formatForTextFieldValue(artifact_value);
