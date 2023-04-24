@@ -22,6 +22,7 @@ import type { GroupCollection, LazyboxItem } from "./items/GroupCollection";
 import type { HTMLTemplateStringProcessor } from "./index";
 import type { SearchInput } from "./SearchInput";
 import type { SelectionBadge } from "./selection/SelectionBadge";
+import type { SelectionElement } from "./selection/SelectionElement";
 
 export interface Lazybox {
     setDropdownContent: (groups: GroupCollection) => void;
@@ -78,15 +79,10 @@ export interface LazyboxComponent {
     wrapper_element: HTMLElement;
     lazybox_element: Element;
     dropdown_element: HTMLElement;
-    selection_element: HTMLElement;
-    placeholder_element: Element;
     dropdown_list_element: HTMLElement;
     search_field_element: HTMLElement & SearchInput;
-}
-
-export interface LazyboxSelectionStateSingle {
-    selected_item: RenderedItem;
-    selected_value_element: DocumentFragment;
+    single_selection_element: HTMLElement & SelectionElement;
+    multiple_selection_element: HTMLElement;
 }
 
 export interface LazyboxSelectionStateMultiple {

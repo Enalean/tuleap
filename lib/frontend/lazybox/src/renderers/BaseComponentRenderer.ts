@@ -21,9 +21,16 @@ import { isLazyboxInAModal } from "../helpers/lazybox-in-modals-helper";
 import { getNewItemTemplate } from "../dropdown/new-item-template";
 import type { SearchInput } from "../SearchInput";
 import { TAG as SEARCH_INPUT_TAG } from "../SearchInput";
+import { TAG as SELECTION_ELEMENT_TAG } from "../selection/SelectionElement";
+import type { SelectionElement } from "../selection/SelectionElement";
 
 const isSearchInput = (element: HTMLElement): element is HTMLElement & SearchInput =>
     element.tagName === SEARCH_INPUT_TAG.toUpperCase();
+
+export const isSelectionElement = (
+    element: HTMLElement
+): element is HTMLElement & SelectionElement =>
+    element.tagName === SELECTION_ELEMENT_TAG.toUpperCase();
 
 export class BaseComponentRenderer {
     constructor(
@@ -39,26 +46,24 @@ export class BaseComponentRenderer {
         const lazybox_element = this.createLazyboxElement();
         const dropdown_element = this.createDropdownElement();
         const dropdown_list_element = this.createDropdownListElement();
-        const selection_element = this.createSelectionElement();
-        const placeholder_element = this.createPlaceholderElement();
+        const multiple_selection_element = this.createMultipleSelectionElement();
         const search_field_element = this.createSearchFieldElement();
+        const single_selection_element = this.createSingleSelectionElement();
 
-        if (!this.source_select_box.disabled) {
-            selection_element.setAttribute("tabindex", "0");
-        }
+        multiple_selection_element.setAttribute("tabindex", "0");
 
         if (this.options.is_multiple) {
             const new_search_section = this.createSearchSectionForMultipleListPicker();
             new_search_section.appendChild(search_field_element);
-            selection_element.appendChild(new_search_section);
+            multiple_selection_element.appendChild(new_search_section);
+            lazybox_element.appendChild(multiple_selection_element);
         } else {
             const search_section_element = this.createSearchSectionElement();
             search_section_element.appendChild(search_field_element);
             dropdown_element.insertAdjacentElement("afterbegin", search_section_element);
-            selection_element.appendChild(placeholder_element);
+            lazybox_element.appendChild(single_selection_element);
         }
 
-        lazybox_element.appendChild(selection_element);
         dropdown_element.appendChild(dropdown_list_element);
         wrapper_element.appendChild(lazybox_element);
         this.doc.body.insertAdjacentElement("beforeend", dropdown_element);
@@ -73,10 +78,10 @@ export class BaseComponentRenderer {
             wrapper_element,
             lazybox_element: lazybox_element,
             dropdown_element,
-            selection_element,
-            placeholder_element,
             dropdown_list_element,
             search_field_element,
+            single_selection_element,
+            multiple_selection_element,
         };
     }
 
@@ -102,28 +107,25 @@ export class BaseComponentRenderer {
         return dropdown_element;
     }
 
-    private createPlaceholderElement(): Element {
-        const placeholder_element = this.doc.createElement("span");
-        placeholder_element.classList.add("lazybox-placeholder");
-        placeholder_element.appendChild(this.doc.createTextNode(this.options.placeholder));
-        return placeholder_element;
-    }
-
-    private createSelectionElement(): HTMLElement {
+    private createMultipleSelectionElement(): HTMLElement {
         const selection_element = this.doc.createElement("span");
         selection_element.classList.add("lazybox-selection");
         selection_element.setAttribute("data-test", "lazybox-selection");
+        selection_element.classList.add("lazybox-multiple");
+        selection_element.setAttribute("aria-haspopup", "true");
+        selection_element.setAttribute("aria-expanded", "false");
+        selection_element.setAttribute("role", "combobox");
 
-        if (this.options.is_multiple) {
-            selection_element.classList.add("lazybox-multiple");
-            selection_element.setAttribute("aria-haspopup", "true");
-            selection_element.setAttribute("aria-expanded", "false");
-            selection_element.setAttribute("role", "combobox");
-        } else {
-            selection_element.classList.add("lazybox-single");
-            selection_element.setAttribute("role", "textbox");
-            selection_element.setAttribute("aria-readonly", "true");
+        return selection_element;
+    }
+
+    private createSingleSelectionElement(): HTMLElement & SelectionElement {
+        const selection_element = this.doc.createElement(SELECTION_ELEMENT_TAG);
+        if (!isSelectionElement(selection_element)) {
+            throw new Error("Could not create the SelectionElement");
         }
+        selection_element.placeholder_text = this.options.placeholder;
+        selection_element.onSelection = this.options.selection_callback;
 
         return selection_element;
     }

@@ -52,13 +52,13 @@ describe("MultipleSelectionManager", () => {
         source_select_box = doc.createElement("select");
 
         const options = OptionsBuilder.withoutNewItem().withIsMultiple().build();
-        const { selection_element } = new BaseComponentRenderer(
+        const { multiple_selection_element } = new BaseComponentRenderer(
             doc,
             source_select_box,
             options
         ).renderBaseComponent();
 
-        selection_container = selection_element;
+        selection_container = multiple_selection_element;
         search_field = Object.assign(doc.createElement("span"), {
             placeholder: "",
             clear: noop,

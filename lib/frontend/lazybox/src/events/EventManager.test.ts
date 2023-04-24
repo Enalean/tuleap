@@ -167,12 +167,12 @@ describe("event manager", () => {
 
             // Keyboard selection has occurred
             vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
             expect(manage_dropdown.isDropdownOpen()).toBe(false);
 
             // Now user hits the Enter key again
             doesSelectionElementHaveTheFocus.mockReturnValue(true);
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
             expect(manage_dropdown.isDropdownOpen()).toBe(true);
 
             // Now user closes the dropdown without selecting any item
@@ -182,7 +182,7 @@ describe("event manager", () => {
 
             // And finally, he hits enter once again
             doesSelectionElementHaveTheFocus.mockReturnValue(true);
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
             expect(manage_dropdown.isDropdownOpen()).toBe(true);
         });
     });
@@ -284,9 +284,9 @@ describe("event manager", () => {
             expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(0);
         });
 
-        it("should remove the keydown event on document", () => {
+        it("should remove the navigation event handler on document", () => {
             manager.removeEventsListenersOnDocument();
-            doc.dispatchEvent(new Event("keydown"));
+            doc.dispatchEvent(new Event("keyup"));
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
         });
     });
@@ -310,7 +310,7 @@ describe("event manager", () => {
             );
 
             manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
 
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
         });
@@ -319,7 +319,7 @@ describe("event manager", () => {
             vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
 
             manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
 
             expect(navigation_manager.navigate).toHaveBeenCalled();
         });
@@ -330,7 +330,7 @@ describe("event manager", () => {
             const clear = vi.spyOn(search_field, "clear");
 
             manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
             expect(manage_selection.getCurrentSelection()).toStrictEqual(highlighted_item);
@@ -340,7 +340,7 @@ describe("event manager", () => {
 
         it("should close the dropdown when the tab key has been pressed", () => {
             manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Tab" }));
 
             expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
         });

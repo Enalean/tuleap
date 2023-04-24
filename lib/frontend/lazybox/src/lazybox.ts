@@ -34,6 +34,7 @@ import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import type { LazyboxItem } from "./items/GroupCollection";
 import { getSelectionBadgeCallback } from "./SelectionBadgeCallbackDefaulter";
+import { DropdownEventsHandler } from "./dropdown/DropdownEventsHandler";
 
 export function createLazybox(
     source_select_box: HTMLSelectElement,
@@ -50,41 +51,52 @@ export function createLazybox(
         wrapper_element,
         lazybox_element,
         dropdown_element,
-        selection_element,
-        placeholder_element,
         dropdown_list_element,
         search_field_element,
+        single_selection_element,
+        multiple_selection_element,
     } = base_renderer.renderBaseComponent();
 
     const scrolling_manager = new ScrollingManager(wrapper_element);
     const field_focus_manager = new FieldFocusManager(
         document,
         source_select_box,
-        selection_element
+        multiple_selection_element
     );
     field_focus_manager.init();
 
     const highlighter = new ListItemHighlighter(dropdown_list_element);
+    const dropdown_events_handler = DropdownEventsHandler(
+        scrolling_manager,
+        search_field_element,
+        single_selection_element,
+        field_focus_manager,
+        highlighter
+    );
     const dropdown_manager = new DropdownManager(
         document,
         wrapper_element,
         lazybox_element,
         dropdown_element,
         dropdown_list_element,
-        selection_element,
-        scrolling_manager,
-        field_focus_manager,
-        highlighter,
-        search_field_element
+        dropdown_events_handler.onDropdownOpen,
+        dropdown_events_handler.onDropdownClosed
     );
     search_field_element.addEventListener("search-input", () => {
+        dropdown_manager.openLazybox();
+    });
+    single_selection_element.addEventListener("clear-selection", () => {
+        search_field_element.clear();
+        dropdown_manager.openLazybox();
+    });
+    single_selection_element.addEventListener("enter-pressed", () => {
         dropdown_manager.openLazybox();
     });
 
     const selection_manager = options.is_multiple
         ? new MultipleSelectionManager(
               source_select_box,
-              selection_element,
+              multiple_selection_element,
               search_field_element,
               options.placeholder,
               dropdown_manager,
@@ -92,16 +104,7 @@ export function createLazybox(
               options.selection_callback,
               getSelectionBadgeCallback(options)
           )
-        : new SelectionManager(
-              source_select_box,
-              dropdown_element,
-              selection_element,
-              placeholder_element,
-              dropdown_manager,
-              items_map_manager,
-              options.selection_callback,
-              search_field_element
-          );
+        : new SelectionManager(single_selection_element, items_map_manager);
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         dropdown_list_element,
@@ -151,6 +154,7 @@ export function createLazybox(
             selection_manager.setSelection(rendered_items);
         },
         destroy: (): void => {
+            scrolling_manager.unlockScrolling();
             event_manager.removeEventsListenersOnDocument();
             dropdown_manager.destroy();
             document.body.removeChild(dropdown_element);

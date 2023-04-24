@@ -31,6 +31,7 @@
 
 .remove-button {
     @include common.unset-button-style;
+    @include common.focusable-button;
 
     margin: 0 5px 0 0;
     font-size: 0.75rem;

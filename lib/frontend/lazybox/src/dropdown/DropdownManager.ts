@@ -16,15 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ScrollingManager } from "../events/ScrollingManager";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
-import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import type { SearchInput } from "../SearchInput";
 
 export interface ManageDropdown {
-    isDropdownOpen: () => boolean;
-    closeLazybox: () => void;
-    openLazybox: () => void;
+    isDropdownOpen(): boolean;
+    closeLazybox(): void;
+    openLazybox(): void;
+    onOpen: () => void;
+    onClose: () => void;
 }
 
 export class DropdownManager implements ManageDropdown {
@@ -37,22 +35,19 @@ export class DropdownManager implements ManageDropdown {
         private readonly lazybox_element: Element,
         private readonly dropdown_element: HTMLElement,
         private readonly dropdown_list_element: Element,
-        private readonly selection_element: HTMLElement,
-        private readonly scrolling_manager: ScrollingManager,
-        private readonly field_focus_manager: FieldFocusManager,
-        private readonly highlighter: ListItemHighlighter,
-        private readonly search_field: SearchInput
+        public readonly onOpen: () => void,
+        public readonly onClose: () => void
     ) {
         const resize_dropdown_callback = (entries: readonly ResizeObserverEntry[]): void => {
             if (!this.isDropdownOpen()) {
                 return;
             }
-            let is_list_being_filtered = false;
+            let has_dropdown_been_resized = false;
             if (entries.length === 1 && entries[0].target.classList.contains("lazybox-dropdown")) {
-                is_list_being_filtered = true;
+                has_dropdown_been_resized = true;
             }
 
-            this.resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered);
+            this.resizeAndMoveDropdownUnderWrapperElement(has_dropdown_been_resized);
         };
         this.resize_observer = new ResizeObserver(resize_dropdown_callback);
 
@@ -72,17 +67,10 @@ export class DropdownManager implements ManageDropdown {
             return;
         }
 
-        this.scrolling_manager.unlockScrolling();
-        this.highlighter.resetHighlight();
-
         this.dropdown_element.classList.remove("lazybox-dropdown-shown");
         this.lazybox_element.classList.remove("lazybox-with-open-dropdown");
         this.setAriaExpandedAttribute(this.dropdown_list_element, false);
-        this.field_focus_manager.applyFocusOnLazybox();
-
-        if (this.selection_element.hasAttribute("aria-expanded")) {
-            this.setAriaExpandedAttribute(this.selection_element, false);
-        }
+        this.onClose();
     }
 
     public openLazybox(): void {
@@ -90,25 +78,18 @@ export class DropdownManager implements ManageDropdown {
             return;
         }
 
-        this.scrolling_manager.lockScrolling();
         this.dropdown_element.classList.add("lazybox-dropdown-shown");
         this.lazybox_element.classList.add("lazybox-with-open-dropdown");
         this.resizeAndMoveDropdownUnderWrapperElement(false);
         this.setAriaExpandedAttribute(this.dropdown_list_element, true);
-
-        if (this.selection_element.hasAttribute("aria-expanded")) {
-            this.setAriaExpandedAttribute(this.selection_element, true);
-        }
-
-        this.search_field.setFocus();
+        this.onOpen();
     }
 
     public destroy(): void {
-        this.scrolling_manager.unlockScrolling();
         this.resize_observer.disconnect();
     }
 
-    private resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered: boolean): void {
+    private resizeAndMoveDropdownUnderWrapperElement(has_dropdown_been_resized: boolean): void {
         window.requestAnimationFrame(() => {
             const lazybox_boundaries = this.wrapper_element.getBoundingClientRect();
             const x_coordinate = lazybox_boundaries.left + window.scrollX;
@@ -125,7 +106,7 @@ export class DropdownManager implements ManageDropdown {
 
             if (
                 !has_enough_room_below ||
-                (this.is_dropdown_placed_above && is_list_being_filtered)
+                (this.is_dropdown_placed_above && has_dropdown_been_resized)
             ) {
                 const pos = y_coordinate - height - lazybox_boundaries.height;
                 this.dropdown_element.style.top = pos + "px";
