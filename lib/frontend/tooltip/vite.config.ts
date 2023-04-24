@@ -23,16 +23,8 @@ import * as path from "path";
 export default vite.defineLibConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/tooltip.js"),
+            entry: path.resolve(__dirname, "src/tooltip.ts"),
             name: "codendi.Tooltip",
-        },
-        rollupOptions: {
-            external: ["jquery"],
-            output: {
-                globals: {
-                    jquery: "jQuery",
-                },
-            },
         },
     },
 });

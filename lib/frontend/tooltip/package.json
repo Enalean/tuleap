@@ -20,9 +20,11 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@types/dompurify": "^3.0.2",
     "dompurify": "^3.0.0"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
   }
