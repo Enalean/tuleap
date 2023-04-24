@@ -41,16 +41,13 @@ docker run -i \
     --name "$UNIQUE_NAME-rpm-builder" \
     -v "$UNIQUE_NAME-rpm-volume":/rpms \
     -v "$WORKSPACE/sources":/tuleap:ro \
-    --tmpfs /tmp/tuleap_build:rw,noexec,nosuid \
-    -e TMPDIR=/tmp/tuleap_build/ \
-    -e XDG_CACHE_HOME=/tmp/tuleap_build/user_cache \
     -v "$HOME/nix-content":/nix \
     -v /etc/passwd:/etc/passwd:ro \
     -w /tuleap \
     -u "$(id -u)":"$(id -g)" \
     "$UNIQUE_NAME-rpm-builder" \
     nix-shell --pure -I nixpkgs="/tuleap/tools/utils/nix/pinned-nixpkgs.nix" "/tuleap/tools/utils/nix/build-tools/" \
-        --run "OS=${OS} XDG_CACHE_HOME=/tmp/tuleap_build/user_cache tools/rpm/build_rpm_inside_container.sh"
+        --run "OS=${OS} XDG_CACHE_HOME=/home_build tools/rpm/build_rpm_inside_container.sh"
 
 docker run -t \
     --name "$UNIQUE_NAME-rpm-installer" \

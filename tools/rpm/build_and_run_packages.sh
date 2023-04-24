@@ -62,15 +62,12 @@ docker run --rm -v nix-volume:/nix tuleap-generated-files-builder chown "$(id -u
 
 docker run -i --name rpm-builder \
     -v rpm-volume:/rpms -v "$clean_tuleap_sources":/tuleap -w /tuleap \
-    --tmpfs /tmp/tuleap_build:rw,noexec,nosuid \
     -v nix-volume:/nix \
-    -e TMPDIR=/tmp/tuleap_build \
-    -e XDG_CACHE_HOME=/tmp/tuleap_build/user_cache \
     -v /etc/passwd:/etc/passwd:ro \
     -u "$(id -u)":"$(id -g)" \
     tuleap-generated-files-builder \
     nix-shell --pure -I nixpkgs="/tuleap/tools/utils/nix/pinned-nixpkgs.nix" "/tuleap/tools/utils/nix/build-tools/" \
-        --run "export EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0} && export OS=${OS} && tools/utils/scripts/generated-files-builder.sh prod && XDG_CACHE_HOME=/tmp/tuleap_build/user_cache tools/rpm/build_rpm_inside_container.sh"
+        --run "export EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0} && export OS=${OS} && tools/utils/scripts/generated-files-builder.sh prod && XDG_CACHE_HOME=/home_build tools/rpm/build_rpm_inside_container.sh"
 
 if [ "$OS" == "centos7" ]; then
     INSTALL_IMAGE=tuleap-installrpms:centos7

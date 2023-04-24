@@ -4,16 +4,15 @@ def runInsideNixDockerEnv(String command, String container_run_args = '', String
     sh ('mkdir -p "$HOME/nix-content"')
     def image = docker.build('nix-env', '-f "$(pwd)"/tools/utils/nix/nix.dockerfile "$(pwd)"/tools/utils/nix/');
     image
-        .inside(container_run_args + ' --tmpfs /tmp/tuleap_build:rw,noexec,nosuid -e TMPDIR=/tmp/tuleap_build/ -v $HOME/nix-content:/nix -v /etc/passwd:/etc/passwd:ro') {
+        .inside(container_run_args + ' -v $HOME/nix-content:/nix -v /etc/passwd:/etc/passwd:ro') {
             sh """
-            export XDG_CACHE_HOME=/tmp/tuleap_build/user_cache
             nix-shell --pure -I nixpkgs="\$(pwd)/tools/utils/nix/pinned-nixpkgs.nix" "\$(pwd)/tools/utils/nix/${tool_flavor}-tools/" --run "${command}"
             """
         }
 }
 
 def prepareSources(String prepare_flavor) {
-    runInsideNixDockerEnv("tools/utils/scripts/generated-files-builder.sh ${prepare_flavor}", '--read-only')
+    runInsideNixDockerEnv("tools/utils/scripts/generated-files-builder.sh ${prepare_flavor}", '--read-only --tmpfs /home_build:rw,noexec,nosuid')
 }
 
 def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_verified_files, String verified_files) {

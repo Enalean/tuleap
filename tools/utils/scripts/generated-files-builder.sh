@@ -2,7 +2,7 @@
 
 set -ex
 
-TULEAP_BUILD_TMP_FOLDER='/tmp/tuleap_build'
+TULEAP_BUILD_TMP_FOLDER='/home_build'
 
 ROOT_DIR=$(readlink -f "$(dirname $0)/../../..")
 
