@@ -37,7 +37,7 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
-    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok|Err
+    public function prepareDBForMigration(\Project $project, string $db_name, string $db_prefix): Ok|Err
     {
         $project_id = (int) $project->getID();
 
@@ -47,12 +47,12 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
             /**
              * @psalm-return Ok<null>|Err<Fault>
              */
-            function (string $current_db_name) use ($db_name, $central_db_name, $db_prefix, $project_id): Ok|Err {
-                if ($current_db_name === $db_name || $central_db_name === null) {
+            function (string $current_db_name) use ($db_name, $db_prefix, $project_id): Ok|Err {
+                if ($current_db_name === $db_name) {
                     return Result::ok(null);
                 }
 
-                return $this->moveToCentralDB($current_db_name, $central_db_name, $db_prefix, $project_id);
+                return $this->moveToAnotherDB($current_db_name, $db_name, $db_prefix, $project_id);
             }
         )->andThen(
             /** @psalm-return Ok<null> */
@@ -81,17 +81,18 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
-    private function moveToCentralDB(string $current_db_name, string $central_db_name, string $db_prefix, int $project_id): Ok|Err
+    private function moveToAnotherDB(string $current_db_name, string $expected_db_name, string $db_prefix, int $project_id): Ok|Err
     {
-        return $this->moveTablesToCentralDB($current_db_name, $central_db_name, $db_prefix)
+        $this->createDatabase($expected_db_name);
+        return $this->moveTablesToAnotherDB($current_db_name, $expected_db_name, $db_prefix)
             ->andThen(
                 /**
                  * @psalm-return Ok<null>
                  */
-                function () use ($current_db_name, $central_db_name, $project_id): Ok {
+                function () use ($current_db_name, $expected_db_name, $project_id): Ok {
                     $this->getDB()->run(
                         'UPDATE plugin_mediawiki_database SET database_name = ? WHERE project_id = ?',
-                        $central_db_name,
+                        $expected_db_name,
                         $project_id,
                     );
                     $this->getDB()->run('DROP DATABASE ' . $this->getDB()->escapeIdentifier($current_db_name));
@@ -101,17 +102,22 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
             );
     }
 
+    private function createDatabase(string $db_name): void
+    {
+        $this->getDB()->run(sprintf('CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $this->getDB()->escapeIdentifier($db_name)));
+    }
+
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
-    private function moveTablesToCentralDB(string $current_db_name, string $central_db_name, string $db_prefix): Ok|Err
+    private function moveTablesToAnotherDB(string $current_db_name, string $expected_db_name, string $db_prefix): Ok|Err
     {
         foreach ($this->searchDBTableNames($current_db_name) as $table_name) {
             $table_name_without_prefix = \Psl\Str\after($table_name, 'mw');
             if ($table_name_without_prefix === null) {
                 return Result::err(
                     Fault::fromMessage(
-                        sprintf('Table %s in database %s does not have the expected format', $table_name, $central_db_name)
+                        sprintf('Table %s in database %s does not have the expected format', $table_name, $current_db_name)
                     )
                 );
             }
@@ -121,7 +127,7 @@ final class PrimeLegacyMediawikiDB extends DataAccessObject implements LegacyMed
                     'ALTER TABLE %s.%s RENAME %s.%s',
                     $this->getDB()->escapeIdentifier($current_db_name),
                     $this->getDB()->escapeIdentifier($table_name),
-                    $this->getDB()->escapeIdentifier($central_db_name),
+                    $this->getDB()->escapeIdentifier($expected_db_name),
                     $this->getDB()->escapeIdentifier($db_prefix . $table_name_without_prefix)
                 )
             );

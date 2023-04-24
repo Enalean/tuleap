@@ -31,5 +31,5 @@ interface LegacyMediawikiDBPrimer
     /**
      * @psalm-return Ok<null>|Err<Fault>
      */
-    public function prepareDBForMigration(\Project $project, ?string $central_db_name, string $db_name, string $db_prefix): Ok|Err;
+    public function prepareDBForMigration(\Project $project, string $db_name, string $db_prefix): Ok|Err;
 }

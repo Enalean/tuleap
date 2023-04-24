@@ -125,7 +125,6 @@ final class MigrateInstance
 
         return $this->legacy_mediawiki_db_primer->prepareDBForMigration(
             $this->project,
-            $this->central_database_name,
             $this->getDBName(),
             $this->getDBPrefix()
         )->andThen(
