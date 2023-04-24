@@ -79,6 +79,11 @@ function createTooltip(
 
     function appendTooltipToBody(content: string | SemiStructuredContent): void {
         const { sanitize } = DOMPurify;
+        const sanitize_options = {
+            ADD_TAGS: ["tlp-relative-date"],
+            ADD_ATTR: ["date", "absolute-date", "placement", "preference", "locale"],
+        };
+
         fetched = true;
         tooltip = document.createElement("div");
         tooltip.style.display = "none";
@@ -93,19 +98,19 @@ function createTooltip(
             if (content.title_as_html.length > 0) {
                 const header = document.createElement("div");
                 header.classList.add("crossref-tooltip-header");
-                header.innerHTML = sanitize(content.title_as_html);
+                header.innerHTML = sanitize(content.title_as_html, sanitize_options);
                 tooltip.appendChild(header);
             }
 
             if (content.body_as_html) {
                 const body = document.createElement("div");
                 body.classList.add("crossref-tooltip-body");
-                body.innerHTML = sanitize(content.body_as_html);
+                body.innerHTML = sanitize(content.body_as_html, sanitize_options);
                 tooltip.appendChild(body);
             }
         } else {
             tooltip.classList.add("codendi-tooltip");
-            tooltip.innerHTML = sanitize(content);
+            tooltip.innerHTML = sanitize(content, sanitize_options);
         }
         document.body.appendChild(tooltip);
     }
