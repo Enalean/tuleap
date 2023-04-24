@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Client;
 
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\ConfigKeyValueValidator;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[ConfigKeyCategory('Outbound HTTP requests')]
-final class OutboundHTTPRequestSettings
+final class OutboundHTTPRequestProxyTest extends TestCase
 {
-    #[ConfigKey('CIDR ranges that can be reached by outbound HTTP requests')]
-    #[ConfigKeyString('')]
-    #[ConfigKeyValueValidator(CIDRRangesValidator::class)]
-    public const ALLOW_RANGES = "http_outbound_requests_allow_ranges";
-    #[ConfigKey('CIDR ranges that cannot be reached by outbound HTTP requests if not allowed (extends the default deny list)')]
-    #[ConfigKeyString('')]
-    #[ConfigKeyValueValidator(CIDRRangesValidator::class)]
-    public const DENY_RANGES  = "http_outbound_requests_deny_ranges";
+    use ForgeConfigSandbox;
+
+    public function testUsesAdminDefinedProxy(): void
+    {
+        \ForgeConfig::set('sys_proxy', 'my-proxy.test:8080');
+
+        self::assertTrue(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
+        self::assertSame('my-proxy.test:8080', OutboundHTTPRequestProxy::getProxy());
+    }
 }

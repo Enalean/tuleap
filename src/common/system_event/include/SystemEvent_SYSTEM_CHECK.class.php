@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 
 /**
 * System Event classes
@@ -122,6 +123,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         }
 
         $this->warnWhenThereIsTooMuchDelayInWorkerEventsProcessing($logger);
+        $this->warnWhenOutboundHTTPRequestsHaveBeenFiltered($logger);
 
         try {
             EventManager::instance()->processEvent(
@@ -162,5 +164,16 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
 
         $queue_supervisor = new \Tuleap\Queue\QueueSupervisor($queue, $logger);
         $queue_supervisor->warnWhenThereIsTooMuchDelayInWorkerEventsProcessing(new DateTimeImmutable());
+    }
+
+    private function warnWhenOutboundHTTPRequestsHaveBeenFiltered(\Psr\Log\LoggerInterface $logger): void
+    {
+        if (\ForgeConfig::get(FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST) !== FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE) {
+            return;
+        }
+        $dao = new \Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO();
+        if ($dao->hasFilteredAnOutboundHTTPRequestSinceLastSystemCheck()) {
+            $logger->warning('An outbound HTTP request has been filtered, please check the logs and adjust your configuration is necessary.');
+        }
     }
 }

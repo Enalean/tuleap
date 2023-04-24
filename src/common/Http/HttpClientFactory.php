@@ -28,16 +28,14 @@ use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpAsyncClient;
 use Psr\Http\Client\ClientInterface;
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyString;
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO;
 use Tuleap\Http\Client\HTTPOutboundResponseMetricCollector;
+use Tuleap\Http\Client\OutboundHTTPRequestProxy;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
 class HttpClientFactory
 {
-    #[ConfigKey('Proxy used by outbound HTTP requests')]
-    #[ConfigKeyString('')]
-    public const PROXY    = "sys_proxy";
     private const TIMEOUT = 5;
 
     public static function createClient(Plugin ...$plugins): ClientInterface
@@ -70,9 +68,10 @@ class HttpClientFactory
         return self::createClientWithConfig(
             [
                 'timeout' => $timeout,
-                'proxy'   => \ForgeConfig::get(self::PROXY),
+                'proxy'   => OutboundHTTPRequestProxy::getProxy(),
             ],
             new HTTPOutboundResponseMetricCollector(Prometheus::instance()),
+            new FilteredOutboundHTTPResponseAlerter(\BackendLogger::getDefaultLogger(), new FilteredOutboundHTTPResponseAlerterDAO()),
             ...$plugins,
         );
     }
