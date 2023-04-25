@@ -628,7 +628,13 @@ document.observe("dom:loaded", function () {
                             //Tooltips. load only in fast ways panels
                             // since report table are loaded later in
                             // the function load_behavior_...
-                            codendi.Tooltip.load("tracker-link-artifact-fast-ways");
+
+                            const panel = document.getElementById(
+                                "tracker-link-artifact-fast-ways"
+                            );
+                            if (panel) {
+                                codendi.Tooltip.load(panel);
+                            }
 
                             load_behaviors_in_slow_ways_panel();
 
