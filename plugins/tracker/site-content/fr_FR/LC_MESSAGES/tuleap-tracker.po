@@ -3510,7 +3510,6 @@ msgstr ""
 msgid "The selected values will define the artifact as done:"
 msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
 
-#, php-format
 msgid ""
 "The semantic %s is used. It will be automatically displayed at the beginning "
 "of the tooltip."
