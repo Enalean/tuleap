@@ -110,9 +110,9 @@ final class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetByIdCallTrowErrorIfInvalidParameters(): void
     {
-        $this->provider_dao->method('searchById')->with(42)->willReturn(false);
+        $this->provider_dao->method('searchById')->with(42)->willReturn(null);
 
-        $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException');
+        $this->expectException(\Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException::class);
         $this->provider_manager->getById(42);
     }
 }

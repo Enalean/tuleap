@@ -24,7 +24,7 @@ use Tuleap\DB\DataAccessObject;
 
 class ProviderDao extends DataAccessObject
 {
-    public function searchById($provider_id)
+    public function searchById($provider_id): ?array
     {
         $sql = "SELECT generic_provider.*, azure_provider.*,
                        provider.id,
