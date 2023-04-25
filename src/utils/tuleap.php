@@ -301,6 +301,13 @@ $CLI_command_collector->addCommand(
     static fn () => new \Tuleap\System\CollectSystemDataCommand(EventManager::instance()),
 );
 
+$CLI_command_collector->addCommand(
+    \Tuleap\Http\Client\SmokescreenDumpConfigurationCommand::NAME,
+    static fn () => new \Tuleap\Http\Client\SmokescreenDumpConfigurationCommand(
+        \Tuleap\Http\Client\SmokescreenConfiguration::fromForgeConfig(),
+    ),
+);
+
 $event_manager->dispatch($CLI_command_collector);
 
 $application = new Application();

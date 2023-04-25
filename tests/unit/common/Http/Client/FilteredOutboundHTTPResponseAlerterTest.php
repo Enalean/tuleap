@@ -43,7 +43,9 @@ final class FilteredOutboundHTTPResponseAlerterTest extends TestCase
 
         $alerter->handleRequest(
             HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/'),
-            fn () => new \Http\Promise\FulfilledPromise(HTTPFactoryBuilder::responseFactory()->createResponse(407)),
+            fn () => new \Http\Promise\FulfilledPromise(
+                HTTPFactoryBuilder::responseFactory()->createResponse(407)->withHeader('X-Smokescreen-Error', 'Some error')
+            ),
             fn (\Http\Promise\Promise $promise) => $promise,
         );
 
@@ -59,7 +61,9 @@ final class FilteredOutboundHTTPResponseAlerterTest extends TestCase
 
         $alerter->handleRequest(
             HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/'),
-            fn () => new \Http\Promise\FulfilledPromise(HTTPFactoryBuilder::responseFactory()->createResponse(407)),
+            fn () => new \Http\Promise\FulfilledPromise(
+                HTTPFactoryBuilder::responseFactory()->createResponse(407)->withHeader('X-Smokescreen-Error', 'Some error')
+            ),
             fn (\Http\Promise\Promise $promise) => $promise,
         );
 

@@ -36,6 +36,14 @@ final class HTTPOutboundResponseMetricCollectorTest extends TestCase
         );
     }
 
+    public function testCollectsHTTPStatusCodeOnSSRFFilteredRequests(): void
+    {
+        $this->assertStringContainsString(
+            'tuleap_outbound_http_requests_total{status="ssrf_filtered",http_status_code="407"} 1',
+            $this->buildPrometheusText(new \Http\Promise\FulfilledPromise(HTTPFactoryBuilder::responseFactory()->createResponse(407)->withHeader('X-Smokescreen-Error', 'Something bad')))
+        );
+    }
+
     public function testCollectsOnlyKnownHTTPStatusCode(): void
     {
         $this->assertStringContainsString(
@@ -47,7 +55,7 @@ final class HTTPOutboundResponseMetricCollectorTest extends TestCase
     public function testCollectsFailedRequests(): void
     {
         $this->assertStringContainsString(
-            'tuleap_outbound_http_requests_total{status="failure"} 1',
+            'tuleap_outbound_http_requests_total{status="failure",http_status_code="invalid"} 1',
             $this->buildPrometheusText(new \Http\Promise\RejectedPromise(new \Exception()))
         );
     }

@@ -25,23 +25,19 @@ namespace Tuleap\Http\Client;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class OutboundHTTPRequestProxyTest extends TestCase
+final class SmokescreenConfigurationTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testUsesAdminDefinedProxy(): void
+    public function testBuildsConfiguration(): void
     {
-        \ForgeConfig::set('sys_proxy', 'my-proxy.test:8080');
+        \ForgeConfig::set(OutboundHTTPRequestSettings::ALLOW_RANGES, '2001:db8::/32,192.0.2.0/24');
 
-        self::assertTrue(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('my-proxy.test:8080', OutboundHTTPRequestProxy::getProxy());
-    }
+        $configuration = SmokescreenConfiguration::fromForgeConfig();
 
-    public function testUsesDefaultFilteringProxyWhenAdministratorsHaveNotDefinedTheirOwnProxy(): void
-    {
-        \ForgeConfig::set('sys_proxy', ' ');
-
-        self::assertFalse(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('localhost:4750', OutboundHTTPRequestProxy::getProxy());
+        self::assertSame('localhost', $configuration->ip);
+        self::assertTrue($configuration->allow_missing_role);
+        self::assertEqualsCanonicalizing(['192.0.2.0/24', '2001:db8::/32'], $configuration->allow_ranges);
+        self::assertEqualsCanonicalizing([], $configuration->deny_ranges);
     }
 }

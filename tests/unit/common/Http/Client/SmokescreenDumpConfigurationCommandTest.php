@@ -22,26 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Client;
 
+use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class OutboundHTTPRequestProxyTest extends TestCase
+final class SmokescreenDumpConfigurationCommandTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testUsesAdminDefinedProxy(): void
+    public function testOutputsSmokescreenConfiguration(): void
     {
-        \ForgeConfig::set('sys_proxy', 'my-proxy.test:8080');
+        $command_tester = new CommandTester(
+            new SmokescreenDumpConfigurationCommand(SmokescreenConfiguration::fromForgeConfig())
+        );
 
-        self::assertTrue(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('my-proxy.test:8080', OutboundHTTPRequestProxy::getProxy());
-    }
+        $exit_code = $command_tester->execute([]);
 
-    public function testUsesDefaultFilteringProxyWhenAdministratorsHaveNotDefinedTheirOwnProxy(): void
-    {
-        \ForgeConfig::set('sys_proxy', ' ');
-
-        self::assertFalse(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
-        self::assertSame('localhost:4750', OutboundHTTPRequestProxy::getProxy());
+        self::assertSame(0, $exit_code);
+        self::assertJsonStringEqualsJsonString(
+            '{"ip":"localhost", "allow_missing_role":true, "allow_ranges":[], "deny_ranges":[]}',
+            $command_tester->getDisplay(),
+        );
     }
 }
