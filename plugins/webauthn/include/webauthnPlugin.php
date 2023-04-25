@@ -32,11 +32,34 @@ final class WebAuthnPlugin extends Plugin
         bindtextdomain('tuleap-webauthn', __DIR__ . '/../site-content');
     }
 
-    public function getPluginInfo(): \Tuleap\WebAuthn\Plugin\PluginInfo
+    public function getPluginInfo(): Tuleap\WebAuthn\Plugin\PluginInfo
     {
         if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\WebAuthn\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function getAccountSettings(): Tuleap\Request\DispatchableWithRequest
+    {
+        return new Tuleap\WebAuthn\Controllers\AccountController();
+    }
+
+    #[Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(Tuleap\Request\CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
+            $r->get('/account', $this->getRouteHandler('getAccountSettings'));
+        });
+    }
+
+    #[Tuleap\Plugin\ListeningToEventClass]
+    public function accountTabPresenterCollection(Tuleap\User\Account\AccountTabPresenterCollection $collection): void
+    {
+        $collection->add(new Tuleap\User\Account\AccountTabPresenter(
+            dgettext('tuleap-webauthn', 'WebAuthn'),
+            $this->getPluginPath() . '/account',
+            $collection->getCurrentHref()
+        ));
     }
 }
