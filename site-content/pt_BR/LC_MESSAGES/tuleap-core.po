@@ -217,6 +217,13 @@ msgstr ""
 msgid "<i>Disabled</i>"
 msgstr "<i>Desabilitado</i>"
 
+msgid ""
+"<p>An outbound HTTP request has been filtered recently, you might want to "
+"adjust your configuration. Please check <a href=\"/administration-guide/"
+"system-administration/filtering-outbound-requests.html\">the documentation "
+"for more information</a>.</p>"
+msgstr ""
+
 msgid "<strong>Monitor this thread</strong>"
 msgstr "<forte>Monitore esta discussão</strong>"
 

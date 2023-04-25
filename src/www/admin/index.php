@@ -23,6 +23,7 @@ use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
 use Tuleap\BrowserDetection\BrowserUsageSessionsStatisticsRetriever;
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
@@ -273,6 +274,7 @@ $site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
             new \Psr\Log\NullLogger(),
         )
     ),
+    new FilteredOutboundHTTPResponseAlerterDAO()
 );
 
 // Start output

@@ -222,6 +222,17 @@ msgstr ""
 msgid "<i>Disabled</i>"
 msgstr "<i>Inactif</i>"
 
+msgid ""
+"<p>An outbound HTTP request has been filtered recently, you might want to "
+"adjust your configuration. Please check <a href=\"/administration-guide/"
+"system-administration/filtering-outbound-requests.html\">the documentation "
+"for more information</a>.</p>"
+msgstr ""
+"<p>Une requête HTTP allant vers l'extérieur a récemment été filtrée, il se "
+"vous souhaitiez ajuster votre configuration. Veuillez consulter la <a href="
+"\"/administration-guide/system-administration/filtering-outbound-requests."
+"html\">documentation pour plus d'informations</a>.</p>"
+
 msgid "<strong>Monitor this thread</strong>"
 msgstr "<strong>Surveiller ce fil de discussion</strong>"
 

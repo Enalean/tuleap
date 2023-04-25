@@ -27,14 +27,19 @@ use Event;
 use EventManager;
 use ForgeUpgradeConfig;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
+use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerterDAO;
 
 final class SiteAdminWarnings
 {
     private EventManager $event_manager;
     private ForgeUpgradeConfig $forge_upgrade_config;
 
-    public function __construct(EventManager $event_manager, ForgeUpgradeConfig $forge_upgrade_config)
-    {
+    public function __construct(
+        EventManager $event_manager,
+        ForgeUpgradeConfig $forge_upgrade_config,
+        private readonly FilteredOutboundHTTPResponseAlerterDAO $filtered_outbound_HTTP_response_alerter_dao,
+    ) {
         $this->event_manager        = $event_manager;
         $this->forge_upgrade_config = $forge_upgrade_config;
     }
@@ -52,6 +57,13 @@ final class SiteAdminWarnings
 
         if (! $this->forge_upgrade_config->isSystemUpToDate()) {
             $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="/doc/en/installation-guide/update.html">upgrade documentation</a>.</p>') . '</div>';
+        }
+
+        if (
+            \ForgeConfig::get(FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST) === FilteredOutboundHTTPResponseAlerter::ALERT_FILTERED_OUTBOUND_HTTP_REQUEST_SYSTEM_CHECK_VALUE
+            && $this->filtered_outbound_HTTP_response_alerter_dao->hasAnOutboundHTTPRequestBeenFilteredRecently()
+        ) {
+            $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<p>An outbound HTTP request has been filtered recently, you might want to adjust your configuration. Please check <a href="/administration-guide/system-administration/filtering-outbound-requests.html">the documentation for more information</a>.</p>') . '</div>';
         }
 
         return implode('', $warnings);

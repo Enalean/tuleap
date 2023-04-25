@@ -1632,6 +1632,11 @@ CREATE TABLE webauthn_challenge (
     expiration_date INT UNSIGNED NOT NULL,
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
+
+CREATE TABLE filtered_outbound_http_requests (
+    last_blocked INT UNSIGNED NOT NULL,
+    seen_by_system_check BOOLEAN
+) ENGINE=InnoDB;
 #
 # EOF
 #
