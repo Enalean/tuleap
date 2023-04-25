@@ -151,6 +151,9 @@ msgstr ""
 "L'artéfact #%d n'a pas été supprimé de la planification générale car il est "
 "déjà présent dans un sous jalon."
 
+msgid "Back to semantics"
+msgstr "Retour aux sémantiques"
+
 msgid "Backlog title"
 msgstr "Titre du backlog"
 
@@ -178,6 +181,9 @@ msgstr "Graphiques"
 
 msgid "Charts configuration"
 msgstr "Configuration des graphiques"
+
+msgid "Choose a field..."
+msgstr "Choisissez un champ..."
 
 msgid "Close"
 msgstr "Fermer"
@@ -264,6 +270,9 @@ msgstr "Planification générale explicite"
 
 msgid "Export the configuration"
 msgstr "Exporter la configuration"
+
+msgid "Field used by semantic"
+msgstr "Champ utilisé par la sémantique"
 
 msgid "Filter:"
 msgstr "Filtre :"
@@ -473,6 +482,9 @@ msgstr "Supprimer de la planification générale"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "Save semantic"
+msgstr "Sauvegarder la sémantique"
+
 msgid "Scrum"
 msgstr "Scrum"
 
@@ -623,8 +635,8 @@ msgstr ""
 "Cette fonctionnalité est en cours de développement. Une fois coché il n'est "
 "plus possible de démarrer un mode Scrum avec un template par défaut."
 
-msgid "This is used in the <b>Agile Dashboard</b> if enabled."
-msgstr "Ce champ est utilisé dans le <b>Tableau Agile</b> si activé."
+msgid "This is used in the Agile Dashboard if enabled."
+msgstr "Ce champ est utilisé dans le Tableau Agile si activé."
 
 msgid ""
 "This option will display all the burnup charts in the project with elements "
@@ -699,8 +711,14 @@ msgstr "L'action de modification en masse n'est pas connue."
 msgid "Unplanned"
 msgstr "Non planifié"
 
+msgid "Unset this semantic"
+msgstr "Réinitialiser la sémantique"
+
 msgid "Update of planning assignment may lead to errors in:"
 msgstr "La mise à jour des plannings peut causer des erreurs dans :"
+
+msgid "Update semantic"
+msgstr "Mettre à jour la sémantique"
 
 msgid "View Planning"
 msgstr "Vue du Planning"
@@ -769,11 +787,11 @@ msgid "You cannot create new planning because either:"
 msgstr "Vous ne pouvez plus créer de planning soit:"
 
 msgid ""
-"You cannot define the <em>initial effort</em> semantic since there aren't "
-"any numeric fields in the tracker"
+"You cannot define the initial effort semantic since there aren't any numeric "
+"fields in the tracker"
 msgstr ""
-"Vous ne pouvez pas définir la sémantique <em>effort estimé</em> car il n'y a "
-"aucun champ numérique dans votre outil de suivi"
+"Vous ne pouvez pas définir la sémantique effort estimé car il n'y a aucun "
+"champ numérique dans votre outil de suivi"
 
 #, php-format
 msgid ""
