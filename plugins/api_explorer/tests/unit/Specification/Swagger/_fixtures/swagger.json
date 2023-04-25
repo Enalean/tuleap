@@ -17,7 +17,7 @@
   "paths": {
     "\/somepath\/{id}\/demo": {
       "get": {
-        "operationId": "retrieveSwaggerJsonDemoResource",
+        "operationId": "retrieveTuleap\\APIExplorer\\Specification\\Swagger\\SwaggerJsonDemoResource",
         "tags": [
           "somepath"
         ],
@@ -45,13 +45,13 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#\/definitions\/SwaggerJsonDemoRepresentation"
+              "$ref": "#/definitions/Tuleap\\APIExplorer\\Specification\\Swagger\\SwaggerJsonDemoRepresentation"
             }
           }
         }
       },
       "put": {
-        "operationId": "updateSwaggerJsonDemoResource",
+        "operationId": "updateTuleap\\APIExplorer\\Specification\\Swagger\\SwaggerJsonDemoResource",
         "tags": [
           "somepath"
         ],
@@ -70,7 +70,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#\/definitions\/SwaggerJsonDemoRepresentation"
+              "$ref": "#/definitions/Tuleap\\APIExplorer\\Specification\\Swagger\\SwaggerJsonDemoRepresentation"
             }
           }
         ],
@@ -101,7 +101,7 @@
     }
   },
   "definitions": {
-    "SwaggerJsonDemoRepresentation": {
+    "Tuleap\\APIExplorer\\Specification\\Swagger\\SwaggerJsonDemoRepresentation": {
       "properties": {
         "message": {
           "type": "string",
