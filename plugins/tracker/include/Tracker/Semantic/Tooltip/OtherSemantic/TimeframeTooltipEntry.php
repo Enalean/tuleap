@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Tooltip\OtherSemantic;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Language\DateFormat;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -60,9 +61,11 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
 
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../../templates/tooltip/other-semantic/');
 
+        $formatter = DateFormat::getYearFullMonthAndDayFormatter($user);
+
         return $renderer->renderToString('timeframe-tooltip-entry', [
-            'start_date'                => $start ? $start->format("F j, Y") : '', //TODO i18n
-            'end_date'                  => $end ? $end->format("F j, Y") : '',
+            'start_date'                => $start ? $formatter->format($start) : '',
+            'end_date'                  => $end ? $formatter->format($end) : '',
             'is_end_date_in_error'      => ! $this->haveEndDateGreaterOrEqualToStartDate($start, $end),
             'time_period_error_message' => $time_period->getErrorMessage(),
         ]);
