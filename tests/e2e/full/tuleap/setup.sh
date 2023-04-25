@@ -15,7 +15,7 @@ MYSQLROOT_LOAD="$MYSQLROOT $MYSQL_DBNAME"
 clean_up() {
     # Drop symlink to the file explaining we might to take a look at journalctl
     # It is a annoyance when we do a `docker compose cp ...:/var/log` at the end
-    rm /var/log/README
+    rm -f /var/log/README
 }
 
 setup_system_configuration() {

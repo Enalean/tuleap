@@ -99,8 +99,15 @@ final class Tuleap
         );
         $forge_upgrade->recordOnlyCore();
 
+        $output->writeln("Generate platform secret");
+        $secret_key = new \Tuleap\Cryptography\SecretKeyFileOnFileSystem();
+        $secret_key->initAndGetEncryptionKeyPath();
+        $secret_key->restoreOwnership(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
+
+        $output->writeln("Start SSH daemon for initial setup (git)");
         $ssh_daemon = new SSHDaemon($this->process_factory);
         $ssh_daemon->startDaemon($output);
+
         $this->setup(
             $output,
             $fqdn,
@@ -121,11 +128,10 @@ final class Tuleap
     private function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
     {
         $output->writeln('Configure Tuleap');
-        $this->process_factory->getProcessWithoutTimeout(
+        $process = $this->process_factory->getProcessWithoutTimeout(
             [
                 '/bin/bash',
                 '/usr/share/tuleap/tools/setup.el7.sh',
-                '--debug',
                 '--assumeyes',
                 '--configure',
                 '--server-name=' . $tuleap_fqdn,
@@ -133,7 +139,10 @@ final class Tuleap
                 '--mysql-user=' . $db_admin_user,
                 '--mysql-password=' . $db_admin_password,
             ]
-        )->mustRun();
+        );
+        $process->mustRun(function (string $type, string $buffer) use ($output) {
+            $output->writeln($buffer);
+        });
         $this->regenerateConfigurations($output);
     }
 

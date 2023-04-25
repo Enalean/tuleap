@@ -9,6 +9,11 @@ MAX_TEST_EXECUTION_TIME='60m'
 TIMEOUT="$(command -v gtimeout || echo timeout)"
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
 
+additional_compose_file=""
+if [ -f "${EXTRA_COMPOSE_FILE:-}" ]; then
+    additional_compose_file="-f $EXTRA_COMPOSE_FILE"
+fi
+
 case "${1:-}" in
     "mysql57")
     export DB_HOST="mysql57"
@@ -24,7 +29,7 @@ case "${1:-}" in
 esac
 
 project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml  -f ./tests/e2e/docker-compose-test-runner.yml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p $project_name"
+DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file $additional_compose_file -p $project_name"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then

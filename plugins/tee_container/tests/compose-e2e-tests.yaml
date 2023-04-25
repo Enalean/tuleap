@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  tuleap:
+    image: docker.tuleap.org/tuleap-enterprise-edition:dev
+    command: [ "--exec", "/tuleap_src/tests/e2e/full/tuleap/setup.sh" ]
+    environment:
+      - TULEAP_FQDN=tuleap
+      - DB_ADMIN_USER=root
+      - DB_ADMIN_PASSWORD=welcome0
+      - TULEAP_SYS_DBHOST=${DB_HOST}
+      - TULEAP_SYS_DBPASSWD=welcome0
+      - SITE_ADMINISTRATOR_PASSWORD=welcome0
+      - TULEAP_EMAIL_TRANSPORT=smtp
+      - TULEAP_EMAIL_RELAYHOST=mailhog:1025
+      - TULEAP_FPM_SESSION_MODE=redis
+      - TULEAP_REDIS_SERVER=redis
+      - TULEAP_SRC=/tuleap_src
+    volumes:
+      - .:/tuleap_src:ro
