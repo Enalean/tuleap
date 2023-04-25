@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Template\Plugin;
+declare(strict_types=1);
 
-final class PluginInfo extends \PluginInfo
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class WebAuthnPlugin extends Plugin
 {
-    public function __construct(\Plugin $plugin)
+    public function __construct(?int $id)
     {
-        parent::__construct($plugin);
+        parent::__construct($id);
+        $this->setScope(self::SCOPE_SYSTEM);
+        bindtextdomain('tuleap-webauthn', __DIR__ . '/../site-content');
+    }
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+    public function getPluginInfo(): \Tuleap\WebAuthn\Plugin\PluginInfo
+    {
+        if (! $this->pluginInfo) {
+            $this->pluginInfo = new Tuleap\WebAuthn\Plugin\PluginInfo($this);
+        }
+        return $this->pluginInfo;
     }
 }

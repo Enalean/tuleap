@@ -20,7 +20,7 @@
 
 namespace Tuleap\Template\Plugin;
 
-class PluginDescriptor extends \PluginDescriptor
+final class PluginDescriptor extends \PluginDescriptor
 {
     public function __construct()
     {

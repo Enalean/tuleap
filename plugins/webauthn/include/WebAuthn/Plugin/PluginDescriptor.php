@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Template\Plugin;
+declare(strict_types=1);
 
-final class PluginInfo extends \PluginInfo
+namespace Tuleap\WebAuthn\Plugin;
+
+final class PluginDescriptor extends \PluginDescriptor
 {
-    public function __construct(\Plugin $plugin)
+    public function __construct()
     {
-        parent::__construct($plugin);
-
-        $this->setPluginDescriptor(new PluginDescriptor());
+        parent::__construct(
+            dgettext('tuleap-webauthn', 'WebAuthn'),
+            dgettext('tuleap-webauthn', 'Authentication with passkeys')
+        );
     }
 }
