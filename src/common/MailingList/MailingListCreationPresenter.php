@@ -59,10 +59,6 @@ class MailingListCreationPresenter
      * @var bool
      */
     public $has_existing_lists;
-    /**
-     * @var string
-     */
-    public $do_create_url;
 
     /**
      * @param string[] $existing_lists
@@ -75,7 +71,6 @@ class MailingListCreationPresenter
         array $existing_lists,
         string $purified_intro,
         string $default_name_value,
-        string $do_create_url,
     ) {
         $this->group_id           = $group_id;
         $this->csrf_token         = $csrf;
@@ -85,6 +80,5 @@ class MailingListCreationPresenter
         $this->purified_intro     = $purified_intro;
         $this->default_name_value = $default_name_value;
         $this->has_existing_lists = ! empty($existing_lists);
-        $this->do_create_url      = $do_create_url;
     }
 }

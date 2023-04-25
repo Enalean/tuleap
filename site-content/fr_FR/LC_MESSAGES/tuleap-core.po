@@ -2109,6 +2109,13 @@ msgstr "Administration de la liste"
 msgid "Mail To"
 msgstr "Envoyer à"
 
+msgid ""
+"Mailing list creation is no longer possible as the plugin will be removed "
+"soon"
+msgstr ""
+"Le création de liste de diffusion n'est plus possible car le plugin sera "
+"bientôt supprimé"
+
 msgid "Mailing list name"
 msgstr "Nom de la liste de diffusion"
 
@@ -3902,11 +3909,11 @@ msgstr "Il n'y a pas encore d'activité"
 msgid "There isn't any mailing list yet"
 msgstr "Il n'y a aucune liste de diffusion pour l'instant"
 
-msgid "There isn't any mailing lists yet"
-msgstr "Il n'y a aucune liste de diffusion pour l'instant"
+msgid "There isn't any mailing lists"
+msgstr "Il n'y a aucune liste de diffusion"
 
 msgid ""
-"There isn't any mailing lists yet or you don't have permissions to see them."
+"There isn't any mailing lists or you don't have permissions to see them."
 msgstr ""
 "Il n’y a aucune liste de diffusion pour l’instant ou vous n'avez pas la "
 "permission pour les voir."

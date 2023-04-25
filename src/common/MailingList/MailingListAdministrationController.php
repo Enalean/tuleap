@@ -98,7 +98,6 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
             'admin-index',
             new MailingListAdministrationPresenter(
                 $mailing_list_presenters,
-                MailingListCreationController::getUrl($project),
                 self::getCSRF($project)
             )
         );

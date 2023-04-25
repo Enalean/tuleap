@@ -2086,6 +2086,11 @@ msgstr "Administração da Lista de Email"
 msgid "Mail To"
 msgstr "Enviar para"
 
+msgid ""
+"Mailing list creation is no longer possible as the plugin will be removed "
+"soon"
+msgstr ""
+
 msgid "Mailing list name"
 msgstr "Nome da lista de email"
 
@@ -3853,13 +3858,12 @@ msgstr "Ainda não há nenhuma atividade"
 msgid "There isn't any mailing list yet"
 msgstr "Não há nenhuma lista de emails ainda"
 
-msgid "There isn't any mailing lists yet"
-msgstr "Não há listas de emails ainda"
+msgid "There isn't any mailing lists"
+msgstr ""
 
 msgid ""
-"There isn't any mailing lists yet or you don't have permissions to see them."
+"There isn't any mailing lists or you don't have permissions to see them."
 msgstr ""
-"Não há listas de emails ainda ou você não tem permissão para visualizá-las."
 
 msgid "There isn't any matching members"
 msgstr "Não foram encontrados membros relacionados"

@@ -65,8 +65,7 @@ class MailingListCreationPresenterBuilder
             $list_prefix,
             $existing_lists,
             $this->purifier->purify($intro, \Codendi_HTMLPurifier::CONFIG_LIGHT),
-            $default_name_value,
-            MailingListCreationController::getUrl($project),
+            $default_name_value
         );
     }
 }

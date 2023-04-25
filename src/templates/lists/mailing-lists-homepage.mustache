@@ -44,19 +44,17 @@
     {{^ has_lists }}
         <section class="empty-state-page">
             <h1 class="empty-state-title">
-                {{# gettext }}There isn't any mailing lists yet{{/ gettext }}
+                {{# gettext }}There isn't any mailing lists {{/ gettext }}
             </h1>
             {{^ is_project_admin }}
                 <p class="empty-state-text">
-                    {{# gettext }}There isn't any mailing lists yet or you don't have permissions to see them.{{/ gettext }}
+                    {{# gettext }}There isn't any mailing lists or you don't have permissions to see them.{{/ gettext }}
                 </p>
             {{/ is_project_admin }}
-
             {{# is_project_admin }}
-                <a href="{{ creation_url }}" class="empty-state-action tlp-button-primary">
-                    <i class="fas fa-plus tlp-button-icon"></i>
-                    {{# gettext }}New mailing list{{/ gettext }}
-                </a>
+               <button type="button" class=" empty-state-action tlp-button-primary" disabled title="{{# gettext }} Mailing list creation is no longer possible as the plugin will be removed soon {{/ gettext }}">
+                    {{# gettext }} New mailing list {{/ gettext }}
+               </button>
             {{/ is_project_admin }}
         </section>
     {{/ has_lists }}
