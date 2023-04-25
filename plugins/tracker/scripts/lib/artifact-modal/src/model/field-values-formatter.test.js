@@ -67,6 +67,14 @@ describe("TuleapArtifactFieldValues", () => {
                             type: "sb",
                             permissions: ["read", "update", "create"],
                             default_value: [{ id: 967, label: "intertransmission" }],
+                            values: [
+                                {
+                                    id: 667,
+                                },
+                                {
+                                    id: 967,
+                                },
+                            ],
                         },
                         {
                             field_id: 320,
@@ -155,7 +163,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     280: { field_id: 280, type: "aid" },
                     973: { field_id: 973, type: "atid" },
                     9: { field_id: 9, type: "lud" },
@@ -187,7 +195,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues([], tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     175: {
                         field_id: 175,
                         permissions: ["read", "update", "create"],
@@ -221,7 +229,7 @@ describe("TuleapArtifactFieldValues", () => {
                 };
                 const output = getSelectedValues(artifact_values, tracker);
 
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     901: {
                         field_id: 901,
                         type: "text",
@@ -247,7 +255,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     336: {
                         field_id: 336,
                         permissions: ["read", "update", "create"],
@@ -277,7 +285,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     349: {
                         field_id: 349,
                         type: "text",
@@ -344,7 +352,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     163: {
                         field_id: 163,
                         type: "float",
@@ -384,8 +392,8 @@ describe("TuleapArtifactFieldValues", () => {
                 };
                 const output = getSelectedValues(artifact_values, tracker);
                 expect(output[609].field_id).toBe(609);
-                expect(output[609].permissions).toEqual(["read", "update", "create"]);
-                expect(output[609].value).toEqual(expect.any(String));
+                expect(output[609].permissions).toStrictEqual(["read", "update", "create"]);
+                expect(output[609].value).toStrictEqual(expect.any(String));
             });
         });
 
@@ -405,14 +413,56 @@ describe("TuleapArtifactFieldValues", () => {
                             name: "theow",
                             permissions: ["read", "update", "create"],
                             type: "sb",
+                            values: [
+                                {
+                                    id: 667,
+                                },
+                                {
+                                    id: 557,
+                                },
+                            ],
                         },
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     613: {
                         field_id: 613,
                         bind_value_ids: [557],
+                        type: "sb",
+                        permissions: ["read", "update", "create"],
+                    },
+                });
+            });
+
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values and this value is missing, then [100] will be returned", function () {
+                const artifact_values = {
+                    613: {
+                        field_id: 613,
+                        bind_value_ids: [557],
+                    },
+                };
+                const tracker = {
+                    fields: [
+                        {
+                            field_id: 613,
+                            label: "heritor",
+                            name: "theow",
+                            permissions: ["read", "update", "create"],
+                            type: "sb",
+                            values: [
+                                {
+                                    id: 667,
+                                },
+                            ],
+                        },
+                    ],
+                };
+                const output = getSelectedValues(artifact_values, tracker);
+                expect(output).toStrictEqual({
+                    613: {
+                        field_id: 613,
+                        bind_value_ids: [100],
                         type: "sb",
                         permissions: ["read", "update", "create"],
                     },
@@ -432,7 +482,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     87: {
                         field_id: 87,
                         bind_value_ids: [100],
@@ -456,7 +506,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     622: {
                         field_id: 622,
                         bind_value_ids: [941],
@@ -485,7 +535,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     90: {
                         field_id: 90,
                         bind_value_ids: [412],
@@ -512,14 +562,62 @@ describe("TuleapArtifactFieldValues", () => {
                             name: "babyship",
                             permissions: ["read", "update", "create"],
                             type: "msb",
+                            values: [
+                                {
+                                    id: 667,
+                                },
+                                {
+                                    id: 679,
+                                },
+                                {
+                                    id: 971,
+                                },
+                            ],
                         },
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     383: {
                         field_id: 383,
                         bind_value_ids: [971, 679],
+                        type: "msb",
+                        permissions: ["read", "update", "create"],
+                    },
+                });
+            });
+
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact value will be returned without the no more available values", function () {
+                const artifact_values = {
+                    383: {
+                        field_id: 383,
+                        bind_value_ids: [971, 679],
+                    },
+                };
+                const tracker = {
+                    fields: [
+                        {
+                            field_id: 383,
+                            label: "hospodar",
+                            name: "babyship",
+                            permissions: ["read", "update", "create"],
+                            type: "msb",
+                            values: [
+                                {
+                                    id: 667,
+                                },
+                                {
+                                    id: 971,
+                                },
+                            ],
+                        },
+                    ],
+                };
+                const output = getSelectedValues(artifact_values, tracker);
+                expect(output).toStrictEqual({
+                    383: {
+                        field_id: 383,
+                        bind_value_ids: [971],
                         type: "msb",
                         permissions: ["read", "update", "create"],
                     },
@@ -539,7 +637,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     860: {
                         field_id: 860,
                         bind_value_ids: [100],
@@ -566,7 +664,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     698: {
                         field_id: 698,
                         bind_value_ids: [196, 800],
@@ -599,7 +697,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     137: {
                         field_id: 137,
                         bind_value_ids: [498, null, 443],
@@ -627,7 +725,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     607: {
                         field_id: 607,
                         bind_value_ids: [null, null, null],
@@ -659,7 +757,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     910: {
                         field_id: 910,
                         bind_value_ids: [477, null, 848],
@@ -687,7 +785,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues(artifact_values, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     430: {
                         field_id: 430,
                         bind_value_ids: [100],
@@ -710,7 +808,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     242: {
                         field_id: 242,
                         bind_value_ids: [100],
@@ -737,7 +835,7 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     897: {
                         field_id: 897,
                         bind_value_ids: [931, 410],
@@ -796,7 +894,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues(artifact_values, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 904: {
                     field_id: 904,
                     type: "perm",
@@ -825,7 +923,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 662: {
                     field_id: 662,
                     type: "perm",
@@ -862,7 +960,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues(artifact_values, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 103: {
                     field_id: 103,
                     file_descriptions: [{ id: 4 }, { id: 9 }],
@@ -890,7 +988,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 542: {
                     field_id: 542,
                     type: "file",
@@ -926,7 +1024,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues(artifact_values, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 665: {
                     field_id: 665,
                     is_autocomputed: false,
@@ -951,7 +1049,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 304: {
                     field_id: 304,
                     is_autocomputed: true,
@@ -979,7 +1077,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 304: {
                     field_id: 304,
                     is_autocomputed: false,
@@ -1004,7 +1102,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 304: {
                     field_id: 304,
                     is_autocomputed: true,
