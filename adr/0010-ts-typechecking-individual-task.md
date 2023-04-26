@@ -4,6 +4,8 @@
 * Deciders: Thomas GERBET, Joris MASSON
 * Date: 2022-01-13
 
+Technical Story: [request #31907 Have TypeScript typechecking in dedicated task][0]
+
 ## Context and Problem Statement
 
 Typechecking of TypeScript files is currently mixed with the `build` and `test` tasks.
@@ -32,7 +34,8 @@ The typechecking is moved into its own task for each package.
 * We are less likely to encounter errors only in specific scenario
 * We can easily switch the tool used for typechecking to choose the one the best suited to the situation
 
-
 ### Negative consequences
 
 * We have to go through each package of the codebase to do the change
+
+[0]: https://tuleap.net/plugins/tracker/?aid=31907
