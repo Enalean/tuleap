@@ -123,10 +123,15 @@ final class MigrateInstance
 
         $instance_name = $this->project->getUnixNameLowerCase();
 
-        return $this->legacy_mediawiki_db_primer->prepareDBForMigration(
-            $this->project,
-            $this->getDBName(),
-            $this->getDBPrefix()
+        return $this->moveDataDirectory()->andThen(
+            /** @psalm-return Ok<null>|Err<Fault> */
+            function (): Ok|Err {
+                return $this->legacy_mediawiki_db_primer->prepareDBForMigration(
+                    $this->project,
+                    $this->getDBName(),
+                    $this->getDBPrefix()
+                );
+            }
         )->andThen(
             /** @psalm-return Ok<ResponseInterface>|Err<Fault> */
             function () use ($request_factory, $instance_name, $client, $logger): Ok|Err {
@@ -160,6 +165,25 @@ final class MigrateInstance
                 return Result::err(new InitializationIssue($fault, $this->project));
             }
         );
+    }
+
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    private function moveDataDirectory(): Ok|Err
+    {
+        $mw_data_dir_project_name = '/var/lib/tuleap/mediawiki/projects/' . $this->project->getUnixName();
+        if (! is_dir($mw_data_dir_project_name)) {
+            return Result::ok(null);
+        }
+
+        $mw_data_dir_project_id = '/var/lib/tuleap/mediawiki/projects/' . $this->project->getID();
+        $is_success             = rename($mw_data_dir_project_name, $mw_data_dir_project_id);
+        if (! $is_success) {
+            Result::err(Fault::fromMessage(sprintf('Not able to rename "%s" to "%s"', $mw_data_dir_project_name, $mw_data_dir_project_id)));
+        }
+
+        return Result::ok(null);
     }
 
     /**
