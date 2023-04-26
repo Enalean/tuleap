@@ -95,7 +95,10 @@ function OverviewController(
     }
 
     function loadTooltipsInPullRequestInfoArea() {
-        TooltipService.setupTooltips($element.find("#pull-request-overview"));
+        const overview = $element.find("#pull-request-overview");
+        if (overview.length > 0) {
+            TooltipService.setupTooltips(overview[0]);
+        }
     }
 
     function showEditionForm() {
