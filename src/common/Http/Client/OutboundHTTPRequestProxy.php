@@ -31,7 +31,14 @@ final class OutboundHTTPRequestProxy
 {
     #[ConfigKey('Proxy used by outbound HTTP requests')]
     #[ConfigKeyString('')]
-    public const PROXY                    = "sys_proxy";
+    public const PROXY = "sys_proxy";
+
+    #[ConfigKey('Bypass SSRF filtering proxy (smokescreen). Only use in case of emergency.')]
+    #[ConfigKeyString(self::FILTERING_PROXY_ENABLED)]
+    public const FILTERING_PROXY_USAGE    = 'filtering_proxy_usage';
+    public const FILTERING_PROXY_ENABLED  = 'enabled';
+    public const FILTERING_PROXY_DISABLED = 'disabled';
+
     private const DEFAULT_FILTERING_PROXY = 'localhost:4750';
 
     private function __construct()
@@ -45,6 +52,11 @@ final class OutboundHTTPRequestProxy
         }
 
         return self::DEFAULT_FILTERING_PROXY;
+    }
+
+    public static function isFilteringProxyEnabled(): bool
+    {
+        return ! self::isProxyDefinedByAdministrators() && \ForgeConfig::get(self::FILTERING_PROXY_USAGE) !== self::FILTERING_PROXY_DISABLED;
     }
 
     public static function isProxyDefinedByAdministrators(): bool

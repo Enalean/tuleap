@@ -65,11 +65,14 @@ class HttpClientFactory
 
     public static function createClientWithCustomTimeout(int $timeout, Plugin ...$plugins): HttpAsyncClient&ClientInterface
     {
+        $config = [
+            'timeout' => $timeout,
+        ];
+        if (OutboundHTTPRequestProxy::isFilteringProxyEnabled()) {
+            $config['proxy'] = OutboundHTTPRequestProxy::getProxy();
+        }
         return self::createClientWithConfig(
-            [
-                'timeout' => $timeout,
-                'proxy'   => OutboundHTTPRequestProxy::getProxy(),
-            ],
+            $config,
             new HTTPOutboundResponseMetricCollector(Prometheus::instance()),
             new FilteredOutboundHTTPResponseAlerter(\BackendLogger::getDefaultLogger(), new FilteredOutboundHTTPResponseAlerterDAO()),
             ...$plugins,
