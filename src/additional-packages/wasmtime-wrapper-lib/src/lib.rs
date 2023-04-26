@@ -71,7 +71,7 @@ pub unsafe extern "C" fn callWasmModule(
                     };
             }
         },
-        Err(e) => return internal_error(format!("{}", e)),
+        Err(e) => internal_error(format!("{}", e)),
     }
 }
 
