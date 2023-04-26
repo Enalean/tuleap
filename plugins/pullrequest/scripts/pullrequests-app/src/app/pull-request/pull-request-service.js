@@ -47,9 +47,10 @@ function PullRequestService(PullRequestRestService) {
     }
 
     function updateTitleAndDescription(pull_request, new_title, new_description) {
+        const title = new_title === undefined ? "" : new_title;
         return PullRequestRestService.updateTitleAndDescription(
             pull_request.id,
-            new_title,
+            title,
             new_description
         ).then(function (response) {
             pull_request.title = response.data.title;
