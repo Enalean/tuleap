@@ -1448,15 +1448,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<form name="form1" method="POST" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-formElements">';
 
-        echo '  <div class="container-fluid">
-                  <div class="row-fluid">
-                    <div class="span3">';
+        echo '  <div class="tracker-admin-fields">
+                    <div>';
         $this->fetchAdminPalette();
         echo '      </div>
-                    <div class="span9">';
+                    <div>';
         echo $this->fetchAdminFormElements();
         echo '      </div>
-                  </div>
                 </div>
               </form>';
         $this->displayAdminFooter($layout);

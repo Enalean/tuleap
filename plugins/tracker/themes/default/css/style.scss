@@ -1689,8 +1689,17 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 /* }}} */
 
 /* {{{ Palette */
+.tracker-admin-fields {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+}
+
 .tracker-admin-palette {
     overflow: hidden;
+
+    > .widget > .widget-content {
+        padding: 0;
+    }
 }
 
 #tracker-admin-field-properties {
@@ -1707,13 +1716,11 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .tracker-admin-palette a.button_disabled,
 .tracker-admin-palette a.button {
     display: block;
-    /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
-    display: inline-block;
     width: 40%;
     min-width: 148px;
-    margin-right: 2%;
-    margin-bottom: 5px;
+    max-width: 148px;
     padding: 4px 8px 3px 5px;
+    overflow: hidden;
     border: 1px solid #c2c2c2;
     border-radius: var(--tlp-medium-radius);
     background: transparent url("../../default/images/button-gradient.png") top left repeat-x;
@@ -1721,6 +1728,7 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     font-size: 0.85em;
     text-align: left;
     text-decoration: none;
+    text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
 }
@@ -1746,11 +1754,19 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 }
 
 .tracker-admin-palette-content {
-    padding: 5px 5px 10px;
-}
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: var(--tlp-small-spacing);
 
-.tracker-admin-palette-content td {
-    padding: 2px;
+    > table {
+        grid-column: span 2;
+        margin: var(--tlp-small-spacing) 0 0;
+
+        > tbody > tr > td:first-child {
+            width: 1px;
+            padding: 0 var(--tlp-small-spacing) 0 0;
+        }
+    }
 }
 
 .tracker-admin-palette-content label {
