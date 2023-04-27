@@ -177,7 +177,7 @@ final class MigrateInstance
             return Result::ok(null);
         }
 
-        $mw_data_dir_project_id = '/var/lib/tuleap/mediawiki/projects/' . $this->project->getID();
+        $mw_data_dir_project_id = '/var/lib/tuleap/mediawiki/projects/' . (int) $this->project->getID();
         $is_success             = rename($mw_data_dir_project_name, $mw_data_dir_project_id);
         if (! $is_success) {
             Result::err(Fault::fromMessage(sprintf('Not able to rename "%s" to "%s"', $mw_data_dir_project_name, $mw_data_dir_project_id)));
