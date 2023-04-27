@@ -70,6 +70,24 @@ final class FilteredOutboundHTTPResponseAlerterTest extends TestCase
         self::assertFalse($logger->hasErrorRecords());
     }
 
+    public function testIgnoresFilteredRequestsWhenAdministratorsHaveDisabledFiltering(): void
+    {
+        \ForgeConfig::set(OutboundHTTPRequestProxy::FILTERING_PROXY_USAGE, OutboundHTTPRequestProxy::FILTERING_PROXY_DISABLED);
+
+        $logger  = new TestLogger();
+        $alerter = new FilteredOutboundHTTPResponseAlerter($logger, $this->createStub(FilteredOutboundHTTPResponseAlerterDAO::class));
+
+        $alerter->handleRequest(
+            HTTPFactoryBuilder::requestFactory()->createRequest('GET', '/'),
+            fn () => new \Http\Promise\FulfilledPromise(
+                HTTPFactoryBuilder::responseFactory()->createResponse(407)->withHeader('X-Smokescreen-Error', 'Some error')
+            ),
+            fn (\Http\Promise\Promise $promise) => $promise,
+        );
+
+        self::assertFalse($logger->hasErrorRecords());
+    }
+
     public function testDoesNotNothingWhenResponseIsNotA407(): void
     {
         $logger  = new TestLogger();
