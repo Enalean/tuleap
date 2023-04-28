@@ -60,8 +60,6 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $this->addHook(EventCronJobEveryMinute::NAME);
         $this->addHook(BotMattermostDeleted::NAME);
 
-        $this->listenToCollectRouteEventWithDefaultController();
-
         return parent::getHooksAndCallbacks();
     }
 
