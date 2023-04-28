@@ -58,7 +58,7 @@ class ProviderManager
     public function getById($id): Provider
     {
         $row = $this->dao->searchById($id);
-        if ($row === false) {
+        if ($row === null) {
             throw new ProviderNotFoundException();
         }
         if (isset($row['tenant_id'])) {
