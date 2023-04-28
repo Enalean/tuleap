@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { SelectionElement } from "../selection/SelectionElement";
 
 export class FieldFocusManager {
     private steal_focus_event_from_source_select_box_handler!: (event: Event) => void;
 
     constructor(
-        private readonly doc: Document,
         private readonly source_select_box: HTMLSelectElement,
-        private readonly selection_element: HTMLElement
+        private readonly selection_element: SelectionElement
     ) {}
 
     public init(): void {
@@ -45,11 +45,7 @@ export class FieldFocusManager {
         );
     }
 
-    public doesSelectionElementHaveTheFocus(): boolean {
-        return this.doc.activeElement === this.selection_element;
-    }
-
     public applyFocusOnLazybox(): void {
-        this.selection_element.focus();
+        this.selection_element.setFocus();
     }
 }

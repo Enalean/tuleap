@@ -19,7 +19,6 @@
 
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { SearchInput } from "../SearchInput";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import type { SelectionElement } from "../selection/SelectionElement";
 
@@ -31,8 +30,7 @@ export type DropdownEventsHandler = {
 export const DropdownEventsHandler = (
     scrolling_manager: ScrollingManager,
     search_field: SearchInput,
-    single_selection_element: SelectionElement,
-    field_focus_manager: FieldFocusManager,
+    selection_element: SelectionElement,
     highlighter: ListItemHighlighter
 ): DropdownEventsHandler => ({
     onDropdownOpen(): void {
@@ -42,8 +40,7 @@ export const DropdownEventsHandler = (
 
     onDropdownClosed(): void {
         scrolling_manager.unlockScrolling();
-        field_focus_manager.applyFocusOnLazybox();
-        single_selection_element.setFocus();
+        selection_element.setFocus();
         highlighter.resetHighlight();
     },
 });

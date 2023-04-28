@@ -81,13 +81,7 @@ export interface LazyboxComponent {
     dropdown_element: HTMLElement;
     dropdown_list_element: HTMLElement;
     search_field_element: HTMLElement & SearchInput;
-    single_selection_element: HTMLElement & SelectionElement;
-    multiple_selection_element: HTMLElement;
-}
-
-export interface LazyboxSelectionStateMultiple {
-    selected_items: Map<string, RenderedItem>;
-    selected_values_elements: Map<string, Element>;
+    selection_element: HTMLElement & SelectionElement;
 }
 
 export interface ScrollCoordinates {

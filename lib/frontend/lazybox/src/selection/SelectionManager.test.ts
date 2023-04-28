@@ -25,7 +25,6 @@ import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import type { SelectionElement } from "./SelectionElement";
-import { RenderedItemStub } from "../../tests/stubs/RenderedItemStub";
 
 const noop = (): void => {
     //Do nothing
@@ -35,15 +34,24 @@ describe("SelectionManager", () => {
     let selection_element: SelectionElement,
         manager: SelectionManager,
         items_map_manager: ItemsMapManager,
-        item_1: RenderedItem;
+        item_1: RenderedItem,
+        item_2: RenderedItem;
 
     beforeEach(() => {
         items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         selection_element = {
-            getSelection: () => RenderedItemStub.withDefaults(),
+            getSelection: () => {
+                const selection: ReadonlyArray<RenderedItem> = [];
+                return selection;
+            },
             clearSelection: noop,
             selectItem: (item) => {
                 if (item) {
+                    //Do nothing
+                }
+            },
+            replaceSelection(items: ReadonlyArray<RenderedItem>) {
+                if (items) {
                     //Do nothing
                 }
             },
@@ -60,9 +68,10 @@ describe("SelectionManager", () => {
             })
         );
         item_1 = items_map_manager.findLazyboxItemInItemMap("lazybox-item-value-1");
+        item_2 = items_map_manager.findLazyboxItemInItemMap("lazybox-item-value-2");
     });
 
-    describe("processSelection", () => {
+    describe("processSelection()", () => {
         it(`finds the corresponding item in the Item Map
             and asks the selection element to select it`, () => {
             const select = vi.spyOn(selection_element, "selectItem");
@@ -73,34 +82,39 @@ describe("SelectionManager", () => {
         });
     });
 
-    describe("updateSelectionAfterDropdownContentChange", () => {
-        it(`when an item is selected but there is no item in the items map anymore,
-            then it asks the selection element to clear`, () => {
-            const clear = vi.spyOn(selection_element, "clearSelection");
-            manager.processSelection(item_1.element);
-            items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
-            manager.updateSelectionAfterDropdownContentChange();
+    describe(`setSelection()`, () => {
+        it(`replaces the previous selection by the new one`, () => {
+            const replaceSelection = vi.spyOn(selection_element, "replaceSelection");
 
-            expect(clear).toHaveBeenCalled();
+            const items = [item_1, item_2];
+            manager.setSelection(items);
+
+            expect(replaceSelection).toHaveBeenCalledWith(items);
         });
+    });
 
-        it(`when an item has been selected, and is still available in the new items,
-            then it should re-select it (to deal with new Element references)`, () => {
-            vi.spyOn(selection_element, "getSelection").mockReturnValue(item_1);
-            manager.processSelection(item_1.element);
-            const select = vi.spyOn(selection_element, "selectItem");
+    describe("updateSelectionAfterDropdownContentChange()", () => {
+        it(`when items have been selected, and are still available in the new dropdown content,
+            then it should set their "selected" property and assign their aria-selected attribute`, () => {
+            vi.spyOn(selection_element, "getSelection").mockReturnValue([item_1, item_2]);
+            manager.setSelection([item_1, item_2]);
 
             const groups = GroupCollectionBuilder.withSingleGroup({
                 items: [
                     { id: "value-0", value: { id: 0 }, is_disabled: false },
                     { id: "value-1", value: item_1.value, is_disabled: false },
+                    { id: "value-2", value: item_2.value, is_disabled: false },
                 ],
             });
             items_map_manager.refreshItemsMap(groups);
             manager.updateSelectionAfterDropdownContentChange();
 
             const new_item_1 = items_map_manager.findLazyboxItemInItemMap(item_1.id);
-            expect(select).toHaveBeenCalledWith(new_item_1);
+            const new_item_2 = items_map_manager.findLazyboxItemInItemMap(item_2.id);
+            expect(new_item_1.is_selected).toBe(true);
+            expect(new_item_1.element.getAttribute("aria-selected")).toBe("true");
+            expect(new_item_2.is_selected).toBe(true);
+            expect(new_item_2.element.getAttribute("aria-selected")).toBe("true");
         });
     });
 });

@@ -31,10 +31,10 @@ import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
-import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import type { LazyboxItem } from "./items/GroupCollection";
 import { getSelectionBadgeCallback } from "./SelectionBadgeCallbackDefaulter";
 import { DropdownEventsHandler } from "./dropdown/DropdownEventsHandler";
+import { KeyboardSelector } from "./selection/KeyboardSelector";
 
 export function createLazybox(
     source_select_box: HTMLSelectElement,
@@ -53,24 +53,19 @@ export function createLazybox(
         dropdown_element,
         dropdown_list_element,
         search_field_element,
-        single_selection_element,
-        multiple_selection_element,
+        selection_element,
     } = base_renderer.renderBaseComponent();
+    selection_element.selection_badge_callback = getSelectionBadgeCallback(options);
 
     const scrolling_manager = new ScrollingManager(wrapper_element);
-    const field_focus_manager = new FieldFocusManager(
-        document,
-        source_select_box,
-        multiple_selection_element
-    );
+    const field_focus_manager = new FieldFocusManager(source_select_box, selection_element);
     field_focus_manager.init();
 
     const highlighter = new ListItemHighlighter(dropdown_list_element);
     const dropdown_events_handler = DropdownEventsHandler(
         scrolling_manager,
         search_field_element,
-        single_selection_element,
-        field_focus_manager,
+        selection_element,
         highlighter
     );
     const dropdown_manager = new DropdownManager(
@@ -82,29 +77,26 @@ export function createLazybox(
         dropdown_events_handler.onDropdownOpen,
         dropdown_events_handler.onDropdownClosed
     );
+    const selection_manager = new SelectionManager(selection_element, items_map_manager);
+    const keyboard_selector = KeyboardSelector(
+        dropdown_manager,
+        highlighter,
+        selection_manager,
+        search_field_element
+    );
     search_field_element.addEventListener("search-input", () => {
         dropdown_manager.openLazybox();
     });
-    single_selection_element.addEventListener("clear-selection", () => {
+    search_field_element.addEventListener("enter-pressed", () => {
+        keyboard_selector.handleEnter();
+    });
+    selection_element.addEventListener("clear-selection", () => {
         search_field_element.clear();
         dropdown_manager.openLazybox();
     });
-    single_selection_element.addEventListener("enter-pressed", () => {
+    selection_element.addEventListener("open-dropdown", () => {
         dropdown_manager.openLazybox();
     });
-
-    const selection_manager = options.is_multiple
-        ? new MultipleSelectionManager(
-              source_select_box,
-              multiple_selection_element,
-              search_field_element,
-              options.placeholder,
-              dropdown_manager,
-              items_map_manager,
-              options.selection_callback,
-              getSelectionBadgeCallback(options)
-          )
-        : new SelectionManager(single_selection_element, items_map_manager);
 
     const dropdown_content_renderer = new DropdownContentRenderer(
         dropdown_list_element,
@@ -124,10 +116,9 @@ export function createLazybox(
         source_select_box,
         selection_manager,
         dropdown_manager,
-        dropdown_content_renderer,
         keyboard_navigation_manager,
         highlighter,
-        field_focus_manager
+        keyboard_selector
     );
     const dropdown_content_refresher = DropdownContentRefresher(
         items_map_manager,

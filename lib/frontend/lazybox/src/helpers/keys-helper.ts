@@ -33,10 +33,6 @@ export function isArrowUp(event: KeyboardEvent): boolean {
     return event.key === "ArrowUp";
 }
 
-export function isTabKey(event: KeyboardEvent): boolean {
-    return event.key === "Tab";
-}
-
 export function isBackspaceKey(event: KeyboardEvent): boolean {
     return event.key === "Backspace";
 }

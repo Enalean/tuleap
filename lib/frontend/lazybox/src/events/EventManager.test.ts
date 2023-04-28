@@ -21,13 +21,12 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { EventManager } from "./EventManager";
 import { ManageDropdownStub } from "../../tests/stubs/ManageDropdownStub";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 import { ManageSelectionStub } from "../../tests/stubs/ManageSelectionStub";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
 import type { SearchInput } from "../SearchInput";
+import { KeyboardSelector } from "../selection/KeyboardSelector";
 
 const noop = (): void => {
     //Do nothing
@@ -42,9 +41,7 @@ describe("event manager", () => {
         clickable_item: Element,
         search_field: SearchInput,
         item_highlighter: ListItemHighlighter,
-        dropdown_content_renderer: DropdownContentRenderer,
-        navigation_manager: KeyboardNavigationManager,
-        field_focus_manager: FieldFocusManager;
+        navigation_manager: KeyboardNavigationManager;
 
     function getEventManager(
         dropdown_element: Element,
@@ -60,10 +57,9 @@ describe("event manager", () => {
             source_select_box,
             manage_selection,
             dropdown_manager,
-            dropdown_content_renderer,
             navigation_manager,
             item_highlighter,
-            field_focus_manager
+            KeyboardSelector(dropdown_manager, item_highlighter, manage_selection, search_field)
         );
     }
 
@@ -93,15 +89,6 @@ describe("event manager", () => {
             highlightItem: vi.fn(),
             getHighlightedItem: vi.fn(),
         } as unknown as ListItemHighlighter;
-
-        dropdown_content_renderer = {
-            renderFilteredLazyboxDropdownContent: vi.fn(),
-            renderAfterDependenciesUpdate: vi.fn(),
-        } as unknown as DropdownContentRenderer;
-
-        field_focus_manager = {
-            doesSelectionElementHaveTheFocus: vi.fn(),
-        } as unknown as FieldFocusManager;
 
         navigation_manager = { navigate: vi.fn() } as unknown as KeyboardNavigationManager;
     });
@@ -157,33 +144,14 @@ describe("event manager", () => {
             expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(0);
         });
 
-        it("When a keyboard selection has occurred, and user hits Enter, then it should reopen the dropdown", () => {
-            const doesSelectionElementHaveTheFocus = vi.spyOn(
-                field_focus_manager,
-                "doesSelectionElementHaveTheFocus"
-            );
-
+        it(`When user hits Enter and the dropdown is open,
+            then it should select the highlighted item
+            and close the dropdown`, () => {
             manager.attachEvents();
 
-            // Keyboard selection has occurred
             vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
             doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
             expect(manage_dropdown.isDropdownOpen()).toBe(false);
-
-            // Now user hits the Enter key again
-            doesSelectionElementHaveTheFocus.mockReturnValue(true);
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-            expect(manage_dropdown.isDropdownOpen()).toBe(true);
-
-            // Now user closes the dropdown without selecting any item
-            doesSelectionElementHaveTheFocus.mockReturnValue(false);
-            doc.dispatchEvent(new MouseEvent("pointerup"));
-            expect(manage_dropdown.isDropdownOpen()).toBe(false);
-
-            // And finally, he hits enter once again
-            doesSelectionElementHaveTheFocus.mockReturnValue(true);
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-            expect(manage_dropdown.isDropdownOpen()).toBe(true);
         });
     });
 
@@ -336,13 +304,6 @@ describe("event manager", () => {
             expect(manage_selection.getCurrentSelection()).toStrictEqual(highlighted_item);
             expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
             expect(clear).toHaveBeenCalled();
-        });
-
-        it("should close the dropdown when the tab key has been pressed", () => {
-            manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Tab" }));
-
-            expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
         });
     });
 });

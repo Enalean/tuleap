@@ -18,7 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { HostElement, InternalSearchInput } from "./SearchInput";
+import type { HostElement } from "./SearchInput";
 import { buildClear, buildFocus, onInput, onKeyUp } from "./SearchInput";
 
 const noopSearchCallback = (query: string): void => {
@@ -135,12 +135,19 @@ describe(`SearchInput`, () => {
             expect(event.type).toBe("backspace-pressed");
         });
 
-        it(`prevents the "enter" key from submitting forms`, () => {
+        it(`dispatches an "enter-pressed" event
+            and prevents the "enter" key from submitting forms
+            and stops propagation to avoid triggering handler in SelectionElement`, () => {
             const host = getHost();
+            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
             const inner_event = buildKeyboardEvent("Enter", "");
+            const stopPropagation = vi.spyOn(inner_event, "stopPropagation");
             onKeyUp(host, inner_event);
 
             expect(inner_event.defaultPrevented).toBe(true);
+            const event = dispatchEvent.mock.calls[0][0];
+            expect(event.type).toBe("enter-pressed");
+            expect(stopPropagation).toHaveBeenCalled();
         });
 
         it(`assigns host query on keyUp`, () => {
@@ -157,7 +164,7 @@ describe(`SearchInput`, () => {
             const host = {
                 query: "a query",
                 search_callback: noopSearchCallback,
-            } as InternalSearchInput;
+            } as HostElement;
             const search_callback = vi.spyOn(host, "search_callback");
 
             buildClear(host)();
@@ -174,7 +181,7 @@ describe(`SearchInput`, () => {
             target.append(inner_input);
             const host = {
                 content: (): HTMLElement => target,
-            } as InternalSearchInput;
+            } as HostElement;
 
             buildFocus(host)();
 

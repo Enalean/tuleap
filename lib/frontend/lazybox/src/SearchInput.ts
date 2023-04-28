@@ -29,7 +29,7 @@ export type SearchInput = {
     setFocus(): void;
 };
 export type HostElement = HTMLElement & InternalSearchInput;
-export type InternalSearchInput = Readonly<SearchInput> & {
+type InternalSearchInput = Readonly<SearchInput> & {
     query: string;
     timeout_id: number | undefined;
     content(): HTMLElement;
@@ -72,6 +72,8 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     }
     if (isEnterKey(event)) {
         preventEnterFromSubmittingParentForms(event);
+        event.stopPropagation();
+        dispatch(host, "enter-pressed");
         return;
     }
     if (hasBackspaceBeenPressedWhileQueryWasAlreadyEmpty(host, event)) {
@@ -83,17 +85,13 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     host.query = event.target.value;
 };
 
-export const buildClear = (host: InternalSearchInput): (() => void) => {
-    return () => {
-        host.query = "";
-        host.search_callback(host.query);
-    };
+export const buildClear = (host: InternalSearchInput) => (): void => {
+    host.query = "";
+    host.search_callback(host.query);
 };
 
-export const buildFocus = (host: InternalSearchInput): (() => void) => {
-    return () => {
-        host.content().querySelector("input")?.focus();
-    };
+export const buildFocus = (host: InternalSearchInput) => (): void => {
+    host.content().querySelector("input")?.focus();
 };
 
 export const TAG = "tuleap-lazybox-search";
@@ -102,12 +100,8 @@ export const SearchInput = define<InternalSearchInput>({
     disabled: false,
     placeholder: "",
     query: "",
-    clear: {
-        get: buildClear,
-    },
-    setFocus: {
-        get: buildFocus,
-    },
+    clear: { get: buildClear },
+    setFocus: { get: buildFocus },
     search_callback: undefined,
     timeout_id: undefined,
     content: (host) => html`<input

@@ -20,6 +20,7 @@
 import type { ManageSelection } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { SelectionElement } from "./SelectionElement";
+import type { RenderedItem } from "../type";
 
 export class SelectionManager implements ManageSelection {
     constructor(
@@ -37,19 +38,15 @@ export class SelectionManager implements ManageSelection {
     }
 
     public updateSelectionAfterDropdownContentChange(): void {
-        const available_items = this.items_map_manager.getLazyboxItems();
-        if (available_items.length === 0) {
-            this.clearSelection();
-            return;
-        }
         const previous_selection = this.selection_element.getSelection();
-        if (!previous_selection) {
-            return;
-        }
-        const item = this.items_map_manager.getItemWithValue(previous_selection.value);
-        if (item) {
-            this.selection_element.selectItem(item);
-        }
+        previous_selection.forEach((previous_selection) => {
+            const item = this.items_map_manager.getItemWithValue(previous_selection.value);
+            if (!item) {
+                return;
+            }
+            item.is_selected = true;
+            item.element.setAttribute("aria-selected", "true");
+        });
     }
 
     public clearSelection(): void {
@@ -60,7 +57,7 @@ export class SelectionManager implements ManageSelection {
         return this.selection_element.hasSelection();
     }
 
-    public setSelection(): void {
-        // Not implemented yet
+    public setSelection(selection: ReadonlyArray<RenderedItem>): void {
+        this.selection_element.replaceSelection(selection);
     }
 }
