@@ -136,7 +136,7 @@ const warning_threshold_message = computed((): string => {
         "The archive you want to download has a size greater than %{ warning_threshold } MB."
     );
 
-    return interpolate(translated, { warning_threshold });
+    return interpolate(translated, { warning_threshold: warning_threshold.value });
 });
 
 const archive_size_message = computed((): string => {
