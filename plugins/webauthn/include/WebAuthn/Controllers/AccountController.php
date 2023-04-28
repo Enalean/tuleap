@@ -23,16 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use HTTPRequest;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
 
 final class AccountController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     public const URL = '/plugins/webauthn/account';
+
+    public function __construct(
+        private readonly TemplateRenderer $renderer,
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
+    }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
@@ -41,7 +50,12 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
             throw new ForbiddenException();
         }
 
-        (new UserPreferencesHeader())->display(dgettext('tuleap-webauthn', 'WebAuthn'), $layout);
+        $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
+
+        $presenter = new AccountPresenter($tabs);
+
+        (new UserPreferencesHeader())->display(dgettext('tuleap-webauthn', 'Passkeys'), $layout);
+        $this->renderer->renderToPage('account', $presenter);
         $layout->footer(FooterConfiguration::withoutContent());
     }
 }
