@@ -15,6 +15,6 @@ cbindgen = "0.24.3"
 serde = { version = "1.0.147", features = ["derive"] }
 serde_json = "1.0.87"
 anyhow = "1.0.66"
-wasmtime = { version = "8.0.0", default_features = false, features = ["parallel-compilation", "cranelift", "pooling-allocator"] }
-wasmtime-wasi = "8.0.0"
-wasi-common = "8.0.0"
+wasmtime = { version = "7.0.0", default_features = false, features = ["parallel-compilation", "cranelift", "pooling-allocator"] }
+wasmtime-wasi = "7.0.0"
+wasi-common = "7.0.0"
