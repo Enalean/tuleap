@@ -15,15 +15,8 @@ pipeline {
         }
 
         stage('Prepare') {
-            agent {
-                dockerfile {
-                    dir 'sources/tools/utils/nix/'
-                    filename 'tools.dockerfile'
-                    reuseNode true
-                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only -v /nix -v /root'
-                }
-            }
             steps {
+                script { actions = load 'sources/tests/actions.groovy' }
                 dir ('sources') {
                     withCredentials([
                         usernamePassword(
@@ -33,11 +26,7 @@ pipeline {
                         ),
                         string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
                     ]) {
-                        sh """
-                        # nix-daemon needs root (for now)
-                        su-exec-nixdaemon root sh -c 'TMPDIR=/tmp/tuleap_build/ nix-daemon' &
-                        tools/utils/scripts/generated-files-builder.sh dev
-                        """
+                        script { actions.prepareSources('dev') }
                     }
                 }
             }
@@ -66,60 +55,25 @@ pipeline {
                     } }
                 }
                 stage('ESLint static analysis') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
                     steps { script { actions.runESLint() } }
                 }
                 stage('SCSS coding standards') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
                     steps { script { actions.runStylelint() } }
                 }
                 stage ('JS Unit tests') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tools/utils/nix/'
-                            filename 'tools.dockerfile'
-                            reuseNode true
-                            args '--network none --tmpfs /tmp/js_test_cache:rw,noexec,nosuid -e TMPDIR=/tmp/js_test_cache/'
-                        }
-                    }
-                    steps { script { actions.runJSUnitTests('.') } }
+                    steps { script { actions.runJSUnitTests() } }
                     post { always { junit 'results/js-test-results/junit-*.xml' } }
                 }
             }
         }
 
         stage('Publish') {
-            agent {
-                dockerfile {
-                    dir 'sources/tools/utils/nix/'
-                    filename 'tools.dockerfile'
-                    reuseNode true
-                    args '--tmpfs /tmp:rw,noexec,nosuid --read-only'
-                }
-            }
             steps {
                 dir ('sources') {
                     withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-                        sh '''
-                        export HOME=/tmp/tuleap_build
-                        mkdir /tmp/tuleap_build
-                        pnpm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}"
-                        pnpm publish --access public --filter "@tuleap/*" --no-git-checks
-                        '''
+                        script { actions.actions.runInsideNixDockerEnv(
+                            'HOME=/home_build/ pnpm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}" && HOME=/home_build/ pnpm publish --access public --filter "@tuleap/*" --no-git-checks'
+                        ) }
                     }
                 }
             }
