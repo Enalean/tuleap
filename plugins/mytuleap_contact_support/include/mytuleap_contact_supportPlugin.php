@@ -38,18 +38,6 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         bindtextdomain('tuleap-mytuleap_contact_support', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook('cssfile');
-        $this->addHook('javascript_file');
-        $this->addHook('site_help');
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -86,6 +74,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         return TemplateRendererFactory::build()->getRenderer($template_path);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/plugins/mytuleap_contact_support', function (RouteCollector $r) {
@@ -110,13 +99,15 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         return $this->getContactSupportFormController();
     }
 
-    public function cssfile()
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
+    public function cssfile(): void
     {
         $asset = $this->getIncludeAssets();
         echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style-flamingparrot.css') . '" />';
     }
 
-    public function javascript_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('javascript_file')]
+    public function javascriptFile($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $layout = $params['layout'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
@@ -124,12 +115,14 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($asset, 'modal-flaming-parrot.js'));
     }
 
-    public function site_help($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('site_help')]
+    public function siteHelp($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['extra_content'] = $this->getContactSupportFormController()->getFormContent();
     }
 
-    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
+    public function burningParrotGetJavascriptFiles(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $asset                        = $this->getIncludeAssets();
         $params['javascript_files'][] = $asset->getFileURL('modal-burning-parrot.js');
@@ -139,7 +132,8 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         }
     }
 
-    public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
+    public function burningParrotGetStylesheets(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $asset                   = $this->getIncludeAssets();
         $params['stylesheets'][] = $asset->getFileURL('style-burningparrot.css');
