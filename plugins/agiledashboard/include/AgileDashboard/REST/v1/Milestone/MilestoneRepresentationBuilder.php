@@ -29,6 +29,16 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 class MilestoneRepresentationBuilder
 {
     /**
+     * Allow plugins to modify the milestone requested by a RESt call
+     *
+     * Parameters:
+     * 'user'                                       => The user who requested
+     * 'milestone'                                  => The Milestone object
+     * 'milestone_representation_reference_holder' => The reference to a RESt representation of the milestone
+     */
+    public const AGILEDASHBOARD_EVENT_REST_GET_MILESTONE = 'agiledashboard_event_rest_get_milestone';
+
+    /**
      * @var \Planning_MilestoneFactory
      */
     private $milestone_factory;
@@ -136,7 +146,7 @@ class MilestoneRepresentationBuilder
         $milestone_representation_reference_holder->milestone_representation = $milestone_representation;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
+            self::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
             [
                 'version'                                   => 'v1',
                 'user'                                      => $user,

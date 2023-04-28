@@ -30,6 +30,15 @@ use UserManager;
 
 class BacklogItemRepresentationFactory
 {
+    /**
+     * Get backlog item tracker card fields semantic
+     *
+     * Parameters:
+     * 'tracker'              => The Tracker of the backlog item
+     * 'card_fields_semantic' => Tracker card fields semantic
+     */
+    public const AGILEDASHBOARD_EVENT_GET_CARD_FIELDS = 'agiledashboard_event_get_card_fields';
+
     /** @var BackgroundColorBuilder */
     private $background_color_builder;
 
@@ -109,7 +118,7 @@ class BacklogItemRepresentationFactory
         $card_fields_semantic = null;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            self::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             [
                 'tracker'              => $artifact->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic,

@@ -23,6 +23,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\REST\v1\MilestonesCardwallResource;
@@ -97,15 +100,15 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(PaneInfoCollector::NAME);
-                $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
-                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
-                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
-                $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
-                $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
-                $this->addHook(AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
-                $this->addHook(AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
-                $this->addHook(AGILEDASHBOARD_EVENT_REST_RESOURCES);
-                $this->addHook(AGILEDASHBOARD_EXPORT_XML);
+                $this->addHook(Planning_MilestoneSelectorController::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
+                $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
+                $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
+                $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
+                $this->addHook(MilestoneRepresentationBuilder::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
+                $this->addHook(Planning_Controller::AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
+                $this->addHook(BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
+                $this->addHook(AgileDashboardPlugin::AGILEDASHBOARD_EVENT_REST_RESOURCES);
+                $this->addHook(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -475,15 +478,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
 
         return new CardwallPaneInfo($milestone->getGroupId(), $milestone->getPlanningId(), $milestone->getArtifactId());
-    }
-
-    public function agiledashboard_event_index_page($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        // Only display a cardwall if there is something to display
-        if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
-            $pane_info      = new CardwallPaneInfo($params['milestone']->getGroupId(), $params['milestone']->getPlanningId(), $params['milestone']->getArtifactId());
-            $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
-        }
     }
 
     protected function getCardwallPane(CardwallPaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory)

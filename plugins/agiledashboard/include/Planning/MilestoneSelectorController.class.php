@@ -19,6 +19,17 @@
  */
 class Planning_MilestoneSelectorController extends MVC2_PluginController
 {
+    /**
+     * Modify the redirect parameters when attempt to display a planning without specific Milestone selected
+     *
+     * Parameters:
+     * 'milestone' => The most recent Planning_Milestone on which we are about to be redirected
+     *
+     * Expected results
+     * 'redirect_parameters' => Input/Output parameter, array of 'key' => 'value'
+     */
+    public const AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT = 'agiledashboard_event_milestone_selector_redirect';
+
     private $milestone_factory;
 
     public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory)
@@ -42,7 +53,7 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController
                 'aid'         => $milestone->getArtifact()->getId(),
             ];
             EventManager::instance()->processEvent(
-                AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
+                self::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
                 [
                     'milestone' => $milestone,
                     'redirect_parameters' => &$redirect_parameters,

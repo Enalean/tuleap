@@ -112,7 +112,7 @@ class PlanningEditionPresenterBuilder
         $view    = null;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
+            \Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
             [
                 'tracker' => $tracker,
                 'view'    => &$view,

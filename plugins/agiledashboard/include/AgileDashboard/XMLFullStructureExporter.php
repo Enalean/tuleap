@@ -20,6 +20,8 @@
 
 class AgileDashboard_XMLFullStructureExporter
 {
+    public const AGILEDASHBOARD_EXPORT_XML = 'agiledashboard_export_xml';
+
     /** @var EventManager */
     private $event_manager;
 
@@ -65,13 +67,10 @@ class AgileDashboard_XMLFullStructureExporter
         return new Codendi_Request($params);
     }
 
-    /**
-     * @return SimpleXMLElement
-     */
-    private function exportOtherPlugins(Project $project, SimpleXMLElement $into_xml)
+    private function exportOtherPlugins(Project $project, SimpleXMLElement $into_xml): void
     {
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EXPORT_XML,
+            self::AGILEDASHBOARD_EXPORT_XML,
             [
                 'project'  => $project,
                 'into_xml' => $into_xml,

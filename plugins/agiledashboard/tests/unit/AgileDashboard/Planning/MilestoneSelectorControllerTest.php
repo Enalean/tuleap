@@ -87,7 +87,7 @@ final class Planning_MilestoneSelectorControllerTest extends \Tuleap\Test\PHPUni
         EventManager::setInstance($event_manager);
 
         $event_manager->shouldReceive('processEvent')->with(
-            AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
+            Planning_MilestoneSelectorController::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
             \Mockery::any()
         )->atLeast()->once();
 

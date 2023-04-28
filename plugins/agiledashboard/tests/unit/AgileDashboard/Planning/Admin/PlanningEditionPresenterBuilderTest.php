@@ -217,7 +217,7 @@ final class PlanningEditionPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private function stubCardwallConfiguration(): void
     {
         $this->event_manager->addClosureOnEvent(
-            AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
+            \Planning_Controller::AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
             function ($event_name, $params) {
                 $params['view'] = 'Cardwall configuration';
             }
