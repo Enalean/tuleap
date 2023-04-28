@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import common from "./webpack.common.js";
-import { webpack_configurator } from "@tuleap/build-system-configurator";
+import common from "./webpack.common.mjs";
+import {webpack_configurator} from "@tuleap/build-system-configurator";
 
 export default webpack_configurator.extendDevConfiguration(common);
