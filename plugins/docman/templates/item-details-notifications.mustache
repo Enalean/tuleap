@@ -1,6 +1,6 @@
 <form method="POST" action="" data-test="docman_notifications_form">
     <input type="hidden" name="action" value="update_monitoring" />
-    <table class="table plugin-docman-notifications-list">
+    <table class="table plugin-docman-notifications-list" data-test="notified-users">
         <thead>
             <tr>
                 <th><i class="far fa-trash-alt"></i></th>
@@ -89,5 +89,5 @@
       </tbody>
     </table>
 
-    <input type="submit" value="{{ validate_button }}" class="btn btn-primary">
+    <input type="submit" value="{{ validate_button }}" class="btn btn-primary" data-test="validate-notification-button">
 </form>

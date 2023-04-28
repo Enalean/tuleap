@@ -73,11 +73,11 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $checked  = ! $user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
-        $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
-        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" ' . $checked . ' ' . $disabled . ' />' . dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
+        $content .= '<label class="checkbox" for="plugin_docman_monitor_item" data-test="notify-me-checkbox">';
+        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" data-test="notify-me-hierarchy-checkbox" ' . $checked . ' ' . $disabled . ' />' . dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
         $content .= '</label></p>';
         $content .= $this->item->accept($this, ['user' => &$user]);
-        $content .= '<p><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
+        $content .= '<p><input type="submit" data-test="submit-notification-button" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
         $content .= '</form>';
         $content .= '</dd></fieldset></dl>';
         $content .= '<dl>' . $this->displayListeningUsers($this->item->getId()) . '</dl>';

@@ -18,6 +18,7 @@
  */
 
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
+import { deleteDocumentDisplayedInQuickLook, openQuickLook } from "../support/helpers";
 
 describe("Document new UI", () => {
     let now: number;
@@ -155,13 +156,6 @@ describe("Document new UI", () => {
                 disableSpecificErrorThrownByCkeditor();
             });
 
-            function deleteFolder(): void {
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
-            }
-
             it("user can manipulate folders", () => {
                 cy.projectAdministratorSession();
                 cy.visitProjectService(`document-project-${now}`, "Documents");
@@ -179,17 +173,8 @@ describe("Document new UI", () => {
 
                     cy.get("[data-test=document-modal-submit-button-create-folder]").click();
                 });
-
-                cy.get("[data-test=document-tree-content]")
-                    .contains("tr", "My new folder")
-                    .within(() => {
-                        // button is displayed on tr::hover, so we need to force click
-                        cy.get("[data-test=quick-look-button]").click({ force: true });
-                    });
-
-                cy.get("[data-test=document-quick-look]").contains("My new folder");
-
-                deleteFolder();
+                openQuickLook("My new folder");
+                deleteDocumentDisplayedInQuickLook();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
@@ -205,20 +190,8 @@ describe("Document new UI", () => {
                     cy.get("[data-test=document-new-item-title]").type("My new empty document");
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
                 });
-
-                cy.get("[data-test=document-tree-content]")
-                    .contains("tr", "My new empty document")
-                    .within(() => {
-                        // button is displayed on tr::hover, so we need to force click
-                        cy.get("[data-test=quick-look-button]").click({ force: true });
-                    });
-
-                cy.get("[data-test=document-quick-look]").contains("My new empty document");
-
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
+                openQuickLook("My new empty document");
+                deleteDocumentDisplayedInQuickLook();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
@@ -236,15 +209,7 @@ describe("Document new UI", () => {
                     cy.get("[data-test=document-new-item-link-url]").type("https://example.com");
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
                 });
-
-                cy.get("[data-test=document-tree-content]")
-                    .contains("tr", "My new link document")
-                    .within(() => {
-                        // button is displayed on tr::hover, so we need to force click
-                        cy.get("[data-test=quick-look-button]").click({ force: true });
-                    });
-
-                cy.get("[data-test=document-quick-look]").contains("My new link document");
+                openQuickLook("My new link document");
 
                 cy.get("[data-test=document-quicklook-action-button-new-version").click({
                     force: true,
@@ -258,11 +223,7 @@ describe("Document new UI", () => {
 
                     cy.get("[data-test=document-modal-submit-button-create-link-version]").click();
                 });
-
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
+                deleteDocumentDisplayedInQuickLook();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
@@ -295,10 +256,7 @@ describe("Document new UI", () => {
                         cy.get("[data-test=quick-look-button]").click({ force: true });
                     });
 
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
+                deleteDocumentDisplayedInQuickLook();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
