@@ -25,9 +25,6 @@ namespace Tuleap\WebAssembly;
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\Mapper\TreeMapper;
-use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
@@ -38,31 +35,12 @@ final class FFIWASMCaller implements WASMCaller
      * @var \FFI&FFIWASMCallerStub $ffi
      */
     private \FFI $ffi;
-    private readonly Prometheus $prometheus;
-    private const MAX_EXEC_TIME_IN_MS      = 10;
-    private const MAX_MEMORY_SIZE_IN_BYTES = 4194304; /* 4 Mo */
+    private const MAX_EXEC_TIME_IN_MS      = 80;
+    private const MAX_MEMORY_SIZE_IN_BYTES = 3145728; /* 3 Mo */
     private const HEADER_PATH              = '/usr/lib/tuleap/wasm/libwasmtimewrapper.h';
-
-    private const INTERNAL_ERROR_NAME  = 'wasm_UserCodeErrorResponse_total';
-    private const INTERNAL_ERROR_HELP  = 'Total number of UserCodeErrorResponse received';
-    private const USER_CODE_ERROR_NAME = 'wasm_UserCodeErrorResponse_total';
-    private const USER_CODE_ERROR_HELP = 'Total number of UserCodeErrorResponse received';
-    private const VALID_RESPONSE_NAME  = 'wasm_ValidResponse_total';
-    private const VALID_RESPONSE_HELP  = 'Total number of ValidResponse received';
-
-    private const EXEC_TIME_NAME             = 'wasm_module_duration_seconds';
-    private const EXEC_TIME_HELP             = 'Execution time of the WebAssembly module in seconds';
-    private const EXEC_TIME_BUCKETS          = [0.00025, 0.0005, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01];
-    private const EXEC_TIME_FULL_NAME        = 'wasm_full_duration_seconds';
-    private const EXEC_TIME_FULL_HELP        = 'Execution time of the WebAssembly module in seconds, including the FFI back and forth, setting up Wamstime, executing the module...';
-    private const EXEC_TIME_FULL_BUCKETS     = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10];
-    private const MEMORY_CONSUMPTION_NAME    = 'wasm_memory_usage_bytes';
-    private const MEMORY_CONSUMPTION_HELP    = 'Memory consumed by the git WebAssembly module in bytes';
-    private const MEMORY_CONSUMPTION_BUCKETS = [1114112, 2228224, 3342336, 4194304];
 
     public function __construct(
         private readonly TreeMapper $mapper,
-        Prometheus $prometheus,
     ) {
         /**
          * @var ?(\FFI&FFIWASMCallerStub) $ffi_tmp
@@ -71,26 +49,14 @@ final class FFIWASMCaller implements WASMCaller
         if ($ffi_tmp === null) {
             throw new \LogicException("Could not load C declaration from " . self::HEADER_PATH);
         }
-        $this->ffi        = $ffi_tmp;
-        $this->prometheus = $prometheus;
+        $this->ffi = $ffi_tmp;
     }
 
     public function call(string $wasm_path, string $input): Option
     {
-        $start_time = microtime(true);
-
         $output     = $this->ffi->callWasmModule($wasm_path, $input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
         $output_php = \FFI::string($output);
         $this->ffi->freeCallWasmModuleOutput($output);
-
-        $end_time = microtime(true);
-        Prometheus::instance()->histogram(
-            self::EXEC_TIME_FULL_NAME,
-            self::EXEC_TIME_FULL_HELP,
-            ($end_time - $start_time),
-            [],
-            self::EXEC_TIME_FULL_BUCKETS
-        );
 
         try {
             $wasm_response = $this->mapper->map(
@@ -102,60 +68,11 @@ final class FFIWASMCaller implements WASMCaller
         }
 
         $value = match ($wasm_response::class) {
-            WASMInternalErrorResponse::class => $this->processInternalErrorResponse($wasm_response),
-            WASMUserCodeErrorResponse::class => $this->processUserCodeErrorResponse($wasm_response),
-            WASMValidResponse::class => $this->processValidResponse($wasm_response),
+            WASMInternalErrorResponse::class => throw WASMExecutionException::internalError($wasm_response),
+            WASMUserCodeErrorResponse::class => Result::err(Fault::fromMessage($wasm_response->user_error)),
+            WASMValidResponse::class => Result::ok($wasm_response->data),
         };
 
         return Option::fromValue($value);
-    }
-
-    /**
-     * @psalm-return never
-     * @throws WASMExecutionException
-     */
-    private function processInternalErrorResponse(WASMInternalErrorResponse $wasm_response): never
-    {
-        $this->prometheus->increment(self::INTERNAL_ERROR_NAME, self::INTERNAL_ERROR_HELP);
-        throw WASMExecutionException::internalError($wasm_response);
-    }
-
-    /**
-     * @psalm-return Err<Fault>
-     */
-    private function processUserCodeErrorResponse(WASMUserCodeErrorResponse $wasm_response): Err
-    {
-        $this->prometheus->increment(self::USER_CODE_ERROR_NAME, self::USER_CODE_ERROR_HELP);
-        $this->processStats($wasm_response->stats);
-        return Result::err(Fault::fromMessage($wasm_response->user_error));
-    }
-
-    /**
-     * @psalm-return Ok<String>
-     */
-    private function processValidResponse(WASMValidResponse $wasm_response): Ok
-    {
-        $this->prometheus->increment(self::VALID_RESPONSE_NAME, self::VALID_RESPONSE_HELP);
-        $this->processStats($wasm_response->stats);
-        return Result::ok($wasm_response->data);
-    }
-
-    private function processStats(WASMStatistics $wasm_stats): void
-    {
-        Prometheus::instance()->histogram(
-            self::EXEC_TIME_NAME,
-            self::EXEC_TIME_HELP,
-            $wasm_stats->exec_time_as_seconds,
-            [],
-            self::EXEC_TIME_BUCKETS
-        );
-
-        Prometheus::instance()->histogram(
-            self::MEMORY_CONSUMPTION_NAME,
-            self::MEMORY_CONSUMPTION_HELP,
-            $wasm_stats->memory_in_bytes,
-            [],
-            self::MEMORY_CONSUMPTION_BUCKETS
-        );
     }
 }

@@ -24,5 +24,4 @@ namespace Tuleap\WebAssembly;
 final class WASMValidResponse
 {
     public readonly string $data;
-    public readonly WASMStatistics $stats;
 }

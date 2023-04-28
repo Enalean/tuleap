@@ -82,7 +82,6 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAction;
 use Tuleap\Git\Hook\PreReceive\PreReceiveCommand;
-use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\WebAssembly\EmptyWASMCaller;
 use Tuleap\WebAssembly\FFIWASMCaller;
@@ -2745,7 +2744,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             function (): PreReceiveCommand {
                 $mapper = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper();
                 if (\ForgeConfig::getFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY) === '1') {
-                    $wasm_caller = new FFIWASMCaller($mapper, Prometheus::instance());
+                    $wasm_caller = new FFIWASMCaller($mapper);
                 } else {
                     $wasm_caller = new EmptyWASMCaller();
                 }

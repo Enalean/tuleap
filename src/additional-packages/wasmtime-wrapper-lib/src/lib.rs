@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use anyhow::{anyhow, Result};
-use serde::{Deserialize, Serialize};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::Arc;
-use std::time::Instant;
 use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
@@ -53,25 +51,21 @@ pub unsafe extern "C" fn callWasmModule(
         max_memory: max_memory_size_in_bytes,
     };
     match compile_and_exec(filename, input, &limits) {
-        Ok(out_struct) => match out_struct.result {
-            Ok(output_message) => success_response(output_message, out_struct.stats),
-            Err(e) => {
-                return match e.downcast_ref::<Trap>() {
-                        Some(&Trap::Interrupt) => user_error(format!(
-                            "The module has exceeded the {} ms of allowed computation time",
-                            limits.max_exec_time
-                        ),
-                        out_struct.stats),
-                        Some(&Trap::UnreachableCodeReached) => user_error(format!(
-                            "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
-                            limits.max_memory
-                        ),
-                        out_struct.stats),
-                        _ => user_error(format!("{}", e.root_cause()), out_struct.stats),
-                    };
-            }
-        },
-        Err(e) => return internal_error(format!("{}", e)),
+        Ok(s) => success_response(s),
+        Err(e) => {
+            return match e.downcast_ref::<Trap>() {
+                Some(&Trap::Interrupt) => user_error(format!(
+                    "The module has exceeded the {} ms of allowed computation time",
+                    limits.max_exec_time
+                )),
+                Some(&Trap::UnreachableCodeReached) => user_error(format!(
+                    "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
+                    limits.max_memory
+                )),
+                None => internal_error(format!("{}", e)),
+                _ => user_error(format!("{}", e.root_cause())),
+            };
+        }
     }
 }
 
@@ -85,11 +79,8 @@ pub unsafe extern "C" fn freeCallWasmModuleOutput(json_ptr: *mut c_char) {
     };
 }
 
-fn success_response(wasm_stdout: String, statistics: Stats) -> *mut c_char {
-    let response = SuccessResponseJson {
-        data: wasm_stdout,
-        stats: statistics,
-    };
+fn success_response(wasm_stdout: String) -> *mut c_char {
+    let response = SuccessResponseJson { data: wasm_stdout };
     let c_str = CString::new(serde_json::to_string(&response).unwrap()).unwrap();
     CString::into_raw(c_str)
 }
@@ -102,10 +93,9 @@ fn internal_error(error_message: String) -> *mut c_char {
     CString::into_raw(c_str)
 }
 
-fn user_error(error_message: String, statistics: Stats) -> *mut c_char {
+fn user_error(error_message: String) -> *mut c_char {
     let err = UserErrorJson {
         error: error_message,
-        stats: statistics,
     };
     let c_str = CString::new(serde_json::to_string(&err).unwrap()).unwrap();
     CString::into_raw(c_str)
@@ -125,29 +115,17 @@ struct Limitations {
     max_memory: usize,
 }
 
-#[derive(Serialize, Debug, Deserialize)]
-pub struct Stats {
-    pub exec_time_as_seconds: f64,
-    pub memory_in_bytes: usize,
-}
-
-struct OutputAndStats {
-    result: Result<String, Error>,
-    stats: Stats,
-}
-
 fn compile_and_exec(
     filename: String,
     input: String,
     limits: &Limitations,
-) -> Result<OutputAndStats, anyhow::Error> {
+) -> Result<String, anyhow::Error> {
     let stdin = ReadPipe::from(input);
     let stdout = WritePipe::new_in_memory();
 
     let my_state = StoreState {
         limits: StoreLimitsBuilder::new()
             .memory_size(limits.max_memory)
-            .memories(1)
             .instances(1)
             .build(),
         wasi: WasiCtxBuilder::new()
@@ -171,9 +149,15 @@ fn compile_and_exec(
 
     let module = load_module(&engine, &filename)?;
 
-    let instance = linker
-        .instantiate(&mut store, &module)
-        .expect("Failed to instantiate imported instance");
+    linker
+        .module(&mut store, "", &module)
+        .expect("linking the function");
+
+    let run = linker
+        .get_default(&mut store, "")
+        .expect("should get the wasi runtime")
+        .typed::<(), ()>(&store)
+        .expect("should type the function");
 
     let max_exec_time = limits.max_exec_time;
     std::thread::spawn(move || {
@@ -181,21 +165,7 @@ fn compile_and_exec(
         engine.increment_epoch();
     });
 
-    let now = Instant::now();
-    let res = instance
-        .get_typed_func::<(), ()>(&mut store, "_start")?
-        .call(&mut store, ());
-    let exec_time = now.elapsed().as_secs_f64();
-
-    let memory = instance
-        .get_memory(&mut store, "memory")
-        .ok_or(anyhow::format_err!("failed to find `memory` export"))?;
-
-    let statistics = Stats {
-        exec_time_as_seconds: exec_time,
-        memory_in_bytes: memory.data_size(&store),
-    };
-
+    let res = run.call(&mut store, ());
     drop(store);
 
     match res {
@@ -210,21 +180,9 @@ fn compile_and_exec(
                 Err(e) => return Err(anyhow!(e)),
             };
 
-            let output = OutputAndStats {
-                result: Ok(str),
-                stats: statistics,
-            };
-
-            Ok(output)
+            Ok(str)
         }
-        Err(e) => {
-            let output = OutputAndStats {
-                result: Err(e),
-                stats: statistics,
-            };
-
-            Ok(output)
-        }
+        Err(e) => Err(e),
     }
 }
 
@@ -235,10 +193,9 @@ mod tests {
     use std::ptr;
 
     use crate::callWasmModule;
-    use crate::wire::{SuccessResponseJson, UserErrorJson};
 
     const MAX_EXEC_TIME: u64 = 80;
-    const MAX_MEMORY_SIZE: usize = 4194304; /* 4 Mo */
+    const MAX_MEMORY_SIZE: usize = 3145728;
 
     #[test]
     fn expected_output_normal() {
@@ -255,11 +212,7 @@ mod tests {
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
-
-        assert_eq!("Hello world !", json_out.data);
-        assert!(json_out.stats.exec_time_as_seconds > 0.0);
-        assert!(json_out.stats.memory_in_bytes == 1114112);
+        assert_eq!("{\"data\":\"Hello world !\"}", str_out);
     }
 
     #[test]
@@ -350,17 +303,13 @@ mod tests {
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        let json_out: UserErrorJson = serde_json::from_str(str_out).unwrap();
-
         assert_eq!(
             format!(
-                "The module has exceeded the {} ms of allowed computation time",
+                r#"{{"error":"The module has exceeded the {} ms of allowed computation time"}}"#,
                 MAX_EXEC_TIME
             ),
-            json_out.error
+            str_out
         );
-
-        assert!(json_out.stats.exec_time_as_seconds > 0.080000);
     }
 
     #[test]
@@ -379,40 +328,12 @@ mod tests {
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        let json_out: UserErrorJson = serde_json::from_str(str_out).unwrap();
-
         assert_eq!(
             format!(
-                "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
+                r#"{{"error":"wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use"}}"#,
                 MAX_MEMORY_SIZE
             ),
-            json_out.error
+            str_out
         );
-
-        assert!(json_out.stats.exec_time_as_seconds > 0.0);
-        assert!(json_out.stats.memory_in_bytes == 1114112);
-    }
-
-    #[test]
-    fn wasm_module_allocate_okay_amount_of_memory() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-success.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
-
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
-
-        let c_out =
-            unsafe { callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE) };
-        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
-        let str_out: &str = cstr_out.to_str().unwrap();
-
-        let json_out: SuccessResponseJson = serde_json::from_str(str_out).unwrap();
-
-        assert_eq!("Memory Ok", json_out.data);
-        assert!(json_out.stats.exec_time_as_seconds > 0.0);
-        assert!(json_out.stats.memory_in_bytes == 3211264);
     }
 }

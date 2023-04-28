@@ -1,4 +1,3 @@
-use crate::Stats;
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -17,12 +16,11 @@ use crate::Stats;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct SuccessResponseJson {
     pub data: String,
-    pub stats: Stats,
 }
 
 #[derive(Serialize)]
@@ -30,8 +28,7 @@ pub struct InternalErrorJson {
     pub internal_error: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct UserErrorJson {
     pub error: String,
-    pub stats: Stats,
 }
