@@ -60,34 +60,6 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         bindTextDomain('tuleap-frs', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook('frs_edit_form_additional_info');
-        $this->addHook('frs_process_edit_form');
-        $this->addHook('codendi_daily_start');
-        $this->addHook(GetReleaseNotesLink::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_RESOURCES);
-        $this->addHook(FRSOngoingUploadChecker::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
-            $this->addHook(ArtifactPartialUpdate::NAME);
-            $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
-            $this->addHook(ImportXMLProjectTrackerDone::NAME);
-        }
-
-        if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->addHook(PaneInfoCollector::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
-    /**
-     * @see Plugin::getDependencies()
-     */
     public function getDependencies()
     {
         return ['tracker'];
@@ -104,7 +76,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $this->pluginInfo;
     }
 
-    public function codendiDailyStart()
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(): void
     {
         $cleaner = new FileUploadCleaner(
             new UploadPathAllocator(),
@@ -113,7 +86,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
     }
 
-    public function frsOngoingUploadChecker(FRSOngoingUploadChecker $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function frsOngoingUploadChecker(FRSOngoingUploadChecker $event): void
     {
         $file         = $event->getFile();
         $current_time = new DateTimeImmutable();
@@ -129,7 +103,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
@@ -192,7 +167,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         );
     }
 
-    public function frs_edit_form_additional_info($params) //phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName('frs_edit_form_additional_info')]
+    public function frsEditFormAdditionalInfo($params): void //phpcs:ignore
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
 
@@ -205,7 +181,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $params['notes_in_markdown'] = true;
     }
 
-    public function frs_process_edit_form($params) //phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName('frs_process_edit_form')]
+    public function frsProcessEditForm($params): void //phpcs:ignore
     {
         $release_request = $params['release_request'];
 
@@ -254,25 +231,28 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return new Retriever(new Dao());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getReleaseNotesLink(GetReleaseNotesLink $event): void
     {
         $release_id = urlencode((string) $event->getRelease()->getReleaseID());
         $event->setUrl("/frs/release/$release_id/release-notes");
     }
 
-    public function rest_resources($params) //phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources($params): void //phpcs:ignore
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    /** @see \Event::REST_PROJECT_RESOURCES */
-    public function rest_project_resources(array $params) //phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_PROJECT_RESOURCES)]
+    public function restProjectResources(array $params): void //phpcs:ignore
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResources($params['resources'], $params['project']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $mappings            = $event->getMappingsRegistery();
@@ -292,8 +272,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
     }
 
-    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
-    public function tracker_artifact_editrenderer_add_view_in_collection(array $params) //phpcs:ignore
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION)]
+    public function trackerArtifactEditrendererAddViewInCollection(array $params): void //phpcs:ignore
     {
         $user       = $params['user'];
         $request    = $params['request'];
@@ -306,6 +286,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $milestone  = $collector->getMilestone();
@@ -315,7 +296,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
     }
 
-    public function artifactPartialUpdate(ArtifactPartialUpdate $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function artifactPartialUpdate(ArtifactPartialUpdate $event): void
     {
         $artifact   = $event->getArtifact();
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($artifact);
@@ -325,7 +307,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
     }
 
-    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event): void
     {
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($event->getArtifact());
 
