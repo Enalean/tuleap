@@ -32,15 +32,6 @@ final class embedPlugin extends Plugin
         bindtextdomain('tuleap-embed', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        if (defined('TRACKER_BASE_DIR')) {
-            $this->addHook(GetAdditionalAssetsForArtifactDisplay::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -57,6 +48,7 @@ final class embedPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getAdditionalAssetsForArtifactDisplay(
         GetAdditionalAssetsForArtifactDisplay $event,
     ): void {
