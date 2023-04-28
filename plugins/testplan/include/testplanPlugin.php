@@ -32,7 +32,6 @@ use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
-use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\REST\ResourcesInjector;
 use Tuleap\TestPlan\TestDefinition\EventRedirectAfterArtifactCreationOrUpdateProcessor;
@@ -91,19 +90,7 @@ final class testplanPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(PaneInfoCollector::NAME);
-        $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
-        $this->addHook(GetURIForMilestoneFromTTM::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(BuildArtifactFormActionEvent::NAME);
-        $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $milestone = $collector->getMilestone();
@@ -124,11 +111,13 @@ final class testplanPlugin extends Plugin
         $collector->addPane($pane_info);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
     {
         $event->add(TestPlanPaneInfo::NAME);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
@@ -144,6 +133,7 @@ final class testplanPlugin extends Plugin
      *
      * @psalm-param array{restler: \Luracast\Restler\Restler} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         (new ResourcesInjector())->populate($params['restler']);
@@ -232,6 +222,7 @@ final class testplanPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getURIForMilestoneFromTTM(GetURIForMilestoneFromTTM $event): void
     {
         $milestone = $event->getMilestone();
@@ -257,6 +248,7 @@ final class testplanPlugin extends Plugin
         return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject(), $user);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
         $redirect_parameter_injector = new RedirectParameterInjector(
@@ -267,6 +259,7 @@ final class testplanPlugin extends Plugin
         $redirect_parameter_injector->injectAndInformUserAboutBacklogItemBeingCovered($event->getRequest(), $event->getRedirect());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
