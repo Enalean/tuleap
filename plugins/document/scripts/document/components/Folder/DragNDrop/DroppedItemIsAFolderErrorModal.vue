@@ -19,14 +19,7 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <translate
-            tag="p"
-            v-bind:translate-n="nb_dropped_files"
-            translate-plural="The items you have dropped contain an item which is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time."
-        >
-            The item you have dropped is not a file. If you want to upload a folder, we advise you
-            to create a new folder first, then upload its content inside in a second time.
-        </translate>
+        <p>{{ error_message }}</p>
     </error-modal>
 </template>
 
@@ -34,6 +27,9 @@
 import ErrorModal from "./ErrorModal.vue";
 import { computed } from "vue";
 import type { Reason } from "../../../type";
+import { useGettext } from "vue3-gettext";
+
+const { $ngettext } = useGettext();
 
 const props = defineProps<{ reasons: Array<Reason> }>();
 
@@ -48,4 +44,12 @@ const emit = defineEmits<{
 function bubbleErrorModalHidden(): void {
     emit("error-modal-hidden");
 }
+
+const error_message = computed((): string => {
+    return $ngettext(
+        "The item you have dropped is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time.",
+        "The items you have dropped contain an item which is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time.",
+        nb_dropped_files.value
+    );
+});
 </script>

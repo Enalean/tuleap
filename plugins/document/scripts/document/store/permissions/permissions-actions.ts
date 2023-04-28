@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -82,7 +81,7 @@ export const updatePermissions = async (
             context.commit("replaceCurrentFolder", updated_item, { root: true });
             await context.dispatch("loadFolder", item_id, { root: true });
         } else {
-            Vue.set(updated_item, "updated", true);
+            updated_item.updated = true;
             context.commit("removeItemFromFolderContent", updated_item, { root: true });
             context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
             context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });

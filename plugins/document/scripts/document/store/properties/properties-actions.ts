@@ -29,7 +29,6 @@ import {
 } from "../../api/properties-rest-querier";
 import { getCustomProperties } from "../../helpers/properties-helpers/custom-properties-helper";
 import { getItem, getItemWithSize } from "../../api/rest-querier";
-import Vue from "vue";
 import { formatCustomPropertiesForFolderUpdate } from "../../helpers/properties-helpers/update-data-transformatter-helper";
 import type { ActionContext } from "vuex";
 import type { FolderStatus, Folder, FolderProperties, Item, RootState } from "../../type";
@@ -165,7 +164,7 @@ export const updateProperties = async (
             context.commit("replaceCurrentFolder", updated_item, { root: true });
             await context.dispatch("loadFolder", payload.item.id, { root: true });
         } else {
-            Vue.set(updated_item, "updated", true);
+            updated_item.updated = true;
             context.commit("removeItemFromFolderContent", updated_item, { root: true });
             context.commit("addJustCreatedItemToFolderContent", updated_item, { root: true });
             context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });

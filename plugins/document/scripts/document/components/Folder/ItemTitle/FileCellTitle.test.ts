@@ -18,36 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FileCellTitle from "./FileCellTitle.vue";
-import localVue from "../../../helpers/local-vue";
 import { TYPE_FILE } from "../../../constants";
 import type { FileProperties, Folder, ItemFile, RootState } from "../../../type";
-import VueRouter from "vue-router";
-import type { Location, Route } from "vue-router/types/router";
-import * as route from "../../../helpers/use-router";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("FileCellTitle", () => {
-    function getWrapper(item: ItemFile): Wrapper<FileCellTitle> {
-        const router = new VueRouter();
-        jest.spyOn(router, "resolve").mockImplementation(() => ({
-            location: {} as Location,
-            route: {} as Route,
-            href: "/patch/to/embedded",
-            normalizedTo: {} as Location,
-            resolved: {} as Route,
-        }));
-        const mocked_router = jest.spyOn(route, "useRouter");
-        mocked_router.mockReturnValue(router);
-
+    function getWrapper(item: ItemFile): VueWrapper<InstanceType<typeof FileCellTitle>> {
         return shallowMount(FileCellTitle, {
-            localVue,
             propsData: { item },
-            mocks: {
-                localVue,
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         current_folder: {
                             id: 1,

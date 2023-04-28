@@ -46,11 +46,13 @@
                     v-model="item.link_properties"
                     v-bind:item="item"
                     name="properties"
+                    v-bind:value="item.link_properties"
                 />
                 <wiki-properties
                     v-model="item.wiki_properties"
                     v-bind:item="item"
                     name="properties"
+                    v-bind:value="item.wiki_properties"
                 />
                 <embedded-properties
                     v-model="item.embedded_properties"
@@ -67,10 +69,12 @@
             <other-information-properties-for-create
                 v-bind:currently-updated-item="item"
                 v-model="item.obsolescence_date"
+                v-bind:value="item.obsolescence_date"
             />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
                 v-model="item.permissions_for_groups"
+                v-bind:value="item.permissions_for_groups"
                 v-bind:project_ugroups="project_ugroups"
             />
         </div>
@@ -176,7 +180,9 @@ export default {
             "update-multiple-properties-list-value",
             this.updateMultiplePropertiesListValue
         );
-        this.modal.removeEventListener("tlp-modal-hidden", this.reset);
+        if (this.modal) {
+            this.modal.removeEventListener("tlp-modal-hidden", this.reset);
+        }
         emitter.off("update-status-property", this.updateStatusValue);
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);

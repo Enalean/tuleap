@@ -37,6 +37,7 @@ import type { Store } from "vuex";
 import { ref } from "vue";
 import * as vueuse from "@vueuse/core";
 
+const mocked_store = { dispatch: jest.fn() };
 jest.mock("../store", () => ({ store: { dispatch: jest.fn() } as unknown as Store<State> }));
 
 describe("Clipboard Store", () => {
@@ -54,7 +55,7 @@ describe("Clipboard Store", () => {
     describe("PasteItem", () => {
         it(`When an item is already being pasted
         Then it does nothing`, async () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: true,
             });
@@ -66,7 +67,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Reject unknown paste operation", async () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 operation_type: "unknown_operation",
             });
@@ -78,7 +79,7 @@ describe("Clipboard Store", () => {
 
         it(`When item to paste is of an unknown type
             Then the paste is rejected and the clipboard state restored`, async () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_type: "unknown_type",
             });
@@ -94,7 +95,7 @@ describe("Clipboard Store", () => {
 
         it(`When an error is raised when pasting an item
             Then the paste is rejected and the clipboard state is kept so the user can retry`, async () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_type: TYPE_EMPTY,
             });
@@ -116,7 +117,7 @@ describe("Clipboard Store", () => {
 
     describe("Copy/PasteItem", () => {
         const testPasteSuccess = async (type: string): Promise<void> => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_type: type,
                 item_id: copied_item_id,
@@ -195,7 +196,7 @@ describe("Clipboard Store", () => {
 
     describe("Cut/PasteItem", () => {
         const testPasteSuccess = async (type: string): Promise<void> => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_type: type,
                 item_id: moved_item_id,
@@ -292,7 +293,7 @@ describe("Clipboard Store", () => {
                 type: TYPE_EMPTY,
             } as Empty;
 
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: false,
             });
@@ -312,7 +313,7 @@ describe("Clipboard Store", () => {
                 type: TYPE_EMPTY,
             } as Empty;
 
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: true,
                 item_id: null,
@@ -331,7 +332,7 @@ describe("Clipboard Store", () => {
                 type: TYPE_EMPTY,
             } as Empty;
 
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: false,
             });
@@ -350,7 +351,7 @@ describe("Clipboard Store", () => {
                 type: TYPE_EMPTY,
             } as Empty;
 
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: true,
             });
@@ -362,7 +363,7 @@ describe("Clipboard Store", () => {
 
     describe("emptyClipboard", () => {
         it("Clear clipboard", () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_id: 147,
                 item_title: "My title",
@@ -382,7 +383,7 @@ describe("Clipboard Store", () => {
 
     describe("startPasting", () => {
         it("Mark paste in progress", () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
 
             store.startPasting();
             expect(store.pasting_in_progress).toBe(true);
@@ -391,7 +392,7 @@ describe("Clipboard Store", () => {
 
     describe("pastingHasFailed", () => {
         it("Unmark paste in progress when pasting has failed", () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 pasting_in_progress: true,
             });
@@ -403,7 +404,7 @@ describe("Clipboard Store", () => {
 
     describe("emptyClipboardAfterItemDeletion", () => {
         it("Clears the clipboard when the item in it is deleted", () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_id: 741,
             });
@@ -413,7 +414,7 @@ describe("Clipboard Store", () => {
         });
 
         it("Keeps the clipboard intact when another item is deleted", () => {
-            const store = useClipboardStore("1", "1");
+            const store = useClipboardStore(mocked_store, "1", "1");
             store.$patch({
                 item_id: 741,
             });

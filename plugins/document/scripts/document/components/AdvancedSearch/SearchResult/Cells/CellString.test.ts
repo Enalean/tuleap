@@ -28,10 +28,6 @@ describe("CellString", () => {
             },
         });
 
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <td>
-              Lorem ipsum
-            </td>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

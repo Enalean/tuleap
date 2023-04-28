@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useNamespacedActions, useState, useNamespacedState } from "vuex-composition-helpers";
 import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
 import type { RootState } from "../../type";

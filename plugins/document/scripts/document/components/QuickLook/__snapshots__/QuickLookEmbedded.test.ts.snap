@@ -5,21 +5,9 @@ exports[`QuickLookEmbedded Component can be rendered for embedded 1`] = `
   class="document-quick-look-document-action"
 >
   <router-link-stub
-    ariacurrentvalue="page"
     class="tlp-button-primary tlp-button-small"
-    event="click"
-    tag="a"
     to="[object Object]"
-  >
-    
-        Open
-        
-    <i
-      aria-hidden="true"
-      class="fa-solid fa-right-long tlp-button-icon-right"
-    />
-  </router-link-stub>
-   
+  />
   <drop-down-quick-look-stub
     item="[object Object]"
   />

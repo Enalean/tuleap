@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
 import type { Empty, ItemFile, NewItemAlternativeArray } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
-import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../../constants";
 import emitter from "../../../../helpers/emitter";
 import { default as real_emitter } from "../../../../helpers/emitter";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
-import type { DispatchOptions, Payload } from "vuex";
-import type { NewVersionFromEmptyInformation } from "../../../../store/actions-update";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("NewVersionEmptyMenuOptions", function () {
     const CURRENT_ITEM: Empty = {
@@ -39,10 +37,12 @@ describe("NewVersionEmptyMenuOptions", function () {
     } as Empty;
     let emit: jest.SpyInstance;
     let location: Location;
+    let create_version_from_empty: jest.Mock;
 
     beforeEach(() => {
         emit = jest.spyOn(emitter, "emit");
         location = { href: "" } as Location;
+        create_version_from_empty = jest.fn();
     });
 
     afterEach(() => {
@@ -55,20 +55,30 @@ describe("NewVersionEmptyMenuOptions", function () {
             user_can_create_wiki: false,
         },
         create_new_item_alternatives: NewItemAlternativeArray = []
-    ): Wrapper<NewVersionEmptyMenuOptions> {
+    ): VueWrapper<InstanceType<typeof NewVersionEmptyMenuOptions>> {
         return shallowMount(NewVersionEmptyMenuOptions, {
-            localVue,
             propsData: {
                 item: CURRENT_ITEM,
                 location,
             },
-            provide: {
-                create_new_item_alternatives,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: { configuration },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                embedded_are_allowed: configuration.embedded_are_allowed,
+                                user_can_create_wiki: configuration.user_can_create_wiki,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                    actions: {
+                        createNewVersionFromEmpty: create_version_from_empty,
+                    },
                 }),
+                provide: {
+                    create_new_item_alternatives,
+                },
             },
         });
     }
@@ -165,28 +175,15 @@ describe("NewVersionEmptyMenuOptions", function () {
         const alternatives = wrapper.findAll("[data-test=alternative]");
         expect(alternatives).toHaveLength(2);
 
-        let intercepted_file = file;
-        jest.spyOn(wrapper.vm.$store, "dispatch").mockImplementation(
-            (
-                payloadWithType: Payload | string,
-                options?: DispatchOptions | [string, Empty, NewVersionFromEmptyInformation]
-            ): Promise<void> => {
-                if (payloadWithType === "createNewVersionFromEmpty" && Array.isArray(options)) {
-                    intercepted_file = options[2].file_properties.file;
-                }
-                return Promise.resolve();
-            }
-        );
-
         await alternatives.at(0).trigger("click");
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "createNewVersionFromEmpty",
-            expect.anything()
+        expect(create_version_from_empty).toHaveBeenCalled();
+        expect(create_version_from_empty.mock.calls[0][1][2].file_properties.file.name).toBe(
+            "Specs.docx"
         );
-        expect(intercepted_file.name).toBe("Specs.docx");
 
         real_emitter.emit("item-has-just-been-updated", {
             item: {

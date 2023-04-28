@@ -22,7 +22,7 @@ import NewVersionEmptyDropdown from "./NewVersionEmptyDropdown.vue";
 import type { Item } from "../../../../type";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
-import localVue from "../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 jest.mock("@tuleap/tlp-dropdown");
 
 describe("NewVersionEmptyDropdown", function () {
@@ -44,7 +44,7 @@ describe("NewVersionEmptyDropdown", function () {
                     user_can_write: true,
                 } as Item,
             },
-            localVue,
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(createDropdown).toHaveBeenCalled();

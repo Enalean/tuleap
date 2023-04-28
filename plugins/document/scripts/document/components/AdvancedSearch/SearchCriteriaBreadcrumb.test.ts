@@ -17,44 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue, RouterLinkStub, shallowMount } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
-import type { Folder } from "../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GettextPlugin from "vue-gettext";
+import type { Folder, RootState } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+import * as router from "vue-router";
+
+jest.mock("vue-router");
 
 describe("SearchCriteriaBreadcrumb", () => {
-    it("should display a spinner while ascendant hierarchy is loading", () => {
-        // We don't use localVue from helpers since the inclusion of VueRouter via localVue.use()
-        // prevents us to properly test and mock stuff here.
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
+    beforeEach(() => {
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { item_id: "101" },
+        } as unknown as RouteLocationNormalizedLoaded);
+    });
 
+    it("should display a spinner while ascendant hierarchy is loading", () => {
         const wrapper = shallowMount(SearchCriteriaBreadcrumb, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         current_folder_ascendant_hierarchy: [],
                         is_loading_ascendant_hierarchy: true,
-                    },
+                    } as unknown as RootState,
                 }),
-                $route: {
-                    params: {
-                        folder_id: 101,
-                    },
-                    query: {
-                        q: "Lorem ipsum",
-                    },
+                stubs: {
+                    RouterLink: RouterLinkStub,
                 },
-            },
-            stubs: {
-                RouterLink: RouterLinkStub,
             },
         });
 
@@ -62,38 +52,20 @@ describe("SearchCriteriaBreadcrumb", () => {
     });
 
     it("should display a link to each ascendant folder plus a link to search in root folder", () => {
-        // We don't use localVue from helpers since the inclusion of VueRouter via localVue.use()
-        // prevents us to properly test and mock stuff here.
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
         const wrapper = shallowMount(SearchCriteriaBreadcrumb, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         current_folder_ascendant_hierarchy: [
                             { id: 123, title: "Foo" } as Folder,
                             { id: 124, title: "Bar" } as Folder,
                         ],
                         is_loading_ascendant_hierarchy: false,
-                    },
+                    } as unknown as RootState,
                 }),
-                $route: {
-                    params: {
-                        folder_id: 101,
-                    },
-                    query: {
-                        q: "Lorem ipsum",
-                    },
+                stubs: {
+                    RouterLink: RouterLinkStub,
                 },
-            },
-            stubs: {
-                RouterLink: RouterLinkStub,
             },
         });
 

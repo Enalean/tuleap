@@ -10,7 +10,6 @@ exports[`CriterionNumber should render the component 1`] = `
   >
     Id
   </label>
-   
   <input
     class="tlp-input"
     data-test="document-criterion-number-id"

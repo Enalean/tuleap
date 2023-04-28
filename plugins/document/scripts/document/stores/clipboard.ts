@@ -20,7 +20,7 @@
 import type { Pinia } from "pinia";
 import { defineStore } from "pinia";
 import type { ClipboardState } from "./types";
-import type { Folder } from "../type";
+import type { Folder, RootState } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
@@ -47,8 +47,8 @@ import {
     moveWiki,
 } from "../api/move-rest-querier";
 import type { Item } from "../type";
-import { store } from "../store";
 import { useLocalStorage } from "@vueuse/core";
+import type { Store } from "vuex";
 
 export interface PastePayload {
     destination_folder: Folder;
@@ -64,6 +64,7 @@ function buildBaseStorageKey(project_id: string, user_id: string): string {
 // run for no advantages.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useClipboardStore(
+    store: Store<RootState>,
     project_id: string,
     user_id: string,
     pinia?: Pinia | null | undefined

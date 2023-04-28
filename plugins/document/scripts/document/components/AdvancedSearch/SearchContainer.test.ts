@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import SearchResultError from "./SearchResult/SearchResultError.vue";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 const searchInFolderMock = jest.fn();
 jest.mock("../../api/rest-querier", () => {
@@ -25,79 +25,95 @@ jest.mock("../../api/rest-querier", () => {
     };
 });
 
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import SearchResultError from "./SearchResult/SearchResultError.vue";
 import SearchContainer from "./SearchContainer.vue";
 import SearchResultTable from "./SearchResult/SearchResultTable.vue";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import type { AdvancedSearchParams } from "../../type";
-import VueRouter from "vue-router";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import type { Events } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import { nextTick } from "vue";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import * as router from "../../helpers/use-router";
+import type { Router } from "vue-router";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("SearchContainer", () => {
+    let push_route_spy: jest.Mock;
     beforeEach(() => {
         searchInFolderMock.mockReset();
+        push_route_spy = jest.fn();
+
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { push: push_route_spy } as unknown as Router;
+        });
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            query: { q: "Lorem ipsum" },
+        } as unknown as RouteLocationNormalizedLoaded);
     });
+
+    const load_folder = jest.fn();
+
+    function getWrapper(
+        query: string,
+        search_params: AdvancedSearchParams
+    ): VueWrapper<InstanceType<typeof SearchContainer>> {
+        return shallowMount(SearchContainer, {
+            propsData: {
+                query: search_params,
+                folder_id: 101,
+                offset: 0,
+            },
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        loadFolder: load_folder,
+                    },
+                }),
+                stubs: ["router-link", "router-view"],
+            },
+        });
+    }
 
     it("should automatically load the current folder so that breadcrumb is accurate when user refresh the page", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const wrapper = shallowMount(SearchContainer, {
+        shallowMount(SearchContainer, {
             propsData: {
                 query: buildAdvancedSearchParams(),
                 folder_id: 101,
                 offset: 0,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        loadFolder: load_folder,
+                    },
                 }),
-                $route: {
-                    query: { q: "" },
-                },
             },
         });
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadFolder", 101);
+        expect(load_folder).toHaveBeenCalled();
     });
 
     it("should route to a new search if user changes global search", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams());
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit(
             "advanced-search",
-            buildAdvancedSearchParams({ global_search: "Lorem ipsum" })
+            buildAdvancedSearchParams({ global_search: "Lorem ipsum do" })
         );
 
-        expect(router.push).toHaveBeenCalledWith({
+        expect(push_route_spy).toHaveBeenCalledWith({
             name: "search",
             query: {
-                q: "Lorem ipsum",
+                q: "Lorem ipsum do",
             },
             params: {
                 folder_id: "101",
@@ -108,32 +124,12 @@ describe("SearchContainer", () => {
     it("should route to a new search if user changes type", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams());
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ type: "folder" }));
 
-        expect(router.push).toHaveBeenCalledWith({
+        expect(push_route_spy).toHaveBeenCalledWith({
             name: "search",
             query: {
                 type: "folder",
@@ -147,32 +143,12 @@ describe("SearchContainer", () => {
     it("should route to a new search if user changes title", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams());
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ title: "doloret" }));
 
-        expect(router.push).toHaveBeenCalledWith({
+        expect(push_route_spy).toHaveBeenCalledWith({
             name: "search",
             query: {
                 title: "doloret",
@@ -186,32 +162,12 @@ describe("SearchContainer", () => {
     it("should route to a new search if user changes description", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams());
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit("advanced-search", buildAdvancedSearchParams({ description: "doloret" }));
 
-        expect(router.push).toHaveBeenCalledWith({
+        expect(push_route_spy).toHaveBeenCalledWith({
             name: "search",
             query: {
                 description: "doloret",
@@ -225,27 +181,7 @@ describe("SearchContainer", () => {
     it("should not route to a new search if user didn't change the criteria but still perform the search to make sure that results are accurate", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "Lorem ipsum" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("Lorem ipsum", buildAdvancedSearchParams());
 
         const criteria = wrapper.findComponent(SearchCriteriaPanel);
         criteria.vm.$emit(
@@ -253,34 +189,14 @@ describe("SearchContainer", () => {
             buildAdvancedSearchParams({ global_search: "Lorem ipsum" })
         );
 
-        expect(router.push).not.toHaveBeenCalled();
+        expect(push_route_spy).not.toHaveBeenCalled();
         expect(searchInFolderMock).toHaveBeenCalledTimes(1);
     });
 
     it("should perform a new search if user paginates through results", async () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
         const expected_params: AdvancedSearchParams = buildAdvancedSearchParams({
             global_search: "Lorem ipsum",
@@ -288,36 +204,16 @@ describe("SearchContainer", () => {
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 0);
 
         wrapper.setProps({ offset: 10 });
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
-        expect(router.push).not.toHaveBeenCalled();
+        expect(push_route_spy).not.toHaveBeenCalled();
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 10);
     });
 
     it("should perform a new search if user select another folder in the breadcrumb", async () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const router = new VueRouter();
-        jest.spyOn(router, "push").mockImplementation();
-
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                    params: { folder_id: "101" },
-                },
-                $router: router,
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
         const expected_params: AdvancedSearchParams = buildAdvancedSearchParams({
             global_search: "Lorem ipsum",
@@ -325,32 +221,17 @@ describe("SearchContainer", () => {
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 0);
 
         wrapper.setProps({ folder_id: 102 });
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
-        expect(router.push).not.toHaveBeenCalled();
+        expect(push_route_spy).not.toHaveBeenCalled();
         expect(searchInFolderMock).toHaveBeenCalledWith(102, expected_params, 0);
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadFolder", 102);
+        expect(load_folder).toHaveBeenCalled();
     });
 
     it("should search for items based on criteria", () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams({ global_search: "Lorem ipsum" }),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                },
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
         expect(searchInFolderMock).toHaveBeenCalledWith(
             101,
@@ -362,37 +243,21 @@ describe("SearchContainer", () => {
     });
 
     it("should display an error state if the query failed", async () => {
-        searchInFolderMock.mockResolvedValue([]);
+        searchInFolderMock.mockRejectedValue(
+            new FetchWrapperError("Not Found", {
+                status: 404,
+                json: (): Promise<{ error: { code: number; message: string } }> =>
+                    Promise.reject({ error: { code: 404, message: "Error on server" } }),
+            } as Response)
+        );
 
-        const wrapper = shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                },
-            },
-        });
+        const wrapper = getWrapper("", buildAdvancedSearchParams());
 
-        // Due to an obscure combination of async events, and rethrow of error,
-        // it is pretty difficult to assert that our Error component is displayed
-        // in case of REST error (we didn't manage to catch the rethrow in the middle
-        // $nextTick() call). Therefore we bypass the REST call to set manually
-        // the error.
-        wrapper.setData({
-            error: new Error("Oups"),
-        });
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
-        expect(wrapper.findComponent(SearchResultTable).exists()).toBe(false);
-        expect(wrapper.findComponent(SearchResultError).exists()).toBe(true);
+        expect(wrapper.findComponent("search-result-table-stub").exists()).toBe(false);
+        expect(wrapper.findComponent("search-result-error-stub").exists()).toBe(true);
     });
 
     it.each<[keyof Events]>([
@@ -411,22 +276,7 @@ describe("SearchContainer", () => {
             },
         });
 
-        shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-                $route: {
-                    query: { q: "" },
-                },
-            },
-        });
+        getWrapper("", buildAdvancedSearchParams({ global_search: "Lorem ipsum" }));
 
         emitter.emit(event);
 

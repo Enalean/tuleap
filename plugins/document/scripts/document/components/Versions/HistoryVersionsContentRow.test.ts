@@ -37,13 +37,13 @@ jest.mock("../../api/version-rest-querier", () => {
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import UserBadge from "../User/UserBadge.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
 import type { RestUser } from "../../api/rest-querier";
-import type { FileHistory, User } from "../../type";
+import type { FileHistory, Item, ItemFile } from "../../type";
 import { FEEDBACK } from "../../injection-keys";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
@@ -51,12 +51,11 @@ describe("HistoryVersionsContentRow", () => {
     let success: () => void;
 
     function getWrapper(
-        item: User,
+        item: Item,
         has_more_than_one_version: boolean,
         authoring_tool = ""
-    ): Wrapper<HistoryVersionsContentRow> {
+    ): VueWrapper<InstanceType<typeof HistoryVersionsContentRow>> {
         return shallowMount(HistoryVersionsContentRow, {
-            localVue,
             propsData: {
                 item,
                 has_more_than_one_version,
@@ -78,9 +77,12 @@ describe("HistoryVersionsContentRow", () => {
                 location,
                 loadVersions,
             },
-            provide: {
-                should_display_source_column_for_versions: true,
-                [FEEDBACK as symbol]: { success },
+            global: {
+                ...getGlobalTestOptions({}),
+                provide: {
+                    should_display_source_column_for_versions: true,
+                    [FEEDBACK as symbol]: { success },
+                },
             },
         });
     }
@@ -96,13 +98,13 @@ describe("HistoryVersionsContentRow", () => {
     });
 
     it("should display a user badge for each author and two coauthors", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true);
 
         expect(wrapper.findAllComponents(UserBadge)).toHaveLength(3);
     });
 
     it("should display a link to the approval table", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true);
 
         expect(wrapper.find("[data-test=approval-link]").exists()).toBe(true);
     });
@@ -110,11 +112,7 @@ describe("HistoryVersionsContentRow", () => {
     it("should display authoring tool as source", () => {
         const authoring_tool = "Awesome Office Editor";
 
-        const wrapper = getWrapper(
-            { user_can_delete: true } as unknown as User,
-            true,
-            authoring_tool
-        );
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true, authoring_tool);
 
         expect(wrapper.find("[data-test=source]").text()).toBe(authoring_tool);
     });
@@ -122,23 +120,19 @@ describe("HistoryVersionsContentRow", () => {
     it("should display a 'Uploaded' as source if version has no identified authoring tool", () => {
         const authoring_tool = "";
 
-        const wrapper = getWrapper(
-            { user_can_delete: true } as unknown as User,
-            true,
-            authoring_tool
-        );
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true, authoring_tool);
 
         expect(wrapper.find("[data-test=source]").text()).toBe("Uploaded");
     });
 
     it("should not display a delete button if user cannot delete", () => {
-        const wrapper = getWrapper({ user_can_delete: false } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: false } as ItemFile, true);
 
         expect(wrapper.find("[data-test=delete-button]").exists()).toBe(false);
     });
 
     it("should display a disabled button if user can delete but there is only one version", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, false);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, false);
 
         const button = wrapper.find("[data-test=delete-button]").element;
         if (!(button instanceof HTMLButtonElement)) {
@@ -149,7 +143,7 @@ describe("HistoryVersionsContentRow", () => {
     });
 
     it("should display a delete button if user can delete and there is more than one version", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true);
 
         const button = wrapper.find("[data-test=delete-button]").element;
         if (!(button instanceof HTMLButtonElement)) {
@@ -162,7 +156,7 @@ describe("HistoryVersionsContentRow", () => {
     it("should delete the version if user confirm the deletion and reload the versions to display latest data", async () => {
         deleteFileVersion.mockReturnValue(okAsync(null));
 
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true);
 
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
@@ -174,7 +168,7 @@ describe("HistoryVersionsContentRow", () => {
     it("should not reload anything if deletion of version failed", async () => {
         deleteFileVersion.mockReturnValue(errAsync(Fault.fromMessage("Oops!")));
 
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as ItemFile, true);
 
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 

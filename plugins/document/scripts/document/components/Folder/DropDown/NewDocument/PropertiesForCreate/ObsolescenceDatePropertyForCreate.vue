@@ -25,7 +25,7 @@
         data-test="obsolescence-date-property"
     >
         <label class="tlp-label" for="document-obsolescence-date-select">
-            <translate>Obsolescence date</translate>
+            {{ $gettext("Obsolescence date") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element document-obsolescence-date-properties-fields">
@@ -37,12 +37,12 @@
                 v-model="selected_value"
                 v-on:change="updateDatePickerValue"
             >
-                <option name="permanent" value="permanent" v-translate>Permanent</option>
-                <option name="3months" value="3" v-translate>3 months</option>
-                <option name="6months" value="6" v-translate>6 months</option>
-                <option name="12months" value="12" v-translate>12 months</option>
-                <option name="fixedDate" value="fixed" v-translate>Fixed date</option>
-                <option name="today" value="today" v-translate>Obsolete today</option>
+                <option name="permanent" value="permanent">{{ $gettext("Permanent") }}</option>
+                <option name="3months" value="3">{{ $gettext("3 months") }}</option>
+                <option name="6months" value="6">{{ $gettext("6 months") }}</option>
+                <option name="12months" value="12">{{ $gettext("12 months") }}</option>
+                <option name="fixedDate" value="fixed">{{ $gettext("Fixed date") }}</option>
+                <option name="today" value="today">{{ $gettext("Obsolete today") }}</option>
             </select>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa-regular fa-calendar"></i></span>
@@ -58,7 +58,7 @@
         </div>
         <p
             class="tlp-text-danger"
-            v-if="error_message && error_message.length > 0"
+            v-if="has_error_message"
             data-test="obsolescence-date-error-message"
         >
             {{ error_message }}
@@ -73,8 +73,8 @@ import type { ConfigurationState } from "../../../../../store/configuration";
 import { getObsolescenceDateValueInput } from "../../../../../helpers/properties-helpers/obsolescence-date-value";
 import emitter from "../../../../../helpers/emitter";
 import moment from "moment/moment";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import { computed, ref } from "vue";
 
 const props = defineProps<{ value: string }>();
 
@@ -89,6 +89,10 @@ let uses_helper_validity = ref(false);
 const { is_obsolescence_date_property_used } = useNamespacedState<
     Pick<ConfigurationState, "is_obsolescence_date_property_used">
 >("configuration", ["is_obsolescence_date_property_used"]);
+
+const has_error_message = computed((): boolean => {
+    return error_message.value.length > 0;
+});
 
 function updateDatePickerValue(event: Event) {
     if (!(event.target instanceof HTMLSelectElement)) {
@@ -124,4 +128,6 @@ function updateObsolescenceDate(new_date: string) {
 
     uses_helper_validity.value = false;
 }
+
+defineExpose({ has_error_message });
 </script>

@@ -20,13 +20,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookLink from "./QuickLookLink.vue";
-import localVue from "../../helpers/local-vue";
-import Vuex from "vuex";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { TYPE_LINK } from "../../constants";
 import type { Item } from "../../type";
-
-localVue.use(Vuex);
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../store/configuration";
 
 describe("QuickLookLink", () => {
     it("renders quick look for link document", () => {
@@ -35,11 +32,15 @@ describe("QuickLookLink", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookLink, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { project_id: 101 },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                project_id: 101,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },

@@ -28,14 +28,20 @@ import {
 import { shallowMount } from "@vue/test-utils";
 import DisplayVersions from "./DisplayVersions.vue";
 import HistoryVersions from "./HistoryVersions.vue";
-import localVue from "../../helpers/local-vue";
-import VueRouter from "vue-router";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { nextTick } from "vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { Item } from "../../type";
+import * as router from "vue-router";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+
+jest.mock("vue-router");
 
 describe("DisplayVersions", () => {
-    let store = {
-        dispatch: jest.fn(),
-    };
+    beforeEach(() => {
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { item_id: "101" },
+        } as unknown as RouteLocationNormalizedLoaded);
+    });
 
     it.each([
         [TYPE_FOLDER, false],
@@ -45,78 +51,60 @@ describe("DisplayVersions", () => {
         [TYPE_WIKI, false],
         [TYPE_EMPTY, false],
     ])("should display a %s with versions: %s", async (type, should_versions_be_displayed) => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/history/42",
-                    name: "item",
-                },
-            ],
-        });
-
-        store = createStoreMock({});
-
-        store.dispatch.mockImplementation((action_name) => {
-            if (action_name === "loadDocumentWithAscendentHierarchy") {
-                return {
-                    id: 42,
-                    type,
-                };
-            }
-
-            return null;
+        const load_with_hierarchy = jest.fn().mockImplementation(() => {
+            return Promise.resolve({
+                id: 42,
+                type,
+            } as Item);
         });
 
         const wrapper = shallowMount(DisplayVersions, {
-            localVue,
-            router,
-            mocks: { $store: store },
-            provide: {
-                should_display_history_in_document: true,
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        loadDocumentWithAscendentHierarchy: load_with_hierarchy,
+                    },
+                }),
+                provide: {
+                    should_display_history_in_document: true,
+                },
+                stubs: ["router-link"],
             },
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersions).exists()).toBe(should_versions_be_displayed);
     });
 
     it("should not display anything if user tries direct access while feature flag is off", async () => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/history/42",
-                    name: "item",
-                },
-            ],
-        });
-
-        store.dispatch.mockImplementation((action_name) => {
-            if (action_name === "loadDocumentWithAscendentHierarchy") {
-                return {
-                    id: 42,
-                    type: TYPE_FILE,
-                };
-            }
-
-            return null;
+        const load_with_hierarchy = jest.fn().mockImplementation(() => {
+            return Promise.resolve({
+                id: 42,
+                type: TYPE_FILE,
+            } as Item);
         });
 
         const wrapper = shallowMount(DisplayVersions, {
-            localVue,
-            router,
-            mocks: { $store: store },
-            provide: {
-                should_display_history_in_document: false,
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        loadDocumentWithAscendentHierarchy: load_with_hierarchy,
+                    },
+                }),
+                provide: {
+                    should_display_history_in_document: false,
+                },
+                stubs: ["router-link"],
             },
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 });

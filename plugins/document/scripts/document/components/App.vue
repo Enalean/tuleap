@@ -34,7 +34,7 @@
         />
         <router-view v-else />
         <global-error-modal v-if="has_global_modal_error" />
-        <switch-to-old-u-i v-if="can_user_switch_to_old_ui" />
+        <switch-to-old-u-i v-if="can_user_switch" />
         <post-item-deletion-notification />
     </div>
 </template>
@@ -74,6 +74,12 @@ export default {
         ]),
         ...mapState("configuration", ["can_user_switch_to_old_ui"]),
         ...mapGetters(["is_uploading"]),
+        can_user_switch() {
+            return this.can_user_switch_to_old_ui;
+        },
+        has_global_modal_error() {
+            return this.has_global_modal_error;
+        },
     },
     created() {
         const base_title = document.title;

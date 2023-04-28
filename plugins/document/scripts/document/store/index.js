@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters";
 import * as actions from "./actions";
@@ -30,14 +29,12 @@ import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
 import { createConfigurationModule } from "./configuration";
 
-Vue.use(Vuex);
-
 export let store;
 
-export function createStore(configuration_state) {
+export function createInitializedStore(user_id, project_id, configuration_state) {
     const configuration = createConfigurationModule(configuration_state);
 
-    store = new Vuex.Store({
+    return createStore({
         state,
         getters,
         mutations,
@@ -51,6 +48,4 @@ export function createStore(configuration_state) {
             configuration,
         },
     });
-
-    return store;
 }

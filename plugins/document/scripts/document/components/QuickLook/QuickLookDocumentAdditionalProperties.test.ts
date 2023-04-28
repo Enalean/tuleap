@@ -18,18 +18,25 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
-import localVue from "../../helpers/local-vue";
 import type { ListValue, Property } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookDocumentAdditionalProperties", () => {
-    function createWrapper(property: Property): Wrapper<QuickLookDocumentAdditionalProperties> {
+    function createWrapper(
+        property: Property
+    ): VueWrapper<InstanceType<typeof QuickLookDocumentAdditionalProperties>> {
         return shallowMount(QuickLookDocumentAdditionalProperties, {
-            localVue,
             propsData: {
                 property,
+            },
+            global: {
+                ...getGlobalTestOptions({}),
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
             },
         });
     }
@@ -116,8 +123,7 @@ describe("QuickLookDocumentAdditionalProperties", () => {
             expect(wrapper.find("ul").exists()).toBeFalsy();
             expect(wrapper.find("[data-test=property-list-date]").exists()).toBeFalsy();
             expect(display_properties).toBeTruthy();
-            expect(display_properties.text()).toStrictEqual(string_property.value);
-            expect(display_properties.html()).toContain(string_property.post_processed_value);
+            expect(wrapper.vm.get_value).toStrictEqual(string_property.post_processed_value);
         });
     });
     it(`Given text type empty value

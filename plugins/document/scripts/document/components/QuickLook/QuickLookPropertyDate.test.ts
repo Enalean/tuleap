@@ -18,31 +18,34 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
-
-import localVue from "../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
 import * as date_formatter from "../../helpers/date-formatter";
 import type { Property } from "../../type";
 import type { ConfigurationState } from "../../store/configuration";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookPropertyDate", () => {
-    function getWrapper(property: Property): Wrapper<QuickLookPropertyDate> {
+    function getWrapper(
+        property: Property
+    ): VueWrapper<InstanceType<typeof QuickLookPropertyDate>> {
         return shallowMount(QuickLookPropertyDate, {
-            localVue,
             propsData: { property },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { date_time_format: "d/m/Y H:i" } as ConfigurationState,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                date_time_format: "d/m/Y H:i",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
+                stubs: {
+                    "tlp-relative-date": true,
+                },
             },
         });
     }

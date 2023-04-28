@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <fragment>
+    <div>
         <new-item-modal />
         <new-folder-modal />
         <create-new-item-version-modal
@@ -58,10 +58,10 @@
             data-test="document-folder-size-warning-modal"
         />
         <ongoing-upload-modal
-            v-if="should_display_ongoing_upload_modal"
+            v-if="can_display_ongoing_upload_modal"
             v-on:close="ongoingUploadModalHasBeenClosed"
         />
-    </fragment>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -74,7 +74,7 @@ import type {
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
-import { defineAsyncComponent, onMounted, onUnmounted, ref, shallowRef } from "vue";
+import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import type { Item } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
@@ -121,7 +121,7 @@ function showUpdateItemPropertiesModal(event: UpdatePropertiesEvent): void {
 const updated_item = ref<Item | null>(null);
 const shown_new_version_modal = shallowRef<undefined | unknown>(undefined);
 
-function showCreateNewItemVersionModal(event: NewVersionEvent) {
+function showCreateNewItemVersionModal(event: NewVersionEvent): void {
     updated_item.value = event.detail.current_item;
 
     switch (updated_item.value.type) {
@@ -187,7 +187,7 @@ const current_folder_size = ref<number | null>(null);
 
 function showMaxArchiveSizeThresholdExceededErrorModal(
     event: MaxArchiveSizeThresholdExceededEvent
-) {
+): void {
     current_folder_size.value = event.detail.current_folder_size;
 }
 
@@ -197,6 +197,7 @@ function hideDownloadFolderModals(): void {
 }
 
 const should_display_ongoing_upload_modal = ref(false);
+
 function itemIsBeingUploaded(): void {
     should_display_ongoing_upload_modal.value = true;
 }
@@ -204,6 +205,13 @@ function itemIsBeingUploaded(): void {
 function ongoingUploadModalHasBeenClosed(): void {
     should_display_ongoing_upload_modal.value = false;
 }
+
+const can_display_ongoing_upload_modal = computed((): boolean => {
+    return (
+        should_display_ongoing_upload_modal.value &&
+        should_display_ongoing_upload_modal.value !== false
+    );
+});
 
 onMounted(() => {
     emitter.on("deleteItem", showDeleteItemModal);
@@ -234,11 +242,9 @@ onUnmounted(() => {
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Fragment } from "vue-frag";
 
 export default defineComponent({
     components: {
-        Fragment,
         "confirm-deletion-modal": () =>
             import(
                 /* webpackChunkName: "document-confirm-item-deletion-modal" */

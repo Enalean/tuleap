@@ -52,11 +52,14 @@ import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 
-const props = withDefaults(defineProps<{ item: Item; is_in_quicklook?: boolean }>(), {
+const props = withDefaults(defineProps<{ item: Item | null; is_in_quicklook?: boolean }>(), {
     is_in_quicklook: false,
 });
 
 const is_item_a_folder = computed((): boolean => {
+    if (!props.item) {
+        return false;
+    }
     return isFolder(props.item);
 });
 

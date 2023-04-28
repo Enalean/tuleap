@@ -17,22 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import UploadProgressBar from "./UploadProgressBar.vue";
-import localVue from "../../../helpers/local-vue";
 import type { FakeItem } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-function getWrapper(item: FakeItem): Wrapper<UploadProgressBar> {
+let cancel_file_upload: jest.Mock;
+let cancel_version_upload: jest.Mock;
+let cancel_folder_upload: jest.Mock;
+
+function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgressBar>> {
     return shallowMount(UploadProgressBar, {
-        localVue,
         propsData: { item },
-        mocks: { $store: createStoreMock({}) },
+        global: {
+            ...getGlobalTestOptions({
+                actions: {
+                    cancelFileUpload: cancel_file_upload,
+                    cancelVersionUpload: cancel_version_upload,
+                    cancelFolderUpload: cancel_folder_upload,
+                },
+            }),
+        },
     });
 }
 
 describe("UploadProgressBar", () => {
+    beforeEach(() => {
+        cancel_file_upload = jest.fn();
+        cancel_version_upload = jest.fn();
+        cancel_folder_upload = jest.fn();
+    });
+
     it(`Given item is uploading a new version of a file
         When user click on cancel
         Then we should call cancelVersionUpload`, async () => {
@@ -48,7 +64,7 @@ describe("UploadProgressBar", () => {
 
         await wrapper.get("[data-test=cancel-upload]").trigger("click");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("cancelVersionUpload", item);
+        expect(cancel_version_upload).toHaveBeenCalled();
     });
 
     it(`Given item is uploading a file (initial version)
@@ -65,7 +81,7 @@ describe("UploadProgressBar", () => {
 
         await wrapper.get("[data-test=cancel-upload]").trigger("click");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("cancelFileUpload", item);
+        expect(cancel_file_upload).toHaveBeenCalled();
     });
 
     it(`Given item is uploading a file or a version
@@ -82,7 +98,7 @@ describe("UploadProgressBar", () => {
 
         await wrapper.get("[data-test=cancel-upload]").trigger("click");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("cancelFolderUpload", item);
+        expect(cancel_folder_upload).toHaveBeenCalled();
     });
 
     it(`Given item is uploading a file or a version

@@ -19,20 +19,25 @@
 
 import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CellDescription from "./CellDescription.vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CellDescription", () => {
     it("should display the preprocessed description", () => {
         const wrapper = shallowMount(CellDescription, {
-            localVue,
             propsData: {
                 item: {
                     post_processed_description: "ipsum doloret",
                 } as ItemSearchResult,
             },
+            global: {
+                ...getGlobalTestOptions({}),
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
+            },
         });
 
-        expect(wrapper.text()).toContain("ipsum doloret");
+        expect(wrapper.vm.get_post_processed_description).toBe("ipsum doloret");
     });
 });

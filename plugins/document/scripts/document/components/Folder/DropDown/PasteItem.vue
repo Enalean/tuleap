@@ -60,6 +60,9 @@ import { useNamespacedState, useState } from "vuex-composition-helpers";
 import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
 import type { ConfigurationState } from "../../../store/configuration";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ destination: Folder }>();
 
@@ -67,10 +70,14 @@ const { folder_content, current_folder } = useState<
     Pick<State, "folder_content" | "current_folder">
 >(["folder_content", "current_folder"]);
 
+import { useStore } from "vuex";
+
+const store = useStore();
+
 const { project_id, user_id } = useNamespacedState<
     Pick<ConfigurationState, "project_id" | "user_id">
 >("configuration", ["project_id", "user_id"]);
-const clipboard = useClipboardStore(project_id.value, user_id.value);
+const clipboard = useClipboardStore(store, project_id.value, user_id.value);
 
 const can_item_be_pasted = computed((): boolean => {
     if (

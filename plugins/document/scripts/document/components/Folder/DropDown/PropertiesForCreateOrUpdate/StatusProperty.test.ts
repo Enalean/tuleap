@@ -18,19 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import StatusProperty from "./StatusProperty.vue";
 import emitter from "../../../../helpers/emitter";
-import localVue from "../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 jest.mock("../../../../helpers/emitter");
 
 describe("StatusProperty", () => {
-    function createWrapper(props = {}): Wrapper<StatusProperty> {
+    function createWrapper(props = {}): VueWrapper<InstanceType<typeof StatusProperty>> {
         return shallowMount(StatusProperty, {
-            localVue,
             propsData: { ...props },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 

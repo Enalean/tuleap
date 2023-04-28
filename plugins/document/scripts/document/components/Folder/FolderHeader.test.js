@@ -27,32 +27,14 @@ jest.mock("@tuleap/tlp-modal", () => {
 });
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
-
 import FolderHeader from "./FolderHeader.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
 import emitter from "../../helpers/emitter";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("FolderHeader", () => {
-    let factory, store;
-
-    beforeEach(() => {
-        const general_store = {
-            state: {
-                is_loading_ascendant_hierarchy: false,
-                configuration: {
-                    is_status_property_used: true,
-                },
-            },
-            getters: {
-                current_folder_title: "My folder title",
-                is_folder_empty: true,
-            },
-        };
-
-        store = createStoreMock(general_store);
-
+    function factory(is_loading_ascendant_hierarchy, is_folder_empty) {
         const dynamic_import_stubs = [
             "confirm-deletion-modal",
             "permissions-update-modal",
@@ -60,51 +42,56 @@ describe("FolderHeader", () => {
             "download-folder-size-threshold-exceeded-modal",
             "download-folder-size-warning-modal",
             "file-changelog-modal",
+            "update-properties-modal",
         ];
 
-        factory = (props = {}) => {
-            return shallowMount(FolderHeader, {
-                localVue,
-                mocks: { $store: store },
-                propsData: { ...props },
+        return shallowMount(FolderHeader, {
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        is_loading_ascendant_hierarchy,
+                        current_folder: { id: 20 },
+                    },
+                    getters: {
+                        current_folder_title: () => "My folder title",
+                        is_folder_empty: () => is_folder_empty,
+                    },
+                    modules: {
+                        configuration: {
+                            namespaced: true,
+                            state: { is_status_property_used: true },
+                        },
+                    },
+                }),
                 stubs: dynamic_import_stubs,
-            });
-        };
-    });
+            },
+        });
+    }
+
     describe("Component rendering -", () => {
         it(`Does not display title information when folder is loading_ascendent_hierarchy`, () => {
-            store.state.is_loading_ascendant_hierarchy = true;
-
-            const wrapper = factory();
+            const wrapper = factory(true, true);
             expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toContain(
                 "document-folder-title-loading"
             );
         });
 
         it(`Display title information when folder is loaded`, () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-
-            const wrapper = factory();
-            expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toEqual([]);
+            const wrapper = factory(false, true);
+            expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toStrictEqual(
+                []
+            );
         });
     });
     describe("Search box -", () => {
         it(`Does not display search box, when current folder has no content`, () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-            store.getters.is_folder_empty = true;
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(
                 wrapper.find("[data-test=document-folder-harder-search-box]").exists()
             ).toBeFalsy();
         });
         it(`Display search box, when folder has content`, () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-            store.getters.is_folder_empty = false;
-
-            const wrapper = factory();
+            const wrapper = factory(false, false);
             expect(
                 wrapper.find("[data-test=document-folder-harder-search-box]").exists()
             ).toBeTruthy();
@@ -113,60 +100,42 @@ describe("FolderHeader", () => {
 
     describe("Modal loading -", () => {
         it(`Loads new item version modal`, async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
-            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(false);
+            const wrapper = factory(false, true);
 
             const event = { detail: { current_item: { type: TYPE_LINK } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             await wrapper.vm.shown_new_version_modal();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
         });
 
         it(`Loads new empty version modal`, async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
-            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(false);
+            const wrapper = factory(false, true);
 
             const event = { item: { type: TYPE_EMPTY }, type: TYPE_LINK };
             wrapper.vm.showCreateNewVersionModalForEmpty(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             await wrapper.vm.shown_new_version_modal();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
         });
 
         it(`Loads delete modal`, async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(false);
 
             emitter.emit("deleteItem", {
-                item: store.state.current_folder,
+                item: { id: 20 },
             });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(true);
         });
 
         it(`Loads update properties modal`, async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
-            expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
-                false
-            );
-
+            const wrapper = factory(false, true);
             const event = { detail: { current_item: { type: TYPE_EMPTY, status: "" } } };
             wrapper.vm.showUpdateItemPropertiesModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             await wrapper.vm.shown_update_properties_modal();
             expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
                 true
@@ -174,41 +143,32 @@ describe("FolderHeader", () => {
         });
 
         it(`Loads permission modal`, async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(
                 false
             );
             const event = { detail: { current_item: { type: TYPE_EMPTY, properties: [] } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(true);
         });
 
         it("Loads the folder size threshold exceeded error modal", async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(
                 wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
             ).toBe(false);
 
             const event = { detail: { current_folder_size: 100000 } };
             wrapper.vm.showMaxArchiveSizeThresholdExceededErrorModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(
                 wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
             ).toBe(true);
         });
 
         it("Loads the folder size warning modal", async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
                 false
             );
@@ -217,24 +177,21 @@ describe("FolderHeader", () => {
                 detail: { current_folder_size: 100000, folder_href: "/download/folder/here" },
             };
             wrapper.vm.showArchiveSizeWarningModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
                 true
             );
         });
 
         it("loads the file changelog modal", async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
+            const wrapper = factory(false, true);
             expect(wrapper.find("[data-test=file-changelog-modal]").exists()).toBe(false);
 
             const event = {
                 detail: { updated_file: { id: 12 }, dropped_file: new Blob() },
             };
             wrapper.vm.showChangelogModal(event);
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=file-changelog-modal]").exists()).toBe(true);
         });
     });

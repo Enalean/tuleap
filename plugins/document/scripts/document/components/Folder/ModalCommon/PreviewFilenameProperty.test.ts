@@ -17,28 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PreviewFilenameProperty from "./PreviewFilenameProperty.vue";
-import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { DefaultFileItem } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("PreviewFilenameProperty", () => {
     function getWrapper(
         item: DefaultFileItem,
         configuration: ConfigurationState
-    ): Wrapper<PreviewFilenameProperty> {
+    ): VueWrapper<InstanceType<typeof PreviewFilenameProperty>> {
         return shallowMount(PreviewFilenameProperty, {
-            localVue,
             propsData: {
                 item,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: configuration as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },
@@ -64,7 +65,7 @@ describe("PreviewFilenameProperty", () => {
             is_filename_pattern_enforced: false,
         } as ConfigurationState);
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("should display nothing if item is not a file is not enforced", () => {
@@ -74,7 +75,7 @@ describe("PreviewFilenameProperty", () => {
             is_filename_pattern_enforced: true,
         } as ConfigurationState);
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it("should display the preview", () => {

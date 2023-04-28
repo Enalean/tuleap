@@ -17,11 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import {webpack_configurator} from "@tuleap/build-system-configurator";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+
 const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const assets_public_path = "/assets/document/";
-const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
+import MomentTimezoneDataPlugin from "moment-timezone-data-webpack-plugin";
+import {VueLoaderPlugin} from "vue-loader";
 
 const entry_points = {
     document: "./scripts/document/index.js",
@@ -29,7 +37,7 @@ const entry_points = {
     "document-style": "./themes/document.scss",
 };
 
-module.exports = [
+export default [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
@@ -40,14 +48,24 @@ module.exports = [
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
-                vue: path.resolve(__dirname, "node_modules", "vue"),
+                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
             },
         },
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader,
+                {
+                    test: /\.vue$/,
+                    exclude: /node_modules/,
+                    loader: "vue-loader",
+                    options: {
+                        compilerOptions: {
+                            compatConfig: {
+                                MODE: 2,
+                            },
+                        },
+                    },
+                },
                 webpack_configurator.rule_scss_loader,
                 {
                     test: /new\.(docx|xlsx|pptx)/,
@@ -58,8 +76,8 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
-            webpack_configurator.getVueLoaderPlugin(),
+            POGettextPlugin.webpack(),
+            new VueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
             new MomentTimezoneDataPlugin({
                 startYear: 1970,
@@ -67,8 +85,5 @@ module.exports = [
             }),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];

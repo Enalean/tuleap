@@ -146,6 +146,7 @@ export interface Item extends MinimalItem {
     status: string | FolderStatus;
     created?: boolean;
     obsolescence_date: null | number;
+    updated?: boolean;
     properties: Array<Property> | Array<FolderProperty>;
 }
 
@@ -249,6 +250,7 @@ export interface ItemFile extends Item, ApprovableDocument, Uploadable {
     name?: string;
     size?: number;
     status: string;
+    properties: Array<Property>;
 }
 
 export interface Link extends Item, ApprovableDocument {
@@ -256,6 +258,7 @@ export interface Link extends Item, ApprovableDocument {
     link_properties: LinkProperties;
     type: "link";
     status: string;
+    properties: Array<Property>;
 }
 
 export interface Embedded extends Item, ApprovableDocument {
@@ -263,6 +266,7 @@ export interface Embedded extends Item, ApprovableDocument {
     embedded_file_properties: EmbeddedProperties | null;
     type: "embedded";
     status: string;
+    properties: Array<Property>;
 }
 
 export interface Wiki extends Item, ApprovableDocument {
@@ -270,6 +274,7 @@ export interface Wiki extends Item, ApprovableDocument {
     wiki_properties: WikiProperties;
     type: "wiki";
     status: string;
+    properties: Array<Property>;
 }
 
 export interface Empty extends Item, Uploadable {
@@ -277,6 +282,7 @@ export interface Empty extends Item, Uploadable {
     approval_table: ApprovalTable | null;
     type: "empty";
     status: string;
+    properties: Array<Property>;
 }
 
 export interface LockInfo {

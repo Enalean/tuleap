@@ -18,14 +18,17 @@
  */
 
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
-import type { Route } from "vue-router/types/router";
 import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 describe("get-search-props-from-route", () => {
     describe("folder_id", () => {
         it("should search in the provided folder_id", () => {
             const { folder_id } = getSearchPropsFromRoute(
-                { params: { folder_id: 102 }, query: {} } as unknown as Route,
+                {
+                    params: { folder_id: 102 },
+                    query: {},
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -34,7 +37,7 @@ describe("get-search-props-from-route", () => {
 
         it("should consider that the search is performed in root folder if folder_id is not provided", () => {
             const { folder_id } = getSearchPropsFromRoute(
-                { params: {}, query: {} } as unknown as Route,
+                { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -45,7 +48,7 @@ describe("get-search-props-from-route", () => {
     describe("offset", () => {
         it("should search at the provided offset", () => {
             const { offset } = getSearchPropsFromRoute(
-                { params: {}, query: { offset: 50 } } as unknown as Route,
+                { params: {}, query: { offset: 50 } } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -54,7 +57,7 @@ describe("get-search-props-from-route", () => {
 
         it("should default to first offset", () => {
             const { offset } = getSearchPropsFromRoute(
-                { params: {}, query: {} } as unknown as Route,
+                { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -65,7 +68,7 @@ describe("get-search-props-from-route", () => {
     describe("query", () => {
         it("should default to empty query", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: {} } as unknown as Route,
+                { params: {}, query: {} } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -74,7 +77,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept q parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { q: "Lorem ipsum" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { q: "Lorem ipsum" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -85,7 +91,7 @@ describe("get-search-props-from-route", () => {
 
         it("should accept id parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { id: "123" } } as unknown as Route,
+                { params: {}, query: { id: "123" } } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -94,7 +100,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept filename parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { filename: "bob.jpg" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { filename: "bob.jpg" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -103,7 +112,7 @@ describe("get-search-props-from-route", () => {
 
         it("should accept type parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { type: "wiki" } } as unknown as Route,
+                { params: {}, query: { type: "wiki" } } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -112,7 +121,10 @@ describe("get-search-props-from-route", () => {
 
         it("should default to no type if user starts to update the url parameter by hand", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { type: "unknown" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { type: "unknown" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -121,7 +133,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept title parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { title: "Lorem ipsum" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { title: "Lorem ipsum" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -130,7 +145,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept description parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { description: "Lorem ipsum" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { description: "Lorem ipsum" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -139,7 +157,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept owner parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { owner: "jdoe" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { owner: "jdoe" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -153,7 +174,7 @@ describe("get-search-props-from-route", () => {
                     {
                         params: {},
                         query: { create_date: "2022-01-30", create_date_op: operator },
-                    } as unknown as Route,
+                    } as unknown as RouteLocationNormalizedLoaded,
                     101,
                     []
                 );
@@ -170,7 +191,7 @@ describe("get-search-props-from-route", () => {
                     {
                         params: {},
                         query: { update_date: "2022-01-30", update_date_op: operator },
-                    } as unknown as Route,
+                    } as unknown as RouteLocationNormalizedLoaded,
                     101,
                     []
                 );
@@ -187,7 +208,7 @@ describe("get-search-props-from-route", () => {
                     {
                         params: {},
                         query: { obsolescence_date: "2022-01-30", obsolescence_date_op: operator },
-                    } as unknown as Route,
+                    } as unknown as RouteLocationNormalizedLoaded,
                     101,
                     []
                 );
@@ -201,7 +222,10 @@ describe("get-search-props-from-route", () => {
 
         it("should accept status parameter", () => {
             const { query } = getSearchPropsFromRoute(
-                { params: {}, query: { status: "draft" } } as unknown as Route,
+                {
+                    params: {},
+                    query: { status: "draft" },
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -215,7 +239,7 @@ describe("get-search-props-from-route", () => {
                     {
                         params: {},
                         query: { field_1: "lorem", field_2: "2022-01-30", field_2_op: operator },
-                    } as unknown as Route,
+                    } as unknown as RouteLocationNormalizedLoaded,
                     101,
                     [
                         { name: "field_1", label: "Toto", type: "text" },
@@ -236,7 +260,7 @@ describe("get-search-props-from-route", () => {
                 {
                     params: {},
                     query: {},
-                } as unknown as Route,
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 [
                     { name: "field_1", label: "Toto", type: "text" },
@@ -256,7 +280,7 @@ describe("get-search-props-from-route", () => {
                 {
                     params: {},
                     query: { field_1: "lorem", field_2: "2022-01-30", field_2_op: ">" },
-                } as unknown as Route,
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -270,7 +294,7 @@ describe("get-search-props-from-route", () => {
                 {
                     params: {},
                     query: { sort: "title" },
-                } as unknown as Route,
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );
@@ -282,7 +306,7 @@ describe("get-search-props-from-route", () => {
                 {
                     params: {},
                     query: { sort: "title:desc" },
-                } as unknown as Route,
+                } as unknown as RouteLocationNormalizedLoaded,
                 101,
                 []
             );

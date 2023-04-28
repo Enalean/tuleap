@@ -2,12 +2,13 @@
 
 exports[`TableBodySkeleton should display skeleton for different types of column 1`] = `
 <tbody>
+  
   <tr>
+    
     <td
       class="tlp-table-cell-numeric"
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -19,7 +20,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -27,8 +27,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -40,7 +39,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -48,8 +46,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -57,19 +54,19 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
     </td>
+    
   </tr>
   <tr>
+    
     <td
       class="tlp-table-cell-numeric"
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -81,7 +78,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -89,8 +85,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -102,7 +97,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -110,8 +104,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -119,19 +112,19 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
     </td>
+    
   </tr>
   <tr>
+    
     <td
       class="tlp-table-cell-numeric"
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -143,7 +136,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -151,8 +143,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -164,7 +155,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         aria-hidden="true"
         class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
-       
       <span
         class="tlp-skeleton-text"
       />
@@ -172,8 +162,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
@@ -181,12 +170,13 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     <td
       class=""
     >
-      <!---->
-       
+      <!--v-if-->
       <span
         class="tlp-skeleton-text"
       />
     </td>
+    
   </tr>
+  
 </tbody>
 `;

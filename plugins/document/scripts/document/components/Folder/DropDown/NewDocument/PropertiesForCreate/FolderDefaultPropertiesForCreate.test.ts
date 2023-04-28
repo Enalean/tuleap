@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../../helpers/local-vue";
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 import type { Property, ListValue } from "../../../../../type";
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("FolderDefaultPropertiesForCreate", () => {
     function createWrapper(
@@ -32,15 +31,24 @@ describe("FolderDefaultPropertiesForCreate", () => {
         properties: Array<Property>,
         is_status_property_used: boolean,
         has_loaded_properties: boolean
-    ): Wrapper<FolderDefaultPropertiesForCreate> {
+    ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForCreate>> {
         return shallowMount(FolderDefaultPropertiesForCreate, {
-            localVue,
             propsData: { status_value, properties },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { is_status_property_used } as ConfigurationState,
-                        properties: { has_loaded_properties } as PropertiesState,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_status_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                        properties: {
+                            state: {
+                                has_loaded_properties,
+                            } as unknown as PropertiesState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },

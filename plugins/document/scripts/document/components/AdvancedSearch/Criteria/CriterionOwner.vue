@@ -21,13 +21,13 @@
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-owner">
         <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
-        <select class="tlp-input" v-bind:id="id" ref="owner_input" v-bind:data-test="id">
+        <select class="tlp-input" v-bind:id="id" ref="owner_input">
             <option
                 selected
                 v-if="currently_selected_user"
                 v-bind:value="currently_selected_user.id"
             >
-                {{ currently_selected_user.display_name }}
+                {{ get_currently_selected_user.display_name }}
             </option>
             <slot />
         </select>
@@ -58,6 +58,10 @@ const currently_selected_user = ref<RestUser | undefined>();
 const emit = defineEmits<{
     (e: "input", value: string): void;
 }>();
+
+const get_currently_selected_user = computed(
+    (): RestUser | undefined => currently_selected_user.value
+);
 
 onMounted(async (): Promise<void> => {
     const people_picker_element = owner_input.value;
@@ -103,5 +107,9 @@ onMounted(async (): Promise<void> => {
 
 const id = computed((): string => {
     return "document-criterion-owner-" + props.criterion.name;
+});
+
+defineExpose({
+    get_currently_selected_user,
 });
 </script>

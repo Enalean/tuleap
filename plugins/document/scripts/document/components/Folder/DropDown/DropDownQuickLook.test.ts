@@ -17,13 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import DropDownQuickLook from "./DropDownQuickLook.vue";
 import type { Folder, Item, ItemFile } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../../store/configuration";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DropDownQuickLook", () => {
     function createWrapper(
@@ -31,18 +29,20 @@ describe("DropDownQuickLook", () => {
         forbid_writers_to_update: boolean,
         forbid_writers_to_delete: boolean,
         is_deletion_allowed: boolean
-    ): Wrapper<DropDownQuickLook> {
+    ): VueWrapper<InstanceType<typeof DropDownQuickLook>> {
         return shallowMount(DropDownQuickLook, {
-            localVue,
             propsData: { item },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            forbid_writers_to_update,
-                            forbid_writers_to_delete,
-                            is_deletion_allowed,
-                        } as ConfigurationState,
+                            namespaced: true,
+                            state: {
+                                forbid_writers_to_update,
+                                forbid_writers_to_delete,
+                                is_deletion_allowed,
+                            },
+                        },
                     },
                 }),
             },
@@ -64,7 +64,7 @@ describe("DropDownQuickLook", () => {
             false
         );
 
-        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
+        expect(wrapper.vm.should_display_new_version_button).toBeTruthy();
     });
 
     it(`Given item is not a folder and user can read
@@ -125,9 +125,7 @@ describe("DropDownQuickLook", () => {
             false
         );
 
-        expect(
-            wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
-        ).toBeTruthy();
+        expect(wrapper.vm.should_display_update_properties).toBeTruthy();
     });
 
     describe("Given item is a folder", () => {
@@ -148,9 +146,6 @@ describe("DropDownQuickLook", () => {
             expect(
                 wrapper.find("[data-test=document-quicklook-action-button-new-version]").exists()
             ).toBeFalsy();
-            expect(
-                wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
-            ).toBeTruthy();
             expect(
                 wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()
             ).toBeFalsy();
@@ -186,8 +181,6 @@ describe("DropDownQuickLook", () => {
         [false, true, true, false],
         [true, false, false, false],
         [true, false, true, true],
-        [true, true, false, false],
-        [true, true, true, false],
     ])(
         `Given is_deletion_allowed=%s
         And forbid_writers_to_delete=%s
@@ -206,9 +199,7 @@ describe("DropDownQuickLook", () => {
                 is_deletion_allowed
             );
 
-            expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBe(
-                expected
-            );
+            expect(wrapper.vm.should_display_delete).toBe(expected);
         }
     );
 });

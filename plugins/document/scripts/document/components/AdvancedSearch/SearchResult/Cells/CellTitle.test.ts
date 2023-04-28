@@ -18,16 +18,18 @@
  */
 
 import type { FileProperties, ItemSearchResult } from "../../../../type";
-import { shallowMount } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount, mount } from "@vue/test-utils";
 import CellTitle from "./CellTitle.vue";
-import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../../store/configuration";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import * as tlp_dropdown from "@tuleap/tlp-dropdown";
+
+jest.mock("@tuleap/tlp-dropdown");
 
 describe("CellTitle", () => {
     it("should output a link for File", () => {
         const wrapper = shallowMount(CellTitle, {
-            localVue,
             propsData: {
                 item: {
                     id: 123,
@@ -40,14 +42,20 @@ describe("CellTitle", () => {
                     } as FileProperties,
                 } as unknown as ItemSearchResult,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
+                            state: {
+                                project_id: "101",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
 
@@ -58,7 +66,6 @@ describe("CellTitle", () => {
 
     it("should output a link to open a File", () => {
         const wrapper = shallowMount(CellTitle, {
-            localVue,
             propsData: {
                 item: {
                     id: 123,
@@ -71,14 +78,20 @@ describe("CellTitle", () => {
                     } as FileProperties,
                 } as unknown as ItemSearchResult,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
+                            state: {
+                                project_id: "101",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
 
@@ -89,7 +102,6 @@ describe("CellTitle", () => {
 
     it("should output a link for Wiki", () => {
         const wrapper = shallowMount(CellTitle, {
-            localVue,
             propsData: {
                 item: {
                     id: 123,
@@ -97,14 +109,20 @@ describe("CellTitle", () => {
                     title: "Lorem",
                 } as unknown as ItemSearchResult,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
+                            state: {
+                                project_id: "101",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
 
@@ -114,8 +132,14 @@ describe("CellTitle", () => {
     });
 
     it("should output a route link for Embedded", () => {
-        const wrapper = shallowMount(CellTitle, {
-            localVue,
+        const fake_dropdown_object = {
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+        } as unknown as Dropdown;
+
+        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
+
+        const wrapper = mount(CellTitle, {
             propsData: {
                 item: {
                     id: 123,
@@ -137,25 +161,31 @@ describe("CellTitle", () => {
                     ],
                 } as unknown as ItemSearchResult,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            project_id: 101,
-                        } as unknown as ConfigurationState,
+                            state: {
+                                project_id: "101",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
 
-        const link = wrapper.find("[data-test=router-link]");
-        expect(link.props().to).toStrictEqual({
+        expect(wrapper.vm.in_app_link).toStrictEqual({
             name: "item",
             params: {
                 folder_id: "120",
                 item_id: "123",
             },
         });
+        const link = wrapper.find("[data-test=router-link]");
         expect(link.attributes().title).toBe("Lorem");
     });
 });

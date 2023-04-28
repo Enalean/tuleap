@@ -17,21 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-
 const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+
+process.env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineJestConfiguration();
 module.exports = {
     ...jest_base_config,
     transform: {
         ...jest_base_config.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
-    },
-    moduleNameMapper: {
-        ...jest_base_config.moduleNameMapper,
-        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
-        ".(docx|pptx|xlsx)$": "identity-obj-proxy",
+        "^.+\\.vue$": "@vue/vue3-jest",
     },
     displayName: "document",
 };

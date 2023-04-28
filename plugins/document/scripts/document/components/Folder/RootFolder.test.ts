@@ -18,33 +18,43 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import RootFolder from "./RootFolder.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("RootFolder", () => {
-    let store = {
-        dispatch: jest.fn(),
-        commit: jest.fn(),
-    };
+    let load_root_folder: jest.Mock;
+    let remove_quick_look: jest.Mock;
+    let reset_ascendent_hierarchy: jest.Mock;
 
-    function createWrapper(): Wrapper<RootFolder> {
-        const store_options = {};
-        store = createStoreMock(store_options);
+    beforeEach(() => {
+        load_root_folder = jest.fn();
+        remove_quick_look = jest.fn();
+        reset_ascendent_hierarchy = jest.fn();
+    });
 
+    function createWrapper(): VueWrapper<InstanceType<typeof RootFolder>> {
         return shallowMount(RootFolder, {
-            localVue,
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        loadRootFolder: load_root_folder,
+                        removeQuickLook: remove_quick_look,
+                    },
+                    mutations: {
+                        resetAscendantHierarchy: reset_ascendent_hierarchy,
+                    },
+                }),
+            },
         });
     }
 
     it(`Should load folder content`, (): void => {
         createWrapper();
 
-        expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
-        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
-        expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
+        expect(load_root_folder).toHaveBeenCalled();
+        expect(remove_quick_look).toHaveBeenCalled();
+        expect(reset_ascendent_hierarchy).toHaveBeenCalled();
     });
 });

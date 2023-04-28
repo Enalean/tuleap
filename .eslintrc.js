@@ -178,6 +178,7 @@ module.exports = {
                 "src/scripts/main/src/*/permissions-per-group/**/*.vue",
             ],
             rules: {
+                "vue/no-v-for-template-key": "off", //will be supported in vue3, we do not want template introduce div when we don't need them
                 "@typescript-eslint/explicit-function-return-type": "off",
                 "@typescript-eslint/explicit-module-boundary-types": "off",
                 "prefer-const": "off",

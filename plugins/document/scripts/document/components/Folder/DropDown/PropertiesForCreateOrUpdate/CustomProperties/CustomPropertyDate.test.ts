@@ -18,20 +18,20 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyDate from "./CustomPropertyDate.vue";
 import type { Property } from "../../../../../type";
-import localVue from "../../../../../helpers/local-vue";
 import DateFlatPicker from "../DateFlatPicker.vue";
 import emitter from "../../../../../helpers/emitter";
 
 jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyDate", () => {
-    function createWrapper(property: Property): Wrapper<CustomPropertyDate> {
+    function createWrapper(
+        property: Property
+    ): VueWrapper<InstanceType<typeof CustomPropertyDate>> {
         return shallowMount(CustomPropertyDate, {
-            localVue,
             propsData: { currentlyUpdatedItemProperty: property },
         });
     }

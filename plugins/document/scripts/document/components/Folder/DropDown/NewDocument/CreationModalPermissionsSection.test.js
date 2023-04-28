@@ -19,8 +19,8 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CreationModalPermissionsSection", () => {
     let factory;
@@ -28,8 +28,8 @@ describe("CreationModalPermissionsSection", () => {
     beforeEach(() => {
         factory = (props) => {
             return shallowMount(CreationModalPermissionsSection, {
-                localVue,
                 propsData: { ...props },
+                global: { ...getGlobalTestOptions({}) },
             });
         };
     });

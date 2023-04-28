@@ -24,7 +24,7 @@
         data-test="document-new-item-title-form-element"
     >
         <label class="tlp-label" for="document-title">
-            <translate>Title</translate>
+            {{ $gettext("Title") }}
             <i class="fa-solid fa-asterisk"></i>
         </label>
         <input
@@ -57,7 +57,7 @@ import type { Folder, Item } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 import { useState } from "vuex-composition-helpers";
 import { computed, onMounted, ref, watch } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { State } from "../../../../../type";
 
 const props = defineProps<{

@@ -17,35 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../../helpers/local-vue";
 import OtherInformationPropertiesForCreate from "./OtherInformationPropertiesForCreate.vue";
 import { TYPE_FILE } from "../../../../../constants";
 import type { ItemFile, Property } from "../../../../../type";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../../../store/configuration";
+import type { PropertiesState } from "../../../../../store/properties/module";
 
 jest.mock("../../../../../helpers/emitter");
 
 describe("OtherInformationPropertiesForCreate", () => {
-    let store = {
-        dispatch: jest.fn(),
-    };
+    let load_properties: jest.Mock;
+
+    beforeEach(() => {
+        load_properties = jest.fn();
+    });
 
     function createWrapper(
         value: string,
         is_obsolescence_date_property_used: boolean,
         has_loaded_properties: boolean
-    ): Wrapper<OtherInformationPropertiesForCreate> {
-        store = createStoreMock({
-            state: {
-                configuration: { is_obsolescence_date_property_used },
-                properties: { has_loaded_properties },
-            },
-        });
+    ): VueWrapper<InstanceType<typeof OtherInformationPropertiesForCreate>> {
+        load_properties.mockReset();
         const properties: Array<Property> = [];
         return shallowMount(OtherInformationPropertiesForCreate, {
-            localVue,
             propsData: {
                 currentlyUpdatedItem: {
                     properties: properties,
@@ -55,8 +52,26 @@ describe("OtherInformationPropertiesForCreate", () => {
                 } as ItemFile,
                 value,
             },
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_obsolescence_date_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                        properties: {
+                            state: {
+                                has_loaded_properties,
+                            } as unknown as PropertiesState,
+                            namespaced: true,
+                            actions: {
+                                loadProjectProperties: load_properties,
+                            },
+                        },
+                    },
+                }),
             },
         });
     }
@@ -90,6 +105,6 @@ describe("OtherInformationPropertiesForCreate", () => {
     it("Load project properties at first load", () => {
         createWrapper("", true, false);
 
-        expect(store.dispatch).toHaveBeenCalledWith("properties/loadProjectProperties");
+        expect(load_properties).toHaveBeenCalled();
     });
 });

@@ -17,29 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("ModalSizeThresholdExceeded", () => {
-    function getWrapper(): Wrapper<ModalSizeThresholdExceeded> {
-        const state = {
-            configuration: { max_archive_size: 1 },
-        };
-        const store_options = { state };
-        const store = createStoreMock(store_options);
-
+    function getWrapper(): VueWrapper<InstanceType<typeof ModalSizeThresholdExceeded>> {
         return shallowMount(ModalSizeThresholdExceeded, {
-            localVue,
             propsData: {
                 size: 1050000,
             },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: { max_archive_size: 1 },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
 

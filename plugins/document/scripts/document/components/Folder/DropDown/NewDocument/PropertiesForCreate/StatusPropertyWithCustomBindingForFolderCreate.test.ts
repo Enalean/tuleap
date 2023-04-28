@@ -17,29 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../../helpers/local-vue";
 import StatusPropertyWithCustomBindingForFolderCreate from "./StatusPropertyWithCustomBindingForFolderCreate.vue";
 import type { ConfigurationState } from "../../../../../store/configuration";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { Folder, RootState } from "../../../../../type";
 
 describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
     function createWrapper(
         status_value: string,
         is_status_property_used: boolean
-    ): Wrapper<StatusPropertyWithCustomBindingForFolderCreate> {
+    ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForFolderCreate>> {
         return shallowMount(StatusPropertyWithCustomBindingForFolderCreate, {
-            localVue,
             propsData: { status_value },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { is_status_property_used } as ConfigurationState,
-                        current_folder: {
-                            id: 4,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_status_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
                         },
                     },
+                    state: {
+                        current_folder: {
+                            id: 4,
+                        } as Folder,
+                    } as RootState,
                 }),
             },
         });

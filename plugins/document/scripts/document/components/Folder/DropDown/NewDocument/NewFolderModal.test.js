@@ -19,75 +19,89 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
-
 import NewFolderModal from "./NewFolderModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("NewFolderModal", () => {
-    let factory, store;
+    let factory;
+
+    const load_projects_ugroups = jest.fn();
+    const current_folder = {
+        id: 42,
+        title: "My current folder",
+        obsolescence_date: null,
+        properties: [
+            {
+                short_name: "title",
+                name: "title",
+                list_value: "My current folder",
+                is_multiple_value_allowed: false,
+                type: "text",
+                is_required: false,
+                description: "My current folder",
+                is_used: false,
+            },
+            {
+                short_name: "custom property",
+                name: "custom",
+                value: "value",
+                is_multiple_value_allowed: false,
+                type: "text",
+                is_required: false,
+                description: "Some Custom",
+                is_used: false,
+            },
+            {
+                short_name: "status",
+                list_value: [
+                    {
+                        id: 103,
+                    },
+                ],
+            },
+        ],
+        permissions_for_groups: {
+            can_read: [],
+            can_write: [],
+            can_manage: [],
+        },
+    };
 
     beforeEach(() => {
-        const general_store = {
-            state: {
-                current_folder: {
-                    id: 42,
-                    title: "My current folder",
-                    properties: [
-                        {
-                            short_name: "title",
-                            name: "title",
-                            list_value: "My current folder",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                        {
-                            short_name: "custom property",
-                            name: "custom",
-                            value: "value",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                        {
-                            short_name: "status",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                    permissions_for_groups: {
-                        can_read: [],
-                        can_write: [],
-                        can_manage: [],
-                    },
-                },
-                configuration: {
-                    project_id: 102,
-                },
-            },
-        };
-
-        store = createStoreMock(general_store, {
-            permissions: { project_ugroups: null },
-            properties: {},
-            configuration: { is_status_property_used: true },
-        });
-
         factory = (item = {}) => {
             return shallowMount(NewFolderModal, {
-                localVue,
-                mocks: { $store: store },
                 data() {
                     return {
                         item,
                     };
+                },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            permissions: {
+                                state: {
+                                    project_ugroups: null,
+                                },
+                                namespaced: true,
+                                actions: {
+                                    loadProjectUserGroupsIfNeeded: load_projects_ugroups,
+                                },
+                            },
+                            configuration: {
+                                state: {
+                                    is_status_property_used: true,
+                                    has_loaded_properties: true,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder,
+                        },
+                    }),
                 },
             });
         };
@@ -129,18 +143,14 @@ describe("NewFolderModal", () => {
     });
 
     it("Does not load project properties, when they have already been loaded", async () => {
-        store.state.properties = {
-            has_loaded_properties: true,
-        };
-
-        const wrapper = factory();
+        factory();
 
         emitter.emit("show-new-document-modal", {
-            detail: { parent: store.state.current_folder },
+            detail: { parent: current_folder },
         });
-        await wrapper.vm.$nextTick().then(() => {});
+        await nextTick();
 
-        expect(store.dispatch).not.toHaveBeenCalledWith("properties/loadProjectProperties");
+        expect(load_projects_ugroups).not.toHaveBeenCalled();
     });
 
     it("inherit default values from parent properties", () => {
@@ -155,6 +165,8 @@ describe("NewFolderModal", () => {
                     is_required: false,
                     list_value: null,
                     allowed_list_values: null,
+                    description: "Some Custom",
+                    is_used: false,
                 },
             ],
         };
@@ -162,9 +174,9 @@ describe("NewFolderModal", () => {
         const wrapper = factory();
 
         emitter.emit("show-new-folder-modal", {
-            detail: { parent: store.state.current_folder },
+            detail: { parent: current_folder },
         });
-        expect(wrapper.vm.item.properties).toEqual(folder_to_create.properties);
+        expect(wrapper.vm.item.properties).toStrictEqual(folder_to_create.properties);
         expect(wrapper.vm.item.status).toBe("rejected");
     });
 

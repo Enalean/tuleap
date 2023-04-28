@@ -51,12 +51,10 @@
             <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_WIKI"></i>
             {{ $gettext("Wiki page") }}
         </button>
-        <template v-for="section in create_new_item_alternatives">
-            <span
-                class="tlp-dropdown-menu-title document-dropdown-menu-title"
-                v-bind:key="section.title"
-                >{{ section.title }}</span
-            >
+        <template v-for="section in create_new_item_alternatives" v-bind:key="section.title">
+            <span class="tlp-dropdown-menu-title document-dropdown-menu-title">{{
+                section.title
+            }}</span>
             <button
                 v-for="alternative in section.alternatives"
                 class="tlp-dropdown-menu-item"
@@ -158,7 +156,7 @@ async function convertEmptyDocument(alternative: NewItemAlternative): Promise<vo
 
     await createNewVersionFromEmpty([TYPE_FILE, props.item, new_version]);
 
-    const redirectToEditor = (event: ItemHasJustBeenUpdatedEvent) => {
+    const redirectToEditor = (event: ItemHasJustBeenUpdatedEvent): void => {
         const item = event.item;
         if (item.id === props.item.id) {
             emitter.off("item-has-just-been-updated", redirectToEditor);

@@ -21,11 +21,8 @@
 <template>
     <tbody>
         <tr v-for="i in 3" v-bind:key="i">
-            <template v-for="column of columns">
-                <td
-                    v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }"
-                    v-bind:key="'document-search-result-' + column.name + '-skeleton'"
-                >
+            <template v-for="column of columns" v-bind:key="column.name">
+                <td v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }">
                     <i
                         class="tlp-skeleton-icon document-search-result-icon"
                         v-bind:class="{

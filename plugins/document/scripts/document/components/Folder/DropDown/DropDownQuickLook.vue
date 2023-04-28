@@ -24,56 +24,53 @@
             v-bind:is-in-large-mode="false"
             v-bind:is-appended="false"
         >
-            <drop-down-menu v-bind:item="item">
-                <download-file
-                    v-if="should_display_download_button"
-                    v-bind:item="item"
-                    slot="download"
-                    data-test="document-dropdown-menu-download-file"
-                />
-                <create-new-item-version-button
-                    v-bind:item="item"
-                    v-bind:button-classes="`tlp-dropdown-menu-item`"
-                    v-bind:icon-classes="`fa-solid fa-fw fa-share tlp-dropdown-menu-item-icon`"
-                    v-if="
-                        should_display_new_version_button &&
-                        item.user_can_write &&
-                        !is_item_a_folder
-                    "
-                    data-test="document-quicklook-action-button-new-version"
-                    slot="new-item-version"
-                />
+            <download-file
+                v-if="should_display_download_button"
+                v-bind:item="item"
+                slot="download"
+                data-test="document-dropdown-menu-download-file"
+            />
+            <create-new-item-version-button
+                v-bind:item="item"
+                v-bind:button-classes="`tlp-dropdown-menu-item`"
+                v-bind:icon-classes="`fa-solid fa-fw fa-share tlp-dropdown-menu-item-icon`"
+                v-if="should_display_new_version_button"
+                data-test="document-quicklook-action-button-new-version"
+                slot="new-item-version"
+            />
 
-                <template v-if="!is_item_a_folder && item.user_can_write">
-                    <lock-item
-                        v-bind:item="item"
-                        data-test="document-dropdown-menu-lock-item"
-                        slot="lock-item"
-                    />
-                    <unlock-item
-                        v-bind:item="item"
-                        data-test="document-dropdown-menu-unlock-item"
-                        slot="unlock-item"
-                    />
-                    <drop-down-separator slot="display-item-title-separator" />
-                </template>
+            <template v-if="!is_item_a_folder && item.user_can_write">
+                <lock-item
+                    v-bind:item="item"
+                    data-test="document-dropdown-menu-lock-item"
+                    slot="lock-item"
+                />
+                <unlock-item
+                    v-bind:item="item"
+                    data-test="document-dropdown-menu-unlock-item"
+                    slot="unlock-item"
+                />
+                <drop-down-separator slot="display-item-title-separator" />
+            </template>
 
-                <update-properties
-                    slot="update-properties"
-                    data-test="document-dropdown-menu-update-properties"
-                    v-bind:item="item"
-                    v-if="should_display_update_properties"
-                />
-                <update-permissions slot="update-permissions" v-bind:item="item" />
-                <drop-down-separator slot="delete-item-separator" v-if="should_display_delete" />
-                <delete-item
-                    v-bind:item="item"
-                    role="menuitem"
-                    data-test="document-quick-look-delete-button"
-                    slot="delete-item"
-                    v-if="should_display_delete"
-                />
-            </drop-down-menu>
+            <update-properties
+                slot="update-properties"
+                data-test="document-dropdown-menu-update-properties"
+                v-bind:item="item"
+                v-if="should_display_update_properties"
+            />
+            <update-permissions slot="update-permissions" v-bind:item="item" />
+
+            <drop-down-menu v-bind:item="item" />
+
+            <drop-down-separator slot="delete-item-separator" v-if="should_display_delete" />
+            <delete-item
+                v-bind:item="item"
+                role="menuitem"
+                data-test="document-quick-look-delete-button"
+                slot="delete-item"
+                v-if="should_display_delete"
+            />
         </drop-down-button>
     </div>
 </template>
@@ -121,13 +118,17 @@ const is_item_a_folder = computed((): boolean => {
 const should_display_download_button = computed(
     (): boolean =>
         isFile(props.item) &&
-        props.item.file_properties &&
+        props.item.file_properties !== null &&
         (props.item.file_properties.open_href || "") !== ""
 );
 
 const should_display_new_version_button = computed(
     (): boolean =>
-        !is_item_a_wiki_with_approval_table.value && !is_item_a_folder.value && !isEmpty(props.item)
+        !is_item_a_wiki_with_approval_table.value &&
+        !is_item_a_folder.value &&
+        !isEmpty(props.item) &&
+        props.item.user_can_write &&
+        !is_item_a_folder.value
 );
 
 const should_display_update_properties = computed((): boolean =>
@@ -138,4 +139,10 @@ const should_display_delete = computed(
     (): boolean =>
         is_deletion_allowed.value && canDelete(forbid_writers_to_delete.value, props.item)
 );
+
+defineExpose({
+    should_display_delete,
+    should_display_new_version_button,
+    should_display_update_properties,
+});
 </script>

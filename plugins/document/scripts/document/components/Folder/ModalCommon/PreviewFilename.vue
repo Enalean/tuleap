@@ -50,4 +50,6 @@ const preview = computed((): string => {
         props.item.file_properties.file
     );
 });
+
+defineExpose({ preview });
 </script>

@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
-import localVue from "../../helpers/local-vue";
 
 import { TYPE_FILE, TYPE_FOLDER } from "../../constants";
 import type {
@@ -32,14 +31,17 @@ import type {
     Property,
     User,
 } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookDocumentProperties", () => {
-    function createWrapper(item: Item): Wrapper<QuickLookDocumentProperties> {
+    function createWrapper(
+        item: Item
+    ): VueWrapper<InstanceType<typeof QuickLookDocumentProperties>> {
         return shallowMount(QuickLookDocumentProperties, {
-            localVue,
             propsData: {
                 item,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 

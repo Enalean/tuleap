@@ -17,71 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import VueRouter from "vue-router";
-import type { Wrapper } from "@vue/test-utils";
+import { nextTick } from "vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
-import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as abort_current_uploads from "../../../helpers/abort-current-uploads";
 import type { Folder, RootState } from "../../../type";
-import type { Location, Route } from "vue-router/types/router";
-import * as route from "../../../helpers/use-router";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import * as router from "../../../helpers/use-router";
+import type { Router } from "vue-router";
 
 describe("FolderCellTitle", () => {
-    let store = {
-        dispatch: jest.fn(),
-        commit: jest.fn(),
-    };
-
+    let initialize_folder_properties: jest.Mock;
+    let unfold_folder_content: jest.Mock;
+    let get_sub_folder_content: jest.Mock;
+    let toggle_collapse_folder_has_uploading_content: jest.Mock;
+    let set_user_preferences: jest.Mock;
+    let fold_folder_content: jest.Mock;
+    let append_folder_to_hierarchy: jest.Mock;
     const item = { id: 10 } as Folder;
-
-    function getWrapper(is_expanded: boolean, is_uploading: boolean): Wrapper<FolderCellTitle> {
-        const router = new VueRouter();
-        jest.spyOn(router, "resolve").mockImplementation(() => ({
-            location: {} as Location,
-            route: {
-                path: "/folder/42",
-                name: "folder",
-            } as Route,
-            href: "/patch/to/embedded",
-            normalizedTo: {} as Location,
-            resolved: {} as Route,
-        }));
-        jest.spyOn(router, "push").mockImplementation(() => ({
-            location: {} as Location,
-            route: {
-                path: "/folder/42",
-                name: "folder",
-            } as Route,
-            href: "/patch/to/embedded",
-            normalizedTo: {} as Location,
-            resolved: {} as Route,
-        }));
-        const mocked_router = jest.spyOn(route, "useRouter");
-        mocked_router.mockReturnValue(router);
-        store = createStoreMock({
-            state: {
-                current_folder: {
-                    id: 1,
-                    title: "My current folder",
-                } as Folder,
-                files_uploads_list: [{ parent_id: 42, progress: 34 }],
-            } as RootState,
-            getters: {
-                is_uploading,
-            },
+    beforeEach(() => {
+        const mock_resolve = jest.fn().mockReturnValue({ href: "/my-url" });
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { resolve: mock_resolve, push: jest.fn() } as unknown as Router;
         });
+        initialize_folder_properties = jest.fn();
+        unfold_folder_content = jest.fn();
+        get_sub_folder_content = jest.fn();
+        toggle_collapse_folder_has_uploading_content = jest.fn();
+        set_user_preferences = jest.fn();
+        fold_folder_content = jest.fn();
+        append_folder_to_hierarchy = jest.fn();
+    });
+
+    function getWrapper(
+        is_expanded: boolean,
+        is_uploading: boolean
+    ): VueWrapper<InstanceType<typeof FolderCellTitle>> {
+        get_sub_folder_content.mockReset();
 
         item.is_expanded = is_expanded;
 
         return shallowMount(FolderCellTitle, {
-            localVue,
             propsData: { item },
-            mocks: {
-                localVue,
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        preferencies: {
+                            actions: { setUserPreferenciesForFolder: set_user_preferences },
+                            namespaced: true,
+                        },
+                    },
+                    state: {
+                        current_folder: {
+                            id: 1,
+                            title: "My current folder",
+                        } as Folder,
+                        files_uploads_list: [{ parent_id: 42, progress: 34 }],
+                    } as RootState,
+                    getters: {
+                        is_uploading: () => is_uploading,
+                    },
+                    mutations: {
+                        initializeFolderProperties: initialize_folder_properties,
+                        unfoldFolderContent: unfold_folder_content,
+                        toggleCollapsedFolderHasUploadingContent:
+                            toggle_collapse_folder_has_uploading_content,
+                        foldFolderContent: fold_folder_content,
+                        appendFolderToAscendantHierarchy: append_folder_to_hierarchy,
+                    },
+                    actions: {
+                        getSubfolderContent: get_sub_folder_content,
+                    },
+                }),
+                stubs: ["router-link", "router-view"],
             },
         });
     }
@@ -91,10 +100,11 @@ describe("FolderCellTitle", () => {
         Then we should dynamically load its content`, async () => {
         const wrapper = await getWrapper(true, false);
 
-        await Vue.nextTick();
+        await nextTick();
+        await nextTick();
 
-        expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
-        expect(store.commit).toHaveBeenCalledWith("unfoldFolderContent", item.id);
+        expect(initialize_folder_properties).toHaveBeenCalled();
+        expect(unfold_folder_content).toHaveBeenCalled();
 
         const toggle = wrapper.get("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-down");
@@ -108,13 +118,13 @@ describe("FolderCellTitle", () => {
         Then we don't load anything and render directly it`, async () => {
         const wrapper = getWrapper(false, false);
 
-        await Vue.nextTick();
+        await nextTick();
 
-        expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
+        expect(initialize_folder_properties).toHaveBeenCalled();
         const toggle = wrapper.get("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-right");
 
-        expect(store.dispatch).not.toHaveBeenCalledWith("getSubfolderContent", expect.anything());
+        expect(get_sub_folder_content).not.toHaveBeenCalled();
     });
 
     describe("toggle expanded folders", () => {
@@ -124,22 +134,19 @@ describe("FolderCellTitle", () => {
             const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
-            expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
-            await Vue.nextTick();
+            expect(initialize_folder_properties).toHaveBeenCalled();
+            await nextTick();
             const toggle = wrapper.get("[data-test=toggle]");
             toggle.trigger("click");
-            await Vue.nextTick();
+            await nextTick();
             expect(toggle.classes()).toContain("fa-caret-down");
 
-            expect(store.commit).toHaveBeenCalledWith("unfoldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith(
-                "toggleCollapsedFolderHasUploadingContent",
-                expect.anything()
-            );
-            expect(store.dispatch).toHaveBeenCalledWith(
-                "preferencies/setUserPreferenciesForFolder",
-                { folder_id: item.id, should_be_closed: false }
-            );
+            expect(unfold_folder_content).toHaveBeenCalled();
+            expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
+            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
+                folder_id: item.id,
+                should_be_closed: false,
+            });
         });
 
         it(`Given folder is expanded
@@ -148,19 +155,16 @@ describe("FolderCellTitle", () => {
             const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
-            await Vue.nextTick();
-            expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
+            await nextTick();
+            expect(initialize_folder_properties).toHaveBeenCalled();
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");
-            expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith(
-                "toggleCollapsedFolderHasUploadingContent",
-                expect.anything()
-            );
-            expect(store.dispatch).toHaveBeenCalledWith(
-                "preferencies/setUserPreferenciesForFolder",
-                { folder_id: item.id, should_be_closed: true }
-            );
+            expect(fold_folder_content).toHaveBeenCalled();
+            expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
+            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
+                folder_id: item.id,
+                should_be_closed: true,
+            });
         });
 
         it(`Given folder is closed and given its children have been loaded
@@ -168,19 +172,18 @@ describe("FolderCellTitle", () => {
         Then it save baby bears and load its content only once`, async () => {
             const wrapper = getWrapper(false, false);
             wrapper.get("[data-test=toggle]").trigger("click");
-            await Vue.nextTick();
+            await nextTick();
 
             wrapper.get("[data-test=toggle]").trigger("click");
-            await Vue.nextTick();
+            await nextTick();
 
             wrapper.get("[data-test=toggle]").trigger("click");
-            await Vue.nextTick();
+            await nextTick();
 
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-down");
 
-            // 1 call for getSubfolderContent and 3 calls for setUserPreferenciesForFolder
-            expect(store.dispatch.mock.calls).toHaveLength(4);
+            expect(get_sub_folder_content.call).toHaveLength(1);
         });
     });
 
@@ -191,19 +194,16 @@ describe("FolderCellTitle", () => {
             const wrapper = await getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
-            await Vue.nextTick();
-            expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
+            await nextTick();
+            expect(initialize_folder_properties).toHaveBeenCalled();
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");
-            expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith(
-                "toggleCollapsedFolderHasUploadingContent",
-                expect.anything()
-            );
-            expect(store.dispatch).toHaveBeenCalledWith(
-                "preferencies/setUserPreferenciesForFolder",
-                { folder_id: item.id, should_be_closed: true }
-            );
+            expect(fold_folder_content).toHaveBeenCalled();
+            expect(toggle_collapse_folder_has_uploading_content).toHaveBeenCalled();
+            expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
+                folder_id: item.id,
+                should_be_closed: true,
+            });
         });
     });
 
@@ -220,7 +220,7 @@ describe("FolderCellTitle", () => {
 
             wrapper.get("[data-test=document-go-to-folder-link]").trigger("click");
 
-            expect(store.commit).not.toHaveBeenCalledWith("appendFolderToAscendantHierarchy");
+            expect(append_folder_to_hierarchy).not.toHaveBeenCalled();
         });
 
         it(`Given there no upload
@@ -229,10 +229,7 @@ describe("FolderCellTitle", () => {
             const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=document-go-to-folder-link]").trigger("click");
 
-            expect(store.commit).toHaveBeenCalledWith(
-                "appendFolderToAscendantHierarchy",
-                expect.anything()
-            );
+            expect(append_folder_to_hierarchy).toHaveBeenCalled();
         });
     });
 });

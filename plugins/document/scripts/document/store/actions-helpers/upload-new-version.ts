@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { createNewVersion } from "../../api/rest-querier";
-import Vue from "vue";
 import type { ActionContext } from "vuex";
 import type { ApprovalTable, ItemFile, RootState } from "../../type";
 import { uploadVersion } from "./upload-file";
@@ -48,9 +47,9 @@ export async function uploadNewVersion(
     }
 
     context.commit("addFileInUploadsList", item);
-    Vue.set(item, "progress", null);
-    Vue.set(item, "upload_error", null);
-    Vue.set(item, "is_uploading_new_version", true);
+    item.progress = null;
+    item.upload_error = null;
+    item.is_uploading_new_version = false;
 
     uploadVersionAndAssignUploader(context, item, uploaded_file, new_version);
 }

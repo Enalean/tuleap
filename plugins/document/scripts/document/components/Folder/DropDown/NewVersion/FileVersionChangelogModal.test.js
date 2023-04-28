@@ -18,30 +18,41 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("FileVersionChangelogModal", () => {
-    let store;
+    let create_file_version = jest.fn();
 
     function getWrapper() {
         return shallowMount(FileVersionChangelogModal, {
-            localVue,
             propsData: {
                 updatedFile: { id: 12, title: "How to.pdf", properties: [] },
                 droppedFile: new File([], "How to (updated).pdf"),
             },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        createNewFileVersionFromModal: create_file_version,
+                    },
+                    modules: {
+                        error: {
+                            namespaced: true,
+                            mutations: {
+                                resetModalError: jest.fn(),
+                            },
+                        },
+                    },
+                }),
+            },
         });
     }
 
     beforeEach(() => {
-        store = createStoreMock({}, { error: {} });
-
         jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
@@ -49,7 +60,7 @@ describe("FileVersionChangelogModal", () => {
         });
     });
 
-    it("Create a new version of the document with the provided changelog and titles if any.", () => {
+    it("Create a new version of the document with the provided changelog and titles if any.", async () => {
         const wrapper = getWrapper();
         wrapper.setData({
             version: {
@@ -60,7 +71,9 @@ describe("FileVersionChangelogModal", () => {
 
         wrapper.get("form").trigger("submit");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("createNewFileVersionFromModal", [
+        await nextTick();
+
+        expect(create_file_version).toHaveBeenCalledWith(expect.anything(), [
             { id: 12, title: "How to.pdf", properties: [] },
             expect.any(File),
             "Added the [contributions] section",
@@ -70,7 +83,7 @@ describe("FileVersionChangelogModal", () => {
         ]);
     });
 
-    it("Create a new version of the document with the new approval table.", () => {
+    it("Create a new version of the document with the new approval table.", async () => {
         const wrapper = getWrapper();
         wrapper.setData({
             version: {
@@ -84,7 +97,9 @@ describe("FileVersionChangelogModal", () => {
             .vm.$emit("approval-table-action-change", "reset");
         wrapper.get("form").trigger("submit");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("createNewFileVersionFromModal", [
+        await nextTick();
+
+        expect(create_file_version).toHaveBeenCalledWith(expect.anything(), [
             { id: 12, title: "How to.pdf", properties: [] },
             expect.any(File),
             "Added the [contributions] section",
@@ -100,7 +115,7 @@ describe("FileVersionChangelogModal", () => {
         expect(wrapper.vm.$data.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.title).toBe("A title");
     });
@@ -111,7 +126,7 @@ describe("FileVersionChangelogModal", () => {
         expect(wrapper.vm.$data.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
@@ -119,12 +134,12 @@ describe("FileVersionChangelogModal", () => {
     it("Updates the lock", async () => {
         const wrapper = getWrapper();
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBeUndefined();
         emitter.emit("update-lock", true);
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
     });

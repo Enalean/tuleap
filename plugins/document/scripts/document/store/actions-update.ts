@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import type { ActionContext } from "vuex";
 import type { ApprovalTable, Embedded, Empty, ItemFile, Link, RootState, Wiki } from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
@@ -53,7 +52,7 @@ export async function createNewFileVersion(
 ): Promise<void> {
     try {
         await uploadNewVersion(context, [item, dropped_file, item.title, "", false, null]);
-        Vue.set(item, "updated", true);
+        item.updated = true;
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", {
             collapsed_folder: parent,
@@ -87,7 +86,7 @@ export const createNewFileVersionFromModal = async (
             is_file_locked,
             approval_table_action,
         ]);
-        Vue.set(item, "updated", true);
+        item.updated = true;
         emitter.emit("item-is-being-uploaded");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -114,7 +113,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
             is_file_locked,
             approval_table_action
         );
-        Vue.set(item, "updated", true);
+        item.updated = true;
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -135,7 +134,7 @@ export const createNewWikiVersionFromModal = async (
         await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
-        Vue.set(item, "updated", true);
+        item.updated = true;
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -164,7 +163,7 @@ export const createNewLinkVersionFromModal = async (
         );
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
-        Vue.set(item, "updated", true);
+        item.updated = true;
         emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -212,7 +211,7 @@ export const createNewVersionFromEmpty = async (
                 break;
         }
         const updated_item = await getItem(item.id);
-        Vue.set(updated_item, "updated", true);
+        updated_item.updated = true;
         if (selected_type === TYPE_LINK || selected_type === TYPE_EMBEDDED) {
             emitter.emit("item-has-just-been-updated", { item });
         } else {
@@ -239,9 +238,9 @@ async function uploadNewFileVersionFromEmptyDocument(
 
     if (updated_item && (isFakeItem(updated_item) || isEmpty(updated_item))) {
         context.commit("addFileInUploadsList", updated_item);
-        Vue.set(updated_item, "progress", null);
-        Vue.set(updated_item, "upload_error", null);
-        Vue.set(updated_item, "is_uploading_new_version", true);
+        updated_item.progress = null;
+        updated_item.upload_error = null;
+        updated_item.is_uploading_new_version = true;
     }
 
     uploadVersionAndAssignUploaderFromEmpty(item, context, uploaded_file, new_version);

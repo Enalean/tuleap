@@ -18,21 +18,20 @@
  *
  */
 
-import localVue from "../../../../../helpers/local-vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import emitter from "../../../../../helpers/emitter";
 import DescriptionProperty from "./DescriptionProperty.vue";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
 describe("DescriptionProperty", () => {
-    function createWrapper(value: string): Wrapper<DescriptionProperty> {
+    function createWrapper(value: string): VueWrapper<InstanceType<typeof DescriptionProperty>> {
         return shallowMount(DescriptionProperty, {
-            localVue: localVue,
-            propsData: {
-                value,
-            },
+            propsData: { value },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -41,7 +40,7 @@ describe("DescriptionProperty", () => {
 
         const wrapper = createWrapper(value);
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
         const input = wrapper.get("[data-test=document-property-description]");
 
         if (!(input.element instanceof HTMLTextAreaElement)) {

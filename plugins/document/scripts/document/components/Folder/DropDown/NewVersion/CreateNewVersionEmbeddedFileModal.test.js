@@ -18,41 +18,47 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionEmbeddedFileModal from "./CreateNewVersionEmbeddedFileModal.vue";
 import emitter from "../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("CreateNewVersionEmbeddedFileModal", () => {
     const add_event_listener = jest.fn();
     const modal_show = jest.fn();
     const remove_backdrop = jest.fn();
+    const load_documents = jest.fn();
 
     function getWrapper(prop) {
-        const state = {
-            error: { has_modal_error: false },
-        };
-        const store_option = { state };
-        const store = createStoreMock(store_option);
-
-        store.dispatch.mockImplementation((action) => {
-            if (action === "loadDocument") {
-                return Promise.resolve({
-                    id: 12,
-                    title: "Dacia",
-                    embedded_file_properties: {
-                        content: "VROOM VROOM",
-                    },
-                });
-            }
+        load_documents.mockImplementation(() => {
+            return Promise.resolve({
+                id: 12,
+                title: "Dacia",
+                embedded_file_properties: {
+                    content: "VROOM VROOM",
+                },
+            });
         });
         return shallowMount(CreateNewVersionEmbeddedFileModal, {
-            localVue,
             propsData: {
                 ...prop,
             },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        error: {
+                            state: {
+                                has_modal_error: false,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                    actions: {
+                        loadDocument: load_documents,
+                    },
+                }),
+            },
         });
     }
 
@@ -74,7 +80,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         expect(wrapper.vm.$data.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.title).toBe("A title");
     });
@@ -87,7 +93,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         expect(wrapper.vm.$data.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
@@ -97,12 +103,12 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
         emitter.emit("update-lock", false);
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
     });
@@ -111,7 +117,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         const wrapper = getWrapper({
             item: { id: 12, title: "Dacia", embedded_file_properties: { content: "Time or ..." } },
         });
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("Time or ...");
     });
@@ -121,7 +127,8 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("VROOM VROOM");
     });

@@ -18,20 +18,20 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import ApprovalBadge from "./ApprovalBadge.vue";
 import { TYPE_EMBEDDED } from "../../../constants";
 import type { ApprovableDocument, Embedded } from "../../../type";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ApprovalBadge", () => {
     function createWrapper(
         item: ApprovableDocument,
         isInFolderContentRow: boolean
-    ): Wrapper<ApprovalBadge> {
+    ): VueWrapper<InstanceType<typeof ApprovalBadge>> {
         return shallowMount(ApprovalBadge, {
-            localVue,
             propsData: { item, isInFolderContentRow },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -66,13 +66,12 @@ describe("ApprovalBadge", () => {
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
         expect(wrapper.element).toMatchInlineSnapshot(`
             <span
-              class="document-approval-badge tlp-badge-success "
+              class="tlp-badge-success document-approval-badge"
             >
               <i
                 class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
               />
               Approved
-
             </span>
         `);
     });
@@ -94,13 +93,12 @@ describe("ApprovalBadge", () => {
         expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
         expect(wrapper.element).toMatchInlineSnapshot(`
             <span
-              class="document-approval-badge tlp-badge-success document-tree-item-toggle-quicklook-approval-badge"
+              class="tlp-badge-success document-tree-item-toggle-quicklook-approval-badge document-approval-badge"
             >
               <i
                 class="fa-solid tlp-badge-icon fa-tlp-gavel-approved"
               />
               Approved
-
             </span>
         `);
     });

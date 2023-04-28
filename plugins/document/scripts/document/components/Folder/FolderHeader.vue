@@ -261,6 +261,9 @@ export default {
             this.file_creation_properties = event.detail;
         },
         showUpdateItemPropertiesModal(event) {
+            if (!event.detail.current_item) {
+                return;
+            }
             this.updated_properties = event.detail.current_item;
             if (!this.isItemAFolder(this.updated_properties)) {
                 this.shown_update_properties_modal = () =>

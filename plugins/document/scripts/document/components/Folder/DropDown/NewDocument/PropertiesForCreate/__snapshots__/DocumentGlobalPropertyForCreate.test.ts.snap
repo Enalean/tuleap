@@ -9,23 +9,22 @@ exports[`DocumentGlobalPropertyForCreate renders component 1`] = `
   >
     <title-property-stub
       currentlyupdateditem="[object Object]"
+      isinupdatecontext="false"
       parent="[object Object]"
       value="My document"
     />
-     
     <status-property-with-custom-binding-for-document-create-stub
       parent="[object Object]"
       status_value="Draft"
     />
   </div>
-   
   <preview-filename-stub
     item="[object Object]"
   />
-   
   <description-property-stub
     value="A custom description"
   />
-   
+  
+  
 </div>
 `;

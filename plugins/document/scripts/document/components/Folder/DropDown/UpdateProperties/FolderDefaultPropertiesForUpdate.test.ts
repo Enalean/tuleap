@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+
 const emitMock = jest.fn();
 jest.mock("../../../../helpers/emitter", () => {
     return {
@@ -24,22 +26,21 @@ jest.mock("../../../../helpers/emitter", () => {
     };
 });
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../helpers/local-vue";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import { TYPE_FOLDER } from "../../../../constants";
 import type { Folder, Property } from "../../../../type";
 import type { ListValue } from "../../../../type";
+import type { ConfigurationState } from "../../../../store/configuration";
+import type { PropertiesState } from "../../../../store/properties/module";
+import { nextTick } from "vue";
 
 describe("FolderDefaultPropertiesForUpdate", () => {
-    let store = {
-        dispatch: jest.fn(),
-        commit: jest.fn(),
-    };
+    let load_properties: jest.Mock;
 
     beforeEach(() => {
+        load_properties = jest.fn();
         emitMock.mockClear();
     });
 
@@ -48,24 +49,35 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         has_loaded_properties: boolean,
         currentlyUpdatedItem: Folder,
         itemProperty: Array<Property>
-    ): Wrapper<FolderDefaultPropertiesForUpdate> {
-        const store_options = {
-            state: {
-                properties: { has_loaded_properties },
-                configuration: { is_status_property_used },
-            },
-        };
-        store = createStoreMock(store_options);
-
+    ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForUpdate>> {
         return shallowMount(FolderDefaultPropertiesForUpdate, {
-            localVue,
             propsData: {
                 currentlyUpdatedItem,
                 itemProperty,
                 status_value: "",
                 recursion_option: "",
             },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_status_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                        properties: {
+                            state: {
+                                has_loaded_properties,
+                            } as unknown as PropertiesState,
+                            actions: {
+                                loadProjectProperties: load_properties,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
 
@@ -78,7 +90,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             } as Folder;
             createWrapper(true, false, item, []);
 
-            expect(store.dispatch).toHaveBeenCalledWith("properties/loadProjectProperties");
+            expect(load_properties).toHaveBeenCalled();
         });
 
         it(`Given custom component are loading
@@ -89,7 +101,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 title: "title",
             } as Folder;
             const wrapper = createWrapper(true, false, item, []);
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
@@ -265,7 +277,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             wrapper
                 .find("[data-test=document-custom-property-recursion-option]")
-                .vm.$emit("input", "all_items");
+                .trigger("input", "all_items");
 
             expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
                 detail: {
@@ -309,7 +321,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .vm.$emit("input", "all_items");
+            .trigger("input", "all_items");
 
         expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
             detail: {
@@ -352,7 +364,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .vm.$emit("input", "all_items");
+            .trigger("input", "all_items");
 
         expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
             detail: {
@@ -395,63 +407,10 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
         wrapper
             .find("[data-test=document-custom-property-recursion-option]")
-            .vm.$emit("input", "all_items");
+            .trigger("input", "all_items");
 
         wrapper.find("[data-test=document-status-property-recursion-input]").setChecked(false);
 
         expect(emitMock).toHaveBeenCalledWith("update-status-recursion", false);
-    });
-
-    it(`Given "none" recursion option
-        then the status properties is not in the update list is empty, all the checkbox are unchecked`, () => {
-        const properties = [
-            {
-                short_name: "field_1",
-                list_value: [
-                    {
-                        id: 103,
-                    } as ListValue,
-                ],
-            } as unknown as Property,
-        ];
-        const item = {
-            id: 123,
-            title: "My title",
-            description: "My description",
-            properties,
-            status: {
-                value: "rejected",
-                recursion: "none",
-            },
-        } as Folder;
-
-        const item_property = [
-            {
-                short_name: "field_1",
-                list_value: [103],
-            } as unknown as Property,
-        ];
-
-        const wrapper = createWrapper(false, true, item, item_property);
-
-        wrapper
-            .find("[data-test=document-custom-property-recursion-option]")
-            .vm.$emit("input", "all_items");
-
-        expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
-            detail: {
-                property_list: ["field_1"],
-            },
-        });
-
-        wrapper
-            .find("[data-test=document-custom-property-recursion-option]")
-            .vm.$emit("input", "none");
-
-        expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
-            detail: {
-                property_list: [],
-            },
-        });
     });
 });

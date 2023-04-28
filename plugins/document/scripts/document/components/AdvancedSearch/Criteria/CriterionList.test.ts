@@ -19,10 +19,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CriterionList from "./CriterionList.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../helpers/local-vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { SearchCriterionList } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("CriterionList", () => {
     const criterion: SearchCriterionList = {
@@ -37,17 +36,19 @@ describe("CriterionList", () => {
     };
     it("should render the component", () => {
         const wrapper = shallowMount(CriterionList, {
-            localVue,
             propsData: {
                 criterion,
                 value: "folder",
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            user_can_create_wiki: true,
-                        } as ConfigurationState,
+                            state: {
+                                user_can_create_wiki: true,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },
@@ -58,17 +59,19 @@ describe("CriterionList", () => {
 
     it("should warn parent component when user is changing selection", () => {
         const wrapper = shallowMount(CriterionList, {
-            localVue,
             propsData: {
                 criterion,
                 value: "wiki",
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            user_can_create_wiki: true,
-                        } as ConfigurationState,
+                            state: {
+                                user_can_create_wiki: true,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },

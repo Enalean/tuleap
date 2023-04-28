@@ -41,39 +41,41 @@
             <div class="download-modal-multiple-warnings-section">
                 <h2 class="tlp-modal-subtitle">
                     <span class="tlp-badge-warning download-modal-warning-number">1</span>
-                    <span v-translate>Archive size warning threshold reached</span>
+                    <span>{{ $gettext("Archive size warning threshold reached") }}</span>
                 </h2>
                 <div class="download-modal-multiple-warnings-content">
-                    <p v-translate="{ warning_threshold }">
-                        The archive you want to download has a size greater than %{
-                        warning_threshold } MB.
+                    <p>{{ warning_threshold_message }}</p>
+                    <p>
+                        {{
+                            $gettext(
+                                "Depending on the speed of your network, it can take some time to complete. Do you want to continue?"
+                            )
+                        }}
                     </p>
-                    <p v-translate>
-                        Depending on the speed of your network, it can take some time to complete.
-                        Do you want to continue?
-                    </p>
-                    <div
-                        class="tlp-alert-warning"
-                        data-test="download-as-zip-folder-size-warning"
-                        v-translate="{ size_in_MB }"
-                    >
-                        Size of the archive to be downloaded: %{ size_in_MB } MB
+                    <div class="tlp-alert-warning" data-test="download-as-zip-folder-size-warning">
+                        {{ archive_size_message }}
                     </div>
                 </div>
             </div>
             <div class="download-modal-multiple-warnings-section" v-if="shouldWarnOsxUser">
                 <h2 class="tlp-modal-subtitle">
                     <span class="tlp-badge-warning download-modal-warning-number">2</span>
-                    <span v-translate>We detect you are using OSX</span>
+                    <span>{{ $gettext("We detect you are using OSX") }}</span>
                 </h2>
                 <div class="download-modal-multiple-warnings-content">
-                    <p v-translate>
-                        The archive you want to download has a size greater than or equal to 4GB or
-                        contains more than 64000 files.
+                    <p>
+                        {{
+                            $gettext(
+                                "The archive you want to download has a size greater than or equal to 4GB or contains more than 64000 files."
+                            )
+                        }}"
                     </p>
-                    <p v-translate>
-                        Please note that the OSX archive extraction tool might not succeed in
-                        opening it.
+                    <p>
+                        {{
+                            $gettext(
+                                "Please note that the OSX archive extraction tool might not succeed in opening it."
+                            )
+                        }}
                     </p>
                 </div>
             </div>
@@ -84,9 +86,8 @@
                 class="tlp-button-warning tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 data-test="close-archive-size-warning"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <a
                 type="button"
@@ -107,7 +108,7 @@ import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ size: number; folderHref: string; shouldWarnOsxUser: boolean }>();
 
@@ -121,13 +122,27 @@ const size_in_MB = computed((): string => {
     return Number.parseFloat(size_in_mb.toString()).toFixed(2);
 });
 
-const { interpolate, $ngettext } = useGettext();
+const { interpolate, $ngettext, $gettext } = useGettext();
 
 const modal_header_title = computed((): string => {
     const nb_warnings = props.shouldWarnOsxUser ? 2 : 1;
     const translated = $ngettext("1 warning", "%{ nb_warnings } warnings", nb_warnings);
 
     return interpolate(translated, { nb_warnings });
+});
+
+const warning_threshold_message = computed((): string => {
+    const translated = $gettext(
+        "The archive you want to download has a size greater than %{ warning_threshold } MB."
+    );
+
+    return interpolate(translated, { warning_threshold });
+});
+
+const archive_size_message = computed((): string => {
+    const translated = $gettext("Size of the archive to be downloaded: %{ size_in_MB } MB");
+
+    return interpolate(translated, { size_in_MB: size_in_MB.value });
 });
 
 const modal = ref<Modal | null>(null);

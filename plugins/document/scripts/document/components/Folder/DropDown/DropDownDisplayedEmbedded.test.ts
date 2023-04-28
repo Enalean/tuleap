@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import DropDownDisplayedEmbedded from "./DropDownDisplayedEmbedded.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Item, State } from "../../../type";
+import type { Item, RootState } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DropDownDisplayedEmbedded", () => {
     function createWrapper(
@@ -32,11 +31,11 @@ describe("DropDownDisplayedEmbedded", () => {
         parent_id: number,
         forbid_writers_to_update: boolean,
         forbid_writers_to_delete: boolean
-    ): Wrapper<DropDownDisplayedEmbedded> {
+    ): VueWrapper<InstanceType<typeof DropDownDisplayedEmbedded>> {
         return shallowMount(DropDownDisplayedEmbedded, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            propsData: { isInFolderEmptyState: false },
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         currently_previewed_item: {
                             id: 42,
@@ -45,14 +44,18 @@ describe("DropDownDisplayedEmbedded", () => {
                             can_user_manage,
                             parent_id,
                         } as Item,
+                    } as RootState,
+                    modules: {
                         configuration: {
-                            forbid_writers_to_update,
-                            forbid_writers_to_delete,
-                        } as ConfigurationState,
-                    } as unknown as State,
+                            state: {
+                                forbid_writers_to_update,
+                                forbid_writers_to_delete,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
                 }),
             },
-            propsData: { isInFolderEmptyState: false },
         });
     }
 

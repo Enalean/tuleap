@@ -19,11 +19,14 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <translate tag="p">
-            When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at
-            once.
-        </translate>
-        <translate tag="p">Please start again.</translate>
+        <p>
+            {{
+                $gettext(
+                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once."
+                )
+            }}
+        </p>
+        <p>{{ $gettext("Please start again.") }}</p>
     </error-modal>
 </template>
 

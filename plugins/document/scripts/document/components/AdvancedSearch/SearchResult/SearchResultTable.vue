@@ -24,10 +24,9 @@
             <table class="tlp-table document-search-table">
                 <thead>
                     <tr data-test="document-search-table-columns">
-                        <template v-for="column of columns">
+                        <template v-for="column of columns" v-bind:key="column.name">
                             <th
                                 v-bind:class="th_classes(column)"
-                                v-bind:key="'document-search-result-' + column.name + '-header'"
                                 v-on:click="toggleSort(column)"
                                 v-bind:data-test="`sort-${column.name}`"
                             >
@@ -78,7 +77,7 @@ import type {
     ItemSearchResult,
     SearchResult,
     SearchResultColumnDefinition,
-    RootState,
+    State,
     AdvancedSearchParams,
 } from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
@@ -88,12 +87,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useState, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { useRouter } from "../../../helpers/use-router";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { getRouterQueryFromSearchParams } from "../../../helpers/get-router-query-from-search-params";
 
 const { interpolate, $gettext } = useGettext();
 
-const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+const { current_folder } = useState<Pick<State, "current_folder">>(["current_folder"]);
 
 const props = defineProps<{
     is_loading: boolean;

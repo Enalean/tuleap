@@ -35,15 +35,11 @@
                 </template>
             </template>
 
-            <span
-                class="document-quick-look-property-empty"
-                v-else-if="!has_property_a_value"
-                v-translate
-            >
-                Empty
+            <span class="document-quick-look-property-empty" v-else-if="!has_property_a_value">
+                {{ $gettext("Empty") }}
             </span>
             <template v-else>
-                <div v-dompurify-html="property.post_processed_value"></div>
+                <div v-dompurify-html="get_value"></div>
             </template>
         </p>
     </div>
@@ -54,7 +50,7 @@ import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../constants";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 import { computed } from "vue";
 import type { Property } from "../../type";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 
@@ -104,5 +100,13 @@ const has_property_a_value = computed((): boolean => {
     }
 
     return props.property.value !== null && props.property.value !== "";
+});
+
+const get_value = computed((): string => {
+    return props.property.post_processed_value ? props.property.post_processed_value : "";
+});
+
+defineExpose({
+    get_value,
 });
 </script>

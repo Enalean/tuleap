@@ -9,18 +9,14 @@ exports[`CriterionGlobalText should render the component 1`] = `
   >
     <label
       class="tlp-label"
-      data-current-language="en_US"
-      data-msgid="Global search"
       for="document-global-search"
     >
       Global search
     </label>
-     
     <search-information-popover-stub
       description="Global search will search in all text properties of document (but does not look inside the document)."
     />
   </div>
-   
   <input
     class="tlp-input"
     data-test="global-search"

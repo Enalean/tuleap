@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TestingPinia } from "@pinia/testing";
-import { createTestingPinia } from "@pinia/testing";
+import type { ConfigurationState } from "../../../store/configuration";
 
 const emitMock = jest.fn();
 jest.mock("../../../helpers/emitter", () => {
@@ -26,10 +25,12 @@ jest.mock("../../../helpers/emitter", () => {
         emit: emitMock,
     };
 });
+const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<RootState>;
 
-import type { Wrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { createTestingPinia } from "@pinia/testing";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import PasteItem from "./PasteItem.vue";
 import * as check_item_title from "../../../helpers/properties-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
@@ -39,10 +40,10 @@ import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
 } from "../../../constants";
-import type { Folder, Item } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Folder, Item, RootState } from "../../../type";
+import { nextTick } from "vue";
 import { useClipboardStore } from "../../../stores/clipboard";
-import { ref } from "vue";
+import type { Store } from "vuex";
 
 describe("PasteItem", () => {
     const destination = {
@@ -50,7 +51,6 @@ describe("PasteItem", () => {
         type: TYPE_FOLDER,
     } as Item;
     const current_folder = {} as Folder;
-    let pinia: TestingPinia;
     let store: ReturnType<typeof useClipboardStore>;
 
     function createWrapper(
@@ -60,37 +60,41 @@ describe("PasteItem", () => {
         item_title: string | null,
         pasting_in_progress: boolean,
         item_type: string = TYPE_FOLDER
-    ): Wrapper<PasteItem> {
-        const root_store = createStoreMock({
-            state: {
-                current_folder,
-                folder_content: [],
-                configuration: {
-                    user_id: "1",
-                    project_id: "1",
-                },
-            },
-        });
-
-        pinia = createTestingPinia({
+    ): VueWrapper<PasteItem> {
+        const pinia = createTestingPinia({
             initialState: {
                 clipboard: {
-                    operation_type: ref(operation_type),
-                    item_title: ref(item_title),
-                    pasting_in_progress: ref(pasting_in_progress),
-                    item_type: ref(item_type),
-                    item_id: ref(123),
+                    operation_type,
+                    item_title,
+                    pasting_in_progress,
+                    item_type,
+                    item_id: 123,
                 },
             },
         });
-        store = useClipboardStore("1", "1", pinia);
 
+        store = useClipboardStore(mocked_store, "1", "1", pinia);
         return shallowMount(PasteItem, {
-            mocks: {
-                $store: root_store,
+            global: {
+                ...getGlobalTestOptions(
+                    {
+                        modules: {
+                            configuration: {
+                                state: {
+                                    user_id: "1",
+                                    project_id: "1",
+                                } as ConfigurationState,
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder,
+                            folder_content: [],
+                        } as unknown as RootState,
+                    },
+                    pinia
+                ),
             },
-            localVue: localVue,
-            pinia,
             propsData: { destination },
         });
     }
@@ -109,12 +113,10 @@ describe("PasteItem", () => {
             "My item",
             false
         );
-
         expect(wrapper.text()).toContain("My item");
 
         wrapper.trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(store.pasteItem).toHaveBeenCalledWith({
             destination_folder: destination,
@@ -125,9 +127,9 @@ describe("PasteItem", () => {
 
     it(`Given no item is in the clipboard
         Then no item can be pasted`, () => {
-        const wrapper = createWrapper(destination, current_folder, null, null, true);
+        const wrapper = createWrapper(destination, current_folder, null, "", true);
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given an item is in the clipboard
@@ -146,7 +148,7 @@ describe("PasteItem", () => {
             true
         );
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given an item is in the clipboard
@@ -165,7 +167,7 @@ describe("PasteItem", () => {
             true
         );
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given an item is being pasted
@@ -179,7 +181,7 @@ describe("PasteItem", () => {
             true
         );
 
-        expect(wrapper.attributes().disabled).toBeTruthy();
+        expect(wrapper.attributes().disabled).toBe("");
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
         wrapper.trigger("click");
@@ -201,7 +203,7 @@ describe("PasteItem", () => {
             TYPE_EMPTY
         );
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given a folder is in the clipboard to be moved
@@ -217,7 +219,7 @@ describe("PasteItem", () => {
             true
         );
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given a folder is in the clipboard to be moved
@@ -234,6 +236,6 @@ describe("PasteItem", () => {
             true
         );
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 });

@@ -18,19 +18,17 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentGlobalPropertyForCreate from "./DocumentGlobalPropertyForCreate.vue";
-import localVue from "../../../../../helpers/local-vue";
 import type { Folder, ItemFile } from "../../../../../type";
 
 describe("DocumentGlobalPropertyForCreate", () => {
     function createWrapper(
         item: ItemFile,
         parent: Folder
-    ): Wrapper<DocumentGlobalPropertyForCreate> {
+    ): VueWrapper<InstanceType<typeof DocumentGlobalPropertyForCreate>> {
         return shallowMount(DocumentGlobalPropertyForCreate, {
-            localVue,
             propsData: { currentlyUpdatedItem: item, parent },
         });
     }

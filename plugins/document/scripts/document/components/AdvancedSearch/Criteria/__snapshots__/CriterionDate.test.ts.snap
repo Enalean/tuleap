@@ -10,7 +10,6 @@ exports[`CriterionDate should render the component when date is set 1`] = `
   >
     Creation date
   </label>
-   
   <div
     class="tlp-form-element tlp-form-element-prepend"
   >
@@ -20,32 +19,25 @@ exports[`CriterionDate should render the component when date is set 1`] = `
       <option
         value=">"
       >
-        
-                After
-            
+        After
       </option>
-       
       <option
         value=<
       >
-        
-                Before
-            
+        Before
       </option>
-       
       <option
         data-test="equal"
         value="="
       >
-        
-                On
-            
+        On
       </option>
     </select>
-     
     <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
+      modelvalue="2022-01-01"
+      required="false"
       value="2022-01-01"
     />
   </div>
@@ -62,7 +54,6 @@ exports[`CriterionDate should render the component when no date set 1`] = `
   >
     Creation date
   </label>
-   
   <div
     class="tlp-form-element tlp-form-element-prepend"
   >
@@ -72,32 +63,25 @@ exports[`CriterionDate should render the component when no date set 1`] = `
       <option
         value=">"
       >
-        
-                After
-            
+        After
       </option>
-       
       <option
         value=<
       >
-        
-                Before
-            
+        Before
       </option>
-       
       <option
         data-test="equal"
         value="="
       >
-        
-                On
-            
+        On
       </option>
     </select>
-     
     <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
+      modelvalue=""
+      required="false"
       value=""
     />
   </div>

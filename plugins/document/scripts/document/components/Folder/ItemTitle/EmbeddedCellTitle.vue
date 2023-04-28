@@ -29,8 +29,8 @@
                 aria-hidden="true"
             ></i>
         </a>
-        <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
-            Corrupted
+        <span class="tlp-badge-warning document-badge-corrupted" v-if="is_corrupted">
+            {{ $gettext("Corrupted") }}
         </span>
     </div>
 </template>

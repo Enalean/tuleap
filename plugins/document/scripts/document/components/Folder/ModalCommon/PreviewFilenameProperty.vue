@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { DefaultFileItem } from "../../../type";
 import { ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";

@@ -36,7 +36,7 @@
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ item: Item }>();
 

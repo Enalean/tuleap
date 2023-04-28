@@ -19,13 +19,11 @@
 
 import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CellId from "./CellId.vue";
 
 describe("CellId", () => {
     it("should display the item id", () => {
         const wrapper = shallowMount(CellId, {
-            localVue,
             propsData: {
                 item: {
                     id: 123,

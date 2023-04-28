@@ -19,17 +19,19 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CriterionOwner from "./CriterionOwner.vue";
-import localVue from "../../../helpers/local-vue";
 import type { Select2Plugin } from "tlp";
 import * as autocomplete from "@tuleap/autocomplete-for-select2";
 import * as retrieve_selected_owner from "../../../helpers/owner/retrieve-selected-owner";
 import type { RestUser } from "../../../api/rest-querier";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { ConfigurationState } from "../../../store/configuration";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 jest.mock("tlp");
 
 interface Select2Mock extends Select2Plugin {
     trigger(): this;
+
     on(): this;
 }
 
@@ -44,15 +46,10 @@ describe("CriterionOwner", () => {
         autocompleter.mockReturnValue(select2);
 
         const get_spy = jest.spyOn(retrieve_selected_owner, "retrieveSelectedOwner");
-        get_spy.mockResolvedValue({ display_name: "John Doe", username: "jdoe" } as RestUser);
+        const current_user = { display_name: "John Doe", username: "jdoe" } as RestUser;
+        get_spy.mockResolvedValue(current_user);
 
         const wrapper = shallowMount(CriterionOwner, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
-                    state: { configuration: { project_name: "test" } },
-                }),
-            },
             propsData: {
                 criterion: {
                     name: "owner",
@@ -60,9 +57,22 @@ describe("CriterionOwner", () => {
                 },
                 value: "jdoe",
             },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: { project_name: "test" } as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
+        await nextTick();
+        await nextTick();
         expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.vm.get_currently_selected_user).toStrictEqual(current_user);
     });
 });

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <p class="tlp-text-info" v-if="clipboard.item_title !== null && !clipboard.pasting_in_progress">
+    <p class="tlp-text-info" v-if="has_item_in_clipboard && !clipboard.pasting_in_progress">
         <i class="fa-solid fa-circle-info document-clipboard-content-information-icon"></i>
         <template v-if="clipboard.operation_type === CLIPBOARD_OPERATION_CUT"
             >{{ moving_title }}
@@ -27,10 +27,8 @@
             {{ copying_title }}
         </template>
     </p>
-    <p
-        class="tlp-text-info"
-        v-else-if="clipboard.item_title !== null && clipboard.pasting_in_progress"
-    >
+
+    <p class="tlp-text-info" v-else-if="has_item_in_clipboard && clipboard.pasting_in_progress">
         <i class="fa-solid fa-spin fa-circle-notch document-clipboard-content-information-icon"></i>
         <template v-if="clipboard.operation_type === CLIPBOARD_OPERATION_CUT">
             {{ item_being_moved_title }}
@@ -44,18 +42,24 @@
 <script setup lang="ts">
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-
+import { useGettext } from "vue3-gettext";
 import { useClipboardStore } from "../../../stores/clipboard";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 const { project_id, user_id } = useNamespacedState<
     Pick<ConfigurationState, "project_id" | "user_id">
 >("configuration", ["project_id", "user_id"]);
-const clipboard = useClipboardStore(project_id.value, user_id.value);
+const clipboard = useClipboardStore(store, project_id.value, user_id.value);
 
 const { interpolate, $gettext } = useGettext();
+
+const has_item_in_clipboard = computed((): boolean => {
+    return clipboard.item_title !== null && clipboard.item_title !== "";
+});
 
 const moving_title = computed((): string => {
     return interpolate(

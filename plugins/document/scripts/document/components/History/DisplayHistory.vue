@@ -29,7 +29,7 @@
             <router-link
                 class="tlp-tab"
                 v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
-                v-if="item_type_has_versions"
+                v-if="item_has_versions"
                 data-test="versions-link"
                 >{{ $gettext("Versions") }}</router-link
             >
@@ -43,9 +43,9 @@
 
 <script setup lang="ts">
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
-import { useRoute } from "../../helpers/use-router";
+import { useRoute } from "vue-router";
 import { useActions } from "vuex-composition-helpers";
-import { inject, onBeforeMount, ref } from "vue";
+import { computed, inject, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryLogs from "./HistoryLogs.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
@@ -65,4 +65,10 @@ onBeforeMount(async () => {
             isFile(item.value) || isLink(item.value) || isEmbedded(item.value);
     }
 });
+
+const item_has_versions = computed((): boolean => {
+    return item_type_has_versions.value;
+});
+
+defineExpose({ item_has_versions });
 </script>

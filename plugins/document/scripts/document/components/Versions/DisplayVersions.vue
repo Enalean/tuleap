@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
-import { useRoute } from "../../helpers/use-router";
+import { useRoute } from "vue-router";
 import { useActions } from "vuex-composition-helpers";
 import { inject, onBeforeMount, provide, ref } from "vue";
 import type { Item } from "../../type";

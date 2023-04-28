@@ -18,13 +18,14 @@
  *
  */
 
-import localVue from "../../../../../helpers/local-vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyListMultipleValue from "./CustomPropertyListMultipleValue.vue";
 import emitter from "../../../../../helpers/emitter";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ListValue, Property } from "../../../../../type";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { PropertiesState } from "../../../../../store/properties/module";
+import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -35,29 +36,32 @@ describe("CustomPropertyListMultipleValue", () => {
         { id: 102, name: "fghij" },
     ];
 
-    function createWrapper(property: Property): Wrapper<CustomPropertyListMultipleValue> {
-        const store = createStoreMock(
-            {},
-            {
-                properties: {
-                    project_properties: [
-                        {
-                            short_name: "list",
-                            allowed_list_values,
-                        } as Property,
-                        {
-                            short_name: "an other list",
-                            allowed_list_values: [{ id: 100, name: "None" }],
-                        } as Property,
-                    ],
-                },
-            }
-        );
-
+    function createWrapper(
+        property: Property
+    ): VueWrapper<InstanceType<typeof CustomPropertyListMultipleValue>> {
         return shallowMount(CustomPropertyListMultipleValue, {
-            localVue,
             propsData: { currentlyUpdatedItemProperty: property },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        properties: {
+                            state: {
+                                project_properties: [
+                                    {
+                                        short_name: "list",
+                                        allowed_list_values,
+                                    } as Property,
+                                    {
+                                        short_name: "an other list",
+                                        allowed_list_values: [{ id: 100, name: "None" }],
+                                    } as Property,
+                                ],
+                            } as unknown as PropertiesState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
 
@@ -72,7 +76,7 @@ describe("CustomPropertyListMultipleValue", () => {
             is_multiple_value_allowed: true,
         } as unknown as Property;
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         const all_options = wrapper
             .get("[data-test=document-custom-list-multiple-select]")
@@ -137,7 +141,7 @@ describe("CustomPropertyListMultipleValue", () => {
         } as unknown as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await wrapper.vm.$nextTick();
+        await nextTick();
         expect(
             wrapper.find("[data-test=document-custom-property-list-multiple]").exists()
         ).toBeFalsy();
@@ -154,7 +158,7 @@ describe("CustomPropertyListMultipleValue", () => {
         } as unknown as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await wrapper.vm.$nextTick();
+        await nextTick();
         wrapper.get("[data-test=document-custom-list-multiple-value-102]").setSelected();
         wrapper.get("[data-test=document-custom-list-multiple-select]").trigger("change");
 

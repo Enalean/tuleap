@@ -18,12 +18,12 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DateFlatPicker from "./DateFlatPicker.vue";
 
 describe("DateFlatPicker", () => {
-    function createWrapper(props = {}): Wrapper<DateFlatPicker> {
+    function createWrapper(props = {}): VueWrapper<InstanceType<typeof DateFlatPicker>> {
         return shallowMount(DateFlatPicker, {
             propsData: { ...props },
         });

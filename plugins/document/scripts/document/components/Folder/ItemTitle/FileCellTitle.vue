@@ -32,8 +32,8 @@
             {{ item.title
             }}<i class="fas document-action-icon" v-bind:class="action_icon" aria-hidden="true"></i>
         </a>
-        <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
-            Corrupted
+        <span class="tlp-badge-warning document-badge-corrupted" v-if="is_corrupted">
+            {{ $gettext("Corrupted") }}
         </span>
     </div>
 </template>
@@ -44,8 +44,11 @@ import { ICON_EMPTY, ACTION_ICON_FILE, ACTION_ICON_ONLYOFFICE } from "../../../c
 import FakeCaret from "./FakeCaret.vue";
 import type { ItemFile } from "../../../type";
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ item: ItemFile }>();
+
+const { $gettext } = useGettext();
 
 const is_corrupted = computed((): boolean => {
     return !("file_properties" in props.item) || props.item.file_properties === null;

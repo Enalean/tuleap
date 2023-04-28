@@ -48,7 +48,7 @@ import { useGetters, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { RootGetter } from "../../../store/getters";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps({
     user_can_dragndrop_in_current_folder: { type: Boolean, required: true },

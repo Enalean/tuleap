@@ -49,7 +49,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import { useActions } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
@@ -139,4 +139,6 @@ onBeforeUnmount(() => {
         dropdown_menu.value.remove();
     }
 });
+
+defineExpose({ should_menu_be_displayed });
 </script>

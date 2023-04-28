@@ -20,7 +20,7 @@
 export function getTableFirstChild(
     table_body: HTMLTableSectionElement
 ): HTMLTableRowElement | null {
-    const table_first_child = table_body.firstChild;
+    const table_first_child = table_body.firstElementChild;
     if (!(table_first_child instanceof HTMLTableRowElement)) {
         return null;
     }
@@ -29,7 +29,7 @@ export function getTableFirstChild(
 }
 
 export function getTableLastChild(table_body: HTMLTableSectionElement): HTMLTableRowElement | null {
-    let table_last_child = table_body.lastChild;
+    let table_last_child = table_body.lastElementChild;
     if (!(table_last_child instanceof HTMLTableRowElement)) {
         return null;
     }

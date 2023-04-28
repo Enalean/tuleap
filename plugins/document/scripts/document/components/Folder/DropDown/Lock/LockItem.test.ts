@@ -17,23 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LockItem from "./LockItem.vue";
-import localVue from "../../../../helpers/local-vue";
 import type { ItemFile, LockInfo } from "../../../../type";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("LockItem", () => {
-    const store = {
-        dispatch: jest.fn(),
-    };
+    let lock_document: jest.Mock;
 
-    function createWrapper(item: ItemFile): Wrapper<LockItem> {
+    beforeEach(() => {
+        lock_document = jest.fn();
+    });
+
+    function createWrapper(item: ItemFile): VueWrapper<InstanceType<typeof LockItem>> {
         return shallowMount(LockItem, {
-            localVue,
             propsData: { item },
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        lock: {
+                            actions: { lockDocument: lock_document },
+                            namespaced: true,
+                        },
+                    },
+                }),
             },
         });
     }
@@ -99,6 +107,6 @@ describe("LockItem", () => {
 
         wrapper.get("[data-test=document-dropdown-menu-lock-item]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("lock/lockDocument", item);
+        expect(lock_document).toHaveBeenCalledWith(expect.any(Object), item);
     });
 });

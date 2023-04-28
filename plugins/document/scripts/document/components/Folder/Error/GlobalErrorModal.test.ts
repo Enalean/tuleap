@@ -18,25 +18,40 @@
  */
 
 import * as tlp_modal from "@tuleap/tlp-modal";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Modal } from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
+import type { ErrorState } from "../../../store/error/module";
 
-function createWrapper(error_message: string): Wrapper<GlobalErrorModal> {
+let reset_error: jest.Mock;
+
+function createWrapper(error_message: string): VueWrapper<InstanceType<typeof GlobalErrorModal>> {
     return shallowMount(GlobalErrorModal, {
-        localVue,
-        mocks: {
-            $store: createStoreMock({
-                state: { error: { global_modal_error_message: error_message } },
+        global: {
+            ...getGlobalTestOptions({
+                modules: {
+                    error: {
+                        state: {
+                            global_modal_error_message: error_message,
+                        } as unknown as ErrorState,
+                        mutations: {
+                            resetErrors: reset_error,
+                        },
+                        namespaced: true,
+                    },
+                },
             }),
         },
     });
 }
 
 describe(`GlobalErrorModal`, () => {
+    beforeEach(() => {
+        reset_error = jest.fn();
+    });
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
@@ -61,7 +76,7 @@ describe(`GlobalErrorModal`, () => {
         const wrapper = createWrapper(error_message);
 
         wrapper.get("[data-test=show-details]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);
@@ -87,10 +102,9 @@ describe(`GlobalErrorModal`, () => {
                 addEventListener: (event_name: string, handler: () => void) => handler(),
             } as unknown as Modal;
         });
-        const wrapper = createWrapper("");
-        const commit = jest.spyOn(wrapper.vm.$store, "commit");
+        createWrapper("");
 
-        expect(commit).toHaveBeenCalled();
+        expect(reset_error).toHaveBeenCalled();
     });
 
     it(`when I click on the "reload" button, it reloads the page`, () => {

@@ -32,18 +32,19 @@ import HistoryLogsErrorState from "./HistoryLogsErrorState.vue";
 import HistoryLogsEmptyState from "./HistoryLogsEmptyState.vue";
 import HistoryLogsContent from "./HistoryLogsContent.vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import type { Embedded } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("HistoryLogs", () => {
     it("should display a loading state", () => {
         getLogs.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            localVue,
             propsData: {
                 item: { id: 42 } as Embedded,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(true);
@@ -56,13 +57,14 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            localVue,
             propsData: {
                 item: { id: 42 } as Embedded,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);
@@ -74,13 +76,14 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(errAsync(Error("You cannot!")));
 
         const wrapper = shallowMount(HistoryLogs, {
-            localVue,
             propsData: {
                 item: { id: 42 } as Embedded,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(true);
@@ -92,13 +95,14 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(okAsync([{} as LogEntry]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            localVue,
             propsData: {
                 item: { id: 42 } as Embedded,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);

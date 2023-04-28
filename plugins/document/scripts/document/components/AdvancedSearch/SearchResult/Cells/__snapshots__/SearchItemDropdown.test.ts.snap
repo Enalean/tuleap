@@ -3,25 +3,29 @@
 exports[`SearchItemDropdown should render the dropdown with the menu detached 1`] = `
 <body>
   <div>
-    <div
-      class="tlp-dropdown document-search-dropdown"
-    >
-      <button
-        aria-label="Open dropdown menu"
-        class="tlp-button-primary tlp-button-small"
-        data-test="trigger"
-        id="document-search-dropdown-trigger-111"
-        type="button"
+    <div>
+      <div
+        data-v-app=""
       >
-        <i
-          class="fa-solid fa-ellipsis"
-        />
-         
-        <i
-          class="fa-solid fa-caret-down tlp-button-icon-right"
-        />
-      </button>
-       
+        <div
+          class="tlp-dropdown document-search-dropdown"
+        >
+          <button
+            aria-label="Open dropdown menu"
+            class="tlp-button-primary tlp-button-small"
+            data-test="trigger"
+            id="document-search-dropdown-trigger-111"
+            type="button"
+          >
+            <i
+              class="fa-solid fa-ellipsis"
+            />
+            <i
+              class="fa-solid fa-caret-down tlp-button-icon-right"
+            />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <div

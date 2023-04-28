@@ -140,7 +140,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { deleteFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { FEEDBACK } from "../../injection-keys";
 import { noop_feedack_handler } from "../../helpers/noop-feedback-handler";
 

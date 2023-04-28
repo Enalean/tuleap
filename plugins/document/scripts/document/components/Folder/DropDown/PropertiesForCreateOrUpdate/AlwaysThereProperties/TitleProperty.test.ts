@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../../../helpers/local-vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Folder, Item, ItemFile, State } from "../../../../../type";
 import TitleProperty from "./TitleProperty.vue";
 import emitter from "../../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { RootState } from "../../../../../type";
+import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -41,7 +42,7 @@ describe("TitleProperty", () => {
         isInUpdateContext: boolean,
         parent: Folder,
         currentlyUpdatedItem: Item
-    ): Wrapper<TitleProperty> {
+    ): VueWrapper<InstanceType<typeof TitleProperty>> {
         const state = {
             folder_content: [
                 {
@@ -65,12 +66,12 @@ describe("TitleProperty", () => {
             ],
         } as unknown as State;
 
-        const store = createStoreMock({ state });
         return shallowMount(TitleProperty, {
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({
+                    state: state as RootState,
+                }),
             },
-            localVue: localVue,
             propsData: {
                 value,
                 isInUpdateContext,
@@ -92,7 +93,7 @@ describe("TitleProperty", () => {
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
         wrapper.setProps({ value: value });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
         const input = wrapper.get("[data-test=document-new-item-title]");
 
         if (!(input.element instanceof HTMLInputElement)) {
@@ -116,7 +117,7 @@ describe("TitleProperty", () => {
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
         wrapper.setProps({ value: value });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
         const input = wrapper.get("[data-test=document-new-item-title]");
 
         if (!(input.element instanceof HTMLInputElement)) {
@@ -137,7 +138,7 @@ describe("TitleProperty", () => {
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
         wrapper.setProps({ value: value });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
         const input = wrapper.get("[data-test=document-new-item-title]");
 
         if (!(input.element instanceof HTMLInputElement)) {
@@ -164,7 +165,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: value });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -181,7 +182,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_folder_name });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
@@ -201,7 +202,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: value });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -218,7 +219,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_document_name });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
@@ -237,7 +238,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: "updated title" });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -254,7 +255,7 @@ describe("TitleProperty", () => {
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
             wrapper.setProps({ value: existing_document_name });
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });

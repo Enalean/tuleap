@@ -27,17 +27,18 @@
             v-if="is_loading_ascendant_hierarchy"
         ></i>
         <template v-else>
-            <template v-for="(folder, index) of current_folder_ascendant_hierarchy">
+            <template
+                v-for="(folder, index) of current_folder_ascendant_hierarchy"
+                v-bind:key="folder.id"
+            >
                 <i
                     class="fa-solid fa-chevron-right document-search-breadcrumbs-separator"
                     aria-hidden="true"
                     v-if="index > 0"
-                    v-bind:key="'separator-' + folder.id"
                 ></i>
                 <router-link
                     v-bind:to="getSearchInFolderRoute(folder)"
                     class="document-search-breadcrumbs-crumb tlp-badge-secondary tlp-badge-outline"
-                    v-bind:key="'folder-' + folder.id"
                 >
                     {{ folder.title }}
                 </router-link>
@@ -53,17 +54,19 @@
 
 <script setup lang="ts">
 import type { Folder, State } from "../../type";
-import type { Route } from "vue-router/types/router";
 import { useState } from "vuex-composition-helpers";
-import { useRoute } from "../../helpers/use-router";
+import type { RouteLocationNormalized } from "vue-router";
+import { useRoute } from "vue-router";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const route = useRoute();
 
 const { current_folder_ascendant_hierarchy, is_loading_ascendant_hierarchy } = useState<
     Pick<State, "current_folder_ascendant_hierarchy" | "is_loading_ascendant_hierarchy">
 >(["current_folder_ascendant_hierarchy", "is_loading_ascendant_hierarchy"]);
 
-function getSearchInFolderRoute(folder: Folder): Route {
+function getSearchInFolderRoute(folder: Folder): RouteLocationNormalized {
     return {
         ...route,
         params: {
@@ -77,7 +80,7 @@ function getSearchInFolderRoute(folder: Folder): Route {
     };
 }
 
-function getSearchInRootFolderRoute(): Route {
+function getSearchInRootFolderRoute(): RouteLocationNormalized {
     return {
         ...route,
         params: {},

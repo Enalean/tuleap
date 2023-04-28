@@ -19,34 +19,52 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchResultTable from "./SearchResultTable.vue";
-import localVue from "../../../helpers/local-vue";
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
 import TableBodyResults from "./TableBodyResults.vue";
-import type { ItemSearchResult, SearchResult, SearchResultColumnDefinition } from "../../../type";
+import type {
+    ItemSearchResult,
+    SearchResult,
+    SearchResultColumnDefinition,
+    State,
+} from "../../../type";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
-import VueRouter from "vue-router";
-import * as route from "../../../helpers/use-router";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import * as router from "../../../helpers/use-router";
+import type { Router } from "vue-router";
+import type { Folder, RootState } from "../../../type";
 
 describe("SearchResultTable", () => {
+    let mock_push: jest.Mock;
+    let mock_replace: jest.Mock;
+    beforeEach(() => {
+        mock_push = jest.fn();
+        mock_replace = jest.fn();
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { push: mock_push, replace: mock_replace } as unknown as Router;
+        });
+    });
+
     it("should display skeleton while loading", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            localVue,
             propsData: {
                 is_loading: true,
                 results: null,
                 query: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            columns: [],
-                        } as unknown as ConfigurationState,
+                            state: {
+                                columns: [],
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: ["router-link", "router-view"],
             },
         });
 
@@ -58,7 +76,6 @@ describe("SearchResultTable", () => {
 
     it("should display empty state when no results to display", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            localVue,
             propsData: {
                 is_loading: false,
                 results: {
@@ -69,14 +86,18 @@ describe("SearchResultTable", () => {
                 } as SearchResult,
                 query: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            columns: [],
-                        } as unknown as ConfigurationState,
+                            state: {
+                                columns: [],
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: ["router-link", "router-view"],
             },
         });
 
@@ -88,7 +109,6 @@ describe("SearchResultTable", () => {
 
     it("should display results", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            localVue,
             propsData: {
                 is_loading: false,
                 results: {
@@ -99,14 +119,18 @@ describe("SearchResultTable", () => {
                 } as SearchResult,
                 query: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            columns: [],
-                        } as unknown as ConfigurationState,
+                            state: {
+                                columns: [],
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
+                stubs: ["router-link", "router-view"],
             },
         });
 
@@ -117,14 +141,7 @@ describe("SearchResultTable", () => {
     });
 
     it("should sort title ascending", () => {
-        const router = new VueRouter();
-        jest.spyOn(router, "replace").mockImplementation();
-        jest.spyOn(router, "push").mockImplementation();
-        const mocked_router = jest.spyOn(route, "useRouter");
-        mocked_router.mockReturnValue(router);
-
         const wrapper = shallowMount(SearchResultTable, {
-            localVue,
             propsData: {
                 is_loading: false,
                 results: {
@@ -148,25 +165,34 @@ describe("SearchResultTable", () => {
                     sort: null,
                 },
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        current_folder: { id: 10 },
+            global: {
+                stubs: ["router-link", "router-view"],
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            columns: [
-                                { name: "title", label: "Label" } as SearchResultColumnDefinition,
-                            ],
-                        } as unknown as ConfigurationState,
+                            state: {
+                                columns: [
+                                    {
+                                        name: "title",
+                                        label: "Label",
+                                    } as SearchResultColumnDefinition,
+                                ],
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
+                    state: {
+                        current_folder: { id: 10 } as Folder,
+                    } as State,
                 }),
             },
         });
 
         wrapper.get("[data-test=sort-title]").trigger("click");
-        expect(router.replace).toHaveBeenCalledWith({
+        expect(mock_replace).toHaveBeenCalledWith({
             name: "search",
         });
-        expect(router.push).toHaveBeenCalledWith({
+        expect(mock_push).toHaveBeenCalledWith({
             name: "search",
             query: {
                 q: "Lorem ipsum",
@@ -177,14 +203,7 @@ describe("SearchResultTable", () => {
     });
 
     it("should sort title descending", () => {
-        const router = new VueRouter();
-        jest.spyOn(router, "replace").mockImplementation();
-        jest.spyOn(router, "push").mockImplementation();
-        const mocked_router = jest.spyOn(route, "useRouter");
-        mocked_router.mockReturnValue(router);
-
         const wrapper = shallowMount(SearchResultTable, {
-            localVue,
             propsData: {
                 is_loading: false,
                 results: {
@@ -208,16 +227,25 @@ describe("SearchResultTable", () => {
                     sort: { name: "title", order: "asc" },
                 },
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        current_folder: { id: 10 },
+            global: {
+                stubs: ["router-link", "router-view"],
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            columns: [
-                                { name: "title", label: "Label" } as SearchResultColumnDefinition,
-                            ],
-                        } as unknown as ConfigurationState,
+                            state: {
+                                columns: [
+                                    {
+                                        name: "title",
+                                        label: "Label",
+                                    } as SearchResultColumnDefinition,
+                                ],
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
+                    state: {
+                        current_folder: { id: 10 } as Folder,
+                    } as State,
                 }),
             },
         });
@@ -225,10 +253,10 @@ describe("SearchResultTable", () => {
         const title_element = wrapper.get("[data-test=sort-title]");
         expect(title_element.classes()).toContain("document-search-column-is-sortable");
         title_element.trigger("click");
-        expect(router.replace).toHaveBeenCalledWith({
+        expect(mock_replace).toHaveBeenCalledWith({
             name: "search",
         });
-        expect(router.push).toHaveBeenCalledWith({
+        expect(mock_push).toHaveBeenCalledWith({
             name: "search",
             query: {
                 q: "Lorem ipsum",
@@ -243,29 +271,18 @@ describe("SearchResultTable", () => {
             "Custom Vroom Multi List Metadata",
             {
                 name: "field_18",
-                label: "Custom Vroom Multi List Metadata",
-                is_multiple_value_allowed: true,
             } as SearchResultColumnDefinition,
         ],
         [
             "Location",
             {
                 name: "location",
-                label: "Location",
-                is_multiple_value_allowed: false,
             } as SearchResultColumnDefinition,
         ],
     ])(
         "should not sort the %s column",
         (column_name: string, column: SearchResultColumnDefinition) => {
-            const router = new VueRouter();
-            jest.spyOn(router, "replace").mockImplementation();
-            jest.spyOn(router, "push").mockImplementation();
-            const mocked_router = jest.spyOn(route, "useRouter");
-            mocked_router.mockReturnValue(router);
-
             const wrapper = shallowMount(SearchResultTable, {
-                localVue,
                 propsData: {
                     is_loading: false,
                     results: {
@@ -289,19 +306,35 @@ describe("SearchResultTable", () => {
                         sort: { name: "title", order: "asc" },
                     },
                 },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
+                global: {
+                    stubs: ["router-link", "router-view"],
+                    ...getGlobalTestOptions({
+                        modules: {
                             configuration: {
-                                columns: [
-                                    {
-                                        name: "title",
-                                        label: "Label",
-                                    } as SearchResultColumnDefinition,
-                                    column,
-                                ],
-                            } as unknown as ConfigurationState,
+                                state: {
+                                    columns: [
+                                        {
+                                            name: "title",
+                                            label: "Label",
+                                        } as SearchResultColumnDefinition,
+                                        {
+                                            name: "field_18",
+                                            label: "Custom Vroom Multi List Metadata",
+                                            is_multiple_value_allowed: true,
+                                        } as SearchResultColumnDefinition,
+                                        {
+                                            name: "location",
+                                            label: "Location",
+                                            is_multiple_value_allowed: false,
+                                        } as SearchResultColumnDefinition,
+                                    ],
+                                } as unknown as ConfigurationState,
+                                namespaced: true,
+                            },
                         },
+                        state: {
+                            current_folder: { id: 42 } as Folder,
+                        } as RootState,
                     }),
                 },
             });
@@ -311,8 +344,8 @@ describe("SearchResultTable", () => {
 
             column_element.trigger("click");
 
-            expect(router.replace).not.toHaveBeenCalled();
-            expect(router.push).not.toHaveBeenCalled();
+            expect(mock_replace).not.toHaveBeenCalled();
+            expect(mock_push).not.toHaveBeenCalled();
         }
     );
 });

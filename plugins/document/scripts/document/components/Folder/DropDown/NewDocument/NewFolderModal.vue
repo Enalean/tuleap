@@ -38,6 +38,7 @@
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
                 v-model="item.permissions_for_groups"
+                v-bind:value="item.permissions_for_groups"
                 v-bind:project_ugroups="project_ugroups"
             />
         </div>

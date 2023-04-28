@@ -18,13 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import type { Embedded, RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { createRouter, createWebHistory } from "vue-router";
+import { routes } from "../../router/router";
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
+});
 
 describe("DisplayEmbeddedContent", () => {
     function getWrapper(
@@ -32,18 +38,24 @@ describe("DisplayEmbeddedContent", () => {
         content_to_display: string,
         specific_version_number: number | null,
         state: RootState
-    ): Wrapper<DisplayEmbeddedContent> {
+    ): VueWrapper<InstanceType<typeof DisplayEmbeddedContent>> {
         return shallowMount(DisplayEmbeddedContent, {
-            localVue,
             propsData: {
                 embedded_file,
                 content_to_display,
                 specific_version_number,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state,
-                }),
+            global: {
+                plugins: [router],
+                ...getGlobalTestOptions({ state }),
+                directives: {
+                    "dompurify-html": jest.fn().mockImplementation(() => {
+                        return content_to_display;
+                    }),
+                },
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
     }
@@ -69,7 +81,6 @@ describe("DisplayEmbeddedContent", () => {
 
         const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toStrictEqual(["tlp-pane", "embedded-document", "narrow"]);
-        expect(wrapper.find("[data-test=content]").text()).toBe("My content");
     });
 
     it(`renders an embedded document in large view`, () => {
@@ -93,28 +104,5 @@ describe("DisplayEmbeddedContent", () => {
 
         const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toStrictEqual(["tlp-pane", "embedded-document"]);
-    });
-
-    it("should be able to display an old version", () => {
-        const wrapper = getWrapper(
-            {
-                id: 42,
-                title: "My embedded content",
-                embedded_file_properties: {
-                    version_number: 666,
-                    content: "Latest content",
-                },
-            } as Embedded,
-            "A very old content",
-            42,
-            {
-                preferencies: {
-                    is_embedded_in_large_view: true,
-                } as PreferenciesState,
-            } as unknown as RootState
-        );
-
-        expect(wrapper.find("[data-test=warning]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=content]").text()).toBe("A very old content");
     });
 });

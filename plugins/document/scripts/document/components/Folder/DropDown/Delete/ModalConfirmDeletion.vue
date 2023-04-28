@@ -26,8 +26,8 @@
         ref="delete_modal"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title" v-translate>
-                Hold on a second!
+            <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title">
+                {{ $gettext("Hold on a second!") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -45,9 +45,12 @@
                 class="tlp-alert-warning"
                 v-if="is_item_a_folder(item)"
                 data-test="delete-folder-warning"
-                v-translate
             >
-                When you delete a folder, all its content is also deleted. Please think wisely!
+                {{
+                    $gettext(
+                        "When you delete a folder, all its content is also deleted. Please think wisely!"
+                    )
+                }}
             </div>
             <delete-associated-wiki-page-checkbox
                 v-if="can_wiki_checkbox_be_shown"
@@ -68,9 +71,8 @@
                 type="button"
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="button"
@@ -87,7 +89,7 @@
                         'fa-solid fa-trash': !is_an_action_on_going,
                     }"
                 ></i>
-                <span v-translate>Delete</span>
+                {{ $gettext("Delete") }}
             </button>
         </div>
     </div>
@@ -112,10 +114,12 @@ import type { RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useRouter } from "../../../../helpers/use-router";
 
 const props = defineProps<{ item: Item }>();
+
+const { $gettext, interpolate } = useGettext();
 
 const { current_folder, currently_previewed_item } = useState<
     Pick<RootState, "current_folder" | "currently_previewed_item">
@@ -157,7 +161,6 @@ const can_wiki_checkbox_be_shown = computed((): boolean => {
     );
 });
 
-const { $gettext, interpolate } = useGettext();
 const router = useRouter();
 
 const close_title = $gettext("Close");
@@ -236,4 +239,6 @@ function is_item_a_wiki(item: Item): boolean {
 function is_item_a_folder(item: Item): boolean {
     return isFolder(item);
 }
+
+defineExpose({ can_wiki_checkbox_be_shown });
 </script>

@@ -19,31 +19,28 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CriterionGlobalText from "./CriterionGlobalText.vue";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("CriterionGlobalText", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionGlobalText, {
-            localVue,
-            propsData: {
-                value: "Lorem",
-            },
+            propsData: { value: "Lorem" },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("should warn parent component when user is changing text", () => {
         const wrapper = shallowMount(CriterionGlobalText, {
-            localVue,
-            propsData: {
-                value: "Lorem",
-            },
+            propsData: { value: "Lorem" },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         wrapper.find("[data-test=global-search]").setValue("Lorem ipsum");
-        expect(wrapper.emitted().input).toStrictEqual([["Lorem ipsum"]]);
+        expect(wrapper.emitted().input[0]).toStrictEqual(["Lorem ipsum"]);
     });
 });

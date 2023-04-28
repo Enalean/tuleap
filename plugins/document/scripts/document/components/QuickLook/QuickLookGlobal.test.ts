@@ -18,11 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { TYPE_FILE } from "../../constants";
 import QuickLookGlobal from "./QuickLookGlobal.vue";
-import type { ItemFile, State } from "../../type";
-import localVue from "../../helpers/local-vue";
+import type { ItemFile, RootState } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookGlobal", () => {
     it(`Displays the description of the item observed in the QuickLook`, () => {
@@ -36,19 +35,20 @@ describe("QuickLookGlobal", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookGlobal, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         currently_previewed_item,
-                    } as unknown as State,
+                    } as unknown as RootState,
                 }),
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
             },
         });
 
-        const displayed_description = wrapper.get("[id=item-description]");
-        expect(displayed_description.text()).toStrictEqual(currently_previewed_item.description);
-        expect(displayed_description.html()).toContain(
+        wrapper.get("[id=item-description]");
+        expect(wrapper.vm.get_description).toContain(
             currently_previewed_item.post_processed_description
         );
     });

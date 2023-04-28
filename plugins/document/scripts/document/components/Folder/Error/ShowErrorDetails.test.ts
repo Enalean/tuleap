@@ -17,42 +17,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../helpers/local-vue";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ErrorState } from "../../../store/error/module";
+import { nextTick } from "vue";
 
 describe("ShowErrorDetails", () => {
-    let show_error_details_factory: () => Wrapper<ShowErrorDetails>,
-        folder_loading_error: string,
-        document_loading_error: string,
-        document_lock_error: string;
+    let show_error_details_factory: () => VueWrapper<InstanceType<typeof ShowErrorDetails>>,
+        folder_loading_error: "Error during folder load.",
+        document_loading_error: "Error during folder load.",
+        document_lock_error: "Error during lock document.";
 
     describe("folder has a loading error", () => {
         beforeEach(() => {
-            folder_loading_error = "Error during folder load.";
-
-            const state = {
-                error: {
-                    has_folder_loading_error: true,
-                    folder_loading_error,
-                },
-            };
-            const store_options = {
-                state,
-                getters: {
-                    "error/has_any_loading_error": true,
-                },
-            };
-
-            const store = createStoreMock(store_options);
-
-            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
+            show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    localVue,
                     propsData: {},
-                    mocks: { $store: store },
+                    global: {
+                        ...getGlobalTestOptions({
+                            modules: {
+                                error: {
+                                    state: {
+                                        folder_loading_error,
+                                        document_loading_error,
+                                        document_lock_error,
+                                        has_folder_loading_error: true,
+                                    } as unknown as ErrorState,
+                                    getters: {
+                                        has_any_loading_error: () => true,
+                                    },
+                                    namespaced: true,
+                                },
+                            },
+                        }),
+                    },
                 });
             };
         });
@@ -64,7 +64,7 @@ describe("ShowErrorDetails", () => {
                 wrapper.find("[data-test=error-details-show-more-button]").exists()
             ).toBeTruthy();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -83,37 +83,32 @@ describe("ShowErrorDetails", () => {
             Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
-                folder_loading_error
-            );
+            await nextTick();
+            expect(wrapper.vm.error_message).toBe(folder_loading_error);
         });
     });
 
     describe("item has a loading error", () => {
         beforeEach(() => {
-            document_loading_error = "Error during folder load.";
-
-            const state = {
-                error: {
-                    has_document_loading_error: true,
-                    document_loading_error: document_loading_error,
-                },
-            };
-            const store_options = {
-                state,
-                getters: {
-                    "error/has_any_loading_error": true,
-                },
-            };
-
-            const store = createStoreMock(store_options);
-
-            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
+            show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    localVue,
                     propsData: {},
-                    mocks: { $store: store },
+                    global: {
+                        ...getGlobalTestOptions({
+                            modules: {
+                                error: {
+                                    state: {
+                                        has_document_loading_error: true,
+                                        document_lock_error,
+                                    } as unknown as ErrorState,
+                                    getters: {
+                                        has_any_loading_error: () => true,
+                                    },
+                                    namespaced: true,
+                                },
+                            },
+                        }),
+                    },
                 });
             };
         });
@@ -123,37 +118,32 @@ describe("ShowErrorDetails", () => {
         Then the message displayed is the item one`, async () => {
             const wrapper = show_error_details_factory();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
-                document_loading_error
-            );
+            await nextTick();
+            expect(wrapper.vm.error_message).toBe(document_loading_error);
         });
     });
 
     describe("item has a lock error", () => {
         beforeEach(() => {
-            document_lock_error = "Error during lock document.";
-
-            const state = {
-                error: {
-                    has_document_lock_error: true,
-                    document_lock_error,
-                },
-            };
-            const store_options = {
-                state,
-                getters: {
-                    "error/has_any_loading_error": true,
-                },
-            };
-
-            const store = createStoreMock(store_options);
-
-            show_error_details_factory = (): Wrapper<ShowErrorDetails> => {
+            show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    localVue,
                     propsData: {},
-                    mocks: { $store: store },
+                    global: {
+                        ...getGlobalTestOptions({
+                            modules: {
+                                error: {
+                                    state: {
+                                        has_document_lock_error: true,
+                                        document_lock_error,
+                                    } as unknown as ErrorState,
+                                    getters: {
+                                        has_any_loading_error: () => true,
+                                    },
+                                    namespaced: true,
+                                },
+                            },
+                        }),
+                    },
                 });
             };
         });
@@ -165,7 +155,7 @@ describe("ShowErrorDetails", () => {
                 wrapper.find("[data-test=error-details-show-more-button]").exists()
             ).toBeTruthy();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await wrapper.vm.$nextTick();
+            await nextTick();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -184,10 +174,8 @@ describe("ShowErrorDetails", () => {
             Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
             wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
-                document_lock_error
-            );
+            await nextTick();
+            expect(wrapper.vm.error_message).toBe(document_lock_error);
         });
     });
 });

@@ -20,8 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import CellStatus from "./CellStatus.vue";
 import type { ItemSearchResult } from "../../../../type";
-import CellString from "./CellString.vue";
-import localVue from "../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CellStatus", () => {
     it.each([
@@ -34,15 +33,15 @@ describe("CellStatus", () => {
         "when status is %s, displayed value should be '%s'",
         (status: string | null, expected: string) => {
             const wrapper = shallowMount(CellStatus, {
-                localVue,
                 propsData: {
                     item: {
                         status,
                     } as ItemSearchResult,
                 },
+                global: { ...getGlobalTestOptions({}) },
             });
 
-            expect(wrapper.findComponent(CellString).text()).toBe(expected);
+            expect(wrapper.vm.status).toBe(expected);
         }
     );
 });

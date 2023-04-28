@@ -78,7 +78,6 @@
                 v-for="parent in currentFolderAscendantHierarchyToDisplay()"
                 v-bind:key="parent.id"
                 v-bind:item="parent"
-                v-bind:data-test="`breadcrumb-element-${parent.id}`"
             />
             <span
                 class="breadcrumb-item"
@@ -103,7 +102,7 @@
 import type { Item, State } from "../../type";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
 import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import { ref } from "vue";

@@ -26,6 +26,7 @@
 <script>
 import { mapState } from "vuex";
 import FolderContainer from "./FolderContainer.vue";
+import { useRoute } from "vue-router";
 
 export default {
     name: "ChildFolder",
@@ -33,23 +34,12 @@ export default {
     computed: {
         ...mapState(["current_folder", "currently_previewed_item"]),
     },
-    watch: {
-        $route(to) {
-            if (this.$route.name !== "preview") {
-                this.$store.dispatch("removeQuickLook");
-                if (this.current_folder && this.current_folder.id !== this.$route.params.item_id) {
-                    this.$store.dispatch("loadFolder", parseInt(this.$route.params.item_id, 10));
-                }
-            } else {
-                this.$store.dispatch("toggleQuickLook", to.params.preview_item_id);
-            }
-        },
-    },
     async mounted() {
-        if (this.$route.name === "preview") {
+        const route = useRoute();
+        if (route.name === "preview") {
             await this.$store.dispatch(
                 "toggleQuickLook",
-                parseInt(this.$route.params.preview_item_id, 10)
+                parseInt(route.params.preview_item_id, 10)
             );
 
             if (!this.current_folder && this.currently_previewed_item) {
@@ -59,7 +49,7 @@ export default {
                 );
             }
         } else {
-            this.$store.dispatch("loadFolder", parseInt(this.$route.params.item_id, 10));
+            this.$store.dispatch("loadFolder", parseInt(route.params.item_id, 10));
             this.$store.dispatch("removeQuickLook");
         }
     },

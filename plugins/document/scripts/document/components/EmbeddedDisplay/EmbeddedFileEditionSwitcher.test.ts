@@ -18,27 +18,42 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Item, RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("EmbeddedFileEditionSwitcher", () => {
+    let display_in_large_mode: jest.Mock;
+    let display_in_narrow_mode: jest.Mock;
+
+    beforeEach(() => {
+        display_in_large_mode = jest.fn();
+        display_in_narrow_mode = jest.fn();
+    });
+
     function getWrapper(
         preferencies: PreferenciesState,
         currently_previewed_item: Item | null
-    ): Wrapper<EmbeddedFileEditionSwitcher> {
+    ): VueWrapper<InstanceType<typeof EmbeddedFileEditionSwitcher>> {
         return shallowMount(EmbeddedFileEditionSwitcher, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        preferencies: {
+                            state: preferencies as PreferenciesState,
+                            namespaced: true,
+                            actions: {
+                                displayEmbeddedInNarrowMode: display_in_narrow_mode,
+                                displayEmbeddedInLargeMode: display_in_large_mode,
+                            },
+                        },
+                    },
                     state: {
-                        preferencies,
                         currently_previewed_item,
-                    } as unknown as RootState,
+                    } as RootState,
                 }),
             },
         });
@@ -87,10 +102,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
         );
 
         wrapper.get("[data-test=view-switcher-narrow]").trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "preferencies/displayEmbeddedInNarrowMode",
-            item
-        );
+        expect(display_in_narrow_mode).toHaveBeenCalled();
     });
 
     it(`Should switch view to large when user click on large view`, () => {
@@ -103,9 +115,6 @@ describe("EmbeddedFileEditionSwitcher", () => {
         );
 
         wrapper.get("[data-test=view-switcher-large]").trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
-            "preferencies/displayEmbeddedInLargeMode",
-            item
-        );
+        expect(display_in_large_mode).toHaveBeenCalled();
     });
 });

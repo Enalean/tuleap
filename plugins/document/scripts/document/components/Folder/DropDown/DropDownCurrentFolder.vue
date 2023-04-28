@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <drop-down-menu v-bind:item="current_folder">
+    <div class="dropdown-menu">
         <drop-down-item-title
             slot="display-item-title"
             v-bind:item="current_folder"
@@ -33,6 +33,7 @@
             />
             <update-permissions v-bind:item="current_folder" slot="update-permissions" />
 
+            <drop-down-menu v-bind:item="current_folder" />
             <drop-down-separator
                 slot="delete-item-separator"
                 v-if="can_user_delete_item"
@@ -46,7 +47,7 @@
                 v-if="can_user_delete_item"
             />
         </template>
-    </drop-down-menu>
+    </div>
 </template>
 
 <script setup lang="ts">

@@ -19,32 +19,32 @@
  */
 
 import DeleteItem from "./DeleteItem.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Item } from "../../../../type";
-import localVue from "../../../../helpers/local-vue";
 import emitter from "../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../../store/configuration";
 
 jest.mock("../../../../helpers/emitter");
 
 describe("DeleteItem", () => {
-    let store = {};
     function createWrapper(
         user_can_write: boolean,
         is_deletion_allowed: boolean
-    ): Wrapper<DeleteItem> {
-        store = createStoreMock({
-            state: {
-                configuration: { is_deletion_allowed },
-            },
-        });
+    ): VueWrapper<InstanceType<typeof DeleteItem>> {
         return shallowMount(DeleteItem, {
-            mocks: {
-                $store: store,
-            },
-            localVue: localVue,
             propsData: { item: { id: 1, user_can_write } as Item },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: { is_deletion_allowed } as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
 

@@ -9,28 +9,6 @@ exports[`FolderLoadingScreen displays the folder loading screen 1`] = `
     icons="fa-solid fa-folder,fa-solid fa-folder,fa-regular fa-file,fa-regular fa-file,fa-regular fa-file"
     nb_cols="3"
     nb_rows="5"
-  >
-    <th
-      class="document-tree-head-name"
-    >
-      Name
-    </th>
-     
-    <th
-      class="document-tree-head-owner document-tree-head-skeleton"
-    >
-      
-            Owner
-        
-    </th>
-     
-    <th
-      class="document-tree-head-updatedate document-tree-head-skeleton"
-    >
-      
-            Last update date
-        
-    </th>
-  </skeleton-table-stub>
+  />
 </div>
 `;

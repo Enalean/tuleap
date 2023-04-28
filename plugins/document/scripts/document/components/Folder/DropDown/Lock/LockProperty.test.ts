@@ -18,19 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LockProperty from "./LockProperty.vue";
 import type { Item, LockInfo, User } from "../../../../type";
-import localVue from "../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("LockProperty", () => {
-    function instantiateComponent(item: Item): Wrapper<LockProperty> {
+    function instantiateComponent(item: Item): VueWrapper<InstanceType<typeof LockProperty>> {
         return shallowMount(LockProperty, {
-            localVue,
             propsData: {
                 item: { ...item },
             },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 

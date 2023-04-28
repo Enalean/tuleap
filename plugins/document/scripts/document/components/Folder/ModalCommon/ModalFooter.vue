@@ -19,39 +19,42 @@
   -->
 
 <template>
-    <div v-bind:id="props.ariaLabelledBy" class="tlp-modal-footer">
+    <div v-bind:id="ariaLabelledBy" class="tlp-modal-footer">
         <button
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-modal-action"
             data-dismiss="modal"
-            v-translate
         >
-            Cancel
+            {{ $gettext("Cancel") }}
         </button>
         <button
             type="submit"
             class="tlp-button-primary tlp-modal-action"
-            v-bind:disabled="props.isLoading"
-            v-bind:data-test="props.dataTest"
+            v-bind:disabled="isLoading"
+            v-bind:data-test="dataTest"
         >
             <i
-                v-if="props.isLoading"
+                v-if="isLoading"
                 class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
                 data-test="document-modal-footer-spinner"
             ></i>
             <i
                 v-else
                 class="tlp-button-icon"
-                v-bind:class="props.iconSubmitButtonClass"
+                v-bind:class="iconSubmitButtonClass"
                 data-test="document-modal-footer-icon"
             ></i>
-            {{ props.submitButtonLabel }}
+            {{ submitButtonLabel }}
         </button>
     </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+defineProps<{
     ariaLabelledBy: string;
     isLoading: boolean;
     dataTest: string;

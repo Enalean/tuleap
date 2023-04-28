@@ -91,11 +91,11 @@
             <span>{{ $gettext("Approval tables") }}</span>
         </a>
 
-        <drop-down-separator />
+        <drop-down-separator v-if="item.user_can_write" />
 
-        <cut-item v-bind:item="item" />
-        <copy-item v-bind:item="item" />
-        <paste-item v-bind:destination="item" />
+        <cut-item v-bind:item="item" v-if="item.user_can_write" />
+        <copy-item v-bind:item="item" v-if="item.user_can_write" />
+        <paste-item v-bind:destination="item" v-if="item.user_can_write" />
 
         <template v-if="is_item_a_folder">
             <drop-down-separator />
@@ -106,7 +106,7 @@
         </template>
 
         <slot name="delete-item-separator" v-if="is_deletion_allowed" />
-        <slot name="delete-item" />
+        <slot name="delete-item" v-if="is_deletion_allowed" />
     </fragment>
 </template>
 <script setup lang="ts">
@@ -147,4 +147,6 @@ const should_display_versions_link = computed(
 function getUrlForPane(pane_name: string): string {
     return `/plugins/docman/?group_id=${project_id.value}&id=${props.item.id}&action=details&section=${pane_name}`;
 }
+
+defineExpose({ is_item_an_empty_document, is_item_a_folder, should_display_versions_link });
 </script>

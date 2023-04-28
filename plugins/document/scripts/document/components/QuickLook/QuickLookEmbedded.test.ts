@@ -20,9 +20,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookEmbedded from "./QuickLookEmbedded.vue";
-import localVue from "../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../constants";
 import type { Item } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookEmbedded", () => {
     it("Component can be rendered for embedded", () => {
@@ -32,8 +32,8 @@ describe("QuickLookEmbedded", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmbedded, {
-            localVue,
             propsData: { item: item },
+            global: { ...getGlobalTestOptions({}), stubs: ["router-link"] },
         });
 
         expect(wrapper.element).toMatchSnapshot();

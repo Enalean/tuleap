@@ -19,16 +19,17 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchResultError from "./SearchResultError.vue";
-import localVue from "../../../helpers/local-vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("SearchResultError", () => {
     it("should display error message", () => {
         const wrapper = shallowMount(SearchResultError, {
-            localVue,
             propsData: {
                 error: new Error("Lorem ipsum"),
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.text()).toContain("Lorem ipsum");
@@ -36,7 +37,6 @@ describe("SearchResultError", () => {
 
     it("should display error message of a FetchWrapperError", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            localVue,
             propsData: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () =>
@@ -48,17 +48,17 @@ describe("SearchResultError", () => {
                         }),
                 } as Response),
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.text()).toContain("400 Bad request");
     });
 
     it("should display i18n error message of a FetchWrapperError", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            localVue,
             propsData: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () =>
@@ -71,42 +71,43 @@ describe("SearchResultError", () => {
                         }),
                 } as Response),
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.text()).toContain("Les paramètres ne sont pas corrects");
     });
 
     it("should default to default message of FetchWrapperError if it does not contain an error object", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            localVue,
             propsData: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () => Promise.resolve({}),
                 } as Response),
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });
 
     it("should default to default message of FetchWrapperError if response is malformed", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            localVue,
             propsData: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () => Promise.reject(new Error("No valid json")),
                 } as Response),
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });

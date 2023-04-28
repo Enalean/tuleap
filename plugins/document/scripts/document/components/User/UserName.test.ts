@@ -20,14 +20,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import UserName from "./UserName.vue";
-import localVue from "../../helpers/local-vue";
 
 describe("UserName", () => {
     it(`Given user is connected
         When we display the user name
         Then we should be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            localVue,
             propsData: {
                 user: {
                     id: 1,
@@ -43,7 +41,6 @@ describe("UserName", () => {
         When we display the user name
         Then we should not be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            localVue,
             propsData: {
                 user: {
                     id: 1,

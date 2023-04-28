@@ -18,13 +18,11 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CellDate from "./CellDate.vue";
 
 describe("CellDate", () => {
     it("should display the update date of the item", () => {
         const wrapper = shallowMount(CellDate, {
-            localVue,
             propsData: {
                 date: "2021-10-06",
             },

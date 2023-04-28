@@ -17,23 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VueRouter from "vue-router";
-import type { Wrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 
-describe("GoBackToRootButton", () => {
-    function getWrapper(router: VueRouter): Wrapper<GoBackToRootButton> {
-        const store_options = {};
-        const store = createStoreMock(store_options);
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import * as router from "vue-router";
 
+jest.mock("vue-router");
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+
+describe("GoBackToRootButton", () => {
+    beforeEach(() => {
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { item_id: "101" },
+        } as unknown as RouteLocationNormalizedLoaded);
+    });
+
+    function getWrapper(): VueWrapper<InstanceType<typeof GoBackToRootButton>> {
         return shallowMount(GoBackToRootButton, {
-            localVue,
-            router,
-            mocks: {
-                $store: store,
+            global: {
+                ...getGlobalTestOptions({}),
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
     }
@@ -41,31 +48,14 @@ describe("GoBackToRootButton", () => {
     it(`Given we are not displaying root folder
         When error is displayed
         Then a button go back to root is displayed`, () => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/folder/3/42",
-                    name: "item",
-                },
-            ],
-        });
-        const wrapper = getWrapper(router);
+        const wrapper = getWrapper();
         expect(wrapper.find("[data-test=item-can-go-to-root-button]").exists()).toBeTruthy();
     });
 
     it(`Given we are displaying root folder
         When error is displayed
         Then no button is displayed`, () => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/",
-                    name: "root_folder",
-                },
-            ],
-        });
-
-        const wrapper = getWrapper(router);
+        const wrapper = getWrapper();
         expect(wrapper.find("[data-test=can-go-to-root-button]").exists()).toBeFalsy();
     });
 });

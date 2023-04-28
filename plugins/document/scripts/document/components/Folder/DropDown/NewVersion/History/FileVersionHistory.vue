@@ -28,7 +28,7 @@
                 <i class="fa-solid fa-right-long"></i>
             </a>
         </p>
-        <table class="tlp-table" v-if="!has_error">
+        <table class="tlp-table" v-if="!get_has_error">
             <thead>
                 <tr>
                     <th class="document-file-version-version">{{ $gettext("Version") }}</th>
@@ -36,23 +36,23 @@
                     <th class="document-file-version-filename">{{ $gettext("Filename") }}</th>
                 </tr>
             </thead>
-            <tbody v-if="!has_error">
+            <tbody v-if="!get_has_error">
                 <file-version-history-content
-                    v-for="version of versions"
+                    v-for="version of displayed_versions"
                     v-bind:key="version.id"
                     v-bind:version="version"
                 />
-                <tr v-if="is_version_history_empty && !is_loading">
+                <tr v-if="is_version_history_empty && !are_versions_loading">
                     <td colspan="3" class="tlp-table-cell-empty">
                         {{ $gettext("No version history") }}
                     </td>
                 </tr>
-                <template v-if="is_loading">
+                <template v-if="are_versions_loading">
                     <file-version-history-skeleton v-for="line in 5" v-bind:key="line" />
                 </template>
             </tbody>
         </table>
-        <div v-if="has_error" class="tlp-alert-danger">
+        <div v-if="get_has_error" class="tlp-alert-danger">
             {{ error_message }}
         </div>
     </fragment>
@@ -112,5 +112,24 @@ const history_url = computed((): string => {
 
 const display_latest_version_text = computed((): boolean => {
     return versions.value.length >= 5;
+});
+
+const displayed_versions = computed((): ReadonlyArray<FileHistory> => {
+    return versions.value;
+});
+
+const are_versions_loading = computed((): boolean => {
+    return is_loading.value;
+});
+
+const get_has_error = computed((): boolean => {
+    return has_error.value;
+});
+
+defineExpose({
+    versions,
+    is_version_history_empty,
+    are_versions_loading,
+    get_has_error,
 });
 </script>
