@@ -27,6 +27,7 @@ require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
 use Tuleap\CLI\Command\ConfigDumpEvent;
+use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
@@ -89,105 +90,6 @@ class LdapPlugin extends Plugin
         parent::__construct($id);
 
         bindTextDomain('tuleap-ldap', LDAP_SITE_CONTENT_DIR);
-    }
-
-    public function getHooksAndCallbacks()
-    {
-        // Layout
-        $this->addHook(RegistrationGuardEvent::NAME);
-        $this->addHook(AuthenticationMeanName::NAME);
-
-        // Search
-        $this->addHook(Event::SEARCH_TYPE);
-
-        // Authentication
-        $this->addHook(BeforeStandardLogin::NAME);
-        $this->addHook(\Tuleap\SVNCore\AccessControl\BeforeSVNLogin::NAME);
-        $this->addHook(AfterLocalStandardLogin::NAME);
-        $this->addHook(\Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin::NAME);
-
-        // Login
-        $this->addHook('login_presenter');
-        $this->addHook('display_lostpw_createaccount', 'forbidIfLdapAuth');
-        $this->addHook(RedirectAfterLogin::NAME);
-
-        // User finder
-        $this->addHook('user_manager_find_user', 'user_manager_find_user');
-        $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier');
-        $this->addHook(UserRetrieverByLoginNameEvent::NAME);
-        $this->addHook(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent::NAME);
-        $this->addHook(FindUserByEmailEvent::NAME);
-
-        // User Home
-        $this->addHook('user_home_pi_entry', 'personalInformationEntry');
-
-        // User account
-        $this->addHook('before_lostpw-confirm', 'cancelChange');
-        $this->addHook('before_lostpw', 'cancelChange');
-        $this->addHook(PasswordPreUpdateEvent::NAME);
-        $this->addHook(AccountInformationCollection::NAME);
-
-        // User group
-        $this->addHook('project_admin_ugroup_deletion');
-
-        // Site Admin
-        $this->addHook('before_admin_change_pw', 'warnNoPwChange');
-        $this->addHook('usergroup_update_form', 'addLdapInput');
-        $this->addHook('usergroup_update', 'updateLdapID');
-
-        // Project admin
-        $this->addHook(ProjectMembersAdditionalModalCollectionPresenter::NAME);
-        $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed');
-
-        // Svn intro
-        $this->addHook(Event::SVN_INTRO);
-        $this->addHook('svn_check_access_username', 'svn_check_access_username');
-
-        // Search as you type user
-        $this->addHook('ajax_search_user', 'ajax_search_user');
-
-        // Project creation
-        $this->addHook(RegisterProjectCreationEvent::NAME);
-
-        // Backend SVN
-        $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn');
-        $this->addHook(GetSVNLoginNameEvent::NAME);
-
-        // Daily codendi job
-        $this->addHook('codendi_daily_start', 'codendi_daily_start');
-        $this->addHook(RootDailyStartEvent::NAME);
-
-        // SystemEvent
-        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class');
-
-        // Ask for LDAP Username of a User
-        $this->addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
-
-        // User profile creation/update
-        $this->addHook(Event::USER_MANAGER_UPDATE_DB);
-        $this->addHook(AccountCreated::NAME);
-
-        if (defined('GIT_EVENT_PLATFORM_CAN_USE_GERRIT')) {
-            $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
-        }
-
-        $this->addHook(UserDetailsPresenter::ADDITIONAL_DETAILS);
-        $this->addHook('ugroup_duplication');
-        $this->addHook(BindingAdditionalModalPresenterCollection::NAME);
-        $this->addHook(UGroupEditProcessAction::NAME);
-        $this->addHook(MembersEditProcessAction::NAME);
-
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-
-        $this->addHook(CollectRoutesEvent::NAME);
-
-        $this->addHook(ConfigDumpEvent::NAME);
-
-        $this->addHook(UserGroupAdditionalInformationEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
     }
 
     /**
@@ -299,9 +201,9 @@ class LdapPlugin extends Plugin
      *
      * @param Array $params
      *
-     * @return void
      */
-    public function ajax_search_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('ajax_search_user')]
+    public function ajaxSearchUser($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLDAPUserManagementEnabled() && ! $params['codendiUserOnly']) {
             $params['pluginAnswered'] = true;
@@ -344,10 +246,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * @see Event::SEARCH_TYPE
-     */
-    public function search_type($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SEARCH_TYPE)]
+    public function searchType($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $query  = $params['query'];
         $result = $params['results'];
@@ -369,6 +269,7 @@ class LdapPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function beforeLogin(BeforeStandardLogin $event): void
     {
         if ($this->isLdapAuthType()) {
@@ -385,6 +286,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function beforeSVNLogin(\Tuleap\SVNCore\AccessControl\BeforeSVNLogin $event): void
     {
         if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
@@ -402,6 +304,7 @@ class LdapPlugin extends Plugin
      * account was automatically created and user must complete his
      * registration.
      */
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function redirectAfterLogin(RedirectAfterLogin $event): void
     {
         if ($this->isLdapAuthType()) {
@@ -421,6 +324,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function afterLocalLogin(AfterLocalStandardLogin $event): void
     {
         if ($this->isLdapAuthType()) {
@@ -445,6 +349,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function afterLocalSVNLogin(\Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin $event): void
     {
         if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
@@ -460,6 +365,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function retrieveUserBySVNLoginName(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent $event): void
     {
         if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
@@ -474,7 +380,8 @@ class LdapPlugin extends Plugin
      *  IN  $params['ident']
      *  IN/OUT  $params['user'] User object if found or null.
      */
-    public function user_manager_find_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('user_manager_find_user')]
+    public function userManagerFindUser($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLDAPUserManagementEnabled()) {
             $ldap = $this->getLdap();
@@ -507,7 +414,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function user_manager_get_user_by_identifier($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('user_manager_get_user_by_identifier')]
+    public function userManagerGetUserByIdentifier($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
             try {
@@ -523,7 +431,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function getUserByLoginName(UserRetrieverByLoginNameEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserByLoginName(UserRetrieverByLoginNameEvent $event): void
     {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
             $lri = $this->getLdap()->searchLogin($event->getLoginName());
@@ -544,7 +453,8 @@ class LdapPlugin extends Plugin
      *  OUT $params['entry_label']
      *  OUT $params['entry_value']
      */
-    public function personalInformationEntry($params)
+    #[\Tuleap\Plugin\ListeningToEventName('user_home_pi_entry')]
+    public function userHomePiEntry($params): void
     {
         if ($this->isLdapAuthType()) {
             $params['entry_label'][$this->getId()] = sprintf(dgettext('tuleap-ldap', '%1$s login'), $this->getLDAPServerCommonName());
@@ -557,8 +467,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /** @see UserDetailsPresenter::ADDITIONAL_DETAILS */
-    public function additional_details($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(UserDetailsPresenter::ADDITIONAL_DETAILS)]
+    public function additionalDetails($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType()) {
             $user = $params['user'];
@@ -610,16 +520,23 @@ class LdapPlugin extends Plugin
         return $link;
     }
 
-    /**
-     * Hook
-     */
-    public function cancelChange($params)
+    #[\Tuleap\Plugin\ListeningToEventName('before_lostpw')]
+    public function beforeLostpw($params): void
     {
         if ($this->isLdapAuthType()) {
             exit_permission_denied();
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName('before_lostpw-confirm')]
+    public function beforeLostpwConfirm($params): void
+    {
+        if ($this->isLdapAuthType()) {
+            exit_permission_denied();
+        }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registrationGuardEvent(RegistrationGuardEvent $event): void
     {
         if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
@@ -627,7 +544,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function warnNoPwChange($params)
+    #[\Tuleap\Plugin\ListeningToEventName('before_admin_change_pw')]
+    public function beforeAdminChangePw($params): void
     {
         global $Language;
         if ($this->isLdapAuthType()) {
@@ -635,7 +553,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function addLdapInput($params)
+    #[\Tuleap\Plugin\ListeningToEventName('usergroup_update_form')]
+    public function usergroupUpdateForm($params): void
     {
         global $Language;
         if ($this->isLdapAuthType()) {
@@ -651,9 +570,9 @@ class LdapPlugin extends Plugin
      *
      * @param $params
      *
-     * @return void
      */
-    public function updateLdapID($params)
+    #[\Tuleap\Plugin\ListeningToEventName('usergroup_update')]
+    public function usergroupUpdate($params): void
     {
         global $Language;
         if ($this->isLdapAuthType()) {
@@ -678,9 +597,9 @@ class LdapPlugin extends Plugin
      *
      * @param Array $params
      *
-     * @return void
      */
-    public function forbidIfLdapAuth($params)
+    #[\Tuleap\Plugin\ListeningToEventName('display_lostpw_createaccount')]
+    public function displayLostpwCreateaccount($params): void
     {
         if ($this->isLdapAuthType()) {
             if (! $this->hasLDAPWrite()) {
@@ -709,14 +628,16 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event): void
     {
         if ($this->isLdapAuthType() && $event->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
             $event->forbidUserToChangePassword();
         }
     }
 
-    public function accountInformationCollection(AccountInformationCollection $account_information)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function accountInformationCollection(AccountInformationCollection $account_information): void
     {
         if ($this->isLdapAuthType()) {
             if ($account_information->getUser()->getLdapId() !== '' && ! $this->hasLDAPWrite()) {
@@ -742,7 +663,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function project_admin_ugroup_deletion($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_ugroup_deletion')]
+    public function projectAdminUgroupDeletion($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ldap_usergroup_manager = $this->getLdapUserGroupManager();
         $ldap_usergroup_manager->setId($params['ugroup_id']);
@@ -750,10 +672,8 @@ class LdapPlugin extends Plugin
         $ldap_usergroup_manager->unbindFromBindLdap();
     }
 
-    /**
-     * @see Event::SVN_INTRO
-     */
-    public function svn_intro($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SVN_INTRO)]
+    public function svnIntro($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ldap_project_manager = new LDAP_ProjectManager();
 
@@ -777,7 +697,8 @@ class LdapPlugin extends Plugin
      * $params['project_svnroot']
      * $params['username']
      */
-    public function svn_check_access_username($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('svn_check_access_username')]
+    public function svnCheckAccessUsername($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $svnProjectManager = new LDAP_ProjectManager();
         if (
@@ -801,9 +722,9 @@ class LdapPlugin extends Plugin
      * Collects additional modals to display in project-admin > members
      *
      *
-     * @return void
      */
-    public function projectAdminMembersAdditionalModal(ProjectMembersAdditionalModalCollectionPresenter $collector)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function projectAdminMembersAdditionalModal(ProjectMembersAdditionalModalCollectionPresenter $collector): void
     {
         if ($this->isLDAPGroupsUsageEnabled()) {
             $project_members_manager = $this->getLdapProjectGroupManager();
@@ -859,6 +780,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES)]
     public function burningParrotGetJavascriptFiles(array $params): void
     {
         if ($this->currentRequestIsForProjectUgroupAdmin()) {
@@ -866,6 +788,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName(Event::BURNING_PARROT_GET_STYLESHEETS)]
     public function burningParrotGetStylesheets(array $params): void
     {
         if ($this->currentRequestIsForProjectUgroupAdmin()) {
@@ -891,7 +814,8 @@ class LdapPlugin extends Plugin
      *
      * @return Void
      */
-    public function ugroup_update_users_allowed(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::UGROUP_UPDATE_USERS_ALLOWED)]
+    public function ugroupUpdateUsersAllowed(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['ugroup_id']) {
             $ldapUserGroupManager = $this->getLdapUserGroupManager();
@@ -901,6 +825,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
     {
         if ($this->isLdapAuthType() && $this->getLdap()->getLDAPParam('svn_auth') == 1) {
@@ -914,9 +839,9 @@ class LdapPlugin extends Plugin
      *
      * @param Array $params
      *
-     * @return void
      */
-    public function backend_factory_get_svn(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('backend_factory_get_svn')]
+    public function backendFactoryGetSvn(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
@@ -924,10 +849,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * @see \Tuleap\svn\Event\GetSVNLoginNameEvent
-     */
-    public function getSvnLoginName(GetSVNLoginNameEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getSvnLoginName(GetSVNLoginNameEvent $event): void
     {
         if (! $this->isLdapAuthType()) {
             return;
@@ -956,9 +879,9 @@ class LdapPlugin extends Plugin
      *
      * @param Array $params
      *
-     * @return void
      */
-    public function codendi_daily_start($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType() && $this->isDailySyncEnabled()) {
             $this->getLogger()->info('Starting LDAP daily synchronisation');
@@ -980,7 +903,6 @@ class LdapPlugin extends Plugin
             $this->synchronizeStaticUgroupMembers();
 
             $this->getLogger()->info('LDAP daily synchronisation done');
-            return true;
         }
     }
 
@@ -1000,7 +922,8 @@ class LdapPlugin extends Plugin
         $ldapUserGroupManager->synchronizeUgroups();
     }
 
-    public function rootDailyStart(RootDailyStartEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function rootDailyStart(RootDailyStartEvent $event): void
     {
         if ($this->isLdapAuthType()) {
             $retriever       = new NonUniqueUidRetriever(new LDAP_UserDao());
@@ -1055,12 +978,14 @@ class LdapPlugin extends Plugin
         return false;
     }
 
-    public function system_event_get_types_for_default_queue($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE)]
+    public function systemEventGetTypesForDefaultQueue($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'][] = 'PLUGIN_LDAP_UPDATE_LOGIN';
     }
 
-    public function get_system_event_class($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_SYSTEM_EVENT_CLASS)]
+    public function getSystemEventClass($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         switch ($params['type']) {
             case 'PLUGIN_LDAP_UPDATE_LOGIN':
@@ -1076,14 +1001,16 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function get_ldap_login_name_for_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_LDAP_LOGIN_NAME_FOR_USER)]
+    public function getLdapLoginNameForUser($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType()) {
             $params['ldap_user'] = $this->getLdapUserManager()->getLDAPUserFromUser($params['user']);
         }
     }
 
-    public function login_presenter($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('login_presenter')]
+    public function loginPresenter($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isLdapAuthType()) {
             $params['authoritative'] = true;
@@ -1091,10 +1018,8 @@ class LdapPlugin extends Plugin
         }
     }
 
-    /**
-     * @see Event::USER_MANAGER_UPDATE_DB
-     */
-    public function user_manager_update_db(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::USER_MANAGER_UPDATE_DB)]
+    public function userManagerUpdateDb(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         try {
             $this->getLDAPUserWrite()->updateWithPreviousUser($params['old_user'], $params['new_user']);
@@ -1105,6 +1030,7 @@ class LdapPlugin extends Plugin
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function accountCreated(AccountCreated $account_created): void
     {
         try {
@@ -1133,10 +1059,8 @@ class LdapPlugin extends Plugin
         );
     }
 
-    /**
-     * @see GIT_EVENT_PLATFORM_CAN_USE_GERRIT
-     */
-    public function git_event_platform_can_use_gerrit($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT)]
+    public function gitEventPlatformCanUseGerrit($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ldap_params = $this->getLDAPParams();
 
@@ -1190,7 +1114,8 @@ class LdapPlugin extends Plugin
         return $this->getEtcDir() . 'ldap.inc';
     }
 
-    public function ugroup_duplication($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('ugroup_duplication')]
+    public function ugroupDuplication(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao              = $this->getUserGroupDao();
         $source_ugroup_id = $params['source_ugroup']->getId();
@@ -1306,7 +1231,8 @@ class LdapPlugin extends Plugin
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup') === 0;
     }
 
-    public function bindingAdditionalModalPresenterCollection(BindingAdditionalModalPresenterCollection $collection)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function bindingAdditionalModalPresenterCollection(BindingAdditionalModalPresenterCollection $collection): void
     {
         $request = HTTPRequest::instance();
         $builder = new AdditionalModalPresenterBuilder($this->getLdapUserGroupManager(), $request, $this->getLDAPServerCommonName());
@@ -1320,7 +1246,8 @@ class LdapPlugin extends Plugin
         );
     }
 
-    public function ugroupEditProcessAction(UGroupEditProcessAction $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function ugroupEditProcessAction(UGroupEditProcessAction $event): void
     {
         $request = $event->getRequest();
         $ugroup  = $event->getUGroup();
@@ -1385,7 +1312,8 @@ class LdapPlugin extends Plugin
         return $bind_option;
     }
 
-    public function membersEditProcessAction(MembersEditProcessAction $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function membersEditProcessAction(MembersEditProcessAction $event): void
     {
         $request = $event->getRequest();
         $csrf    = $event->getCSRF();
@@ -1437,7 +1365,8 @@ class LdapPlugin extends Plugin
         return new \Tuleap\LDAP\BindMembersConfirmController($this->getLdapProjectGroupManager(), UserManager::instance(), UserHelper::instance(), new \Tuleap\Project\Admin\MembershipDelegationDao());
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->get('/welcome', $this->getRouteHandler('routeGetWelcome'));
@@ -1449,6 +1378,7 @@ class LdapPlugin extends Plugin
         });
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function authenticationMeanName(AuthenticationMeanName $event): void
     {
         if ($this->isLdapAuthType()) {
@@ -1470,12 +1400,14 @@ class LdapPlugin extends Plugin
         return UserManager::instance();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function configDumpEvent(ConfigDumpEvent $event): void
     {
         // load properties
         $this->getPluginInfo();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function addAdditionalInformation(UserGroupAdditionalInformationEvent $event): void
     {
         (
@@ -1488,6 +1420,7 @@ class LdapPlugin extends Plugin
         )->addAdditionalUserGroupInformation($event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function findUserByEmailEvent(FindUserByEmailEvent $event): void
     {
         (new CreateUserFromEmail($this->getLdap(), $this->getLdapUserManager(), $this->getLogger()))->process($event);

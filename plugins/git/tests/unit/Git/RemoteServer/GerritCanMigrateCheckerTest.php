@@ -57,7 +57,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_cannot_use_gerrit',
             false
@@ -73,7 +73,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_cannot_use_gerrit',
             false
@@ -89,7 +89,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_can_use_gerrit',
             false
@@ -105,7 +105,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
             'git_event_platform_can_use_gerrit',
             false

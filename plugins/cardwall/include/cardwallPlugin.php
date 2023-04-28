@@ -433,7 +433,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     }
 
     /**
-     * @see Event::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
+     * @see BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
      */
     public function agiledashboard_event_get_card_fields($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
