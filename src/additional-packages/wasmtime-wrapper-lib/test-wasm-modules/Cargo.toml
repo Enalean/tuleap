@@ -12,5 +12,9 @@ name = "memory-alloc-fail"
 path = "src/memory-alloc-fail/main.rs"
 
 [[bin]]
+name = "memory-alloc-success"
+path = "src/memory-alloc-success/main.rs"
+
+[[bin]]
 name = "happy-path"
 path = "src/happy-path/main.rs"

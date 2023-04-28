@@ -21,8 +21,9 @@
 declare(strict_types=1);
 
 namespace Tuleap\WebAssembly;
-final class WASMValidResponse
+
+final class WASMStatistics
 {
-    public readonly string $data;
-    public readonly WASMStatistics $stats;
+    public readonly float $exec_time_as_seconds;
+    public readonly int $memory_in_bytes;
 }

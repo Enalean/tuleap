@@ -25,4 +25,5 @@ namespace Tuleap\WebAssembly;
 final class WASMUserCodeErrorResponse
 {
     public readonly string $user_error;
+    public readonly WASMStatistics $stats;
 }
