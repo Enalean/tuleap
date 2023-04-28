@@ -9,9 +9,6 @@
   "module": "dist/plugin-docgen-xlsx.js",
   "main": "dist/plugin-docgen-xlsx.umd.cjs",
   "types": "dist/index.d.ts",
-  "dependencies": {
-    "xlsx": "^0.18.5"
-  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
@@ -20,5 +17,8 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "dependencies": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   }
 }
