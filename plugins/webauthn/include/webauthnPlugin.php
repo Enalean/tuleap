@@ -40,9 +40,17 @@ final class WebAuthnPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    private function getTemplateRenderer(): TemplateRenderer
+    {
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
+    }
+
     public function getAccountSettings(): Tuleap\Request\DispatchableWithRequest
     {
-        return new Tuleap\WebAuthn\Controllers\AccountController();
+        return new Tuleap\WebAuthn\Controllers\AccountController(
+            $this->getTemplateRenderer(),
+            EventManager::instance()
+        );
     }
 
     #[Tuleap\Plugin\ListeningToEventClass]
@@ -57,7 +65,7 @@ final class WebAuthnPlugin extends Plugin
     public function accountTabPresenterCollection(Tuleap\User\Account\AccountTabPresenterCollection $collection): void
     {
         $collection->add(new Tuleap\User\Account\AccountTabPresenter(
-            dgettext('tuleap-webauthn', 'WebAuthn'),
+            dgettext('tuleap-webauthn', 'Passkeys'),
             $this->getPluginPath() . '/account',
             $collection->getCurrentHref()
         ));

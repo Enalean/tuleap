@@ -1,0 +1,27 @@
+<div class="user-preferences">
+    <h1 class="user-preferences-title">
+        {{# gettext }}Preferences{{/ gettext }}
+    </h1>
+
+    <div class="user-preferences-container">
+        {{> user-account-tabs }}
+
+        <div class="user-preferences-section">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="tlp-pane-title-icon fa-solid fa-key" aria-hidden="true"></i>
+                            {{# dgettext }} tuleap-webauthn | Passkeys {{/ dgettext }}
+                        </h1>
+                    </div>
+                    <div class="tlp-pane-section">
+                        <button type="button" class="tlp-button-primary" disabled>
+                            {{# dgettext }} tuleap-webauthn | Add a passkey {{/ dgettext }}
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

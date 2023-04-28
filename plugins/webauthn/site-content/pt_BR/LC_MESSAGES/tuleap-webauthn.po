@@ -12,7 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.2.2\n"
 
+msgid "Add a passkey"
+msgstr ""
+
 msgid "Authentication with passkeys"
+msgstr ""
+
+msgid "Passkeys"
 msgstr ""
 
 msgid "WebAuthn"
