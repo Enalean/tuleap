@@ -164,6 +164,10 @@ class TransitionFactory
 
     public function getTransitionId(Tracker $tracker, $from, $to)
     {
+        if ($tracker->getWorkflow() instanceof WorkflowWithoutTransition) {
+            return null;
+        }
+
         $tracker_id = $tracker->getId();
 
         if ($from != null) {
