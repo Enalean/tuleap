@@ -170,7 +170,7 @@ class Tracker_Action_CreateArtifact
         }
     }
 
-    private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user)
+    private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user): bool
     {
         $request_data        = $request->get('artifact');
         $artifact_link_field = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
@@ -182,7 +182,7 @@ class Tracker_Action_CreateArtifact
         $art_link_id = $artifact_link_field->getId();
 
         if (isset($request_data[$art_link_id]) && isset($request_data[$art_link_id]['parent'])) {
-            return $request_data[$art_link_id]['parent'] == Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE;
+            return $request_data[$art_link_id]['parent'] == [Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE];
         }
 
         return false;
