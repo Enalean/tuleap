@@ -58,14 +58,6 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function routeGetAdmin(): ListEndpointsController
     {
         return new ListEndpointsController(
@@ -90,13 +82,15 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get('/admin/tuleap_synchro', $this->getRouteHandler('routeGetAdmin'));
         $event->getRouteCollector()->post('/admin/tuleap_synchro/add_endpoint', $this->getRouteHandler('routePostAddEndpoint'));
         $event->getRouteCollector()->post('/admin/tuleap_synchro/delete_endpoint', $this->getRouteHandler('routePostDeleteEndpoint'));
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
