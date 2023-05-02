@@ -18,7 +18,7 @@
             selection_callback: (selected_value) => {
                 console.log("Selected value : " + selected_value);
             },
-            search_field_callback: (query) => {
+            search_input_callback: (query) => {
                 console.log("Serach query : " + query);
                 lazybox.setDropdownContent([{
                     label: "Matching items",
@@ -45,7 +45,6 @@
         const lazybox_multiple = createLazybox(document.querySelector('#lazybox-users-selector'), {
             is_multiple: true,
             placeholder: "Search users by names",
-            search_input_placeholder: "",
             templating_callback: (html, item) => html`
                 <span class="doc-multiple-lazybox-user-with-avatar">
                     <div class="tlp-avatar-mini"></div>
@@ -55,21 +54,23 @@
             selection_callback: (selected_user) => {
                 console.log("Selected user : " + selected_user);
             },
-            search_field_callback: (query) => {
-                console.log("Serach query : " + query);
+            search_input_callback: (query) => {
+                console.log("Search query : " + query);
                 lazybox_multiple.setDropdownContent([{
                     label: "Matching users",
                     empty_message: "No user found",
                     items: [{
-                        id: "102",
-                        value: {
-                            id: 102,
-                            display_name: "Joe l'Asticot"
-                        },
+                        value: { id: 102, display_name: "Joe l'Asticot" },
                         is_selected: false,
                     }]
                 }])
-            }
+            },
+            selection_badge_callback: (item) => {
+                const badge = document.createElement("tuleap-lazybox-selection-badge");
+                badge.color = "lake-placid-blue";
+                badge.innerText = item.value.display_name;
+                return badge;
+            },
         });
     </script>
 </div>

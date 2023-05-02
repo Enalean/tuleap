@@ -38,5 +38,6 @@ const getItemValue = (item: LazyboxItem): string => {
 };
 
 export const TemplatingCallbackStub = {
-    build: (): LazyboxTemplatingCallback => (html, item) => html`${getItemValue(item)}`,
+    build: (): LazyboxTemplatingCallback => (html, item) =>
+        html`<span>Badge</span>${getItemValue(item)}`,
 };

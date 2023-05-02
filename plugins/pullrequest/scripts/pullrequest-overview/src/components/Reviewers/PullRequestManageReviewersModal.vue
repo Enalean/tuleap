@@ -155,9 +155,8 @@ function initReviewersAutocompleter(select: HTMLSelectElement): void {
     const lazybox = createLazybox(select, {
         is_multiple: true,
         placeholder: $gettext("Search users by their names"),
-        search_input_placeholder: "",
         templating_callback: getAssignableReviewerTemplate,
-        search_field_callback: (query) => {
+        search_input_callback: (query) => {
             autocompleter.autocomplete(lazybox, currently_selected_users.value, query);
         },
         selection_callback: (selected_users) => {
@@ -166,7 +165,7 @@ function initReviewersAutocompleter(select: HTMLSelectElement): void {
     });
 
     lazybox.setDropdownContent([group_builder.buildEmpty()]);
-    lazybox.setSelection(users_transformer.buildForSelection(props.reviewers_list));
+    lazybox.replaceSelection(users_transformer.buildForSelection(props.reviewers_list));
 }
 
 function saveReviewers(): void {

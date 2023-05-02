@@ -34,48 +34,48 @@ export const getLinkableArtifact = (item: unknown): LinkableArtifact | null => {
     return item;
 };
 
-export const getStatusClasses = (status: Status): string => {
+export const getStatusClasses = (status: Status): string[] => {
     if (!status.color) {
-        return "link-field-item-status tlp-badge-outline tlp-badge-secondary";
+        return ["link-field-item-status", "tlp-badge-outline", "tlp-badge-secondary"];
     }
-    return `link-field-item-status tlp-badge-outline tlp-badge-${status.color}`;
+    return ["link-field-item-status", "tlp-badge-outline", `tlp-badge-${status.color}`];
 };
 
 export const getLinkableArtifactTemplate = (
-    lit_html: typeof HTMLTemplateStringProcessor,
+    html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem
 ): HTMLTemplateResult => {
     const artifact = getLinkableArtifact(item.value);
     if (!artifact) {
-        return lit_html``;
+        return html``;
     }
 
-    const item_classes = `tlp-swatch-${artifact.xref.color} cross-ref-badge link-field-xref-badge`;
+    const item_classes = [
+        `tlp-swatch-${artifact.xref.color}`,
+        "cross-ref-badge",
+        "link-field-xref-badge",
+    ];
 
     if (item.is_disabled) {
-        return lit_html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
+        return html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
             <span class="${item_classes}">${artifact.xref.ref}</span>
             <span class="link-field-item-title">${artifact.title}</span>
-            <span class="link-field-disabled-item-already-linked-info">${getAlreadyLinkedInfo()}</span>
-            ${
-                artifact.status &&
-                lit_html`<span class="${getStatusClasses(artifact.status)}">${
-                    artifact.status.value
-                }</span>`
-            }
+            <span class="link-field-disabled-item-already-linked-info"
+                >${getAlreadyLinkedInfo()}</span
+            >
+            ${artifact.status &&
+            html`<span class="${getStatusClasses(artifact.status)}"
+                >${artifact.status.value}</span
+            >`}
             <span class="link-field-item-project">${artifact.project.label}</span>
         </span>`;
     }
 
-    return lit_html`<span class="link-field-item">
-            <span class="${item_classes}">${artifact.xref.ref}</span>
-            <span class="link-field-item-title">${artifact.title}</span>
-            ${
-                artifact.status &&
-                lit_html`<span class="${getStatusClasses(artifact.status)}">${
-                    artifact.status.value
-                }</span>`
-            }
-            <span class="link-field-item-project">${artifact.project.label}</span>
-        </span>`;
+    return html`<span class="link-field-item">
+        <span class="${item_classes}">${artifact.xref.ref}</span>
+        <span class="link-field-item-title">${artifact.title}</span>
+        ${artifact.status &&
+        html`<span class="${getStatusClasses(artifact.status)}">${artifact.status.value}</span>`}
+        <span class="link-field-item-project">${artifact.project.label}</span>
+    </span>`;
 };

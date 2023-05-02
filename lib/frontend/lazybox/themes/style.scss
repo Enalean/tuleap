@@ -49,19 +49,6 @@
             cursor: not-allowed;
         }
     }
-
-    &.lazybox-with-open-dropdown .lazybox-selection {
-        border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0
-            0;
-        border-color: var(--tlp-main-color);
-    }
-
-    &.lazybox-with-open-dropdown {
-        &.lazybox-with-dropdown-above .lazybox-selection {
-            border-radius: 0 0 var(--tlp-form-element-border-radius)
-                var(--tlp-form-element-border-radius);
-        }
-    }
 }
 
 .lazybox-selection {
@@ -94,6 +81,15 @@
     }
 }
 
+.lazybox-with-open-dropdown > .lazybox-selection {
+    border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0 0;
+    border-color: var(--tlp-main-color);
+}
+
+.lazybox-with-open-dropdown.lazybox-with-dropdown-above > .lazybox-selection {
+    border-radius: 0 0 var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius);
+}
+
 .lazybox-placeholder {
     color: var(--tlp-form-element-placeholder-color);
 }
@@ -103,6 +99,7 @@
     position: absolute;
     z-index: 2002;
     flex-direction: column;
+    width: 0;
     padding: 0;
     border-right: 1px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-main-color);
@@ -111,11 +108,7 @@
     background-color: var(--tlp-white-color);
     box-shadow: var(--tlp-flyover-shadow);
 
-    &.lazybox-dropdown-over-modal {
-        z-index: 2007;
-    }
-
-    &.lazybox-dropdown-shown {
+    &[open] {
         display: flex;
     }
 
@@ -157,13 +150,21 @@
     }
 }
 
-.lazybox-dropdown-option-value {
-    cursor: pointer;
+%dropdown-item {
+    font-size: 14px;
+    line-height: normal;
 
-    &.lazybox-item-highlighted {
+    &:focus,
+    &:hover {
         background-color: var(--tlp-main-color);
         color: var(--tlp-white-color);
     }
+}
+
+.lazybox-dropdown-option-value {
+    @extend %dropdown-item;
+
+    cursor: pointer;
 
     &[aria-selected="true"]::before {
         content: "\f00c"; // fa-check
@@ -180,7 +181,8 @@
         padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
         color: var(--tlp-main-color);
 
-        &.lazybox-item-highlighted {
+        &.focus,
+        &:hover {
             color: var(--tlp-white-color);
         }
     }
@@ -197,11 +199,6 @@
     }
 }
 
-%dropdown-item {
-    font-size: 14px;
-    line-height: normal;
-}
-
 .lazybox-new-item-button {
     @extend %dropdown-item;
     @include common.unset-button-style;
@@ -210,12 +207,6 @@
     color: var(--tlp-dark-color);
     font-family: var(--tlp-font-family);
     cursor: pointer;
-
-    &:focus,
-    &:hover {
-        background-color: var(--tlp-main-color);
-        color: var(--tlp-white-color);
-    }
 }
 
 .lazybox-dropdown-values-list {
@@ -233,7 +224,6 @@
     display: flex;
     align-items: baseline;
     padding: 6px 12px 6px 32px;
-    user-select: none;
 }
 
 .lazybox-dropdown-option-value-disabled {

@@ -116,8 +116,11 @@ describe("PullRequestManageReviewersModal", () => {
             Then lazybox's selection should be set with these reviewers`, () => {
             getWrapper(reviewers);
 
-            const selection = lazybox_stub.getInitialSelection().map(({ id }) => id);
-            expect(selection).toStrictEqual([String(joe_lasticot_id), String(joe_hobo_id)]);
+            const selection = lazybox_stub.getInitialSelection().map((item) => {
+                const user = item.value as User;
+                return user.id;
+            });
+            expect(selection).toStrictEqual([joe_lasticot_id, joe_hobo_id]);
         });
 
         it(`Given that no reviewers are assigned on the pull-request yet

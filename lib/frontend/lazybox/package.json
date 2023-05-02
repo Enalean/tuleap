@@ -18,11 +18,11 @@
     "./style": "./dist/style.css"
   },
   "dependencies": {
+    "@floating-ui/dom": "0.5.4",
     "@tuleap/core-constants": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
-    "hybrids": "8.1.8",
-    "lit": "^2.2.3"
+    "hybrids": "8.1.8"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

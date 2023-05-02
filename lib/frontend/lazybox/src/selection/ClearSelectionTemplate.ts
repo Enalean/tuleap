@@ -19,27 +19,13 @@
 
 import { dispatch, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import { isEnterKey } from "../helpers/keys-helper";
 import type { HostElement, SelectionElement } from "./SelectionElement";
 
 const onClick = (host: HostElement, event: Event): void => {
     event.stopPropagation();
     host.clearSelection();
     dispatch(host, "clear-selection");
-};
-
-const onKeyDown = (host: unknown, event: KeyboardEvent): void => {
-    if (isEnterKey(event)) {
-        // Do not trigger the click, or else the dropdown will open and be focused,
-        // "keyup" will be dispatched in it, and it will immediately select the first possible value
-        event.preventDefault();
-    }
-};
-
-const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
-    if (isEnterKey(event)) {
-        onClick(host, event);
-    }
+    dispatch(host, "open-dropdown");
 };
 
 export const getClearSelectionButton = (): UpdateFunction<SelectionElement> => {
@@ -49,8 +35,6 @@ export const getClearSelectionButton = (): UpdateFunction<SelectionElement> => {
             data-test="clear-current-selection-button"
             class="lazybox-selected-value-remove-button"
             onclick=${onClick}
-            onkeydown="${onKeyDown}"
-            onkeyup="${onKeyUp}"
         >
             ×
         </button>

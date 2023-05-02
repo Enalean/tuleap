@@ -45,7 +45,7 @@ export const LazyboxStub = {
             setDropdownContent: (groups: GroupCollection): void => {
                 last_group_of_items = groups[groups.length - 1];
             },
-            setSelection: (items: readonly LazyboxItem[]): void => {
+            replaceSelection: (items: readonly LazyboxItem[]): void => {
                 initial_selection = items;
 
                 selection_callback(initial_selection.map(({ value }) => value));

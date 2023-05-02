@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { html as HTMLTemplateStringProcessor } from "lit/html.js";
+import type { html as HTMLTemplateStringProcessor } from "hybrids";
 import type { Lazybox, LazyboxOptions } from "./type";
 import * as creator from "./lazybox";
 import "../themes/style.scss";
 
-export type { HTMLTemplateResult } from "lit/html.js";
 export type { HTMLTemplateStringProcessor, Lazybox, LazyboxOptions };
-export type { LazyboxSelectionCallback, LazyboxSearchFieldCallback } from "./type";
+export type {
+    LazyboxSelectionCallback,
+    LazyboxSearchInputCallback,
+    HTMLTemplateResult,
+} from "./type";
 export type { GroupCollection, GroupOfItems, LazyboxItem } from "./items/GroupCollection";
 
 export function createLazybox(

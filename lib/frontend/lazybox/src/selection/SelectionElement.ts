@@ -19,63 +19,53 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, dispatch, html } from "hybrids";
-import { html as lit_html, render } from "lit/html.js";
-import type { TemplateResult } from "lit/html.js";
 import type {
     LazyboxSelectionBadgeCallback,
     LazyboxSelectionCallback,
-    RenderedItem,
+    LazyboxTemplatingCallback,
 } from "../type";
 import { isEnterKey } from "../helpers/keys-helper";
 import type { SearchInput } from "../SearchInput";
 import { getClearSelectionButton } from "./ClearSelectionTemplate";
+import type { LazyboxItem } from "../items/GroupCollection";
+import "./SelectionBadge";
 
 export const TAG = "tuleap-lazybox-selection";
 
 export type SelectionElement = {
     multiple: boolean;
     placeholder_text: string;
-    selectItem(item: RenderedItem): void;
+    selectItem(item: LazyboxItem): void;
     clearSelection(): void;
-    hasSelection(): boolean;
+    isSelected(item: LazyboxItem): boolean;
     onSelection: LazyboxSelectionCallback;
-    getSelection(): ReadonlyArray<RenderedItem>;
-    replaceSelection(items: ReadonlyArray<RenderedItem>): void;
+    replaceSelection(items: ReadonlyArray<LazyboxItem>): void;
     setFocus(): void;
     selection_badge_callback: LazyboxSelectionBadgeCallback;
+    templating_callback: LazyboxTemplatingCallback;
     search_input: SearchInput & HTMLElement;
 };
 type InternalSelectionElement = Readonly<SelectionElement> & {
     content(): HTMLElement;
-    selected_items: RenderedItem[];
+    selected_items: LazyboxItem[];
     span_element: HTMLElement;
 };
 export type HostElement = InternalSelectionElement & HTMLElement;
 
-const getSingleSelectedElement = (host: InternalSelectionElement): Element => {
-    const root = document.createElement("span");
-    root.setAttribute("data-test", "selected-element");
-    root.classList.add("lazybox-selected-value");
-    root.setAttribute("aria-readonly", "true");
-    let template: TemplateResult;
-    if (host.selected_items.length < 1) {
-        template = lit_html``;
-    } else {
-        template = host.selected_items[0].template;
-    }
-    render(template, root);
-    return root;
-};
-
 const getSingleSelectionContent = (
     host: InternalSelectionElement
 ): UpdateFunction<SelectionElement> => {
-    if (!host.hasSelection()) {
+    if (host.selected_items.length < 1) {
         return html`<span class="lazybox-placeholder" data-test="selection-placeholder"
             >${host.placeholder_text}</span
         >`;
     }
-    return html`${getSingleSelectedElement(host)}${getClearSelectionButton()}`;
+    return html`<span
+            data-test="selected-element"
+            class="lazybox-selected-value"
+            aria-readonly="true"
+            >${host.templating_callback(html, host.selected_items[0])}</span
+        >${getClearSelectionButton()}`;
 };
 
 const callOnSelection = (host: InternalSelectionElement): void => {
@@ -86,24 +76,24 @@ const callOnSelection = (host: InternalSelectionElement): void => {
 
 const removeItemFromSelection = (
     host: InternalSelectionElement,
-    item_to_remove: RenderedItem
+    item_to_remove: LazyboxItem
 ): void => {
     host.selected_items = host.selected_items.filter((item) => item !== item_to_remove);
     callOnSelection(host);
 };
 
-export const buildSelectedBadges = (host: HostElement): HTMLElement[] =>
+export const buildSelectedBadges = (host: HostElement): UpdateFunction<SelectionElement>[] =>
     host.selected_items.map((selected_item) => {
         const badge = host.selection_badge_callback(selected_item);
         badge.addEventListener("remove-badge", () => {
             removeItemFromSelection(host, selected_item);
             dispatch(host, "open-dropdown");
         });
-        return badge;
+        return html`${badge}`;
     });
 
 const getMultipleSelectionContent = (host: HostElement): UpdateFunction<SelectionElement> => {
-    if (!host.hasSelection()) {
+    if (host.selected_items.length === 0) {
         return html`${host.search_input}`;
     }
     return html`${buildSelectedBadges(host)}${host.search_input}${getClearSelectionButton()}`;
@@ -117,8 +107,8 @@ export const buildClear = (host: InternalSelectionElement) => (): void => {
 
 export const buildSelectItem =
     (host: InternalSelectionElement) =>
-    (item: RenderedItem): void => {
-        if (item.is_selected) {
+    (item: LazyboxItem): void => {
+        if (host.isSelected(item)) {
             // We won't unselect it
             return;
         }
@@ -126,56 +116,28 @@ export const buildSelectItem =
             // We don't care ¯\_(ツ)_/¯
             return;
         }
-        host.selected_items = [...host.selected_items, item];
+        host.selected_items = host.multiple ? [...host.selected_items, item] : [item];
         callOnSelection(host);
     };
 
+export const buildIsSelected =
+    (host: InternalSelectionElement) =>
+    (item: LazyboxItem): boolean =>
+        host.selected_items.includes(item);
+
 export const buildReplaceSelection =
     (host: InternalSelectionElement) =>
-    (items: ReadonlyArray<RenderedItem>): void => {
+    (items: ReadonlyArray<LazyboxItem>): void => {
         host.selected_items = [...items];
         callOnSelection(host);
     };
 
-const markDropdownItemAsSelected = (item: RenderedItem): void => {
-    item.is_selected = true;
-    item.element.setAttribute("aria-selected", "true");
-};
-
-const markDropdownItemAsNotSelected = (item: RenderedItem): void => {
-    item.is_selected = false;
-    item.element.setAttribute("aria-selected", "false");
-};
-
-export const selectedItemSetter = (
-    host: SelectionElement,
-    new_value: RenderedItem[],
-    old_value: RenderedItem[] | undefined
-): RenderedItem[] => {
-    if (!old_value) {
-        return [];
+export const observeSelectedItems = (host: SelectionElement, new_value: LazyboxItem[]): void => {
+    if (!host.multiple) {
+        return;
     }
-    if (old_value === new_value) {
-        return new_value;
-    }
-    old_value.forEach(markDropdownItemAsNotSelected);
-    new_value.forEach(markDropdownItemAsSelected);
-    if (host.multiple) {
-        if (new_value.length > 0) {
-            host.search_input.placeholder = "";
-        } else {
-            host.search_input.placeholder = host.placeholder_text;
-        }
-    }
-    return new_value;
+    host.search_input.placeholder = new_value.length > 0 ? "" : host.placeholder_text;
 };
-
-export const buildHasSelection = (host: InternalSelectionElement) => (): boolean =>
-    host.selected_items.length > 0;
-
-export const buildGetSelection =
-    (host: InternalSelectionElement) => (): ReadonlyArray<RenderedItem> =>
-        host.selected_items;
 
 export const searchInputSetter = (
     host: InternalSelectionElement,
@@ -235,15 +197,15 @@ export const SelectionElement = define<InternalSelectionElement>({
     tag: TAG,
     multiple: false,
     placeholder_text: "",
-    selected_items: { set: selectedItemSetter },
+    selected_items: { observe: observeSelectedItems, set: (host, new_value) => new_value ?? [] },
     selectItem: { get: buildSelectItem },
     clearSelection: { get: buildClear },
-    hasSelection: { get: buildHasSelection },
-    getSelection: { get: buildGetSelection },
+    isSelected: { get: buildIsSelected },
     replaceSelection: { get: buildReplaceSelection },
     setFocus: { get: buildFocus },
     onSelection: undefined,
     selection_badge_callback: undefined,
+    templating_callback: undefined,
     search_input: { set: searchInputSetter },
     span_element: { get: getSpan },
     content: getContent,

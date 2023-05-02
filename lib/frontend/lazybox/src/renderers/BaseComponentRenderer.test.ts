@@ -45,9 +45,8 @@ describe("base-component-renderer", () => {
     };
 
     it("should render the base component and append it right after the source <select>", () => {
-        options = OptionsBuilder.withoutNewItem().withIsMultiple().build();
-        const { lazybox_element, dropdown_element, selection_element, dropdown_list_element } =
-            render();
+        options = OptionsBuilder.withMultiple().build();
+        const { lazybox_element, dropdown_element, selection_element } = render();
 
         const base_component = selectOrThrow(
             doc.body,
@@ -56,8 +55,7 @@ describe("base-component-renderer", () => {
 
         expect(base_component.contains(lazybox_element)).toBe(true);
         expect(base_component.contains(selection_element)).toBe(true);
-        expect(doc.body.contains(dropdown_element)).toBe(true);
-        expect(dropdown_element.contains(dropdown_list_element)).toBe(true);
+        expect(base_component.contains(dropdown_element)).toBe(true);
     });
 
     it("When the source <select> is disabled, then the lazybox should be disabled", () => {

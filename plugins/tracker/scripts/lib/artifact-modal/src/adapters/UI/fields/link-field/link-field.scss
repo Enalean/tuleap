@@ -71,10 +71,14 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-table-footer-input {
-    position: relative;
     width: 100%;
 
-    > .link-field-selector-wrapper > .lazybox-component-wrapper > .lazybox > .lazybox-selection {
+    // stylelint-disable-next-line selector-max-compound-selectors
+    > .link-field-selector-wrapper
+        > .lazybox-component-wrapper
+        > .lazybox
+        > tuleap-lazybox-selection
+        > .lazybox-selection {
         height: 32px;
     }
 }

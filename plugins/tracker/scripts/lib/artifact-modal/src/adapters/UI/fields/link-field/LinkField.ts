@@ -227,7 +227,7 @@ const createLazyBox = (host: LinkField, is_feature_flag_enabled: boolean): void 
         is_multiple: false,
         placeholder: getLinkSelectorPlaceholderText(),
         search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
-        search_field_callback: (query) => {
+        search_input_callback: (query) => {
             host.controller.clearFaultNotification();
             return host.autocompleter.autoComplete(host, query);
         },
