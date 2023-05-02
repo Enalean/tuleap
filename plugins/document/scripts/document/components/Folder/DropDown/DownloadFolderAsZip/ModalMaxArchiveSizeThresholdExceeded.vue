@@ -117,7 +117,7 @@ const archive_size_message = computed((): string => {
 const max_size_allowed_message = computed((): string => {
     const translated = $gettext("Maximum archive size allowed: %{ max_archive_size } MB");
 
-    return interpolate(translated, { max_archive_size });
+    return interpolate(translated, { max_archive_size: max_archive_size.value });
 });
 
 const emit = defineEmits<{
