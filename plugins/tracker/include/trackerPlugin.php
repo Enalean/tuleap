@@ -22,6 +22,8 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
@@ -385,12 +387,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function getHooksAndCallbacks()
     {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->addHook(AGILEDASHBOARD_EXPORT_XML);
+            $this->addHook(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML);
 
             // REST Milestones
-            $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
-            $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
-            $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN);
+            $this->addHook(MilestoneRepresentationBuilder::AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
+            $this->addHook(MilestoneResource::AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
         }
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
@@ -1317,11 +1318,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $milestone_representation_reference_holder                           = $params['milestone_representation_reference_holder'];
             $milestone_representation_reference_holder->milestone_representation = \Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::buildWithBurndownEnabled($milestone_representation_reference_holder->milestone_representation);
         }
-    }
-
-    public function agiledashboard_event_rest_options_burndown($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $this->buildRightVersionOfMilestonesBurndownResource($params['version'])->options($params['user'], $params['milestone']);
     }
 
     public function agiledashboard_event_rest_get_burndown($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

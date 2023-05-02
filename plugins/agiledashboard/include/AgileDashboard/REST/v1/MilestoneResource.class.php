@@ -77,7 +77,26 @@ use UserManager;
  */
 class MilestoneResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 100;
+    /**
+     * RESt call for cardwall GET
+     *
+     * Parameters:
+     * 'version'   => API version
+     * 'milestone' => Milestone on which cardwall is requested
+     */
+    public const AGILEDASHBOARD_EVENT_REST_GET_CARDWALL = 'agiledashboard_event_rest_get_cardwall';
+
+    /**
+     * RESt call for burndown GET
+     *
+     * Parameters:
+     * 'version'   => API version
+     * 'user'      => The user who resquest the burndown
+     * 'milestone' => Milestone on which burndown is requested
+     * 'burndown'  => OUT the \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     */
+    public const AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN = 'agiledashboard_event_rest_get_burndown';
+    public const MAX_LIMIT                              = 100;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
@@ -112,8 +131,6 @@ class MilestoneResource extends AuthenticatedResource
     /** @var QueryToCriterionStatusConverter */
     private $query_to_criterion_converter;
 
-    /** @var Tracker_FormElementFactory  */
-    private $tracker_form_element_factory;
     /**
      * @var ContentForMiletoneProvider
      */
@@ -125,9 +142,8 @@ class MilestoneResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $planning_factory                   = PlanningFactory::build();
-        $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $planning_factory               = PlanningFactory::build();
+        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
         $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
             new ScrumForMonoMilestoneDao(),
@@ -155,9 +171,7 @@ class MilestoneResource extends AuthenticatedResource
             $this->milestone_factory,
             $planning_factory,
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
-            new RemainingEffortValueRetriever(
-                $this->tracker_form_element_factory
-            ),
+            new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
             new ArtifactsInExplicitBacklogDao(),
             new Tracker_Artifact_PriorityDao()
         );
@@ -1096,7 +1110,7 @@ class MilestoneResource extends AuthenticatedResource
         );
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
+            self::AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
             [
                 'version'   => 'v1',
                 'milestone' => $milestone,
@@ -1147,7 +1161,7 @@ class MilestoneResource extends AuthenticatedResource
         );
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
+            self::AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
             [
                 'version'   => 'v1',
                 'user'      => $user,

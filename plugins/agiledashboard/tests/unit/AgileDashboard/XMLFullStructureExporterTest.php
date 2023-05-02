@@ -58,7 +58,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
     {
         $this->event_manager->shouldReceive('processEvent')
             ->with(
-                AGILEDASHBOARD_EXPORT_XML,
+                AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML,
                 Mockery::on(
                     function ($params) {
                         return $params['project']->getID() === $this->project->getID() && isset($params['into_xml']);
@@ -73,7 +73,9 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
     {
         $this->router->shouldReceive('route')->once();
 
-        $this->event_manager->shouldReceive('processEvent')->with(AGILEDASHBOARD_EXPORT_XML, Mockery::any());
+        $this->event_manager
+            ->shouldReceive('processEvent')
+            ->with(AgileDashboard_XMLFullStructureExporter::AGILEDASHBOARD_EXPORT_XML, Mockery::any());
 
         $this->xml_exporter->export($this->project);
     }

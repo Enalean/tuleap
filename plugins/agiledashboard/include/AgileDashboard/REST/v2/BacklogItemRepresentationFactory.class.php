@@ -61,7 +61,7 @@ class BacklogItemRepresentationFactory
         $card_fields_semantic = null;
 
         EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            \Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             [
                 'tracker'              => $backlog_item->getArtifact()->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic,

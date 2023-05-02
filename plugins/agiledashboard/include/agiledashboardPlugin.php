@@ -187,6 +187,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public const PLUGIN_NAME      = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
+    public const AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
+
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
 
@@ -975,7 +977,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $injector->populate($params['restler']);
 
         EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_REST_RESOURCES,
+            self::AGILEDASHBOARD_EVENT_REST_RESOURCES,
             $params
         );
     }

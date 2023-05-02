@@ -25,6 +25,7 @@ use Cardwall_Semantic_CardFields;
 use EventManager;
 use PFUser;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
@@ -149,7 +150,7 @@ class ItemRepresentationBuilder
         $card_fields_semantic = null;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            BacklogItemRepresentationFactory::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
             [
                 'tracker'              => $artifact->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic,

@@ -54,6 +54,33 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
  */
 class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    /**
+     * Fetch the cardwall configuration html
+     *
+     * Parameters:
+     * 'tracker' => The Planning Tracker of the planning that is being configured
+     * 'view'    => The HTML to be fetched
+     */
+    public const AGILEDASHBOARD_EVENT_PLANNING_CONFIG = 'agiledashboard_event_planning_config';
+
+    /**
+     * Update a planning
+     *
+     * Parameters:
+     * 'tracker' => The Planning Tracker of the planning that is being configured
+     * 'request' => The standard request object
+     */
+    public const AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE = 'agiledashboard_event_planning_config_update';
+
+    /**
+     * Checks if cardwall is enabled
+     *
+     * Parameters:
+     * 'tracker' => The Planning Tracker of the planning that is being configured
+     * 'enabled' => boolean
+     */
+    public const AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED = 'agiledashboard_event_is_cardwall_enabled';
+
     public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
     public const PAST_PERIOD                   = 'past';
     public const FUTURE_PERIOD                 = 'future';
@@ -592,7 +619,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $enabled = false;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
+            self::AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
             [
                 'tracker' => $tracker,
                 'enabled' => &$enabled,
@@ -608,7 +635,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $view    = null;
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
+            self::AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
             [
                 'tracker' => $tracker,
                 'view'    => &$view,
@@ -694,7 +721,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $tracker = $this->getPlanning()->getPlanningTracker();
 
         $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE,
+            self::AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE,
             [
                 'request' => $this->request,
                 'tracker' => $tracker,
