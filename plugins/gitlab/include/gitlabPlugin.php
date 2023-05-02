@@ -117,7 +117,6 @@ use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
-use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
@@ -183,37 +182,12 @@ class gitlabPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(GetExternalUsedServiceEvent::NAME);
-
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_RESOURCES);
-
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(GetReferenceEvent::NAME);
-
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
-        $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
-        $this->addHook(NatureCollection::NAME);
-        $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
-        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
-
-        $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
-        $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
-        $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-
-        $this->addHook(GitAdminGetExternalPanePresenters::NAME);
-        $this->addHook(CollectGitRoutesEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getDependencies(): array
     {
         return ['git', 'tracker'];
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalUsedServiceEvent(GetExternalUsedServiceEvent $event): void
     {
         $project        = $event->getProject();
@@ -226,24 +200,21 @@ class gitlabPlugin extends Plugin
         $event->addUsedServiceName(self::SERVICE_NAME);
     }
 
-    /**
-     * @see Event::REST_PROJECT_RESOURCES
-     */
-    public function rest_project_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_PROJECT_RESOURCES)]
+    public function restProjectResources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectGitlabResource($params['resources'], $params['project']);
     }
 
-    /**
-     * @see REST_RESOURCES
-     */
-    public function rest_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/plugins/gitlab', function (FastRoute\RouteCollector $r) {
@@ -252,6 +223,7 @@ class gitlabPlugin extends Plugin
         });
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(
@@ -715,6 +687,7 @@ class gitlabPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getReference(GetReferenceEvent $event): void
     {
         if (
@@ -750,7 +723,8 @@ class gitlabPlugin extends Plugin
         }
     }
 
-    public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES)]
+    public function getPluginsAvailableKeywordsReferences(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
         $params['keywords'][] = GitlabMergeRequestReference::REFERENCE_NAME;
@@ -758,8 +732,8 @@ class gitlabPlugin extends Plugin
         $params['keywords'][] = GitlabBranchReference::REFERENCE_NAME;
     }
 
-    /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
-    public function get_reference_admin_capabilities(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName(Event::GET_REFERENCE_ADMIN_CAPABILITIES)]
+    public function getReferenceAdminCapabilities(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $reference = $params['reference'];
         \assert($reference instanceof Reference);
@@ -783,6 +757,7 @@ class gitlabPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
         $natures->addNature(
@@ -826,11 +801,13 @@ class gitlabPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function referenceAdministrationWarningsCollectorEvent(ReferenceAdministrationWarningsCollectorEvent $event): void
     {
         (new ReferenceAdministrationWarningsCollectorEventHandler())->handle($event);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
     {
         $repository_integration_dao = new GitlabRepositoryIntegrationDao();
@@ -870,6 +847,7 @@ class gitlabPlugin extends Plugin
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function externalSystemReferencePresentersCollector(ExternalSystemReferencePresentersCollector $collector): void
     {
         $collector->add(
@@ -902,6 +880,7 @@ class gitlabPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
     {
         $project = $event->getTracker()->getProject();
@@ -926,6 +905,7 @@ class gitlabPlugin extends Plugin
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
         $button_fecther = new CreateBranchButtonFetcher(
@@ -956,6 +936,7 @@ class gitlabPlugin extends Plugin
         $event->addAction($button_action);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
         if ($event->getCurrentTabName() === GitLabLinkGroupTabPresenter::PANE_NAME) {
