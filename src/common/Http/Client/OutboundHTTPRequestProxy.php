@@ -51,7 +51,11 @@ final class OutboundHTTPRequestProxy
             return self::getProxyDefinedByAdministrators();
         }
 
-        return self::DEFAULT_FILTERING_PROXY;
+        if (self::isFilteringProxyEnabled()) {
+            return self::DEFAULT_FILTERING_PROXY;
+        }
+
+        return '';
     }
 
     public static function isFilteringProxyEnabled(): bool

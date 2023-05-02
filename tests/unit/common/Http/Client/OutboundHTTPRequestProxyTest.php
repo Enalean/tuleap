@@ -44,4 +44,10 @@ final class OutboundHTTPRequestProxyTest extends TestCase
         self::assertFalse(OutboundHTTPRequestProxy::isProxyDefinedByAdministrators());
         self::assertSame('localhost:4750', OutboundHTTPRequestProxy::getProxy());
     }
+
+    public function testDoesNotDefineAProxyWhenKillswitchIsEnabled(): void
+    {
+        \ForgeConfig::set('filtering_proxy_usage', 'disabled');
+        self::assertSame('', OutboundHTTPRequestProxy::getProxy());
+    }
 }
