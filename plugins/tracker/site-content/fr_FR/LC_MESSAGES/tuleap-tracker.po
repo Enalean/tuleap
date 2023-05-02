@@ -2848,7 +2848,7 @@ msgstr ""
 msgid ""
 "Status semantic allows to define how an artifact is considered to be open."
 msgstr ""
-"La sémantique État permet de définir comment un aretfact est considéré "
+"La sémantique État permet de définir comment un artéfact est considéré "
 "ouvert."
 
 msgid "Std deviation"
