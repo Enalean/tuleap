@@ -19,11 +19,11 @@ let
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      sha256 = "sha256-2HfwNoluPPOOAdCaqUVaZcAd8M2naPYAsphZO1Inefg=";
+      hash = "sha256-2HfwNoluPPOOAdCaqUVaZcAd8M2naPYAsphZO1Inefg=";
     };
-    cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
-      inherit src;
-      sha256 = "sha256-kL5B9UOpQx4Ep3TvneUI+Z+zoqNCjbIIET3S3NQKY6E=";
+    cargoDeps = pkgs.rustPlatform.importCargoLock {
+      lockFile = "${src.out}/Cargo.lock";
+      allowBuiltinFetchGit = true;
     };
 
     nativeBuildInputs = [ pkgs.rustPlatform.cargoSetupHook rustBinWithMuslTarget zigCC ];

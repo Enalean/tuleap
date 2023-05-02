@@ -221,7 +221,7 @@ describe("getTraceabilityMatrix", () => {
             title: "Test A",
             campaign: "Tuleap 13.4",
             executed_by: "John Doe",
-            executed_on: "6/23/2020 12:01:04 PM",
+            executed_on: "6/23/2020 12:01:04 PM",
             executed_on_date: new Date("2020-06-23T08:01:04-04:00"),
             status: "passed",
         });
@@ -395,7 +395,7 @@ describe("getTraceabilityMatrix", () => {
             title: "Test A",
             campaign: "Tuleap 13.4",
             executed_by: "John Doe",
-            executed_on: "6/23/2020 12:01:04 PM",
+            executed_on: "6/23/2020 12:01:04 PM",
             executed_on_date: new Date("2020-06-23T08:01:04-04:00"),
             status: "passed",
         });
@@ -520,7 +520,7 @@ describe("getTraceabilityMatrix", () => {
                     title: "Test A",
                     campaign: expected_status === "failed" ? "New features" : "Tuleap 13.4",
                     executed_by: expected_status ? "John Doe" : null,
-                    executed_on: expected_submitted_on_date ? "6/23/2020 12:01:04 PM" : null,
+                    executed_on: expected_submitted_on_date ? "6/23/2020 12:01:04 PM" : null,
                     executed_on_date: expected_submitted_on_date
                         ? new Date(expected_submitted_on_date)
                         : null,
