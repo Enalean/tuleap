@@ -318,12 +318,11 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function setType(object $object, ValidationInfo $info): void
     {
-        //TODO: proper type management
-        $type = Util::getShortName($info->type);
+        $type = $info->type;
         if ($info->type == 'array') {
             $object->type = 'array';
             if ($info->children) {
-                $contentType   = Util::getShortName($info->contentType);
+                $contentType   = $info->contentType;
                 $object->items = (object) [
                     '$ref' => "#/definitions/$contentType",
                 ];
@@ -351,7 +350,7 @@ final class SwaggerJsonPathsAndDefinitions
                         ];
                     }
                 } else {
-                    $contentType   = Util::getShortName($info->contentType);
+                    $contentType   = $info->contentType;
                     $object->items = (object) [
                         '$ref' => "#/definitions/$contentType",
                     ];
@@ -362,6 +361,7 @@ final class SwaggerJsonPathsAndDefinitions
                 ];
             }
         } elseif ($info->children) {
+            assert(is_string($type));
             $this->model($type, $info->children);
             $object->{'$ref'} = "#/definitions/$type";
         } elseif (is_string($info->type) && $t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->type))) {
@@ -395,7 +395,7 @@ final class SwaggerJsonPathsAndDefinitions
         if (isset($hash[$id])) {
             return $hash[$id];
         }
-        $class  = Util::getShortName($route['className']);
+        $class  = $route['className'];
         $method = $route['methodName'];
 
         if (isset(self::PREFIXES[$method])) {
