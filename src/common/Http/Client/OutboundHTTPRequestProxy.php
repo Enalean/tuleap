@@ -24,6 +24,7 @@ namespace Tuleap\Http\Client;
 
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyString;
 
 #[ConfigKeyCategory('Outbound HTTP requests')]
@@ -35,6 +36,7 @@ final class OutboundHTTPRequestProxy
 
     #[ConfigKey('Bypass SSRF filtering proxy (smokescreen). Only use in case of emergency.')]
     #[ConfigKeyString(self::FILTERING_PROXY_ENABLED)]
+    #[ConfigKeyHidden]
     public const FILTERING_PROXY_USAGE    = 'filtering_proxy_usage';
     public const FILTERING_PROXY_ENABLED  = 'enabled';
     public const FILTERING_PROXY_DISABLED = 'disabled';
