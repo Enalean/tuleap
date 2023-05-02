@@ -27,6 +27,14 @@ use Project;
 class GerritCanMigrateChecker
 {
     /**
+     * Check if platform can use gerrit
+     *
+     * Parameters:
+     *     'platform_can_use_gerrit' => boolean
+     */
+    public const GIT_EVENT_PLATFORM_CAN_USE_GERRIT = 'git_event_platform_can_use_gerrit';
+
+    /**
      * @var EventManager
      */
     private $event_manager;
@@ -51,7 +59,7 @@ class GerritCanMigrateChecker
         $platform_can_use_gerrit = false;
 
         $this->event_manager->processEvent(
-            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            self::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             [
                 'platform_can_use_gerrit' => &$platform_can_use_gerrit,
             ]

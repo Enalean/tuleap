@@ -24,13 +24,6 @@ define('GIT_BASE_DIR', dirname(__FILE__));
 define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
 define('GITOLITE3_LOGS_PATH', '/var/lib/gitolite/.gitolite/logs/');
 
-/**
- * Check if platform can use gerrit
- *
- * Parameters:
- *     'platform_can_use_gerrit' => boolean
- */
-define('GIT_EVENT_PLATFORM_CAN_USE_GERRIT', 'git_event_platform_can_use_gerrit');
 define('REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY', 'rest_git_pull_request_get_for_repository');
 
 /**
