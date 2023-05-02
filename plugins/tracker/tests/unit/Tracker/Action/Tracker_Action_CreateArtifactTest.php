@@ -167,11 +167,17 @@ final class Tracker_Action_CreateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->parent_tracker)->andReturns($this->parent_art_link_field);
         $this->formelement_factory->shouldReceive('getAnArtifactLinkField')->with($this->current_user, $this->tracker)->andReturns($this->art_link_field);
         $this->art_link_field->shouldReceive('getId')->andReturns(333);
-        $this->request->shouldReceive('get')->with('artifact')->andReturns([333 => ['parent' => Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE]]);
+        $this->request->shouldReceive('get')->with('artifact')->andReturns([
+            333 => [
+                'parent' => [(string) Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE],
+            ],
+        ]);
         $this->new_artifact->shouldReceive('getAllAncestors')->with($this->current_user)->andReturns([]);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
-        $this->assertNotNull($this->redirect->query_parameters);
+        self::assertNotEmpty($this->redirect->query_parameters);
+        self::assertArrayHasKey("func", $this->redirect->query_parameters);
+        self::assertArrayHasKey("tracker", $this->redirect->query_parameters);
     }
 
     public function testItDoesntRedirectWhenNewArtifactAlreadyHasAParent(): void
