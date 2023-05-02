@@ -62,12 +62,6 @@
     </div>
 </template>
 
-<script setup>
-import { useGettext } from "vue3-gettext";
-
-const { $gettext } = useGettext();
-</script>
-
 <script>
 import PermissionsSelector from "./PermissionsSelector.vue";
 
