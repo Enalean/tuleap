@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
@@ -17,18 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { Fault } from "@tuleap/fault";
 
-declare(strict_types=1);
-
-namespace Tuleap\WebAuthn\Controllers;
-
-use Tuleap\User\Account\AccountTabPresenterCollection;
-
-final class AccountPresenter
-{
-    public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly bool $has_passkey,
-    ) {
-    }
-}
+export const RegistrationFault = {
+    fromError: (error: unknown): Fault =>
+        error instanceof Error
+            ? Fault.fromError(error)
+            : Fault.fromMessage("Failed to register passkey"),
+};

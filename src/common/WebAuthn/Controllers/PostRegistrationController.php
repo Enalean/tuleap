@@ -84,7 +84,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         }
         $response = $request_body['response'];
         $name     = $request_body['name'];
-        if (! is_array($response) || ! is_string($name)) {
+        if (! is_array($response) || ! is_string($name) || empty($name)) {
             return $this->error_response_builder->build(400, _('Request body is not well formed'));
         }
 

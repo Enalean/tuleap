@@ -45,11 +45,26 @@ final class WebAuthnPlugin extends Plugin
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 
+    private function getViteAssets(): \Tuleap\Layout\IncludeViteAssets
+    {
+        return new \Tuleap\Layout\IncludeViteAssets(
+            __DIR__ . '/../frontend-assets',
+            '/assets/webauthn'
+        );
+    }
+
+    private function getWebAuthnCredentialSourceDao(): \Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao
+    {
+        return new \Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao();
+    }
+
     public function getAccountSettings(): Tuleap\Request\DispatchableWithRequest
     {
         return new Tuleap\WebAuthn\Controllers\AccountController(
             $this->getTemplateRenderer(),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->getViteAssets(),
+            $this->getWebAuthnCredentialSourceDao()
         );
     }
 

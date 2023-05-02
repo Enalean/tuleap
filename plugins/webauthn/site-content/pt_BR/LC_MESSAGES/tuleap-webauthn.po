@@ -15,11 +15,32 @@ msgstr ""
 msgid "Add a passkey"
 msgstr ""
 
+msgid "Adding a new passkey"
+msgstr ""
+
 msgid "Authentication with passkeys"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "My key"
+msgstr ""
+
+msgid "Name of passkey"
 msgstr ""
 
 msgid "Passkeys"
 msgstr ""
 
+msgid "Unable to register your passkey"
+msgstr ""
+
 msgid "WebAuthn"
+msgstr ""
+
+msgid "You have a registered passkey"
+msgstr ""
+
+msgid "Your browser doesn't support WebAuthn"
 msgstr ""

@@ -27,11 +27,14 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 
 final class AccountController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -40,6 +43,8 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
     public function __construct(
         private readonly TemplateRenderer $renderer,
         private readonly EventDispatcherInterface $dispatcher,
+        private readonly IncludeViteAssets $vite_assets,
+        private readonly WebAuthnCredentialSourceDao $source_dao,
     ) {
     }
 
@@ -52,7 +57,14 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
 
-        $presenter = new AccountPresenter($tabs);
+        $sources = $this->source_dao->getAllByUserId((int) $user->getId());
+
+        $presenter = new AccountPresenter(
+            $tabs,
+            ! empty($sources)
+        );
+
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'scripts/account.ts'));
 
         (new UserPreferencesHeader())->display(dgettext('tuleap-webauthn', 'Passkeys'), $layout);
         $this->renderer->renderToPage('account', $presenter);

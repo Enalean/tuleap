@@ -47,7 +47,8 @@ enable_plugins() {
         testplan  \
         program_management  \
         frs \
-        statistics
+        statistics \
+        webauthn
 
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 }
