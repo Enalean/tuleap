@@ -64,8 +64,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline');
         $this->addHook('statistics_collector', 'statistics_collector');
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
-
-        $this->listenToCollectRouteEventWithDefaultController();
     }
 
     private function canIncludeStylesheets()

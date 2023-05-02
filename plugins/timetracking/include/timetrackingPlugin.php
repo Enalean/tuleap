@@ -80,8 +80,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::REST_RESOURCES);
 
-        $this->listenToCollectRouteEventWithDefaultController();
-
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);

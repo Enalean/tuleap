@@ -67,7 +67,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
             $this->addHook(PostReceiveExecuteEvent::NAME);
-            $this->listenToCollectRouteEventWithDefaultController();
         }
         if (defined('PULLREQUEST_BASE_DIR')) {
             $this->addHook(GetCreatePullRequest::NAME);

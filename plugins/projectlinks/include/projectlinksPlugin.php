@@ -22,16 +22,22 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Widget\Event\GetProjectWidgetList;
+use Tuleap\Widget\Event\GetWidget;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
+class ProjectLinksPlugin extends Plugin implements DispatchableWithRequest
 {
     public $pluginInfo;
 
@@ -48,10 +54,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         $this->addHook('project_summary_title', 'projectSummaryTitle');
 
         $this->addHook(RegisterProjectCreationEvent::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
+        $this->addHook(GetWidget::NAME);
+        $this->addHook(GetProjectWidgetList::NAME);
         $this->addHook(NavigationPresenter::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     //========================================================================
@@ -70,21 +75,25 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         return $this->getPluginPath() . "/projectlinks_admin.php";
     }
 
-    //========================================================================
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeAdminPage'));
+        });
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/projectlinks_admin.php', $this->getRouteHandler('routeAdminPage'));
         });
     }
 
-    public function routeAdminPage(): \Tuleap\Request\DispatchableWithRequest
+    public function routeAdminPage(): DispatchableWithRequest
     {
-        return new \Tuleap\Plugin\PluginLegacyController($this);
+        return $this;
     }
 
-    public function process(): void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        ServiceInstrumentation::increment($this->getName());
         // serve the administration pages for project links
 
         global $Language;
@@ -1009,14 +1018,14 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         db_query("DELETE FROM plugin_projectlinks_relationship WHERE ((master_group_id=" . db_ei($group_id) . ") OR (target_group_id=" . db_ei($group_id) . "))");
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    public function widgetInstance(GetWidget $get_widget_event)
     {
         if ($get_widget_event->getName() === 'projectlinkshomepage') {
             $get_widget_event->setWidget(new ProjectLinks_Widget_HomePageLinks($this, Codendi_HTMLPurifier::instance()));
         }
     }
 
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    public function getProjectWidgetList(GetProjectWidgetList $event)
     {
         $event->addWidget('projectlinkshomepage');
     }

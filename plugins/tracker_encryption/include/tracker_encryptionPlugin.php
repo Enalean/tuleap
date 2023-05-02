@@ -48,7 +48,6 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $this->addHook('fill_project_history_sub_events');
         $this->addHook('javascript_file');
         $this->addHook('cssfile');
-        $this->listenToCollectRouteEventWithDefaultController();
 
         return parent::getHooksAndCallbacks();
     }

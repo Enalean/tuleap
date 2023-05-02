@@ -34,7 +34,6 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting implem
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->listenToCollectRouteEventWithDefaultController();
         bindtextdomain('tuleap-pluginsadministration', __DIR__ . '/../site-content');
     }
 
