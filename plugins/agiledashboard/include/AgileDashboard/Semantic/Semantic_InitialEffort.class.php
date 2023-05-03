@@ -21,6 +21,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\AgileDashboard\Semantic\InitialEffortSemanticAdminPresenterBuilder;
 use Tuleap\AgileDashboard\Semantic\SemanticInitialEffortPossibleFieldRetriever;
 
 class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
@@ -103,7 +104,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $html = dgettext('tuleap-agiledashboard', 'This is used in the <b>Agile Dashboard</b> if enabled.');
+        $html = dgettext('tuleap-agiledashboard', 'This is used in the Agile Dashboard if enabled.');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
@@ -115,65 +116,21 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         return $html;
     }
 
-    /**
-     * Display the form to let the admin change the semantic
-     *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
-     * @param TrackerManager          $tracker_manager  The tracker manager
-     * @param Codendi_Request         $request          The request
-     * @param PFUser                  $current_user     The user who made the request
-     *
-     * @return void
-     */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
-        $purify = Codendi_HTMLPurifier::instance();
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
-        $html = '';
-
-        $numeric_fields = $this->getSemanticInitialEffortPossibleFieldRetriever()->getPossibleFieldsForInitialEffort(
-            $this->tracker,
-            $this->getFieldId()
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
         );
 
-        if ($numeric_fields) {
-            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html  .= $this->getCSRFToken()->fetchHTMLInput();
-            $select = '<select name="initial_effort_field_id">';
-            if (! $this->getFieldId()) {
-                $select .= '<option value="-1" selected="selected">' . $purify->purify(dgettext('tuleap-tracker', 'Choose a field...')) . '</option>';
-            }
+        $builder = new InitialEffortSemanticAdminPresenterBuilder($this->getSemanticInitialEffortPossibleFieldRetriever());
 
-            foreach ($numeric_fields as $numeric_field) {
-                if ($numeric_field->getId() == $this->getFieldId()) {
-                    $selected = ' selected="selected" ';
-                } else {
-                    $selected = '';
-                }
-                $select .= '<option value="' . $purify->purify($numeric_field->getId()) . '" ' . $selected . '>' . $purify->purify($numeric_field->getLabel()) . '</option>';
-            }
-            $select .= '</select>';
-
-            $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
-            $unset_btn .= $purify->purify(dgettext('tuleap-tracker', 'Unset this semantic')) . '</button>';
-
-            $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
-            $submit_btn .= $purify->purify($GLOBALS['Language']->getText('global', 'save_change')) . '</button>';
-
-            if (! $this->getFieldId()) {
-                $html .= dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
-                $html .= '<p>' . $purify->purify(dgettext('tuleap-tracker', 'Feel free to choose one:'));
-                $html .= $select . ' <br> ' . $submit_btn . '</p>';
-            } else {
-                $html .= sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $select);
-                $html .= $submit_btn . ' ' . $purify->purify($GLOBALS['Language']->getText('global', 'or')) . ' ' . $unset_btn;
-            }
-            $html .= '</form>';
-        } else {
-            $html .= dgettext('tuleap-agiledashboard', 'You cannot define the <em>initial effort</em> semantic since there aren\'t any numeric fields in the tracker');
-        }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $purify->purify(dgettext('tuleap-tracker', 'go back to semantic overview')) . '</a></p>';
-        echo $html;
+        $template_rendreder = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+        echo $template_rendreder->renderToString(
+            'semantics/admin-inital-effort',
+            $builder->build($this, $this->getCSRFToken())
+        );
 
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }

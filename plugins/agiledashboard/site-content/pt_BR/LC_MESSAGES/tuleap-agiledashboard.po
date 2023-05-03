@@ -126,6 +126,9 @@ msgid ""
 "in a submilestone."
 msgstr ""
 
+msgid "Back to semantics"
+msgstr ""
+
 msgid "Backlog title"
 msgstr ""
 
@@ -151,6 +154,9 @@ msgid "Charts"
 msgstr ""
 
 msgid "Charts configuration"
+msgstr ""
+
+msgid "Choose a field..."
 msgstr ""
 
 msgid "Close"
@@ -228,6 +234,9 @@ msgid "Explicit top backlog"
 msgstr ""
 
 msgid "Export the configuration"
+msgstr ""
+
+msgid "Field used by semantic"
 msgstr ""
 
 msgid "Filter:"
@@ -415,6 +424,9 @@ msgstr "Remover do backlog principal"
 msgid "Save"
 msgstr "Gravar"
 
+msgid "Save semantic"
+msgstr ""
+
 msgid "Scrum"
 msgstr "Scrum"
 
@@ -544,7 +556,7 @@ msgid ""
 "scrum with default template."
 msgstr ""
 
-msgid "This is used in the <b>Agile Dashboard</b> if enabled."
+msgid "This is used in the Agile Dashboard if enabled."
 msgstr ""
 
 msgid ""
@@ -610,7 +622,13 @@ msgstr ""
 msgid "Unplanned"
 msgstr ""
 
+msgid "Unset this semantic"
+msgstr ""
+
 msgid "Update of planning assignment may lead to errors in:"
+msgstr ""
+
+msgid "Update semantic"
 msgstr ""
 
 msgid "View Planning"
@@ -670,8 +688,8 @@ msgid "You cannot create new planning because either:"
 msgstr ""
 
 msgid ""
-"You cannot define the <em>initial effort</em> semantic since there aren't "
-"any numeric fields in the tracker"
+"You cannot define the initial effort semantic since there aren't any numeric "
+"fields in the tracker"
 msgstr ""
 
 #, php-format
