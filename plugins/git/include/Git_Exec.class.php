@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Git\Branch\BranchName;
+use Tuleap\Http\Client\OutboundHTTPRequestProxy;
 
 /**
  * Wrap access to git commands
@@ -524,6 +525,7 @@ class Git_Exec
     {
         return $this->getAllowedProtocolEnvVariable() . $this->git_cmd .
                ' -c init.defaultBranch=' . escapeshellarg(BranchName::defaultBranchName()->name) .
+               ' -c http.proxy=' . escapeshellarg(OutboundHTTPRequestProxy::getProxy()) .
                ' --work-tree=' . escapeshellarg($this->work_tree) .
                ' --git-dir=' . escapeshellarg($this->git_dir);
     }

@@ -67,10 +67,8 @@ class HttpClientFactory
     {
         $config = [
             'timeout' => $timeout,
+            'proxy'   => OutboundHTTPRequestProxy::getProxy(),
         ];
-        if (OutboundHTTPRequestProxy::isFilteringProxyEnabled()) {
-            $config['proxy'] = OutboundHTTPRequestProxy::getProxy();
-        }
         return self::createClientWithConfig(
             $config,
             new HTTPOutboundResponseMetricCollector(Prometheus::instance()),
