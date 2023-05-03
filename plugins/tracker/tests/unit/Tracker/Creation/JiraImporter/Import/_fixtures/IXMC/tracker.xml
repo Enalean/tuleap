@@ -91,7 +91,7 @@
               <label><![CDATA[Rapporteur]]></label>
               <bind type="users">
                 <items>
-                  <item label="ugroup_2"/>
+                  <item label="group_members"/>
                 </items>
               </bind>
             </formElement>
@@ -100,7 +100,7 @@
               <label><![CDATA[Responsable]]></label>
               <bind type="users">
                 <items>
-                  <item label="ugroup_2"/>
+                  <item label="group_members"/>
                 </items>
               </bind>
             </formElement>
@@ -127,7 +127,7 @@
           <label><![CDATA[Approbateurs]]></label>
           <bind type="users">
             <items>
-              <item label="ugroup_2"/>
+              <item label="group_members"/>
             </items>
           </bind>
         </formElement>

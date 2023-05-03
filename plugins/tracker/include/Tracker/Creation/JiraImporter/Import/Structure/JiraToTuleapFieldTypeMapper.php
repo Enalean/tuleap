@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -226,7 +225,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withRank(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_RANK)
                         ->withRequired($jira_field->isRequired())
                         ->withUsersValues(
-                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                            new XMLBindUsersValue('group_members')
                         )
                         ->withPermissions(... $permissions);
 
@@ -240,7 +239,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withRank(AlwaysThereFieldsExporter::JIRA_REPORTER_RANK)
                         ->withRequired($jira_field->isRequired())
                         ->withUsersValues(
-                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                            new XMLBindUsersValue('group_members')
                         )
                         ->withPermissions(... $permissions);
 
@@ -254,7 +253,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withRank(11)
                         ->withRequired($jira_field->isRequired())
                         ->withUsersValues(
-                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                            new XMLBindUsersValue('group_members')
                         )
                         ->withPermissions(... $permissions);
 
@@ -268,7 +267,7 @@ class JiraToTuleapFieldTypeMapper
                         ->withRank(12)
                         ->withRequired($jira_field->isRequired())
                         ->withUsersValues(
-                            new XMLBindUsersValue(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME)
+                            new XMLBindUsersValue('group_members')
                         )
                         ->withPermissions(... $permissions);
 

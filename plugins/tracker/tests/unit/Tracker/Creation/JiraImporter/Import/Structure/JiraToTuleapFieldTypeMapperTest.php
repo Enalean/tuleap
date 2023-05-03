@@ -384,7 +384,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 self::assertEquals('Multi Select', $node->label);
                 self::assertEquals('users', $node->bind['type']);
                 self::assertCount(1, $node->bind->items->item);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+                self::assertEquals('group_members', $node->bind->items->item[0]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('multiselectid');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE, $mapping->getType());
@@ -408,7 +408,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 self::assertEquals('Assignee', $node->label);
                 self::assertEquals('users', $node->bind['type']);
                 self::assertCount(1, $node->bind->items->item);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+                self::assertEquals('group_members', $node->bind->items->item[0]['label']);
 
                 $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME);
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
@@ -432,7 +432,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 self::assertEquals('Reporter', $node->label);
                 self::assertEquals('users', $node->bind['type']);
                 self::assertCount(1, $node->bind->items->item);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+                self::assertEquals('group_members', $node->bind->items->item[0]['label']);
 
                 $mapping = $collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_REPORTER_NAME);
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
@@ -456,7 +456,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
                 self::assertEquals('Reviewers', $node->label);
                 self::assertEquals('users', $node->bind['type']);
                 self::assertCount(1, $node->bind->items->item);
-                self::assertEquals(Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME, $node->bind->items->item[0]['label']);
+                self::assertEquals('group_members', $node->bind->items->item[0]['label']);
 
                 $mapping = $collection->getMappingFromJiraField('custom_123214');
                 self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
