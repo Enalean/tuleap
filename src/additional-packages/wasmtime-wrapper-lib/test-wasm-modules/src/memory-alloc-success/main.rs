@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
@@ -18,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+ fn main() -> () {
+    // Allocate 2Mo (8 x 262144 = 2097152 bytes)
+    let mut vec: Vec<u64> = Vec::with_capacity(262144);
+    for i in 0..262144 {
+        vec.push(i);
+    }
 
-namespace Tuleap\WebAssembly;
-final class WASMValidResponse
-{
-    public readonly string $data;
-    public readonly WASMStatistics $stats;
+    print!("Memory Ok");
 }
