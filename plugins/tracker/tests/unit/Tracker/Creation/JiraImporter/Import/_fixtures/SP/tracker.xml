@@ -70,7 +70,7 @@
               <label><![CDATA[Reporter]]></label>
               <bind type="users">
                 <items>
-                  <item label="ugroup_2"/>
+                  <item label="group_members"/>
                 </items>
               </bind>
             </formElement>
@@ -79,7 +79,7 @@
               <label><![CDATA[Assignee]]></label>
               <bind type="users">
                 <items>
-                  <item label="ugroup_2"/>
+                  <item label="group_members"/>
                 </items>
               </bind>
             </formElement>
