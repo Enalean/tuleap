@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
@@ -18,17 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+describe("User preferences | WebAuthn", () => {
+    beforeEach(() => {
+        cy.projectMemberSession();
+        cy.visit("/plugins/webauthn/account");
+    });
 
-namespace Tuleap\WebAuthn\Controllers;
+    it("can register a new passkey", () => {
+        cy.createAuthenticator().then((id) => {
+            cy.get("[data-test=add-button]").should("be.visible");
+            cy.get("[data-test=add-button]").click();
 
-use Tuleap\User\Account\AccountTabPresenterCollection;
+            cy.get("[data-test=name-modal-input]").type("My awesome key");
+            cy.get("[data-test=name-modal-button]").click();
 
-final class AccountPresenter
-{
-    public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly bool $has_passkey,
-    ) {
-    }
-}
+            cy.get("[data-test=registered-section]").should("be.visible");
+
+            cy.removeAuthenticator(id);
+        });
+    });
+});

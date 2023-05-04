@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
@@ -18,17 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\WebAuthn\Controllers;
-
-use Tuleap\User\Account\AccountTabPresenterCollection;
-
-final class AccountPresenter
-{
-    public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly bool $has_passkey,
-    ) {
-    }
+.webauthn-hidden {
+    display: none;
 }

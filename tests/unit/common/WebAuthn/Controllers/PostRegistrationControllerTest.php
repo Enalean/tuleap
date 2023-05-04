@@ -203,6 +203,12 @@ final class PostRegistrationControllerTest extends TestCase
                 'name' => -1,
             ],
         ];
+        yield 'It returns 400 when name is empty' => [
+            'body' => [
+                'response' => [],
+                'name' => '',
+            ],
+        ];
         yield 'It returns 400 when invalid response' => [
             'body' => [
                 'response' => ['invalid data'],

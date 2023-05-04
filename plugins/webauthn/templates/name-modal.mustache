@@ -1,0 +1,27 @@
+<form class="tlp-modal" id="webauthn-name-modal"
+      role="dialog" aria-labelledby="modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-title">
+            {{# dgettext }} tuleap-webauthn | Adding a new passkey {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal"
+                aria-label="{{# dgettext }} tuleap-webauthn | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="webauthn-name-input">
+                {{# dgettext }} tuleap-webauthn | Name of passkey {{/ dgettext }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <input type="text" class="tlp-input" id="webauthn-name-input" name="name" data-test="name-modal-input"
+                   placeholder="{{# dgettext }} tuleap-webauthn | My key {{/ dgettext }}" required />
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button class="tlp-button tlp-button-primary" type="submit" data-test="name-modal-button">
+            {{# dgettext }} tuleap-webauthn | Add a passkey {{/ dgettext }}
+        </button>
+    </div>
+</form>

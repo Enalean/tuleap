@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,17 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-namespace Tuleap\WebAuthn\Controllers;
-
-use Tuleap\User\Account\AccountTabPresenterCollection;
-
-final class AccountPresenter
-{
-    public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly bool $has_passkey,
-    ) {
+export default vite.defineAppConfig(
+    { plugin_name: "webauthn" },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    account: path.resolve(__dirname, "scripts/account.ts"),
+                },
+            },
+        },
+        resolve: {
+            dedupe: ["neverthrow"],
+        },
     }
-}
+);

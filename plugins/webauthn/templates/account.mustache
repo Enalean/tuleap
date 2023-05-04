@@ -6,6 +6,8 @@
     <div class="user-preferences-container">
         {{> user-account-tabs }}
 
+        {{> name-modal }}
+
         <div class="user-preferences-section">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
@@ -15,10 +17,33 @@
                             {{# dgettext }} tuleap-webauthn | Passkeys {{/ dgettext }}
                         </h1>
                     </div>
-                    <div class="tlp-pane-section">
-                        <button type="button" class="tlp-button-primary" disabled>
-                            {{# dgettext }} tuleap-webauthn | Add a passkey {{/ dgettext }}
-                        </button>
+
+                    {{^ has_passkey }}
+                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-register-section">
+                            <button type="button" class="tlp-button-primary" id="webauthn-add-button"
+                                    data-test="add-button" data-target-modal-id="webauthn-name-modal">
+                                <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden"
+                                   aria-hidden="true"></i>
+                                {{# dgettext }} tuleap-webauthn | Add a passkey {{/ dgettext }}
+                            </button>
+                            <p class="tlp-text-danger webauthn-hidden" id="webauthn-error">
+                                {{# dgettext }} tuleap-webauthn | Unable to register your passkey {{/ dgettext }}
+                            </p>
+                        </div>
+                    {{/ has_passkey }}
+
+                    {{# has_passkey }}
+                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-register-section"
+                             data-test="registered-section">
+                            {{# dgettext }} tuleap-webauthn | You have a registered passkey {{/ dgettext }}
+                        </div>
+                    {{/ has_passkey }}
+
+                    <div class="tlp-pane-section webauthn-hidden" id="webauthn-disabled-section">
+                        <p class="tlp-text-warning">
+                            <i class="fa-solid fa-warning" aria-hidden="true"></i>
+                            {{# dgettext }} tuleap-webauthn | Your browser doesn't support WebAuthn {{/ dgettext }}
+                        </p>
                     </div>
                 </div>
             </section>
