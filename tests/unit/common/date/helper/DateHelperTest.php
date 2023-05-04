@@ -239,6 +239,36 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testRelativeDateRelativeFistAbsoluteShownWithoutTime(): void
+    {
+        $GLOBALS['Language']
+            ->method('getText')
+            ->with(
+                'system',
+                'datefmt_short',
+            )
+            ->willReturn('Y-m-d');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive(
+                [
+                    'getLocale'     => 'en_US',
+                    'getPreference' => 'relative_first-absolute_shown',
+                ]
+            )
+            ->getMock();
+
+        $this->assertEquals(
+            '<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14"
+            preference="relative"
+            locale="en_US"
+            placement="right">2009-02-14</tlp-relative-date>',
+            DateHelper::relativeDateInlineContextWithoutTime(1234567890, $user)
+        );
+    }
+
     public function testRelativeDateRelativeFistAbsoluteTooltip(): void
     {
         $GLOBALS['Language']

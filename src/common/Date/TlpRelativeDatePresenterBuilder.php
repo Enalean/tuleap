@@ -29,17 +29,25 @@ class TlpRelativeDatePresenterBuilder
     private const POSITION_RIGHT = 'right';
     private const POSITION_TOP   = 'top';
 
+    private const WITH_TIME    = true;
+    private const WITHOUT_TIME = false;
+
     public function getTlpRelativeDatePresenterInBlockContext(\DateTimeImmutable $date, \PFUser $user): TlpRelativeDatePresenter
     {
-        return $this->getPresenter($date, $user, self::POSITION_TOP);
+        return $this->getPresenter($date, $user, self::POSITION_TOP, self::WITH_TIME);
     }
 
     public function getTlpRelativeDatePresenterInInlineContext(\DateTimeImmutable $date, \PFUser $user): TlpRelativeDatePresenter
     {
-        return $this->getPresenter($date, $user, self::POSITION_RIGHT);
+        return $this->getPresenter($date, $user, self::POSITION_RIGHT, self::WITH_TIME);
     }
 
-    private function getPresenter(\DateTimeImmutable $date, \PFUser $user, string $position): TlpRelativeDatePresenter
+    public function getTlpRelativeDatePresenterInInlineContextWithoutTime(\DateTimeImmutable $date, \PFUser $user): TlpRelativeDatePresenter
+    {
+        return $this->getPresenter($date, $user, self::POSITION_RIGHT, self::WITHOUT_TIME);
+    }
+
+    private function getPresenter(\DateTimeImmutable $date, \PFUser $user, string $position, bool $with_time): TlpRelativeDatePresenter
     {
         switch ($user->getPreference(\DateHelper::PREFERENCE_NAME)) {
             case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
@@ -68,7 +76,12 @@ class TlpRelativeDatePresenterBuilder
 
         return new TlpRelativeDatePresenter(
             date('c', $time),
-            date($GLOBALS['Language']->getText('system', 'datefmt'), $time),
+            date(
+                $with_time
+                    ? $GLOBALS['Language']->getText('system', 'datefmt')
+                    : $GLOBALS['Language']->getText('system', 'datefmt_short'),
+                $time
+            ),
             $placement,
             $preference,
             $user->getLocale(),

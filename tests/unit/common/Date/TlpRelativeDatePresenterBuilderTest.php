@@ -37,8 +37,10 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->willReturnCallback(static fn ($key1, $key2) => match ($key2) {
+                'datefmt' => 'd/m/Y H:i',
+                'datefmt_short' => 'd/m/Y',
+            });
     }
 
     /**
@@ -106,6 +108,41 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals('2009-02-14T00:31:30+01:00', $presenter->date);
         self::assertEquals('14/02/2009 00:31', $presenter->absolute_date);
+        self::assertEquals($expected_placement, $presenter->placement);
+        self::assertEquals($expected_preference, $presenter->preference);
+        self::assertEquals('fr_FR', $presenter->locale);
+    }
+
+    /**
+     * @testWith ["relative_first-absolute_shown", "right", "relative"]
+     *           ["absolute_first-relative_shown", "right", "absolute"]
+     *           ["relative_first-absolute_tooltip", "tooltip", "relative"]
+     *           ["absolute_first-relative_tooltip", "tooltip", "absolute"]
+     */
+    public function testInlineContextWithoutTime(
+        string $preference_value,
+        string $expected_placement,
+        string $expected_preference,
+    ): void {
+        $builder = new TlpRelativeDatePresenterBuilder();
+
+        $user = Mockery::mock(PFUser::class)
+            ->shouldReceive(
+                [
+                    'getPreference' => $preference_value,
+                    'getLocale'     => 'fr_FR',
+                ]
+            )
+            ->getMock();
+
+
+        $presenter = $builder->getTlpRelativeDatePresenterInInlineContextWithoutTime(
+            (new DateTimeImmutable())->setTimestamp(1234567890),
+            $user,
+        );
+
+        self::assertEquals('2009-02-14T00:31:30+01:00', $presenter->date);
+        self::assertEquals('14/02/2009', $presenter->absolute_date);
         self::assertEquals($expected_placement, $presenter->placement);
         self::assertEquals($expected_preference, $presenter->preference);
         self::assertEquals('fr_FR', $presenter->locale);
