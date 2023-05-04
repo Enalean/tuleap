@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 describe("CellDescription", () => {
     it("should display the preprocessed description", () => {
         const wrapper = shallowMount(CellDescription, {
-            propsData: {
+            props: {
                 item: {
                     post_processed_description: "ipsum doloret",
                 } as ItemSearchResult,

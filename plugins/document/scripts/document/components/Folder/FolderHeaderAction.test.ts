@@ -25,7 +25,7 @@ import type { Folder } from "../../type";
 describe("FolderHeaderAction", () => {
     function createWrapper(item: Folder): VueWrapper<InstanceType<typeof FolderHeaderAction>> {
         return shallowMount(FolderHeaderAction, {
-            propsData: { item },
+            props: { item },
         });
     }
 

@@ -31,7 +31,7 @@ describe("CurrentFolderDropZone", () => {
             props = {}
         ): VueWrapper<InstanceType<typeof CurrentFolderDropZone>> => {
             return shallowMount(CurrentFolderDropZone, {
-                propsData: { ...props },
+                props: { ...props },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

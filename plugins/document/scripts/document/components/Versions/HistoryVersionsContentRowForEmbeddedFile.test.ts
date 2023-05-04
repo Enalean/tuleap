@@ -54,7 +54,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
         has_more_than_one_version: boolean
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRowForEmbeddedFile>> {
         return shallowMount(HistoryVersionsContentRowForEmbeddedFile, {
-            propsData: {
+            props: {
                 item,
                 has_more_than_one_version,
                 version: {

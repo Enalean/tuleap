@@ -26,7 +26,7 @@ import { nextTick } from "vue";
 describe("SearchResultError", () => {
     it("should display error message", () => {
         const wrapper = shallowMount(SearchResultError, {
-            propsData: {
+            props: {
                 error: new Error("Lorem ipsum"),
             },
             global: { ...getGlobalTestOptions({}) },
@@ -37,7 +37,7 @@ describe("SearchResultError", () => {
 
     it("should display error message of a FetchWrapperError", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            propsData: {
+            props: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () =>
                         Promise.resolve({
@@ -59,7 +59,7 @@ describe("SearchResultError", () => {
 
     it("should display i18n error message of a FetchWrapperError", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            propsData: {
+            props: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () =>
                         Promise.resolve({
@@ -82,7 +82,7 @@ describe("SearchResultError", () => {
 
     it("should default to default message of FetchWrapperError if it does not contain an error object", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            propsData: {
+            props: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () => Promise.resolve({}),
                 } as Response),
@@ -98,7 +98,7 @@ describe("SearchResultError", () => {
 
     it("should default to default message of FetchWrapperError if response is malformed", async () => {
         const wrapper = shallowMount(SearchResultError, {
-            propsData: {
+            props: {
                 error: new FetchWrapperError("Lorem ipsum", {
                     json: () => Promise.reject(new Error("No valid json")),
                 } as Response),

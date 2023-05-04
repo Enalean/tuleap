@@ -41,7 +41,7 @@ describe("ModalConfirmationDeletion", () => {
         } as Wiki;
 
         return shallowMount(DeleteAssociatedWikiPageCheckbox, {
-            propsData: { item, wikiPageReferencers },
+            props: { item, wikiPageReferencers },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

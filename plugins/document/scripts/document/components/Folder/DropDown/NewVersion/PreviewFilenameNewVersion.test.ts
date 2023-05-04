@@ -33,7 +33,7 @@ describe("PreviewFilenameNewVersion", () => {
         filename_pattern: string
     ): VueWrapper<InstanceType<typeof PreviewFilenameNewVersion>> {
         return shallowMount(PreviewFilenameNewVersion, {
-            propsData: {
+            props: {
                 item,
                 version,
             },

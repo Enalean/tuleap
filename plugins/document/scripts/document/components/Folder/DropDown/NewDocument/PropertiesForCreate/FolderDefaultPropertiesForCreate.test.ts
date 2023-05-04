@@ -33,7 +33,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
         has_loaded_properties: boolean
     ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForCreate>> {
         return shallowMount(FolderDefaultPropertiesForCreate, {
-            propsData: { status_value, properties },
+            props: { status_value, properties },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

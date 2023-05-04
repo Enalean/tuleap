@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 describe("DownloadButton", () => {
     function getWrapper(item: ItemFile): VueWrapper<InstanceType<typeof DownloadButton>> {
         return shallowMount(DownloadButton, {
-            propsData: { item },
+            props: { item },
             global: { ...getGlobalTestOptions({}) },
         });
     }

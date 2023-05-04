@@ -32,7 +32,7 @@ describe("QuickLookEmpty", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmpty, {
-            propsData: { item: item },
+            props: { item: item },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -45,7 +45,7 @@ describe("QuickLookEmpty", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmpty, {
-            propsData: { item: item },
+            props: { item: item },
         });
 
         expect(wrapper.findComponent(NewVersionEmptyDropdown).exists()).toBe(false);

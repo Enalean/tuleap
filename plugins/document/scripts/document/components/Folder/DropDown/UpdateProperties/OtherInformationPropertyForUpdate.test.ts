@@ -44,7 +44,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
     ): VueWrapper<InstanceType<typeof OtherInformationPropertiesForUpdate>> {
         load_properties.mockReset();
         return shallowMount(OtherInformationPropertiesForUpdate, {
-            propsData: { currentlyUpdatedItem: item, value: "", propertyToUpdate },
+            props: { currentlyUpdatedItem: item, value: "", propertyToUpdate },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

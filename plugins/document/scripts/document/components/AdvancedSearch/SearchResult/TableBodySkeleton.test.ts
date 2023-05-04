@@ -23,7 +23,7 @@ import TableBodySkeleton from "./TableBodySkeleton.vue";
 describe("TableBodySkeleton", () => {
     it("should display skeleton for different types of column", () => {
         const wrapper = shallowMount(TableBodySkeleton, {
-            propsData: {
+            props: {
                 columns: [
                     { name: "id", label: "Whatever" },
                     { name: "title", label: "Whatever" },

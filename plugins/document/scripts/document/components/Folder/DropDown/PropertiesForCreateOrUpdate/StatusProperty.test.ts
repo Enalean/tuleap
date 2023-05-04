@@ -29,7 +29,7 @@ jest.mock("../../../../helpers/emitter");
 describe("StatusProperty", () => {
     function createWrapper(props = {}): VueWrapper<InstanceType<typeof StatusProperty>> {
         return shallowMount(StatusProperty, {
-            propsData: { ...props },
+            props: { ...props },
             global: { ...getGlobalTestOptions({}) },
         });
     }

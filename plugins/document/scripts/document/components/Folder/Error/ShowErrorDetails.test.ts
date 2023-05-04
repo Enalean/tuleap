@@ -34,7 +34,7 @@ describe("ShowErrorDetails", () => {
         beforeEach(() => {
             show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    propsData: {},
+                    props: {},
                     global: {
                         ...getGlobalTestOptions({
                             modules: {
@@ -92,7 +92,7 @@ describe("ShowErrorDetails", () => {
         beforeEach(() => {
             show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    propsData: {},
+                    props: {},
                     global: {
                         ...getGlobalTestOptions({
                             modules: {
@@ -127,7 +127,7 @@ describe("ShowErrorDetails", () => {
         beforeEach(() => {
             show_error_details_factory = (): VueWrapper<InstanceType<typeof ShowErrorDetails>> => {
                 return shallowMount(ShowErrorDetails, {
-                    propsData: {},
+                    props: {},
                     global: {
                         ...getGlobalTestOptions({
                             modules: {

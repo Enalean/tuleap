@@ -53,7 +53,7 @@ describe("NewItemMenuOptions", function () {
         create_new_item_alternatives: NewItemAlternativeArray = []
     ): VueWrapper<InstanceType<typeof NewItemMenuOptions>> {
         return shallowMount(NewItemMenuOptions, {
-            propsData: {
+            props: {
                 item: CURRENT_FOLDER,
             },
             global: {

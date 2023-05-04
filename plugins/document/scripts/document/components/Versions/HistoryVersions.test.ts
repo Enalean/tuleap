@@ -52,7 +52,7 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42 } as ItemFile,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -68,7 +68,7 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42 } as ItemFile,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -87,7 +87,7 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(errAsync(Error("You cannot!")));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42 } as ItemFile,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -106,7 +106,7 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([{} as FileHistory]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42, type: "file" } as ItemFile,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -125,7 +125,7 @@ describe("HistoryVersions", () => {
         getAllLinkVersionHistory.mockReturnValue(okAsync([{} as LinkVersion]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42, type: "link" } as Link,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -144,7 +144,7 @@ describe("HistoryVersions", () => {
         getAllEmbeddedFileVersionHistory.mockReturnValue(okAsync([{} as EmbeddedFileVersion]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            propsData: {
+            props: {
                 item: { id: 42, type: "embedded" } as Embedded,
             },
             global: { ...getGlobalTestOptions({}) },

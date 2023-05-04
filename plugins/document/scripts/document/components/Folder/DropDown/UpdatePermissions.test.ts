@@ -29,7 +29,7 @@ jest.mock("../../../helpers/emitter");
 describe("UpdatePermissions", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof UpdatePermissions>> {
         return shallowMount(UpdatePermissions, {
-            propsData: { item },
+            props: { item },
             global: { ...getGlobalTestOptions({}) },
         });
     }

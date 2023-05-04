@@ -59,7 +59,7 @@ describe("FolderCellTitle", () => {
         item.is_expanded = is_expanded;
 
         return shallowMount(FolderCellTitle, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

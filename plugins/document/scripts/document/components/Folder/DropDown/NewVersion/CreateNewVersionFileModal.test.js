@@ -39,7 +39,7 @@ describe("CreateNewVersionFileModal", () => {
         const store = createStoreMock(store_option);
 
         return shallowMount(CreateNewVersionFileModal, {
-            propsData: {
+            props: {
                 item: {
                     id: 12,
                     title: "Dacia",

@@ -33,7 +33,7 @@ describe("UnlockItem", () => {
 
     function createWrapper(item: ItemFile): VueWrapper<InstanceType<typeof UnlockItem>> {
         return shallowMount(UnlockItem, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

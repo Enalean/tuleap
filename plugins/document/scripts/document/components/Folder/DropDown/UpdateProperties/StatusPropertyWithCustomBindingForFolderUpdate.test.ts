@@ -28,7 +28,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
         is_status_property_used: boolean
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForFolderUpdate>> {
         return shallowMount(StatusPropertyWithCustomBindingForFolderUpdate, {
-            propsData: { status_value: "none" },
+            props: { status_value: "none" },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

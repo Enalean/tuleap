@@ -30,7 +30,7 @@ describe("PreviewFilenameProperty", () => {
         configuration: ConfigurationState
     ): VueWrapper<InstanceType<typeof PreviewFilenameProperty>> {
         return shallowMount(PreviewFilenameProperty, {
-            propsData: {
+            props: {
                 item,
             },
             global: {

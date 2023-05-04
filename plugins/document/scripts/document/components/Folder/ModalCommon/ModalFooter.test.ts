@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 describe("ModalFooter", () => {
     function createWrapper(isLoading: boolean): VueWrapper<InstanceType<typeof ModalFooter>> {
         return shallowMount(ModalFooter, {
-            propsData: {
+            props: {
                 isLoading: isLoading,
                 ariaLabelledBy: "label",
                 dataTest: "",

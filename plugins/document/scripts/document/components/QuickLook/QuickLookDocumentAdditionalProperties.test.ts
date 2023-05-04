@@ -29,7 +29,7 @@ describe("QuickLookDocumentAdditionalProperties", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof QuickLookDocumentAdditionalProperties>> {
         return shallowMount(QuickLookDocumentAdditionalProperties, {
-            propsData: {
+            props: {
                 property,
             },
             global: {

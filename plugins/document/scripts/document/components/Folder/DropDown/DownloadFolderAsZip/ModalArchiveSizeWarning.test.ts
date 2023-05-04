@@ -29,7 +29,7 @@ import type { ConfigurationState } from "../../../../store/configuration";
 describe("ModalArchiveSizeWarningModal", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ModalArchiveSizeWarningModal>> {
         return shallowMount(ModalArchiveSizeWarningModal, {
-            propsData: {
+            props: {
                 size: 1050000,
                 folderHref: "/download/me/here",
                 shouldWarnOsxUser: false,

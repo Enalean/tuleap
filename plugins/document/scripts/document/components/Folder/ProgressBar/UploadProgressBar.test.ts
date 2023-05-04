@@ -29,7 +29,7 @@ let cancel_folder_upload: jest.Mock;
 
 function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgressBar>> {
     return shallowMount(UploadProgressBar, {
-        propsData: { item },
+        props: { item },
         global: {
             ...getGlobalTestOptions({
                 actions: {

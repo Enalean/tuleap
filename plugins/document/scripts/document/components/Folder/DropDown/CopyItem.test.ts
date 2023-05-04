@@ -50,7 +50,7 @@ describe("CopyItem", () => {
 
         store = useClipboardStore(mocked_store, "1", "1", pinia);
         return shallowMount(CopyItem, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions(
                     {

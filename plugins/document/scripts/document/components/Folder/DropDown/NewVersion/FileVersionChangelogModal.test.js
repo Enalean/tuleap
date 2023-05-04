@@ -30,7 +30,7 @@ describe("FileVersionChangelogModal", () => {
 
     function getWrapper() {
         return shallowMount(FileVersionChangelogModal, {
-            propsData: {
+            props: {
                 updatedFile: { id: 12, title: "How to.pdf", properties: [] },
                 droppedFile: new File([], "How to (updated).pdf"),
             },

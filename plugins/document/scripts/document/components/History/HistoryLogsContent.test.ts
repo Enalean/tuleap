@@ -26,7 +26,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 describe("HistoryLogsContent", () => {
     it("should display old and new value", () => {
         const wrapper = shallowMount(HistoryLogsContent, {
-            propsData: {
+            props: {
                 log_entries: [
                     {
                         when: "2021-10-06",
@@ -46,7 +46,7 @@ describe("HistoryLogsContent", () => {
 
     it("should collapse cols when there is no old value", () => {
         const wrapper = shallowMount(HistoryLogsContent, {
-            propsData: {
+            props: {
                 log_entries: [
                     {
                         when: "2021-10-06",
@@ -66,7 +66,7 @@ describe("HistoryLogsContent", () => {
 
     it("should collapse cols when there is no new value", () => {
         const wrapper = shallowMount(HistoryLogsContent, {
-            propsData: {
+            props: {
                 log_entries: [
                     {
                         when: "2021-10-06",
@@ -86,7 +86,7 @@ describe("HistoryLogsContent", () => {
 
     it("should collapse cols when there is no new value nor old value", () => {
         const wrapper = shallowMount(HistoryLogsContent, {
-            propsData: {
+            props: {
                 log_entries: [
                     {
                         when: "2021-10-06",
@@ -106,7 +106,7 @@ describe("HistoryLogsContent", () => {
 
     it("should display a link to a diff", () => {
         const wrapper = shallowMount(HistoryLogsContent, {
-            propsData: {
+            props: {
                 log_entries: [
                     {
                         when: "2021-10-06",

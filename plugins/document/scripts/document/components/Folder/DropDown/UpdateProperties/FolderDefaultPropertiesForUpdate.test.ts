@@ -51,7 +51,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         itemProperty: Array<Property>
     ): VueWrapper<InstanceType<typeof FolderDefaultPropertiesForUpdate>> {
         return shallowMount(FolderDefaultPropertiesForUpdate, {
-            propsData: {
+            props: {
                 currentlyUpdatedItem,
                 itemProperty,
                 status_value: "",

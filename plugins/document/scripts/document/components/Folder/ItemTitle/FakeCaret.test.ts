@@ -34,7 +34,7 @@ describe("FakeCaret", () => {
 
     function getWrapper(state: RootState, item: Wiki): VueWrapper<InstanceType<typeof FakeCaret>> {
         const component_options = {
-            propsData: {
+            props: {
                 item,
             },
         };

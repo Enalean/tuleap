@@ -28,7 +28,7 @@ import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 describe("FileCellTitle", () => {
     function getWrapper(item: ItemFile): VueWrapper<InstanceType<typeof FileCellTitle>> {
         return shallowMount(FileCellTitle, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     state: {

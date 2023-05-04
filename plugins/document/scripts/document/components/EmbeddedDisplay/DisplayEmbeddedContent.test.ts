@@ -40,7 +40,7 @@ describe("DisplayEmbeddedContent", () => {
         state: RootState
     ): VueWrapper<InstanceType<typeof DisplayEmbeddedContent>> {
         return shallowMount(DisplayEmbeddedContent, {
-            propsData: {
+            props: {
                 embedded_file,
                 content_to_display,
                 specific_version_number,

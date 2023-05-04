@@ -43,7 +43,7 @@ describe("OtherInformationPropertiesForCreate", () => {
         load_properties.mockReset();
         const properties: Array<Property> = [];
         return shallowMount(OtherInformationPropertiesForCreate, {
-            propsData: {
+            props: {
                 currentlyUpdatedItem: {
                     properties: properties,
                     obsolescence_date: null,

@@ -55,7 +55,7 @@ describe("DropDownCurrentFolder", () => {
                     } as unknown as RootState,
                 }),
             },
-            propsData: { isInFolderEmptyState },
+            props: { isInFolderEmptyState },
         });
     }
 

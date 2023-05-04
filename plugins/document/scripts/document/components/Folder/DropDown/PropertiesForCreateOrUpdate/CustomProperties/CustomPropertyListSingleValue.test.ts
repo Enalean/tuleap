@@ -35,7 +35,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof CustomPropertyListSingleValue>> {
         return shallowMount(CustomPropertyListSingleValue, {
-            propsData: { currentlyUpdatedItemProperty: property },
+            props: { currentlyUpdatedItemProperty: property },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

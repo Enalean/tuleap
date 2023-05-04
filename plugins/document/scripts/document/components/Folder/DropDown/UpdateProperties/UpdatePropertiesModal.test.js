@@ -31,7 +31,7 @@ describe("UpdatePropertiesModal", () => {
     beforeEach(() => {
         factory = (item, has_loaded_properties) => {
             return shallowMount(UpdatePropertiesModal, {
-                propsData: { item },
+                props: { item },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

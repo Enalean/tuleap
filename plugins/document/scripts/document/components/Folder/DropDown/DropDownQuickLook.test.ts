@@ -31,7 +31,7 @@ describe("DropDownQuickLook", () => {
         is_deletion_allowed: boolean
     ): VueWrapper<InstanceType<typeof DropDownQuickLook>> {
         return shallowMount(DropDownQuickLook, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

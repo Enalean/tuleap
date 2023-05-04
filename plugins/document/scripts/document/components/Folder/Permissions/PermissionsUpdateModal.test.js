@@ -40,7 +40,7 @@ describe("PermissionsUpdateModal", () => {
 
         factory = (props = {}, ugroups) => {
             return shallowMount(PermissionsUpdateModal, {
-                propsData: { ...props },
+                props: { ...props },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

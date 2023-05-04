@@ -40,7 +40,7 @@ describe("DropDownMenu", () => {
         should_display_history_in_document = false
     ): VueWrapper<InstanceType<typeof DropDownMenu>> {
         return shallowMount(DropDownMenu, {
-            propsData: { isInFolderEmptyState: false, isInQuickLookMode: false, item },
+            props: { isInFolderEmptyState: false, isInQuickLookMode: false, item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

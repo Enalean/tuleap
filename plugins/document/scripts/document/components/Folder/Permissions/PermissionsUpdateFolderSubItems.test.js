@@ -29,7 +29,7 @@ describe("PermissionsUpdateFolderSubItems", () => {
     beforeEach(() => {
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateFolderSubItems, {
-                propsData: { ...props },
+                props: { ...props },
                 global: { ...getGlobalTestOptions({}) },
             });
         };

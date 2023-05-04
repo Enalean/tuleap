@@ -27,7 +27,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 describe("LockProperty", () => {
     function instantiateComponent(item: Item): VueWrapper<InstanceType<typeof LockProperty>> {
         return shallowMount(LockProperty, {
-            propsData: {
+            props: {
                 item: { ...item },
             },
             global: { ...getGlobalTestOptions({}) },

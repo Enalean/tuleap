@@ -40,7 +40,7 @@ describe("FileCreationModal", () => {
         has_modal_error: boolean
     ): VueWrapper<InstanceType<typeof FileCreationModal>> {
         return shallowMount(FileCreationModal, {
-            propsData: {
+            props: {
                 parent: { id: 12, title: "Dacia" },
                 droppedFile: dropped_file,
             },

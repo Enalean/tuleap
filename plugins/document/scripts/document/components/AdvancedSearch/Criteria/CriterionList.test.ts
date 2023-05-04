@@ -36,7 +36,7 @@ describe("CriterionList", () => {
     };
     it("should render the component", () => {
         const wrapper = shallowMount(CriterionList, {
-            propsData: {
+            props: {
                 criterion,
                 value: "folder",
             },
@@ -59,7 +59,7 @@ describe("CriterionList", () => {
 
     it("should warn parent component when user is changing selection", () => {
         const wrapper = shallowMount(CriterionList, {
-            propsData: {
+            props: {
                 criterion,
                 value: "wiki",
             },

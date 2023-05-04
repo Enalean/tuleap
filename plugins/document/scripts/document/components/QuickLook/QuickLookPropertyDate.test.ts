@@ -31,7 +31,7 @@ describe("QuickLookPropertyDate", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof QuickLookPropertyDate>> {
         return shallowMount(QuickLookPropertyDate, {
-            propsData: { property },
+            props: { property },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

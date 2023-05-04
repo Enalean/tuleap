@@ -30,7 +30,7 @@ describe("StatusPropertyWithCustomBindingForDocumentCreate", () => {
         is_status_property_used: boolean
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForDocumentCreate>> {
         return shallowMount(StatusPropertyWithCustomBindingForDocumentCreate, {
-            propsData: { status_value },
+            props: { status_value },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

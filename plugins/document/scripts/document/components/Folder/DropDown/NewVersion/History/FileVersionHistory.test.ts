@@ -35,7 +35,7 @@ describe("FileVersionHistory", () => {
         is_loading = false
     ): VueWrapper<InstanceType<typeof FileVersionHistory>> {
         return shallowMount(FileVersionHistory, {
-            propsData: { item: { id: 18, type: TYPE_FILE } },
+            props: { item: { id: 18, type: TYPE_FILE } },
             data() {
                 return {
                     has_error,

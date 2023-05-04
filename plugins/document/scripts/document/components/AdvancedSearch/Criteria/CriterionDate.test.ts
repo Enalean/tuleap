@@ -26,7 +26,7 @@ import { nextTick } from "vue";
 describe("CriterionDate", () => {
     it("should render the component when no date set", async () => {
         const wrapper = shallowMount(CriterionDate, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "create_date",
                     label: "Creation date",
@@ -44,7 +44,7 @@ describe("CriterionDate", () => {
     it("should render the component when date is set", async () => {
         const value: SearchDate = { date: "2022-01-01", operator: "=" };
         const wrapper = shallowMount(CriterionDate, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "create_date",
                     label: "Creation date",
@@ -61,7 +61,7 @@ describe("CriterionDate", () => {
 
     it("should warn parent component when user is changing date", () => {
         const wrapper = mount(CriterionDate, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "create_date",
                     label: "Creation date",
@@ -79,7 +79,7 @@ describe("CriterionDate", () => {
 
     it("should warn parent component when user is changing operator", () => {
         const wrapper = shallowMount(CriterionDate, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "create_date",
                     label: "Creation date",

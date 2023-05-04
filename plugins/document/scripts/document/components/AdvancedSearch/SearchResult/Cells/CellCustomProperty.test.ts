@@ -45,7 +45,7 @@ describe("CellCustomProperty", () => {
 
     it("should display a string property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            propsData: {
+            props: {
                 column_name: "field_123",
                 item,
             },
@@ -57,7 +57,7 @@ describe("CellCustomProperty", () => {
 
     it("should display a list property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            propsData: {
+            props: {
                 column_name: "field_124",
                 item,
             },
@@ -69,7 +69,7 @@ describe("CellCustomProperty", () => {
 
     it("should display a date property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            propsData: {
+            props: {
                 column_name: "field_125",
                 item,
             },
@@ -81,7 +81,7 @@ describe("CellCustomProperty", () => {
 
     it("should display an empty cell when the item does not have the column in its custom properties", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            propsData: {
+            props: {
                 column_name: "field_126",
                 item,
             },
@@ -92,7 +92,7 @@ describe("CellCustomProperty", () => {
 
     it("should display an empty cell when the date is null", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            propsData: {
+            props: {
                 column_name: "field_225",
                 item,
             },

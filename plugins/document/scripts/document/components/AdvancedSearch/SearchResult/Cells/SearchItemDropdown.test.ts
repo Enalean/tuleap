@@ -71,7 +71,7 @@ describe("SearchItemDropdown", () => {
         document.body.appendChild(parent_container);
 
         wrapper = shallowMount(SearchItemDropdown, {
-            propsData: {
+            props: {
                 item: {
                     id: 111,
                 } as ItemSearchResult,

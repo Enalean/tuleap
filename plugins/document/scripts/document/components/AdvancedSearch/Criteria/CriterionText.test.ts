@@ -25,7 +25,7 @@ import { nextTick } from "vue";
 describe("CriterionText", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionText, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "title",
                     label: "Title",
@@ -42,7 +42,7 @@ describe("CriterionText", () => {
 
     it("should warn parent component when user is changing text", () => {
         const wrapper = shallowMount(CriterionText, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "title",
                     label: "Title",

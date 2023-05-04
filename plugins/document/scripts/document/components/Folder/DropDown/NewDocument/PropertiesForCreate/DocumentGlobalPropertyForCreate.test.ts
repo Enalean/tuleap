@@ -29,7 +29,7 @@ describe("DocumentGlobalPropertyForCreate", () => {
         parent: Folder
     ): VueWrapper<InstanceType<typeof DocumentGlobalPropertyForCreate>> {
         return shallowMount(DocumentGlobalPropertyForCreate, {
-            propsData: { currentlyUpdatedItem: item, parent },
+            props: { currentlyUpdatedItem: item, parent },
         });
     }
 

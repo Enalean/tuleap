@@ -61,7 +61,7 @@ describe("DisplayEmbedded", () => {
         has_document_loading_error: boolean
     ): VueWrapper<InstanceType<typeof DisplayEmbedded>> {
         return shallowMount(DisplayEmbedded, {
-            propsData: {
+            props: {
                 item_id: 42,
             },
             global: {
@@ -102,7 +102,7 @@ describe("DisplayEmbedded", () => {
         version_id: number | null
     ): VueWrapper<InstanceType<typeof DisplayEmbedded>> {
         return shallowMount(DisplayEmbedded, {
-            propsData: {
+            props: {
                 item_id: 42,
                 version_id: version_id,
             },

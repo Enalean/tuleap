@@ -30,7 +30,7 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
         is_status_property_used: boolean
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForFolderCreate>> {
         return shallowMount(StatusPropertyWithCustomBindingForFolderCreate, {
-            propsData: { status_value },
+            props: { status_value },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

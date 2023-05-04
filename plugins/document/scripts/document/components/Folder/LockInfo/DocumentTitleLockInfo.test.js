@@ -31,7 +31,7 @@ describe("DocumentTitleLockInfo", () => {
 
         document_locked_factory = (props = {}) => {
             return shallowMount(DocumentTitleLockInfo, {
-                propsData: { ...props },
+                props: { ...props },
                 mocks: { $store: store },
                 global: { ...getGlobalTestOptions({}) },
             });

@@ -47,7 +47,7 @@ describe("TableBodyResultRow", () => {
         "when wanted column is %s then matching component should be %s",
         (name, expected_component) => {
             const wrapper = shallowMount(TableBodyResultRow, {
-                propsData: {
+                props: {
                     item: {
                         id: 123,
                     } as ItemSearchResult,

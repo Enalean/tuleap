@@ -23,7 +23,7 @@ import CellDate from "./CellDate.vue";
 describe("CellDate", () => {
     it("should display the update date of the item", () => {
         const wrapper = shallowMount(CellDate, {
-            propsData: {
+            props: {
                 date: "2021-10-06",
             },
         });

@@ -31,7 +31,7 @@ describe("DropDownMenuTreeView", () => {
         forbid_writers_to_delete: boolean
     ): VueWrapper<InstanceType<typeof DropDownMenuTreeView>> {
         return shallowMount(DropDownMenuTreeView, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

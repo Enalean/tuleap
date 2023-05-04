@@ -37,7 +37,7 @@ describe("EmbeddedCellTitle", () => {
 
     function getWrapper(item: Embedded): VueWrapper<InstanceType<typeof EmbeddedCellTitle>> {
         return shallowMount(EmbeddedCellTitle, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     state: {

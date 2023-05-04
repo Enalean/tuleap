@@ -52,7 +52,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
         is_obsolescence_date_property_used: boolean
     ): VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>> {
         return shallowMount(ObsolescenceDatePropertyForUpdate, {
-            propsData: { value: "" },
+            props: { value: "" },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

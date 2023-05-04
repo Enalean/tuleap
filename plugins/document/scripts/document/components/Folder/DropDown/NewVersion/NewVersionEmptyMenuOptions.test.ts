@@ -57,7 +57,7 @@ describe("NewVersionEmptyMenuOptions", function () {
         create_new_item_alternatives: NewItemAlternativeArray = []
     ): VueWrapper<InstanceType<typeof NewVersionEmptyMenuOptions>> {
         return shallowMount(NewVersionEmptyMenuOptions, {
-            propsData: {
+            props: {
                 item: CURRENT_ITEM,
                 location,
             },

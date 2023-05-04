@@ -34,7 +34,7 @@ describe("DeleteItem", () => {
         is_deletion_allowed: boolean
     ): VueWrapper<InstanceType<typeof DeleteItem>> {
         return shallowMount(DeleteItem, {
-            propsData: { item: { id: 1, user_can_write } as Item },
+            props: { item: { id: 1, user_can_write } as Item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

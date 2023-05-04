@@ -28,7 +28,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 describe("ModalSizeThresholdExceeded", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ModalSizeThresholdExceeded>> {
         return shallowMount(ModalSizeThresholdExceeded, {
-            propsData: {
+            props: {
                 size: 1050000,
             },
             global: {

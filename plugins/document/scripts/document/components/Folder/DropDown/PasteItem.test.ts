@@ -95,7 +95,7 @@ describe("PasteItem", () => {
                     pinia
                 ),
             },
-            propsData: { destination },
+            props: { destination },
         });
     }
 

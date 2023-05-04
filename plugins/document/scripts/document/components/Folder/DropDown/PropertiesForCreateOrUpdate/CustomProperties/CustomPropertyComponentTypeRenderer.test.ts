@@ -27,7 +27,7 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         item_property: Property
     ): VueWrapper<InstanceType<typeof CustomPropertyComponentTypeRenderer>> {
         return shallowMount(CustomPropertyComponentTypeRenderer, {
-            propsData: { itemProperty: item_property },
+            props: { itemProperty: item_property },
         });
     }
 

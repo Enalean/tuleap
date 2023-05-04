@@ -63,7 +63,7 @@ describe("ModalConfirmDeletion", () => {
         get_wikis = jest.fn().mockReturnValue(wiki_referencing_same_page);
 
         return shallowMount(ModalConfirmDeletion, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

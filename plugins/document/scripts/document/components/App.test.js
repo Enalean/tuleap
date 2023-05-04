@@ -53,7 +53,7 @@ describe("App", () => {
 
         factory = () => {
             return shallowMount(App, {
-                propsData: default_prop,
+                props: default_prop,
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

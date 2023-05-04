@@ -41,7 +41,7 @@ describe("QuickLookFile", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookFile, {
-            propsData: { item: item },
+            props: { item: item },
             global: { ...getGlobalTestOptions({}) },
         });
 
@@ -62,7 +62,7 @@ describe("QuickLookFile", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookFile, {
-            propsData: { item: item },
+            props: { item: item },
             global: { ...getGlobalTestOptions({}) },
         });
 
