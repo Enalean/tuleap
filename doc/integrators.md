@@ -6,11 +6,26 @@ to review and merge contributions into master.
 ## Environment setup
 
 You need to be ale to sign the commits/tags/merges in stable repository.
-For this you need to generate a gpg key (`gpg --gen-key`) and indicates
-to git which key to use:
 
-``` bash
-$ git config --global user.signingkey <gpg-key-id>
+The commits are expected to be signed with a SSH key with a FIDO security key.
+
+If it is not already the case, generate a SSH key associated to your security key:
+
+```bash
+ssh-keygen -t ecdsa-sk -f ~/.ssh/id_ecdsa_sk
+```
+
+Then configure git to use this key:
+```bash
+git config gpg.format ssh
+git config user.signingKey ~/.ssh/id_ecdsa_sk
+```
+
+Add yourself in the allowed signers file `tools/utils/signing-keys/allowed-integrators` (follow the existing entries to add your public key) and push this file under review.
+
+If you need to check signature of existing commits (e.g `git log --show-signature`) then you need to instruct git to use our allowed signers file:
+```bash
+git config gpg.ssh.allowedSignersFile tools/utils/signing-keys/allowed-integrators
 ```
 
 ## Integration of contributions
