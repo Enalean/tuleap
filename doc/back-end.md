@@ -23,6 +23,7 @@ Tuleap internals
 * [Plugins](./back-end/plugins.md)
 * [CLI](./back-end/cli.md)
 * [Keycloak](./back-end/keycloak.md)
+* [Making HTTP requests](./back-end/making-http-requests.md)
 * [Redis](./back-end/redis.md)
 * [Config](./back-end/config.md)
 * [Flowcharts](./back-end/flowcharts.md)
