@@ -29,7 +29,7 @@ case "${1:-}" in
 esac
 
 project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
-DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file $additional_compose_file -p $project_name"
+DOCKERCOMPOSE="docker-compose --project-directory . -f ./tests/e2e/compose.yaml -f ./tests/e2e/compose-run-tests.yaml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file $additional_compose_file -p $project_name"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then
