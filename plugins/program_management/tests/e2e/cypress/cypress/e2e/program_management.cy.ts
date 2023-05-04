@@ -27,6 +27,8 @@ describe("Program management", () => {
         program_project_name = "program-" + now;
         team_project_name = "team-" + now;
         other_team_project_name = "z-other-team-" + now;
+
+        cy.intercept("/api/v1/projects/*/program_teams").as("linkTeamToProgram");
     });
 
     it("SAFe usage", () => {
@@ -84,6 +86,8 @@ function configureProgram(program_project_name: string, team_project_name: strin
     cy.get("[data-test=program-go-to-administration]").click({ force: true });
     selectLabelInListPickerDropdown(team_project_name);
     cy.get("[data-test=program-management-add-team-button]").click({ force: true });
+
+    cy.wait("@linkTeamToProgram");
 
     cy.log("Edit configuration");
     cy.get("[data-test=admin-program-increment-label]").type("Foo");
