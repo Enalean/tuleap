@@ -91,7 +91,7 @@ final class SiteDeployGitolite3Hooks
     {
         $logger->info('Executing gitolite setup --hooks-only');
 
-        $this->process_factory->getProcess(['/usr/bin/sudo', '-u', 'gitolite', self::GITOLITE_BIN, 'setup', '--hooks-only'])->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/bin/sudo', '-u', 'gitolite', self::GITOLITE_BIN, 'setup', '--hooks-only'])->mustRun();
     }
 
     private static function symlink(string $target_path, string $link_path): void

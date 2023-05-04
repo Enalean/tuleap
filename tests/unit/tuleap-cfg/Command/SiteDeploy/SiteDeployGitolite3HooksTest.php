@@ -43,7 +43,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitolite_base_dir = $base_dir . "/var/lib/gitolite";
 
         $this->process_factory = $this->createStub(ProcessFactory::class);
-        $this->process_factory->method('getProcess')->willReturn(new Process(['/bin/true']));
+        $this->process_factory->method('getProcessWithoutTimeout')->willReturn(new Process(['/bin/true']));
     }
 
     public function testCreatePostReceiveHookSymlinkWorks(): void
