@@ -37,17 +37,21 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\FaultMapper;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
-use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
+use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -76,19 +80,28 @@ class ProjectTrackersResource extends AuthenticatedResource
      *          <pre>{"with_time_tracking": true}</pre>
      * <br/>
      * <p>
-     *   <strong>/!\</strong> Please note that {"is_tracker_admin": false} is not supported and will result
+     *   ⚠ Please note that {"is_tracker_admin": false} is not supported and will result
      *   in a 400 Bad Request error.
+     * </p>
+     *
+     * <p>
+     *   ⚠ Notes about <code>with_creation_semantic_check</code> key:
+     * <ul>
+     *   <li> It's only available with the <strong>minimal</strong> representation, full representation will return 400 Bad Request error</li>
+     *   <li> The <code>cannot_create_reasons</code> key in the result which contains the list of all reasons that prevent you from creating an artifact </li>
+     * </ul>
      * </p>
      *
      * @url    GET {id}/trackers
      * @access hybrid
      * @oauth2-scope read:tracker
      *
-     * @param int    $id             Id of the project
+     * @param int $id Id of the project
      * @param CompleteTrackerRepresentation::FULL_REPRESENTATION|MinimalTrackerRepresentation::MINIMAL_REPRESENTATION $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
-     * @param int    $limit          Number of elements displayed per page {@from path} {@min 0} {@max 50}
-     * @param int $offset         Position of the first element to display {@from path} {@min 0}
-     * @param string $query          JSON object of search criteria properties {@from path}
+     * @param int $limit Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     * @param string $query JSON object of search criteria properties {@from path}
+     * @param array  $with_creation_semantic_check Include the list of reasons why an artifact cannot be created with only the given semantics {@from path} {@type string} {@fix true}
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      *
@@ -96,7 +109,7 @@ class ProjectTrackersResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getTrackers(int $id, string $representation = CompleteTrackerRepresentation::FULL_REPRESENTATION, int $limit = 10, int $offset = 0, string $query = '')
+    public function getTrackers(int $id, string $representation = CompleteTrackerRepresentation::FULL_REPRESENTATION, int $limit = 10, int $offset = 0, string $query = '', array $with_creation_semantic_check = [])
     {
         $this->checkAccess();
         $this->optionsTrackers($id);
@@ -166,7 +179,15 @@ class ProjectTrackersResource extends AuthenticatedResource
             new WorkflowRestBuilder()
         );
 
-        $representation_builder = new TrackerRepresentationBuilder(TrackerFactory::instance(), $builder);
+        $cannot_create_reasons  = new ArtifactCannotBeCreatedReasonsGetter(
+            SubmissionPermissionVerifier::instance(),
+        );
+        $representation_builder = new TrackerRepresentationBuilder(TrackerFactory::instance(), $builder, $cannot_create_reasons);
+
+        $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST($with_creation_semantic_check)->match(
+            fn(CollectionOfCreationSemanticToCheck $valid_semantic_to_check) => $valid_semantic_to_check,
+            FaultMapper::mapToRestException(...)
+        );
 
         if (empty($json_query) || isset($json_query["is_tracker_admin"])) {
             $all_trackers = $representation_builder->buildTrackerRepresentations(
@@ -175,7 +196,8 @@ class ProjectTrackersResource extends AuthenticatedResource
                 $representation,
                 $limit,
                 $offset,
-                $filter_on_tracker_administration_permission
+                $filter_on_tracker_administration_permission,
+                $semantics_to_check
             );
 
             $this->sendAllowHeaders();
