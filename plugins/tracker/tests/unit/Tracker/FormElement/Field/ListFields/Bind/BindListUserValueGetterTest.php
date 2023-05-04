@@ -53,10 +53,16 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->default_dao = Mockery::mock(BindDefaultValueDao::class);
-        $this->user_helper = Mockery::mock(\UserHelper::class);
+        $this->default_dao     = Mockery::mock(BindDefaultValueDao::class);
+        $this->user_helper     = Mockery::mock(\UserHelper::class);
+        $platform_users_getter = new class implements PlatformUsersGetter {
+            public function getRegisteredUsers(\UserHelper $user_helper): array
+            {
+                return [];
+            }
+        };
 
-        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper])
+        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper, $platform_users_getter])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }

@@ -29,12 +29,22 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     protected $display_name;
     private $hp;
 
-    public function __construct($id, $user_name = null, $display_name = null)
+    public function __construct($id, $user_name = null, $display_name = null, private readonly ?PFUser $user = null)
     {
-        parent::__construct($id, false);
-        $this->user_name    = $user_name;
+        if ($user !== null) {
+            parent::__construct($user->getId(), false);
+            $this->user_name = $user->getUserName();
+        } else {
+            parent::__construct($id, false);
+            $this->user_name = $user_name;
+        }
         $this->display_name = $display_name;
         $this->hp           = Codendi_HTMLPurifier::instance();
+    }
+
+    public static function fromUser(PFUser $user, string $full_name): self
+    {
+        return new self(-1, null, $full_name, $user);
     }
 
     public function getUsername()
@@ -66,8 +76,11 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return UserHelper::instance();
     }
 
-    public function getUser()
+    public function getUser(): PFUser
     {
+        if (isset($this->user)) {
+            return $this->user;
+        }
         return $this->getUserManager()->getUserById($this->getId());
     }
 

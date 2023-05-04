@@ -29,21 +29,14 @@ use UserHelper;
 
 class BindListUserValueGetter
 {
-    /**
-     * @var BindDefaultValueDao
-     */
-    private $bind_defaultvalue_dao;
-    /**
-     * @var UserHelper
-     */
-    private $user_helper;
+    private const WEB_PAYLOAD_UGROUP_PREFIX   = 'ugroup_';
+    private const UGROUP_FOR_REGISTERED_USERS = self::WEB_PAYLOAD_UGROUP_PREFIX . ProjectUGroup::REGISTERED;
 
     public function __construct(
-        BindDefaultValueDao $bind_defaultvalue_dao,
-        UserHelper $user_helper,
+        private BindDefaultValueDao $bind_defaultvalue_dao,
+        private UserHelper $user_helper,
+        private readonly PlatformUsersGetter $platform_users_getter,
     ) {
-        $this->bind_defaultvalue_dao = $bind_defaultvalue_dao;
-        $this->user_helper           = $user_helper;
     }
 
     /**
@@ -55,6 +48,9 @@ class BindListUserValueGetter
         array $bindvalue_ids,
         \Tracker_FormElement_Field $field,
     ): array {
+        if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
+            return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
+        }
         return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
             $ugroups,
             $keyword,
@@ -71,6 +67,9 @@ class BindListUserValueGetter
         array $ugroups,
         \Tracker_FormElement_Field $field,
     ): array {
+        if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
+            return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
+        }
         return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
             $ugroups,
             null,
@@ -78,6 +77,11 @@ class BindListUserValueGetter
             $field,
             true
         );
+    }
+
+    private function isRegisteredUsersPartOfRequestedUserGroups(array $ugroups): bool
+    {
+        return in_array(self::UGROUP_FOR_REGISTERED_USERS, $ugroups, true);
     }
 
     /**
@@ -169,7 +173,7 @@ class BindListUserValueGetter
                     )";
                     break;
                 default:
-                    if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
+                    if (preg_match('/' . preg_quote(self::WEB_PAYLOAD_UGROUP_PREFIX) . '([0-9]+)/', $ugroup, $matches)) {
                         if (strlen($matches[1]) > 2) {
                             if ($filter_on_active_user) {
                                 $sql[] = $this->getActiveMembersOfStaticGroup($matches);
