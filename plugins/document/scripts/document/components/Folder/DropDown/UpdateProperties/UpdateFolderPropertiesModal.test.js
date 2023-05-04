@@ -32,7 +32,7 @@ describe("UpdateFolderPropertiesModal", () => {
         factory = (props = {}) => {
             return shallowMount(UpdateFolderPropertiesModal, {
                 mocks: { $store: store },
-                propsData: { ...props },
+                props: { ...props },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

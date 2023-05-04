@@ -30,7 +30,7 @@ jest.mock("../../../helpers/emitter");
 describe("QuickLookButton", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof QuickLookButton>> {
         return shallowMount(QuickLookButton, {
-            propsData: { item },
+            props: { item },
             global: { ...getGlobalTestOptions({}) },
         });
     }

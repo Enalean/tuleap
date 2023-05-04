@@ -44,7 +44,7 @@ describe("QuickLookWiki", () => {
                     },
                 }),
             },
-            propsData: { item: item },
+            props: { item: item },
         });
 
         expect(wrapper.element).toMatchSnapshot();

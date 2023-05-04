@@ -24,7 +24,7 @@ import CellFilename from "./CellFilename.vue";
 describe("CellFilename", () => {
     it("should display the filename of a File document", () => {
         const wrapper = shallowMount(CellFilename, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                     type: "file",
@@ -45,7 +45,7 @@ describe("CellFilename", () => {
         "should display empty string if document is not a File",
         (type: string): void => {
             const wrapper = shallowMount(CellFilename, {
-                propsData: {
+                props: {
                     item: {
                         id: 123,
                         type,

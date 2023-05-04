@@ -33,7 +33,7 @@ describe("DropDownDisplayedEmbedded", () => {
         forbid_writers_to_delete: boolean
     ): VueWrapper<InstanceType<typeof DropDownDisplayedEmbedded>> {
         return shallowMount(DropDownDisplayedEmbedded, {
-            propsData: { isInFolderEmptyState: false },
+            props: { isInFolderEmptyState: false },
             global: {
                 ...getGlobalTestOptions({
                     state: {

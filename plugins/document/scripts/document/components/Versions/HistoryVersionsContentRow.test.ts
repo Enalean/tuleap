@@ -56,7 +56,7 @@ describe("HistoryVersionsContentRow", () => {
         authoring_tool = ""
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRow>> {
         return shallowMount(HistoryVersionsContentRow, {
-            propsData: {
+            props: {
                 item,
                 has_more_than_one_version,
                 version: {

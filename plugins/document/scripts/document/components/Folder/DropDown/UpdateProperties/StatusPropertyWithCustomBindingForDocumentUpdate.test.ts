@@ -28,7 +28,7 @@ describe("StatusPropertyWithCustomBindingForDocumentUpdate", () => {
         is_status_property_used: boolean
     ): VueWrapper<InstanceType<typeof StatusPropertyWithCustomBindingForDocumentUpdate>> {
         return shallowMount(StatusPropertyWithCustomBindingForDocumentUpdate, {
-            propsData: { status_value: "none" },
+            props: { status_value: "none" },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

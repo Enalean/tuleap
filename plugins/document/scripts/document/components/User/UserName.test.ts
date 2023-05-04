@@ -26,7 +26,7 @@ describe("UserName", () => {
         When we display the user name
         Then we should be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            propsData: {
+            props: {
                 user: {
                     id: 1,
                     is_anonymous: false,
@@ -41,7 +41,7 @@ describe("UserName", () => {
         When we display the user name
         Then we should not be able to click on its name`, () => {
         const wrapper = shallowMount(UserName, {
-            propsData: {
+            props: {
                 user: {
                     id: 1,
                     is_anonymous: true,

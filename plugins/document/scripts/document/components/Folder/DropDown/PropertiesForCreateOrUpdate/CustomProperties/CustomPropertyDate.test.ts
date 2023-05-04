@@ -32,7 +32,7 @@ describe("CustomPropertyDate", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof CustomPropertyDate>> {
         return shallowMount(CustomPropertyDate, {
-            propsData: { currentlyUpdatedItemProperty: property },
+            props: { currentlyUpdatedItemProperty: property },
         });
     }
 

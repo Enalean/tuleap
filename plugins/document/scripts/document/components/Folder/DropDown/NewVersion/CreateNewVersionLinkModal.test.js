@@ -39,7 +39,7 @@ describe("CreateNewVersionLinkModal", () => {
         const store = createStoreMock(store_option);
 
         return shallowMount(CreateNewVersionLinkModal, {
-            propsData: {
+            props: {
                 item: { id: 12, title: "Dacia" },
             },
             mocks: { $store: store },

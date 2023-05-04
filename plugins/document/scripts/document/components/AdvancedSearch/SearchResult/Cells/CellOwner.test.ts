@@ -30,7 +30,7 @@ describe("CellOwner", () => {
         } as unknown as User;
 
         const wrapper = shallowMount(CellOwner, {
-            propsData: {
+            props: {
                 item: {
                     owner,
                 } as ItemSearchResult,

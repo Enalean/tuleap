@@ -33,7 +33,7 @@ const router = createRouter({
 describe("CellLocation", () => {
     it("should display path via the router link and the folder separators", () => {
         const wrapper = shallowMount(CellLocation, {
-            propsData: {
+            props: {
                 item: {
                     parents: [
                         {

@@ -30,7 +30,7 @@ describe("ApprovalBadge", () => {
         isInFolderContentRow: boolean
     ): VueWrapper<InstanceType<typeof ApprovalBadge>> {
         return shallowMount(ApprovalBadge, {
-            propsData: { item, isInFolderContentRow },
+            props: { item, isInFolderContentRow },
             global: { ...getGlobalTestOptions({}) },
         });
     }

@@ -72,7 +72,7 @@ describe("TitleProperty", () => {
                     state: state as RootState,
                 }),
             },
-            propsData: {
+            props: {
                 value,
                 isInUpdateContext,
                 parent,

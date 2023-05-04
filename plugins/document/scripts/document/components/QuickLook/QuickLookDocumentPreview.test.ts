@@ -32,7 +32,7 @@ describe("QuickLookDocumentPreview", () => {
         is_loading_currently_previewed_item: boolean
     ): VueWrapper<InstanceType<typeof QuickLookDocumentPreview>> {
         return shallowMount(QuickLookDocumentPreview, {
-            propsData: {
+            props: {
                 iconClass: icon_class,
             },
             global: {

@@ -41,7 +41,7 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            propsData: {
+            props: {
                 item: { id: 42 } as Embedded,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -57,7 +57,7 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            propsData: {
+            props: {
                 item: { id: 42 } as Embedded,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -76,7 +76,7 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(errAsync(Error("You cannot!")));
 
         const wrapper = shallowMount(HistoryLogs, {
-            propsData: {
+            props: {
                 item: { id: 42 } as Embedded,
             },
             global: { ...getGlobalTestOptions({}) },
@@ -95,7 +95,7 @@ describe("HistoryLogs", () => {
         getLogs.mockReturnValue(okAsync([{} as LogEntry]));
 
         const wrapper = shallowMount(HistoryLogs, {
-            propsData: {
+            props: {
                 item: { id: 42 } as Embedded,
             },
             global: { ...getGlobalTestOptions({}) },

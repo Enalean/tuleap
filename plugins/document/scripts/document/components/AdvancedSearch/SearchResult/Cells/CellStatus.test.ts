@@ -33,7 +33,7 @@ describe("CellStatus", () => {
         "when status is %s, displayed value should be '%s'",
         (status: string | null, expected: string) => {
             const wrapper = shallowMount(CellStatus, {
-                propsData: {
+                props: {
                     item: {
                         status,
                     } as ItemSearchResult,

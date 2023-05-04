@@ -50,7 +50,7 @@ describe("CriterionOwner", () => {
         get_spy.mockResolvedValue(current_user);
 
         const wrapper = shallowMount(CriterionOwner, {
-            propsData: {
+            props: {
                 criterion: {
                     name: "owner",
                     label: "Owner",

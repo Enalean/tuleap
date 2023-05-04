@@ -50,7 +50,7 @@ describe("SearchResultPagination", () => {
             query.offset = String(from);
         }
         return shallowMount(SearchResultPagination, {
-            propsData: {
+            props: {
                 from,
                 to,
                 total,

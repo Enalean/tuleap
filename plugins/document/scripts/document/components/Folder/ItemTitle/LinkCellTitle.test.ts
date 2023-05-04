@@ -35,7 +35,7 @@ describe("LinkCellTitle", () => {
         } as Link;
 
         const wrapper = shallowMount(LinkCellTitle, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

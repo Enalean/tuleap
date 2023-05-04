@@ -48,7 +48,7 @@ describe("SearchResultTable", () => {
 
     it("should display skeleton while loading", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            propsData: {
+            props: {
                 is_loading: true,
                 results: null,
                 query: null,
@@ -76,7 +76,7 @@ describe("SearchResultTable", () => {
 
     it("should display empty state when no results to display", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            propsData: {
+            props: {
                 is_loading: false,
                 results: {
                     from: 0,
@@ -109,7 +109,7 @@ describe("SearchResultTable", () => {
 
     it("should display results", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            propsData: {
+            props: {
                 is_loading: false,
                 results: {
                     from: 0,
@@ -142,7 +142,7 @@ describe("SearchResultTable", () => {
 
     it("should sort title ascending", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            propsData: {
+            props: {
                 is_loading: false,
                 results: {
                     from: 0,
@@ -204,7 +204,7 @@ describe("SearchResultTable", () => {
 
     it("should sort title descending", () => {
         const wrapper = shallowMount(SearchResultTable, {
-            propsData: {
+            props: {
                 is_loading: false,
                 results: {
                     from: 0,
@@ -283,7 +283,7 @@ describe("SearchResultTable", () => {
         "should not sort the %s column",
         (column_name: string, column: SearchResultColumnDefinition) => {
             const wrapper = shallowMount(SearchResultTable, {
-                propsData: {
+                props: {
                     is_loading: false,
                     results: {
                         from: 0,

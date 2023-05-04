@@ -30,7 +30,7 @@ jest.mock("@tuleap/tlp-dropdown");
 describe("CellTitle", () => {
     it("should output a link for File", () => {
         const wrapper = shallowMount(CellTitle, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                     type: "file",
@@ -66,7 +66,7 @@ describe("CellTitle", () => {
 
     it("should output a link to open a File", () => {
         const wrapper = shallowMount(CellTitle, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                     type: "file",
@@ -102,7 +102,7 @@ describe("CellTitle", () => {
 
     it("should output a link for Wiki", () => {
         const wrapper = shallowMount(CellTitle, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                     type: "wiki",
@@ -140,7 +140,7 @@ describe("CellTitle", () => {
         jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
 
         const wrapper = mount(CellTitle, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                     type: "embedded",

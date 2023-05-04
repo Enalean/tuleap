@@ -38,7 +38,7 @@ describe("NewVersionEmptyDropdown", function () {
 
     it("should initiate a dropdown", function () {
         shallowMount(NewVersionEmptyDropdown, {
-            propsData: {
+            props: {
                 item: {
                     type: "folder",
                     user_can_write: true,

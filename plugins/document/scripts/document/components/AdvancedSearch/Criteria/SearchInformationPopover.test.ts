@@ -27,7 +27,7 @@ jest.mock("@tuleap/tlp-popovers");
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {
         const wrapper = shallowMount(SearchInformationPopover, {
-            propsData: {
+            props: {
                 criterion: "Cars",
                 description: "Cars go brrrrrr",
             },

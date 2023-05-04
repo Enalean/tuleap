@@ -40,7 +40,7 @@ describe("NewItemDropdown", function () {
 
     it("should initiate a dropdown", function () {
         shallowMount(NewItemDropdown, {
-            propsData: {
+            props: {
                 item: {
                     type: "folder",
                     user_can_write: true,
@@ -56,7 +56,7 @@ describe("NewItemDropdown", function () {
         "should not output anything since %s is not a folder",
         function (type) {
             const wrapper = shallowMount(NewItemDropdown, {
-                propsData: {
+                props: {
                     item: {
                         type,
                         user_can_write: true,
@@ -70,7 +70,7 @@ describe("NewItemDropdown", function () {
 
     it("should not output anything if folder is not writable", function () {
         const wrapper = shallowMount(NewItemDropdown, {
-            propsData: {
+            props: {
                 item: {
                     type: "folder",
                     user_can_write: false,

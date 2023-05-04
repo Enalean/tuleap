@@ -25,7 +25,7 @@ import { nextTick } from "vue";
 describe("CriterionGlobalText", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionGlobalText, {
-            propsData: { value: "Lorem" },
+            props: { value: "Lorem" },
             global: { ...getGlobalTestOptions({}) },
         });
 
@@ -36,7 +36,7 @@ describe("CriterionGlobalText", () => {
 
     it("should warn parent component when user is changing text", () => {
         const wrapper = shallowMount(CriterionGlobalText, {
-            propsData: { value: "Lorem" },
+            props: { value: "Lorem" },
             global: { ...getGlobalTestOptions({}) },
         });
 

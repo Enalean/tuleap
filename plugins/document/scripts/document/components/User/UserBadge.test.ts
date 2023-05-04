@@ -26,7 +26,7 @@ describe("UserBadge", () => {
         When we display the user badge
         Then its avatar is displayed`, () => {
         const wrapper = shallowMount(UserBadge, {
-            propsData: {
+            props: {
                 user: {
                     id: 1,
                     has_avatar: true,
@@ -44,7 +44,7 @@ describe("UserBadge", () => {
         When we display the user badge
         Then whe should not display it`, () => {
         const wrapper = shallowMount(UserBadge, {
-            propsData: {
+            props: {
                 user: {
                     id: 1,
                     has_avatar: false,

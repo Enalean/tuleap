@@ -32,7 +32,7 @@ describe("ItemPermissionError", () => {
                     mail_content: "",
                 };
             },
-            propsData: { csrf_token: "", csrf_token_name: "challenge" },
+            props: { csrf_token: "", csrf_token_name: "challenge" },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

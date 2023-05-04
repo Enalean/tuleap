@@ -49,7 +49,7 @@ describe("DownloadFolderAsZip", () => {
         max_archive_size = 1
     ): VueWrapper<InstanceType<typeof DownloadFolderAsZip>> {
         return shallowMount(DownloadFolderAsZip, {
-            propsData: { item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

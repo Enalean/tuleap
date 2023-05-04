@@ -38,7 +38,7 @@ describe("CreateNewItemVersionButton", () => {
         item: Item
     ): VueWrapper<InstanceType<typeof CreateNewItemVersionButton>> {
         return shallowMount(CreateNewItemVersionButton, {
-            propsData: { item: item, buttonClasses: "", iconClasses: "" },
+            props: { item: item, buttonClasses: "", iconClasses: "" },
             global: {
                 ...getGlobalTestOptions({
                     actions: { loadDocument: load_document },

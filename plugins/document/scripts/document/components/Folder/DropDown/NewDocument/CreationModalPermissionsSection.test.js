@@ -28,7 +28,7 @@ describe("CreationModalPermissionsSection", () => {
     beforeEach(() => {
         factory = (props) => {
             return shallowMount(CreationModalPermissionsSection, {
-                propsData: { ...props },
+                props: { ...props },
                 global: { ...getGlobalTestOptions({}) },
             });
         };

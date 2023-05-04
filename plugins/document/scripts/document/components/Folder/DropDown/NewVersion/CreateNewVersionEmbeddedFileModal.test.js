@@ -41,7 +41,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             });
         });
         return shallowMount(CreateNewVersionEmbeddedFileModal, {
-            propsData: {
+            props: {
                 ...prop,
             },
             global: {

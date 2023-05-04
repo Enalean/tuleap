@@ -25,7 +25,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 describe("DocumentRelativeDate", () => {
     it("should display a tlp-relative-date element", () => {
         const wrapper = shallowMount(DocumentRelativeDate, {
-            propsData: {
+            props: {
                 date: "2021-10-06",
             },
             global: {
@@ -52,7 +52,7 @@ describe("DocumentRelativeDate", () => {
 
     it("should display a tlp-relative-date element with placement on right", () => {
         const wrapper = shallowMount(DocumentRelativeDate, {
-            propsData: {
+            props: {
                 date: "2021-10-06",
                 relative_placement: "right",
             },

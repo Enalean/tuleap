@@ -32,7 +32,7 @@ describe("CreateNewVersionEmptyModal", () => {
     beforeEach(() => {
         factory = (props) => {
             return shallowMount(CreateNewVersionEmptyModal, {
-                propsData: { ...props },
+                props: { ...props },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {

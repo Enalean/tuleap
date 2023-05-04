@@ -30,7 +30,7 @@ describe("CustomPropertyString", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof CustomPropertyString>> {
         return shallowMount(CustomPropertyString, {
-            propsData: { currentlyUpdatedItemProperty: property },
+            props: { currentlyUpdatedItemProperty: property },
         });
     }
 

@@ -40,7 +40,7 @@ describe("CustomPropertyListMultipleValue", () => {
         property: Property
     ): VueWrapper<InstanceType<typeof CustomPropertyListMultipleValue>> {
         return shallowMount(CustomPropertyListMultipleValue, {
-            propsData: { currentlyUpdatedItemProperty: property },
+            props: { currentlyUpdatedItemProperty: property },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

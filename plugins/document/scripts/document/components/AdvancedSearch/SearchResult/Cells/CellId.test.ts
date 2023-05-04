@@ -24,7 +24,7 @@ import CellId from "./CellId.vue";
 describe("CellId", () => {
     it("should display the item id", () => {
         const wrapper = shallowMount(CellId, {
-            propsData: {
+            props: {
                 item: {
                     id: 123,
                 } as ItemSearchResult,

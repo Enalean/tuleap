@@ -32,7 +32,7 @@ describe("QuickLookEmbedded", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmbedded, {
-            propsData: { item: item },
+            props: { item: item },
             global: { ...getGlobalTestOptions({}), stubs: ["router-link"] },
         });
 

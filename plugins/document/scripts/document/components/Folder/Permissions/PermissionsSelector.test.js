@@ -28,7 +28,7 @@ describe("PermissionsSelector", () => {
     beforeEach(() => {
         factory = (props = {}) => {
             return shallowMount(PermissionsSelector, {
-                propsData: { ...props },
+                props: { ...props },
             });
         };
     });

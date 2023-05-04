@@ -26,7 +26,7 @@ describe("ItemUpdateProperties", () => {
         isOpenAfterDnd = false
     ): VueWrapper<InstanceType<typeof ItemUpdateProperties>> {
         return shallowMount(ItemUpdateProperties, {
-            propsData: {
+            props: {
                 version: {
                     title: "Not idea",
                     is_file_locked: false,

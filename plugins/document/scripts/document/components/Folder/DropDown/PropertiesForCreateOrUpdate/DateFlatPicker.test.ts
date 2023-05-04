@@ -25,7 +25,7 @@ import DateFlatPicker from "./DateFlatPicker.vue";
 describe("DateFlatPicker", () => {
     function createWrapper(props = {}): VueWrapper<InstanceType<typeof DateFlatPicker>> {
         return shallowMount(DateFlatPicker, {
-            propsData: { ...props },
+            props: { ...props },
         });
     }
 

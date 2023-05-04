@@ -23,7 +23,7 @@ import CellObsolescenceDate from "./CellObsolescenceDate.vue";
 describe("CellObsolescenceDate", () => {
     it("should display the obsolescence date", () => {
         const wrapper = shallowMount(CellObsolescenceDate, {
-            propsData: {
+            props: {
                 item: {
                     obsolescence_date: "2022-01-30",
                 },
@@ -39,7 +39,7 @@ describe("CellObsolescenceDate", () => {
 
     it("should display a dash when the obsolescence date is null", () => {
         const wrapper = shallowMount(CellObsolescenceDate, {
-            propsData: {
+            props: {
                 item: {
                     obsolescence_date: null,
                 },

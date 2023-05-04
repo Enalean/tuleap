@@ -31,7 +31,7 @@ describe("QuickLookFolder", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookFolder, {
-            propsData: { item: item },
+            props: { item: item },
         });
 
         expect(wrapper.find("[data-test=create-folder-button]").exists()).toBeTruthy();

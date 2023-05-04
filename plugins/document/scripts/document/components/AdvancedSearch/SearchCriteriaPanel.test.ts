@@ -58,7 +58,7 @@ describe("SearchCriteriaPanel", () => {
         } as unknown as ConfigurationState;
         const wrapper = shallowMount(SearchCriteriaPanel, {
             attachTo: parent_node,
-            propsData: {
+            props: {
                 query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },
@@ -108,7 +108,7 @@ describe("SearchCriteriaPanel", () => {
 
     it("should not display the breadcrumbs if we are searching in root folder", async () => {
         const wrapper = shallowMount(SearchCriteriaPanel, {
-            propsData: {
+            props: {
                 query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },

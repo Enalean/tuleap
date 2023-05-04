@@ -27,7 +27,7 @@ jest.mock("../../helpers/emitter");
 
 function getFolderContentRowInstance(props, data = {}) {
     return shallowMount(FolderContentRow, {
-        propsData: props,
+        props: props,
         data() {
             return { ...data };
         },

@@ -26,7 +26,7 @@ import type { Item } from "../../type";
 describe("ActionsHeader", () => {
     function getWrapper(item: Item): VueWrapper<InstanceType<typeof ActionsHeader>> {
         return shallowMount(ActionsHeader, {
-            propsData: { item },
+            props: { item },
         });
     }
 

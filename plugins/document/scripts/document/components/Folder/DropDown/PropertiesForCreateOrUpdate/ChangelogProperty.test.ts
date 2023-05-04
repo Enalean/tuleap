@@ -29,7 +29,7 @@ jest.mock("../../../../helpers/emitter");
 describe("ChangelogProperty", () => {
     function createWrapper(): VueWrapper<InstanceType<typeof ChangelogProperty>> {
         return shallowMount(ChangelogProperty, {
-            propsData: { value: "a changelog" },
+            props: { value: "a changelog" },
             global: { ...getGlobalTestOptions({}) },
         });
     }

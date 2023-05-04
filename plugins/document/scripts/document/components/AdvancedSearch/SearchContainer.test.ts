@@ -62,7 +62,7 @@ describe("SearchContainer", () => {
         search_params: AdvancedSearchParams
     ): VueWrapper<InstanceType<typeof SearchContainer>> {
         return shallowMount(SearchContainer, {
-            propsData: {
+            props: {
                 query: search_params,
                 folder_id: 101,
                 offset: 0,
@@ -82,7 +82,7 @@ describe("SearchContainer", () => {
         searchInFolderMock.mockResolvedValue([]);
 
         shallowMount(SearchContainer, {
-            propsData: {
+            props: {
                 query: buildAdvancedSearchParams(),
                 folder_id: 101,
                 offset: 0,
