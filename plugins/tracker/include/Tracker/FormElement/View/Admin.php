@@ -24,6 +24,8 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  *
  * This is the top most element of the hierarchy and correspond to Tracker_FormElement
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_View_Admin
 {
     /**
@@ -373,13 +375,17 @@ class Tracker_FormElement_View_Admin
         if ($fields) {
             $trackers = [];
             foreach ($fields as $field) {
-                $t                     = $field->getTracker();
-                $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $t->getId())) . '&func=admin-formElements">' . $hp->purify($t->getName()) . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';
+                $tracker = $field->getTracker();
+                if (! $tracker->isDeleted() && $tracker->getProject() && ! $tracker->getProject()->isDeleted()) {
+                    $trackers[$tracker->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $tracker->getId())) . '&func=admin-formElements">' . $hp->purify($tracker->getName()) . ' (' . $hp->purify($tracker->getProject()->getPublicName()) . ')</a>';
+                }
             }
-            $html .= dgettext('tuleap-tracker', 'This field is used by the following trackers:');
-            $html .= '<ul><li>';
-            $html .= implode('</li><li>', $trackers);
-            $html .= '</li></ul>';
+            if (! empty($trackers)) {
+                $html .= dgettext('tuleap-tracker', 'This field is used by the following trackers:');
+                $html .= '<ul><li>';
+                $html .= implode('</li><li>', $trackers);
+                $html .= '</li></ul>';
+            }
         }
         return $html;
     }
