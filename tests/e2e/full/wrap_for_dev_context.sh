@@ -36,7 +36,8 @@ rm -rf "$test_results_folder/*" || true
 
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
+export TEST_RESULT_OUTPUT="$test_results_folder"
+$DOCKERCOMPOSE up -d --build
 
 HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v ${DB_HOST})"
 echo -e "Please set in /etc/hosts:\n\e[32m$HOSTS\e[0m"
