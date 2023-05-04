@@ -20,6 +20,7 @@
 
 namespace Tuleap\HudsonGit;
 
+use Codendi_HTMLPurifier;
 use GitRepository;
 use Tuleap\Git\Webhook\ExternalWebhookPresenter;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
@@ -29,6 +30,7 @@ use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
 use CSRFSynchronizerToken;
 use TemplateRendererFactory;
 use Tuleap\HudsonGit\Log\LogFactory;
+use Tuleap\Sanitizer\URISanitizer;
 
 /**
  * I am responsible of adding the possibility to repo admin to define jenkins hook for a git repository and
@@ -61,6 +63,8 @@ class GitWebhooksSettingsEnhancer
         LogFactory $log_factory,
         CSRFSynchronizerToken $csrf,
         JenkinsServerFactory $jenkins_server_factory,
+        private readonly Codendi_HTMLPurifier $html_purifier,
+        private readonly URISanitizer $uri_sanitizer,
     ) {
         $this->dao                    = $dao;
         $this->csrf                   = $csrf;
@@ -117,7 +121,9 @@ class GitWebhooksSettingsEnhancer
                         $repository,
                         $url,
                         $triggered_jobs,
-                        $this->csrf
+                        $this->csrf,
+                        $this->html_purifier,
+                        $this->uri_sanitizer,
                     ),
                 ]
             );
