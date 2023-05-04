@@ -48,22 +48,22 @@ export default class App extends Vue {
     readonly roadmap_id!: number;
 
     @Prop({ required: true })
-    private readonly visible_natures!: NaturesLabels;
+    readonly visible_natures!: NaturesLabels;
 
     @State
-    private error_message!: string;
+    error_message!: string;
 
     @State
-    private should_display_error_state!: boolean;
+    should_display_error_state!: boolean;
 
     @State
-    private should_display_empty_state!: boolean;
+    should_display_empty_state!: boolean;
 
     @Action
     private readonly loadRoadmap!: (roadmap_id: number) => Promise<void>;
 
     @State
-    private readonly is_loading!: boolean;
+    readonly is_loading!: boolean;
 
     mounted(): void {
         this.loadRoadmap(this.roadmap_id);

@@ -50,9 +50,9 @@ export default class ShowClosedControl extends Vue {
     private readonly show_closed_elements!: boolean;
 
     @Mutation
-    private readonly toggleClosedElements!: (show_closed_elements: boolean) => void;
+    readonly toggleClosedElements!: (show_closed_elements: boolean) => void;
 
-    private is_checked = true;
+    is_checked = true;
 
     mounted(): void {
         this.is_checked = this.show_closed_elements;

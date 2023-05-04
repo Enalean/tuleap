@@ -75,7 +75,7 @@ export default class DependencyNatureControl extends Vue {
     @tasks.Getter
     private readonly has_at_least_one_row_shown!: boolean;
 
-    private readonly NONE_SPECIALVALUE = "-1";
+    readonly NONE_SPECIALVALUE = "-1";
 
     get id(): string {
         return getUniqueId("roadmap-gantt-links");
