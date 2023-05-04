@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
     );
     Vue.use(Vuex);
+    Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);
 

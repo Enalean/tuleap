@@ -21,12 +21,6 @@ msgstr "Une erreur est survenue lors de la récupération des enfants."
 msgid "Displayed artifacts don't have any links to each other."
 msgstr "Les artéfacts affichés ne possèdent pas de liens entre eux."
 
-msgid "End date"
-msgstr "Date de fin"
-
-msgid "End date is lesser than start date!"
-msgstr "La date de fin est inférieure à la date de début !"
-
 msgid "Linked to"
 msgstr "Lié à"
 
@@ -48,9 +42,6 @@ msgstr "Oups, quelque chose ne va pas."
 msgid "Please come back later."
 msgstr "Veuillez revenir plus tard."
 
-msgid "Progress"
-msgstr "Progression"
-
 msgid "Q%{ quarter }"
 msgstr "Trim. %{ quarter }"
 
@@ -63,9 +54,6 @@ msgstr "Trimestre %{ quarter } de %{ year }"
 msgid "Show closed items"
 msgstr "Afficher les éléments fermés"
 
-msgid "Start date"
-msgstr "Date de début"
-
 msgid "There is no data to show."
 msgstr "Il n'y a pas de données à afficher."
 
@@ -74,9 +62,6 @@ msgstr "Échelle"
 
 msgid "Today: %{ date }"
 msgstr "Aujourd'hui : %{ date }"
-
-msgid "Undefined"
-msgstr "Non définie"
 
 msgid "W%{ week }"
 msgstr "S%{ week }"

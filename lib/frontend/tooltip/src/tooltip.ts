@@ -163,28 +163,10 @@ function createTooltip(
         fetching = true;
         element.title = "";
         const url = new URL(reference_url);
-        url.searchParams.append("as-json-for-tooltip", "1");
-
-        const response = await fetch(url.toString(), {
-            credentials: "same-origin",
-            headers: { "X-Requested-With": "XMLHttpRequest" },
-        });
-        if (!response.ok) {
-            return;
-        }
+        const data = await retrieveTooltipData(url);
 
         fetching = false;
         fetched = true;
-
-        const content_type = response.headers.get("content-type");
-        if (!content_type) {
-            element.title = old_title;
-            return;
-        }
-
-        const data = content_type.toLowerCase().startsWith("application/json")
-            ? await response.json()
-            : await response.text();
 
         if (data) {
             appendTooltipToBody(data);
@@ -195,6 +177,29 @@ function createTooltip(
             element.title = old_title;
         }
     }
+}
+
+export async function retrieveTooltipData(
+    url: URL
+): Promise<string | SemiStructuredContent | undefined> {
+    url.searchParams.append("as-json-for-tooltip", "1");
+
+    const response = await fetch(url.toString(), {
+        credentials: "same-origin",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+    });
+    if (!response.ok) {
+        return Promise.resolve(undefined);
+    }
+
+    const content_type = response.headers.get("content-type");
+    if (!content_type) {
+        return Promise.resolve(undefined);
+    }
+
+    return content_type.toLowerCase().startsWith("application/json")
+        ? response.json()
+        : response.text();
 }
 
 function loadSparklines(sparkline_hrefs: SparklineHrefCollection): void {

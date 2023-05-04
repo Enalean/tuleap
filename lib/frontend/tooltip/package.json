@@ -15,9 +15,6 @@
       "require": "./dist/tooltip.umd.cjs"
     }
   },
-  "peerDependencies": {
-    "jquery": ">=1.7.0 <4.0.0"
-  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/dompurify": "^3.0.2",
