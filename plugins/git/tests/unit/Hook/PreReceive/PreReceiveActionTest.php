@@ -48,10 +48,15 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRepoDoesNotExist(): void
     {
-        $action = $this->buildPreReceiveAction(null, WASMCallerStub::successfulWasmCall(''));
+        $wasm_caller = WASMCallerStub::successfulWasmCall('');
 
-        $this->expectException(PreReceiveRepositoryNotFoundException::class);
-        $action->preReceiveExecute("non_existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+        $action = $this->buildPreReceiveAction(null, $wasm_caller);
+
+        $result = $action->preReceiveExecute("non_existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
+
+        self::assertFalse($wasm_caller->hasBeenCalled());
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(null, $result->value);
     }
 
     public function testWasmModuleDoesNotExist(): void

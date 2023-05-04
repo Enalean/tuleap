@@ -56,7 +56,6 @@ final class PreReceiveAction
     /**
      * Analyze information related to a git object reference
      * @psalm-return Ok<null>|Err<Fault>
-     * @throws PreReceiveRepositoryNotFoundException
      */
     public function preReceiveExecute(string $repository_path, string $input_data): Ok|Err
     {
@@ -66,7 +65,7 @@ final class PreReceiveAction
 
         $repository = $this->git_repository_factory->getFromFullPath($repository_path);
         if ($repository === null) {
-            throw new PreReceiveRepositoryNotFoundException();
+            return Result::ok(null);
         }
 
         $wasm_path = $this->getPossibleCustomPreReceiveHookPath($repository);
