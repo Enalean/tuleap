@@ -21,6 +21,8 @@ We also strongly suggest that you familiarize yourself with [Code
 Smells](https://blog.codinghorror.com/code-smells/) as it might pop up
 during code reviews.
 
+Contributors are expected to read and follow [Tuleap Secure Coding Practices](./secure-coding-practices.md).
+
 ## Write code optimized for reading
 
 All new contributors should be aware that people will spend way more
