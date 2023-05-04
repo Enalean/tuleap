@@ -84,7 +84,7 @@ export default class GanttTask extends Vue {
     };
 
     @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+    readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly task!: Task;

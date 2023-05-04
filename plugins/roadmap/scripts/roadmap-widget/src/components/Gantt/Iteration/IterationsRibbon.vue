@@ -48,7 +48,7 @@ const timeperiod = namespace("timeperiod");
 })
 export default class IterationsRibbon extends Vue {
     @timeperiod.Getter
-    private readonly time_period!: TimePeriod;
+    readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly nb_additional_units!: number;

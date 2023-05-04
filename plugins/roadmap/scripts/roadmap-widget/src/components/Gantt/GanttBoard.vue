@@ -230,16 +230,16 @@ export default class GanttBoard extends Vue {
     private readonly tasks!: Task[];
 
     @iterations.Getter
-    private readonly lvl1_iterations_to_display!: Iteration[];
+    readonly lvl1_iterations_to_display!: Iteration[];
 
     @iterations.Getter
-    private readonly lvl2_iterations_to_display!: Iteration[];
+    readonly lvl2_iterations_to_display!: Iteration[];
 
     @timeperiod.State
-    private readonly timescale!: TimeScale;
+    readonly timescale!: TimeScale;
 
     @timeperiod.Mutation
-    private readonly setTimescale!: (timescale: TimeScale) => void;
+    readonly setTimescale!: (timescale: TimeScale) => void;
 
     @timeperiod.Getter
     private readonly time_period!: TimePeriod;
@@ -253,11 +253,11 @@ export default class GanttBoard extends Vue {
     @Prop({ required: true })
     private readonly visible_natures!: NaturesLabels;
 
-    private nb_additional_units = 0;
+    nb_additional_units = 0;
 
     private observer: ResizeObserver | null = null;
 
-    private dependencies_nature_to_display: string | null = null;
+    dependencies_nature_to_display: string | null = null;
 
     private is_scrolling = false;
 

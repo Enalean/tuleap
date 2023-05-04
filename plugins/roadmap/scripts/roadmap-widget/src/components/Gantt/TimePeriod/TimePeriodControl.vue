@@ -29,13 +29,22 @@
         <select
             class="tlp-select tlp-select-small tlp-select-adjusted"
             v-bind:id="id"
-            v-on:change="$emit('input', $event.target.value)"
+            v-on:change="updateTimePeriod"
             data-test="select-timescale"
             v-bind:disabled="is_disabled"
         >
-            <option value="week" v-bind:selected="value === 'week'" v-translate>Week</option>
-            <option value="month" v-bind:selected="value === 'month'" v-translate>Month</option>
-            <option value="quarter" v-bind:selected="value === 'quarter'" v-translate>
+            <option value="week" v-bind:selected="value === 'week'" data-test="week" v-translate>
+                Week
+            </option>
+            <option value="month" v-bind:selected="value === 'month'" data-test="month" v-translate>
+                Month
+            </option>
+            <option
+                value="quarter"
+                v-bind:selected="value === 'quarter'"
+                data-test="quarter"
+                v-translate
+            >
                 Quarter
             </option>
         </select>
@@ -65,6 +74,13 @@ export default class TimePeriodControl extends Vue {
 
     get is_disabled(): boolean {
         return !this.has_at_least_one_row_shown;
+    }
+
+    updateTimePeriod(event: Event): void {
+        if (event.target instanceof HTMLSelectElement) {
+            const value: string | null = event.target.value;
+            this.$emit("input", value);
+        }
     }
 }
 </script>

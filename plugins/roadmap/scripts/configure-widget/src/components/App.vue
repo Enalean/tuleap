@@ -162,7 +162,7 @@ export default class App extends Vue {
     private readonly widget_id!: number;
 
     @Prop({ required: true })
-    private title!: string;
+    title!: string;
 
     @Prop({ required: true })
     private readonly trackers!: Tracker[];
@@ -185,12 +185,10 @@ export default class App extends Vue {
     @Ref("trackers-picker")
     private readonly trackers_picker!: HTMLSelectElement;
 
-    private user_selected_tracker_ids: number[] = this.selected_tracker_ids;
-    private user_selected_lvl1_iteration_tracker_id: number | "" =
-        this.selected_lvl1_iteration_tracker_id;
-    private user_selected_lvl2_iteration_tracker_id: number | "" =
-        this.selected_lvl2_iteration_tracker_id;
-    private user_selected_default_timescale: TimeScale = this.selected_default_timescale;
+    user_selected_tracker_ids: number[] = this.selected_tracker_ids;
+    user_selected_lvl1_iteration_tracker_id: number | "" = this.selected_lvl1_iteration_tracker_id;
+    user_selected_lvl2_iteration_tracker_id: number | "" = this.selected_lvl2_iteration_tracker_id;
+    user_selected_default_timescale: TimeScale = this.selected_default_timescale;
     private list_picker: ListPicker | undefined = undefined;
 
     mounted(): void {

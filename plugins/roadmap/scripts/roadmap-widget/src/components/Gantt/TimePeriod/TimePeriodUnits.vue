@@ -40,7 +40,7 @@ import type { TimePeriod } from "../../../type";
 @Component
 export default class TimePeriodUnits extends Vue {
     @Prop({ required: true })
-    private readonly time_period!: TimePeriod;
+    readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly time_units!: Date[];

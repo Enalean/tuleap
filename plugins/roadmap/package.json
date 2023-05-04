@@ -30,6 +30,7 @@
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest",
-    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && vite serve"
+    "dev:serve-arrows": "cd scripts/roadmap-widget/src/dev-arrows/ && vite serve",
+    "typecheck": "vue-tsc --noEmit"
   }
 }

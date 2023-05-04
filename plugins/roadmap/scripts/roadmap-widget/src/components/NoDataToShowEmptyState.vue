@@ -61,6 +61,6 @@ import { Component, Prop } from "vue-property-decorator";
 @Component
 export default class NoDataToShowEmptyState extends Vue {
     @Prop({ required: false, default: true })
-    private readonly should_invite_to_come_back!: boolean;
+    readonly should_invite_to_come_back!: boolean;
 }
 </script>

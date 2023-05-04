@@ -98,7 +98,7 @@ export default class LoadingState extends Vue {
         time_period: HTMLDivElement;
     };
 
-    private time_units: Date[] = [];
+    time_units: Date[] = [];
 
     private observer: ResizeObserver | null = null;
 
