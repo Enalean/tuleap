@@ -206,7 +206,7 @@ if (! IS_SCRIPT) {
         $urlVerif        = $urlVerifFactory->getURLVerification($_SERVER);
         $urlVerif->assertValidUrl($_SERVER, $request);
 
-        (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy(
+        (new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger()))->incrementLegacy(
             DetectedBrowser::detectFromTuleapHTTPRequest($request)
         );
     }
