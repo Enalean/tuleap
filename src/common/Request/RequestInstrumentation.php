@@ -21,11 +21,18 @@
 
 namespace Tuleap\Request;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
 class RequestInstrumentation
 {
+    #[ConfigKey('Log pages that take more than defined milliseconds to render (default: 5000 for 5 seconds)')]
+    #[ConfigKeyInt(5000)]
+    public const CONFIG_SLOW_PAGES = 'slow_pages_threshold';
+
     private const COUNT_NAME = 'http_responses_total';
     private const COUNT_HELP = 'Total number of HTTP request';
 
@@ -33,14 +40,8 @@ class RequestInstrumentation
     private const DURATION_HELP    = 'Duration of http responses in microseconds';
     private const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
-    /**
-     * @var Prometheus
-     */
-    private $prometheus;
-
-    public function __construct(Prometheus $prometheus)
+    public function __construct(private readonly Prometheus $prometheus, private readonly LoggerInterface $logger)
     {
-        $this->prometheus = $prometheus;
     }
 
     public function increment(int $code, DetectedBrowser $detected_browser): void
@@ -88,10 +89,14 @@ class RequestInstrumentation
 
     private function updateRequestDurationHistogram(string $router): void
     {
+        $elapsed_time = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
+        if ($elapsed_time >= (\ForgeConfig::get(self::CONFIG_SLOW_PAGES) / 1000)) {
+            $this->logger->warning(sprintf('Slow page: %s (%.3fs)', $_SERVER['REQUEST_URI'] ?? 'No REQUEST_URI', $elapsed_time));
+        }
         $this->prometheus->histogram(
             self::DURATION_NAME,
             self::DURATION_HELP,
-            microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'],
+            $elapsed_time,
             ['router' => $router],
             self::DURATION_BUCKETS
         );

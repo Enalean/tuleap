@@ -27,7 +27,7 @@ require_once __DIR__ . '/../include/pre.php';
 
 \Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
 
-(new RequestInstrumentation(Prometheus::instance()))->incrementSoap(
+(new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger()))->incrementSoap(
     DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())
 );
 

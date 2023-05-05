@@ -365,7 +365,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 if ($layout === null) {
                     throw new \Exception("Could not load BurningParrot theme");
                 }
-                (new RequestInstrumentation(Prometheus::instance()))->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
+                (new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger()))->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
                 (new ErrorRendering())->rendersError(
                     $layout,
                     $request,

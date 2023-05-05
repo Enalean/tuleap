@@ -37,7 +37,7 @@ $minimal_request = new \Tuleap\Http\Server\NullServerRequest();
 $response        = $cors_middleware->process($minimal_request, $request_handler);
 (new SapiEmitter())->emit($response);
 
-$request_instrumentation = new RequestInstrumentation(Prometheus::instance());
+$request_instrumentation = new RequestInstrumentation(Prometheus::instance(), BackendLogger::getDefaultLogger());
 
 $http_request = HTTPRequest::instance();
 try {

@@ -45,6 +45,7 @@ use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
 use Tuleap\SOAP\DisableSOAPEndpoints;
 use Tuleap\System\ServiceControl;
@@ -90,6 +91,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         OutboundHTTPRequestSettings::class,
         OutboundHTTPRequestProxy::class,
         FilteredOutboundHTTPResponseAlerter::class,
+        RequestInstrumentation::class,
     ];
 
     /**
