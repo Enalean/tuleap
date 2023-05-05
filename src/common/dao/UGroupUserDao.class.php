@@ -157,7 +157,7 @@ class UGroupUserDao extends DataAccessObject
 
     public function searchUserByDynamicUGroupIdIncludingSuspended(int $ugroupId, int $groupId): IProvideDataAccessResult
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true);
         if (! $sql) {
             return new DataAccessResultEmpty();
         }
@@ -171,7 +171,7 @@ class UGroupUserDao extends DataAccessObject
 
     public function searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($ugroupId, $groupId)
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true, true);
 
         if (! $sql) {
             return new DataAccessResultEmpty();
@@ -197,7 +197,7 @@ class UGroupUserDao extends DataAccessObject
         $limit    = $this->da->escapeInt($limit);
         $offset   = $this->da->escapeInt($offset);
 
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, true);
 
         if (! $sql) {
             return false;

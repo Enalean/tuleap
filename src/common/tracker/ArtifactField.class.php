@@ -710,18 +710,18 @@ class ArtifactField
             $show_suspended = true;
             for ($i = 0; $i < count($value_func); $i++) {
                 if ($value_func[$i] == 'group_members') {
-                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
+                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, $show_suspended);
                 } elseif ($value_func[$i] == 'group_admins') {
-                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
+                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, $show_suspended);
                 } elseif ($value_func[$i] == 'tracker_admins') {
-                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
+                    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, $show_suspended);
                 } elseif ($value_func[$i] == 'artifact_submitters') {
                     $qry_value[$i] = $ath->getSubmitters($with_display_preferences);
                 } elseif (preg_match('/ugroup_([0-9]+)/', $value_func[$i], $matches)) {
                     if (strlen($matches[1]) > 2) {
                         $qry_value[$i] = ugroup_db_get_members($matches[1], $with_display_preferences);
                     } else {
-                        $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
+                        $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, $show_suspended);
                     }
                 }
             }

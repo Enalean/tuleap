@@ -317,7 +317,6 @@ function ugroup_db_get_dynamic_members(
     $atid,
     $group_id,
     $with_display_preferences = false,
-    $keyword = null,
     $show_suspended = false,
     bool $show_deleted = false,
     array $user_ids = [],
@@ -330,12 +329,6 @@ function ugroup_db_get_dynamic_members(
         $uh       = UserHelper::instance();
         $sqlname  = $uh->getDisplayNameSQLQuery();
         $sqlorder = $uh->getDisplayNameSQLOrder();
-    }
-
-    $having_keyword = '';
-    if ($keyword) {
-        $keyword        = $data_access->quoteLikeValueSurround($keyword);
-        $having_keyword = " HAVING full_name LIKE $keyword ";
     }
 
     $user_status = "( status='A' OR status='R' ";
@@ -359,16 +352,16 @@ function ugroup_db_get_dynamic_members(
         return null;
     } elseif ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user WHERE " . $user_status . " $having_keyword ORDER BY " . $sqlorder . " )";
+        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user WHERE " . $user_status . " ORDER BY " . $sqlorder . " )";
     } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY " . $sqlorder . ")";
+        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " ORDER BY " . $sqlorder . ")";
     } elseif ($ugroup_id == $GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  $having_keyword ORDER BY " . $sqlorder . ")";
+        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
     } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . "  $having_keyword ORDER BY " . $sqlorder . ")";
+        return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
     } elseif ($atid && $ugroup_id == $GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return "(SELECT user.user_id, " . $sqlname . ", user.realname, user.user_name,  user.email, user.status FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . "  ORDER BY " . $sqlorder . ")";
@@ -380,7 +373,7 @@ function ugroup_db_get_dynamic_members(
                     AND ug.group_id = $group_id
                     AND forum_flags = '2'
                     AND " . $user_status . "
-                    $having_keyword ORDER BY " . $sqlorder . " )";
+                    ORDER BY " . $sqlorder . " )";
     } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
         // News writer
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name,  user.email, user.status
@@ -389,7 +382,7 @@ function ugroup_db_get_dynamic_members(
                     AND ug.group_id = $group_id
                     AND (ug.news_flags = '1' OR ug.news_flags = '2')
                     AND " . $user_status . "
-                    $having_keyword ORDER BY " . $sqlorder . " )";
+                    ORDER BY " . $sqlorder . " )";
     } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_ADMIN) {
         // News admin
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
@@ -398,7 +391,7 @@ function ugroup_db_get_dynamic_members(
                     AND ug.group_id = $group_id
                     AND ug.news_flags = '2'
                     AND " . $user_status . "
-                    $having_keyword ORDER BY " . $sqlorder . " )";
+                    ORDER BY " . $sqlorder . " )";
     }
     return null;
 }

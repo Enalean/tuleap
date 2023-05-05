@@ -81,7 +81,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $da = Mockery::mock(DataAccessObject::class);
         $this->default_dao->shouldReceive('getDa')->andReturn($da);
 
-        $this->assertEquals([], $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForProjectMemberGroup(): void
@@ -106,7 +106,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
             [
                 ProjectUGroup::PROJECT_MEMBERS,
-                $keyword,
                 $bindvalue_ids,
                 $tracker,
                 false,
@@ -134,7 +133,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForProjectAdminGroup(): void
@@ -159,7 +158,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
             [
                 ProjectUGroup::PROJECT_ADMIN,
-                $keyword,
                 $bindvalue_ids,
                 $tracker,
                 false,
@@ -187,7 +185,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItReturnsAnEmptyArrayIfNoUserIsFoundInUgroups(): void
@@ -212,7 +210,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
             [
                 ProjectUGroup::PROJECT_ADMIN,
-                $keyword,
                 $bindvalue_ids,
                 $tracker,
                 false,
@@ -222,7 +219,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->default_dao->shouldReceive('retrieve')->never();
 
-        $this->assertEquals([], $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals([], $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForArtifactSubmitters(): void
@@ -266,7 +263,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForArtifactModifiers(): void
@@ -310,7 +307,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForDynamicUGroup(): void
@@ -342,7 +339,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getUGroupUtilsDynamicMembers')->withArgs(
             [
                 ProjectUGroup::PROJECT_MEMBERS,
-                $keyword,
                 $bindvalue_ids,
                 $tracker,
                 false,
@@ -363,7 +359,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals($expected, $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field));
     }
 
     public function testItExtractUserListForStaticUGroup(): void
@@ -394,7 +390,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->getter->shouldReceive('getAllMembersOfStaticGroup')->withArgs(
             [
-                $keyword,
                 $bindvalue_ids,
                 $matches = ["ugroup_109", 109],
             ]
@@ -415,7 +410,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             $expected,
-            $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field)
+            $this->getter->getSubsetOfUsersValueWithUserIds($ugroups, $bindvalue_ids, $field)
         );
     }
 

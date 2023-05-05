@@ -261,9 +261,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         if ($this->values === null) {
             $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
-            $this->values = $value_getter->getUsersValueByKeywordAndIds(
+            $this->values = $value_getter->getSubsetOfUsersValueWithUserIds(
                 $ugroups,
-                null,
                 [],
                 $this->field
             );
@@ -289,9 +288,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
 
         $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance(), PlatformUsersGetterSingleton::instance());
-        return $value_getter->getUsersValueByKeywordAndIds(
+        return $value_getter->getSubsetOfUsersValueWithUserIds(
             $this->value_function,
-            null,
             $bindvalue_ids,
             $this->field
         );
@@ -300,11 +298,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get all values to be displayed in the field
      *
-     * @param string $keyword
-     *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    public function getAllValues($keyword = null)
+    public function getAllValues()
     {
         return $this->getAllValuesByUGroupList($this->value_function);
     }
