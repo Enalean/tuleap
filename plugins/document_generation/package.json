@@ -20,7 +20,7 @@
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.37",
     "vue3-gettext": "^2.2.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
+    "xlsx": "git+https://git.sheetjs.com/sheetjs/sheetjs.git#333e4e40f9c5603bd22a811f54c61c20bc9e17ab"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
