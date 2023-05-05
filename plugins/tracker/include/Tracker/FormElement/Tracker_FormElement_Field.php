@@ -944,6 +944,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
+    public function canBeDisplayedInTooltip(): bool
+    {
+        return true;
+    }
+
     /**
      * Verifies the consistency of the imported Tracker
      *

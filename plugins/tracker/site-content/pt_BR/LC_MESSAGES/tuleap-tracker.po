@@ -286,9 +286,6 @@ msgstr ""
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
 
-msgid "Add a field to the tooltip:"
-msgstr ""
-
 msgid "Add a follow-up comment"
 msgstr ""
 
@@ -314,6 +311,9 @@ msgstr ""
 msgid ""
 "Add a target which will be called everytime an artifact is created or "
 "updated. The URL will be called using HTTP POST method."
+msgstr ""
+
+msgid "Add field to tooltip"
 msgstr ""
 
 msgid "Add new values"
@@ -1399,6 +1399,14 @@ msgstr ""
 msgid "From a Tracker v3"
 msgstr ""
 
+msgid "From fields"
+msgstr ""
+
+msgid "From other semantic (predefined, displayed first)"
+msgid_plural "From other semantics (predefined, displayed first)"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "General settings"
 msgstr ""
 
@@ -1503,6 +1511,12 @@ msgstr ""
 msgid ""
 "In order to edit artifact links, please <a href=\"%1$s\">switch to the full "
 "edit mode</a>."
+msgstr ""
+
+msgid ""
+"In order to have consistent rendering across the platform, information from "
+"important semantics is displayed first. You can add tracker specific "
+"information after."
 msgstr ""
 
 msgid ""
@@ -2226,7 +2240,7 @@ msgstr "Remover"
 msgid "Remove %s from +New dropdown"
 msgstr ""
 
-msgid "Remove the field from the tooltip"
+msgid "Remove from tooltip"
 msgstr ""
 
 #, php-format
@@ -2948,6 +2962,9 @@ msgstr ""
 msgid "The following fields will be displayed in the tooltip:"
 msgstr ""
 
+msgid "The following information will be displayed in the tooltip:"
+msgstr ""
+
 msgid ""
 "The following trackers cannot be displayed (data seems missing in database):"
 msgstr ""
@@ -3102,15 +3119,6 @@ msgstr ""
 
 msgid "The selected values will define the artifact as done:"
 msgstr ""
-
-msgid ""
-"The semantic %s is used. It will be automatically displayed at the beginning "
-"of the tooltip."
-msgid_plural ""
-"The following semantics are used: %s. They will be automatically displayed "
-"at the beginning of the tooltip."
-msgstr[0] ""
-msgstr[1] ""
 
 msgid ""
 "The semantic done cannot be defined because the semantic status is not "
@@ -3305,10 +3313,13 @@ msgstr ""
 msgid "There isn't any fields in the tooltip yet."
 msgstr ""
 
-msgid "There isn't any trackers yet"
+msgid "There isn't any fields to add to the tooltip"
 msgstr ""
 
-msgid "There isn't anymore fields left to add to the tooltip"
+msgid "There isn't any information in the tooltip yet."
+msgstr ""
+
+msgid "There isn't any trackers yet"
 msgstr ""
 
 msgid "There must be at least one authorized user group."
@@ -3461,6 +3472,11 @@ msgid "Token based email gateway"
 msgstr ""
 
 msgid "Tooltip"
+msgstr ""
+
+msgid ""
+"Tooltips are shown everywhere in Tuleap when an artifact is hovered, giving "
+"more information coming from the artifact's data."
 msgstr ""
 
 msgid "Total effort"
@@ -4160,9 +4176,6 @@ msgid "fieldset_ids attribute must not be empty."
 msgstr ""
 
 msgid "fixed_in"
-msgstr ""
-
-msgid "go back to semantic overview"
 msgstr ""
 
 msgid "have access to all artifacts"

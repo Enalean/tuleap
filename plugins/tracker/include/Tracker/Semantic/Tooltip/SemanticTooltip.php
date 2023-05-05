@@ -171,14 +171,15 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
                 )
             )
         );
-        $progress         = $progress_builder->getSemantic($this->tracker);
-        if ($progress->isDefined()) {
-            $others[] = $progress->getLabel();
-        }
 
         $timeframe = SemanticTimeframeBuilder::build()->getSemantic($this->tracker);
         if ($timeframe->isDefined()) {
             $others[] = $timeframe->getLabel();
+        }
+
+        $progress = $progress_builder->getSemantic($this->tracker);
+        if ($progress->isDefined()) {
+            $others[] = $progress->getLabel();
         }
 
         return $others;
@@ -208,14 +209,16 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
         Codendi_Request $request,
         PFUser $current_user,
     ) {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $fields = $this->getFields();
 
-        $options = '';
-        foreach ($this->tracker->getFormElements() as $formElement) {
-            $options .= $formElement->fetchAddTooltip($fields);
-        }
+        $select_options = (new SelectOptionsBuilder(Tracker_FormElementFactory::instance()))
+            ->build($this->tracker, $current_user, $fields);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/semantics');
         $presenter = new SemanticTooltipAdminPresenter(
@@ -229,7 +232,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
             ),
             $this->getUrl(),
             $this->getAdminSemanticUrl(),
-            $options,
+            $select_options,
         );
         $renderer->renderToPage('admin-tooltip', $presenter);
 

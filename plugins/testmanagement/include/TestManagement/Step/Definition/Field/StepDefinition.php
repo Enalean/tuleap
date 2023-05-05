@@ -246,6 +246,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
+    public function canBeDisplayedInTooltip(): bool
+    {
+        return false;
+    }
+
     /**
      * @return StepDefinitionChangesetValueDao
      */
