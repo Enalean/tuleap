@@ -24,13 +24,15 @@ namespace Tuleap\Test\Stubs\WebAuthn;
 
 use Symfony\Component\Uid\Uuid;
 use Tuleap\WebAuthn\Source\ChangeCredentialSourceName;
+use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\SaveCredentialSourceWithName;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
-final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName
+final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId
 {
     /**
      * @var array<string, string>
@@ -68,7 +70,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         return array_map(
             static fn(string $source_id) => new PublicKeyCredentialSource(
                 $source_id,
-                'type',
+                'public-key',
                 [],
                 'attestationType',
                 TrustPathLoader::loadTrustPath(['type' => 'Webauthn\\TrustPath\\EmptyTrustPath']),
@@ -96,5 +98,18 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         $this->sources_id[] = $publicKeyCredentialSource->getPublicKeyCredentialId();
 
         $this->sources_name[$publicKeyCredentialSource->getPublicKeyCredentialId()] = $name;
+    }
+
+    public function getAllByUserId(int $user_id): array
+    {
+        return array_map(
+            static fn(PublicKeyCredentialSource $source) => new WebAuthnCredentialSource(
+                $source,
+                'name',
+                new \DateTimeImmutable(),
+                new \DateTimeImmutable()
+            ),
+            $this->findAllForUserEntity(new PublicKeyCredentialUserEntity('', '', ''))
+        );
     }
 }

@@ -5049,6 +5049,11 @@ msgstr ""
 msgid "You have successfully recovered your password,"
 msgstr "Vous venez de réinitialiser votre mot de passe,"
 
+msgid "You have to register your passkey before authenticate with it"
+msgstr ""
+"Vous devez enregistrer votre clé d'authentification avant de vous "
+"authentifier avec"
+
 msgid ""
 "You invited %1$s with email %2$s to register to %3$s and join the project "
 "%4$s."
