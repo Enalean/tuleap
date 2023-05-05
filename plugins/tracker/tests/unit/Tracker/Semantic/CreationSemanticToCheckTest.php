@@ -43,4 +43,11 @@ final class CreationSemanticToCheckTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertSame(Tracker_Semantic_Title::NAME, $result->value->semantic_to_check);
     }
+
+    public function testItReturnsTrueIfTheCurrentSemanticIsTheSemanticTitle(): void
+    {
+        $current_semantic = "title";
+        $result           = CreationSemanticToCheck::fromREST($current_semantic);
+        self::assertTrue($result->value->isSemanticTitle());
+    }
 }

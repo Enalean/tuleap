@@ -20,38 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\Tracker\Test\Stub\Semantic;
 
+use Tracker;
+use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Title;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 
-/**
- * @psalm-immutable
- */
-final class CreationSemanticToCheck
+final class GetTitleSemanticStub implements GetTitleSemantic
 {
-    private const SUPPORTED_SEMANTICS = [Tracker_Semantic_Title::NAME];
-
-    private function __construct(public readonly string $semantic_to_check)
+    private function __construct(private readonly ?Tracker_FormElement_Field_Text $text_field)
     {
     }
 
-    /**
-     * @return Ok<self>|Err<Fault>
-     */
-    public static function fromREST(string $semantic_to_check): Ok|Err
+    public function getByTracker(Tracker $tracker): Tracker_Semantic_Title
     {
-        if (! in_array($semantic_to_check, self::SUPPORTED_SEMANTICS)) {
-            return Result::err(SemanticNotSupportedFault::fromSemanticName($semantic_to_check));
-        }
-        return Result::ok(new self($semantic_to_check));
+        return new Tracker_Semantic_Title($tracker, $this->text_field);
     }
 
-    public function isSemanticTitle(): bool
+    public static function withoutTextField(): self
     {
-        return $this->semantic_to_check === Tracker_Semantic_Title::NAME;
+        return new self(null);
+    }
+
+    public static function withTextField(Tracker_FormElement_Field_Text $text_field): self
+    {
+        return new self($text_field);
     }
 }
