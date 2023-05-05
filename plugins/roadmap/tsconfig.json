@@ -4,7 +4,6 @@
         "scripts/**/*"
     ],
     "compilerOptions": {
-        "incremental": false,
         "skipLibCheck": true
     }
 }
