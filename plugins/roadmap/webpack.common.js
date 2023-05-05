@@ -56,7 +56,6 @@ module.exports = [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
