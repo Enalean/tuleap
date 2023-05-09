@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render, html } from "lit/html.js";
-import type { LazyboxOptions, LazyboxSelectionBadgeCallback, RenderedItem } from "./type";
+import { html } from "hybrids";
+import type { LazyboxOptions, LazyboxSelectionBadgeCallback } from "./type";
 import type { SelectionBadge } from "./selection/SelectionBadge";
 import { TAG as SELECTION_BADGE_TAG } from "./selection/SelectionBadge";
+import type { LazyboxItem } from "./items/GroupCollection";
 
 export const isBadge = (element: Element | null): element is HTMLElement & SelectionBadge =>
     element?.tagName === SELECTION_BADGE_TAG.toUpperCase();
@@ -28,23 +29,18 @@ export const isBadge = (element: Element | null): element is HTMLElement & Selec
 export const getSelectionBadgeCallback = (
     options: LazyboxOptions
 ): LazyboxSelectionBadgeCallback => {
-    return options.selection_badge_callback
+    return "selection_badge_callback" in options
         ? options.selection_badge_callback
-        : (item: RenderedItem): SelectionBadge & HTMLElement => {
-              const document_fragment = document.createDocumentFragment();
-              render(
-                  html`
-                      <tuleap-lazybox-selection-badge outline>
-                          ${item.template}
-                      </tuleap-lazybox-selection-badge>
-                  `,
-                  document_fragment
-              );
-
-              const selected_value_badge = document_fragment.firstElementChild;
-              if (!isBadge(selected_value_badge)) {
-                  throw new Error("Cannot create the selected value badge");
+        : (item: LazyboxItem): SelectionBadge & HTMLElement => {
+              const target = document.createElement("span");
+              const renderFunction = html`<tuleap-lazybox-selection-badge outline
+                  >${options.templating_callback(html, item)}</tuleap-lazybox-selection-badge
+              >`;
+              renderFunction(target, target);
+              const badge = target.firstElementChild;
+              if (!isBadge(badge)) {
+                  throw Error("Could not create badge");
               }
-              return selected_value_badge;
+              return badge;
           };
 };

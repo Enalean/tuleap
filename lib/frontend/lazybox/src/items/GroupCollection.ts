@@ -18,7 +18,6 @@
  */
 
 export type LazyboxItem = {
-    readonly id: string;
     readonly is_disabled: boolean;
     readonly value: unknown;
 };

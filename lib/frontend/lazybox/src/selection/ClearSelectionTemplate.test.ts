@@ -19,13 +19,13 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import type { RenderedItem } from "../type";
+import type { LazyboxItem } from "../items/GroupCollection";
 import type { HostElement } from "./SelectionElement";
 import { buildClear } from "./SelectionElement";
 import { getClearSelectionButton } from "./ClearSelectionTemplate";
-import { RenderedItemStub } from "../../tests/stubs/RenderedItemStub";
+import { LazyboxItemStub } from "../../tests/stubs/LazyboxItemStub";
 
-const noopOnSelection = (item: RenderedItem | null): void => {
+const noopOnSelection = (item: LazyboxItem | null): void => {
     if (item) {
         //Do nothing
     }
@@ -42,7 +42,7 @@ describe("ClearSelectionTemplate", () => {
         const host = doc.createElement("span") as HostElement;
         Object.assign(host, {
             multiple: false,
-            selected_items: [RenderedItemStub.withDefaults()],
+            selected_items: [LazyboxItemStub.withDefaults()],
             clearSelection: buildClear(host),
             onSelection: noopOnSelection,
         });
@@ -61,6 +61,7 @@ describe("ClearSelectionTemplate", () => {
     };
 
     it(`When I click on the button, it will dispatch a "clear-selection" event
+        and an "open-dropdown" event
         and will call onSelection() with a null parameter`, () => {
         const host = getHost();
         const dispatch = vi.spyOn(host, "dispatchEvent");
@@ -70,25 +71,7 @@ describe("ClearSelectionTemplate", () => {
         button.click();
 
         expect(dispatch.mock.calls[0][0].type).toBe("clear-selection");
-        expect(host.selected_items).toHaveLength(0);
-        expect(onSelection).toHaveBeenCalledWith(null);
-    });
-
-    it(`when I press enter on the button, it will simulate a click on keyup instead of keydown
-        so that enter keyup event is NOT dispatched in the open dropdown, which would select
-        the first possible value immediately`, () => {
-        const host = getHost();
-        const dispatch = vi.spyOn(host, "dispatchEvent");
-        const onSelection = vi.spyOn(host, "onSelection");
-
-        const button = getButton(host);
-        const down_event = new KeyboardEvent("keydown", { key: "Enter", cancelable: true });
-        const up_event = new KeyboardEvent("keyup", { key: "Enter" });
-        button.dispatchEvent(down_event);
-        button.dispatchEvent(up_event);
-
-        expect(down_event.defaultPrevented).toBe(true);
-        expect(dispatch.mock.calls[0][0].type).toBe("clear-selection");
+        expect(dispatch.mock.calls[1][0].type).toBe("open-dropdown");
         expect(host.selected_items).toHaveLength(0);
         expect(onSelection).toHaveBeenCalledWith(null);
     });

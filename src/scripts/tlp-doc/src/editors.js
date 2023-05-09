@@ -376,7 +376,6 @@ function initLinkSelector() {
     const ADDITIONAL_ITEM_ID = 105;
 
     const item_105 = {
-        id: String(ADDITIONAL_ITEM_ID),
         value: {
             id: ADDITIONAL_ITEM_ID,
             color: "graffiti-yellow",
@@ -387,7 +386,6 @@ function initLinkSelector() {
     };
     const items = [
         {
-            id: "101",
             value: {
                 id: 101,
                 color: "acid-green",
@@ -397,7 +395,6 @@ function initLinkSelector() {
             is_disabled: false,
         },
         {
-            id: "102",
             value: {
                 id: 102,
                 color: "fiesta-red",
@@ -407,7 +404,6 @@ function initLinkSelector() {
             is_disabled: false,
         },
         {
-            id: "103",
             value: {
                 id: 103,
                 color: "deep-blue",
@@ -442,7 +438,7 @@ function initLinkSelector() {
         selection_callback: () => {
             // Do nothing
         },
-        search_field_callback: (query) => {
+        search_input_callback: (query) => {
             if (query === "") {
                 link_selector.setDropdownContent([{ ...group, items }]);
                 return;
@@ -471,35 +467,19 @@ function initLinkSelector() {
 function initMultiUserLinkSelector() {
     const users = [
         {
-            id: "101",
-            value: {
-                id: 102,
-                display_name: "Johnny Cash (jocash)",
-            },
+            value: { id: 102, display_name: "Johnny Cash (jocash)" },
             is_disabled: false,
         },
         {
-            id: "102",
-            value: {
-                id: 102,
-                display_name: "Joe l'Asticot (jolasti)",
-            },
+            value: { id: 102, display_name: "Joe l'Asticot (jolasti)" },
             is_disabled: false,
         },
         {
-            id: "103",
-            value: {
-                id: 103,
-                display_name: "John doe (jdoe)",
-            },
+            value: { id: 103, display_name: "John doe (jdoe)" },
             is_disabled: false,
         },
         {
-            id: "104",
-            value: {
-                id: 104,
-                display_name: "Joe the hobo (johobo)",
-            },
+            value: { id: 104, display_name: "Joe the hobo (johobo)" },
             is_disabled: true,
         },
     ];
@@ -514,7 +494,6 @@ function initMultiUserLinkSelector() {
     const users_lazybox = createLazybox(document.querySelector("#lazybox-users-selector"), {
         is_multiple: true,
         placeholder: "Search users by names",
-        search_input_placeholder: "",
         templating_callback: (html, item) => html`
             <span class="doc-multiple-lazybox-user-with-avatar">
                 <div class="tlp-avatar-mini"></div>
@@ -524,7 +503,7 @@ function initMultiUserLinkSelector() {
         selection_callback: () => {
             // Do nothing
         },
-        search_field_callback: (query) => {
+        search_input_callback: (query) => {
             if (query === "") {
                 users_lazybox.setDropdownContent([user_autocompleter_group]);
                 return;
@@ -539,10 +518,9 @@ function initMultiUserLinkSelector() {
                 ]);
                 return;
             }
-
             users_lazybox.setDropdownContent([user_autocompleter_group]);
         },
     });
     users_lazybox.setDropdownContent([user_autocompleter_group]);
-    users_lazybox.setSelection([users[0]]);
+    users_lazybox.replaceSelection([users[0]]);
 }

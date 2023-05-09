@@ -17,28 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render, html } from "lit/html.js";
-import type { LazyBoxWithNewItemButton } from "../type";
+import type { LazyboxSelectionBadgeCallback } from "../../src/type";
+import type { SelectionBadge } from "../../src/selection/SelectionBadge";
+import { TAG } from "../../src/selection/SelectionBadge";
 
-export const getNewItemTemplate = (
-    doc: Document,
-    options: LazyBoxWithNewItemButton
-): HTMLElement => {
-    const document_fragment = doc.createDocumentFragment();
-    render(
-        html`<button
-            type="button"
-            class="lazybox-new-item-button"
-            @pointerup="${options.new_item_callback}"
-        >
-            ${options.new_item_button_label}
-        </button>`,
-        document_fragment
-    );
+const isBadge = (element: HTMLElement): element is SelectionBadge & HTMLElement =>
+    element.tagName === TAG.toUpperCase();
 
-    const button = document_fragment.querySelector("button");
-    if (button === null) {
-        throw Error("Could not create the 'new item' button");
-    }
-    return button;
+export const SelectionBadgeCallbackStub = {
+    build: (): LazyboxSelectionBadgeCallback => (item) => {
+        if (item) {
+            //Do nothing
+        }
+
+        const badge = document.createElement(TAG);
+        if (!isBadge(badge)) {
+            throw Error("Could not create selection badge");
+        }
+        badge.color = "inca-silver";
+        return badge;
+    },
 };

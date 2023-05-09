@@ -18,18 +18,9 @@
  */
 
 import type { GroupCollection, GroupOfItems } from "../../src";
+import { LazyboxItemStub } from "../stubs/LazyboxItemStub";
 
 export const GroupCollectionBuilder = {
-    withEmptyGroup: (): GroupCollection => [
-        {
-            label: "",
-            empty_message: "irrelevant",
-            items: [],
-            is_loading: false,
-            footer_message: "",
-        },
-    ],
-
     withSingleGroup: (group: Partial<GroupOfItems>): GroupCollection => [
         {
             label: "",
@@ -46,9 +37,9 @@ export const GroupCollectionBuilder = {
             label: "Group 1",
             empty_message: "irrelevant",
             items: [
-                { id: "value-0", value: { id: 0 }, is_disabled: false },
-                { id: "value-1", value: { id: 1 }, is_disabled: false },
-                { id: "value-2", value: { id: 2 }, is_disabled: false },
+                LazyboxItemStub.withDefaults({ value: { id: 0 } }),
+                LazyboxItemStub.withDefaults({ value: { id: 1 } }),
+                LazyboxItemStub.withDefaults({ value: { id: 2 } }),
             ],
             is_loading: false,
             footer_message: "",
@@ -57,9 +48,9 @@ export const GroupCollectionBuilder = {
             label: "Group 2",
             empty_message: "irrelevant",
             items: [
-                { id: "value-3", value: { id: 3 }, is_disabled: false },
-                { id: "value-4", value: { id: 4 }, is_disabled: false },
-                { id: "value-5", value: { id: 5 }, is_disabled: true },
+                LazyboxItemStub.withDefaults({ value: { id: 3 } }),
+                LazyboxItemStub.withDefaults({ value: { id: 4 } }),
+                LazyboxItemStub.withDefaults({ value: { id: 5 }, is_disabled: true }),
             ],
             is_loading: false,
             footer_message: "",

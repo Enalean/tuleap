@@ -19,27 +19,27 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import { RenderedItemStub } from "../../tests/stubs/RenderedItemStub";
-import type { RenderedItem } from "../type";
+import { LazyboxItemStub } from "../../tests/stubs/LazyboxItemStub";
+import type { LazyboxItem } from "../items/GroupCollection";
 import type { HostElement, SelectionElement } from "./SelectionElement";
 import {
     buildClear,
     buildFocus,
-    buildGetSelection,
-    buildHasSelection,
+    buildIsSelected,
     buildReplaceSelection,
     buildSelectedBadges,
     buildSelectItem,
     getContent,
     getSpan,
+    observeSelectedItems,
     onKeyUp,
     searchInputSetter,
-    selectedItemSetter,
 } from "./SelectionElement";
 import type { SearchInput } from "../SearchInput";
-import type { SelectionBadge } from "./SelectionBadge";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
+import { SelectionBadgeCallbackStub } from "../../tests/stubs/SelectionBadgeCallbackStub";
 
-const noopOnSelection = (item: RenderedItem | null): void => {
+const noopOnSelection = (item: LazyboxItem | null): void => {
     if (item !== null) {
         //Do nothing
     }
@@ -67,17 +67,12 @@ describe("SelectionElement", () => {
             return target;
         };
 
-        const getHost = (...selected_items: RenderedItem[]): HostElement =>
+        const getHost = (...selected_items: LazyboxItem[]): HostElement =>
             Object.assign(doc.createElement("span"), {
                 multiple,
                 placeholder_text: PLACEHOLDER_TEXT,
-                hasSelection: () => selected_items.length > 0,
-                selection_badge_callback: (item: RenderedItem) => {
-                    if (item) {
-                        //Do nothing
-                    }
-                    return doc.createElement("span") as SelectionBadge & HTMLElement;
-                },
+                selection_badge_callback: SelectionBadgeCallbackStub.build(),
+                templating_callback: TemplatingCallbackStub.build(),
                 onSelection: noopOnSelection,
                 selected_items,
             }) as HostElement;
@@ -97,7 +92,7 @@ describe("SelectionElement", () => {
                 });
 
                 it(`When an item is selected, it shows it`, () => {
-                    const host = getHost(RenderedItemStub.withDefaults());
+                    const host = getHost(LazyboxItemStub.withDefaults());
                     const content = selectOrThrow(
                         getRenderedTemplate(host),
                         "[data-test=selected-element]"
@@ -127,7 +122,7 @@ describe("SelectionElement", () => {
                 });
 
                 it(`when items are selected, it adds a "Clear all" button`, () => {
-                    const host = getHost(RenderedItemStub.withDefaults());
+                    const host = getHost(LazyboxItemStub.withDefaults());
                     const button = selectOrThrow(
                         getRenderedTemplate(host),
                         "[data-test=clear-current-selection-button]"
@@ -144,24 +139,30 @@ describe("SelectionElement", () => {
         });
 
         describe(`buildSelectedBadges()`, () => {
+            let first_item: LazyboxItem, second_item: LazyboxItem, target: ShadowRoot;
             beforeEach(() => {
                 multiple = true;
             });
 
+            beforeEach(() => {
+                first_item = LazyboxItemStub.withDefaults({ value: "value-0" });
+                second_item = LazyboxItemStub.withDefaults({ value: "value-1" });
+                target = doc.createElement("div") as unknown as ShadowRoot;
+            });
+
             it(`when the badge dispatches "remove-badge" event,
-                it will be removed from selection
-                and will dispatch an "open-dropdown" event`, () => {
-                const first_item = RenderedItemStub.withDefaults({ id: "value-0" });
-                const second_item = RenderedItemStub.withDefaults({ id: "value-1" });
+                the item will be removed from selection
+                and it will dispatch an "open-dropdown" event`, () => {
                 const host = getHost(first_item, second_item);
                 const onSelection = vi.spyOn(host, "onSelection");
                 const dispatch = vi.spyOn(host, "dispatchEvent");
 
-                const badges = buildSelectedBadges(host);
-                expect(badges).toHaveLength(2);
-                badges[1].dispatchEvent(new CustomEvent("remove-badge"));
+                const render_functions = buildSelectedBadges(host);
+                expect(render_functions).toHaveLength(2);
+                render_functions[0](host, target);
+                target.firstElementChild?.dispatchEvent(new CustomEvent("remove-badge"));
 
-                expect(onSelection).toHaveBeenCalledWith([first_item.value]);
+                expect(onSelection).toHaveBeenCalledWith([second_item.value]);
                 expect(dispatch.mock.calls[0][0].type).toBe("open-dropdown");
             });
         });
@@ -170,7 +171,7 @@ describe("SelectionElement", () => {
     describe(`events`, () => {
         it(`when I press the "enter" key while focusing the selection,
             it will dispatch an "open-dropdown" event
-            and will stop propagation to avoid triggering EventManager code`, () => {
+            and will stop propagation (it has already been handled)`, () => {
             const host = doc.createElement("span") as HostElement;
             const dispatch = vi.spyOn(host, "dispatchEvent");
             const event = new KeyboardEvent("keyup", { key: "Enter" });
@@ -196,39 +197,33 @@ describe("SelectionElement", () => {
     });
 
     describe(`selection methods`, () => {
-        let multiple: boolean;
+        let multiple: boolean, is_selected: boolean;
         beforeEach(() => {
             multiple = true;
+            is_selected = false;
         });
 
-        const getHost = (...selected_items: RenderedItem[]): HostElement => {
+        const getHost = (...selected_items: LazyboxItem[]): HostElement => {
             return {
                 multiple,
                 selected_items,
+                isSelected: (item) => {
+                    return item ? is_selected : is_selected;
+                },
                 onSelection: noopOnSelection,
             } as HostElement;
         };
 
-        describe(`getSelection()`, () => {
-            it(`returns the list of selected items`, () => {
-                const host = getHost(
-                    RenderedItemStub.withDefaults({ id: "value-1" }),
-                    RenderedItemStub.withDefaults({ id: "value-2" })
-                );
-                expect(buildGetSelection(host)()).toBe(host.selected_items);
-            });
-        });
-
         describe(`replaceSelection()`, () => {
             it(`replaces the previous selection by the new one`, () => {
                 const host = getHost(
-                    RenderedItemStub.withDefaults({ id: "value-1" }),
-                    RenderedItemStub.withDefaults({ id: "value-2" })
+                    LazyboxItemStub.withDefaults({ value: "value-1" }),
+                    LazyboxItemStub.withDefaults({ value: "value-2" })
                 );
                 const onSelection = vi.spyOn(host, "onSelection");
 
-                const new_item_1 = RenderedItemStub.withDefaults({ id: "value-3" });
-                const new_item_2 = RenderedItemStub.withDefaults({ id: "value-4" });
+                const new_item_1 = LazyboxItemStub.withDefaults({ value: "value-3" });
+                const new_item_2 = LazyboxItemStub.withDefaults({ value: "value-4" });
 
                 buildReplaceSelection(host)([new_item_1, new_item_2]);
 
@@ -239,24 +234,13 @@ describe("SelectionElement", () => {
             });
         });
 
-        describe("hasSelection()", () => {
-            it("should return false when no item is selected", () => {
-                const host = getHost();
-                expect(buildHasSelection(host)()).toBe(false);
-            });
-
-            it("should return true when an item is selected", () => {
-                const host = getHost(RenderedItemStub.withDefaults());
-                expect(buildHasSelection(host)()).toBe(true);
-            });
-        });
-
         describe("selectItem()", () => {
             it.each([
-                ["when it is already selected", { is_selected: true }],
-                ["when it is disabled", { is_disabled: true }],
-            ])("should not select the item %s", (when, item_partial) => {
-                const selected_item = RenderedItemStub.withDefaults(item_partial);
+                ["when it is already selected", { value: "value-0" }, true],
+                ["when it is disabled", { is_disabled: true }, false],
+            ])("should not select the item %s", (when, item_partial, item_is_selected) => {
+                is_selected = item_is_selected;
+                const selected_item = LazyboxItemStub.withDefaults(item_partial);
                 const host = getHost(selected_item);
                 const onSelection = vi.spyOn(host, "onSelection");
 
@@ -268,13 +252,14 @@ describe("SelectionElement", () => {
             it(`when multiple selection is disabled,
                 it should select the item and call the onSelection callback with its value`, () => {
                 multiple = false;
-                const host = getHost();
+                const host = getHost(LazyboxItemStub.withDefaults({ value: "value-0" }));
                 const onSelection = vi.spyOn(host, "onSelection");
-                const new_selection = RenderedItemStub.withDefaults();
+                const new_selection = LazyboxItemStub.withDefaults({ value: "value-1" });
 
                 buildSelectItem(host)(new_selection);
 
                 expect(onSelection).toHaveBeenCalledWith(new_selection.value);
+                expect(host.selected_items).toHaveLength(1);
             });
 
             it(`when multiple selection is allowed,
@@ -282,13 +267,30 @@ describe("SelectionElement", () => {
                 and call the onSelection callback with all selected values`, () => {
                 const previous_value = { id: 451 };
                 const new_value = { id: 958 };
-                const host = getHost(RenderedItemStub.withDefaults({ value: previous_value }));
+                const host = getHost(LazyboxItemStub.withDefaults({ value: previous_value }));
                 const onSelection = vi.spyOn(host, "onSelection");
-                const new_selection = RenderedItemStub.withDefaults({ value: new_value });
+                const new_selection = LazyboxItemStub.withDefaults({ value: new_value });
 
                 buildSelectItem(host)(new_selection);
 
+                expect(host.selected_items).toHaveLength(2);
                 expect(onSelection).toHaveBeenCalledWith([previous_value, new_value]);
+            });
+        });
+
+        describe(`isSelected()`, () => {
+            it(`returns false when an item is not selected`, () => {
+                const host = getHost();
+                const item = LazyboxItemStub.withDefaults();
+
+                expect(buildIsSelected(host)(item)).toBe(false);
+            });
+
+            it(`returns true when an item is selected`, () => {
+                const item = LazyboxItemStub.withDefaults();
+                const host = getHost(item);
+
+                expect(buildIsSelected(host)(item)).toBe(true);
             });
         });
 
@@ -296,7 +298,7 @@ describe("SelectionElement", () => {
             it(`when multiple selection is disabled,
                 it should clear the selection and call the onSelection callback with a null value`, () => {
                 multiple = false;
-                const host = getHost(RenderedItemStub.withDefaults());
+                const host = getHost(LazyboxItemStub.withDefaults());
                 const onSelection = vi.spyOn(host, "onSelection");
 
                 buildClear(host)();
@@ -307,7 +309,7 @@ describe("SelectionElement", () => {
 
             it(`when multiple selection is allowed,
                 it should clear the selection and call the onSelection callback with an empty array`, () => {
-                const host = getHost(RenderedItemStub.withDefaults());
+                const host = getHost(LazyboxItemStub.withDefaults());
                 const onSelection = vi.spyOn(host, "onSelection");
 
                 buildClear(host)();
@@ -321,8 +323,8 @@ describe("SelectionElement", () => {
     describe(`search input setter`, () => {
         it(`when it receives "backspace-pressed" from the search input,
             it will remove the last selected item and call the onSelection callback`, () => {
-            const first_item = RenderedItemStub.withDefaults({ value: { id: 0 } });
-            const second_item = RenderedItemStub.withDefaults({ value: { id: 1 } });
+            const first_item = LazyboxItemStub.withDefaults({ value: { id: 0 } });
+            const second_item = LazyboxItemStub.withDefaults({ value: { id: 1 } });
             const host = {
                 multiple: true,
                 selected_items: [first_item, second_item],
@@ -340,14 +342,15 @@ describe("SelectionElement", () => {
         });
     });
 
-    describe("selected item setter", () => {
+    describe("observeSelectedItems()", () => {
+        const SEARCH_INPUT_PLACEHOLDER = "puzzle";
         let multiple: boolean;
         beforeEach(() => {
             multiple = true;
         });
 
         const getHost = (): SelectionElement => {
-            const search_input = { placeholder: "puzzle" } as SearchInput;
+            const search_input = { placeholder: SEARCH_INPUT_PLACEHOLDER } as SearchInput;
             return {
                 multiple,
                 placeholder_text: PLACEHOLDER_TEXT,
@@ -355,47 +358,13 @@ describe("SelectionElement", () => {
             } as SelectionElement;
         };
 
-        it(`will return an empty array by default`, () => {
-            const return_values = selectedItemSetter(getHost(), [], undefined);
-            expect(return_values).toStrictEqual([]);
-        });
+        it(`will do nothing when multiple selection is disabled`, () => {
+            multiple = false;
+            const host = getHost();
 
-        it(`will do nothing when new value is the same as old value`, () => {
-            const old_values = [RenderedItemStub.withDefaults({ is_selected: false })];
+            observeSelectedItems(host, []);
 
-            const return_values = selectedItemSetter(getHost(), old_values, old_values);
-
-            expect(return_values).toBe(old_values);
-            expect(old_values[0].is_selected).toBe(false);
-            expect(old_values[0].element.getAttribute("aria-selected")).toBe("false");
-        });
-
-        it(`will mark old values as NOT selected in the dropdown
-            and mark new values as selected in the dropdown`, () => {
-            const first_old_value = RenderedItemStub.withDefaults({ is_selected: true });
-            first_old_value.element.setAttribute("aria-selected", "true");
-            const second_old_value = RenderedItemStub.withDefaults({ is_selected: true });
-            second_old_value.element.setAttribute("aria-selected", "true");
-            const new_values = [
-                RenderedItemStub.withDefaults({ is_selected: false }),
-                RenderedItemStub.withDefaults({ is_selected: false }),
-            ];
-
-            const return_values = selectedItemSetter(getHost(), new_values, [
-                first_old_value,
-                second_old_value,
-            ]);
-
-            expect(return_values).toBe(new_values);
-            const [first_value, second_value] = return_values;
-            expect(first_value.is_selected).toBe(true);
-            expect(first_value.element.getAttribute("aria-selected")).toBe("true");
-            expect(second_value.is_selected).toBe(true);
-            expect(second_value.element.getAttribute("aria-selected")).toBe("true");
-            expect(first_old_value.is_selected).toBe(false);
-            expect(first_old_value.element.getAttribute("aria-selected")).toBe("false");
-            expect(second_old_value.is_selected).toBe(false);
-            expect(second_old_value.element.getAttribute("aria-selected")).toBe("false");
+            expect(host.search_input.placeholder).toBe(SEARCH_INPUT_PLACEHOLDER);
         });
 
         describe(`when multiple selection is allowed`, () => {
@@ -405,10 +374,9 @@ describe("SelectionElement", () => {
 
             it(`and when the new selection is not empty,
                 it will clear the search input placeholder`, () => {
-                const new_value = [RenderedItemStub.withDefaults({ is_selected: false })];
                 const host = getHost();
 
-                selectedItemSetter(host, new_value, []);
+                observeSelectedItems(host, [LazyboxItemStub.withDefaults()]);
 
                 expect(host.search_input.placeholder).toBe("");
             });
@@ -417,11 +385,7 @@ describe("SelectionElement", () => {
                 it will assign the search input placeholder`, () => {
                 const host = getHost();
 
-                selectedItemSetter(
-                    host,
-                    [],
-                    [RenderedItemStub.withDefaults({ is_selected: true })]
-                );
+                observeSelectedItems(host, []);
 
                 expect(host.search_input.placeholder).toBe(PLACEHOLDER_TEXT);
             });

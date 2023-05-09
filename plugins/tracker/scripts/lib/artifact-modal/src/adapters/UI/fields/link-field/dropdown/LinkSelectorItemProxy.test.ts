@@ -37,7 +37,6 @@ describe(`LinkSelectorItemProxy`, () => {
 
     it(`builds from a linkable artifact`, () => {
         const item = build();
-        expect(item.id).toBe(String(linkable_artifact.id));
         expect(item.value).toBe(linkable_artifact);
         expect(item.is_disabled).toBe(false);
     });
@@ -45,7 +44,6 @@ describe(`LinkSelectorItemProxy`, () => {
     it(`builds a disabled item when the given artifact has already been linked once`, () => {
         link_verifier = VerifyIsAlreadyLinkedStub.withAllArtifactsAlreadyLinked();
         const item = build();
-        expect(item.id).toBe(String(linkable_artifact.id));
         expect(item.value).toBe(linkable_artifact);
         expect(item.is_disabled).toBe(true);
     });

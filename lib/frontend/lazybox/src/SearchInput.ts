@@ -18,13 +18,13 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import type { LazyboxSearchFieldCallback } from "./type";
+import type { LazyboxSearchInputCallback } from "./type";
 import { isBackspaceKey, isEnterKey } from "./helpers/keys-helper";
 
 export type SearchInput = {
     disabled: boolean;
     placeholder: string;
-    search_callback: LazyboxSearchFieldCallback;
+    search_callback: LazyboxSearchInputCallback;
     clear(): void;
     setFocus(): void;
 };
@@ -73,7 +73,6 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     if (isEnterKey(event)) {
         preventEnterFromSubmittingParentForms(event);
         event.stopPropagation();
-        dispatch(host, "enter-pressed");
         return;
     }
     if (hasBackspaceBeenPressedWhileQueryWasAlreadyEmpty(host, event)) {

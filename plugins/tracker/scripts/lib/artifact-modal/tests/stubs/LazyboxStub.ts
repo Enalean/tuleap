@@ -30,7 +30,7 @@ export const LazyboxStub = {
         return {
             resetSelection: noop,
             setDropdownContent: noop,
-            setSelection: noop,
+            replaceSelection: noop,
             destroy: noop,
         };
     },

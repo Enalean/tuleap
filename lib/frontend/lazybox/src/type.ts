@@ -17,24 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HTMLTemplateResult, TemplateResult } from "lit/html.js";
 import type { GroupCollection, LazyboxItem } from "./items/GroupCollection";
+import type { UpdateFunction } from "hybrids";
 import type { HTMLTemplateStringProcessor } from "./index";
 import type { SearchInput } from "./SearchInput";
 import type { SelectionBadge } from "./selection/SelectionBadge";
 import type { SelectionElement } from "./selection/SelectionElement";
+import type { DropdownElement } from "./dropdown/DropdownElement";
 
 export interface Lazybox {
-    setDropdownContent: (groups: GroupCollection) => void;
-    resetSelection: () => void;
-    setSelection: (selection: ReadonlyArray<LazyboxItem>) => void;
-    destroy: () => void;
+    setDropdownContent(groups: GroupCollection): void;
+    resetSelection(): void;
+    replaceSelection(selection: ReadonlyArray<LazyboxItem>): void;
+    destroy(): void;
 }
 
-export type LazyboxSearchFieldCallback = (query: string) => void;
+export type LazyboxSearchInputCallback = (query: string) => void;
 
 export type LazyboxSelectionCallback = (selected_value: unknown | null) => void;
 
+export type HTMLTemplateResult = UpdateFunction<HTMLElement>;
 export type LazyboxTemplatingCallback = (
     html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem
@@ -42,44 +44,39 @@ export type LazyboxTemplatingCallback = (
 
 export type LazyboxNewItemCallback = () => void;
 
-export type LazyboxSelectionBadgeCallback = (item: RenderedItem) => SelectionBadge & HTMLElement;
+export type LazyboxSelectionBadgeCallback = (item: LazyboxItem) => SelectionBadge & HTMLElement;
 
-export type LazyBoxWithNewItemButton = {
+type LazyboxWithMultipleSelection = {
+    readonly is_multiple: true;
+    readonly selection_badge_callback?: LazyboxSelectionBadgeCallback;
+};
+
+type LazyboxWithSingleSelection = {
+    readonly is_multiple: false;
+    readonly search_input_placeholder: string;
+};
+
+type LazyboxWithNewItemButton = {
     readonly new_item_button_label: string;
     readonly new_item_callback: LazyboxNewItemCallback;
 };
 
-type LazyBoxWithoutNewItemButton = {
+type LazyboxWithoutNewItemButton = {
     readonly new_item_callback?: undefined;
 };
 
-export type LazyboxOptions = (LazyBoxWithoutNewItemButton | LazyBoxWithNewItemButton) & {
-    readonly placeholder: string;
-    readonly search_input_placeholder: string;
-    readonly is_multiple: boolean;
-    readonly templating_callback: LazyboxTemplatingCallback;
-    readonly selection_callback: LazyboxSelectionCallback;
-    readonly search_field_callback: LazyboxSearchFieldCallback;
-    readonly selection_badge_callback?: LazyboxSelectionBadgeCallback;
-};
-
-export type RenderedItemMap = Map<string, RenderedItem>;
-
-export interface RenderedItem {
-    id: string;
-    template: TemplateResult;
-    value: unknown;
-    is_disabled: boolean;
-    is_selected: boolean;
-    group_id: string;
-    element: Element;
-}
+export type LazyboxOptions = (LazyboxWithSingleSelection | LazyboxWithMultipleSelection) &
+    (LazyboxWithoutNewItemButton | LazyboxWithNewItemButton) & {
+        readonly placeholder: string;
+        readonly templating_callback: LazyboxTemplatingCallback;
+        readonly selection_callback: LazyboxSelectionCallback;
+        readonly search_input_callback: LazyboxSearchInputCallback;
+    };
 
 export interface LazyboxComponent {
     wrapper_element: HTMLElement;
     lazybox_element: Element;
-    dropdown_element: HTMLElement;
-    dropdown_list_element: HTMLElement;
+    dropdown_element: HTMLElement & DropdownElement;
     search_field_element: HTMLElement & SearchInput;
     selection_element: HTMLElement & SelectionElement;
 }
@@ -87,12 +84,4 @@ export interface LazyboxComponent {
 export interface ScrollCoordinates {
     x_position: number;
     y_position: number;
-}
-
-export interface ManageSelection {
-    processSelection(item: Element): void;
-    hasSelection(): boolean;
-    updateSelectionAfterDropdownContentChange(): void;
-    clearSelection(): void;
-    setSelection(selection: ReadonlyArray<RenderedItem>): void;
 }

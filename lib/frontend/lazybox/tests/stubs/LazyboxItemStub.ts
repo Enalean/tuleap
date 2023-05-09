@@ -17,24 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { html } from "lit/html.js";
-import type { RenderedItem } from "../../src/type";
+import type { LazyboxItem } from "../../src";
 
-const doc = document.implementation.createHTMLDocument();
-
-export const RenderedItemStub = {
-    withDefaults: (data?: Partial<RenderedItem>): RenderedItem => {
-        const element = doc.createElement("span");
-        element.setAttribute("aria-selected", "false");
-        return {
-            id: "lazybox-item-1",
-            group_id: "",
-            value: "value-1",
-            is_disabled: false,
-            is_selected: false,
-            template: html``,
-            element,
-            ...data,
-        };
-    },
+export const LazyboxItemStub = {
+    withDefaults: (data?: Partial<LazyboxItem>): LazyboxItem => ({
+        value: "value-1",
+        is_disabled: false,
+        ...data,
+    }),
 };

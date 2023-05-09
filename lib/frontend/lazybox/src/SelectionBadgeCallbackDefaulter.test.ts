@@ -18,10 +18,12 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { html } from "lit/html.js";
 import { TAG } from "./selection/SelectionBadge";
 import { getSelectionBadgeCallback, isBadge } from "./SelectionBadgeCallbackDefaulter";
-import type { LazyboxOptions, RenderedItem } from "./type";
+import { OptionsBuilder } from "../tests/builders/OptionsBuilder";
+import { LazyboxItemStub } from "../tests/stubs/LazyboxItemStub";
+import { SelectionBadgeCallbackStub } from "../tests/stubs/SelectionBadgeCallbackStub";
+import { TemplatingCallbackStub } from "../tests/stubs/TemplatingCallbackStub";
 
 describe("SelectionBadgeCallbackDefaulter", () => {
     let doc: Document;
@@ -39,31 +41,25 @@ describe("SelectionBadgeCallbackDefaulter", () => {
     });
 
     it("getSelectionBadgeCallback() should return the option when it exists", () => {
-        const options = {
-            selection_badge_callback: (item: RenderedItem): void => {
-                if (!item) {
-                    throw new Error("No item");
-                }
-            },
-        } as LazyboxOptions;
+        const callback = SelectionBadgeCallbackStub.build();
+        const options = OptionsBuilder.withSelectionBadgeCallback(callback).build();
 
-        expect(getSelectionBadgeCallback(options)).toStrictEqual(options.selection_badge_callback);
+        expect(getSelectionBadgeCallback(options)).toBe(callback);
     });
 
     it(`When the option selection_badge_callback is not defined
         Then getSelectionBadgeCallback() should return a default callback
         That should render a default primary outlined badge containing the item's template`, () => {
-        const callback = getSelectionBadgeCallback({} as LazyboxOptions);
-        const item_template_content = "An item";
-        const rendered_item = {
-            template: html`${item_template_content}`,
-        } as RenderedItem;
+        const templating_callback = TemplatingCallbackStub.build();
+        const callback = getSelectionBadgeCallback(
+            OptionsBuilder.withMultiple().withTemplatingCallback(templating_callback).build()
+        );
 
-        const default_badge = callback(rendered_item);
+        const default_badge = callback(LazyboxItemStub.withDefaults({ value: { id: 12 } }));
 
         expect(isBadge(default_badge)).toBe(true);
         expect(default_badge.outline).toBe(true);
         expect(default_badge.color).toBe("primary");
-        expect(default_badge.innerHTML).toContain(item_template_content);
+        expect(default_badge.innerHTML).toContain("Value 12");
     });
 });

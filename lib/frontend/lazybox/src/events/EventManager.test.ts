@@ -17,154 +17,102 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EventManager } from "./EventManager";
-import { ManageDropdownStub } from "../../tests/stubs/ManageDropdownStub";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
-import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
-import { ManageSelectionStub } from "../../tests/stubs/ManageSelectionStub";
 import { OptionsBuilder } from "../../tests/builders/OptionsBuilder";
-import type { SearchInput } from "../SearchInput";
-import { KeyboardSelector } from "../selection/KeyboardSelector";
-
-const noop = (): void => {
-    //Do nothing
-};
+import type { DropdownElement } from "../dropdown/DropdownElement";
 
 describe("event manager", () => {
     let doc: Document,
         source_select_box: HTMLSelectElement,
-        component_wrapper: HTMLElement,
-        lazybox_input: Element,
-        dropdown: Element,
-        clickable_item: Element,
-        search_field: SearchInput,
-        item_highlighter: ListItemHighlighter,
-        navigation_manager: KeyboardNavigationManager;
+        wrapper_element: HTMLElement,
+        lazybox_element: Element,
+        dropdown: DropdownElement & HTMLElement;
 
-    function getEventManager(
-        dropdown_element: Element,
-        dropdown_manager: ManageDropdownStub,
-        manage_selection: ManageSelectionStub
-    ): EventManager {
-        return new EventManager(
-            doc,
-            component_wrapper,
-            lazybox_input,
-            dropdown_element,
-            search_field,
-            source_select_box,
-            manage_selection,
-            dropdown_manager,
-            navigation_manager,
-            item_highlighter,
-            KeyboardSelector(dropdown_manager, item_highlighter, manage_selection, search_field)
-        );
-    }
+    const getEventManager = (): EventManager =>
+        new EventManager(doc, wrapper_element, lazybox_element, dropdown, source_select_box);
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         source_select_box = document.createElement("select");
 
-        const { wrapper_element, lazybox_element, dropdown_element, dropdown_list_element } =
-            new BaseComponentRenderer(
-                doc,
-                source_select_box,
-                OptionsBuilder.withoutNewItem().build()
-            ).renderBaseComponent();
+        const { wrapper_element: wrapper, lazybox_element: lazybox } = new BaseComponentRenderer(
+            doc,
+            source_select_box,
+            OptionsBuilder.withoutNewItem().build()
+        ).renderBaseComponent();
 
-        component_wrapper = wrapper_element;
-        lazybox_input = lazybox_element;
-        clickable_item = doc.createElement("li");
-        clickable_item.classList.add("lazybox-dropdown-option-value");
-        dropdown_list_element.appendChild(clickable_item);
-
-        search_field = {
-            clear: noop,
-        } as SearchInput;
-        dropdown = dropdown_element;
-
-        item_highlighter = {
-            highlightItem: vi.fn(),
-            getHighlightedItem: vi.fn(),
-        } as unknown as ListItemHighlighter;
-
-        navigation_manager = { navigate: vi.fn() } as unknown as KeyboardNavigationManager;
+        wrapper_element = wrapper;
+        lazybox_element = lazybox;
+        dropdown = Object.assign(doc.createElement("span"), {
+            open: false,
+        }) as DropdownElement & HTMLElement;
     });
 
     it("When the source <select> is disabled, then it should not attach any event", () => {
-        const manager = getEventManager(
-            dropdown,
-            ManageDropdownStub.withClosedDropdown(),
-            ManageSelectionStub.withNoSelection()
-        );
+        const manager = getEventManager();
 
         vi.spyOn(doc, "addEventListener");
-        vi.spyOn(component_wrapper, "addEventListener");
-        vi.spyOn(clickable_item, "addEventListener");
+        vi.spyOn(wrapper_element, "addEventListener");
 
         source_select_box.setAttribute("disabled", "disabled");
 
         manager.attachEvents();
 
         expect(doc.addEventListener).not.toHaveBeenCalled();
-        expect(component_wrapper.addEventListener).not.toHaveBeenCalled();
-        expect(clickable_item.addEventListener).not.toHaveBeenCalled();
+        expect(wrapper_element.addEventListener).not.toHaveBeenCalled();
     });
 
     describe("Dropdown opening", () => {
-        let manager: EventManager, manage_dropdown: ManageDropdownStub;
+        let manager: EventManager;
 
         beforeEach(() => {
-            manage_dropdown = ManageDropdownStub.withClosedDropdown();
-            manager = getEventManager(
-                dropdown,
-                manage_dropdown,
-                ManageSelectionStub.withNoSelection()
-            );
+            manager = getEventManager();
         });
 
-        it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
+        it(`Opens the dropdown when I click on the component root
+            and stops propagation to avoid triggering "click outside" handler`, () => {
             manager.attachEvents();
+            const event = new Event("pointerup");
+            const stopPropagation = vi.spyOn(event, "stopPropagation");
 
-            lazybox_input.dispatchEvent(new MouseEvent("pointerup"));
-            expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(1);
+            lazybox_element.dispatchEvent(event);
 
-            lazybox_input.dispatchEvent(new MouseEvent("pointerup"));
-            expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
+            expect(dropdown.open).toBe(true);
+            expect(stopPropagation).toHaveBeenCalled();
         });
 
-        it("Does not open the dropdown when I click on the component root while the source <select> is disabled", () => {
+        it(`Closes the dropdown when it is open and I click on the component root
+            and stops propagation to avoid triggering "click outside" handler`, () => {
+            dropdown.open = true;
+            manager.attachEvents();
+            const event = new Event("pointerup");
+            const stopPropagation = vi.spyOn(event, "stopPropagation");
+
+            lazybox_element.dispatchEvent(event);
+
+            expect(dropdown.open).toBe(false);
+            expect(stopPropagation).toHaveBeenCalled();
+        });
+
+        it(`Does not open the dropdown when I click on the component root
+            while the source <select> is disabled`, () => {
             source_select_box.setAttribute("disabled", "disabled");
 
             manager.attachEvents();
-            component_wrapper.dispatchEvent(new MouseEvent("click"));
+            wrapper_element.dispatchEvent(new Event("pointerup"));
 
-            expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(0);
-        });
-
-        it(`When user hits Enter and the dropdown is open,
-            then it should select the highlighted item
-            and close the dropdown`, () => {
-            manager.attachEvents();
-
-            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-            expect(manage_dropdown.isDropdownOpen()).toBe(false);
+            expect(dropdown.open).toBe(false);
         });
     });
 
     describe("Dropdown closure", () => {
-        let manager: EventManager, manage_dropdown: ManageDropdownStub;
+        let manager: EventManager;
 
         beforeEach(() => {
-            manage_dropdown = ManageDropdownStub.withOpenDropdown();
-            manager = getEventManager(
-                dropdown,
-                manage_dropdown,
-                ManageSelectionStub.withNoSelection()
-            );
+            dropdown.open = true;
+            manager = getEventManager();
         });
 
         it.each([
@@ -176,134 +124,36 @@ describe("event manager", () => {
                 manager.attachEvents();
                 doc.dispatchEvent(new KeyboardEvent("keyup", event_init));
 
-                expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
+                expect(dropdown.open).toBe(false);
             }
         );
 
         it("should close the dropdown when the user clicks outside the lazybox while it is open", () => {
             manager.attachEvents();
-            doc.dispatchEvent(new MouseEvent("pointerup"));
+            doc.dispatchEvent(new Event("pointerup"));
 
-            expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
-        });
-
-        it(`Given that the dropdown is open and user has not selected any value,
-            When the user clicks outside the lazybox,
-            Then the dropdown is closed and the search field is cleared`, () => {
-            const clear = vi.spyOn(search_field, "clear");
-            manager.attachEvents();
-            doc.dispatchEvent(new MouseEvent("pointerup"));
-
-            expect(clear).toHaveBeenCalled();
-        });
-
-        it(`Given that the dropdown is open and user has selected a value,
-            When the user clicks outside the lazybox,
-            Then the dropdown is closed BUT the search field is left untouched`, () => {
-            const clear = vi.spyOn(search_field, "clear");
-            const manager = getEventManager(
-                dropdown,
-                manage_dropdown,
-                ManageSelectionStub.withSelectedElement(doc.createElement("li"))
-            );
-
-            manager.attachEvents();
-            doc.dispatchEvent(new MouseEvent("pointerdown"));
-
-            expect(clear).not.toHaveBeenCalled();
-        });
-    });
-
-    describe("Item selection", () => {
-        it("processes the selection when an item is clicked in the dropdown list", () => {
-            const manage_dropdown = ManageDropdownStub.withOpenDropdown();
-            const manage_selection = ManageSelectionStub.withNoSelection();
-            const manager = getEventManager(dropdown, manage_dropdown, manage_selection);
-            manager.attachEvents();
-
-            clickable_item.dispatchEvent(new MouseEvent("pointerup"));
-            expect(manage_selection.getProcessSelectionCallCount()).toBe(1);
-            expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
+            expect(dropdown.open).toBe(false);
         });
     });
 
     describe("removeEventsListenersOnDocument", () => {
-        let manager: EventManager, manage_dropdown: ManageDropdownStub;
+        let manager: EventManager;
 
         beforeEach(() => {
-            manage_dropdown = ManageDropdownStub.withClosedDropdown();
-            manager = getEventManager(
-                dropdown,
-                manage_dropdown,
-                ManageSelectionStub.withNoSelection()
-            );
+            manager = getEventManager();
             manager.attachEvents();
         });
 
         it("should remove the keyup event on document", () => {
             manager.removeEventsListenersOnDocument();
-            doc.dispatchEvent(new Event("keyup"));
-            expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(0);
+            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Escape" }));
+            expect(dropdown.open).toBe(false);
         });
 
-        it("should remove the click event on document", () => {
+        it("should remove the pointerup event on document", () => {
             manager.removeEventsListenersOnDocument();
-            doc.dispatchEvent(new Event("click"));
-            expect(manage_dropdown.getOpenLazyboxCallCount()).toBe(0);
-        });
-
-        it("should remove the navigation event handler on document", () => {
-            manager.removeEventsListenersOnDocument();
-            doc.dispatchEvent(new Event("keyup"));
-            expect(navigation_manager.navigate).not.toHaveBeenCalled();
-        });
-    });
-
-    describe("Keyboard navigation", () => {
-        let manager: EventManager,
-            manage_dropdown: ManageDropdownStub,
-            manage_selection: ManageSelectionStub;
-
-        beforeEach(() => {
-            manage_dropdown = ManageDropdownStub.withOpenDropdown();
-            manage_selection = ManageSelectionStub.withNoSelection();
-            manager = getEventManager(dropdown, manage_dropdown, manage_selection);
-        });
-
-        it("should not call the navigation manager when the dropdown is closed", () => {
-            const manager = getEventManager(
-                dropdown,
-                ManageDropdownStub.withClosedDropdown(),
-                manage_selection
-            );
-
-            manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
-
-            expect(navigation_manager.navigate).not.toHaveBeenCalled();
-        });
-
-        it("should call the navigation manager when the dropdown is open", () => {
-            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
-
-            manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
-
-            expect(navigation_manager.navigate).toHaveBeenCalled();
-        });
-
-        it("should select the currently highlighted item when the Enter key is pressed", () => {
-            const highlighted_item = doc.createElement("li");
-            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
-            const clear = vi.spyOn(search_field, "clear");
-
-            manager.attachEvents();
-            doc.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-
-            expect(navigation_manager.navigate).not.toHaveBeenCalled();
-            expect(manage_selection.getCurrentSelection()).toStrictEqual(highlighted_item);
-            expect(manage_dropdown.getCloseLazyboxCallCount()).toBe(1);
-            expect(clear).toHaveBeenCalled();
+            doc.dispatchEvent(new Event("pointerup"));
+            expect(dropdown.open).toBe(false);
         });
     });
 });

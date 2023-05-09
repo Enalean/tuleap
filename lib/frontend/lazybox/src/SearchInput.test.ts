@@ -135,18 +135,14 @@ describe(`SearchInput`, () => {
             expect(event.type).toBe("backspace-pressed");
         });
 
-        it(`dispatches an "enter-pressed" event
-            and prevents the "enter" key from submitting forms
+        it(`prevents the "enter" key from submitting forms
             and stops propagation to avoid triggering handler in SelectionElement`, () => {
             const host = getHost();
-            const dispatchEvent = vi.spyOn(host, "dispatchEvent");
-            const inner_event = buildKeyboardEvent("Enter", "");
-            const stopPropagation = vi.spyOn(inner_event, "stopPropagation");
-            onKeyUp(host, inner_event);
+            const event = buildKeyboardEvent("Enter", "");
+            const stopPropagation = vi.spyOn(event, "stopPropagation");
+            onKeyUp(host, event);
 
-            expect(inner_event.defaultPrevented).toBe(true);
-            const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toBe("enter-pressed");
+            expect(event.defaultPrevented).toBe(true);
             expect(stopPropagation).toHaveBeenCalled();
         });
 
