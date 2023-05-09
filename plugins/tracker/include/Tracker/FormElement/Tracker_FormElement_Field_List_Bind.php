@@ -661,7 +661,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     {
         $values = [];
         //pretty slow, but we do not have a better way to filter a value function
-        foreach ($this->getAllValues($keyword) as $v) {
+        foreach ($this->getAllValues() as $v) {
             if (false !== stripos($v->getLabel(), $keyword)) {
                 $values[] = $v;
                 if (--$limit === 0) {

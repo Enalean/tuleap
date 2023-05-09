@@ -40,28 +40,26 @@ class BindListUserValueGetter
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
      */
-    public function getUsersValueByKeywordAndIds(
+    public function getSubsetOfUsersValueWithUserIds(
         array $ugroups,
-        $keyword,
-        array $bindvalue_ids,
+        array $user_ids,
         \Tracker_FormElement_Field $field,
     ): array {
         if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
             return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
         }
-        return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
+        return $this->getUsersValueWithUserIdsAccordingToUserStatus(
             $ugroups,
-            $keyword,
-            $bindvalue_ids,
+            $user_ids,
             $field,
             false
         );
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     * @return array<int, Tracker_FormElement_Field_List_Bind_UsersValue>
      */
     public function getActiveUsersValue(
         array $ugroups,
@@ -70,9 +68,8 @@ class BindListUserValueGetter
         if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
             return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
         }
-        return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
+        return $this->getUsersValueWithUserIdsAccordingToUserStatus(
             $ugroups,
-            null,
             [],
             $field,
             true
@@ -87,9 +84,8 @@ class BindListUserValueGetter
     /**
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    private function getUsersValueByKeywordAndIdsAccordingUserStatus(
+    private function getUsersValueWithUserIdsAccordingToUserStatus(
         array $ugroups,
-        $keyword,
         array $bindvalue_ids,
         \Tracker_FormElement_Field $field,
         bool $filter_on_active_user,
@@ -114,7 +110,6 @@ class BindListUserValueGetter
                 case 'group_members':
                     $sql[] = $this->getUGroupUtilsDynamicMembers(
                         ProjectUGroup::PROJECT_MEMBERS,
-                        $keyword,
                         $bindvalue_ids,
                         $tracker,
                         false,
@@ -124,7 +119,6 @@ class BindListUserValueGetter
                 case 'group_admins':
                     $sql[] = $this->getUGroupUtilsDynamicMembers(
                         ProjectUGroup::PROJECT_ADMIN,
-                        $keyword,
                         $bindvalue_ids,
                         $tracker,
                         false,
@@ -134,10 +128,6 @@ class BindListUserValueGetter
                 case 'artifact_submitters':
                     $display_name_sql = $this->user_helper->getDisplayNameSQLQuery();
                     $order_by_sql     = $this->user_helper->getDisplayNameSQLOrder();
-                    if ($keyword) {
-                        $keyword = $da->quoteLikeValueSurround($keyword);
-                    }
-                    $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
                         SELECT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
@@ -146,17 +136,12 @@ class BindListUserValueGetter
                             SELECT DISTINCT tracker_artifact.submitted_by FROM tracker_artifact WHERE tracker_id = $tracker_id
                         ) AS tracker_submitted_by ON (user.user_id = tracker_submitted_by.submitted_by)
                         $user_id_sql
-                        $keyword_sql
                         ORDER BY $order_by_sql
                     )";
                     break;
                 case 'artifact_modifiers':
                     $display_name_sql = $this->user_helper->getDisplayNameSQLQuery();
                     $order_by_sql     = $this->user_helper->getDisplayNameSQLOrder();
-                    if ($keyword) {
-                        $keyword = $da->quoteLikeValueSurround($keyword);
-                    }
-                    $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                     $sql[] = "(
                         SELECT user.user_id, $display_name_sql, user.realname, user.user_name, user.email, user.status
@@ -168,7 +153,6 @@ class BindListUserValueGetter
                             WHERE tracker_id = $tracker_id
                         ) AS tracker_modified_by ON (user.user_id = tracker_modified_by.submitted_by)
                         $user_id_sql
-                        $keyword_sql
                         ORDER BY $order_by_sql
                     )";
                     break;
@@ -178,13 +162,12 @@ class BindListUserValueGetter
                             if ($filter_on_active_user) {
                                 $sql[] = $this->getActiveMembersOfStaticGroup($matches);
                             } else {
-                                $sql[] = $this->getAllMembersOfStaticGroup($keyword, $bindvalue_ids, $matches);
+                                $sql[] = $this->getAllMembersOfStaticGroup($bindvalue_ids, $matches);
                             }
                         } else {
                             $show_suspended = false;
                             $sql[]          = $this->getUGroupUtilsDynamicMembers(
                                 $matches[1],
-                                $keyword,
                                 $bindvalue_ids,
                                 $tracker,
                                 $show_suspended,
@@ -232,7 +215,6 @@ class BindListUserValueGetter
      */
     protected function getUGroupUtilsDynamicMembers(
         $ugroup_name,
-        $keyword,
         array $bindvalue_ids,
         \Tracker $tracker,
         bool $show_suspended,
@@ -243,7 +225,6 @@ class BindListUserValueGetter
             $tracker->getId(),
             $tracker->getGroupId(),
             true,
-            $keyword,
             $show_suspended,
             $show_deleted,
             $bindvalue_ids
@@ -269,12 +250,12 @@ class BindListUserValueGetter
     /**
      * protected for testing purpose
      */
-    protected function getAllMembersOfStaticGroup($keyword, array $bindvalue_ids, array $matches): string
+    protected function getAllMembersOfStaticGroup(array $bindvalue_ids, array $matches): string
     {
         return ugroup_db_get_members(
             $matches[1],
             true,
-            $keyword,
+            null,
             $bindvalue_ids
         );
     }
