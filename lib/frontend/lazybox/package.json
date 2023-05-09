@@ -18,7 +18,7 @@
     "./style": "./dist/style.css"
   },
   "dependencies": {
-    "@floating-ui/dom": "0.5.4",
+    "@floating-ui/dom": "1.2.7",
     "@tuleap/core-constants": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",

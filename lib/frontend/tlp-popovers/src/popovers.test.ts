@@ -169,7 +169,7 @@ describe(`Popovers`, () => {
                         }
 
                         const flip_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "flip"
+                            (middleware) => middleware && middleware.name === "flip"
                         );
                         if (!flip_middleware) {
                             done(Error("No flip middleware"));
@@ -208,7 +208,7 @@ describe(`Popovers`, () => {
                         }
 
                         const flip_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "flip"
+                            (middleware) => middleware && middleware.name === "flip"
                         );
                         if (!flip_middleware) {
                             done(Error("No flip middleware"));
@@ -256,7 +256,7 @@ describe(`Popovers`, () => {
                         }
 
                         const offset_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "offset"
+                            (middleware) => middleware && middleware.name === "offset"
                         );
                         if (!offset_middleware) {
                             done(Error("No offset middleware"));
@@ -298,7 +298,7 @@ describe(`Popovers`, () => {
                         }
 
                         const offset_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "offset"
+                            (middleware) => middleware && middleware.name === "offset"
                         );
                         if (!offset_middleware) {
                             done(Error("No offset middleware"));
@@ -345,7 +345,7 @@ describe(`Popovers`, () => {
                         }
 
                         const shift_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "shift"
+                            (middleware) => middleware && middleware.name === "shift"
                         );
                         if (!shift_middleware) {
                             done(Error("No shift middleware"));
@@ -391,7 +391,7 @@ describe(`Popovers`, () => {
                         }
 
                         const arrow_middleware = options.middleware.find(
-                            (middleware) => middleware.name === "arrow"
+                            (middleware) => middleware && middleware.name === "arrow"
                         );
                         if (!arrow_middleware) {
                             done(Error("No arrow middleware"));
