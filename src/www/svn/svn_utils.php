@@ -526,13 +526,6 @@ function svn_utils_format_svn_history($group_id)
     return $output;
 }
 
-// read permission access file. The default settings part.
-function svn_utils_read_svn_access_file_defaults($project_svnroot, $display = false)
-{
-    $accessfile = new SVN_AccessFile_Writer($project_svnroot);
-    return $accessfile->read_defaults($display);
-}
-
 // read permission access file. The project specific part.
 function svn_utils_read_svn_access_file($project_svnroot)
 {

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\SVNCore\GetAllRepositories;
+use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVNCore\SvnCoreUsage;
 use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
 use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
