@@ -34,7 +34,7 @@ use function Psl\Encoding\Base64\encode;
 use function Psl\Json\decode as psl_json_decode;
 use function Psl\Json\encode as psl_json_encode;
 
-final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName
+final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId
 {
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
