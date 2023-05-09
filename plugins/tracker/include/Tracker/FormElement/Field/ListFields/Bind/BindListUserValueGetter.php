@@ -111,18 +111,14 @@ class BindListUserValueGetter
                     $sql[] = $this->getUGroupUtilsDynamicMembers(
                         ProjectUGroup::PROJECT_MEMBERS,
                         $bindvalue_ids,
-                        $tracker,
-                        false,
-                        false
+                        $tracker
                     );
                     break;
                 case 'group_admins':
                     $sql[] = $this->getUGroupUtilsDynamicMembers(
                         ProjectUGroup::PROJECT_ADMIN,
                         $bindvalue_ids,
-                        $tracker,
-                        false,
-                        false
+                        $tracker
                     );
                     break;
                 case 'artifact_submitters':
@@ -165,13 +161,10 @@ class BindListUserValueGetter
                                 $sql[] = $this->getAllMembersOfStaticGroup($bindvalue_ids, $matches);
                             }
                         } else {
-                            $show_suspended = false;
-                            $sql[]          = $this->getUGroupUtilsDynamicMembers(
+                            $sql[] = $this->getUGroupUtilsDynamicMembers(
                                 $matches[1],
                                 $bindvalue_ids,
-                                $tracker,
-                                $show_suspended,
-                                false
+                                $tracker
                             );
                         }
                     }
@@ -217,23 +210,18 @@ class BindListUserValueGetter
         $ugroup_name,
         array $bindvalue_ids,
         \Tracker $tracker,
-        bool $show_suspended,
-        bool $show_deleted,
     ): ?string {
         return ugroup_db_get_dynamic_members(
             $ugroup_name,
-            $tracker->getId(),
+            null,
             $tracker->getGroupId(),
             true,
-            $show_suspended,
-            $show_deleted,
+            false,
+            false,
             $bindvalue_ids
         );
     }
 
-    /**
-     * protected for testing purpose
-     */
     private function getActiveMembersOfStaticGroup(array $matches): string
     {
         $sql_display_name  = $this->user_helper->getDisplayNameSQLQuery();

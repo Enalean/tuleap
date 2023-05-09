@@ -70,7 +70,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAnEmptyArrayWhenTrackerISNotFound(): void
     {
         $ugroups       = ['group_members'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -87,7 +86,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForProjectMemberGroup(): void
     {
         $ugroups       = ['group_members'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -108,8 +106,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProjectUGroup::PROJECT_MEMBERS,
                 $bindvalue_ids,
                 $tracker,
-                false,
-                false,
             ]
         )->once()->andReturn('sql fragement');
 
@@ -139,7 +135,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForProjectAdminGroup(): void
     {
         $ugroups       = ['group_admins'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -160,8 +155,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProjectUGroup::PROJECT_ADMIN,
                 $bindvalue_ids,
                 $tracker,
-                false,
-                false,
             ]
         )->once()->andReturn('sql fragement');
 
@@ -191,7 +184,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAnEmptyArrayIfNoUserIsFoundInUgroups(): void
     {
         $ugroups       = ['group_admins'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -212,8 +204,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProjectUGroup::PROJECT_ADMIN,
                 $bindvalue_ids,
                 $tracker,
-                false,
-                false,
             ]
         )->once()->andReturn(null);
 
@@ -225,7 +215,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForArtifactSubmitters(): void
     {
         $ugroups       = ['artifact_submitters'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -269,7 +258,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForArtifactModifiers(): void
     {
         $ugroups       = ['artifact_modifiers'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -313,7 +301,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForDynamicUGroup(): void
     {
         $ugroups       = ['ugroup_3'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -341,8 +328,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProjectUGroup::PROJECT_MEMBERS,
                 $bindvalue_ids,
                 $tracker,
-                false,
-                false,
             ]
         )->once()->andReturn('sql fragement');
 
@@ -365,7 +350,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExtractUserListForStaticUGroup(): void
     {
         $ugroups       = ['ugroup_109'];
-        $keyword       = "";
         $bindvalue_ids = [];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
@@ -391,7 +375,7 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getter->shouldReceive('getAllMembersOfStaticGroup')->withArgs(
             [
                 $bindvalue_ids,
-                $matches = ["ugroup_109", 109],
+                ["ugroup_109", 109],
             ]
         )->once()->andReturn('sql fragement');
 
