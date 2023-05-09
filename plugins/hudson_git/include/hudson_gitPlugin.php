@@ -166,7 +166,9 @@ class hudson_gitPlugin extends Plugin
                     )
                 ),
                 $this->getCSRF(),
-                self::getJenkinsServerFactory()
+                self::getJenkinsServerFactory(),
+                Codendi_HTMLPurifier::instance(),
+                new \Tuleap\Sanitizer\URISanitizer(new Valid_HTTPURI()),
             );
             $xzibit->pimp($params);
         }

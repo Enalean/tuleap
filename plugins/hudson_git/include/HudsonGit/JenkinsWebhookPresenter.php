@@ -26,11 +26,18 @@ use Codendi_HTMLPurifier;
 use GitRepository;
 use CSRFSynchronizerToken;
 use Tuleap\HudsonGit\Log\Log;
+use Tuleap\Sanitizer\URISanitizer;
 
-class JenkinsWebhookPresenter extends GenericWebhookPresenter
+final class JenkinsWebhookPresenter extends GenericWebhookPresenter
 {
-    public function __construct(GitRepository $repository, $url, array $hooklogs, CSRFSynchronizerToken $csrf)
-    {
+    public function __construct(
+        GitRepository $repository,
+        string $url,
+        array $hooklogs,
+        CSRFSynchronizerToken $csrf,
+        private readonly Codendi_HTMLPurifier $html_purifier,
+        private readonly URISanitizer $uri_sanitizer,
+    ) {
         $use_default_edit_modal = false;
         parent::__construct($repository, 'jenkins', $url, [], $csrf, $use_default_edit_modal);
 
@@ -51,7 +58,6 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
      */
     private function generateHooklogs(array $hooklogs): void
     {
-        $hp = Codendi_HTMLPurifier::instance();
         foreach ($hooklogs as $log) {
             $purified_information = '';
             $job_list             = $log->getJobUrlList();
@@ -59,8 +65,12 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
                 $purified_information .= '<div class="hook-log-triggered-jobs">';
                 $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Git plugin triggered jobs:") . '</h4>';
                 foreach ($job_list as $triggered_job_url) {
-                    $purfied_job_url       = $hp->purify($triggered_job_url);
-                    $purified_information .= '<a href="' . $purfied_job_url . '">' . $purfied_job_url . '</a><br>';
+                    $sanitized_job_url = $this->uri_sanitizer->sanitizeForHTMLAttribute($triggered_job_url);
+                    if ($sanitized_job_url !== '' && $triggered_job_url !== '') {
+                        $purified_information .= '<a href="' . $this->html_purifier->purify($sanitized_job_url) . '">' . $this->html_purifier->purify($triggered_job_url) . '</a><br>';
+                    } else {
+                        $purified_information .= $this->html_purifier->purify($triggered_job_url);
+                    }
                 }
                 $purified_information .= '</div>';
             }
@@ -68,7 +78,7 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
             if ($log->getStatusCode() !== null) {
                 $purified_information .= '<div class="hook-log-branch-source-status">';
                 $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Branch source plugin:") . '</h4>';
-                $purified_information .= $log->getStatusCode();
+                $purified_information .= $this->html_purifier->purify((string) $log->getStatusCode());
                 $purified_information .= '</div>';
             }
 
