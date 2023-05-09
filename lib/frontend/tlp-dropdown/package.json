@@ -11,7 +11,7 @@
   "style": "dist/style.css",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@floating-ui/dom": "^0.5.4"
+    "@floating-ui/dom": "^1.2.7"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
