@@ -26,6 +26,9 @@ import type { HostElement } from "./DropdownElement";
 import type { SelectionElement } from "../selection/SelectionElement";
 import { LazyboxItemStub } from "../../tests/stubs/LazyboxItemStub";
 import { selectOrThrow } from "@tuleap/dom";
+import * as tuleap_focus from "@tuleap/focus-navigation";
+
+vi.mock("@tuleap/focus-navigation");
 
 const noopSelectItem = (item: LazyboxItem): void => {
     if (item) {
@@ -127,9 +130,9 @@ describe("GroupTemplate", () => {
         it(`renders a list item from a given template`, () => {
             render(getHost());
             expect(target.innerHTML).toMatchInlineSnapshot(`
-              " <li role=\\"option\\" tabindex=\\"0\\" class=\\"lazybox-dropdown-option-value\\" data-test=\\"lazybox-item\\" aria-selected=\\"false\\">
-                      <span>Badge</span>Value 1
-                  </li>"
+              <li role="option" tabindex="0" class="lazybox-dropdown-option-value" data-test="lazybox-item" data-navigation="lazybox-item" aria-selected="false">
+                <span>Badge</span>Value 1
+              </li>
             `);
         });
 
@@ -161,6 +164,42 @@ describe("GroupTemplate", () => {
             expect(selectItem).toHaveBeenCalled();
             expect(host.open).toBe(false);
             expect(stopPropagation).toHaveBeenCalled();
+        });
+
+        it(`when I press the "arrow down" key while focusing a list item,
+            it will prevent default (it will not scroll down)
+            and it will focus the next item in the dropdown`, () => {
+            const moveFocus = vi.spyOn(tuleap_focus, "moveFocus");
+            const key_down_event = new KeyboardEvent("keydown", {
+                key: "ArrowDown",
+                cancelable: true,
+            });
+            render(getHost());
+
+            const list_item = selectOrThrow(target, "[data-test=lazybox-item]");
+            list_item.dispatchEvent(key_down_event);
+            expect(key_down_event.defaultPrevented).toBe(true);
+
+            list_item.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowDown" }));
+            expect(moveFocus.mock.calls[0][1]).toBe("down");
+        });
+
+        it(`when I press the "arrow up" key while focusing a list item,
+            it will prevent default (it will not scroll up)
+            and it will focus the previous item in the dropdown`, () => {
+            const moveFocus = vi.spyOn(tuleap_focus, "moveFocus");
+            const key_down_event = new KeyboardEvent("keydown", {
+                key: "ArrowUp",
+                cancelable: true,
+            });
+            render(getHost());
+
+            const list_item = selectOrThrow(target, "[data-test=lazybox-item]");
+            list_item.dispatchEvent(key_down_event);
+            expect(key_down_event.defaultPrevented).toBe(true);
+
+            list_item.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
+            expect(moveFocus.mock.calls[0][1]).toBe("up");
         });
 
         it(`renders a disabled list item`, () => {

@@ -23,6 +23,8 @@ import type { LazyboxNewItemCallback, LazyboxTemplatingCallback } from "../type"
 import type { SelectionElement } from "../selection/SelectionElement";
 import { getAllGroupsTemplate } from "./GroupTemplate";
 import type { GroupCollection } from "../items/GroupCollection";
+import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
+import { moveFocus } from "@tuleap/focus-navigation";
 
 export const TAG = "tuleap-lazybox-dropdown";
 
@@ -70,6 +72,24 @@ export const selectionSetter = (
     return selection;
 };
 
+export const onArrowKeyUp = (host: HTMLElement, event: KeyboardEvent): void => {
+    const getParent = (): HTMLElement => host;
+
+    if (isArrowDown(event)) {
+        moveFocus(host.ownerDocument, "down", getParent);
+        return;
+    }
+    if (isArrowUp(event)) {
+        moveFocus(host.ownerDocument, "up", getParent);
+    }
+};
+
+export const onArrowKeyDown = (host: unknown, event: KeyboardEvent): void => {
+    if (isArrowDown(event) || isArrowUp(event)) {
+        event.preventDefault();
+    }
+};
+
 export const DropdownElement = define<InternalDropdownElement>({
     tag: TAG,
     open: { observe: observeOpen, value: false },
@@ -99,6 +119,9 @@ export const DropdownElement = define<InternalDropdownElement>({
                       class="lazybox-new-item-button"
                       onclick="${host.new_item_callback}"
                       data-test="new-item-button"
+                      data-navigation="lazybox-item"
+                      onkeyup="${onArrowKeyUp}"
+                      onkeydown="${onArrowKeyDown}"
                   >
                       ${host.new_item_button_label}
                   </button>`

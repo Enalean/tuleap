@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@floating-ui/dom": "1.2.7",
-    "@tuleap/core-constants": "workspace:^",
+    "@tuleap/core-constants": "workspace:*",
+    "@tuleap/focus-navigation": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "hybrids": "8.1.8"

@@ -24,6 +24,9 @@ import type { SelectionElement } from "../selection/SelectionElement";
 import type { LazyboxNewItemCallback } from "../type";
 import type { GroupCollection } from "../items/GroupCollection";
 import { selectOrThrow } from "@tuleap/dom";
+import * as tuleap_focus from "@tuleap/focus-navigation";
+
+vi.mock("@tuleap/focus-navigation");
 
 const noop = (): void => {
     //Do nothing
@@ -90,6 +93,46 @@ describe(`DropdownElement`, () => {
             button.click();
 
             expect(new_item_callback).toHaveBeenCalled();
+        });
+
+        it(`when I press the "arrow down" key while focusing the new item button,
+            it will prevent default (it will not scroll down)
+            and it will focus the next item in the dropdown`, () => {
+            new_item_callback = noop;
+            render();
+
+            const button = selectOrThrow(target, "[data-test=new-item-button]");
+            const moveFocus = vi.spyOn(tuleap_focus, "moveFocus");
+            const key_down_event = new KeyboardEvent("keydown", {
+                key: "ArrowDown",
+                cancelable: true,
+            });
+
+            button.dispatchEvent(key_down_event);
+            expect(key_down_event.defaultPrevented).toBe(true);
+
+            button.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowDown" }));
+            expect(moveFocus.mock.calls[0][1]).toBe("down");
+        });
+
+        it(`when I press the "arrow up" key while focusing the new item button,
+            it will prevent default (it will not scroll down)
+            and it will focus the next item in the dropdown`, () => {
+            new_item_callback = noop;
+            render();
+
+            const button = selectOrThrow(target, "[data-test=new-item-button]");
+            const moveFocus = vi.spyOn(tuleap_focus, "moveFocus");
+            const key_down_event = new KeyboardEvent("keydown", {
+                key: "ArrowUp",
+                cancelable: true,
+            });
+
+            button.dispatchEvent(key_down_event);
+            expect(key_down_event.defaultPrevented).toBe(true);
+
+            button.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowUp" }));
+            expect(moveFocus.mock.calls[0][1]).toBe("up");
         });
     });
 

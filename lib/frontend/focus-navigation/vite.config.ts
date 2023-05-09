@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,14 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import pkg from "./package.json";
+import * as path from "path";
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "Lazybox",
-        },
-        rollupOptions: {
-            external: Object.keys(pkg.dependencies),
-            output: {
-                globals: {
-                    hybrids: "hybrids",
-                    "@floating-ui/dom": "FloatingUIDOM",
-                    "@tuleap/focus-navigation": "TuleapFocusNavigation",
-                },
-            },
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "TuleapFocusNavigation",
         },
     },
 });
