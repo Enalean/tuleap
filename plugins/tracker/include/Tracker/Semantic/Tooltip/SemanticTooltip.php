@@ -247,6 +247,9 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
         } else {
             $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
             $html .= '<ul>';
+            foreach ($this->getOtherSemanticsLabels() as $semantic) {
+                $html .= '<li><strong>' . sprintf(dgettext('tuleap-tracker', 'Semantic %s'), $hp->purify($semantic, CODENDI_PURIFIER_CONVERT_HTML)) . '</strong></li>';
+            }
             foreach ($fields as $f) {
                 $html .= '<li><strong>' . $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
             }
