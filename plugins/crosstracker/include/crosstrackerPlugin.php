@@ -96,23 +96,6 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         bindtextdomain('tuleap-crosstracker', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-            $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-            $this->addHook(Event::REST_RESOURCES);
-            $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-            $this->addHook(CollectRoutesEvent::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
-    /**
-     * @see Plugin::getDependencies()
-     */
     public function getDependencies()
     {
         return ['tracker'];
@@ -130,17 +113,20 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event): void
     {
         $event->addWidget(ProjectCrossTrackerSearch::NAME);
     }
 
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event): void
     {
         $event->addWidget(ProjectCrossTrackerSearch::NAME);
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
             $get_widget_event->setWidget(new ProjectCrossTrackerSearch());
@@ -152,15 +138,15 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $this->removeOrphanWidgets([ProjectCrossTrackerSearch::NAME]);
     }
 
-    /** @see Event::REST_RESOURCES */
-    public function restResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    /** @see TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED */
-    public function trackerEventProjectCreationTrackersRequired(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED)]
+    public function trackerEventProjectCreationTrackersRequired(array $params): void
     {
         $dao = new CrossTrackerReportDao();
         foreach ($dao->searchTrackersIdUsedByCrossTrackerByProjectId($params['project_id']) as $row) {
@@ -168,7 +154,8 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(CROSSTRACKER_BASE_URL . '/csv_export/{report_id:\d+}', $this->getRouteHandler('routeGetCSVExportReport'));
     }
