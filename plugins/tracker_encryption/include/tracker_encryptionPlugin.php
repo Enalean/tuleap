@@ -37,21 +37,6 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         bindtextdomain('tuleap-tracker_encryption', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(MarkTrackerAsDeletedController::TRACKER_EVENT_DELETE_TRACKER);
-            $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
-            $this->addHook(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
-        }
-
-        $this->addHook('fill_project_history_sub_events');
-        $this->addHook('javascript_file');
-        $this->addHook('cssfile');
-
-        return parent::getHooksAndCallbacks();
-    }
-
     /**
      * @return Tuleap\TrackerEncryption\Plugin\PluginInfo
      */
@@ -63,9 +48,6 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
-    /**
-     * @see Plugin::getDependencies()
-     */
     public function getDependencies()
     {
         return array('tracker');
@@ -76,7 +58,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         return 'plugin_tracker_encryption';
     }
 
-    public function tracker_formelement_get_classnames($params)
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_FormElementFactory::GET_CLASSNAMES)]
+    public function trackerFormelementGetClassnames($params): void
     {
         $request = HTTPRequest::instance();
         $params['fields']['Encrypted'] = Tracker_FormElement_Field_Encrypted::class;
@@ -85,7 +68,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function fill_project_history_sub_events($params)
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents($params): void
     {
         array_push($params['subEvents']['event_others'], 'Tracker_key');
     }
@@ -118,7 +102,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function tracker_event_delete_tracker($params)
+    #[\Tuleap\Plugin\ListeningToEventName(MarkTrackerAsDeletedController::TRACKER_EVENT_DELETE_TRACKER)]
+    public function trackerEventDeleteTracker($params): void
     {
         $dao_pub_key = new TrackerPublicKeyDao();
         $value_dao   = new ValueDao();
@@ -126,7 +111,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $tracker_key->deleteTrackerKey($params['tracker_id']);
     }
 
-    public function tracker_event_fetch_admin_buttons($params)
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS)]
+    public function trackerEventFetchAdminButtons($params): void
     {
         $params['items']['Encryption'] = array(
                     'url'         => '/plugins/tracker_encryption/?'. http_build_query(array(
@@ -191,7 +177,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $this->displayTrackerKeyForm($tracker_id);
     }
 
-    public function javascript_file($params): void
+    #[\Tuleap\Plugin\ListeningToEventName('javascript_file')]
+    public function javascriptFile($params): void
     {
         if ($this->currentRequestIsForPlugin() || strpos($_SERVER['REQUEST_URI'], 'plugins/tracker') == true) {
             $layout = $params['layout'];
@@ -200,7 +187,8 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function cssFile($params): void
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
+    public function cssfile($params): void
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/tracker') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
