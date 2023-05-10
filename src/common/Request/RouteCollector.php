@@ -236,6 +236,7 @@ use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationChallengeController;
+use Tuleap\WebAuthn\Controllers\PostAuthenticationController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationController;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
@@ -1340,6 +1341,22 @@ class RouteCollector
         );
     }
 
+    public static function postWebAuthnAuthentication(): DispatchablePSR15Compatible
+    {
+        $attestation_statement_manager = new AttestationStatementSupportManager();
+        $attestation_statement_manager->add(new NoneAttestationStatementSupport());
+        $json_response_builder = new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+
+        return new PostAuthenticationController(
+            \UserManager::instance(),
+            new PublicKeyCredentialLoader(
+                new AttestationObjectLoader($attestation_statement_manager)
+            ),
+            new RestlerErrorResponseBuilder($json_response_builder),
+            new SapiEmitter()
+        );
+    }
+
     public static function getFeatureFlag(): FeatureFlagController
     {
         return new FeatureFlagController(
@@ -1533,6 +1550,7 @@ class RouteCollector
             $r->post('/registration', [self::class, 'postWebAuthnRegistration']);
 
             $r->post('/authentication-challenge', [self::class, 'postWebAuthnAuthenticationChallenge']);
+            $r->post('/authentication', [self::class, 'postWebAuthnAuthentication']);
         });
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');

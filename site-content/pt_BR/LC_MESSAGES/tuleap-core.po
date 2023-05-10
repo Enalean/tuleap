@@ -3788,6 +3788,9 @@ msgstr "O painel solicitado não existe."
 msgid "The result of passkey is invalid"
 msgstr ""
 
+msgid "The result of passkey is not for authentication"
+msgstr ""
+
 msgid "The result of passkey is not for registration"
 msgstr ""
 
