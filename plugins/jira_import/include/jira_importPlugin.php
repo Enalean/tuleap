@@ -63,18 +63,12 @@ final class jira_importPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(CLICommandsCollector::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard', 'cardwall', 'roadmap', 'projectmilestones'];
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
     {
         $commands_collector->addCommand(
