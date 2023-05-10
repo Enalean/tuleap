@@ -385,7 +385,7 @@ msgstr ""
 "d'artéfact. Cette URL sera appelée avec HTTP POST."
 
 msgid "Add field to tooltip"
-msgstr "Ajouter un champ à la tooltip"
+msgstr "Ajouter un champ à l'infobulle"
 
 msgid "Add new values"
 msgstr "Ajouter de nouvelles valeurs"
@@ -1903,7 +1903,7 @@ msgid "Manage hierarchy of tracker"
 msgstr "Gérer la hiérarchie du tracker"
 
 msgid "Manage tooltip"
-msgstr "Gérer le tooltip"
+msgstr "Gérer l'infobulle"
 
 msgid ""
 "Mandatory attribute field_id not found in action with type \"set_field_value"
@@ -2520,7 +2520,7 @@ msgid "Remove %s from +New dropdown"
 msgstr "Enlève %s du menu déroulant +Nouveau"
 
 msgid "Remove from tooltip"
-msgstr "Enlever de la tooltip"
+msgstr "Enlever de l'infobulle"
 
 #, php-format
 msgid "Removed: %s"
@@ -3336,10 +3336,10 @@ msgid "The following artifacts were not updated (%1$s)"
 msgstr "Les artéfacts suivant n'ont pas été mis à jour (%1$s)"
 
 msgid "The following fields will be displayed in the tooltip:"
-msgstr "Les champs suivants seront affichés dans le tooltip :"
+msgstr "Les champs suivants seront affichés dans l'infobulle :"
 
 msgid "The following information will be displayed in the tooltip:"
-msgstr "Les informations suivantes seront affichées dans la tooltip :"
+msgstr "Les informations suivantes seront affichées dans l'infobulle :"
 
 msgid ""
 "The following trackers cannot be displayed (data seems missing in database):"
@@ -3765,13 +3765,13 @@ msgid "There is no total effort."
 msgstr "Il n'y a pas d'effort total."
 
 msgid "There isn't any fields in the tooltip yet."
-msgstr "Il n'y pas encore de champs dans le tooltip."
+msgstr "Il n'y pas encore de champs dans l'infobulle."
 
 msgid "There isn't any fields to add to the tooltip"
-msgstr "Il n'y a aucun champs à ajouter à la tooltip"
+msgstr "Il n'y a aucun champs à ajouter à l'infobulle"
 
 msgid "There isn't any information in the tooltip yet."
-msgstr "Il n'y a aucune information dans la tooltip pour l'instant."
+msgstr "Il n'y a aucune information dans l'infobulle pour l'instant."
 
 msgid "There isn't any trackers yet"
 msgstr "Il n'y pas encore d'outil de suivi"
@@ -3957,13 +3957,13 @@ msgid "Token based email gateway"
 msgstr "Passerelle basée sur un jeton d'authentification"
 
 msgid "Tooltip"
-msgstr "Tooltip"
+msgstr "Infobulle"
 
 msgid ""
 "Tooltips are shown everywhere in Tuleap when an artifact is hovered, giving "
 "more information coming from the artifact's data."
 msgstr ""
-"Les tooltips sont affichées partout dans Tuleap quand un artéfact est "
+"Les infobulles sont affichées partout dans Tuleap quand un artéfact est "
 "survolé, donnant plus d'information à propos des données de celui-ci."
 
 msgid "Total effort"

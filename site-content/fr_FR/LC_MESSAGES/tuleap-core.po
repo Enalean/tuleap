@@ -3944,7 +3944,7 @@ msgstr "Cette archive est prête à être importé dans une instance de Tuleap."
 
 msgid "This description will be displayed in a tooltip above reference."
 msgstr ""
-"La description sera affichée dans une bulle lorsque le pointeur est au "
+"La description sera affichée dans une infobulle lorsque le pointeur est au "
 "dessus d'une référence extraite."
 
 msgid ""
