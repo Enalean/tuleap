@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ColorName } from "@tuleap/core-constants";
+import type { LazyboxItem } from "@tuleap/lazybox";
 
-export interface PullRequestLabel {
-    readonly id: number;
-    readonly label: string;
-    readonly is_outline: boolean;
-    readonly color: ColorName;
-}
-
-export interface PullRequestLabelsCollection {
-    readonly labels: ReadonlyArray<PullRequestLabel>;
-}
+export const LazyboxItemStub = {
+    withValue(value: unknown): LazyboxItem {
+        return {
+            value,
+            is_disabled: false,
+        };
+    },
+};

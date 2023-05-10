@@ -29,6 +29,8 @@ export type {
     HTMLTemplateResult,
 } from "./type";
 export type { GroupCollection, GroupOfItems, LazyboxItem } from "./items/GroupCollection";
+export type { SelectionBadge } from "./selection/SelectionBadge";
+export { createSelectionBadge } from "./selection/CreateSelectionBadge";
 
 export function createLazybox(
     source_select_box: HTMLSelectElement,

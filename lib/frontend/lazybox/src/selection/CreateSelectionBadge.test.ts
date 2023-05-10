@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import { describe, it, expect } from "vitest";
+import { createSelectionBadge } from "./CreateSelectionBadge";
+import { TAG } from "./SelectionBadge";
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
+describe("CreateSelectionBadge", () => {
+    it("should create an empty SelectionBadge", () => {
+        const doc = document.implementation.createHTMLDocument();
+        const badge = createSelectionBadge(doc);
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
+        expect(badge.tagName.toLowerCase()).toBe(TAG);
+        expect(badge.color).toBeUndefined();
+        expect(badge.outline).toBeUndefined();
+    });
+});

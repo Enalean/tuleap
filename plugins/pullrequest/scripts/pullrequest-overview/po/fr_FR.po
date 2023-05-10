@@ -63,6 +63,9 @@ msgstr "Éditer le titre"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Existing labels"
+msgstr "Labels existants"
+
 msgid "Failure"
 msgstr "Échec"
 
@@ -87,14 +90,17 @@ msgstr "A rouvert la pull request."
 msgid "Has updated the pull request."
 msgstr "A mis à jour la pull request."
 
+msgid "Labels"
+msgstr "Labels"
+
 msgid "Last CI status"
 msgstr "Statut intégration continue"
 
+msgid "Manage pull-request's labels"
+msgstr "Gérer les labels de la pull-request"
+
 msgid "Manage pull-request's reviewers"
 msgstr "Gérer les relecteurs de la pull-request"
-
-msgid "Manage pull-request's tags"
-msgstr "Gérer les tags de la pull-request"
 
 msgid "Manage reviewers"
 msgstr "Gérer les relecteurs"
@@ -122,11 +128,14 @@ msgstr "Intégrée"
 msgid "Merged on"
 msgstr "Intégrée le"
 
+msgid "No labels have been assigned yet"
+msgstr "Aucun label n'a été encore assigné"
+
+msgid "No matching labels found"
+msgstr "Aucun label correspondant trouvé"
+
 msgid "No matching users found"
 msgstr "Aucun utilisateur correspondant trouvé"
-
-msgid "No tags have been assigned yet"
-msgstr "Aucun tag n'a été encore assigné"
 
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
@@ -206,6 +215,9 @@ msgstr "Sauvegarder les changements"
 msgid "Search users by their names"
 msgstr "Rechercher des utilisateurs par leurs noms"
 
+msgid "Select labels"
+msgstr "Sélectionner des labels"
+
 msgid "Show details"
 msgstr "Voir les détails"
 
@@ -214,9 +226,6 @@ msgstr "Succès"
 
 msgid "Success on"
 msgstr "Succès le"
-
-msgid "Tags"
-msgstr "Tags"
 
 msgid "The last CI status is"
 msgstr "Le dernier statut de l'intégration continue est"

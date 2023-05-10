@@ -36,6 +36,17 @@ export type Badge = {
     readonly label: string;
 };
 
+export interface ProjectLabel {
+    readonly id: number;
+    readonly label: string;
+    readonly is_outline: boolean;
+    readonly color: ColorName;
+}
+
+export interface ProjectLabelsCollection {
+    readonly labels: ReadonlyArray<ProjectLabel>;
+}
+
 type EntryType = "artifact" | "kanban";
 
 export const ARTIFACT_TYPE = "artifact";
