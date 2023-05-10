@@ -718,6 +718,12 @@ msgstr "Mau"
 msgid "Banner"
 msgstr "Banner"
 
+#, php-format
+msgid ""
+"Be careful, \"%s\" does not match the case sensitivity. Its rule has been "
+"disabled."
+msgstr ""
+
 msgid "Before you start, you need to know a few things:"
 msgstr "Antes de começar, você precisa saber algumas coisas:"
 
@@ -1851,6 +1857,10 @@ msgstr "Hash de confirmação inválido."
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
 "Nome do grupo inválido: %s. Por favor, use apenas caracteres alfanuméricos."
+
+#, php-format
+msgid "Invalid line \"%s\""
+msgstr ""
 
 msgid "Invalid project was passed in."
 msgstr "O projeto inválido foi aprovado."
@@ -4346,6 +4356,10 @@ msgstr "Endereço de email do usuário"
 
 msgid "User group"
 msgstr "Grupo do usuário"
+
+#, php-format
+msgid "User group \"%s\" is empty or does not exist"
+msgstr ""
 
 msgid "User group already exists in this project. Please choose another name."
 msgstr ""

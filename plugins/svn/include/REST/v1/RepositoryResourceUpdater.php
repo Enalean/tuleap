@@ -102,7 +102,7 @@ class RepositoryResourceUpdater
                 $repository,
                 $settings->getAccessFileContent(),
                 time(),
-                new SVN_AccessFile_Writer($repository->getSystemPath())
+                new SVN_AccessFile_Writer($repository->getSystemPath()),
             );
         }
 

@@ -9,9 +9,6 @@
 #  *
 #  */
 
-svn_admin_access_control	no_ugroup	User group "$1" is empty or does not exist
-svn_admin_access_control	invalid_line	Invalid line "$1"
-
 svn_admin_immutable_tags	title	Immutable tags
 svn_admin_immutable_tags	configuration	Immutable tags configuration
 svn_admin_immutable_tags	configuration_description	Specify folders where immutable tags will be located. You can specify a whitelist of folders where you will be able to do modifications.

@@ -244,19 +244,12 @@ class XMLRepositoryImporter
     ) {
         $writer = $this->getAccessFileWriter($repo);
 
-        // Add entry to history
-        $access_file = $accessfile_history_creator->create(
+        $accessfile_history_creator->create(
             $repo,
             $this->access_file_contents,
             time(),
-            $writer
+            $writer,
         );
-
-        // Write .SVNAccessFile
-        $logger->info("[svn {$this->name}] Save Access File version #" . $access_file->getVersionNumber() . " to " . $writer->filename() . ": " . $access_file->getContent());
-        if (! $writer->write_with_defaults($access_file->getContent())) {
-            throw new XMLImporterException("Could not write to " . $writer->filename());
-        }
     }
 
     private function importSubscriptions(

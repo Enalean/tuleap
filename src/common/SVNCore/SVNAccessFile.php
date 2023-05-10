@@ -19,9 +19,10 @@
 
 namespace Tuleap\SVNCore;
 
-use Feedback;
 use Project;
 use SVN_AccessFile_Writer;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 
 /**
  * Manage the edition of .SVNAccessFile
@@ -59,58 +60,46 @@ class SVNAccessFile
     private string $platformBlock = '';
 
     /**
-     * Detect if a line is correctly formatted and
-     * corresponds to a defined group
+     * Detect if a line is correctly formatted and corresponds to a defined group
+     *
+     * @psalm-return Option<Fault>
      */
-    public function isGroupDefined(array $groups, string $line, bool $verbose = false): bool
+    public function isGroupDefined(array $groups, string $line): Option
     {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
         if (! empty($matches)) {
             $match = $matches[1];
             if ($match == 'members') {
-                return true;
+                return Option::nothing(Fault::class);
             } else {
                 foreach ($groups as $group => $value) {
                     if ($group == $match) {
-                        return true;
+                        return Option::nothing(Fault::class);
                     }
 
                     if (strtolower($group) === strtolower($match)) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::WARN,
-                            $GLOBALS['Language']->getText(
-                                'svn_admin_access_control',
-                                'ugroup_name_case_sensitivity',
-                                [$match, $group]
-                            )
-                        );
-
-                        return false;
+                        return Option::fromValue(Fault::fromMessage(sprintf(_('Be careful, "%s" does not match the case sensitivity. Its rule has been disabled.'), $group)));
                     }
                 }
-                if ($verbose) {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'no_ugroup', $match));
-                }
-                return false;
+
+                return Option::fromValue(Fault::fromMessage(sprintf(_('User group "%s" is empty or does not exist'), $match)));
             }
         }
-        if ($verbose) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'invalid_line', $line));
-        }
-        return false;
+
+        return Option::fromValue(Fault::fromMessage(sprintf(_('Invalid line "%s"'), $line)));
     }
 
     /**
      * Update renamed ugroup line or comment invalid ugroup line.
      * This validation process cover all groups defined until the current line.
      */
-    public function validateUGroupLine(array $groups, string $line, bool $verbose = false): string
+    public function validateUGroupLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
     {
         $trimmedLine = ltrim($line);
         if (! empty($this->ugroupNewName) && $this->ugroupOldName !== null && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
             return $this->renameGroup($groups, $line);
         } else {
-            return $this->commentInvalidLine($groups, $line, $verbose);
+            return $this->commentInvalidLine($groups, $line, $faults);
         }
     }
 
@@ -140,30 +129,39 @@ class SVNAccessFile
     /**
      * Comments the line corresponding to groups that are not defined
      */
-    public function commentInvalidLine(array $groups, string $line, bool $verbose = false): string
+    public function commentInvalidLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
     {
         $trimmedLine = ltrim($line);
-        if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && ! $this->isGroupDefined($groups, $trimmedLine, $verbose)) {
-            return "# " . $line;
-        } else {
-            return $line;
+        if (str_starts_with($trimmedLine, '@')) {
+            return $this->isGroupDefined($groups, $trimmedLine)->mapOr(
+                function (Fault $fault) use ($line, $faults) {
+                    $faults->add($fault);
+                    return '# ' . $line;
+                },
+                $line,
+            );
         }
+        return $line;
     }
 
     /**
      * Update renamed ugroup line or comment invalid ugroup lines for all lines of .SVNAccessFile
      */
-    public function parseGroupLines(Project $project, string $contents, bool $verbose = false): string
+    public function parseGroupLines(Project $project, string $contents): SVNAccessFileContentAndFaults
     {
-        return $this->parseGroup($project->getSVNRootPath(), $contents, $verbose);
+        $faults       = new CollectionOfSVNAccessFileFaults();
+        $new_contents =  $this->parseGroup($project->getSVNRootPath(), $contents, $faults);
+        return new SVNAccessFileContentAndFaults($new_contents, $faults);
     }
 
-    public function parseGroupLinesByRepositories(string $svn_dir, string $contents, bool $verbose = false): string
+    public function parseGroupLinesByRepositories(string $svn_dir, string $contents): SVNAccessFileContentAndFaults
     {
-        return $this->parseGroup($svn_dir, $contents, $verbose);
+        $faults       = new CollectionOfSVNAccessFileFaults();
+        $new_contents = $this->parseGroup($svn_dir, $contents, $faults);
+        return new SVNAccessFileContentAndFaults($new_contents, $faults);
     }
 
-    private function parseGroup(string $svn_dir, string $contents, bool $verbose = false): string
+    private function parseGroup(string $svn_dir, string $contents, CollectionOfSVNAccessFileFaults $faults): string
     {
         $defaultLines   = explode("\n", $this->getPlatformBlock($svn_dir));
         $groups         = [];
@@ -184,10 +182,11 @@ class SVNAccessFile
                     $validContents .= $line . PHP_EOL;
                     break;
                 default:
-                    $validContents .= $this->validateUGroupLine($groups, $line, $verbose) . PHP_EOL;
+                    $validContents .= $this->validateUGroupLine($groups, $line, $faults) . PHP_EOL;
                     break;
             }
         }
+
         return substr($validContents, 0, -1);
     }
 

@@ -154,6 +154,7 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs(['svn_multi_repository_creation_with_full_settings', \Mockery::any(), \Mockery::any()])
             ->once();
         $this->history_creator->shouldReceive('storeInDBWithoutCleaningContent')->never();
+        $this->history_creator->shouldReceive('storeInDB')->once();
 
         $commit_rules        = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
@@ -232,6 +233,7 @@ class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->history_dao->shouldReceive('groupAddHistory')->withArgs(
             ['svn_multi_repository_creation_with_full_settings', \Mockery::any(), \Mockery::any()]
         )->once();
+        $this->history_creator->shouldReceive('storeInDB')->once();
 
         $commit_rules       = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
