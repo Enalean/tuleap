@@ -19,10 +19,10 @@
 
 import { define, dispatch, html } from "hybrids";
 import type { SearchInput } from "../SearchInput";
-import type { LazyboxNewItemCallback, LazyboxTemplatingCallback } from "../type";
+import type { LazyboxNewItemCallback, LazyboxTemplatingCallback } from "../Options";
 import type { SelectionElement } from "../selection/SelectionElement";
 import { getAllGroupsTemplate } from "./GroupTemplate";
-import type { GroupCollection } from "../items/GroupCollection";
+import type { GroupCollection } from "../GroupCollection";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 import { moveFocus } from "@tuleap/focus-navigation";
 
@@ -58,18 +58,7 @@ export const observeOpen = (
         host.search_input.setFocus();
         return;
     }
-    host.selection.setFocus();
     dispatch(host, "close");
-};
-
-export const selectionSetter = (
-    host: DropdownElement,
-    selection: SelectionElement & HTMLElement
-): SelectionElement & HTMLElement => {
-    selection.addEventListener("open-dropdown", () => {
-        host.open = true;
-    });
-    return selection;
 };
 
 export const onArrowKeyUp = (host: HTMLElement, event: KeyboardEvent): void => {
@@ -99,18 +88,12 @@ export const DropdownElement = define<InternalDropdownElement>({
     new_item_button_label: "",
     templating_callback: undefined,
     search_input: undefined,
-    selection: { set: selectionSetter },
+    selection: undefined,
     content: (host) => {
         if (!host.open) {
             return html``;
         }
-        const search_section = !host.multiple_selection
-            ? html`<span
-                  class="lazybox-single-dropdown-search-section"
-                  data-test="single-search-section"
-                  >${host.search_input}</span
-              >`
-            : html``;
+        const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
 
         const new_item_button =
             host.new_item_callback !== undefined

@@ -31,7 +31,7 @@ export type InternalSelectionBadge = Readonly<SelectionBadge>;
 export type HostElement = InternalSelectionBadge & HTMLElement;
 
 export const getBadgeClasses = (host: SelectionBadge): Record<string, boolean> => ({
-    badge: true,
+    "lazybox-badge": true,
     [`tlp-badge-${host.color}`]: true,
     "tlp-badge-outline": host.outline,
 });
@@ -47,7 +47,9 @@ export const SelectionBadge = define<SelectionBadge>({
     render: (host) =>
         html`
             <span class="${getBadgeClasses(host)}">
-                <button type="button" class="remove-button" onclick=${onClick}>×</button>
+                <button type="button" class="lazybox-badge-remove-button" onclick=${onClick}>
+                    ×
+                </button>
                 <slot></slot>
             </span>
         `.style(badge_style),

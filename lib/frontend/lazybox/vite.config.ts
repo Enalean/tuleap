@@ -25,7 +25,7 @@ export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
+            entry: path.resolve(__dirname, "src/main.ts"),
             name: "Lazybox",
         },
         rollupOptions: {

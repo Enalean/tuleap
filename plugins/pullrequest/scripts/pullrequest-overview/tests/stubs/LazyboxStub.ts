@@ -18,17 +18,12 @@
  */
 
 import type { Lazybox } from "@tuleap/lazybox";
-import type {
-    GroupCollection,
-    GroupOfItems,
-    LazyboxItem,
-    LazyboxSelectionCallback,
-} from "@tuleap/lazybox";
+import type { GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
 
 export type LazyboxStub = Lazybox & {
-    getLastDropdownContent: () => GroupOfItems | null;
-    getInitialSelection: () => ReadonlyArray<LazyboxItem>;
-    selectItems: (items: unknown[]) => void;
+    getLastDropdownContent(): GroupOfItems | null;
+    getInitialSelection(): ReadonlyArray<LazyboxItem>;
+    selectItems(items: unknown[]): void;
 };
 
 const noop = (): void => {
@@ -36,24 +31,39 @@ const noop = (): void => {
 };
 
 export const LazyboxStub = {
-    build: (selection_callback: LazyboxSelectionCallback = noop): LazyboxStub => {
+    build: (): LazyboxStub => {
         let last_group_of_items: GroupOfItems | null = null,
             initial_selection: readonly LazyboxItem[] = [];
 
         return {
-            resetSelection: noop,
-            setDropdownContent: (groups: GroupCollection): void => {
+            options: {
+                is_multiple: true,
+                placeholder: "",
+                templating_callback: (html) => html``,
+                selection_callback: (items): void => {
+                    if (items) {
+                        //Do nothing
+                    }
+                },
+                search_input_callback: (query): void => {
+                    if (query) {
+                        //Do nothing
+                    }
+                },
+            },
+            clearSelection: noop,
+            replaceDropdownContent: (groups): void => {
                 last_group_of_items = groups[groups.length - 1];
             },
-            replaceSelection: (items: readonly LazyboxItem[]): void => {
+            replaceSelection(items): void {
                 initial_selection = items;
-
-                selection_callback(initial_selection.map(({ value }) => value));
+                this.options.selection_callback(initial_selection.map(({ value }) => value));
             },
-            destroy: noop,
             getLastDropdownContent: () => last_group_of_items,
             getInitialSelection: () => initial_selection,
-            selectItems: selection_callback,
+            selectItems(items): void {
+                this.options.selection_callback(items);
+            },
         };
     },
 };

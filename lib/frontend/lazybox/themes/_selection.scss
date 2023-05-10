@@ -1,0 +1,104 @@
+/**
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "./common";
+
+tuleap-lazybox-selection {
+    display: flex;
+    align-items: center;
+    height: var(--tlp-form-element-height);
+    padding: 0
+        calc(
+            (var(--tlp-form-element-padding-horizontal) * 2) +
+                var(--tlp-form-element-select-background-size)
+        )
+        0 var(--tlp-form-element-padding-horizontal);
+    transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+        box-shadow 350ms;
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-form-element-border-radius);
+    background: var(--tlp-form-element-background)
+        url("@tuleap/tlp/src/images/field-double-arrows.svg") no-repeat;
+    background-position: right var(--tlp-form-element-padding-horizontal) center;
+    font-size: var(--tlp-form-element-font-size);
+    line-height: normal;
+    cursor: default;
+    user-select: none;
+
+    &[multiple] {
+        position: relative;
+        flex-wrap: wrap;
+        height: 100%;
+        min-height: var(--tlp-form-element-height);
+        padding: 0 52px 5px 6px;
+        background: var(--tlp-form-element-background)
+            url("@tuleap/tlp/src/images/field-ellipsis.svg") no-repeat;
+        background-position: right 10px top 17px;
+        background-size: 15px 5px;
+    }
+
+    &:focus {
+        border-color: var(--tlp-main-color);
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}
+
+.lazybox-with-open-dropdown {
+    border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0 0;
+    border-color: var(--tlp-main-color);
+}
+
+.lazybox-with-open-dropdown.lazybox-with-dropdown-above {
+    border-radius: 0 0 var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius);
+}
+
+.lazybox-selected-value-remove-button {
+    @include common.unset-button-style;
+    @include common.focusable-button;
+
+    position: relative;
+    top: -1px;
+    float: right;
+    font-size: 18px;
+    line-height: 17px;
+    white-space: nowrap;
+
+    &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+}
+
+tuleap-lazybox-selection[multiple] > .lazybox-selected-value-remove-button {
+    position: absolute;
+    top: 7px;
+    right: 32px;
+    margin: 2px 0 0;
+}
+
+.lazybox-selected-value {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+}

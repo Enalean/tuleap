@@ -43,7 +43,7 @@
                 <label class="tlp-label" for="update-reviewers-modal-select">{{
                     $gettext("Reviewers")
                 }}</label>
-                <select ref="reviewer_input"></select>
+                <tuleap-lazybox ref="reviewer_input" />
             </div>
         </div>
         <div class="tlp-modal-footer pull-request-manage-reviewers-modal-footer">
@@ -87,7 +87,8 @@
 import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { createLazybox } from "@tuleap/lazybox";
+import "@tuleap/lazybox";
+import type { Lazybox } from "@tuleap/lazybox";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -115,7 +116,7 @@ const props = defineProps<{
 const modal_element = ref<Element | undefined>();
 const modal_instance = ref<Modal | null>(null);
 const is_saving = ref(false);
-const reviewer_input = ref<HTMLSelectElement | undefined>();
+const reviewer_input = ref<Lazybox | undefined>();
 const currently_selected_users = ref<Array<User>>([]);
 const has_no_user_selected = computed(
     () => props.reviewers_list.length > 0 && currently_selected_users.value.length === 0
@@ -151,8 +152,8 @@ onBeforeUnmount(() => {
     }
 });
 
-function initReviewersAutocompleter(select: HTMLSelectElement): void {
-    const lazybox = createLazybox(select, {
+function initReviewersAutocompleter(lazybox: Lazybox): void {
+    lazybox.options = {
         is_multiple: true,
         placeholder: $gettext("Search users by their names"),
         templating_callback: getAssignableReviewerTemplate,
@@ -162,9 +163,8 @@ function initReviewersAutocompleter(select: HTMLSelectElement): void {
         selection_callback: (selected_users) => {
             currently_selected_users.value = getSelectedReviewers(selected_users);
         },
-    });
-
-    lazybox.setDropdownContent([group_builder.buildEmpty()]);
+    };
+    lazybox.replaceDropdownContent([group_builder.buildEmpty()]);
     lazybox.replaceSelection(users_transformer.buildForSelection(props.reviewers_list));
 }
 

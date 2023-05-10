@@ -22,12 +22,11 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import * as lazybox from "@tuleap/lazybox";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { LazyboxStub } from "../../../tests/stubs/LazyboxStub";
+import { LazyboxVueStub } from "../../../tests/stubs/LazyboxVueStub";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
@@ -52,7 +51,6 @@ const reviewers: ReadonlyArray<User> = [
     } as User,
 ];
 
-vi.mock("@tuleap/lazybox");
 vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
@@ -63,8 +61,7 @@ describe("PullRequestManageReviewersModal", () => {
     let on_save_callback: (reviewers: ReadonlyArray<User>) => void,
         on_cancel_callback: () => void,
         display_api_error_callback: () => void,
-        modal_instance: Modal,
-        lazybox_stub: LazyboxStub;
+        modal_instance: Modal;
 
     beforeEach(() => {
         display_api_error_callback = vi.fn();
@@ -80,11 +77,6 @@ describe("PullRequestManageReviewersModal", () => {
         } as unknown as Modal;
 
         vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
-        vi.spyOn(lazybox, "createLazybox").mockImplementation((target, options) => {
-            lazybox_stub = LazyboxStub.build(options.selection_callback);
-
-            return lazybox_stub;
-        });
     });
 
     const getWrapper = (reviewers_list: ReadonlyArray<User>): VueWrapper => {
@@ -102,6 +94,7 @@ describe("PullRequestManageReviewersModal", () => {
         return shallowMount(PullRequestManageReviewersModal, {
             global: {
                 ...getGlobalTestOptions(),
+                stubs: { "tuleap-lazybox": LazyboxVueStub },
             },
             props: {
                 reviewers_list,
@@ -114,9 +107,10 @@ describe("PullRequestManageReviewersModal", () => {
     describe("Setup", () => {
         it(`Given that some reviewers are already assigned on the pull-request
             Then lazybox's selection should be set with these reviewers`, () => {
-            getWrapper(reviewers);
+            const wrapper = getWrapper(reviewers);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
-            const selection = lazybox_stub.getInitialSelection().map((item) => {
+            const selection = lazybox_stub.vm.getInitialSelection().map((item) => {
                 const user = item.value as User;
                 return user.id;
             });
@@ -125,9 +119,10 @@ describe("PullRequestManageReviewersModal", () => {
 
         it(`Given that no reviewers are assigned on the pull-request yet
             Then lazybox's selection should not be set`, () => {
-            getWrapper([]);
+            const wrapper = getWrapper([]);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
-            expect(lazybox_stub.getInitialSelection()).toStrictEqual([]);
+            expect(lazybox_stub.vm.getInitialSelection()).toStrictEqual([]);
         });
     });
 
@@ -138,11 +133,13 @@ describe("PullRequestManageReviewersModal", () => {
             const wrapper = getWrapper(reviewers);
 
             await wrapper.vm.$nextTick();
+
             expect(wrapper.find("[data-test=text-info-all-reviewers-cleared]").exists()).toBe(
                 false
             );
 
-            lazybox_stub.selectItems([]);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
+            lazybox_stub.vm.selectItems([]);
 
             await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=text-info-all-reviewers-cleared]").exists()).toBe(true);
@@ -153,11 +150,12 @@ describe("PullRequestManageReviewersModal", () => {
         it("When the reviewers have been saved, Then it should trigger the on_save_callback", async () => {
             vi.spyOn(tuleap_api, "putReviewers").mockReturnValue(okAsync(new Response()));
 
-            const wrapper = getWrapper([]).find("[data-test=save-reviewers-button]");
+            const wrapper = getWrapper([]);
 
-            lazybox_stub.selectItems([joe_lasticot]);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
+            lazybox_stub.vm.selectItems([joe_lasticot]);
 
-            await wrapper.trigger("click");
+            await wrapper.find("[data-test=save-reviewers-button]").trigger("click");
 
             expect(tuleap_api.putReviewers).toHaveBeenCalledOnce();
             expect(tuleap_api.putReviewers).toHaveBeenCalledWith(pull_request_id, [joe_lasticot]);

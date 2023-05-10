@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./SearchInput";
-import { buildClear, buildFocus, onInput, onKeyUp } from "./SearchInput";
+import { buildClear, buildFocus, onInput, onKeyDown, onKeyUp } from "./SearchInput";
 
 const noopSearchCallback = (query: string): void => {
     //Fake usage of query to prevent eslint from removing it
@@ -119,7 +119,7 @@ describe(`SearchInput`, () => {
             }) as HostElement;
 
         const buildKeyboardEvent = (key: string, input_value: string): KeyboardEvent => {
-            const inner_event = new KeyboardEvent("keyup", { key, cancelable: true });
+            const inner_event = new KeyboardEvent("keyup", { key });
             inner_input.value = input_value;
             inner_input.dispatchEvent(inner_event);
             return inner_event;
@@ -137,10 +137,9 @@ describe(`SearchInput`, () => {
 
         it(`prevents the "enter" key from submitting forms
             and stops propagation to avoid triggering handler in SelectionElement`, () => {
-            const host = getHost();
-            const event = buildKeyboardEvent("Enter", "");
+            const event = new KeyboardEvent("keydown", { key: "Enter", cancelable: true });
             const stopPropagation = vi.spyOn(event, "stopPropagation");
-            onKeyUp(host, event);
+            onKeyDown({}, event);
 
             expect(event.defaultPrevented).toBe(true);
             expect(stopPropagation).toHaveBeenCalled();

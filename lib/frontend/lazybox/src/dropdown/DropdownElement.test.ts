@@ -19,10 +19,9 @@
 
 import { describe, it, beforeEach, vi, expect } from "vitest";
 import type { HostElement } from "./DropdownElement";
-import { DropdownElement, observeOpen, selectionSetter } from "./DropdownElement";
-import type { SelectionElement } from "../selection/SelectionElement";
-import type { LazyboxNewItemCallback } from "../type";
-import type { GroupCollection } from "../items/GroupCollection";
+import { DropdownElement, observeOpen } from "./DropdownElement";
+import type { LazyboxNewItemCallback } from "../Options";
+import type { GroupCollection } from "../GroupCollection";
 import { selectOrThrow } from "@tuleap/dom";
 import * as tuleap_focus from "@tuleap/focus-navigation";
 
@@ -42,7 +41,6 @@ describe(`DropdownElement`, () => {
         let target: ShadowRoot,
             open: boolean,
             multiple_selection: boolean,
-            search_input: HTMLElement,
             new_item_callback: LazyboxNewItemCallback | undefined,
             new_item_button_label: string;
 
@@ -50,12 +48,13 @@ describe(`DropdownElement`, () => {
             target = doc.createElement("div") as unknown as ShadowRoot;
             open = true;
             multiple_selection = true;
-            search_input = doc.createElement("span");
             new_item_callback = undefined;
             new_item_button_label = "";
         });
 
         const render = (): void => {
+            const search_input = doc.createElement("span");
+            search_input.dataset.test = "search-input";
             const groups: GroupCollection = [];
             const host: HostElement = {
                 open,
@@ -79,7 +78,7 @@ describe(`DropdownElement`, () => {
         it(`renders a search section in the dropdown when multiple selection is disabled`, () => {
             multiple_selection = false;
             render();
-            const search = target.querySelector("[data-test=single-search-section]");
+            const search = target.querySelector("[data-test=search-input]");
             expect(search).not.toBeNull();
         });
 
@@ -143,19 +142,16 @@ describe(`DropdownElement`, () => {
                 open: false,
                 content: () => dropdown,
                 search_input: { setFocus: noop },
-                selection: { setFocus: noop },
             }) as HostElement;
         };
 
-        it(`when open is set at first render, it does not focus the selection
+        it(`when open is set at first render, it does not dispatch a "close" event
             to avoid grabbing the focus as soon as it is connected`, () => {
             const host = getHost();
-            const focusSelection = vi.spyOn(host.selection, "setFocus");
             const dispatch = vi.spyOn(host, "dispatchEvent");
 
             observeOpen(host, false, undefined);
 
-            expect(focusSelection).not.toHaveBeenCalled();
             expect(dispatch).not.toHaveBeenCalled();
         });
 
@@ -172,27 +168,14 @@ describe(`DropdownElement`, () => {
             expect(event.type).toBe("open");
         });
 
-        it(`when the dropdown closes, it dispatches a "close" event
-            and focuses the selection element`, () => {
+        it(`when the dropdown closes, it dispatches a "close" event`, () => {
             const host = getHost();
-            const focusSelection = vi.spyOn(host.selection, "setFocus");
             const dispatch = vi.spyOn(host, "dispatchEvent");
 
             observeOpen(host, false, true);
 
-            expect(focusSelection).toHaveBeenCalled();
             const event = dispatch.mock.calls[0][0];
             expect(event.type).toBe("close");
-        });
-
-        it(`when it receives "open-dropdown" from the selection, it will open the dropdown`, () => {
-            const host = getHost();
-            const selection = doc.createElement("span") as SelectionElement & HTMLElement;
-
-            selectionSetter(host, selection);
-            selection.dispatchEvent(new CustomEvent("open-dropdown"));
-
-            expect(host.open).toBe(true);
         });
     });
 });

@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
-import type { GroupCollection, LazyboxItem } from "../items/GroupCollection";
+import type { GroupCollection, LazyboxItem } from "../GroupCollection";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { getAllGroupsTemplate, getItemTemplate } from "./GroupTemplate";
 import type { HostElement } from "./DropdownElement";

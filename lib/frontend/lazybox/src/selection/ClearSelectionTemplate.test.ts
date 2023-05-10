@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
-import type { LazyboxItem } from "../items/GroupCollection";
+import type { LazyboxItem } from "../GroupCollection";
 import type { HostElement } from "./SelectionElement";
 import { buildClear } from "./SelectionElement";
 import { getClearSelectionButton } from "./ClearSelectionTemplate";

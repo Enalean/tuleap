@@ -19,12 +19,7 @@
         <li>
             <code class="code-inline">selection_callback: (selected_value: unknown | null | unknown[]) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
             <br>
-            It takes one parameter: <code class="code-inline">selected_value: unknown | null | unknown[]</code>, which holds the <code class="code-inline">value</code> of the items that were just selected or <code class="code-inline">null</code> when the last selection is cleared and the lazybox is in single-value mode.
-        </li>
-        <li>
-            <code class="code-inline">search_input_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
-            <br>
-            It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
+            It takes one parameter: <code class="code-inline">selected_value</code>, which holds the <code class="code-inline">value</code> of the items that were just selected or <code class="code-inline">null</code> when the last selection is cleared and <code class="code-inline">is_multiple = false</code>.
         </li>
         <li>
             <code class="code-inline">selection_badge_callback: (item: LazyboxItem) => SelectionBadge &amp; HTMLElement</code>: An optional callback function returning an instance of custom element representing a selected item badge. It is only available when <code class="code-inline">is_multiple = true</code>. The custom element has a <code class="code-inline">&lt;slot&gt;</code>, you can pass any content in it to be rendered inside the badge. It has two properties:
@@ -35,13 +30,18 @@
             It takes one parameter: <code class="code-inline">item: LazyboxItem</code>: The item for which to build the template.
         </li>
         <li>
+            <code class="code-inline">search_input_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
+            <br>
+            It takes one parameter: <code class="code-inline">query: string</code>: The query typed by the user.
+        </li>
+        <li>
+            <code class="code-inline">is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
+        </li>
+        <li>
             <code class="code-inline">placeholder: string</code>: A (translated) text that will be shown when there is no selection in the lazybox. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact..."
         </li>
         <li>
             <code class="code-inline">search_input_placeholder: string</code>: A (translated) text that will be shown inside the search input. It is only available when <code class="code-inline">is_multiple = false</code>. It is shown when the user didn't write anything yet in the search input. Its purpose is to tell the user the kind of input they are supposed to write, so that their search yields results. For example "Id, title..."
-        </li>
-        <li>
-            <code class="code-inline">is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
         </li>
         <li><code class="code-inline">new_item_callback: () => void</code>: An optional callback to be executed when the user clicks
             on the &quot;Create new item&quot; button. If not given, the &quot;Create new item&quot; button will not appear.
@@ -53,7 +53,7 @@
     Methods:
 <ul>
     <li>
-        <code class="code-inline">setDropdownContent(groups: GroupsOfItems[]) => void</code>: define the contents of the dropdown by giving it a list of <code class="code-inline">GroupOfItems</code>.
+        <code class="code-inline">replaceDropdownContent(groups: GroupsOfItems[]) => void</code>: replaces the contents of the dropdown with the given list of <code class="code-inline">GroupOfItems</code>.
         <br>
         Each <code class="code-inline">GroupOfItems</code> has these properties:
         <ul>
@@ -70,8 +70,7 @@
             <li><code class="code-inline">is_disabled: boolean</code>: the item cannot be selected if it's false.</li>
         </ul>
     </li>
-    <li><code class="code-inline">resetSelection() => void</code>: reset the current selection.</li>
+    <li><code class="code-inline">clearSelection() => void</code>: empties the current selection.</li>
     <li><code class="code-inline">replaceSelection(selection: LazyboxItem[]) => void</code>: replace the current selection with the given one.</li>
-    <li><code class="code-inline">destroy() => void</code>: destroy lazybox and remove all event handlers.</li>
 </ul>
 </p>

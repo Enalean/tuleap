@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
-import { hideSourceSelectBox } from "./hide-selectbox-helper";
+import type { GroupOfItems } from "../../src/GroupCollection";
 
-describe("hide-selectbox-helper", () => {
-    it("should hide the selectbox", () => {
-        const select = document.createElement("select");
-
-        hideSourceSelectBox(select);
-
-        expect(select.classList.contains("lazybox-hidden-accessible")).toBe(true);
-        expect(select.getAttribute("tabindex")).toBe("-1");
-        expect(select.getAttribute("aria-hidden")).toBe("true");
-    });
-});
+export const GroupOfItemsStub = {
+    withDefaults: (data?: Partial<GroupOfItems>): GroupOfItems => ({
+        label: "nonlinear bardism",
+        is_loading: false,
+        empty_message: "No items",
+        footer_message: "",
+        items: [],
+        ...data,
+    }),
+};

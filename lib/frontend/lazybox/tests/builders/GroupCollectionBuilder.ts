@@ -17,43 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupCollection, GroupOfItems } from "../../src";
+import type { GroupCollection, GroupOfItems } from "../../src/GroupCollection";
 import { LazyboxItemStub } from "../stubs/LazyboxItemStub";
+import { GroupOfItemsStub } from "../stubs/GroupOfItemsStub";
 
 export const GroupCollectionBuilder = {
     withSingleGroup: (group: Partial<GroupOfItems>): GroupCollection => [
-        {
-            label: "",
-            empty_message: "",
-            items: [],
-            is_loading: false,
-            footer_message: "",
-            ...group,
-        },
+        GroupOfItemsStub.withDefaults(group),
     ],
 
     withTwoGroups: (): GroupCollection => [
-        {
+        GroupOfItemsStub.withDefaults({
             label: "Group 1",
-            empty_message: "irrelevant",
             items: [
                 LazyboxItemStub.withDefaults({ value: { id: 0 } }),
                 LazyboxItemStub.withDefaults({ value: { id: 1 } }),
                 LazyboxItemStub.withDefaults({ value: { id: 2 } }),
             ],
-            is_loading: false,
-            footer_message: "",
-        },
-        {
+        }),
+        GroupOfItemsStub.withDefaults({
             label: "Group 2",
-            empty_message: "irrelevant",
             items: [
                 LazyboxItemStub.withDefaults({ value: { id: 3 } }),
                 LazyboxItemStub.withDefaults({ value: { id: 4 } }),
                 LazyboxItemStub.withDefaults({ value: { id: 5 }, is_disabled: true }),
             ],
-            is_loading: false,
-            footer_message: "",
-        },
+        }),
     ],
 };

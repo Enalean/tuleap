@@ -28,10 +28,25 @@ const noop = (): void => {
 export const LazyboxStub = {
     build: (): LazyboxStub => {
         return {
-            resetSelection: noop,
-            setDropdownContent: noop,
+            options: {
+                is_multiple: false,
+                search_input_placeholder: "",
+                placeholder: "",
+                templating_callback: (html) => html``,
+                selection_callback: (item): void => {
+                    if (item) {
+                        //Do nothing
+                    }
+                },
+                search_input_callback: (query): void => {
+                    if (query) {
+                        //Do nothing
+                    }
+                },
+            },
+            replaceDropdownContent: noop,
+            clearSelection: noop,
             replaceSelection: noop,
-            destroy: noop,
         };
     },
 };

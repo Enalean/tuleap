@@ -18,10 +18,10 @@
  */
 
 import { html } from "hybrids";
-import type { LazyboxOptions, LazyboxSelectionBadgeCallback } from "./type";
+import type { LazyboxOptions, LazyboxSelectionBadgeCallback } from "./Options";
 import type { SelectionBadge } from "./selection/SelectionBadge";
 import { TAG as SELECTION_BADGE_TAG } from "./selection/SelectionBadge";
-import type { LazyboxItem } from "./items/GroupCollection";
+import type { LazyboxItem } from "./GroupCollection";
 
 export const isBadge = (element: Element | null): element is HTMLElement & SelectionBadge =>
     element?.tagName === SELECTION_BADGE_TAG.toUpperCase();

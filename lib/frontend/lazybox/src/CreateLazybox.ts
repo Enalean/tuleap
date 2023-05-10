@@ -17,24 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LazyboxSelectionBadgeCallback } from "../../src/Options";
-import type { SelectionBadge } from "../../src/selection/SelectionBadge";
-import { TAG } from "../../src/selection/SelectionBadge";
+import { TAG } from "./LazyboxElement";
+import type { Lazybox } from "./LazyboxElement";
 
-const isBadge = (element: HTMLElement): element is SelectionBadge & HTMLElement =>
+const isLazybox = (element: HTMLElement): element is Lazybox & HTMLElement =>
     element.tagName === TAG.toUpperCase();
 
-export const SelectionBadgeCallbackStub = {
-    build: (): LazyboxSelectionBadgeCallback => (item) => {
-        if (item) {
-            //Do nothing
-        }
-
-        const badge = document.createElement(TAG);
-        if (!isBadge(badge)) {
-            throw Error("Could not create selection badge");
-        }
-        badge.color = "inca-silver";
-        return badge;
-    },
+/**
+ * Returns a new Lazybox element.
+ * You should then configure it by setting the `options` property and add it to the document.
+ * @param doc Document The Document in which to create the element.
+ */
+export const createLazybox = (doc: Document): Lazybox & HTMLElement => {
+    const element = doc.createElement(TAG);
+    if (!isLazybox(element)) {
+        throw Error("Could not create Lazybox element");
+    }
+    return element;
 };

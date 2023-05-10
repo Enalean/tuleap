@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function hideSourceSelectBox(source_select_box: HTMLSelectElement): void {
-    source_select_box.classList.add("lazybox-hidden-accessible");
-    source_select_box.setAttribute("tabindex", "-1");
-    source_select_box.setAttribute("aria-hidden", "true");
-}
+import { describe, it, expect } from "vitest";
+import { createLazybox } from "./CreateLazybox";
+import { TAG } from "./LazyboxElement";
+
+describe(`CreateLazybox`, () => {
+    it(`returns a new LazyboxElement`, () => {
+        const doc = document.implementation.createHTMLDocument();
+        const lazybox = createLazybox(doc);
+
+        expect(lazybox.tagName).toBe(TAG.toUpperCase());
+        expect(lazybox.options).toBeUndefined();
+    });
+});

@@ -20,10 +20,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import * as lazybox from "@tuleap/lazybox";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
-import { LazyboxStub } from "../../../tests/stubs/LazyboxStub";
+import { LazyboxVueStub } from "../../../tests/stubs/LazyboxVueStub";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestManageLabelsModal from "./PullRequestManageLabelsModal.vue";
@@ -42,7 +41,6 @@ const easy_fix_label: ProjectLabel = {
 };
 const project_labels = [emergency_label, easy_fix_label];
 
-vi.mock("@tuleap/lazybox");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
@@ -51,8 +49,7 @@ vi.mock("@tuleap/tlp-modal", () => ({
 describe("PullRequestManageLabelsModal", () => {
     let post_edition_callback: (new_labels: ReadonlyArray<ProjectLabel>) => void,
         on_cancel_callback: () => void,
-        modal_instance: Modal,
-        lazybox_stub: LazyboxStub;
+        modal_instance: Modal;
 
     beforeEach(() => {
         post_edition_callback = vi.fn();
@@ -65,16 +62,13 @@ describe("PullRequestManageLabelsModal", () => {
         } as unknown as Modal;
 
         vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
-        vi.spyOn(lazybox, "createLazybox").mockImplementation((target, options) => {
-            lazybox_stub = LazyboxStub.build(options.selection_callback);
-            return lazybox_stub;
-        });
     });
 
     const getWrapper = (current_labels: ReadonlyArray<ProjectLabel>): VueWrapper => {
         return shallowMount(PullRequestManageLabelsModal, {
             global: {
                 ...getGlobalTestOptions(),
+                stubs: { "tuleap-lazybox": LazyboxVueStub },
             },
             props: {
                 project_labels,
@@ -88,9 +82,10 @@ describe("PullRequestManageLabelsModal", () => {
     describe("Setup", () => {
         it(`Given that some labels are already assigned on the pull-request
             Then lazybox's selection should be set with these labels`, () => {
-            getWrapper([emergency_label]);
+            const wrapper = getWrapper([emergency_label]);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
-            const selection = lazybox_stub.getInitialSelection().map((item) => {
+            const selection = lazybox_stub.vm.getInitialSelection().map((item) => {
                 const label = item.value as ProjectLabel;
                 return label.id;
             });
@@ -99,18 +94,20 @@ describe("PullRequestManageLabelsModal", () => {
 
         it(`Given that no labels are assigned on the pull-request yet
             Then lazybox's selection should not be set`, () => {
-            getWrapper([]);
+            const wrapper = getWrapper([]);
+            const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
-            expect(lazybox_stub.getInitialSelection()).toStrictEqual([]);
+            expect(lazybox_stub.vm.getInitialSelection()).toStrictEqual([]);
         });
     });
 
     it("[Save changes] button should trigger the post_edition_callback when clicked", async () => {
-        const wrapper = getWrapper([]).find("[data-test=save-labels-button]");
+        const wrapper = getWrapper([]);
+        const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
-        lazybox_stub.selectItems([easy_fix_label]);
+        lazybox_stub.vm.selectItems([easy_fix_label]);
 
-        await wrapper.trigger("click");
+        await wrapper.find("[data-test=save-labels-button]").trigger("click");
 
         expect(modal_instance.hide).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledOnce();

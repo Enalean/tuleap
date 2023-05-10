@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LazyboxOptions } from "../../src";
-import type { LazyboxSelectionBadgeCallback, LazyboxTemplatingCallback } from "../../src/type";
+import type {
+    LazyboxNewItemCallback,
+    LazyboxOptions,
+    LazyboxSelectionBadgeCallback,
+    LazyboxTemplatingCallback,
+} from "../../src/Options";
 import { TemplatingCallbackStub } from "../stubs/TemplatingCallbackStub";
 
 const noop = (): void => {
@@ -31,12 +35,14 @@ export class OptionsBuilder {
     #search_input_placeholder = "";
     #templating_callback: LazyboxTemplatingCallback = TemplatingCallbackStub.build();
     #selection_badge_callback: LazyboxSelectionBadgeCallback | undefined = undefined;
+    #new_item_callback: LazyboxNewItemCallback | undefined = undefined;
+    #new_item_button_label = "";
 
     private constructor(is_multiple: boolean) {
         this.#is_multiple = is_multiple;
     }
 
-    static withoutNewItem(): OptionsBuilder {
+    static withSingle(): OptionsBuilder {
         return new OptionsBuilder(false);
     }
 
@@ -60,38 +66,45 @@ export class OptionsBuilder {
         return this;
     }
 
+    withNewItemButton(callback: LazyboxNewItemCallback, label: string): this {
+        this.#new_item_callback = callback;
+        this.#new_item_button_label = label;
+        return this;
+    }
+
     withTemplatingCallback(callback: LazyboxTemplatingCallback): this {
         this.#templating_callback = callback;
         return this;
     }
 
     build(): LazyboxOptions {
-        if (!this.#is_multiple) {
-            return {
-                is_multiple: false,
-                placeholder: this.#placeholder,
-                search_input_placeholder: this.#search_input_placeholder,
-                search_input_callback: noop,
-                selection_callback: noop,
-                templating_callback: this.#templating_callback,
+        let options: LazyboxOptions = {
+            is_multiple: true,
+            placeholder: this.#placeholder,
+            templating_callback: this.#templating_callback,
+            search_input_callback: noop,
+            selection_callback: noop,
+        };
+        if (this.#new_item_callback) {
+            options = {
+                ...options,
+                new_item_callback: this.#new_item_callback,
+                new_item_button_label: this.#new_item_button_label,
             };
         }
-        if (this.#selection_badge_callback !== undefined) {
-            return {
-                is_multiple: true,
-                placeholder: this.#placeholder,
-                search_input_callback: noop,
-                selection_callback: noop,
-                templating_callback: this.#templating_callback,
+        if (this.#selection_badge_callback) {
+            options = {
+                ...options,
                 selection_badge_callback: this.#selection_badge_callback,
             };
         }
-        return {
-            is_multiple: true,
-            placeholder: this.#placeholder,
-            search_input_callback: noop,
-            selection_callback: noop,
-            templating_callback: this.#templating_callback,
-        };
+        if (!this.#is_multiple) {
+            return {
+                ...options,
+                is_multiple: false,
+                search_input_placeholder: this.#search_input_placeholder,
+            };
+        }
+        return options;
     }
 }

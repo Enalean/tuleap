@@ -20,7 +20,7 @@
 @use "@tuleap/tlp-badge";
 @use "../../themes/common";
 
-.badge {
+.lazybox-badge {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -29,7 +29,7 @@
     white-space: nowrap;
 }
 
-.remove-button {
+.lazybox-badge-remove-button {
     @include common.unset-button-style;
     @include common.focusable-button;
 

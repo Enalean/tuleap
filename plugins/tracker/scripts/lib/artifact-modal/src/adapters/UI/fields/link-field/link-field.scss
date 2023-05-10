@@ -73,12 +73,7 @@ $link-table-cell-background: transparent;
 .link-field-table-footer-input {
     width: 100%;
 
-    // stylelint-disable-next-line selector-max-compound-selectors
-    > .link-field-selector-wrapper
-        > .lazybox-component-wrapper
-        > .lazybox
-        > tuleap-lazybox-selection
-        > .lazybox-selection {
+    > tuleap-lazybox > tuleap-lazybox-selection {
         height: 32px;
     }
 }
