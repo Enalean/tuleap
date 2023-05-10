@@ -24,22 +24,34 @@ namespace Tuleap\WebAuthn\Controllers;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psl\Json\Exception\DecodeException;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
+use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Webauthn\AuthenticatorAssertionResponse;
+use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\Exception\InvalidDataException;
 use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialRpEntity;
 use function Psl\Json\decode as psl_json_decode;
 
 final class PostAuthenticationController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
+        private readonly GetAllCredentialSourceByUserId $source_dao,
+        private readonly RetrieveWebAuthnChallenge $challenge_dao,
+        private readonly PublicKeyCredentialRpEntity $relying_party_entity,
         private readonly PublicKeyCredentialLoader $credential_loader,
+        private readonly AuthenticatorAssertionResponseValidator $assertion_response_validator,
+        private readonly ResponseFactoryInterface $response_factory,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -79,6 +91,33 @@ final class PostAuthenticationController extends DispatchablePSR15Compatible
             return $this->error_response_builder->build(400, _('The result of passkey is not for authentication'));
         }
 
-        return $this->error_response_builder->build(501);
+        return $this->challenge_dao
+            ->searchChallenge((int) $current_user->getId())
+            ->mapOr(
+                function (string $challenge) use ($current_user, $public_key_credential, $authentication_assertion_response) {
+                    $authenticators = array_map(
+                        static fn(WebAuthnCredentialSource $source) => $source->getSource()->getPublicKeyCredentialDescriptor(),
+                        $this->source_dao->getAllByUserId((int) $current_user->getId())
+                    );
+
+                    $options = PublicKeyCredentialRequestOptions::create($challenge)
+                        ->allowCredentials(...$authenticators);
+
+                    try {
+                        $this->assertion_response_validator->check(
+                            $public_key_credential->getRawId(),
+                            $authentication_assertion_response,
+                            $options,
+                            $this->relying_party_entity->getId() ?? '',
+                            (string) $current_user->getId(),
+                        );
+                    } catch (\Throwable) {
+                        return $this->error_response_builder->build(400, _('The result of passkey is invalid'));
+                    }
+
+                    return $this->response_factory->createResponse(200);
+                },
+                $this->error_response_builder->build(400, _('The authentication cannot be checked'))
+            );
     }
 }

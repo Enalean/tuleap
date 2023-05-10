@@ -23,6 +23,10 @@ namespace Tuleap\Request;
 
 use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
+use Cose\Algorithm\Manager;
+use Cose\Algorithm\Signature\ECDSA\ES256;
+use Cose\Algorithm\Signature\EdDSA\Ed25519;
+use Cose\Algorithm\Signature\RSA\RS256;
 use EventManager;
 use FastRoute;
 use FRSFileFactory;
@@ -250,6 +254,7 @@ use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -1345,13 +1350,33 @@ class RouteCollector
     {
         $attestation_statement_manager = new AttestationStatementSupportManager();
         $attestation_statement_manager->add(new NoneAttestationStatementSupport());
-        $json_response_builder = new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+        $response_factory      = HTTPFactoryBuilder::responseFactory();
+        $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
+        $source_dao            = new WebAuthnCredentialSourceDao();
 
         return new PostAuthenticationController(
             \UserManager::instance(),
+            $source_dao,
+            new WebAuthnChallengeDao(),
+            new PublicKeyCredentialRpEntity(
+                \ForgeConfig::get(ConfigurationVariables::NAME),
+                ServerHostname::rawHostname()
+            ),
             new PublicKeyCredentialLoader(
                 new AttestationObjectLoader($attestation_statement_manager)
             ),
+            new AuthenticatorAssertionResponseValidator(
+                $source_dao,
+                null,
+                new ExtensionOutputCheckerHandler(),
+                Manager::create()
+                    ->add(
+                        Ed25519::create(),
+                        RS256::create(),
+                        ES256::create()
+                    )
+            ),
+            $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
             new SapiEmitter()
         );

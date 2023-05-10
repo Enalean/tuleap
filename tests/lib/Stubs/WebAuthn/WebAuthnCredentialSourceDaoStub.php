@@ -37,7 +37,8 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
     /**
      * @var array<string, string>
      */
-    public array $sources_name = [];
+    public array $sources_name                 = [];
+    private ?PublicKeyCredentialSource $source = null;
 
     /**
      * @param string[] $sources_id
@@ -60,8 +61,33 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         return new self([]);
     }
 
+    public function withRealSource(PublicKeyCredentialSource $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
+        if ($this->source !== null && $this->source->getPublicKeyCredentialId() === $publicKeyCredentialId) {
+            return $this->source;
+        }
+
+        if (in_array($publicKeyCredentialId, $this->sources_id)) {
+            return new PublicKeyCredentialSource(
+                $publicKeyCredentialId,
+                'public-key',
+                [],
+                'attestationType',
+                TrustPathLoader::loadTrustPath(['type' => 'Webauthn\\TrustPath\\EmptyTrustPath']),
+                Uuid::v4(),
+                'credentialPublicKey',
+                'user_id',
+                0
+            );
+        }
+
         return null;
     }
 

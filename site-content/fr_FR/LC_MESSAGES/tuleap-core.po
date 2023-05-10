@@ -3646,6 +3646,9 @@ msgstr ""
 "Une fois cette date passée, le compte sera suspendu. Laissez vide si vous ne "
 "voulez pas de date d'expiration."
 
+msgid "The authentication cannot be checked"
+msgstr "L'authentification ne peut être vérifiée"
+
 msgid ""
 "The base unit of Tuleap is the project, you can join or create as many "
 "projects as you want."

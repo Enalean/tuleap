@@ -3599,6 +3599,9 @@ msgid ""
 "don't want an expiration date."
 msgstr ""
 
+msgid "The authentication cannot be checked"
+msgstr ""
+
 msgid ""
 "The base unit of Tuleap is the project, you can join or create as many "
 "projects as you want."
