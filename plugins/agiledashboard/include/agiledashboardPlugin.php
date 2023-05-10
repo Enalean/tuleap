@@ -293,7 +293,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
 
         if (defined('CARDWALL_BASE_URL')) {
-            $this->addHook(CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT, 'cardwall_event_use_standard_javascript');
+            $this->addHook(cardwallPlugin::CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT, 'cardwall_event_use_standard_javascript');
         }
 
         return parent::getHooksAndCallbacks();

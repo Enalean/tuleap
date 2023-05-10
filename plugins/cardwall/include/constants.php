@@ -20,12 +20,3 @@
 
 define('CARDWALL_BASE_DIR', dirname(__FILE__));
 define('CARDWALL_BASE_URL', '/plugins/cardwall');
-
-/**
- * Can we use standard javascript
- *
- * Parameters:
- *   'use_standard' => boolean
- *
- */
-define('CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT', 'cardwall_event_use_standard_javascript');

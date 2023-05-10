@@ -52,6 +52,15 @@ use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
+     * Can we use standard javascript
+     *
+     * Parameters:
+     *   'use_standard' => boolean
+     *
+     */
+    public const CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT = 'cardwall_event_use_standard_javascript';
+
+    /**
      * @var Cardwall_OnTop_ConfigFactory
      */
     private $config_factory;
@@ -414,7 +423,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         $em = EventManager::instance();
         $em->processEvent(
-            CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
+            self::CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
             [
                 'use_standard' => &$use_standard,
             ]
