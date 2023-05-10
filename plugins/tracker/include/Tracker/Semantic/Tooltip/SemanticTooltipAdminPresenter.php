@@ -31,8 +31,6 @@ final class SemanticTooltipAdminPresenter
 {
     public readonly int $nb_other_semantics;
     public readonly bool $has_other_semantics;
-    public readonly string $comma_separated_other_semantics;
-    public readonly string $cross_img;
     public readonly bool $has_used_fields;
     public readonly bool $has_options;
 
@@ -41,20 +39,17 @@ final class SemanticTooltipAdminPresenter
      * @param TooltipFieldPresenter[] $used_fields
      */
     public function __construct(
-        array $other_semantics,
+        public readonly array $other_semantics,
         public readonly CSRFSynchronizerToken $csrf_token,
         public readonly array $used_fields,
         public readonly string $form_url,
         public readonly string $tracker_admin_semantic_url,
-        public readonly string $options,
+        public readonly SelectOptionsRoot $select_options,
     ) {
-        $this->nb_other_semantics              = count($other_semantics);
-        $this->has_other_semantics             = $this->nb_other_semantics > 0;
-        $this->comma_separated_other_semantics = implode(', ', $other_semantics);
+        $this->nb_other_semantics  = count($other_semantics);
+        $this->has_other_semantics = $this->nb_other_semantics > 0;
 
         $this->has_used_fields = count($used_fields) > 0;
-        $this->has_options     = (bool) $this->options;
-
-        $this->cross_img = $GLOBALS['HTML']->getImagePath('ic/cross.png');
+        $this->has_options     = $this->select_options->options || $this->select_options->optgroups;
     }
 }

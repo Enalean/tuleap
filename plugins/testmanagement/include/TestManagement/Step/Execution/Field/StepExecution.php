@@ -197,6 +197,11 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
+    public function canBeDisplayedInTooltip(): bool
+    {
+        return false;
+    }
+
     /**
      * @return StepExecutionChangesetValueDao
      */

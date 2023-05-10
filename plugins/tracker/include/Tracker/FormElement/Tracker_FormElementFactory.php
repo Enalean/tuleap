@@ -27,12 +27,13 @@ use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
@@ -1052,7 +1053,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @return Tracker_FormElement[]
      */
-    public function getUsedFormElementForTracker($tracker)
+    public function getUsedFormElementForTracker(Tracker $tracker): array
     {
         $tracker_id = $tracker->getId();
         if (! isset($this->used[$tracker_id])) {

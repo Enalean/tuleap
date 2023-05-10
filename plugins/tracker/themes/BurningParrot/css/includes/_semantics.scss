@@ -59,3 +59,11 @@
         display: block;
     }
 }
+
+.semantic-tooltip-add-section {
+    justify-content: left;
+}
+
+.tlp-form-element-append > .semantic-tooltip-add-section-select {
+    min-width: 200px;
+}
