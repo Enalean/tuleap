@@ -79,12 +79,13 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
         \Codendi_HTMLPurifier $purifier,
         ContentInterpretor $interpreter,
         Artifact $artifact,
+        ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
     ) {
-        parent::__construct($artifact, $form_element_factory, $user, $changeset);
+        parent::__construct($artifact, $artifact_representation, $form_element_factory, $user, $changeset);
 
         $this->commonmark_description = self::getPurifiedTextFieldValue(
             $purifier,

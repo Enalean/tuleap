@@ -281,6 +281,9 @@ describe("retrieveArtifactsStructure", () => {
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {
+                artifact: {
+                    id: 359,
+                } as ArtifactResponse,
                 id: 359,
                 summary: "Summary",
                 description: "",

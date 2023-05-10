@@ -31,6 +31,7 @@ use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepres
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -59,13 +60,13 @@ class DefinitionRepresentationBuilder
      */
     private $interpreter;
 
-
     public function __construct(
         Tracker_FormElementFactory $tracker_form_element_factory,
         ConfigConformanceValidator $conformance_validator,
         RequirementRetriever $requirement_retriever,
         \Codendi_HTMLPurifier $purifier,
         ContentInterpretor $interpreter,
+        private readonly ArtifactRepresentationBuilder $artifact_representation_builder,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -103,11 +104,19 @@ class DefinitionRepresentationBuilder
             DefinitionRepresentation::FIELD_DESCRIPTION
         );
 
+        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
+            $user,
+            $definition_artifact,
+            MinimalTrackerRepresentation::build($definition_artifact->getTracker()),
+            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+        );
+
         if (! $description_text_field) {
             return new DefinitionTextOrHTMLRepresentation(
                 $this->purifier,
                 $this->interpreter,
                 $definition_artifact,
+                $definition_artifact_representation,
                 $this->tracker_form_element_factory,
                 $user,
                 Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
@@ -123,6 +132,7 @@ class DefinitionRepresentationBuilder
                     $this->purifier,
                     $this->interpreter,
                     $definition_artifact,
+                    $definition_artifact_representation,
                     $this->tracker_form_element_factory,
                     $user,
                     $description_text_field->getFormat(),
@@ -134,6 +144,7 @@ class DefinitionRepresentationBuilder
                     $this->purifier,
                     $this->interpreter,
                     $definition_artifact,
+                    $definition_artifact_representation,
                     $this->tracker_form_element_factory,
                     $user,
                     $all_requirements,
@@ -151,8 +162,16 @@ class DefinitionRepresentationBuilder
 
         $changeset = null;
 
+        $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentationWithFieldValues(
+            $user,
+            $artifact,
+            MinimalTrackerRepresentation::build($artifact->getTracker()),
+            StatusValueRepresentation::buildFromArtifact($artifact, $user),
+        );
+
         return new MinimalDefinitionRepresentation(
             $artifact,
+            $definition_artifact_representation,
             $this->tracker_form_element_factory,
             $user,
             $changeset

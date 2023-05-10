@@ -100,6 +100,8 @@ export type ExecutionsForCampaignMap = Map<
     }
 >;
 
+export type LastExecutionsMap = Map<number, TestExecutionResponse>;
+
 export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly field_name: string;
     readonly content_length: "blockttmstepdef" | "blockttmstepdefenhanced";

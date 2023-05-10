@@ -23,6 +23,7 @@ import type {
     TrackerStructure,
     DateTimeLocaleInformation,
     ArtifactResponse,
+    ArtifactFromReport,
 } from "@tuleap/plugin-docgen-docx";
 import {
     formatArtifact,
@@ -43,6 +44,8 @@ import type {
     ExportDocument,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
+import type { LastExecutionsMap } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
+import { getLastExecutionForTest } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/last-executions-retriever";
 
 interface TrackerStructurePromiseTuple {
     readonly tracker_id: number;
@@ -104,16 +107,35 @@ export async function createExportReport(
         }
     }
 
+    const test_def_artifact_ids_without_execution: Set<number> = new Set();
+    const test_def_artifacts_with_execution: Map<number, ArtifactResponse> = new Map();
+    const last_executions_map: LastExecutionsMap = new Map();
+    //filter to get only last execution and associated artifact definition
+    for (const test_definition_id of test_def_artifact_ids.values()) {
+        const last_execution = getLastExecutionForTest(test_definition_id, executions_map);
+
+        if (last_execution !== null) {
+            last_executions_map.set(test_definition_id, last_execution);
+
+            test_def_artifacts_with_execution.set(
+                last_execution.definition.artifact.id,
+                last_execution.definition.artifact
+            );
+        } else {
+            test_def_artifact_ids_without_execution.add(test_definition_id);
+        }
+    }
+
     const all_artifacts: ArtifactResponse[] = [
         ...(
-            await getArtifacts(new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids]))
+            await getArtifacts(
+                new Set([...backlog_item_artifact_ids, ...test_def_artifact_ids_without_execution])
+            )
         ).values(),
+        ...test_def_artifacts_with_execution.values(),
     ];
-    const all_artifacts_structures = await retrieveArtifactsStructure(
-        tracker_structure_map,
-        all_artifacts,
-        get_test_execution
-    );
+    const all_artifacts_structures: ReadonlyArray<ArtifactFromReport> =
+        await retrieveArtifactsStructure(tracker_structure_map, all_artifacts, get_test_execution);
 
     return {
         name: gettext_provider.interpolate(
@@ -140,7 +162,10 @@ export async function createExportReport(
                     datetime_locale_information,
                     global_properties.base_url,
                     global_properties.artifact_links_types,
-                    buildStepDefinitionEnhancedWithResultsFunction(artifact, executions_map)
+                    buildStepDefinitionEnhancedWithResultsFunction(
+                        artifact,
+                        last_executions_map.get(artifact.id) ?? null
+                    )
                 )
             ),
     };

@@ -108,6 +108,9 @@ describe("Create an export report", () => {
         jest.spyOn(querier, "getExecutions").mockResolvedValue([
             {
                 definition: {
+                    artifact: {
+                        id: 123,
+                    } as ArtifactResponse,
                     id: 123,
                     summary: "Test A",
                     all_requirements: [

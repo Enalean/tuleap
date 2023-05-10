@@ -71,6 +71,10 @@ use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -90,8 +94,11 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -197,8 +204,21 @@ class ExecutionsResource
                 $conformance_validator,
                 $requirement_retriever,
                 $purifier,
-                $commonmark_interpreter
-            )
+                $commonmark_interpreter,
+                new ArtifactRepresentationBuilder(
+                    $this->formelement_factory,
+                    Tracker_ArtifactFactory::instance(),
+                    new TypeDao(),
+                    new ChangesetRepresentationBuilder(
+                        UserManager::instance(),
+                        $this->formelement_factory,
+                        new CommentRepresentationBuilder(
+                            CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                        ),
+                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
+                    )
+                ),
+            ),
         );
 
         $node_js_client          = new NodeJSClient(
