@@ -3,8 +3,9 @@ lockfileVersion: 5.4
 specifiers:
   '@floating-ui/dom': 1.2.7
   '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/core-constants': workspace:^
+  '@tuleap/core-constants': workspace:*
   '@tuleap/dom': workspace:*
+  '@tuleap/focus-navigation': workspace:*
   '@tuleap/tlp': workspace:*
   '@tuleap/tlp-badge': workspace:*
   hybrids: 8.1.8
@@ -12,6 +13,7 @@ specifiers:
 dependencies:
   '@floating-ui/dom': 1.2.7
   '@tuleap/core-constants': link:../constants
+  '@tuleap/focus-navigation': link:../focus-navigation
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-badge': link:../tlp-badge
   hybrids: 8.1.8

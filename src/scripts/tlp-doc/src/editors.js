@@ -386,38 +386,50 @@ function initLinkSelector() {
     };
     const items = [
         {
-            value: {
-                id: 101,
-                color: "acid-green",
-                xref: "story #101",
-                title: "Do this",
-            },
+            value: { id: 101, color: "acid-green", xref: "story #101", title: "Do this" },
             is_disabled: false,
         },
         {
-            value: {
-                id: 102,
-                color: "fiesta-red",
-                xref: "story #102",
-                title: "Do that",
-            },
+            value: { id: 102, color: "fiesta-red", xref: "story #102", title: "Do that" },
             is_disabled: false,
         },
         {
-            value: {
-                id: 103,
-                color: "deep-blue",
-                xref: "story #103",
-                title: "And that too",
-            },
+            value: { id: 103, color: "deep-blue", xref: "story #103", title: "And that too" },
             is_disabled: true,
         },
     ];
-    const group = {
+    const recent_items = [
+        {
+            value: {
+                id: 106,
+                color: "lake-placid-blue",
+                xref: "request #106",
+                title: "Please fix",
+            },
+            is_disabled: false,
+        },
+        {
+            value: {
+                id: 107,
+                color: "ocean-turquoise",
+                xref: "request #107",
+                title: "It does not work",
+            },
+            is_disabled: false,
+        },
+    ];
+
+    const items_group = {
         label: "Matching items",
         empty_message: "No matching item",
         is_loading: false,
-        items: [],
+        items,
+    };
+    const recent_group = {
+        label: "Recent items",
+        empty_message: "No recent item",
+        is_loading: false,
+        items: recent_items,
     };
 
     const link_selector = createLazybox(source_select, {
@@ -440,28 +452,29 @@ function initLinkSelector() {
         },
         search_input_callback: (query) => {
             if (query === "") {
-                link_selector.setDropdownContent([{ ...group, items }]);
+                link_selector.setDropdownContent([items_group, recent_group]);
                 return;
             }
             const lowercase_query = query.toLowerCase();
 
             if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
-                link_selector.setDropdownContent([{ ...group, items: [item_105] }]);
+                link_selector.setDropdownContent([{ ...items_group, items: [item_105] }]);
                 return;
             }
-            const filtered_items = items.filter(
+            const matching_items = items.filter(
                 (item) =>
                     String(item.value.id).includes(lowercase_query) ||
                     item.value.title.toLowerCase().includes(lowercase_query)
             );
-            if (filtered_items.length > 0) {
-                link_selector.setDropdownContent([{ ...group, items: filtered_items }]);
-                return;
-            }
-            link_selector.setDropdownContent([group]);
+            const matching_recent = recent_items.filter((item) =>
+                item.value.title.toLowerCase().includes(lowercase_query)
+            );
+            const matching_items_group = { ...items_group, items: matching_items };
+            const matching_recent_group = { ...recent_group, items: matching_recent };
+            link_selector.setDropdownContent([matching_items_group, matching_recent_group]);
         },
     });
-    link_selector.setDropdownContent([{ ...group, items }]);
+    link_selector.setDropdownContent([items_group, recent_group]);
 }
 
 function initMultiUserLinkSelector() {
@@ -483,9 +496,18 @@ function initMultiUserLinkSelector() {
             is_disabled: true,
         },
     ];
-
-    const user_autocompleter_group = {
+    const users_group = {
         label: "Matching users",
+        empty_message: "No user found",
+        is_loading: false,
+        items: [],
+    };
+    const recent_users = [
+        { value: { id: 105, display_name: "Jon Snow (jsnow)" }, is_disabled: false },
+        { value: { id: 106, display_name: "Joe Dalton (jdalton)" }, is_disabled: false },
+    ];
+    const recent_group = {
+        label: "Recent users",
         empty_message: "No user found",
         is_loading: false,
         items: [],
@@ -505,22 +527,21 @@ function initMultiUserLinkSelector() {
         },
         search_input_callback: (query) => {
             if (query === "") {
-                users_lazybox.setDropdownContent([user_autocompleter_group]);
+                users_lazybox.setDropdownContent([users_group]);
                 return;
             }
             const lowercase_query = query.toLowerCase();
             const matching_users = users.filter((user) =>
                 user.value.display_name.toLowerCase().includes(lowercase_query)
             );
-            if (matching_users) {
-                users_lazybox.setDropdownContent([
-                    { ...user_autocompleter_group, items: matching_users },
-                ]);
-                return;
-            }
-            users_lazybox.setDropdownContent([user_autocompleter_group]);
+            const matching_recent = recent_users.filter((user) =>
+                user.value.display_name.toLowerCase().includes(lowercase_query)
+            );
+            const matching_users_group = { ...users_group, items: matching_users };
+            const matching_recent_group = { ...recent_group, items: matching_recent };
+            users_lazybox.setDropdownContent([matching_users_group, matching_recent_group]);
         },
     });
-    users_lazybox.setDropdownContent([user_autocompleter_group]);
+    users_lazybox.setDropdownContent([users_group]);
     users_lazybox.replaceSelection([users[0]]);
 }

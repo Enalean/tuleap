@@ -1,0 +1,27 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/focus-navigation",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "dist/focus-navigation.js",
+  "main": "dist/focus-navigation.umd.cjs",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/focus-navigation.js",
+      "require": "./dist/focus-navigation.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/dom": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

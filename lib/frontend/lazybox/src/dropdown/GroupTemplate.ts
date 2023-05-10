@@ -22,13 +22,14 @@ import { html } from "hybrids";
 import type { DropdownElement } from "./DropdownElement";
 import type { GroupOfItems, LazyboxItem } from "../items/GroupCollection";
 import { isEnterKey } from "../helpers/keys-helper";
+import { onArrowKeyDown, onArrowKeyUp } from "./DropdownElement";
 
 export const getItemTemplate = (
     host: DropdownElement,
     item: LazyboxItem
 ): UpdateFunction<DropdownElement> => {
     if (item.is_disabled) {
-        return html` <li
+        return html`<li
             role="option"
             class="lazybox-dropdown-option-value-disabled"
             data-test="lazybox-item"
@@ -42,52 +43,51 @@ export const getItemTemplate = (
         host.open = false;
     };
 
-    const onKeyUp = (host: DropdownElement, event: KeyboardEvent): void => {
-        if (!isEnterKey(event)) {
+    const onKeyUp = (host: DropdownElement & HTMLElement, event: KeyboardEvent): void => {
+        if (isEnterKey(event)) {
+            event.stopPropagation();
+            host.selection.selectItem(item);
+            host.open = false;
             return;
         }
-        event.stopPropagation();
-        host.selection.selectItem(item);
-        host.open = false;
+        onArrowKeyUp(host, event);
     };
 
     const aria_value = String(host.selection.isSelected(item));
-    return html` <li
+    return html`<li
         role="option"
         tabindex="0"
         aria-selected="${aria_value}"
         class="lazybox-dropdown-option-value"
         data-test="lazybox-item"
+        data-navigation="lazybox-item"
         onpointerup="${onPointerUp}"
         onkeyup="${onKeyUp}"
+        onkeydown="${onArrowKeyDown}"
     >
         ${host.templating_callback(html, item)}
     </li>`;
 };
 
 const createEmptyDropdownState = (dropdown_message: string): UpdateFunction<DropdownElement> =>
-    html`
-        <li
-            class="lazybox-empty-dropdown-state"
-            role="alert"
-            aria-live="assertive"
-            data-test="lazybox-empty-state"
-        >
-            ${dropdown_message}
-        </li>
-    `;
+    html`<li
+        class="lazybox-empty-dropdown-state"
+        role="alert"
+        aria-live="assertive"
+        data-test="lazybox-empty-state"
+    >
+        ${dropdown_message}
+    </li>`;
 
 const getGroupLabel = (group: GroupOfItems): UpdateFunction<DropdownElement> => {
     if (group.is_loading) {
-        return html`
-            <strong class="lazybox-group-label">
-                ${group.label}
-                <i
-                    class="fa-solid fa-spin fa-circle-notch lazybox-loading-group-spinner"
-                    data-test="lazybox-loading-group-spinner"
-                ></i>
-            </strong>
-        `;
+        return html`<strong class="lazybox-group-label">
+            ${group.label}
+            <i
+                class="fa-solid fa-spin fa-circle-notch lazybox-loading-group-spinner"
+                data-test="lazybox-loading-group-spinner"
+            ></i>
+        </strong>`;
     }
 
     return html`<strong class="lazybox-group-label">${group.label}</strong>`;
@@ -109,7 +109,7 @@ const getGroupTemplate = (
             ? [createEmptyDropdownState(group.empty_message)]
             : group.items.map((item) => getItemTemplate(host, item));
 
-    return html` <li class="lazybox-item-group">
+    return html`<li class="lazybox-item-group">
         ${getGroupLabel(group)}
         <ul role="group" aria-label="${group.label}" class="lazybox-dropdown-option-group">
             ${item_templates}
