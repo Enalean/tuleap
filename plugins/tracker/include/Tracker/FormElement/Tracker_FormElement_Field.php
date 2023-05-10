@@ -926,19 +926,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
-    /**
-     * Fetch the "add tooltip" box in admin
-     *
-     * @param array $used Current used fields as column.
-     * @param string $prefix Prefix to add before label in optgroups
-     *
-     * @return string
-     */
-    public function fetchAddTooltip($used, $prefix = '')
+    public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
-        if (! isset($used[$this->id])) {
+        if (! isset($used_fields[$this->id])) {
             $html .= '<option value="' . $this->id . '">' . $purifier->purify($this->getLabel()) . '</option>';
         }
         return $html;

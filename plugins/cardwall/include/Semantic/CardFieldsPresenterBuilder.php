@@ -50,7 +50,7 @@ class CardFieldsPresenterBuilder
 
         foreach ($tracker_field as $field) {
             if (! isset($already_used_field[$field->getId()])) {
-                $escpaed_options[] = $field->fetchAddTooltip($already_used_field);
+                $escpaed_options[] = $field->fetchAddCardFields($already_used_field);
             }
         }
 

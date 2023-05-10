@@ -117,17 +117,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return $this->fetchOptgroup('fetchAddColumn', 'add_column_container_', $used, $prefix);
     }
 
-    /**
-     * Fetch the "add tooltip" box in admin
-     *
-     * @param array $used Current used fields as column.
-     * @param string $prefix Prefix to add before label in optgroups
-     *
-     * @return string
-     */
-    public function fetchAddTooltip($used, $prefix = '')
+    public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
-        return $this->fetchOptgroup('fetchAddTooltip', 'add_tooltip_container_', $used, $prefix);
+        return $this->fetchOptgroup('fetchAddCardFields', 'add_cardfields_container_', $used_fields, $prefix);
     }
 
     /**

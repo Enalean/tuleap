@@ -241,7 +241,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
-    public function fetchAddTooltip($used, $prefix = ''): string
+    public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';
     }

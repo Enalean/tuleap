@@ -394,14 +394,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     abstract public function fetchAddColumn($used, $prefix = '');
 
     /**
-     * Fetch the "add tooltip" box in admin
-     *
-     * @param array  $used   Current used fields as column.
-     * @param string $prefix Prefix to add before label in optgroups
-     *
-     * @return string
+     * @param array<int, Tracker_FormElement_Field>  $used_fields
      */
-    abstract public function fetchAddTooltip($used, $prefix = '');
+    abstract public function fetchAddCardFields(array $used_fields, string $prefix = ''): string;
 
     /**
      *
