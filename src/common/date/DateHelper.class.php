@@ -89,6 +89,16 @@ class DateHelper
         return self::relativeDate($presenter);
     }
 
+    public static function relativeDateInlineContextWithoutTime(int $time, PFUser $current_user): string
+    {
+        $presenter = (new TlpRelativeDatePresenterBuilder())->getTlpRelativeDatePresenterInInlineContextWithoutTime(
+            (new DateTimeImmutable())->setTimestamp($time),
+            $current_user
+        );
+
+        return self::relativeDate($presenter);
+    }
+
     /**
      * Calculate the approximate distance between two times
      *

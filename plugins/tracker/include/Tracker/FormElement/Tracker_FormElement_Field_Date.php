@@ -807,7 +807,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html = '';
         if ($value && $value->getTimestamp()) {
             $user  = HTTPRequest::instance()->getCurrentUser();
-            $html .= DateHelper::relativeDateInlineContext($value->getTimestamp() ?? 0, $user);
+            $html .= $this->isTimeDisplayed()
+                ? DateHelper::relativeDateInlineContext($value->getTimestamp() ?? 0, $user)
+                : DateHelper::relativeDateInlineContextWithoutTime($value->getTimestamp() ?? 0, $user);
         }
         return $html;
     }
