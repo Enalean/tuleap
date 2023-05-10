@@ -2683,6 +2683,10 @@ msgstr ""
 "considérées comme fermées."
 
 #, php-format
+msgid "Semantic %s"
+msgstr "Sémantique %s"
+
+#, php-format
 msgid "Semantic Timeframe is not configured for tracker %s."
 msgstr "La sémantique Plage de temps n'est pas configurée pour le tracker %s."
 

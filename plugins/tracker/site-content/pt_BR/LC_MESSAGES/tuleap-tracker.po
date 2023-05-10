@@ -2395,6 +2395,10 @@ msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 
 #, php-format
+msgid "Semantic %s"
+msgstr ""
+
+#, php-format
 msgid "Semantic Timeframe is not configured for tracker %s."
 msgstr ""
 
