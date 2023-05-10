@@ -287,58 +287,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         bindtextdomain('tuleap-program_management', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks(): Collection
-    {
-        $this->addHook(RootPlanningEditionEvent::NAME);
-        $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES, 'getArtifactLinkTypes');
-        $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER, 'getTypePresenter');
-        $this->addHook(
-            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES,
-            'trackerAddSystemTypes'
-        );
-        $this->addHook(CanSubmitNewArtifact::NAME);
-        $this->addHook(ArtifactCreated::NAME);
-        $this->addHook(ArtifactUpdated::NAME);
-        $this->addHook(ArtifactDeleted::NAME);
-        $this->addHook(WorkerEvent::NAME);
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(PlanningAdministrationDelegation::NAME);
-        $this->addHook('tracker_usage', 'trackerUsage');
-        $this->addHook(ProjectStatusUpdate::NAME);
-        $this->addHook(BlockScrumAccess::NAME);
-        $this->addHook(OriginalProjectCollector::NAME);
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-        $this->addHook(BuildArtifactFormActionEvent::NAME);
-        $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-        $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
-        $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
-        $this->addHook(GetExternalPostActionPluginsEvent::NAME);
-        $this->addHook(GetExternalSubFactoriesEvent::NAME);
-        $this->addHook(PostActionVisitExternalActionsEvent::NAME);
-        $this->addHook(GetExternalPostActionJsonParserEvent::NAME);
-        $this->addHook(GetWorkflowExternalPostActionsValueUpdater::NAME);
-        $this->addHook(GetExternalSubFactoryByNameEvent::NAME);
-        $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
-        $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
-        $this->addHook(CheckPostActionsForTracker::NAME);
-        $this->addHook(WorkflowDeletionEvent::NAME);
-        $this->addHook(TransitionDeletionEvent::NAME);
-        $this->addHook(CollectLinkedProjects::NAME);
-        $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
-        $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
-        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
-        $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
-        $this->addHook(ImportXMLProjectTrackerDone::NAME);
-        $this->addHook(PossibleParentSelector::NAME);
-        $this->addHook('codendi_daily_start');
-        $this->addHook(ValidateArtifactLinkValueEvent::NAME);
-        $this->addHook(DisplayArtifactLinkEvent::NAME);
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard', 'cardwall'];
@@ -409,6 +357,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return $this->pluginInfo;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
@@ -739,23 +688,20 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void
     {
         $handler = new RootPlanningEditionHandler(new TeamDao());
         $handler->handle(RootPlanningEditionEventProxy::buildFromEvent($event));
     }
 
-    /**
-     * @see TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES)]
     public function getArtifactLinkTypes(array $params): void
     {
         $params['types'][] = new TimeboxArtifactLinkPresenter();
     }
 
-    /**
-     * @see TypePresenterFactory::EVENT_GET_TYPE_PRESENTER
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER)]
     public function getTypePresenter(array $params): void
     {
         if ($params['shortname'] === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
@@ -763,14 +709,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
-    /**
-     * @see Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES
-     */
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_TYPES)]
     public function trackerAddSystemTypes(array $params): void
     {
         $params['types'][] = TimeboxArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
         $handler          = $this->getCanSubmitNewArtifactHandler();
@@ -778,6 +723,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $handler->handle(CanSubmitNewArtifactEventProxy::buildFromEvent($can_submit_new_artifact), $errors_collector);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function workerEvent(WorkerEvent $event): void
     {
         $logger                 = $this->getLogger();
@@ -916,6 +862,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
         $logger  = $this->getLogger();
@@ -931,6 +878,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $handler->handle(ArtifactCreatedProxy::fromArtifactCreated($event));
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
         $logger                         = $this->getLogger();
@@ -1045,6 +993,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $handler->handle($event_proxy);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
     {
         (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsFromExplicitTopBacklog(
@@ -1053,16 +1002,16 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     }
 
     /**
-     * @see         Event::REST_RESOURCES
-     *
      * @psalm-param array{restler: \Luracast\Restler\Restler} $params
      */
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function planningAdministrationDelegation(
         PlanningAdministrationDelegation $planning_administration_delegation,
     ): void {
@@ -1075,6 +1024,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker::TRACKER_USAGE)]
     public function trackerUsage(array $params): void
     {
         if ((new PlanDao())->isPartOfAPlan(TrackerReferenceProxy::fromTracker($params['tracker']))) {
@@ -1085,6 +1035,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
@@ -1092,6 +1043,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function externalParentCollector(OriginalProjectCollector $original_project_collector): void
     {
         $source_analyser = new SourceArtifactNatureAnalyzer(
@@ -1118,6 +1070,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function blockScrumAccess(BlockScrumAccess $block_scrum_access): void
     {
         $program_store = new ProgramDaoProject();
@@ -1126,6 +1079,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
         $event_proxy       = RedirectUserAfterArtifactCreationOrUpdateEventProxy::fromEvent($event);
@@ -1143,6 +1097,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
         $program_increment_redirection_parameters = ProgramRedirectionParametersProxy::buildFromCodendiRequest($event->getRequest());
@@ -1157,6 +1112,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
         $project_manager         = ProjectManager::instance();
@@ -1203,6 +1159,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerMasschangeGetExternalActionsEvent(TrackerMasschangeGetExternalActionsEvent $event): void
     {
         $project_manager         = ProjectManager::instance();
@@ -1236,6 +1193,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
     {
         $processor = new MassChangeTopBacklogActionProcessor(
@@ -1248,6 +1206,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalPostActionPluginsEvent(GetExternalPostActionPluginsEvent $event): void
     {
         $tracker_id = $event->getTracker()->getId();
@@ -1256,6 +1215,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalSubFactoriesEvent(GetExternalSubFactoriesEvent $event): void
     {
         $event->addFactory(
@@ -1313,6 +1273,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function postActionVisitExternalActionsEvent(PostActionVisitExternalActionsEvent $event): void
     {
         $post_action = $event->getPostAction();
@@ -1325,6 +1286,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $event->setRepresentation($representation);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalPostActionJsonParserEvent(GetExternalPostActionJsonParserEvent $event): void
     {
         $event->addParser(
@@ -1332,6 +1294,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getWorkflowExternalPostActionsValueUpdater(GetWorkflowExternalPostActionsValueUpdater $event): void
     {
         $dao = new AddToTopBacklogPostActionDAO();
@@ -1344,6 +1307,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalSubFactoryByNameEvent(GetExternalSubFactoryByNameEvent $event): void
     {
         if ($event->getPostActionShortName() === AddToTopBacklogPostAction::SHORT_NAME) {
@@ -1353,6 +1317,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function externalPostActionSaveObjectEvent(ExternalPostActionSaveObjectEvent $event): void
     {
         $post_action = $event->getPostAction();
@@ -1364,6 +1329,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $factory->saveObject($post_action);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function getPostActionShortNameFromXmlTagNameEvent(GetPostActionShortNameFromXmlTagNameEvent $event): void
     {
         if ($event->getXmlTagName() === AddToTopBacklogPostAction::XML_TAG_NAME) {
@@ -1371,6 +1337,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
         $verify_is_plannable   = new PlanDao();
@@ -1392,6 +1359,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function workflowDeletionEvent(WorkflowDeletionEvent $event): void
     {
         $workflow_id = (int) $event->getWorkflow()->getId();
@@ -1399,6 +1367,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         (new AddToTopBacklogPostActionDAO())->deleteWorkflowPostActions($workflow_id);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function transitionDeletionEvent(TransitionDeletionEvent $event): void
     {
         $transition_id = (int) $event->getTransition()->getId();
@@ -1406,6 +1375,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectLinkedProjects(CollectLinkedProjects $event): void
     {
         $program_dao     = new ProgramDaoProject();
@@ -1438,6 +1408,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
     {
         $ugroup_manager                       = new UGroupManager();
@@ -1574,6 +1545,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function displayCreatedProjectModal(DisplayCreatedProjectModalPresenter $presenter): void
     {
         if (
@@ -1587,11 +1559,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectCategorisedExternalTemplatesEvent(CollectCategorisedExternalTemplatesEvent $event): void
     {
         $event_manager       = EventManager::instance();
@@ -1608,6 +1582,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $event->addCategorisedTemplate(new TeamTemplate($glyph_finder, $consistency_checker));
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector): void
     {
         $glyph_locations_collector->addLocation(
@@ -1616,6 +1591,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $retrieve_user               = new UserManagerAdapter(UserManager::instance());
@@ -1658,6 +1634,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerArtifactPossibleParentSelector(PossibleParentSelector $possible_parent_selector): void
     {
         $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
@@ -1679,13 +1656,15 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
-    public function codendi_daily_start(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventName('codendi_daily_start')]
+    public function codendiDailyStart(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao     = new PendingSynchronizationDao();
         $cleaner = new SynchronizationCleaner($dao);
         $cleaner->clean();
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function validateArtifactLinkValueEvent(ValidateArtifactLinkValueEvent $event): void
     {
         $deleted_artifact_links_checker = new DeletedArtifactLinksChecker(
@@ -1705,6 +1684,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function displayArtifactLinkEvent(DisplayArtifactLinkEvent $event): void
     {
         if ($event->getTypePresenter()->shortname === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
