@@ -399,25 +399,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     abstract public function fetchAddCardFields(array $used_fields, string $prefix = ''): string;
 
     /**
-     *
-     * @param Artifact $artifact
-     * @param string   $format
-     *
-     * @return string
-     */
-    public function fetchMailFormElements($artifact, $format = 'text', $ignore_perms = false)
-    {
-        $text = '';
-        foreach ($this->getFormElements() as $formElement) {
-            $text .= $formElement->getLabel();
-            $text .= ' : ';
-            $text .= $formElement->fetchMailArtifact($artifact, $format, $ignore_perms);
-            $text .= PHP_EOL;
-        }
-        return $text;
-    }
-
-    /**
      * Duplicate a field. If the field has custom properties,
      * they should be propagated to the new one
      *
