@@ -30,6 +30,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  * Static Fields are not real fields, as they don't have a specific value for each artifact.
  * The value can be updated, but is the same for every artifact.
  */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
 {
     // TODO : remove these functions (no need for that kind of "fields"
@@ -43,7 +44,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
         return '';
     }
 
-    public function fetchAddTooltip($used, $prefix = '')
+    public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';
     }
