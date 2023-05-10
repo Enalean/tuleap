@@ -67,31 +67,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         bindtextdomain('tuleap-timetracking', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
-    {
-        $this->addHook('cssfile');
-        $this->addHook('permission_get_name');
-        $this->addHook('project_admin_ugroup_deletion');
-        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-        $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
-        $this->addHook(GetTrackersWithCriteria::NAME);
-        $this->addHook('fill_project_history_sub_events');
-        $this->addHook(Event::REST_RESOURCES);
-
-        if (defined('TRACKER_BASE_URL')) {
-            $this->addHook(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
-            $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
-            $this->addHook(TrackerEventExportFullXML::NAME);
-            $this->addHook(ImportXMLProjectTrackerDone::NAME);
-            $this->addHook(JiraImporterExternalPluginsEvent::NAME);
-            $this->addHook(PlatformConfigurationForExternalPluginsEvent::NAME);
-        }
-
-        return parent::getHooksAndCallbacks();
-    }
-
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, TimetrackingPluginInfo::class)) {
@@ -106,7 +81,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         return ['tracker'];
     }
 
-    public function cssfile($params)
+    #[\Tuleap\Plugin\ListeningToEventName('cssfile')]
+    public function cssfile($params): void
     {
         if (
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
@@ -126,10 +102,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
-    /**
-     * @see Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS
-     */
-    public function trackerEventFetchAdminButtons($params)
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker::TRACKER_EVENT_FETCH_ADMIN_BUTTONS)]
+    public function trackerEventFetchAdminButtons($params): void
     {
         $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
             'tracker' => $params['tracker_id'],
@@ -210,8 +184,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         return new PermissionsRetriever($this->getTimetrackingUgroupRetriever());
     }
 
-    /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
-    public function tracker_artifact_editrenderer_add_view_in_collection(array $params) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION)]
+    public function trackerArtifactEditrendererAddViewInCollection(array $params): void // @codingStandardsIgnoreLine
     {
         $user     = $params['user'];
         $request  = $params['request'];
@@ -245,7 +219,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         return new TimetrackingEnabler(new AdminDao());
     }
 
-    public function permission_get_name(array $params) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName('permission_get_name')]
+    public function permissionGetName(array $params): void // @codingStandardsIgnoreLine
     {
         if (! $params['name']) {
             switch ($params['permission_type']) {
@@ -261,7 +236,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         }
     }
 
-    public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects): void
     {
         $get_projects->addCriteria(ProjectResource::TIMETRACKING_CRITERION, "'with_time_tracking': true");
     }
@@ -269,7 +245,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     /**
      * @throws \Luracast\Restler\RestException
      */
-    public function getProjectsWithCriteria(\Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getProjectsWithCriteria(\Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects): void
     {
         if (! isset($get_projects->getQuery()[ProjectResource::TIMETRACKING_CRITERION])) {
             return;
@@ -289,7 +266,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
      * @throws User_StatusInvalidException
      * @throws \Luracast\Restler\RestException
      */
-    public function getTrackersWithCriteria(GetTrackersWithCriteria $get_trackers)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getTrackersWithCriteria(GetTrackersWithCriteria $get_trackers): void
     {
         if (! isset($get_trackers->getQuery()[ProjectResource::TIMETRACKING_CRITERION])) {
             return;
@@ -309,7 +287,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         }
     }
 
-    public function project_admin_ugroup_deletion(array $params) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName('project_admin_ugroup_deletion')]
+    public function projectAdminUgroupDeletion(array $params): void // @codingStandardsIgnoreLine
     {
         $ugroup = $params['ugroup'];
 
@@ -317,7 +296,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         $dao->deleteByUgroupId($ugroup->getId());
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === UserWidget::NAME) {
             $get_widget_event->setWidget(new UserWidget());
@@ -332,13 +312,15 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         }
     }
 
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event): void
     {
         $event->addWidget(UserWidget::NAME);
         $event->addWidget(TimeTrackingOverview::NAME);
     }
 
-    public function fill_project_history_sub_events($params) // @codingStandardsIgnoreLine
+    #[\Tuleap\Plugin\ListeningToEventName('fill_project_history_sub_events')]
+    public function fillProjectHistorySubEvents($params): void // @codingStandardsIgnoreLine
     {
         array_push(
             $params['subEvents']['event_others'],
@@ -348,13 +330,14 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
-    /** @see Event::REST_RESOURCES */
-    public function restResources(array $params)
+    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
     {
         $xml                      = $event->getXmlElement();
@@ -385,6 +368,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function trackerEventExportFullXML(TrackerEventExportFullXML $event): void
     {
         $timetracking_ugroup_retriever = new TimetrackingUgroupRetriever(
@@ -415,6 +399,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function jiraImporterExternalPluginsEvent(JiraImporterExternalPluginsEvent $event): void
     {
         $xml_exporter = new JiraXMLExport(
@@ -434,6 +419,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
+    #[\Tuleap\Plugin\ListeningToEventClass]
     public function platformConfigurationForExternalPluginsEvent(PlatformConfigurationForExternalPluginsEvent $event): void
     {
         $configuration = (new JiraTimetrackingConfigurationRetriever($event->getJiraClient(), $event->getLogger()))
