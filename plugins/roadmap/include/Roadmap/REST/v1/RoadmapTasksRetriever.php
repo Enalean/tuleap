@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -37,75 +38,20 @@ use UserManager;
 
 final class RoadmapTasksRetriever
 {
-    /**
-     * @var RoadmapWidgetDao
-     */
-    private $dao;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var URLVerification
-     */
-    private $url_verification;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var IRetrieveDependencies
-     */
-    private $dependencies_retriever;
-    /**
-     * @var RoadmapTasksOutOfDateFilter
-     */
-    private $tasks_filter;
-    /**
-     * @var SemanticProgressBuilder
-     */
-    private $progress_builder;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        RoadmapWidgetDao $dao,
-        \ProjectManager $project_manager,
-        UserManager $user_manager,
-        URLVerification $url_verification,
-        TrackerFactory $tracker_factory,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
-        \Tracker_ArtifactFactory $artifact_factory,
-        IRetrieveDependencies $dependencies_retriever,
-        RoadmapTasksOutOfDateFilter $tasks_filter,
-        SemanticProgressBuilder $progress_builder,
-        LoggerInterface $logger,
+        private readonly RoadmapWidgetDao $dao,
+        private readonly \ProjectManager $project_manager,
+        private readonly UserManager $user_manager,
+        private readonly URLVerification $url_verification,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly SemanticTimeframeBuilder $semantic_timeframe_builder,
+        private readonly \Tracker_ArtifactFactory $artifact_factory,
+        private readonly IRetrieveDependencies $dependencies_retriever,
+        private readonly RoadmapTasksOutOfDateFilter $tasks_filter,
+        private readonly SemanticProgressBuilder $progress_builder,
+        private readonly LoggerInterface $logger,
+        private readonly RetrieveReportToFilterArtifacts $report_to_filter_retriever,
     ) {
-        $this->dao                        = $dao;
-        $this->project_manager            = $project_manager;
-        $this->user_manager               = $user_manager;
-        $this->url_verification           = $url_verification;
-        $this->tracker_factory            = $tracker_factory;
-        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->artifact_factory           = $artifact_factory;
-        $this->dependencies_retriever     = $dependencies_retriever;
-        $this->tasks_filter               = $tasks_filter;
-        $this->progress_builder           = $progress_builder;
-        $this->logger                     = $logger;
     }
 
     /**
@@ -125,12 +71,24 @@ final class RoadmapTasksRetriever
 
         $representation_builders_by_tracker_id = $this->getRepresentationBuildersIndexedByTrackerId($widget_row['id'], $user);
 
-        $tracker_ids         = array_keys($representation_builders_by_tracker_id);
-        $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByListOfTrackerIds(
-            $tracker_ids,
-            $limit,
-            $offset
-        );
+        $tracker_ids = array_keys($representation_builders_by_tracker_id);
+
+        $report = $this->report_to_filter_retriever->getReportToFilterArtifacts($id, $user);
+        if ($report) {
+            $matching            = $report->getMatchingIds(null, true);
+            $ids                 = $matching['id'] ? array_map('intval', explode(',', $matching['id'])) : [];
+            $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByListOfArtifactIds(
+                $ids,
+                $limit,
+                $offset
+            );
+        } else {
+            $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByListOfTrackerIds(
+                $tracker_ids,
+                $limit,
+                $offset
+            );
+        }
 
         $trackers_with_unreadable_status_collection = new TrackersWithUnreadableStatusCollection($this->logger);
 
