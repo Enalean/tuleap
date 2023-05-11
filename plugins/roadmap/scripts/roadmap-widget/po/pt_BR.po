@@ -18,40 +18,10 @@ msgstr ""
 msgid "Linked to"
 msgstr ""
 
-msgid "Links"
-msgstr "Links"
-
-msgid "Month"
-msgstr "Mês"
-
-msgid "None"
-msgstr "Nenhum"
-
-msgid "Ok, got it"
-msgstr ""
-
-msgid "Oops, something went wrong."
-msgstr ""
-
-msgid "Please come back later."
-msgstr ""
-
 msgid "Q%{ quarter }"
 msgstr ""
 
-msgid "Quarter"
-msgstr ""
-
 msgid "Quarter %{ quarter } of %{ year }"
-msgstr ""
-
-msgid "Show closed items"
-msgstr ""
-
-msgid "There is no data to show."
-msgstr ""
-
-msgid "Timescale"
 msgstr ""
 
 msgid "Today: %{ date }"
@@ -59,9 +29,6 @@ msgstr ""
 
 msgid "W%{ week }"
 msgstr ""
-
-msgid "Week"
-msgstr "Semana"
 
 msgid "Week %{ week } of %{ year }"
 msgstr ""

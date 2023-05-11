@@ -22,23 +22,23 @@
     <div>
         <div class="tlp-form-element">
             <label class="tlp-label" v-bind:for="title_id">
-                <translate>Title</translate>
-                <i class="fas fa-asterisk" aria-hidden="true"></i>
+                {{ $gettext("Title") }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
             <input
                 type="text"
                 class="tlp-input"
                 v-bind:id="title_id"
                 name="roadmap[title]"
-                v-model="title"
+                v-model="user_selected_title"
                 required
-                v-bind:placeholder="placeholder"
+                v-bind:placeholder="$gettext('Roadmap')"
             />
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" v-bind:for="progress_of_id">
-                <translate>Show progress of</translate>
-                <i class="fas fa-asterisk" aria-hidden="true"></i>
+                {{ $gettext("Show progress of") }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
 
             <select
@@ -61,7 +61,7 @@
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" v-bind:for="timescale_id">
-                <translate>Default timescale</translate>
+                {{ $gettext("Default timescale") }}
             </label>
             <select
                 class="tlp-select tlp-select-small tlp-select-adjusted"
@@ -70,24 +70,30 @@
                 data-test="timescale"
                 v-model="user_selected_default_timescale"
             >
-                <option value="week" v-translate>Week</option>
-                <option value="month" v-translate>Month</option>
-                <option value="quarter" v-translate>Quarter</option>
+                <option value="week">{{ $gettext("Week") }}</option>
+                <option value="month">{{ $gettext("Month") }}</option>
+                <option value="quarter">{{ $gettext("Quarter") }}</option>
             </select>
         </div>
         <hr class="roadmap-widget-configuration-separator" />
         <h2 class="tlp-modal-subtitle" v-bind:class="subtitle_class">Timeframe ribbons</h2>
-        <translate tag="p">
-            Artifacts of the selected tracker will appear in the upper part of the Roadmap, below
-            the Quarters/Months/Weeks.
-        </translate>
-        <translate tag="p">
-            Selected trackers are expected to have continuous time (i.e. artifacts timeframe do not
-            overlap).
-        </translate>
+        <p>
+            {{
+                $gettext(
+                    "Artifacts of the selected tracker will appear in the upper part of the Roadmap, below the Quarters/Months/Weeks."
+                )
+            }}
+        </p>
+        <p>
+            {{
+                $gettext(
+                    "Selected trackers are expected to have continuous time (i.e. artifacts timeframe do not overlap)."
+                )
+            }}
+        </p>
         <div class="tlp-form-element">
             <label class="tlp-label" v-bind:for="lvl1_id">
-                <translate>Timeframe ribbon, level 1 (eg. Release)</translate>
+                {{ $gettext("Timeframe ribbon, level 1 (eg. Release)") }}
             </label>
 
             <select
@@ -98,7 +104,7 @@
                 data-test="lvl1-iteration-tracker"
             >
                 <option value="" selected>
-                    <translate>Please choose a tracker</translate>
+                    {{ $gettext("Please choose a tracker") }}
                 </option>
                 <option
                     v-for="tracker of suitable_lvl1_iteration_trackers"
@@ -114,7 +120,7 @@
             v-bind:class="{ 'tlp-form-element-disabled': is_lvl2_disabled }"
         >
             <label class="tlp-label" v-bind:for="lvl2_id">
-                <translate>Timeframe ribbon, level 2 (eg. Sprint)</translate>
+                {{ $gettext("Timeframe ribbon, level 2 (eg. Sprint)") }}
             </label>
 
             <select
@@ -126,7 +132,7 @@
                 data-test="lvl2-iteration-tracker"
             >
                 <option value="" selected>
-                    <translate>Please choose a tracker</translate>
+                    {{ $gettext("Please choose a tracker") }}
                 </option>
                 <option
                     v-for="tracker of suitable_lvl2_iteration_trackers"
@@ -138,135 +144,119 @@
             </select>
             <p class="tlp-text-info">
                 <i class="far fa-life-ring" aria-hidden="true"></i>
-                <translate>Level 2 is expected to be a sub-division of level 1.</translate>
+                {{ $gettext("Level 2 is expected to be a sub-division of level 1.") }}
             </p>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Ref, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import type { Tracker } from "../type";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { TimeScale } from "../../../roadmap-widget/src/type";
+import { useGettext } from "vue3-gettext";
 
-@Component
-export default class App extends Vue {
-    override $refs!: {
-        trackers_picker: HTMLSelectElement;
-    };
+const trackers_picker = ref<HTMLSelectElement | null>(null);
 
-    @Prop({ required: true })
-    private readonly widget_id!: number;
+interface AppProps {
+    widget_id: number;
+    title: string;
+    trackers: Tracker[];
+    selected_tracker_ids: number[];
+    selected_default_timescale: TimeScale;
+    selected_lvl1_iteration_tracker_id: number | "";
+    selected_lvl2_iteration_tracker_id: number | "";
+    is_in_creation: boolean;
+}
 
-    @Prop({ required: true })
-    title!: string;
+const props = withDefaults(defineProps<AppProps>(), {
+    title: "",
+    trackers: () => [],
+    selected_tracker_ids: () => [],
+    selected_default_timescale: "month",
+    selected_lvl1_iteration_tracker_id: "",
+    selected_lvl2_iteration_tracker_id: "",
+});
 
-    @Prop({ required: true })
-    private readonly trackers!: Tracker[];
+const { $gettext } = useGettext();
 
-    @Prop({ required: true })
-    private readonly selected_tracker_ids!: number[];
+const user_selected_tracker_ids = ref<number[]>(props.selected_tracker_ids);
+const user_selected_lvl1_iteration_tracker_id = ref<number | "">(
+    props.selected_lvl1_iteration_tracker_id
+);
+const user_selected_lvl2_iteration_tracker_id = ref<number | "">(
+    props.selected_lvl2_iteration_tracker_id
+);
+const user_selected_default_timescale = ref<TimeScale>(props.selected_default_timescale);
+const user_selected_title = ref<string>(props.title);
 
-    @Prop({ required: true })
-    private readonly selected_default_timescale!: TimeScale;
+let list_picker: ListPicker | undefined = undefined;
 
-    @Prop({ required: true })
-    private readonly selected_lvl1_iteration_tracker_id!: number | "";
-
-    @Prop({ required: true })
-    private readonly selected_lvl2_iteration_tracker_id!: number | "";
-
-    @Prop({ required: true })
-    private readonly is_in_creation!: boolean;
-
-    @Ref("trackers-picker")
-    private readonly trackers_picker!: HTMLSelectElement;
-
-    user_selected_tracker_ids: number[] = this.selected_tracker_ids;
-    user_selected_lvl1_iteration_tracker_id: number | "" = this.selected_lvl1_iteration_tracker_id;
-    user_selected_lvl2_iteration_tracker_id: number | "" = this.selected_lvl2_iteration_tracker_id;
-    user_selected_default_timescale: TimeScale = this.selected_default_timescale;
-    private list_picker: ListPicker | undefined = undefined;
-
-    mounted(): void {
-        this.list_picker = createListPicker(this.$refs.trackers_picker, {
+onMounted(() => {
+    const select = trackers_picker.value;
+    if (select) {
+        list_picker = createListPicker(select, {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
-            placeholder: this.$gettext("Please choose a tracker"),
+            placeholder: $gettext("Please choose a tracker"),
         });
     }
+});
 
-    beforeDestroy(): void {
-        this.list_picker?.destroy();
-    }
+onUnmounted((): void => {
+    list_picker?.destroy();
+});
 
-    @Watch("user_selected_lvl1_iteration_tracker_id")
-    forceLevel2ToBeEmptyIfNoLevel1(): void {
-        if (!this.user_selected_lvl1_iteration_tracker_id) {
-            this.user_selected_lvl2_iteration_tracker_id = "";
-        }
+watch(user_selected_lvl1_iteration_tracker_id, (): void => {
+    if (!user_selected_lvl1_iteration_tracker_id.value) {
+        user_selected_lvl2_iteration_tracker_id.value = "";
     }
+});
 
-    get title_id(): string {
-        return "title-" + this.widget_id;
-    }
+const title_id = computed((): string => "title-" + props.widget_id);
 
-    get progress_of_id(): string {
-        return "roadmap-tracker-" + this.widget_id;
-    }
+const progress_of_id = computed((): string => "roadmap-tracker-" + props.widget_id);
 
-    get timescale_id(): string {
-        return "roadmap-timescale-" + this.widget_id;
-    }
+const timescale_id = computed((): string => "roadmap-timescale-" + props.widget_id);
 
-    get lvl1_id(): string {
-        return "lvl1-" + this.widget_id;
-    }
+const lvl1_id = computed((): string => "lvl1-" + props.widget_id);
 
-    get lvl2_id(): string {
-        return "lvl2-" + this.widget_id;
-    }
+const lvl2_id = computed((): string => "lvl2-" + props.widget_id);
 
-    get placeholder(): string {
-        return this.$gettext("Roadmap");
-    }
+const subtitle_class = computed((): string =>
+    props.is_in_creation ? "roadmap-widget-configuration-subtitle" : ""
+);
 
-    get subtitle_class(): string {
-        return this.is_in_creation ? "roadmap-widget-configuration-subtitle" : "";
-    }
+const suitable_trackers = computed((): Tracker[] =>
+    props.trackers.filter(
+        (tracker) =>
+            tracker.id !== user_selected_lvl1_iteration_tracker_id.value &&
+            tracker.id !== user_selected_lvl2_iteration_tracker_id.value
+    )
+);
 
-    get suitable_trackers(): Tracker[] {
-        return this.trackers.filter(
-            (tracker) =>
-                tracker.id !== this.user_selected_lvl1_iteration_tracker_id &&
-                tracker.id !== this.user_selected_lvl2_iteration_tracker_id
-        );
-    }
+const suitable_lvl1_iteration_trackers = computed((): Tracker[] => {
+    return props.trackers.filter(
+        (tracker) =>
+            !user_selected_tracker_ids.value.some((id) => tracker.id === id) &&
+            tracker.id !== user_selected_lvl2_iteration_tracker_id.value
+    );
+});
 
-    get suitable_lvl1_iteration_trackers(): Tracker[] {
-        return this.trackers.filter(
-            (tracker) =>
-                !this.user_selected_tracker_ids.some((id) => tracker.id === id) &&
-                tracker.id !== this.user_selected_lvl2_iteration_tracker_id
-        );
-    }
+const suitable_lvl2_iteration_trackers = computed((): Tracker[] => {
+    return props.trackers.filter(
+        (tracker) =>
+            !user_selected_tracker_ids.value.some((id) => tracker.id === id) &&
+            tracker.id !== user_selected_lvl1_iteration_tracker_id.value
+    );
+});
 
-    get suitable_lvl2_iteration_trackers(): Tracker[] {
-        return this.trackers.filter(
-            (tracker) =>
-                !this.user_selected_tracker_ids.some((id) => tracker.id === id) &&
-                tracker.id !== this.user_selected_lvl1_iteration_tracker_id
-        );
-    }
-
-    get is_lvl2_disabled(): boolean {
-        return (
-            !this.user_selected_lvl1_iteration_tracker_id &&
-            !this.user_selected_lvl2_iteration_tracker_id
-        );
-    }
-}
+const is_lvl2_disabled = computed((): boolean => {
+    return (
+        !user_selected_lvl1_iteration_tracker_id.value &&
+        !user_selected_lvl2_iteration_tracker_id.value
+    );
+});
 </script>

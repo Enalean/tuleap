@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.vue" {
-    import Vue from "vue";
-    export default Vue;
-}
+import common from "./webpack.common.mjs";
+import {webpack_configurator} from "@tuleap/build-system-configurator";
+
+export default webpack_configurator.extendDevConfiguration(common);
