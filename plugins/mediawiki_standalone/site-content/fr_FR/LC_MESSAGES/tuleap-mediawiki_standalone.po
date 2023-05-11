@@ -141,6 +141,9 @@ msgstr ""
 msgid "Project name, status"
 msgstr "Nom du projet, statut"
 
+msgid "Projects with MediaWiki instances to migrate"
+msgstr "Projets avec des instances MediaWiki à migrer"
+
 msgid "Read only access to information about Mediawiki Standalone"
 msgstr "Accès en lecture seule aux informations Mediawiki Autonome"
 

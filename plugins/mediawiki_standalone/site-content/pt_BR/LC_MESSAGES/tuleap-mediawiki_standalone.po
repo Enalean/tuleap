@@ -127,6 +127,9 @@ msgstr ""
 msgid "Project name, status"
 msgstr ""
 
+msgid "Projects with MediaWiki instances to migrate"
+msgstr ""
+
 msgid "Read only access to information about Mediawiki Standalone"
 msgstr ""
 
