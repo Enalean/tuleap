@@ -29,6 +29,7 @@ module.exports = [
     {
         entry: {
             "configure-roadmap-widget-script": "./src/index.ts",
+            "configure-roadmap-widget-style": "./src/style/widget-configuration.scss",
         },
         context,
         output,

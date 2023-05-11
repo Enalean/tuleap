@@ -125,19 +125,12 @@ class RoadmapPlugin extends Plugin
     public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $event): void
     {
         $layout = $event->getLayout();
+        $assets = $this->getConfigureWidgetAssets();
         $layout->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptAsset($this->getConfigureWidgetAssets(), 'configure-roadmap-widget-script.js')
+            new \Tuleap\Layout\JavascriptAsset($assets, 'configure-roadmap-widget-script.js')
         );
         $layout->addCssAsset(
-            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->getStyleAssets(), 'configure-roadmap-widget-style')
-        );
-    }
-
-    private function getStyleAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/roadmap'
+            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'configure-roadmap-widget-style')
         );
     }
 
