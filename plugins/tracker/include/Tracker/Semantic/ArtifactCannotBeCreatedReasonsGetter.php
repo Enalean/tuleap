@@ -24,12 +24,17 @@ namespace Tuleap\Tracker\Semantic;
 
 use PFUser;
 use Tracker;
+use Tracker_Semantic_Title;
+use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 
 final class ArtifactCannotBeCreatedReasonsGetter
 {
     public function __construct(
         private readonly VerifySubmissionPermissions $can_submit_artifact_verifier,
+        private readonly RetrieveUsedFields $used_fields_retriever,
+        private readonly GetTitleSemantic $semantic_title_factory,
     ) {
     }
 
@@ -41,7 +46,14 @@ final class ArtifactCannotBeCreatedReasonsGetter
             return $cannot_create_reasons;
         }
 
-        return $cannot_create_reasons->addReasons($this->canUserCreateArtifact($tracker, $user));
+        $cannot_create_reasons = $cannot_create_reasons->addReasons($this->canUserCreateArtifact($tracker, $user));
+
+        foreach ($semantics_to_check->semantics as $semantic) {
+            if ($semantic->isSemanticTitle()) {
+                $cannot_create_reasons = $cannot_create_reasons->addReasons($this->getReasonsFromSemanticTitle($tracker, $user));
+            }
+        }
+        return $cannot_create_reasons;
     }
 
     private function canUserCreateArtifact(Tracker $tracker, PFUser $user): CollectionOfCannotCreateArtifactReason
@@ -52,5 +64,34 @@ final class ArtifactCannotBeCreatedReasonsGetter
             $cannot_create_reasons = $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(dgettext('tuleap-tracker', 'You can\'t submit an artifact because you do not have the right to submit all required fields')));
         }
         return $cannot_create_reasons;
+    }
+
+    private function getReasonsFromSemanticTitle(Tracker $tracker, PFUser $user): CollectionOfCannotCreateArtifactReason
+    {
+        $title_semantic        = $this->semantic_title_factory->getByTracker($tracker);
+        $cannot_create_reasons = CollectionOfCannotCreateArtifactReason::fromEmptyReason();
+
+        if (! $title_semantic->getField()) {
+            return $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(dgettext('tuleap-tracker', "Title semantic is not defined")));
+        }
+        $title_semantic_text_field = $title_semantic->getField();
+        if (! $title_semantic_text_field->userCanSubmit($user)) {
+            $cannot_create_reasons = $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(sprintf(dgettext('tuleap-tracker', "You do not have the right to submit '%s' field"), $title_semantic_text_field->getLabel())));
+        }
+        if (! $this->hasTrackerOnlyTitleRequired($tracker, $title_semantic, $user)) {
+            $cannot_create_reasons = $cannot_create_reasons->addReason(CannotCreateArtifactReason::fromString(sprintf(dgettext('tuleap-tracker', "Other field than '%s' is required"), $title_semantic_text_field->getLabel())));
+        }
+        return $cannot_create_reasons;
+    }
+
+    private function hasTrackerOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title, PFUser $user): bool
+    {
+        $used_fields = $this->used_fields_retriever->getUsedFields($tracker);
+        foreach ($used_fields as $used_field) {
+            if (($used_field->isRequired() && $used_field->userCanSubmit($user)) && $used_field->getId() !== $semantic_title->getFieldId()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

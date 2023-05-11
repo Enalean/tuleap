@@ -2272,6 +2272,10 @@ msgstr "Ou vous pouvez migrer un outil de suivi v3 …"
 msgid "Other Jira users:"
 msgstr "Autre utilisateurs Jira :"
 
+#, php-format
+msgid "Other field than '%s' is required"
+msgstr "Un champs autre que '%s' est requis"
+
 msgid "Other fields than title or description cannot be required"
 msgstr "Les champs autres que titre ou description ne peuvent pas être requis"
 
@@ -3947,6 +3951,9 @@ msgstr ""
 msgid "Title"
 msgstr "Titre"
 
+msgid "Title semantic is not defined"
+msgstr "La sémantique titre n'est pas définie"
+
 msgid "Today"
 msgstr "Date du jour"
 
@@ -4584,6 +4591,10 @@ msgstr ""
 
 msgid "You do not have the necessary right to edit this artifact."
 msgstr "Vous n'avez pas les droits nécessaires pour l'édition de cet artéfact."
+
+#, php-format
+msgid "You do not have the right to submit '%s' field"
+msgstr "Vous n'avez pas le droit de soumettre le champs '%s'"
 
 msgid "You don't have any artifacts yet"
 msgstr "Vous n'avez pas encore d'artéfact"

@@ -20,8 +20,9 @@
 
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 
-class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetTitleSemantic
 {
     /**
      * Hold an instance of the class
@@ -43,7 +44,7 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker)
+    public function getByTracker(Tracker $tracker): Tracker_Semantic_Title
     {
         return Tracker_Semantic_Title::load($tracker);
     }

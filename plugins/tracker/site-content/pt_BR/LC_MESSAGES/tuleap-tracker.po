@@ -2024,6 +2024,10 @@ msgstr ""
 msgid "Other Jira users:"
 msgstr ""
 
+#, php-format
+msgid "Other field than '%s' is required"
+msgstr ""
+
 msgid "Other fields than title or description cannot be required"
 msgstr ""
 
@@ -3466,6 +3470,9 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
+msgid "Title semantic is not defined"
+msgstr ""
+
 msgid "Today"
 msgstr "Hoje"
 
@@ -4010,6 +4017,10 @@ msgid ""
 msgstr ""
 
 msgid "You do not have the necessary right to edit this artifact."
+msgstr ""
+
+#, php-format
+msgid "You do not have the right to submit '%s' field"
 msgstr ""
 
 msgid "You don't have any artifacts yet"

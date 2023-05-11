@@ -25,6 +25,7 @@ use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
+use Tracker_Semantic_TitleFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use TransitionFactory;
@@ -87,6 +88,11 @@ class ProjectTrackersResource extends AuthenticatedResource
      * <p>
      *   ⚠ Notes about <code>with_creation_semantic_check</code> key:
      * <ul>
+     *   <li> Supported semantic:
+     *        <ul>
+     *           <li> Title </li>
+     *        </ul>
+     * </li>
      *   <li> It's only available with the <strong>minimal</strong> representation, full representation will return 400 Bad Request error</li>
      *   <li> The <code>cannot_create_reasons</code> key in the result which contains the list of all reasons that prevent you from creating an artifact </li>
      * </ul>
@@ -181,6 +187,8 @@ class ProjectTrackersResource extends AuthenticatedResource
 
         $cannot_create_reasons  = new ArtifactCannotBeCreatedReasonsGetter(
             SubmissionPermissionVerifier::instance(),
+            $form_element_factory,
+            Tracker_Semantic_TitleFactory::instance()
         );
         $representation_builder = new TrackerRepresentationBuilder(TrackerFactory::instance(), $builder, $cannot_create_reasons);
 

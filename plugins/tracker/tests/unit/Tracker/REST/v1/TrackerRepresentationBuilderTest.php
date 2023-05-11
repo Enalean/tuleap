@@ -35,6 +35,8 @@ use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackersByGroupIdAndUserCanViewStub;
+use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 final class TrackerRepresentationBuilderTest extends TestCase
@@ -66,7 +68,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
         $representation_build = new TrackerRepresentationBuilder(
             $this->tracker_retriever,
             BuildCompleteTrackerRESTRepresentationStub::defaultRepresentation(),
-            new ArtifactCannotBeCreatedReasonsGetter(VerifySubmissionPermissionStub::withSubmitPermission())
+            new ArtifactCannotBeCreatedReasonsGetter(VerifySubmissionPermissionStub::withSubmitPermission(), RetrieveUsedFieldsStub::withNoFields(), GetTitleSemanticStub::withoutTextField())
         );
 
         return $representation_build->buildTrackerRepresentations($user, $this->project, $tracker_representation, 50, 0, $filter_on_tracker_administration_permission, $this->semantics_to_check);
