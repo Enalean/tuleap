@@ -27,6 +27,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
@@ -38,7 +39,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public static function getTestData(): iterable
     {
-        yield 'it exports jira fields and build an array indexed by id' => [
+        yield 'it exports jira fields with common createmeta and build an array indexed by id' => [
             'payloads' => [
                 ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=projID&issuetypeIds=issueName&expand=projects.issuetypes.fields" => [
                     'projects' => [
@@ -375,13 +376,99 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $field_retriever = new JiraFieldRetriever($wrapper, new NullLogger());
-        $result          = $field_retriever->getAllJiraFields(
+        $field_retriever = new JiraFieldRetriever(
+            $wrapper,
+            new NullLogger(),
+            new AppendFieldsFromCreateMetaAPI($wrapper, new NullLogger()),
+        );
+
+        $result = $field_retriever->getAllJiraFields(
             'projID',
             'issueName',
             new FieldAndValueIDGenerator(),
         );
 
         $tests($result);
+    }
+
+    public function testItGetAllFieldsWithTheCreateMeta(): void
+    {
+        $payloads = [
+            ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta/projID/issuetypes/issueName?startAt=0" => [
+                "maxResults" => 50,
+                "startAt" => 0,
+                "total" => 2,
+                "isLast" => true,
+                'values' => [
+                    [
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string',
+                            'system' => 'summary',
+                        ],
+                        'name' => 'Summary',
+                        'fieldId' => 'summary',
+                        'hasDefaultValue' => false,
+                        'operation' => [
+                            'set',
+                        ],
+                    ],
+                    [
+                        'required' => false,
+                        'schema' => [
+                            'type' => 'user',
+                            'custom' => 'com.atlassian.jira.toolkit:lastupdaterorcommenter',
+                            'customId' => 10071,
+                        ],
+                        'name' => '[opt] Last updator',
+                        'fieldId' => 'customfield_10071',
+                        'hasDefaultValue' => false,
+                        'operation' => [
+                            'set',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $wrapper = new class ($payloads) extends JiraServerClientStub {
+            public function __construct(array $payloads)
+            {
+                $this->urls = $payloads;
+            }
+
+            public function isJiraServer9(): bool
+            {
+                return false;
+            }
+        };
+
+        $field_retriever = new JiraFieldRetriever(
+            $wrapper,
+            new NullLogger(),
+            new AppendFieldsFromCreateMetaServer9API($wrapper, new NullLogger()),
+        );
+
+        $result = $field_retriever->getAllJiraFields(
+            'projID',
+            'issueName',
+            new FieldAndValueIDGenerator(),
+        );
+
+        self::assertCount(2, $result);
+
+        $system_field_representation = $result['summary'];
+        self::assertEquals("summary", $system_field_representation->getId());
+        self::assertEquals("Summary", $system_field_representation->getLabel());
+        self::assertNotNull($system_field_representation->getSchema());
+        self::assertTrue($system_field_representation->isRequired());
+        self::assertTrue($system_field_representation->isSubmit());
+
+        $custom_field_representation = $result['customfield_10071'];
+        self::assertEquals("customfield_10071", $custom_field_representation->getId());
+        self::assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
+        self::assertNotNull($custom_field_representation->getSchema());
+        self::assertFalse($custom_field_representation->isRequired());
+        self::assertTrue($custom_field_representation->isSubmit());
     }
 }

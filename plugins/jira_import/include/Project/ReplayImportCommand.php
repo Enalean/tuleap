@@ -48,7 +48,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Tracker\XML\XMLTracker;
@@ -70,6 +69,7 @@ final class ReplayImportCommand extends Command
             ->setHidden(true)
             ->setDescription('Replay a jira import from a debug archive (meant for Tuleap developers)')
             ->addOption('server-flavor', '', InputOption::VALUE_REQUIRED, 'Type of Jira instance (cloud or server)', 'server')
+            ->addOption('server-major-version', '', InputOption::VALUE_OPTIONAL, 'Major version of Jira server instance')
             ->addOption('path', '', InputOption::VALUE_REQUIRED, 'Path to the directory with the debug files')
             ->addOption('user', '', InputOption::VALUE_REQUIRED, 'User who is doing the import')
             ->addOption('project', '', InputOption::VALUE_REQUIRED, 'Import in project')
@@ -80,11 +80,11 @@ final class ReplayImportCommand extends Command
     {
         $logger = new ConsoleLogger($output, [LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL]);
         try {
-            if ($input->getOption('server-flavor') !== 'server') {
-                $jira_client = JiraClientReplay::buildJiraCloud($input->getOption('path'));
-            } else {
-                $jira_client = JiraClientReplay::buildJiraServer($input->getOption('path'));
-            }
+            $jira_client = JiraClientReplayBuilder::buildReplayClientWithCommandOptions(
+                $input->getOption('server-flavor'),
+                $input->getOption("server-major-version"),
+                $input->getOption('path'),
+            );
 
             $jira_xml_exporter = $this->getJiraXmlExporter($jira_client, $logger);
 

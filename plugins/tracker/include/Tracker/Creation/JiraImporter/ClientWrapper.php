@@ -61,8 +61,11 @@ abstract class ClientWrapper implements JiraClient
     private ?string $debug_directory = null;
     private ?string $log_file        = null;
 
-    final public function __construct(private ClientInterface $client, private RequestFactoryInterface $factory, private string $base_url)
-    {
+    final public function __construct(
+        private readonly ClientInterface $client,
+        private readonly RequestFactoryInterface $factory,
+        private readonly string $base_url,
+    ) {
     }
 
     final public function setDebugDirectory(string $debug_directory): void
@@ -94,7 +97,7 @@ abstract class ClientWrapper implements JiraClient
         JiraCredentials $jira_credentials,
         RequestFactoryInterface $request_factory,
         LoggerInterface $logger,
-    ): JiraServerClient|JiraCloudClient {
+    ): JiraServer9Client|JiraCloudClient|JiraServer7and8Client {
         $client_without_authentication = HttpClientFactory::createClientWithCustomTimeout(self::DEFAULT_TIMEOUT);
         $server_info_uri               = $jira_credentials->getJiraUrl() . self::JIRA_CORE_BASE_URL . '/serverInfo';
         $logger->debug("Do we talk to JiraCloud or JiraServer ?");
@@ -112,11 +115,34 @@ abstract class ClientWrapper implements JiraClient
         }
 
         $logger->info("Instantiate JiraServerClient");
-        return new JiraServerClient(
+
+        $jira_server_major_version = self::getJiraServerMajorVersion($server_info);
+        if ($jira_server_major_version < 9) {
+            return new JiraServer7and8Client(
+                self::getClientWithBearerAuth($jira_credentials),
+                $request_factory,
+                $jira_credentials->getJiraUrl(),
+            );
+        }
+
+        return new JiraServer9Client(
             self::getClientWithBearerAuth($jira_credentials),
             $request_factory,
             $jira_credentials->getJiraUrl(),
         );
+    }
+
+    private static function getJiraServerMajorVersion(array $server_info): int
+    {
+        if (
+            isset($server_info['versionNumbers']) &&
+            is_array($server_info['versionNumbers']) &&
+            isset($server_info['versionNumbers'][0])
+        ) {
+            return $server_info['versionNumbers'][0];
+        }
+
+        return 0;
     }
 
     private static function getClientWithBearerAuth(JiraCredentials $jira_credentials): ClientInterface
@@ -192,4 +218,6 @@ abstract class ClientWrapper implements JiraClient
     }
 
     abstract public function isJiraCloud(): bool;
+
+    abstract public function isJiraServer9(): bool;
 }

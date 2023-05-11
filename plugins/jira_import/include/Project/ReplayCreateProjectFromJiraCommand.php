@@ -33,7 +33,6 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClientReplay;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use UserManager;
 
@@ -54,6 +53,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             ->setHidden(true)
             ->setDescription('Replay a jira project import from a debug archive (meant for Tuleap developers)')
             ->addOption('server-flavor', '', InputOption::VALUE_REQUIRED, 'Type of Jira instance (cloud or server)', 'server')
+            ->addOption('server-major-version', '', InputOption::VALUE_OPTIONAL, 'Major version of Jira server instance')
             ->addOption('path', '', InputOption::VALUE_REQUIRED, 'Path to the directory with the debug files')
             ->addOption('user', '', InputOption::VALUE_REQUIRED, 'Tuleap user login of who is doing the import')
             ->addOption('project', '', InputOption::VALUE_REQUIRED, 'Import in project')
@@ -75,11 +75,11 @@ final class ReplayCreateProjectFromJiraCommand extends Command
 
         $traces_path = $input->getOption('path');
 
-        if ($input->getOption('server-flavor') !== 'server') {
-            $jira_client = JiraClientReplay::buildJiraCloud($traces_path);
-        } else {
-            $jira_client = JiraClientReplay::buildJiraServer($traces_path);
-        }
+        $jira_client = JiraClientReplayBuilder::buildReplayClientWithCommandOptions(
+            $input->getOption('server-flavor'),
+            $input->getOption("server-major-version"),
+            $input->getOption('path'),
+        );
 
         $jira_credentials = $this->getCredentialsFromManifestURL($traces_path);
 

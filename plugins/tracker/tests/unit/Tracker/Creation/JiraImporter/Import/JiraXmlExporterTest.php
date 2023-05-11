@@ -61,6 +61,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaAPI;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaServer9API;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -96,6 +98,16 @@ final class JiraXmlExporterTest extends TestCase
         yield 'SBX' => [
             'fixtures_path' => __DIR__ . '/_fixtures/SBX',
             'is_jira_cloud' => false,
+            'jira_major_version' => 8,
+            'users' => [
+                'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
+            ],
+        ];
+
+        yield 'SBXv9' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/SBXv9',
+            'is_jira_cloud' => false,
+            'jira_major_version' => 9,
             'users' => [
                 'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
             ],
@@ -104,6 +116,7 @@ final class JiraXmlExporterTest extends TestCase
         yield 'IXMC' => [
             'fixtures_path' => __DIR__ . '/_fixtures/IXMC',
             'is_jira_cloud' => false,
+            'jira_major_version' => 8,
             'users' => [
                 'user_1@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('user_1')->build(),
                 'user_2@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('user_2')->build(),
@@ -116,6 +129,7 @@ final class JiraXmlExporterTest extends TestCase
         yield 'SP' => [
             'fixtures_path' => __DIR__ . '/_fixtures/SP',
             'is_jira_cloud' => true,
+            'jira_major_version' => null,
             'users' => [
                 'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('manuel_vacelet')->build(),
                 'thomas.cottier@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('thomas_cottier')->build(),
@@ -127,6 +141,7 @@ final class JiraXmlExporterTest extends TestCase
         yield 'IE' => [
             'fixtures_path' => __DIR__ . '/_fixtures/IE',
             'is_jira_cloud' => true,
+            'jira_major_version' => null,
             'users' => [
                 'marie-ange.garnier@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('marie-ange.garnier')->build(),
                 'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('manuel_vacelet')->build(),
@@ -137,7 +152,7 @@ final class JiraXmlExporterTest extends TestCase
     /**
      * @dataProvider debugTracesProvider
      */
-    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, array $users): void
+    public function testImportFromDebugTraces(string $fixture_path, bool $is_jira_cloud, ?int $jira_major_version, array $users): void
     {
         $root = vfsStream::setup();
 
@@ -156,7 +171,12 @@ final class JiraXmlExporterTest extends TestCase
                 $logger
             );
         } else {
-            $jira_client               = JiraClientReplay::buildJiraServer($fixture_path);
+            if ($jira_major_version !== null && $jira_major_version >= 9) {
+                $jira_client = JiraClientReplay::buildJira9Server($fixture_path);
+            } else {
+                $jira_client = JiraClientReplay::buildJira7And8Server($fixture_path);
+            }
+
             $changelog_entries_builder = new JiraServerChangelogEntriesBuilder(
                 $jira_client,
                 $logger
@@ -229,11 +249,17 @@ final class JiraXmlExporterTest extends TestCase
             }
         };
 
+        if (! $jira_client->isJiraCloud() && $jira_client->isJiraServer9()) {
+            $append_fields_from_create = new AppendFieldsFromCreateMetaServer9API($jira_client, $logger);
+        } else {
+            $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($jira_client, $logger);
+        }
+
         $exporter = new JiraXmlExporter(
             $logger,
             $jira_client,
             $error_collector,
-            new JiraFieldRetriever($jira_client, $logger),
+            new JiraFieldRetriever($jira_client, $logger, $append_fields_from_create),
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),

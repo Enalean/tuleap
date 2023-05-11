@@ -59,6 +59,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaAPI;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\AppendFieldsFromCreateMetaServer9API;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\StoryPointFieldExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
@@ -153,16 +155,22 @@ class JiraXmlExporter
         if ($wrapper->isJiraCloud()) {
             $changelog_entries_builder = new JiraCloudChangelogEntriesBuilder($wrapper, $logger);
             $comment_value_builder     = new JiraCloudCommentValuesBuilder($wrapper, $logger);
+            $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($wrapper, $logger);
+        } elseif ($wrapper->isJiraServer9()) {
+            $changelog_entries_builder = new JiraServerChangelogEntriesBuilder($wrapper, $logger);
+            $comment_value_builder     = new JiraServerCommentValuesBuilder($wrapper, $logger);
+            $append_fields_from_create = new AppendFieldsFromCreateMetaServer9API($wrapper, $logger);
         } else {
             $changelog_entries_builder = new JiraServerChangelogEntriesBuilder($wrapper, $logger);
             $comment_value_builder     = new JiraServerCommentValuesBuilder($wrapper, $logger);
+            $append_fields_from_create = new AppendFieldsFromCreateMetaAPI($wrapper, $logger);
         }
 
         return new self(
             $logger,
             $wrapper,
             $error_collector,
-            new JiraFieldRetriever($wrapper, $logger),
+            new JiraFieldRetriever($wrapper, $logger, $append_fields_from_create),
             $jira_field_mapper,
             $jira_user_retriever,
             new XmlReportExporter(),

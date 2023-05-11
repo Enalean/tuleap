@@ -34,5 +34,7 @@ interface JiraClient
 
     public function isJiraCloud(): bool;
 
+    public function isJiraServer9(): bool;
+
     public function getAttachmentContents(Attachment $attachment): string;
 }

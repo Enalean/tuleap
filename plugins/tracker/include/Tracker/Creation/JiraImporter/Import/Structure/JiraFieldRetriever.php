@@ -34,8 +34,11 @@ class JiraFieldRetriever
 {
     private const PRIORITY_URL = ClientWrapper::JIRA_CORE_BASE_URL . '/priority';
 
-    public function __construct(private JiraClient $wrapper, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly JiraClient $wrapper,
+        private readonly LoggerInterface $logger,
+        private readonly AppendFieldsFromCreate $append_field_from_create,
+    ) {
     }
 
     /**
@@ -56,28 +59,12 @@ class JiraFieldRetriever
      */
     private function appendFromCreateMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
-        $meta_url = ClientWrapper::JIRA_CORE_BASE_URL . "/issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
-            "&issuetypeIds=" . urlencode($jira_issue_type_id) . "&expand=projects.issuetypes.fields";
-
-        $this->logger->debug('GET ' . $meta_url);
-        $project_meta_content = $this->wrapper->getUrl($meta_url);
-
-        if (! $project_meta_content || ! isset($project_meta_content['projects'][0]['issuetypes'][0]['fields'])) {
-            return $fields_by_id;
-        }
-
-        $jira_fields = $project_meta_content['projects'][0]['issuetypes'][0]['fields'];
-        foreach ($jira_fields as $jira_field_id => $jira_field) {
-            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIForSubmit(
-                $jira_field_id,
-                $jira_field,
-                $id_generator
-            );
-
-            $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
-        }
-
-        return $fields_by_id;
+        return $this->append_field_from_create->appendFromCreate(
+            $fields_by_id,
+            $jira_project_key,
+            $jira_issue_type_id,
+            $id_generator,
+        );
     }
 
     /**
