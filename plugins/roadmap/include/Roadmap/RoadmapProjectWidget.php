@@ -31,6 +31,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\PreferencePresenter;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
@@ -363,31 +364,45 @@ final class RoadmapProjectWidget extends \Widget
         $this->dao->delete((int) $id, (int) $this->owner_id, (string) $this->owner_type);
     }
 
-    public function getJavascriptDependencies(): array
+    public function getJavascriptAssets(): array
     {
         return [
-            [
-                'file' => $this->getAssets()->getFileURL('widget-script.js'),
-            ],
-            [
-                'file' => $this->getAssets()->getFileURL('configure-roadmap-widget-script.js'),
-            ],
+            new JavascriptAsset($this->getWidgetAssets(), 'widget-script.js'),
+            new JavascriptAsset($this->getConfigureWidgetAssets(), 'configure-roadmap-widget-script.js'),
         ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
+        $include_assets = $this->getStyleAssets();
+
         return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'widget-style'),
-            new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'configure-roadmap-widget-style'),
+            new CssAssetWithoutVariantDeclinaisons($include_assets, 'widget-style'),
+            new CssAssetWithoutVariantDeclinaisons($include_assets, 'configure-roadmap-widget-style'),
         ]);
     }
 
-    private function getAssets(): IncludeAssets
+    private function getStyleAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../frontend-assets',
             '/assets/roadmap'
+        );
+    }
+
+    private function getWidgetAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../scripts/roadmap-widget/frontend-assets',
+            '/assets/roadmap/roadmap-widget'
+        );
+    }
+
+    private function getConfigureWidgetAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../scripts/configure-widget/frontend-assets',
+            '/assets/roadmap/configure-widget'
         );
     }
 }

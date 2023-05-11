@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createRoadmapLocalVue } from "../../../roadmap-widget/src/helpers/local-vue-for-test";
+import { createRoadmapLocalVue } from "../helpers/local-vue-for-test";
 import type { Tracker } from "../type";
 import * as list_picker from "@tuleap/list-picker";
 

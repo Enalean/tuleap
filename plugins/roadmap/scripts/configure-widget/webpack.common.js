@@ -22,14 +22,13 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
     path.resolve(__dirname, "./frontend-assets"),
-    "/assets/roadmap/"
+    "/assets/roadmap/configure-widget/"
 );
 
 module.exports = [
     {
         entry: {
-            "widget-style": "./themes/widget-roadmap.scss",
-            "configure-roadmap-widget-style": "./themes/widget-configuration.scss",
+            "configure-roadmap-widget-script": "./src/index.ts",
         },
         context,
         output,
@@ -40,12 +39,24 @@ module.exports = [
             tlp: "tlp",
         },
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_chrome_firefox
+                ),
+                webpack_configurator.rule_easygettext_loader,
+                webpack_configurator.rule_vue_loader,
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
+        resolveLoader: {
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
     },
 ];
