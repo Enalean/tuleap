@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
@@ -46,6 +46,7 @@ import {
     abandonPullRequest,
     putReviewers,
     fetchProjectLabels,
+    patchPullRequestLabels,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
@@ -318,6 +319,71 @@ describe("tuleap-rest-querier", () => {
             );
 
             expect(result.value).toStrictEqual(labels);
+        });
+    });
+
+    describe("patchPullRequestLabels", () => {
+        beforeEach(() => {
+            vi.spyOn(fetch_result, "patch").mockReturnValue(okAsync(new Response()));
+        });
+
+        it("when there are no added labels nor removed labels, then it should do nothing", () => {
+            patchPullRequestLabels(pull_request_id, [], []);
+
+            expect(fetch_result.patch).not.toHaveBeenCalled();
+        });
+
+        it('when there are only added labels, then it should not send a "remove" key in the payload', () => {
+            patchPullRequestLabels(pull_request_id, [12], []);
+
+            expect(fetch_result.patch).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                {},
+                {
+                    add: [
+                        {
+                            id: 12,
+                        },
+                    ],
+                }
+            );
+        });
+
+        it('when there are only removed labels, then it should not send an "add" key in the payload', () => {
+            patchPullRequestLabels(pull_request_id, [], [12]);
+
+            expect(fetch_result.patch).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                {},
+                {
+                    remove: [
+                        {
+                            id: 12,
+                        },
+                    ],
+                }
+            );
+        });
+
+        it('when there are removed and added labels, then it should send a payload containing an "add" and a "remove" keys', () => {
+            patchPullRequestLabels(pull_request_id, [8], [12]);
+
+            expect(fetch_result.patch).toHaveBeenCalledWith(
+                uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                {},
+                {
+                    add: [
+                        {
+                            id: 8,
+                        },
+                    ],
+                    remove: [
+                        {
+                            id: 12,
+                        },
+                    ],
+                }
+            );
         });
     });
 });

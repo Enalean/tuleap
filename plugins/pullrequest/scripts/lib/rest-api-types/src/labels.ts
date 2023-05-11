@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+type ProjectLabelId = {
+    readonly id: number;
+};
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
+type ReadonlyProjectLabelIdsArrayWithAtLeastOneValue = [ProjectLabelId, ...ProjectLabelId[]];
 
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
-export * from "./labels";
+export type PatchPullRequestLabelsPayload = {
+    add?: ReadonlyProjectLabelIdsArrayWithAtLeastOneValue;
+    remove?: ReadonlyProjectLabelIdsArrayWithAtLeastOneValue;
+};

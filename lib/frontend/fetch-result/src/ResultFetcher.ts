@@ -75,6 +75,12 @@ export type FetchResult = {
         json_payload: unknown
     ): ResultAsync<Response, Fault>;
 
+    patch(
+        uri: EncodedURI,
+        options: OptionsWithAutoEncodedParameters,
+        json_payload: unknown
+    ): ResultAsync<Response, Fault>;
+
     del(uri: EncodedURI): ResultAsync<Response, Fault>;
 };
 
@@ -137,6 +143,14 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
     put: (uri: EncodedURI, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
         response_retriever.retrieveResponse(getURI(uri, options.params), {
             method: PUT_METHOD,
+            credentials,
+            headers: json_headers,
+            body: JSON.stringify(json_payload),
+        }),
+
+    patch: (uri: EncodedURI, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
+        response_retriever.retrieveResponse(getURI(uri, options.params), {
+            method: PATCH_METHOD,
             credentials,
             headers: json_headers,
             body: JSON.stringify(json_payload),

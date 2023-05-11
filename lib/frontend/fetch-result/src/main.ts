@@ -226,3 +226,19 @@ export const put = result_fetcher.put;
  * @returns {ResultAsync<Response, Fault>}
  */
 export const del = result_fetcher.del;
+
+/**
+ * `patch` queries the given URI with PATCH method and returns an `Ok` variant containing a Response.
+ * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
+ * containing a `Fault`.
+ *
+ * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
+ * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.
+ * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
+ * string.
+ * @returns {ResultAsync<Response, Fault>}
+ */
+export const patch = result_fetcher.patch;

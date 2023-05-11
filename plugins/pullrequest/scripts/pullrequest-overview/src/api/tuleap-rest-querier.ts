@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, uri, patchJSON, put } from "@tuleap/fetch-result";
+import { getJSON, getAllJSON, uri, patchJSON, put, patch } from "@tuleap/fetch-result";
 import type {
     PullRequest,
     User,
@@ -25,9 +25,11 @@ import type {
     ReviewersCollection,
     ProjectLabelsCollection,
     ProjectLabel,
+    PatchPullRequestLabelsPayload,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
 import {
     PULL_REQUEST_STATUS_ABANDON,
     PULL_REQUEST_STATUS_MERGED,
@@ -142,4 +144,31 @@ export const fetchProjectLabels = (
             return payload.labels;
         },
     });
+};
+
+export const patchPullRequestLabels = (
+    pull_request_id: number,
+    added_labels: ReadonlyArray<number>,
+    removed_labels: ReadonlyArray<number>
+): ResultAsync<Response | null, Fault> => {
+    if (added_labels.length === 0 && removed_labels.length === 0) {
+        return okAsync(null);
+    }
+
+    const payload: PatchPullRequestLabelsPayload = {};
+    if (added_labels.length > 0) {
+        const added_labels_ids = added_labels.map((id) => ({ id }));
+        payload.add = [added_labels_ids[0], ...added_labels_ids.slice(1)];
+    }
+
+    if (removed_labels.length > 0) {
+        const removed_labels_ids = removed_labels.map((id) => ({ id }));
+        payload.remove = [removed_labels_ids[0], ...removed_labels_ids.slice(1)];
+    }
+
+    return patch(
+        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/labels`,
+        {},
+        payload
+    );
 };
