@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\AccessControl;
 
 use SVN_AccessFile_Writer;
-use SVNAccessFile;
+use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
 

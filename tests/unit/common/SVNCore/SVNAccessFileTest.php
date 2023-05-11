@@ -21,6 +21,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\GlobalSVNPollution;
+use Tuleap\SVNCore\SVNAccessFile;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,17 +61,17 @@ class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateUGroupLine(): void
     {
-        $saf = \Mockery::mock(\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $saf = \Mockery::mock(\Tuleap\SVNCore\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $saf->shouldReceive('isGroupDefined')->andReturns(true);
         $groups = ['uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true];
-        $this->assertEquals(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw', null));
-        $this->assertEquals(' @uGroup11 = rw', $saf->validateUGroupLine($groups, ' @uGroup11 = rw', null));
-        $this->assertEquals(' @@uGroup1 = rw', $saf->validateUGroupLine($groups, ' @@uGroup1 = rw', null));
-        $this->assertEquals('# @uGroup1 = rw', $saf->validateUGroupLine($groups, '# @uGroup1 = rw', null));
+        $this->assertEquals(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw'));
+        $this->assertEquals(' @uGroup11 = rw', $saf->validateUGroupLine($groups, ' @uGroup11 = rw'));
+        $this->assertEquals(' @@uGroup1 = rw', $saf->validateUGroupLine($groups, ' @@uGroup1 = rw'));
+        $this->assertEquals('# @uGroup1 = rw', $saf->validateUGroupLine($groups, '# @uGroup1 = rw'));
 
-        $this->assertEquals('@uGroup3 = rw', $saf->validateUGroupLine($groups, '@uGroup3 = rw', null));
-        $this->assertEquals('@uGroup33 = rw', $saf->validateUGroupLine($groups, '@uGroup33 = rw', null));
-        $this->assertEquals('@uGroup33	= rw', $saf->validateUGroupLine($groups, '@uGroup33	= rw', null));
+        $this->assertEquals('@uGroup3 = rw', $saf->validateUGroupLine($groups, '@uGroup3 = rw'));
+        $this->assertEquals('@uGroup33 = rw', $saf->validateUGroupLine($groups, '@uGroup33 = rw'));
+        $this->assertEquals('@uGroup33	= rw', $saf->validateUGroupLine($groups, '@uGroup33	= rw'));
     }
 
     public function testRenameGroup(): void
@@ -96,10 +97,10 @@ class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testParseGroupLines(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
-        $saf = \Mockery::mock(\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $saf->shouldReceive('getPlatformBlock')->andReturns("[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
+        $saf = new SVNAccessFile();
+        $saf->setPlatformBlock("[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
 
         $this->assertEquals("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r"));
         $this->assertEquals("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw"));
@@ -157,7 +158,7 @@ class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $project->shouldReceive('getSVNRootPath')->andReturns('/svnroot/mytestproject');
 
-        $saf = \Mockery::mock(\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $saf = \Mockery::mock(\Tuleap\SVNCore\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $saf->shouldReceive('getPlatformBlock')->with('/svnroot/mytestproject')->once();
 
         $saf->parseGroupLines($project, '');

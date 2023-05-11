@@ -28,7 +28,7 @@ use BackendSVN;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
-use SVNAccessFile;
+use Tuleap\SVNCore\SVNAccessFile;
 
 final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
