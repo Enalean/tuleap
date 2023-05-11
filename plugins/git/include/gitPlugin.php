@@ -2754,7 +2754,8 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                         $this->getRepositoryFactory(),
                         $wasm_caller,
                         $mapper,
-                        $this->getLogger()
+                        $this->getLogger(),
+                        EventManager::instance(),
                     )
                 );
             }

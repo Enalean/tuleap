@@ -27,8 +27,11 @@ use ForgeConfig;
 use GitRepository;
 use GitRepositoryFactory;
 use org\bovigo\vfs\vfsStream;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
+use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\WebAssembly\WASMCaller;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\WebAssembly\WASMCallerStub;
@@ -37,7 +40,8 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
-    private const PRE_RECEIVE_HOOK_INPUT = 'aaa bbb refs/heads/main';
+    private const PRE_RECEIVE_HOOK_INPUT           = 'aaa bbb refs/heads/main';
+    private const TECHNICAL_PRE_RECEIVE_HOOK_INPUT = 'aaa bbb refs/tlpr/42/head';
 
     protected function setUp(): void
     {
@@ -50,7 +54,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $wasm_caller = WASMCallerStub::successfulWasmCall('');
 
-        $action = $this->buildPreReceiveAction(null, $wasm_caller);
+        $action = $this->buildPreReceiveAction(null, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $result = $action->preReceiveExecute("non_existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
 
@@ -66,7 +70,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wasm_caller = WASMCallerStub::successfulWasmCall('');
 
-        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller);
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $result = $action->preReceiveExecute("existing_repo_path", self::PRE_RECEIVE_HOOK_INPUT);
 
@@ -82,7 +86,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wasm_caller = WASMCallerStub::failingWasmCall();
 
-        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller);
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $structure = [
             'untrusted-code' => [
@@ -108,7 +112,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wasm_caller = WASMCallerStub::successfulWasmCall($invalid_response);
 
-        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller);
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $structure = [
             'untrusted-code' => [
@@ -139,7 +143,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wasm_caller = WASMCallerStub::successfulWasmCall('{"rejection_message": "this push is not accepted :("}');
 
-        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller);
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $structure = [
             'untrusted-code' => [
@@ -158,6 +162,37 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('this push is not accepted :(', (string) $result->error);
     }
 
+    public function testPushWithOnlyTechnicalReferencesIsAccepted(): void
+    {
+        $git_repository = $this->createStub(GitRepository::class);
+        $git_repository->method('getId')->willReturn(42);
+
+        $wasm_caller = WASMCallerStub::successfulWasmCall('{"rejection_message": null}');
+
+        $event_dispatcher = EventDispatcherStub::withCallback(function (MarkTechnicalReference $event): MarkTechnicalReference {
+            $event->markAsTechnical();
+            return $event;
+        });
+
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, $event_dispatcher);
+
+        $structure = [
+            'untrusted-code' => [
+                'git' => [
+                    'pre-receive-hook' => [ '42.wasm' => 'definitely a wasm file'],
+                ],
+            ],
+        ];
+        $root      = vfsStream::setup('root', null, $structure);
+        ForgeConfig::set('sys_data_dir', $root->url());
+
+        $result = $action->preReceiveExecute("existing_repo_path", self::TECHNICAL_PRE_RECEIVE_HOOK_INPUT);
+
+        self::assertFalse($wasm_caller->hasBeenCalled());
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(null, $result->value);
+    }
+
     public function testNormalBehaviour(): void
     {
         $git_repository = $this->createStub(GitRepository::class);
@@ -165,7 +200,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $wasm_caller = WASMCallerStub::successfulWasmCall('{"rejection_message": null}');
 
-        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller);
+        $action = $this->buildPreReceiveAction($git_repository, $wasm_caller, EventDispatcherStub::withIdentityCallback());
 
         $structure = [
             'untrusted-code' => [
@@ -184,7 +219,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(null, $result->value);
     }
 
-    private function buildPreReceiveAction(?GitRepository $git_repository, WASMCaller $wasm_caller): PreReceiveAction
+    private function buildPreReceiveAction(?GitRepository $git_repository, WASMCaller $wasm_caller, EventDispatcherInterface $event_dispatcher): PreReceiveAction
     {
         $git_repository_factory = $this->createStub(GitRepositoryFactory::class);
         $git_repository_factory->method('getFromFullPath')->willReturn($git_repository);
@@ -194,6 +229,7 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
             $wasm_caller,
             (new MapperBuilder())->mapper(),
             new NullLogger(),
+            $event_dispatcher
         );
     }
 }

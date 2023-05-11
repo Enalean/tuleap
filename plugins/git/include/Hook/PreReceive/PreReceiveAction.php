@@ -27,6 +27,7 @@ use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\Mapper\TreeMapper;
 use ForgeConfig;
 use GitRepositoryFactory;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Tuleap\NeverThrow\Err;
@@ -42,6 +43,7 @@ final class PreReceiveAction
         private readonly WASMCaller $wasm_caller,
         private readonly TreeMapper $mapper,
         private readonly LoggerInterface $logger,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -75,9 +77,16 @@ final class PreReceiveAction
 
         $this->logger->debug("[pre-receive] Monitoring updated refs for: '$repository_path'");
         return PreReceiveHookData::fromRawStdinHook($input_data, $this->logger)
+            ->map(
+                fn (PreReceiveHookData $hook_data): PreReceiveHookDataWithoutTechnicalReference => PreReceiveHookDataWithoutTechnicalReference::fromHookData($hook_data, $this->event_dispatcher, $this->logger)
+            )
             ->andThen(
                 /** @psalm-return Ok<null>|Err<Fault> */
-                function (PreReceiveHookData $hook_result) use ($wasm_path): Ok|Err {
+                function (PreReceiveHookDataWithoutTechnicalReference $hook_result) use ($wasm_path): Ok|Err {
+                    if (empty($hook_result->updated_references)) {
+                        return Result::ok(null);
+                    }
+
                     $json_in = json_encode($hook_result, JSON_THROW_ON_ERROR);
                     return $this->wasm_caller->call($wasm_path, $json_in)->mapOr(
                         $this->processResponse(...),
