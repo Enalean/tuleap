@@ -122,7 +122,7 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
             'attestationType',
             TrustPathLoader::loadTrustPath(['type' => 'Webauthn\\TrustPath\\EmptyTrustPath']),
             Uuid::v4(),
-            'credentialPublicKey',
+            random_bytes(16),
             (string) $user_id,
             0
         );
