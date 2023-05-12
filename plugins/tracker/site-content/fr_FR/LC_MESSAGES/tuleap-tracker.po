@@ -3339,9 +3339,6 @@ msgstr "Le champ flottant '%s' ne peut pas être comparé à la chaîne '%s'."
 msgid "The following artifacts were not updated (%1$s)"
 msgstr "Les artéfacts suivant n'ont pas été mis à jour (%1$s)"
 
-msgid "The following fields will be displayed in the tooltip:"
-msgstr "Les champs suivants seront affichés dans l'infobulle :"
-
 msgid "The following information will be displayed in the tooltip:"
 msgstr "Les informations suivantes seront affichées dans l'infobulle :"
 
@@ -3767,9 +3764,6 @@ msgstr "Il n'y a pas d'effort restant."
 
 msgid "There is no total effort."
 msgstr "Il n'y a pas d'effort total."
-
-msgid "There isn't any fields in the tooltip yet."
-msgstr "Il n'y pas encore de champs dans l'infobulle."
 
 msgid "There isn't any fields to add to the tooltip"
 msgstr "Il n'y a aucun champs à ajouter à l'infobulle"

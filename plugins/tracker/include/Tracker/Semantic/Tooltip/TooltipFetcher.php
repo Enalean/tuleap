@@ -45,8 +45,7 @@ final class TooltipFetcher
      */
     public function fetchArtifactTooltip(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): Option
     {
-        $readable_fields = $this->getReadableFields($artifact, $tooltip, $user);
-        if (empty($readable_fields)) {
+        if (! $artifact->userCanView($user)) {
             return Option::nothing(TooltipJSON::class);
         }
 
@@ -54,7 +53,7 @@ final class TooltipFetcher
         foreach ($this->other_semantic_tooltip_entry_fetchers as $other_semantic) {
             $html .= $other_semantic->fetchTooltipEntry($artifact, $user);
         }
-        foreach ($readable_fields as $field) {
+        foreach ($this->getReadableFields($artifact, $tooltip, $user) as $field) {
             $html .= $field->fetchTooltip($artifact);
         }
         $html .= '</table>';
@@ -77,10 +76,6 @@ final class TooltipFetcher
      */
     private function getReadableFields(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): array
     {
-        if (! $artifact->userCanView($user)) {
-            return [];
-        }
-
         $readable_fields = [];
         foreach ($tooltip->getFields() as $field) {
             if ($field->userCanRead($user)) {

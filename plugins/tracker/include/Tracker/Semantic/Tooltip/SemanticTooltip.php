@@ -241,16 +241,19 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
 
     public function fetchForSemanticsHomepage(): string
     {
-        $html   = '';
-        $hp     = Codendi_HTMLPurifier::instance();
-        $fields = $this->getFields();
-        $html  .= '<p>';
-        if (! count($fields)) {
-            $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
+        $html = '';
+        $hp   = Codendi_HTMLPurifier::instance();
+
+        $fields                 = $this->getFields();
+        $other_semantics_labels = $this->getOtherSemanticsLabels();
+
+        $html .= '<p>';
+        if (empty($fields) && empty($other_semantics_labels)) {
+            $html .= dgettext('tuleap-tracker', 'There isn\'t any information in the tooltip yet.');
         } else {
-            $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
+            $html .= dgettext('tuleap-tracker', 'The following information will be displayed in the tooltip:');
             $html .= '<ul>';
-            foreach ($this->getOtherSemanticsLabels() as $semantic) {
+            foreach ($other_semantics_labels as $semantic) {
                 $html .= '<li><strong>' . sprintf(dgettext('tuleap-tracker', 'Semantic %s'), $hp->purify($semantic, CODENDI_PURIFIER_CONVERT_HTML)) . '</strong></li>';
             }
             foreach ($fields as $f) {
