@@ -90,4 +90,24 @@ final class FilterReportDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertNull($dao->getReportIdToFilterArtifacts(123));
     }
+
+    public function testDeletionByReport(): void
+    {
+        $dao = new FilterReportDao();
+
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->run("INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (123, 979)");
+        $db->run("INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (124, 979)");
+        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (123, 666)");
+        $db->run("INSERT INTO plugin_roadmap_widget_trackers(plugin_roadmap_widget_id, tracker_id) VALUES (124, 666)");
+        $db->run("INSERT INTO tracker_report(id, tracker_id, user_id) VALUES (979, 666, null)");
+
+        self::assertEquals(979, $dao->getReportIdToFilterArtifacts(123));
+        self::assertEquals(979, $dao->getReportIdToFilterArtifacts(124));
+
+        $dao->deleteByReport(979);
+
+        self::assertNull($dao->getReportIdToFilterArtifacts(123));
+        self::assertNull($dao->getReportIdToFilterArtifacts(124));
+    }
 }

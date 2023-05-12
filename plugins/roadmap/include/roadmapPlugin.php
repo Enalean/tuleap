@@ -31,6 +31,7 @@ use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
@@ -84,6 +85,12 @@ class RoadmapPlugin extends Plugin
                 TrackerFactory::instance()
             ));
         }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerReportDeleted(TrackerReportDeleted $event): void
+    {
+        (new \Tuleap\Roadmap\FilterReportDao())->deleteByReport((int) $event->getReport()->getId());
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
