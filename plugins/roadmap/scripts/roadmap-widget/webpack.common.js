@@ -29,6 +29,7 @@ module.exports = [
     {
         entry: {
             "widget-script": "./src/index.ts",
+            "widget-style": "./src/style/widget-roadmap.scss",
         },
         context,
         output,

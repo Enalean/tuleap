@@ -374,20 +374,10 @@ final class RoadmapProjectWidget extends \Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = $this->getStyleAssets();
-
         return new CssAssetCollection([
-            new CssAssetWithoutVariantDeclinaisons($include_assets, 'widget-style'),
-            new CssAssetWithoutVariantDeclinaisons($include_assets, 'configure-roadmap-widget-style'),
+            new CssAssetWithoutVariantDeclinaisons($this->getWidgetAssets(), 'widget-style'),
+            new CssAssetWithoutVariantDeclinaisons($this->getConfigureWidgetAssets(), 'configure-roadmap-widget-style'),
         ]);
-    }
-
-    private function getStyleAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/roadmap'
-        );
     }
 
     private function getWidgetAssets(): IncludeAssets
