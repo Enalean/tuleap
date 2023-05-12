@@ -17,45 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import Vue from "vue";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
+import { createApp } from "vue";
 import App from "./components/App.vue";
 
 export async function bootstrapVueMountPoint(
     mount_point: HTMLElement,
     is_in_creation: boolean
 ): Promise<void> {
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "configure-roadmap-widget-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            )
+    const app = createApp(App, {
+        widget_id: Number.parseInt(mount_point.dataset.widgetId || "0", 10),
+        title: String(mount_point.dataset.title),
+        trackers:
+            typeof mount_point.dataset.trackers !== "undefined"
+                ? JSON.parse(mount_point.dataset.trackers) || []
+                : [],
+        selected_tracker_ids:
+            typeof mount_point.dataset.selectedTrackerIds !== "undefined"
+                ? JSON.parse(mount_point.dataset.selectedTrackerIds) || []
+                : [],
+        selected_lvl1_iteration_tracker_id:
+            Number.parseInt(mount_point.dataset.selectedLvl1IterationTrackerId || "0", 10) || "",
+        selected_lvl2_iteration_tracker_id:
+            Number.parseInt(mount_point.dataset.selectedLvl2IterationTrackerId || "0", 10) || "",
+        selected_default_timescale: String(mount_point.dataset.defaultTimescale || "month"),
+        is_in_creation,
+    });
+
+    app.use(
+        await initVueGettext(
+            createGettext,
+            (locale: string) => import(`../po/${getPOFileFromLocale(locale)}`)
+        )
     );
 
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({
-        propsData: {
-            widget_id: Number.parseInt(mount_point.dataset.widgetId || "0", 10),
-            title: String(mount_point.dataset.title),
-            trackers:
-                typeof mount_point.dataset.trackers !== "undefined"
-                    ? JSON.parse(mount_point.dataset.trackers) || []
-                    : [],
-            selected_tracker_ids:
-                typeof mount_point.dataset.selectedTrackerIds !== "undefined"
-                    ? JSON.parse(mount_point.dataset.selectedTrackerIds) || []
-                    : [],
-            selected_lvl1_iteration_tracker_id:
-                Number.parseInt(mount_point.dataset.selectedLvl1IterationTrackerId || "0", 10) ||
-                "",
-            selected_lvl2_iteration_tracker_id:
-                Number.parseInt(mount_point.dataset.selectedLvl2IterationTrackerId || "0", 10) ||
-                "",
-            selected_default_timescale: String(mount_point.dataset.defaultTimescale || "month"),
-            is_in_creation,
-        },
-    }).$mount(mount_point);
+    app.mount(mount_point);
 }

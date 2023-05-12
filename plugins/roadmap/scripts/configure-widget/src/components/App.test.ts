@@ -19,9 +19,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createRoadmapLocalVue } from "../helpers/local-vue-for-test";
 import type { Tracker } from "../type";
 import * as list_picker from "@tuleap/list-picker";
+import { createGettext } from "vue3-gettext";
 
 describe("App", () => {
     beforeEach(() => {
@@ -34,8 +34,10 @@ describe("App", () => {
 
     it("should select a tracker that is not already a lvl1 iteration", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -67,8 +69,10 @@ describe("App", () => {
 
     it("should select a tracker that is not already a lvl2 iteration", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -100,8 +104,10 @@ describe("App", () => {
 
     it("should select a lvl1 tracker that is not already a lvl2 iteration", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -133,8 +139,10 @@ describe("App", () => {
 
     it("should select a lvl1 tracker that is not already a lvl2 iteration nor a tracker", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -166,8 +174,10 @@ describe("App", () => {
 
     it("should select a lvl2 tracker that is not already a lvl1 iteration", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -199,8 +209,10 @@ describe("App", () => {
 
     it("should select a lvl2 tracker that is not already a lvl1 iteration nor a tracker", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -232,8 +244,10 @@ describe("App", () => {
 
     it("should reset lvl2 tracker as soon as lvl1 tracker is reset", async () => {
         const wrapper = shallowMount(App, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
                 widget_id: 101,
                 title: "Roadmap",
                 trackers: [
@@ -251,6 +265,11 @@ describe("App", () => {
         });
         await wrapper.vm.$nextTick();
 
+        const lvl1_select = wrapper.find("[data-test=lvl1-iteration-tracker]");
+        if (!(lvl1_select.element instanceof HTMLSelectElement)) {
+            throw Error("Unable to find the select element");
+        }
+
         const lvl2_select = wrapper.find("[data-test=lvl2-iteration-tracker]").element;
         if (!(lvl2_select instanceof HTMLSelectElement)) {
             throw Error("Unable to find the select element");
@@ -258,7 +277,7 @@ describe("App", () => {
 
         expect(lvl2_select.value).toBe("2");
 
-        await wrapper.setData({ user_selected_lvl1_iteration_tracker_id: "" });
+        await lvl1_select.setValue("");
 
         expect(lvl2_select.value).toBe("");
     });

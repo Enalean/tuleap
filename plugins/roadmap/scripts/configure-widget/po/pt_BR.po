@@ -8,8 +8,7 @@ msgstr ""
 
 msgid ""
 "Artifacts of the selected tracker will appear in the upper part of the "
-"Roadmap, below\n"
-"        the Quarters/Months/Weeks."
+"Roadmap, below the Quarters/Months/Weeks."
 msgstr ""
 
 msgid "Default timescale"
@@ -41,8 +40,7 @@ msgstr ""
 
 msgid ""
 "Selected trackers are expected to have continuous time (i.e. artifacts "
-"timeframe do not\n"
-"        overlap)."
+"timeframe do not overlap)."
 msgstr ""
 
 msgid "Show progress of"

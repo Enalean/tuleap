@@ -29,8 +29,9 @@ module.exports = {
     displayName: "roadmap",
     transform: {
         ...configuration.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+        "^.+\\.vue$": "@vue/vue3-jest",
     },
+    testPathIgnorePatterns: ["/node_modules/"],
     moduleNameMapper: {
         ...configuration.moduleNameMapper,
         "^vue$": path.resolve(__dirname, "./node_modules/vue/"),

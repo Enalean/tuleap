@@ -6,18 +6,19 @@
   "private": true,
   "dependencies": {
     "@tuleap/list-picker": "workspace:*",
-    "@tuleap/vue2-gettext-init": "workspace:*",
-    "vue": "2.7.8"
+    "@tuleap/vue3-gettext-init": "workspace:*",
+    "vue3-gettext": "^2.2.1",
+    "vue": "^3.2.47"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@vue/test-utils": "^1.3",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@vue/test-utils": "^2.0.0",
+    "vue-loader": "^17.0.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest",
     "typecheck": "vue-tsc --noEmit"
   }
