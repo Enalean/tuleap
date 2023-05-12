@@ -99,7 +99,8 @@ $GLOBALS['wgMathoidCli']                 = [
 $GLOBALS['wgUrlProtocols'][] = 'file://';
 $GLOBALS['wgUrlProtocols'][] = 'redis://'; // From old MediaWiki 1.23
 
-$GLOBALS['wgEnableUploads'] = true;
+$GLOBALS['wgEnableUploads']  = true;
+$GLOBALS['wgFileExtensions'] = ['png', 'gif', 'jpg', 'jpeg'];
 
 $GLOBALS['wgCookieSameSite'] = 'Lax';
 $GLOBALS['wgCookiePrefix']   = '__Host-tuleap-' . $GLOBALS['wgDBname'];
