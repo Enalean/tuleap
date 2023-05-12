@@ -2,7 +2,7 @@
     "name": "roadmap",
     "gettext-vue3": {
         "configure-widget": {
-            "src": "scripts/configure-widget",
+            "src": "scripts/configure-widget/src",
             "po": "scripts/configure-widget/po"
         },
         "roadmap-widget": {

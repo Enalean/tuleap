@@ -31,7 +31,9 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\PreferencePresenter;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
@@ -368,7 +370,7 @@ final class RoadmapProjectWidget extends \Widget
     {
         return [
             new JavascriptAsset($this->getWidgetAssets(), 'widget-script.js'),
-            new JavascriptAsset($this->getConfigureWidgetAssets(), 'configure-roadmap-widget-script.js'),
+            new JavascriptViteAsset($this->getConfigureWidgetAssets(), 'src/index.ts'),
         ];
     }
 
@@ -376,7 +378,6 @@ final class RoadmapProjectWidget extends \Widget
     {
         return new CssAssetCollection([
             new CssAssetWithoutVariantDeclinaisons($this->getWidgetAssets(), 'widget-style'),
-            new CssAssetWithoutVariantDeclinaisons($this->getConfigureWidgetAssets(), 'configure-roadmap-widget-style'),
         ]);
     }
 
@@ -388,9 +389,9 @@ final class RoadmapProjectWidget extends \Widget
         );
     }
 
-    private function getConfigureWidgetAssets(): IncludeAssets
+    private function getConfigureWidgetAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../../scripts/configure-widget/frontend-assets',
             '/assets/roadmap/configure-widget'
         );
