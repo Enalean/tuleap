@@ -55,26 +55,6 @@ final class TooltipFetcherTest extends TestCase
         );
     }
 
-    public function testNothingWhenThereIsNoFields(): void
-    {
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method('userCanView')->willReturn(true);
-
-        $tooltip = TooltipFieldsStub::withoutFields();
-
-        $user = UserTestBuilder::buildWithDefaults();
-
-        $template_cache = $this->createMock(TemplateCache::class);
-        $template_cache->method('getPath')->willReturn(null);
-        $template_factory = new TemplateRendererFactory($template_cache);
-
-        self::assertTrue(
-            (new TooltipFetcher($template_factory))
-                ->fetchArtifactTooltip($artifact, $tooltip, $user)
-                ->isNothing()
-        );
-    }
-
     public function testReturnTheTooltipValueOfEachFields(): void
     {
         $artifact = $this->createMock(Artifact::class);

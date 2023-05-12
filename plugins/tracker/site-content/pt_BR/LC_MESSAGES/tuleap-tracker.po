@@ -2967,9 +2967,6 @@ msgstr ""
 msgid "The following artifacts were not updated (%1$s)"
 msgstr ""
 
-msgid "The following fields will be displayed in the tooltip:"
-msgstr ""
-
 msgid "The following information will be displayed in the tooltip:"
 msgstr ""
 
@@ -3316,9 +3313,6 @@ msgid "There is no remaining effort."
 msgstr ""
 
 msgid "There is no total effort."
-msgstr ""
-
-msgid "There isn't any fields in the tooltip yet."
 msgstr ""
 
 msgid "There isn't any fields to add to the tooltip"
