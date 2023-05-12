@@ -24,7 +24,7 @@ import * as fetch_result from "@tuleap/fetch-result";
 import type {
     ActionOnPullRequestEvent,
     GlobalComment,
-    PullRequestLabel,
+    ProjectLabel,
     User,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
@@ -45,6 +45,7 @@ import {
     reopenPullRequest,
     abandonPullRequest,
     putReviewers,
+    fetchProjectLabels,
 } from "./tuleap-rest-querier";
 
 vi.mock("@tuleap/fetch-result");
@@ -257,7 +258,7 @@ describe("tuleap-rest-querier", () => {
 
     describe("fetchPullRequestLabels", () => {
         it("Given a pull-request id, Then it should fetch its labels", async () => {
-            const labels: PullRequestLabel[] = [
+            const labels: ProjectLabel[] = [
                 {
                     id: 1,
                     label: "Emergency",
@@ -280,6 +281,39 @@ describe("tuleap-rest-querier", () => {
 
             expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
+                expect.any(Object)
+            );
+
+            expect(result.value).toStrictEqual(labels);
+        });
+    });
+
+    describe("fetchProjectLabels", () => {
+        it("Given a project id, Then it should fetch all its labels", async () => {
+            const labels: ProjectLabel[] = [
+                {
+                    id: 1,
+                    label: "Emergency",
+                    is_outline: false,
+                    color: "red-wine",
+                },
+                {
+                    id: 2,
+                    label: "Easy fix",
+                    is_outline: true,
+                    color: "acid-green",
+                },
+            ];
+            vi.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync(labels));
+
+            const project_id = 102;
+            const result = await fetchProjectLabels(project_id);
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+
+            expect(fetch_result.getAllJSON).toHaveBeenCalledWith(
+                uri`/api/v1/projects/${project_id}/labels`,
                 expect.any(Object)
             );
 

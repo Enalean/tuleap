@@ -17,11 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import type { GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
-
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
+export interface BuildGroupOfLabels {
+    buildWithLabels(labels: ReadonlyArray<LazyboxItem>): GroupOfItems;
+}
+export const GroupOfLabelsBuilder = ($gettext: (msgid: string) => string): BuildGroupOfLabels => {
+    return {
+        buildWithLabels(labels: ReadonlyArray<LazyboxItem>): GroupOfItems {
+            return {
+                label: $gettext("Existing labels"),
+                empty_message: $gettext("No matching labels found"),
+                footer_message: "",
+                is_loading: false,
+                items: [...labels],
+            };
+        },
+    };
+};

@@ -24,14 +24,14 @@ import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import type { PullRequest, PullRequestLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { PullRequest, ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PullRequestLabels from "./PullRequestLabels.vue";
 
 const pull_request_id = 50;
-const labels: PullRequestLabel[] = [
+const labels: ProjectLabel[] = [
     {
         id: 1,
         label: "Emergency",
@@ -63,16 +63,27 @@ describe("PullRequestLabels", () => {
             }
         });
 
-        return mount(PullRequestLabels, {
+        const wrapper = mount(PullRequestLabels, {
             global: {
                 ...getGlobalTestOptions(),
             },
             props: {
-                pull_request: {
-                    user_can_update_labels,
-                } as PullRequest,
+                pull_request: null,
             },
         });
+
+        wrapper.setProps({
+            pull_request: {
+                user_can_update_labels,
+                repository: {
+                    project: {
+                        id: 102,
+                    },
+                },
+            } as PullRequest,
+        });
+
+        return wrapper;
     };
 
     beforeEach(() => {
@@ -81,6 +92,7 @@ describe("PullRequestLabels", () => {
     });
 
     it("should display a skeleton while the labels are loading, and display them when it is done loading", async () => {
+        vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
         vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync(labels));
 
         const wrapper = getWrapper();
@@ -106,9 +118,12 @@ describe("PullRequestLabels", () => {
     });
 
     it("should display an empty state text when there are no labels assigned to the pull-request yet", async () => {
+        vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
         vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
+
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
@@ -118,11 +133,13 @@ describe("PullRequestLabels", () => {
     it.each([[false], [true]])(
         "should display the button to edit the labels only when the user_can_update_labels is %s",
         async (can_update_labels) => {
+            vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
             vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
 
             user_can_update_labels = can_update_labels;
 
             const wrapper = getWrapper();
+
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
@@ -132,20 +149,33 @@ describe("PullRequestLabels", () => {
         }
     );
 
-    it("When an error occurres while retrieving the labels, then it should trigger the display error callback", async () => {
-        const tuleap_api_fault = Fault.fromMessage("Forbidden");
+    describe("Errors", () => {
+        let tuleap_api_fault: Fault;
 
-        vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(errAsync(tuleap_api_fault));
+        beforeEach(() => {
+            tuleap_api_fault = Fault.fromMessage("Forbidden");
+        });
 
-        const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        it("When an error occurs while retrieving the project labels, then it should trigger the display error callback", async () => {
+            vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(errAsync(tuleap_api_fault));
+            vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
+            const wrapper = getWrapper();
+            await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
+            expect(display_error_callback).toHaveBeenCalledOnce();
+            expect(display_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
+        });
 
-        await wrapper.vm.$nextTick();
+        it("When an error occurs while retrieving the pull-request's labels, then it should trigger the display error callback", async () => {
+            vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(okAsync(labels));
+            vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(
+                errAsync(tuleap_api_fault)
+            );
+            const wrapper = getWrapper();
+            await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
-        expect(display_error_callback).toHaveBeenCalledOnce();
-        expect(display_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
+            expect(display_error_callback).toHaveBeenCalledOnce();
+            expect(display_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
+        });
     });
 });

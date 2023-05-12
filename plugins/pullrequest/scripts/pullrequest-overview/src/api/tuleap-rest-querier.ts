@@ -23,8 +23,8 @@ import type {
     User,
     TimelineItem,
     ReviewersCollection,
-    PullRequestLabelsCollection,
-    PullRequestLabel,
+    ProjectLabelsCollection,
+    ProjectLabel,
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
@@ -39,18 +39,18 @@ interface TimelineItemsCollection {
 }
 
 export const fetchPullRequestInfo = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
-    return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`);
+    return getJSON(uri`/api/v1/pull_requests/${pull_request_id}`);
 };
 
 export const fetchUserInfo = (user_id: number): ResultAsync<User, Fault> => {
-    return getJSON(uri`/api/v1/users/${encodeURIComponent(user_id)}`);
+    return getJSON(uri`/api/v1/users/${user_id}`);
 };
 
 export const fetchPullRequestTimelineItems = (
     pull_request_id: number
 ): ResultAsync<readonly TimelineItem[], Fault> => {
     return getAllJSON<TimelineItemsCollection, TimelineItem>(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/timeline`,
+        uri`/api/v1/pull_requests/${pull_request_id}/timeline`,
         {
             params: { limit: 50, offset: 0 },
             getCollectionCallback: (
@@ -64,7 +64,7 @@ export const patchTitle = (
     pull_request_id: number,
     updated_title: string
 ): ResultAsync<PullRequest, Fault> => {
-    return patchJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`, {
+    return patchJSON(uri`/api/v1/pull_requests/${pull_request_id}`, {
         title: updated_title,
     });
 };
@@ -72,28 +72,25 @@ export const patchTitle = (
 export const fetchReviewersInfo = (
     pull_request_id: number
 ): ResultAsync<ReviewersCollection, Fault> => {
-    return getJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/reviewers`);
+    return getJSON(uri`/api/v1/pull_requests/${pull_request_id}/reviewers`);
 };
 
 export const mergePullRequest = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
-    return patchJSON<PullRequest>(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
-        { status: PULL_REQUEST_STATUS_MERGED }
-    );
+    return patchJSON<PullRequest>(uri`/api/v1/pull_requests/${pull_request_id}`, {
+        status: PULL_REQUEST_STATUS_MERGED,
+    });
 };
 
 export const reopenPullRequest = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
-    return patchJSON<PullRequest>(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
-        { status: PULL_REQUEST_STATUS_REVIEW }
-    );
+    return patchJSON<PullRequest>(uri`/api/v1/pull_requests/${pull_request_id}`, {
+        status: PULL_REQUEST_STATUS_REVIEW,
+    });
 };
 
 export const abandonPullRequest = (pull_request_id: number): ResultAsync<PullRequest, Fault> => {
-    return patchJSON<PullRequest>(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}`,
-        { status: PULL_REQUEST_STATUS_ABANDON }
-    );
+    return patchJSON<PullRequest>(uri`/api/v1/pull_requests/${pull_request_id}`, {
+        status: PULL_REQUEST_STATUS_ABANDON,
+    });
 };
 
 export const fetchMatchingUsers = (query: string): ResultAsync<User[], Fault> => {
@@ -111,7 +108,7 @@ export const putReviewers = (
     reviewers: ReadonlyArray<User>
 ): ResultAsync<Response, Fault> => {
     return put(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/reviewers`,
+        uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
         {},
         {
             users: reviewers.map(({ id }) => ({ id })),
@@ -121,13 +118,27 @@ export const putReviewers = (
 
 export const fetchPullRequestLabels = (
     pull_request_id: number
-): ResultAsync<readonly PullRequestLabel[], Fault> => {
-    return getAllJSON(uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/labels`, {
+): ResultAsync<readonly ProjectLabel[], Fault> => {
+    return getAllJSON(uri`/api/v1/pull_requests/${pull_request_id}/labels`, {
         params: {
             limit: 50,
             offset: 0,
         },
-        getCollectionCallback: (payload: PullRequestLabelsCollection) => {
+        getCollectionCallback: (payload: ProjectLabelsCollection) => {
+            return payload.labels;
+        },
+    });
+};
+
+export const fetchProjectLabels = (
+    project_id: number
+): ResultAsync<readonly ProjectLabel[], Fault> => {
+    return getAllJSON(uri`/api/v1/projects/${project_id}/labels`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (payload: ProjectLabelsCollection) => {
             return payload.labels;
         },
     });

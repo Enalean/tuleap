@@ -18,7 +18,7 @@
  */
 
 import type { BuildStatus, PullRequestMergeStatusType } from "@tuleap/plugin-pullrequest-constants";
-import type { User } from "@tuleap/core-rest-api-types";
+import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
     PullRequestStatusAbandonedType,
     PullRequestStatusMergedType,
@@ -62,6 +62,9 @@ interface CommonPullRequest {
     readonly status: PullRequestStatusType;
     readonly merge_status: PullRequestMergeStatusType;
     readonly status_info: PullRequestStatusInfo | null;
+    readonly repository: {
+        readonly project: ProjectReference;
+    };
 }
 
 export type PullRequestInReview = CommonPullRequest & {

@@ -71,7 +71,11 @@
     }
 
     &.lazybox-multiple {
+        display: flex;
         position: relative;
+        flex-wrap: wrap;
+        align-items: center;
+        height: 100%;
         min-height: var(--tlp-form-element-height);
         padding: 0 52px 5px 6px;
         background: var(--tlp-form-element-background)
@@ -79,6 +83,13 @@
         background-position: right 10px top 17px;
         background-size: 15px 5px;
     }
+}
+
+.lazybox-multiple > .lazybox-selected-value-remove-button {
+    position: absolute;
+    top: 7px;
+    right: 32px;
+    margin: 2px 0 0;
 }
 
 .lazybox-with-open-dropdown > .lazybox-selection {
@@ -254,13 +265,6 @@
     font-size: 18px;
     line-height: 17px;
     white-space: nowrap;
-}
-
-.lazybox-multiple > .lazybox-selected-value-remove-button {
-    position: absolute;
-    top: 7px;
-    right: 32px;
-    margin: 2px 0 0;
 }
 
 .lazybox-multiple-search-section {

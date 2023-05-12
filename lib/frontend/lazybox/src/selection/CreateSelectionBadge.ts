@@ -17,11 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
+import { TAG } from "./SelectionBadge";
+import { isBadge } from "../SelectionBadgeCallbackDefaulter";
+import type { SelectionBadge } from "./SelectionBadge";
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
-
-export * from "./pull-request";
-export * from "./timeline";
-export * from "./post-comments";
+export const createSelectionBadge = (doc: Document): SelectionBadge & HTMLElement => {
+    const badge = doc.createElement(TAG);
+    if (!isBadge(badge)) {
+        throw new Error("Unable to create a SelectionBadge");
+    }
+    return badge;
+};
