@@ -46,7 +46,6 @@ interface HandleUpdateArtifact
         Artifact $current_artifact,
         PFUser $submitter,
         CollectionOfReverseLinks $removed_reverse_links,
-        ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err;
 
     /**
@@ -60,7 +59,6 @@ interface HandleUpdateArtifact
         PFUser $submitter,
         CollectionOfReverseLinks $added_reverse_link,
         CollectionOfReverseLinks $updated_reverse_link_type,
-        ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err;
 
     /**

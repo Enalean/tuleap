@@ -67,9 +67,9 @@ final class PUTHandler
 
                     $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
                     if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
-                            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $stored_reverse_links->differenceByType($reverse_link_collection), $comment)
+                            $this->artifact_update_handler->updateTypeAndAddReverseLinks($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $stored_reverse_links->differenceByType($reverse_link_collection))
                                                           ->map(
-                                                              fn() => $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection), $comment)
+                                                              fn() => $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection))
                                                           )
                                                           ->mapErr(
                                                               [FaultMapper::class, 'mapToRestException']

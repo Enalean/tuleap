@@ -97,13 +97,12 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         Artifact $current_artifact,
         PFUser $submitter,
         CollectionOfReverseLinks $removed_reverse_links,
-        ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err {
         $result = Result::ok(null);
         foreach ($removed_reverse_links->links as $reverse_link) {
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
-                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
                         $source_artifact_link_to_be_removed = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
                         $new_changeset_value = NewArtifactLinkChangesetValue::fromRemovedValues(
@@ -112,7 +111,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                         );
 
                         $container = new ChangesetValuesContainer([], $new_changeset_value);
-                        $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                        $this->updateArtifact($source_artifact, $submitter, $container);
                         return null;
                     },
                 )
@@ -134,14 +133,13 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         PFUser $submitter,
         CollectionOfReverseLinks $added_reverse_link,
         CollectionOfReverseLinks $updated_reverse_link_type,
-        ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err {
         $result               = Result::ok(null);
         $reverse_links_update = array_merge($added_reverse_link->links, $updated_reverse_link_type->links);
         foreach ($reverse_links_update as $reverse_link) {
             $result = $this->getArtifactById($submitter, $reverse_link->getSourceArtifactId())->andThen(
                 fn(Artifact $source_artifact) => $this->getArtifactLinkField($source_artifact)->map(
-                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $comment, $source_artifact) {
+                    function (Tracker_FormElement_Field_ArtifactLink $artifact_link_field) use ($current_artifact, $reverse_link, $submitter, $source_artifact) {
                         $source_artifact_link_to_be_added = CollectionOfForwardLinks::fromReverseLink($current_artifact, $reverse_link);
 
                         $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedAndUpdatedTypeValues(
@@ -150,7 +148,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                         );
                         $container           = new ChangesetValuesContainer([], $new_changeset_value);
                         try {
-                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
+                            $this->updateArtifact($source_artifact, $submitter, $container);
                         } catch (Tracker_NoChangeException) {
                             //Ignore, it should not stop the update
                         }
