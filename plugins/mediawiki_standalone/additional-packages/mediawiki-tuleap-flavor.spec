@@ -22,9 +22,6 @@ Requires: php81-php-xml php81-php-intl php81-php-json php81-php-ldap php81-php-m
 Requires: php74-php-gd
 Requires: php81-php-gd
 
-# Needed to generate thumbnail of webp image
-Requires: libwebp-tools
-
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
