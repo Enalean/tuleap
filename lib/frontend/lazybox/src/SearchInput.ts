@@ -18,7 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import type { LazyboxSearchInputCallback } from "./type";
+import type { LazyboxSearchInputCallback } from "./Options";
 import { isBackspaceKey, isEnterKey } from "./helpers/keys-helper";
 
 export type SearchInput = {
@@ -70,11 +70,6 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }
-    if (isEnterKey(event)) {
-        preventEnterFromSubmittingParentForms(event);
-        event.stopPropagation();
-        return;
-    }
     if (hasBackspaceBeenPressedWhileQueryWasAlreadyEmpty(host, event)) {
         dispatch(host, "backspace-pressed");
     }
@@ -82,6 +77,14 @@ export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
     // while the query was already empty. Otherwise, it deletes an element when we just wanted
     // to remove the last character of the query.
     host.query = event.target.value;
+};
+
+export const onKeyDown = (host: unknown, event: KeyboardEvent): void => {
+    if (!isEnterKey(event)) {
+        return;
+    }
+    preventEnterFromSubmittingParentForms(event);
+    event.stopPropagation();
 };
 
 export const buildClear = (host: InternalSearchInput) => (): void => {
@@ -119,6 +122,7 @@ export const SearchInput = define<InternalSearchInput>({
         placeholder="${host.placeholder}"
         value="${host.query}"
         oninput="${onInput}"
+        onkeydown="${onKeyDown}"
         onkeyup="${onKeyUp}"
     />`,
 });

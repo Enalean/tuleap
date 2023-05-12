@@ -52,7 +52,6 @@ export interface LinkField {
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
-    readonly artifact_link_select: HTMLSelectElement;
     link_selector: Option<Lazybox>;
     current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LinkFieldPresenter;
@@ -125,8 +124,6 @@ export const setNewLinks = (
         return NewLinkCollectionPresenter.buildEmpty();
     }
     host.allowed_link_types = host.controller.displayAllowedTypes();
-    host.artifact_link_select.focus();
-
     return presenter;
 };
 
@@ -160,7 +157,7 @@ export const dropdown_section_descriptor = {
         collection ?? [],
     observe: (host: LinkField): void => {
         host.link_selector.apply((lazybox) => {
-            lazybox.setDropdownContent([
+            lazybox.replaceDropdownContent([
                 ...host.matching_artifact_section,
                 ...host.recently_viewed_section,
                 ...host.search_results_section,
@@ -211,7 +208,7 @@ export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChang
     host.current_link_type = event.detail.new_link_type;
 };
 
-const createLazyBox = (host: LinkField, is_feature_flag_enabled: boolean): void => {
+const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): void => {
     const options_with_feature_flag = is_feature_flag_enabled
         ? {
               new_item_callback: (): void => {
@@ -223,19 +220,20 @@ const createLazyBox = (host: LinkField, is_feature_flag_enabled: boolean): void 
           }
         : {};
 
+    const link_selector = createLazybox(host.ownerDocument);
     const options: LazyboxOptions = {
         is_multiple: false,
         placeholder: getLinkSelectorPlaceholderText(),
         search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
         search_input_callback: (query) => {
             host.controller.clearFaultNotification();
-            return host.autocompleter.autoComplete(host, query);
+            host.autocompleter.autoComplete(host, query);
         },
         templating_callback: getLinkableArtifactTemplate,
         selection_callback: (value) => {
             const artifact = getLinkableArtifact(value);
             if (artifact) {
-                host.link_selector.apply((lazybox) => lazybox.resetSelection());
+                host.link_selector.apply((lazybox) => lazybox.clearSelection());
                 host.new_links_presenter = host.controller.addNewLink(
                     artifact,
                     host.current_link_type
@@ -244,19 +242,12 @@ const createLazyBox = (host: LinkField, is_feature_flag_enabled: boolean): void 
         },
         ...options_with_feature_flag,
     };
-    host.link_selector = Option.fromValue(createLazybox(host.artifact_link_select, options));
+    link_selector.options = options;
+    host.link_selector = Option.fromValue(link_selector);
 };
 
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field",
-    artifact_link_select: ({ content }) => {
-        const select = content().querySelector(`[data-select=artifact-link-select]`);
-        if (!(select instanceof HTMLSelectElement)) {
-            throw new Error("Unable to find the artifact-link-select");
-        }
-
-        return select;
-    },
     link_selector: {
         set: (host, new_value) => new_value ?? Option.nothing(),
     },
@@ -321,9 +312,7 @@ export const LinkField = define<LinkField>({
                             ></tuleap-artifact-modal-link-type-selector>
                         </td>
                         <td class="link-field-table-footer-input" colspan="3">
-                            <div class="link-field-selector-wrapper">
-                                <select data-select="artifact-link-select"></select>
-                            </div>
+                            ${host.link_selector.mapOr((element) => html`${element}`, html``)}
                         </td>
                     </tr>
                 </tfoot>

@@ -23,11 +23,10 @@ import type {
     LazyboxSelectionBadgeCallback,
     LazyboxSelectionCallback,
     LazyboxTemplatingCallback,
-} from "../type";
-import { isEnterKey } from "../helpers/keys-helper";
+} from "../Options";
 import type { SearchInput } from "../SearchInput";
 import { getClearSelectionButton } from "./ClearSelectionTemplate";
-import type { LazyboxItem } from "../items/GroupCollection";
+import type { LazyboxItem } from "../GroupCollection";
 import "./SelectionBadge";
 
 export const TAG = "tuleap-lazybox-selection";
@@ -40,7 +39,6 @@ export type SelectionElement = {
     isSelected(item: LazyboxItem): boolean;
     onSelection: LazyboxSelectionCallback;
     replaceSelection(items: ReadonlyArray<LazyboxItem>): void;
-    setFocus(): void;
     selection_badge_callback: LazyboxSelectionBadgeCallback;
     templating_callback: LazyboxTemplatingCallback;
     search_input: SearchInput & HTMLElement;
@@ -48,7 +46,6 @@ export type SelectionElement = {
 type InternalSelectionElement = Readonly<SelectionElement> & {
     content(): HTMLElement;
     selected_items: LazyboxItem[];
-    span_element: HTMLElement;
 };
 export type HostElement = InternalSelectionElement & HTMLElement;
 
@@ -150,48 +147,8 @@ export const searchInputSetter = (
     return new_value;
 };
 
-export const buildFocus = (host: InternalSelectionElement) => (): void => host.span_element.focus();
-
-export const onKeyUp = (host: HostElement, event: KeyboardEvent): void => {
-    if (isEnterKey(event)) {
-        event.stopPropagation();
-        dispatch(host, "open-dropdown");
-    }
-};
-
-export const getContent = (host: HostElement): UpdateFunction<InternalSelectionElement> => {
-    if (host.multiple) {
-        return html`<span
-            class="lazybox-selection lazybox-multiple"
-            data-lazybox-selection
-            data-test="lazybox-selection"
-            role="combobox"
-            aria-haspopup="true"
-            aria-expanded="false"
-            tabindex="0"
-            onkeyup="${onKeyUp}"
-            >${getMultipleSelectionContent(host)}</span
-        >`;
-    }
-    return html`<span
-        class="lazybox-selection lazybox-single"
-        data-lazybox-selection
-        data-test="lazybox-selection"
-        role="textbox"
-        aria-readonly="true"
-        tabindex="0"
-        onkeyup="${onKeyUp}"
-        >${getSingleSelectionContent(host)}</span
-    >`;
-};
-
-export const getSpan = (host: InternalSelectionElement): HTMLElement => {
-    const element = host.content().querySelector("[data-lazybox-selection]");
-    if (!(element instanceof HTMLElement)) {
-        throw Error("Could not find selection element");
-    }
-    return element;
-};
+export const getContent = (host: HostElement): UpdateFunction<InternalSelectionElement> =>
+    host.multiple ? getMultipleSelectionContent(host) : getSingleSelectionContent(host);
 
 export const SelectionElement = define<InternalSelectionElement>({
     tag: TAG,
@@ -202,11 +159,9 @@ export const SelectionElement = define<InternalSelectionElement>({
     clearSelection: { get: buildClear },
     isSelected: { get: buildIsSelected },
     replaceSelection: { get: buildReplaceSelection },
-    setFocus: { get: buildFocus },
     onSelection: undefined,
     selection_badge_callback: undefined,
     templating_callback: undefined,
     search_input: { set: searchInputSetter },
-    span_element: { get: getSpan },
     content: getContent,
 });

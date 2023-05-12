@@ -32,20 +32,20 @@ export const ReviewersAutocompleter = (
     return {
         autocomplete(lazybox: Lazybox, currently_selected_users: User[], query: string): void {
             if (query.length <= 2) {
-                lazybox.setDropdownContent([group_builder.buildEmptyNotEnoughCharacters()]);
+                lazybox.replaceDropdownContent([group_builder.buildEmptyNotEnoughCharacters()]);
                 return;
             }
 
-            lazybox.setDropdownContent([group_builder.buildLoading()]);
+            lazybox.replaceDropdownContent([group_builder.buildLoading()]);
 
             fetchMatchingUsers(query).match(
                 (users: User[]) => {
-                    lazybox.setDropdownContent([
+                    lazybox.replaceDropdownContent([
                         group_builder.buildWithUsers(users, currently_selected_users),
                     ]);
                 },
                 () => {
-                    lazybox.setDropdownContent([group_builder.buildEmpty()]);
+                    lazybox.replaceDropdownContent([group_builder.buildEmpty()]);
                 }
             );
         },

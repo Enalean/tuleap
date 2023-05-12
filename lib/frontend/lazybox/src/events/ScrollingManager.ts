@@ -18,7 +18,11 @@
  */
 
 import { isLazyboxInAModal } from "../helpers/lazybox-in-modals-helper";
-import type { ScrollCoordinates } from "../type";
+
+interface ScrollCoordinates {
+    x_position: number;
+    y_position: number;
+}
 
 export class ScrollingManager {
     private readonly first_scrollable_parent: HTMLElement | null = null;

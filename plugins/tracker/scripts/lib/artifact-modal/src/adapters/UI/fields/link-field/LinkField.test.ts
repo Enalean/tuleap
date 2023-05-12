@@ -161,12 +161,14 @@ describe("LinkField", () => {
 
     describe(`setters`, () => {
         describe("dropdown_section_descriptor", () => {
-            let link_selector: LazyboxStub, host: LinkField;
+            let link_selector: LazyboxStub;
             beforeEach(() => {
                 link_selector = LazyboxStub.build();
+            });
 
+            const getHost = (): LinkField => {
                 const initial_dropdown_content: GroupCollection = [];
-                host = {
+                return {
                     controller: {} as LinkFieldControllerType,
                     link_selector: Option.fromValue(link_selector),
                     current_link_type: LinkTypeStub.buildUntyped(),
@@ -175,14 +177,15 @@ describe("LinkField", () => {
                     recently_viewed_section: initial_dropdown_content,
                     search_results_section: initial_dropdown_content,
                 } as LinkField;
-            });
+            };
 
             it(`defaults property value to empty array`, () => {
-                expect(dropdown_section_descriptor.set(host, undefined)).toStrictEqual([]);
+                expect(dropdown_section_descriptor.set(getHost(), undefined)).toStrictEqual([]);
             });
 
-            it(`sets the link selector dropdown with the sections in the expected order when a section changes`, () => {
-                const setDropdown = jest.spyOn(link_selector, "setDropdownContent");
+            it(`replaces the link selector dropdown with the sections in the expected order when a section changes`, () => {
+                const host = getHost();
+                const setDropdown = jest.spyOn(link_selector, "replaceDropdownContent");
                 host.matching_artifact_section = [MatchingArtifactsGroup.buildEmpty()];
                 host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildEmpty()];
                 host.search_results_section = [SearchResultsGroup.buildEmpty()];
@@ -267,28 +270,21 @@ describe("LinkField", () => {
             });
         });
 
-        describe("-", () => {
-            let host: LinkField;
-
-            beforeEach(() => {
-                host = {
-                    artifact_link_select: document.implementation
-                        .createHTMLDocument()
-                        .createElement("select"),
+        describe("link setters", () => {
+            const getHost = (): LinkField =>
+                ({
                     controller: {
-                        displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
-                            return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                        displayAllowedTypes: () =>
+                            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                                 VerifyHasParentLinkStub.withNoParentLink(),
                                 LinkTypesCollectionStub.withParentPair()
-                            );
-                        },
-                    } as LinkFieldControllerType,
-                } as LinkField;
-            });
+                            ),
+                    },
+                } as LinkField);
 
             describe("setLinkedArtifacts", () => {
                 it("should default to a loading state when there are no linked artifacts yet", () => {
-                    const linked_artifacts = setLinkedArtifacts(host, undefined);
+                    const linked_artifacts = setLinkedArtifacts(getHost(), undefined);
 
                     expect(linked_artifacts.is_loading).toBe(true);
                     expect(linked_artifacts.has_loaded_content).toBe(false);
@@ -296,6 +292,7 @@ describe("LinkField", () => {
                 });
 
                 it("should display allowed types when linked artifacts have been retrieved", () => {
+                    const host = getHost();
                     setLinkedArtifacts(host, LinkedArtifactCollectionPresenter.fromArtifacts([]));
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
@@ -305,19 +302,16 @@ describe("LinkField", () => {
 
             describe("setNewLinks", () => {
                 it("defaults to an empty NewLinkCollectionPresenter", () => {
-                    const new_links = setNewLinks(host, undefined);
+                    const new_links = setNewLinks(getHost(), undefined);
                     expect(new_links).toHaveLength(0);
                 });
 
-                it(`should display allowed types when new links have been edited,
-                    and focus the <select> element once done`, () => {
-                    const focus = jest.spyOn(host.artifact_link_select, "focus");
-
+                it(`should display allowed types when new links have been edited`, () => {
+                    const host = getHost();
                     setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
-                    expect(focus).toHaveBeenCalledTimes(1);
                 });
             });
         });

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LazyboxTemplatingCallback } from "../../src/type";
-import type { LazyboxItem } from "../../src";
+import type { LazyboxTemplatingCallback } from "../../src/Options";
+import type { LazyboxItem } from "../../src/GroupCollection";
 
 type ItemWithAnId = {
     readonly id: number;

@@ -372,7 +372,6 @@ import { createLazybox } from "@tuleap/lazybox";
 })();
 
 function initLinkSelector() {
-    const source_select = document.querySelector("#lazybox-link-selector");
     const ADDITIONAL_ITEM_ID = 105;
 
     const item_105 = {
@@ -432,7 +431,9 @@ function initLinkSelector() {
         items: recent_items,
     };
 
-    const link_selector = createLazybox(source_select, {
+    const mount_point = document.getElementById("lazybox-link-selector");
+    const link_selector = createLazybox(document);
+    link_selector.options = {
         is_multiple: false,
         placeholder: "Please select an item to link",
         search_input_placeholder: "Type a number",
@@ -441,24 +442,22 @@ function initLinkSelector() {
             // Do nothing
         },
         templating_callback: (html, item) =>
-            html`
-                <span class="tlp-badge-${item.value.color} doc-link-selector-badge">
+            html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">
                     ${item.value.xref}
                 </span>
-                ${item.value.title}
-            `,
+                ${item.value.title}`,
         selection_callback: () => {
             // Do nothing
         },
         search_input_callback: (query) => {
             if (query === "") {
-                link_selector.setDropdownContent([items_group, recent_group]);
+                link_selector.replaceDropdownContent([items_group, recent_group]);
                 return;
             }
             const lowercase_query = query.toLowerCase();
 
             if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
-                link_selector.setDropdownContent([{ ...items_group, items: [item_105] }]);
+                link_selector.replaceDropdownContent([{ ...items_group, items: [item_105] }]);
                 return;
             }
             const matching_items = items.filter(
@@ -471,10 +470,11 @@ function initLinkSelector() {
             );
             const matching_items_group = { ...items_group, items: matching_items };
             const matching_recent_group = { ...recent_group, items: matching_recent };
-            link_selector.setDropdownContent([matching_items_group, matching_recent_group]);
+            link_selector.replaceDropdownContent([matching_items_group, matching_recent_group]);
         },
-    });
-    link_selector.setDropdownContent([items_group, recent_group]);
+    };
+    link_selector.replaceDropdownContent([items_group, recent_group]);
+    mount_point.replaceWith(link_selector);
 }
 
 function initMultiUserLinkSelector() {
@@ -513,7 +513,9 @@ function initMultiUserLinkSelector() {
         items: [],
     };
 
-    const users_lazybox = createLazybox(document.querySelector("#lazybox-users-selector"), {
+    const mount_point = document.getElementById("lazybox-users-selector");
+    const users_lazybox = createLazybox(document);
+    users_lazybox.options = {
         is_multiple: true,
         placeholder: "Search users by names",
         templating_callback: (html, item) => html`
@@ -527,7 +529,7 @@ function initMultiUserLinkSelector() {
         },
         search_input_callback: (query) => {
             if (query === "") {
-                users_lazybox.setDropdownContent([users_group]);
+                users_lazybox.replaceDropdownContent([users_group]);
                 return;
             }
             const lowercase_query = query.toLowerCase();
@@ -539,9 +541,10 @@ function initMultiUserLinkSelector() {
             );
             const matching_users_group = { ...users_group, items: matching_users };
             const matching_recent_group = { ...recent_group, items: matching_recent };
-            users_lazybox.setDropdownContent([matching_users_group, matching_recent_group]);
+            users_lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
         },
-    });
-    users_lazybox.setDropdownContent([users_group]);
+    };
+    users_lazybox.replaceDropdownContent([users_group]);
     users_lazybox.replaceSelection([users[0]]);
+    mount_point.replaceWith(users_lazybox);
 }

@@ -8,5 +8,5 @@
             "tlp": ["../../../../../src/themes/tlp/src/js/index.ts"]
         }
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "tests/**/*"]
 }

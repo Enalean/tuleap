@@ -43,7 +43,7 @@
                 <label class="tlp-label" for="manage-labels-modal-select">{{
                     $gettext("Labels")
                 }}</label>
-                <select id="manage-labels-modal-select" ref="labels_input"></select>
+                <tuleap-lazybox id="manage-labels-modal-select" ref="labels_input" />
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -77,7 +77,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { createLazybox } from "@tuleap/lazybox";
+import "@tuleap/lazybox";
+import type { Lazybox } from "@tuleap/lazybox";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -103,7 +104,7 @@ const props = defineProps<{
 const modal_element = ref<Element | undefined>();
 const modal_instance = ref<Modal | null>(null);
 const is_saving = ref(false);
-const labels_input = ref<HTMLSelectElement | undefined>();
+const labels_input = ref<Lazybox | undefined>();
 const currently_selected_labels = ref<ProjectLabel[]>([]);
 
 const cancel = () => {
@@ -140,7 +141,7 @@ onBeforeUnmount(() => {
     }
 });
 
-function initlabelsAutocompleter(select: HTMLSelectElement): void {
+function initlabelsAutocompleter(lazybox: Lazybox): void {
     const group_builder = GroupOfLabelsBuilder($gettext);
     const autocompleter = LabelsAutocompleter(group_builder);
 
@@ -152,7 +153,7 @@ function initlabelsAutocompleter(select: HTMLSelectElement): void {
         is_disabled: false,
     }));
 
-    const lazybox = createLazybox(select, {
+    lazybox.options = {
         is_multiple: true,
         placeholder: $gettext("Select labels"),
         templating_callback: getAssignableLabelsTemplate,
@@ -168,9 +169,9 @@ function initlabelsAutocompleter(select: HTMLSelectElement): void {
         selection_callback: (selected_labels) => {
             currently_selected_labels.value = getSelectedLabels(selected_labels);
         },
-    });
+    };
 
-    lazybox.setDropdownContent([group_builder.buildWithLabels(project_labels)]);
+    lazybox.replaceDropdownContent([group_builder.buildWithLabels(project_labels)]);
     lazybox.replaceSelection(findLabelsWithIds(project_labels, current_labels_ids));
 }
 </script>

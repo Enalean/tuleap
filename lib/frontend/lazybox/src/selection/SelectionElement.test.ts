@@ -20,19 +20,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import { LazyboxItemStub } from "../../tests/stubs/LazyboxItemStub";
-import type { LazyboxItem } from "../items/GroupCollection";
+import type { LazyboxItem } from "../GroupCollection";
 import type { HostElement, SelectionElement } from "./SelectionElement";
 import {
     buildClear,
-    buildFocus,
     buildIsSelected,
     buildReplaceSelection,
     buildSelectedBadges,
     buildSelectItem,
     getContent,
-    getSpan,
     observeSelectedItems,
-    onKeyUp,
     searchInputSetter,
 } from "./SelectionElement";
 import type { SearchInput } from "../SearchInput";
@@ -99,12 +96,6 @@ describe("SelectionElement", () => {
                     );
                     expect(content).toBeDefined();
                 });
-
-                it(`span_element getter finds it`, () => {
-                    const host = getHost();
-                    Object.assign(host, { content: () => getRenderedTemplate(host) });
-                    expect(getSpan(host)).toBeDefined();
-                });
             });
 
             describe(`when multiple selection is enabled`, () => {
@@ -128,12 +119,6 @@ describe("SelectionElement", () => {
                         "[data-test=clear-current-selection-button]"
                     );
                     expect(button).toBeDefined();
-                });
-
-                it(`span_element getter finds it`, () => {
-                    const host = getHost();
-                    Object.assign(host, { content: () => getRenderedTemplate(host) });
-                    expect(getSpan(host)).toBeDefined();
                 });
             });
         });
@@ -165,34 +150,6 @@ describe("SelectionElement", () => {
                 expect(onSelection).toHaveBeenCalledWith([second_item.value]);
                 expect(dispatch.mock.calls[0][0].type).toBe("open-dropdown");
             });
-        });
-    });
-
-    describe(`events`, () => {
-        it(`when I press the "enter" key while focusing the selection,
-            it will dispatch an "open-dropdown" event
-            and will stop propagation (it has already been handled)`, () => {
-            const host = doc.createElement("span") as HostElement;
-            const dispatch = vi.spyOn(host, "dispatchEvent");
-            const event = new KeyboardEvent("keyup", { key: "Enter" });
-            const stopPropagation = vi.spyOn(event, "stopPropagation");
-
-            onKeyUp(host, event);
-
-            expect(dispatch.mock.calls[0][0].type).toBe("open-dropdown");
-            expect(stopPropagation).toHaveBeenCalled();
-        });
-    });
-
-    describe(`setFocus()`, () => {
-        it(`sets focus to its inner span element`, () => {
-            const span_element = doc.createElement("span");
-            const focus = vi.spyOn(span_element, "focus");
-            const host = { span_element } as HostElement;
-
-            buildFocus(host)();
-
-            expect(focus).toHaveBeenCalled();
         });
     });
 

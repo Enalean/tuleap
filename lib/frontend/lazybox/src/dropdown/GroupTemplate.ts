@@ -20,7 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { DropdownElement } from "./DropdownElement";
-import type { GroupOfItems, LazyboxItem } from "../items/GroupCollection";
+import type { GroupOfItems, LazyboxItem } from "../GroupCollection";
 import { isEnterKey } from "../helpers/keys-helper";
 import { onArrowKeyDown, onArrowKeyUp } from "./DropdownElement";
 

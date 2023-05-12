@@ -1,0 +1,147 @@
+/**
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "./common";
+
+.lazybox-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 2002;
+    flex-direction: column;
+    width: 0;
+    padding: 0;
+    border-right: 1px solid var(--tlp-main-color);
+    border-bottom: 1px solid var(--tlp-main-color);
+    border-left: 1px solid var(--tlp-main-color);
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
+    background-color: var(--tlp-white-color);
+    box-shadow: var(--tlp-flyover-shadow);
+
+    &[open] {
+        display: flex;
+    }
+
+    &.lazybox-dropdown-above {
+        border-top: 1px solid var(--tlp-main-color);
+        border-bottom: unset;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
+        box-shadow: var(--tlp-flyover-shadow-above);
+    }
+}
+
+.lazybox-dropdown-values-list {
+    max-height: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+%-dropdown-item {
+    font-size: 14px;
+    line-height: normal;
+
+    &:focus,
+    &:hover {
+        background-color: var(--tlp-main-color);
+        color: var(--tlp-white-color);
+    }
+}
+
+.lazybox-new-item-button {
+    @extend %-dropdown-item;
+    @include common.unset-button-style;
+
+    padding: 8px 12px 9px;
+    color: var(--tlp-dark-color);
+    font-family: var(--tlp-font-family);
+    cursor: pointer;
+}
+
+.lazybox-dropdown-option-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    user-select: none;
+}
+
+.lazybox-group-label {
+    padding: 6px var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
+    font-weight: 600;
+    line-height: 30px;
+    text-transform: uppercase;
+}
+
+.lazybox-loading-group-spinner {
+    margin: 0 0 0 var(--tlp-small-spacing);
+}
+
+.lazybox-empty-dropdown-state {
+    padding: var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
+    line-height: normal;
+}
+
+.lazybox-group-footer {
+    padding: 2px var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
+}
+
+.lazybox-dropdown-option-value,
+.lazybox-dropdown-option-value-disabled {
+    @extend %-dropdown-item;
+
+    display: flex;
+    align-items: baseline;
+    padding: 6px 12px 6px 32px;
+}
+
+.lazybox-dropdown-option-value {
+    cursor: pointer;
+
+    &[aria-selected="true"]::before {
+        content: "\f00c"; // fa-check
+        position: absolute;
+        top: 9px;
+        left: var(--tlp-form-element-padding-horizontal);
+        font-family: "Font Awesome 6 Free";
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    &[aria-selected="true"] {
+        position: relative;
+        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
+        color: var(--tlp-main-color);
+
+        &.focus,
+        &:hover {
+            color: var(--tlp-white-color);
+        }
+    }
+}
+
+.lazybox-dropdown-option-value-disabled {
+    color: var(--tlp-dimmed-color-transparent-50);
+    cursor: not-allowed;
+}

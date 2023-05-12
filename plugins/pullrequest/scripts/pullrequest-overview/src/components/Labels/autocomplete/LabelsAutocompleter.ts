@@ -41,11 +41,11 @@ export const LabelsAutocompleter = (group_builder: BuildGroupOfLabels): Autocomp
         ): void {
             const trimmed_query = query.trim();
             if (trimmed_query === "") {
-                lazybox.setDropdownContent([group_builder.buildWithLabels(project_labels)]);
+                lazybox.replaceDropdownContent([group_builder.buildWithLabels(project_labels)]);
                 return;
             }
 
-            lazybox.setDropdownContent([
+            lazybox.replaceDropdownContent([
                 group_builder.buildWithLabels(
                     findLabelMatchingValue(project_labels, trimmed_query)
                 ),

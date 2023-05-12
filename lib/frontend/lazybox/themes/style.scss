@@ -17,254 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./common";
+@use "./selection";
+@use "./dropdown";
 
-/**
-* We can't just display: none or add the attribute type="hidden" because we need the <select> for accessibility purpose.
-* Hence, we shrink it at the maximum.
-*/
-
-.lazybox-hidden-accessible {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    white-space: nowrap;
-
-    &:invalid {
-        box-shadow: none;
-    }
+tuleap-lazybox {
+    display: inline-block;
+    width: 100%;
 }
 
-.lazybox {
-    z-index: 2003;
-
-    &.lazybox-disabled {
-        border-color: var(--tlp-form-element-border-color);
-        cursor: not-allowed;
-
-        .lazybox-selection {
-            cursor: not-allowed;
-        }
-    }
-}
-
-.lazybox-selection {
-    display: flex;
-    align-items: center;
-    cursor: default;
-    user-select: none;
-
-    &.lazybox-single {
-        height: var(--tlp-form-element-height);
-        padding: 0
-            calc(
-                (var(--tlp-form-element-padding-horizontal) * 2) +
-                    var(--tlp-form-element-select-background-size)
-            )
-            0 var(--tlp-form-element-padding-horizontal);
-        background: var(--tlp-form-element-background)
-            url("@tuleap/tlp/src/images/field-double-arrows.svg") no-repeat;
-        background-position: right var(--tlp-form-element-padding-horizontal) center;
-    }
-
-    &.lazybox-multiple {
-        display: flex;
-        position: relative;
-        flex-wrap: wrap;
-        align-items: center;
-        height: 100%;
-        min-height: var(--tlp-form-element-height);
-        padding: 0 52px 5px 6px;
-        background: var(--tlp-form-element-background)
-            url("@tuleap/tlp/src/images/field-ellipsis.svg") no-repeat;
-        background-position: right 10px top 17px;
-        background-size: 15px 5px;
-    }
-}
-
-.lazybox-multiple > .lazybox-selected-value-remove-button {
-    position: absolute;
-    top: 7px;
-    right: 32px;
-    margin: 2px 0 0;
-}
-
-.lazybox-with-open-dropdown > .lazybox-selection {
-    border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0 0;
-    border-color: var(--tlp-main-color);
-}
-
-.lazybox-with-open-dropdown.lazybox-with-dropdown-above > .lazybox-selection {
-    border-radius: 0 0 var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius);
+%-placeholder {
+    font-size: var(--tlp-form-element-font-size);
 }
 
 .lazybox-placeholder {
+    @extend %-placeholder;
+
     color: var(--tlp-form-element-placeholder-color);
 }
 
-.lazybox-dropdown {
-    display: none;
-    position: absolute;
-    z-index: 2002;
-    flex-direction: column;
-    width: 0;
-    padding: 0;
-    border-right: 1px solid var(--tlp-main-color);
-    border-bottom: 1px solid var(--tlp-main-color);
-    border-left: 1px solid var(--tlp-main-color);
-    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
-    background-color: var(--tlp-white-color);
-    box-shadow: var(--tlp-flyover-shadow);
+.lazybox-search-field {
+    @extend %-placeholder;
 
-    &[open] {
-        display: flex;
-    }
-
-    &.lazybox-dropdown-above {
-        border-top: 1px solid var(--tlp-main-color);
-        border-bottom: unset;
-        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
-        box-shadow: var(--tlp-flyover-shadow-above);
-    }
+    width: 100%;
+    background: var(--tlp-form-element-background);
+    font-family: var(--tlp-font-family);
 }
 
-.lazybox-group-label {
-    padding: 6px var(--tlp-form-element-padding-horizontal);
-    color: var(--tlp-dimmed-color);
-    font-size: var(--tlp-form-element-small-font-size);
-    font-weight: 600;
-    line-height: 30px;
-    text-transform: uppercase;
-}
-
-.lazybox-loading-group-spinner {
-    margin: 0 0 0 var(--tlp-small-spacing);
-}
-
-.lazybox-empty-dropdown-state {
-    padding: var(--tlp-form-element-padding-horizontal);
-    color: var(--tlp-dimmed-color);
-    font-size: var(--tlp-form-element-small-font-size);
-    line-height: normal;
-}
-
-.lazybox-single-dropdown-search-section {
+.lazybox-single-search-section {
     padding: 4px;
 
-    .lazybox-search-field {
+    > .lazybox-search-field {
         height: var(--tlp-form-element-small-height);
         padding: 0 4px;
+        transition: border-color var(--tlp-form-element-border-transition-duration) linear;
+        border: 1px solid var(--tlp-form-element-border-color);
+        border-radius: var(--tlp-form-element-border-radius);
         font-size: var(--tlp-form-element-small-font-size);
-    }
-}
-
-%dropdown-item {
-    font-size: 14px;
-    line-height: normal;
-
-    &:focus,
-    &:hover {
-        background-color: var(--tlp-main-color);
-        color: var(--tlp-white-color);
-    }
-}
-
-.lazybox-dropdown-option-value {
-    @extend %dropdown-item;
-
-    cursor: pointer;
-
-    &[aria-selected="true"]::before {
-        content: "\f00c"; // fa-check
-        position: absolute;
-        top: 9px;
-        left: var(--tlp-form-element-padding-horizontal);
-        font-family: "Font Awesome 6 Free";
-        font-size: 12px;
-        font-weight: 900;
-    }
-
-    &[aria-selected="true"] {
-        position: relative;
-        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
-        color: var(--tlp-main-color);
-
-        &.focus,
-        &:hover {
-            color: var(--tlp-white-color);
-        }
-    }
-}
-
-.tlp-form-element-error {
-    .lazybox-selection {
-        border-color: var(--tlp-danger-color);
-        color: var(--tlp-danger-dark-color);
 
         &:focus {
-            box-shadow: var(--tlp-shadow-focus-error);
+            transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+                box-shadow 350ms;
+            border-color: var(--tlp-main-color);
+            box-shadow: var(--tlp-shadow-focus);
         }
     }
-}
-
-.lazybox-new-item-button {
-    @extend %dropdown-item;
-    @include common.unset-button-style;
-
-    padding: 8px 12px 9px;
-    color: var(--tlp-dark-color);
-    font-family: var(--tlp-font-family);
-    cursor: pointer;
-}
-
-.lazybox-dropdown-values-list {
-    max-height: 250px;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    list-style: none;
-}
-
-.lazybox-dropdown-option-value,
-.lazybox-dropdown-option-value-disabled {
-    @extend %dropdown-item;
-
-    display: flex;
-    align-items: baseline;
-    padding: 6px 12px 6px 32px;
-}
-
-.lazybox-dropdown-option-value-disabled {
-    color: var(--tlp-dimmed-color-transparent-50);
-    cursor: not-allowed;
-}
-
-.lazybox-dropdown-option-group {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    user-select: none;
-}
-
-.lazybox-group-footer {
-    padding: 2px var(--tlp-form-element-padding-horizontal);
-    color: var(--tlp-dimmed-color);
-    font-size: var(--tlp-form-element-small-font-size);
-}
-
-.lazybox-selected-value-remove-button {
-    @include common.unset-button-style;
-    @include common.focusable-button;
-
-    position: relative;
-    top: -1px;
-    float: right;
-    font-size: 18px;
-    line-height: 17px;
-    white-space: nowrap;
 }
 
 .lazybox-multiple-search-section {
@@ -282,47 +78,5 @@
         &:focus {
             box-shadow: none;
         }
-    }
-}
-
-.lazybox-selected-value {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: default;
-}
-
-.lazybox-component-wrapper {
-    display: inline-block;
-    width: 100%;
-}
-
-.lazybox:not(.lazybox-disabled) {
-    .lazybox-selected-value-remove-button:hover {
-        opacity: 0.5;
-        cursor: pointer;
-    }
-}
-
-:is(.lazybox-search-field, .lazybox-selection) {
-    width: 100%;
-    padding: 0 var(--tlp-form-element-padding-horizontal);
-    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
-    border: 1px solid var(--tlp-form-element-border-color);
-    border-radius: var(--tlp-form-element-border-radius);
-    background: var(--tlp-form-element-background);
-    font-family: var(--tlp-font-family);
-    font-size: var(--tlp-form-element-font-size);
-    line-height: normal;
-
-    &:focus {
-        transition: border-color var(--tlp-form-element-border-transition-duration) linear,
-            box-shadow 350ms;
-        border-color: var(--tlp-main-color);
-        box-shadow: var(--tlp-shadow-focus);
     }
 }

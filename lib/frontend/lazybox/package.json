@@ -8,7 +8,7 @@
   "module": "dist/lazybox.js",
   "main": "dist/lazybox.umd.cjs",
   "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/lazybox.js",
