@@ -1,6 +1,6 @@
 # Link selector component
 
-* Status: accepted
+* Status: Updated by [ADR-0002: Link selector becomes Lazybox, a generic auto-completer.][5]
 * Deciders: Joris MASSON, Thomas GORKA
 * Date: 2022-04-06
 
@@ -42,7 +42,7 @@ The interactive mock-up for this epic used [Select2][2]. It also "hacked" it to 
 * Bad, because mock-up code does not equal production-grade code. We don't want to rely on "hacks" in production code if we can avoid it.
 * Bad, because Select2 was not designed to handle groups of options with different behaviours. It expects all options to behave the same way.
 * Bad, because we want to reduce the usage of Select2. Select2 is quite hard to use, we have spent a long time battling with its API and documentation, for example in Open-list fields in the Artifact Modal. Any deviation from the mock-up will be painful to implement.
-* Bad, because Select2 depends on [jQuery][3]. jQuery was written to make it simpler to use the DOM, but since then the DOM has improved massively. It is now easy to replace most of jQuery's calls by native DOM calls. Furthermore, Tuleap provides two versions of jQuery, both of which are no longer supported. We want to reduce and eventually remove all dependencies to either of those versions.
+* Bad, because Select2 depends on [jQuery][3]. jQuery was written to make it simpler to use the DOM, but since then, the DOM has improved massively. It is now easy to replace most of jQuery's calls by native DOM calls. Furthermore, Tuleap provides two versions of jQuery, both of which are no longer supported. We want to reduce and eventually remove all dependencies to either of those versions.
 
 ### List-picker with modifications
 
@@ -67,3 +67,4 @@ We write a dedicated component and library for the auto-completer component. We 
 [2]: https://select2.org/
 [3]: https://jquery.com/
 [4]: <../../list-picker/package.json>
+[5]: ./0002-lazybox.md

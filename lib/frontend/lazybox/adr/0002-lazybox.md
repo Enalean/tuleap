@@ -1,6 +1,6 @@
 # Link selector becomes Lazybox, a generic auto-completer.
 
-* Status: accepted
+* Status: accepted, updates [ADR-0001: Link selector component][4]
 * Deciders: Joris MASSON, Thomas GORKA
 * Date: 2023-04-06
 
@@ -23,7 +23,7 @@ Hence, a replacement for Select2 is required.
 
 ## Considered Options
 * Find and use open-source auto-completer libraries
-* Implement the missing functionalities in link-selector
+* Implement the missing functionalities in [Link-selector][4]
 
 ## Pros and Cons of the Options
 
@@ -36,7 +36,7 @@ Some auto-completer libraries can be found on GitHub and can be used in our apps
 * Bad, because usually the community using those libraries often want features specific to their use-cases to be implemented. They frequently become bigger and bigger, gaining tons of options over time.
 * Bad, because if a breaking change is introduced, we will be stuck with an old version of this lib, and we will be forced to find a new alternative.
 
-### Implement the missing functionalities in link-selector
+### Implement the missing functionalities in [Link-selector][4]
 
 * Good, because it is our home-made library.
 * Good, because it is perfectly tailored to our use-cases: no more, no less.
@@ -45,7 +45,7 @@ Some auto-completer libraries can be found on GitHub and can be used in our apps
 
 ## Decision Outcome
 
-Link-selector being already a generic auto-completer for single values, and not particularly a link selector, it needs only a few things to make it work with multiple values as well:
+[Link-selector][4] being already a generic auto-completer for single values, and not particularly a link selector, it needs only a few things to make it work with multiple values as well:
 * A multiple-values selection behavior.
 * An `is_multiple` option to toggle it.
 
@@ -53,7 +53,7 @@ Since `link-selector` is a too specific name, we have decided to rename it `lazy
 
 The name `lazybox` has been chosen because we think it reflects pretty well the spirit of this component:
 * First display an empty box featuring a search input and a dropdown.
-* Then push values in its dropdown as you please.
+* Then, push values in its dropdown as you please.
 * It is pretty easy to implement in the various Tuleap features needing an auto-completer.
 
 ### Recommendations and rules
@@ -74,3 +74,4 @@ The name `lazybox` has been chosen because we think it reflects pretty well the 
 [1]: https://tuleap.net/plugins/tracker/?aid=28288
 [2]: https://select2.org/
 [3]: https://jquery.com/
+[4]: ./0001-link-selector.md

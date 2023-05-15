@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { select2, datePicker } from "tlp";
+import { datePicker } from "tlp";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { createModal } from "@tuleap/tlp-modal";
 import { createDropdown } from "@tuleap/tlp-dropdown";
@@ -27,8 +27,14 @@ import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
 import "@tuleap/tlp-relative-date";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
-import { createListPicker } from "@tuleap/list-picker";
-import { createLazybox } from "@tuleap/lazybox";
+import {
+    initAppendSelect2,
+    initMultiSelect2,
+    initPrependSelect2,
+    initSingleSelect2,
+} from "./select2";
+import { initMultipleListPickers, initSingleListPickers } from "./list-picker.js";
+import { initMultipleLazybox, initSingleLazybox } from "./lazybox.js";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -69,173 +75,15 @@ import { createLazybox } from "@tuleap/lazybox";
                 filterInlineTable(filter);
             });
 
-            select2(document.querySelector("#area-select2"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#area-select2-adjusted"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#area-without-autocomplete"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-                minimumResultsForSearch: Infinity,
-            });
-            select2(document.querySelector("#area-select2-help"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#area-select2-mandatory"), {
-                placeholder: "Choose an area",
-            });
-            select2(document.querySelector("#area-select2-disabled"));
-            select2(document.querySelector("#area-select2-error"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#area-select2-small"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#area-select2-large"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-
-            select2(document.querySelector("#types-select2"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#typess-select2"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-adjusted"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-help"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-mandatory"), {
-                placeholder: "Choose a type",
-            });
-            select2(document.querySelector("#types-select2-disabled"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-error"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-small"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#types-select2-large"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            select2(document.querySelector("#append-select2"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#append-select2-small"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#append-select2-large"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#select2-prepend"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#select2-prepend-small"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            select2(document.querySelector("#select2-prepend-large"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-
-            if (example.id === "example-list-picker-") {
-                createListPicker(document.querySelector("#list-picker-sb"), {
-                    placeholder: "Choose a value",
-                    is_filterable: true,
-                });
-
-                createListPicker(document.querySelector("#list-picker-sb-with-optgroups"), {
-                    placeholder: "Choose a value",
-                    is_filterable: true,
-                });
-
-                createListPicker(document.querySelector("#list-picker-sb-disabled"), {
-                    placeholder: "You can't choose any value yet",
-                });
-
-                createListPicker(document.querySelector("#list-picker-sb-error"), {
-                    placeholder: "Choose a value",
-                });
-
-                createListPicker(document.querySelector("#list-picker-sb-avatars"), {
-                    placeholder: "Choose a GoT character",
-                    is_filterable: true,
-                    items_template_formatter: (html, value_id, option_label) => {
-                        if (value_id === "103" || value_id === "108") {
-                            return html`<i class="fa-solid fa-fw fa-user-slash"></i>
-                                ${option_label}`;
-                        }
-                        return html`<i class="fa-solid fa-fw fa-user"></i> ${option_label}`;
-                    },
-                });
-            }
-
-            if (example.id === "example-multi-list-picker-") {
-                createListPicker(document.querySelector("#list-picker-msb"), {
-                    placeholder: "Choose some values in the list",
-                });
-
-                createListPicker(document.querySelector("#list-picker-msb-grouped"), {
-                    placeholder: "Choose some values in the list",
-                });
-
-                createListPicker(document.querySelector("#list-picker-msb-disabled"), {
-                    placeholder: "Choose some values in the list",
-                });
-
-                createListPicker(document.querySelector("#list-picker-msb-error"), {
-                    placeholder: "Choose some values in the list",
-                });
-
-                createListPicker(document.querySelector("#list-picker-msb-none"), {
-                    none_value: "100",
-                });
-
-                createListPicker(document.querySelector("#list-picker-msb-avatars"), {
-                    placeholder: "Choose GoT characters",
-                    is_filterable: true,
-                    items_template_formatter: (html, value_id, option_label) => {
-                        if (value_id === "103" || value_id === "108") {
-                            return html`
-                                <i class="fas fa-fw fa-user-slash"></i>
-                                ${option_label}
-                            `;
-                        }
-                        return html`
-                            <i class="fas fa-fw fa-user"></i>
-                            ${option_label}
-                        `;
-                    },
-                });
-            }
+            initSingleSelect2(example);
+            initMultiSelect2(example);
+            initAppendSelect2(example);
+            initPrependSelect2(example);
+            initSingleListPickers(example);
+            initMultipleListPickers(example);
             if (example.id === "example-lazybox-") {
-                initLinkSelector();
-                initMultiUserLinkSelector();
+                initSingleLazybox();
+                initMultipleLazybox();
             }
 
             const example_links = example.querySelectorAll('a[href="#"]');
@@ -370,181 +218,3 @@ import { createLazybox } from "@tuleap/lazybox";
         setTimeout(updatePreview, 10);
     });
 })();
-
-function initLinkSelector() {
-    const ADDITIONAL_ITEM_ID = 105;
-
-    const item_105 = {
-        value: {
-            id: ADDITIONAL_ITEM_ID,
-            color: "graffiti-yellow",
-            xref: "story #105",
-            title: "Do more stuff",
-        },
-        is_disabled: false,
-    };
-    const items = [
-        {
-            value: { id: 101, color: "acid-green", xref: "story #101", title: "Do this" },
-            is_disabled: false,
-        },
-        {
-            value: { id: 102, color: "fiesta-red", xref: "story #102", title: "Do that" },
-            is_disabled: false,
-        },
-        {
-            value: { id: 103, color: "deep-blue", xref: "story #103", title: "And that too" },
-            is_disabled: true,
-        },
-    ];
-    const recent_items = [
-        {
-            value: {
-                id: 106,
-                color: "lake-placid-blue",
-                xref: "request #106",
-                title: "Please fix",
-            },
-            is_disabled: false,
-        },
-        {
-            value: {
-                id: 107,
-                color: "ocean-turquoise",
-                xref: "request #107",
-                title: "It does not work",
-            },
-            is_disabled: false,
-        },
-    ];
-
-    const items_group = {
-        label: "Matching items",
-        empty_message: "No matching item",
-        is_loading: false,
-        items,
-    };
-    const recent_group = {
-        label: "Recent items",
-        empty_message: "No recent item",
-        is_loading: false,
-        items: recent_items,
-    };
-
-    const mount_point = document.getElementById("lazybox-link-selector");
-    const link_selector = createLazybox(document);
-    link_selector.options = {
-        is_multiple: false,
-        placeholder: "Please select an item to link",
-        search_input_placeholder: "Type a number",
-        new_item_button_label: "→ Create a new item…",
-        new_item_callback: () => {
-            // Do nothing
-        },
-        templating_callback: (html, item) =>
-            html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">
-                    ${item.value.xref}
-                </span>
-                ${item.value.title}`,
-        selection_callback: () => {
-            // Do nothing
-        },
-        search_input_callback: (query) => {
-            if (query === "") {
-                link_selector.replaceDropdownContent([items_group, recent_group]);
-                return;
-            }
-            const lowercase_query = query.toLowerCase();
-
-            if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
-                link_selector.replaceDropdownContent([{ ...items_group, items: [item_105] }]);
-                return;
-            }
-            const matching_items = items.filter(
-                (item) =>
-                    String(item.value.id).includes(lowercase_query) ||
-                    item.value.title.toLowerCase().includes(lowercase_query)
-            );
-            const matching_recent = recent_items.filter((item) =>
-                item.value.title.toLowerCase().includes(lowercase_query)
-            );
-            const matching_items_group = { ...items_group, items: matching_items };
-            const matching_recent_group = { ...recent_group, items: matching_recent };
-            link_selector.replaceDropdownContent([matching_items_group, matching_recent_group]);
-        },
-    };
-    link_selector.replaceDropdownContent([items_group, recent_group]);
-    mount_point.replaceWith(link_selector);
-}
-
-function initMultiUserLinkSelector() {
-    const users = [
-        {
-            value: { id: 102, display_name: "Johnny Cash (jocash)" },
-            is_disabled: false,
-        },
-        {
-            value: { id: 102, display_name: "Joe l'Asticot (jolasti)" },
-            is_disabled: false,
-        },
-        {
-            value: { id: 103, display_name: "John doe (jdoe)" },
-            is_disabled: false,
-        },
-        {
-            value: { id: 104, display_name: "Joe the hobo (johobo)" },
-            is_disabled: true,
-        },
-    ];
-    const users_group = {
-        label: "Matching users",
-        empty_message: "No user found",
-        is_loading: false,
-        items: [],
-    };
-    const recent_users = [
-        { value: { id: 105, display_name: "Jon Snow (jsnow)" }, is_disabled: false },
-        { value: { id: 106, display_name: "Joe Dalton (jdalton)" }, is_disabled: false },
-    ];
-    const recent_group = {
-        label: "Recent users",
-        empty_message: "No user found",
-        is_loading: false,
-        items: [],
-    };
-
-    const mount_point = document.getElementById("lazybox-users-selector");
-    const users_lazybox = createLazybox(document);
-    users_lazybox.options = {
-        is_multiple: true,
-        placeholder: "Search users by names",
-        templating_callback: (html, item) => html`
-            <span class="doc-multiple-lazybox-user-with-avatar">
-                <div class="tlp-avatar-mini"></div>
-                ${item.value.display_name}
-            </span>
-        `,
-        selection_callback: () => {
-            // Do nothing
-        },
-        search_input_callback: (query) => {
-            if (query === "") {
-                users_lazybox.replaceDropdownContent([users_group]);
-                return;
-            }
-            const lowercase_query = query.toLowerCase();
-            const matching_users = users.filter((user) =>
-                user.value.display_name.toLowerCase().includes(lowercase_query)
-            );
-            const matching_recent = recent_users.filter((user) =>
-                user.value.display_name.toLowerCase().includes(lowercase_query)
-            );
-            const matching_users_group = { ...users_group, items: matching_users };
-            const matching_recent_group = { ...recent_group, items: matching_recent };
-            users_lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
-        },
-    };
-    users_lazybox.replaceDropdownContent([users_group]);
-    users_lazybox.replaceSelection([users[0]]);
-    mount_point.replaceWith(users_lazybox);
-}
