@@ -1616,7 +1616,7 @@ CREATE TABLE webauthn_credential_source (
     attestation_type VARCHAR(32) NOT NULL,
     trust_path TEXT NOT NULL,
     aaguid VARCHAR(64) NOT NULL,
-    credential_public_key TEXT NOT NULL,
+    credential_public_key BLOB NOT NULL,
     user_id INT NOT NULL,
     counter INT UNSIGNED NOT NULL,
     other_ui TEXT,
