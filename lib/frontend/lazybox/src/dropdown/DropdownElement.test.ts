@@ -24,6 +24,7 @@ import type { LazyboxNewItemCallback } from "../Options";
 import type { GroupCollection } from "../GroupCollection";
 import { selectOrThrow } from "@tuleap/dom";
 import * as tuleap_focus from "@tuleap/focus-navigation";
+import type { SearchInput } from "../SearchInput";
 
 vi.mock("@tuleap/focus-navigation");
 
@@ -42,7 +43,10 @@ describe(`DropdownElement`, () => {
             open: boolean,
             multiple_selection: boolean,
             new_item_callback: LazyboxNewItemCallback | undefined,
-            new_item_button_label: string;
+            new_item_button_label: string,
+            search_input: SearchInput & HTMLElement,
+            search_input_query: string,
+            clear_search_input: () => void;
 
         beforeEach(() => {
             target = doc.createElement("div") as unknown as ShadowRoot;
@@ -50,11 +54,16 @@ describe(`DropdownElement`, () => {
             multiple_selection = true;
             new_item_callback = undefined;
             new_item_button_label = "";
+            search_input_query = "";
+            clear_search_input = vi.fn();
         });
 
         const render = (): void => {
-            const search_input = doc.createElement("span");
+            search_input = doc.createElement("span") as SearchInput & HTMLElement;
             search_input.dataset.test = "search-input";
+            search_input.getQuery = (): string => search_input_query;
+            search_input.clear = clear_search_input;
+
             const groups: GroupCollection = [];
             const host: HostElement = {
                 open,
@@ -82,16 +91,22 @@ describe(`DropdownElement`, () => {
             expect(search).not.toBeNull();
         });
 
-        it(`renders a new item button in the dropdown when its callback is defined`, () => {
+        it(`renders a new item button in the dropdown when its callback is defined, behaving as follow when clicked:
+            - triggers the new_item_callback with the content of the query
+            - clears the search input`, () => {
+            search_input_query = "Emergency";
+
             new_item_button_label = "Create a new item";
             new_item_callback = vi.fn();
+
             render();
 
             const button = selectOrThrow(target, "[data-test=new-item-button]");
             expect(button.textContent?.trim()).toBe(new_item_button_label);
             button.click();
 
-            expect(new_item_callback).toHaveBeenCalled();
+            expect(new_item_callback).toHaveBeenCalledWith(search_input_query);
+            expect(clear_search_input).toHaveBeenCalledOnce();
         });
 
         it(`when I press the "arrow down" key while focusing the new item button,

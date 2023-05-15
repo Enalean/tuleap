@@ -54,7 +54,7 @@ vi.mock("@tuleap/tlp-modal", () => ({
 }));
 
 describe("PullRequestManageLabelsModal", () => {
-    let post_edition_callback: (new_labels: ReadonlyArray<ProjectLabel>) => void,
+    let post_edition_callback: () => void,
         on_cancel_callback: () => void,
         display_api_error_callback: () => void,
         modal_instance: Modal;
@@ -134,11 +134,31 @@ describe("PullRequestManageLabelsModal", () => {
         expect(tuleap_api.patchPullRequestLabels).toHaveBeenCalledWith(
             pull_request_id,
             [easy_fix_label.id],
+            [],
             []
         );
         expect(modal_instance.hide).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledOnce();
-        expect(post_edition_callback).toHaveBeenCalledWith([easy_fix_label]);
+    });
+
+    it("[Save changes] button should save labels created on-the-fly", async () => {
+        vi.spyOn(tuleap_api, "patchPullRequestLabels").mockReturnValue(okAsync(new Response()));
+
+        const wrapper = getWrapper([]);
+        const button = wrapper.find("[data-test=save-labels-button]");
+
+        wrapper.findComponent(LazyboxVueStub).vm.createItem("Gluten free");
+
+        await button.trigger("click");
+
+        expect(tuleap_api.patchPullRequestLabels).toHaveBeenCalledWith(
+            pull_request_id,
+            [],
+            [],
+            ["Gluten free"]
+        );
+        expect(modal_instance.hide).toHaveBeenCalledOnce();
+        expect(post_edition_callback).toHaveBeenCalledOnce();
     });
 
     it("When an error occurs while saving the labels, Then it should call the display_api_error_callback", async () => {

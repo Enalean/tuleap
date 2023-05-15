@@ -26,6 +26,7 @@ export type SearchInput = {
     placeholder: string;
     search_callback: LazyboxSearchInputCallback;
     clear(): void;
+    getQuery(): string;
 };
 export type HostElement = HTMLElement & InternalSearchInput;
 type InternalSearchInput = Readonly<SearchInput> & {
@@ -104,6 +105,9 @@ export const SearchInput = define<InternalSearchInput>({
     placeholder: "",
     query: "",
     clear: { get: buildClear, connect },
+    getQuery: {
+        get: (host: InternalSearchInput) => (): string => host.query,
+    },
     search_callback: undefined,
     timeout_id: undefined,
     content: (host) => html`<input

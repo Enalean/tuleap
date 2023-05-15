@@ -24,6 +24,7 @@ import { getAllGroupsTemplate } from "./GroupTemplate";
 import type { GroupCollection } from "../GroupCollection";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 import { moveFocus } from "@tuleap/focus-navigation";
+import type { SearchInput } from "../SearchInput";
 
 export const TAG = "tuleap-lazybox-dropdown";
 
@@ -34,7 +35,7 @@ export type DropdownElement = {
     new_item_callback: LazyboxNewItemCallback | undefined;
     new_item_button_label: string;
     templating_callback: LazyboxTemplatingCallback;
-    search_input: HTMLElement;
+    search_input: SearchInput & HTMLElement;
     selection: SelectionElement & HTMLElement;
 };
 type InternalDropdownElement = Readonly<DropdownElement> & {
@@ -77,6 +78,14 @@ export const onArrowKeyDown = (host: unknown, event: KeyboardEvent): void => {
     }
 };
 
+const onClickCreateItem = (
+    search_input: SearchInput,
+    new_item_callback: LazyboxNewItemCallback
+): void => {
+    new_item_callback(search_input.getQuery());
+    search_input.clear();
+};
+
 export const DropdownElement = define<InternalDropdownElement>({
     tag: TAG,
     open: { observe: observeOpen, value: false },
@@ -93,12 +102,14 @@ export const DropdownElement = define<InternalDropdownElement>({
         }
         const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
 
+        const new_item_callback = host.new_item_callback;
         const new_item_button =
-            host.new_item_callback !== undefined
+            new_item_callback !== undefined
                 ? html`<button
                       type="button"
                       class="lazybox-new-item-button"
-                      onclick="${host.new_item_callback}"
+                      onclick="${(): void =>
+                          onClickCreateItem(host.search_input, new_item_callback)}"
                       data-test="new-item-button"
                       data-navigation="lazybox-item"
                       onkeyup="${onArrowKeyUp}"

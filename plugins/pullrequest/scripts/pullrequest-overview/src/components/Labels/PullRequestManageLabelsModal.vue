@@ -95,6 +95,10 @@ import { findLabelsWithIds } from "./autocomplete/LabelFinder";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import { patchPullRequestLabels } from "../../api/tuleap-rest-querier";
+import {
+    LABEL_TO_CREATE_TMP_ID,
+    LabelsCreationManager,
+} from "./autocomplete/LabelsCreationManager";
 
 const { $gettext } = useGettext();
 const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
@@ -103,7 +107,7 @@ const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 const props = defineProps<{
     current_labels: ReadonlyArray<ProjectLabel>;
     project_labels: ReadonlyArray<ProjectLabel>;
-    post_edition_callback: (labels: ProjectLabel[]) => void;
+    post_edition_callback: () => void;
     on_cancel_callback: () => void;
 }>();
 
@@ -113,6 +117,7 @@ const is_saving = ref(false);
 const labels_input = ref<Lazybox | undefined>();
 const newly_selected_labels = ref<ProjectLabel[]>([]);
 const current_labels_ids = props.current_labels.map(({ id }) => id);
+const labels_creation_manager = LabelsCreationManager(props.project_labels);
 
 const cancel = () => {
     props.on_cancel_callback();
@@ -129,10 +134,15 @@ function saveLabels() {
 
     is_saving.value = true;
 
-    patchPullRequestLabels(pull_request_id, added_labels_ids, removed_labels_ids)
+    patchPullRequestLabels(
+        pull_request_id,
+        added_labels_ids,
+        removed_labels_ids,
+        labels_creation_manager.getLabelsToCreate()
+    )
         .match(() => {
             modal_instance.value?.hide();
-            props.post_edition_callback(newly_selected_labels.value);
+            props.post_edition_callback();
         }, displayTuleapAPIFault)
         .finally(() => {
             is_saving.value = false;
@@ -181,7 +191,27 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
             autocompleter.autocomplete(lazybox, project_labels, newly_selected_labels.value, query);
         },
         selection_callback: (selected_labels) => {
-            newly_selected_labels.value = getSelectedLabels(selected_labels);
+            const labels_in_selection = getSelectedLabels(selected_labels);
+            labels_creation_manager.registerLabelsToCreate(labels_in_selection);
+
+            newly_selected_labels.value = labels_in_selection.filter(
+                ({ id }) => id !== LABEL_TO_CREATE_TMP_ID
+            );
+        },
+        new_item_button_label: $gettext("Create a new label"),
+        new_item_callback: (item_name: string) => {
+            if (!labels_creation_manager.canLabelBeCreated(item_name)) {
+                return;
+            }
+
+            project_labels.push({
+                value: labels_creation_manager.getTemporaryLabel(item_name),
+                is_disabled: false,
+            });
+
+            lazybox.replaceSelection(
+                findLabelsWithIds(project_labels, [...current_labels_ids, LABEL_TO_CREATE_TMP_ID])
+            );
         },
     };
 

@@ -149,16 +149,17 @@ export const fetchProjectLabels = (
 export const patchPullRequestLabels = (
     pull_request_id: number,
     added_labels: ReadonlyArray<number>,
-    removed_labels: ReadonlyArray<number>
+    removed_labels: ReadonlyArray<number>,
+    labels_to_create: ReadonlyArray<string>
 ): ResultAsync<Response | null, Fault> => {
-    if (added_labels.length === 0 && removed_labels.length === 0) {
-        return okAsync(null);
-    }
-
     const payload: PatchPullRequestLabelsPayload = {};
-    if (added_labels.length > 0) {
-        const added_labels_ids = added_labels.map((id) => ({ id }));
-        payload.add = [added_labels_ids[0], ...added_labels_ids.slice(1)];
+    const labels_to_add = [
+        ...added_labels.map((id) => ({ id })),
+        ...labels_to_create.map((label) => ({ label })),
+    ];
+
+    if (labels_to_add.length > 0) {
+        payload.add = [labels_to_add[0], ...labels_to_add.slice(1)];
     }
 
     if (removed_labels.length > 0) {
@@ -166,9 +167,9 @@ export const patchPullRequestLabels = (
         payload.remove = [removed_labels_ids[0], ...removed_labels_ids.slice(1)];
     }
 
-    return patch(
-        uri`/api/v1/pull_requests/${encodeURIComponent(pull_request_id)}/labels`,
-        {},
-        payload
-    );
+    if (!payload.add && !payload.remove) {
+        return okAsync(null);
+    }
+
+    return patch(uri`/api/v1/pull_requests/${pull_request_id}/labels`, {}, payload);
 };

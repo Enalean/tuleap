@@ -101,6 +101,7 @@ describe("PullRequestLabels", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
 
         await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
         const displayed_labels = wrapper.findAll("[data-test=pull-request-label]");
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
@@ -140,6 +141,7 @@ describe("PullRequestLabels", () => {
 
             const wrapper = getWrapper();
 
+            await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
