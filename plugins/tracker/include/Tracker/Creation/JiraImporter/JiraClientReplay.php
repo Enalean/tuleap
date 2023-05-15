@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -29,8 +29,11 @@ final class JiraClientReplay implements JiraClient
 {
     private array $payloads = [];
 
-    private function __construct(string $log_dir, private bool $is_cloud)
-    {
+    private function __construct(
+        string $log_dir,
+        private readonly bool $is_cloud,
+        private readonly bool $is_jira_server_9,
+    ) {
         foreach (file($log_dir . '/manifest.log', FILE_IGNORE_NEW_LINES) as $line) {
             [$url, $file, $code] = explode(' ', $line);
             if ($code === '200') {
@@ -50,14 +53,19 @@ final class JiraClientReplay implements JiraClient
         }
     }
 
-    public static function buildJiraServer(string $log_dir): self
+    public static function buildJira7And8Server(string $log_dir): self
     {
-        return new self($log_dir, false);
+        return new self($log_dir, false, false);
+    }
+
+    public static function buildJira9Server(string $log_dir): self
+    {
+        return new self($log_dir, false, true);
     }
 
     public static function buildJiraCloud(string $log_dir): self
     {
-        return new self($log_dir, true);
+        return new self($log_dir, true, false);
     }
 
     public function getJiraProject(): ?string
@@ -111,5 +119,10 @@ final class JiraClientReplay implements JiraClient
     public function getAttachmentContents(Attachment $attachment): string
     {
         return 'fake data';
+    }
+
+    public function isJiraServer9(): bool
+    {
+        return $this->is_jira_server_9;
     }
 }

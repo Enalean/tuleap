@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-final class JiraServerClient extends ClientWrapper
+final class JiraServer9Client extends ClientWrapper
 {
     public function isJiraCloud(): bool
     {
         return false;
+    }
+
+    public function isJiraServer9(): bool
+    {
+        return true;
     }
 }

@@ -1,0 +1,209 @@
+{
+    "maxResults": 50,
+    "startAt": 0,
+    "total": 9,
+    "isLast": true,
+    "values": [
+        {
+            "required": true,
+            "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+            },
+            "name": "Type de ticket",
+            "fieldId": "issuetype",
+            "hasDefaultValue": false,
+            "operations": [],
+            "allowedValues": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+                    "id": "10102",
+                    "description": "",
+                    "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+                    "name": "Bogue",
+                    "subtask": false,
+                    "avatarId": 10303
+                }
+            ]
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "option",
+                "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                "customId": 10202
+            },
+            "name": "Categories",
+            "fieldId": "customfield_10202",
+            "hasDefaultValue": true,
+            "operations": [
+                "set"
+            ],
+            "allowedValues": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10100",
+                    "value": "Logiciel",
+                    "id": "10100"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10101",
+                    "value": "Electrique",
+                    "id": "10101"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10102",
+                    "value": "Mécanique",
+                    "id": "10102"
+                }
+            ],
+            "defaultValue": {
+                "self": "https://jira.example.com/rest/api/2/customFieldOption/10100",
+                "value": "Logiciel",
+                "id": "10100"
+            }
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "string",
+                "system": "summary"
+            },
+            "name": "Résumé",
+            "fieldId": "summary",
+            "hasDefaultValue": false,
+            "operations": [
+                "set"
+            ]
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "string",
+                "system": "description"
+            },
+            "name": "Descriptif",
+            "fieldId": "description",
+            "hasDefaultValue": false,
+            "operations": [
+                "set"
+            ]
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "string",
+                "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                "customId": 10204
+            },
+            "name": "Comment reproduire",
+            "fieldId": "customfield_10204",
+            "hasDefaultValue": false,
+            "operations": [
+                "set"
+            ]
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "versions"
+            },
+            "name": "Affecte la/les version(s)",
+            "fieldId": "versions",
+            "hasDefaultValue": false,
+            "operations": [
+                "set",
+                "add",
+                "remove"
+            ],
+            "allowedValues": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/version/10109",
+                    "id": "10109",
+                    "name": "1.0",
+                    "archived": false,
+                    "released": false,
+                    "projectId": 10103
+                }
+            ]
+        },
+        {
+            "required": false,
+            "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+            },
+            "name": "Pièce jointe",
+            "fieldId": "attachment",
+            "hasDefaultValue": false,
+            "operations": []
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "option",
+                "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                "customId": 10215
+            },
+            "name": "Composants",
+            "fieldId": "customfield_10215",
+            "hasDefaultValue": false,
+            "operations": [
+                "set"
+            ],
+            "allowedValues": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10361",
+                    "value": "Composant_1",
+                    "id": "10361"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10362",
+                    "value": "Composant_2",
+                    "id": "10362"
+                },
+                {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10363",
+                    "value": "Composant_3",
+                    "id": "10363"
+                }
+            ]
+        },
+        {
+            "required": true,
+            "schema": {
+                "type": "project",
+                "system": "project"
+            },
+            "name": "Projet",
+            "fieldId": "project",
+            "hasDefaultValue": false,
+            "operations": [
+                "set"
+            ],
+            "allowedValues": [
+                {
+                    "self": "https://jira.example.com/rest/api/2/project/10103",
+                    "id": "10103",
+                    "key": "SBX",
+                    "name": "SANDBOX",
+                    "projectTypeKey": "software",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/projectavatar?pid=10103&avatarId=10712",
+                        "24x24": "https://jira.example.com/secure/projectavatar?size=small&pid=10103&avatarId=10712",
+                        "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&pid=10103&avatarId=10712",
+                        "32x32": "https://jira.example.com/secure/projectavatar?size=medium&pid=10103&avatarId=10712"
+                    },
+                    "projectCategory": {
+                        "self": "https://jira.example.com/rest/api/2/projectCategory/10104",
+                        "id": "10104",
+                        "description": "Projet interne à ACME",
+                        "name": "ACME"
+                    }
+                }
+            ]
+        }
+    ]
+}

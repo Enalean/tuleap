@@ -1,0 +1,13 @@
+https://jira.example.com/rest/api/2/issuetype/10102 d8185100aa609050c6d2ba8c3c2f2f4c2c2aecbe.json 200
+https://jira.example.com/rest/api/2/mypermissions?projectKey=SBX 6228766c052f93cee99fb37192219454b5c9a993.json 200
+https://jira.example.com/rest/api/2/project/SBX/statuses 7a07648eb9f07aaf54edbe443feae2c04dbfca6b.json 200
+https://jira.example.com/rest/api/2/priority priorities.json 200
+https://jira.example.com/rest/api/2/issue/createmeta/SBX/issuetypes/10102?startAt=0 821ab2f69bb73bd43211ab31c36d613fdc73345d.json 200
+https://jira.example.com/rest/api/2/search?jql=project%3D%22SBX%22+AND+issuetype%3D10102&expand=editmeta&startAt=0&maxResults=1 expand_editmeta_search.json 200
+https://jira.example.com/rest/api/2/search?jql=project%3D%22SBX%22+AND+issuetype%3D10102&fields=%2Aall&expand=renderedFields&startAt=0 e508e4aa43d33f8c1ff0c86b31833b175270193a.json 200
+https://jira.example.com/rest/api/2/issue/SBX-6?expand=changelog sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-6?expand=renderedFields sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-5?expand=changelog sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-5?expand=renderedFields sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-1?expand=changelog sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-1?expand=renderedFields sbx6.json 200

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -31,6 +31,11 @@ abstract class JiraCloudClientStub implements JiraClient
     public array $urls = [];
 
     public function isJiraCloud(): bool
+    {
+        return true;
+    }
+
+    public function isJiraServer9(): bool
     {
         return true;
     }

@@ -1,0 +1,9 @@
+{
+    "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+    "id": "10102",
+    "description": "",
+    "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+    "name": "Bogue",
+    "subtask": false,
+    "avatarId": 10303
+}

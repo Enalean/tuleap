@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-final class JiraCloudClient extends ClientWrapper
+use Tuleap\Tracker\XML\IDGenerator;
+
+interface AppendFieldsFromCreate
 {
-    public function isJiraCloud(): bool
-    {
-        return true;
-    }
-
-    public function isJiraServer9(): bool
-    {
-        return false;
-    }
+    /**
+     * @return JiraFieldAPIRepresentation[]
+     */
+    public function appendFromCreate(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array;
 }

@@ -1,0 +1,1025 @@
+<?xml version="1.0"?>
+<tracker id="T200" parent_id="0">
+  <name><![CDATA[Bugs]]></name>
+  <item_name><![CDATA[bug]]></item_name>
+  <description><![CDATA[Bug]]></description>
+  <color><![CDATA[inca-silver]]></color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="fieldset" ID="bug_details_fieldset" rank="1">
+      <name><![CDATA[details_fieldset]]></name>
+      <label><![CDATA[Details]]></label>
+      <formElements>
+        <formElement type="column" ID="bug_left_column" rank="1">
+          <name><![CDATA[left_column]]></name>
+          <label><![CDATA[left_column]]></label>
+          <formElements>
+            <formElement type="string" ID="bug_summary" rank="1" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Résumé]]></label>
+            </formElement>
+            <formElement type="text" ID="bug_description" rank="2" required="1">
+              <name><![CDATA[description]]></name>
+              <label><![CDATA[Descriptif]]></label>
+              <properties rows="10" cols="50"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="column" ID="bug_right_column" rank="2">
+          <name><![CDATA[right_column]]></name>
+          <label><![CDATA[right_column]]></label>
+          <formElements>
+            <formElement type="aid" ID="bug_artifact_id" rank="7">
+              <name><![CDATA[artifact_id]]></name>
+              <label><![CDATA[Artifact id]]></label>
+            </formElement>
+            <formElement type="string" ID="bug_jira_issue_url" rank="8">
+              <name><![CDATA[jira_issue_url]]></name>
+              <label><![CDATA[Link to original issue]]></label>
+            </formElement>
+            <formElement type="subby" ID="bug_creator" rank="2">
+              <name><![CDATA[creator]]></name>
+              <label><![CDATA[Created by]]></label>
+            </formElement>
+            <formElement type="subon" ID="bug_created" rank="3">
+              <name><![CDATA[created]]></name>
+              <label><![CDATA[Creation date]]></label>
+            </formElement>
+            <formElement type="lud" ID="bug_updated" rank="4">
+              <name><![CDATA[updated]]></name>
+              <label><![CDATA[Last update date]]></label>
+            </formElement>
+            <formElement type="date" ID="bug_resolutiondate" rank="5">
+              <name><![CDATA[resolutiondate]]></name>
+              <label><![CDATA[Resolved]]></label>
+              <properties display_time="1"/>
+            </formElement>
+            <formElement type="sb" ID="bug_status" rank="1">
+              <name><![CDATA[status]]></name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V1" label="NOUVEAU"/>
+                  <item ID="V2" label="ANALYSE"/>
+                  <item ID="V3" label="FERME"/>
+                  <item ID="V4" label="ATTENTE_ACCORD"/>
+                  <item ID="V5" label="CORRECTION"/>
+                  <item ID="V6" label="RELECTURE"/>
+                  <item ID="V7" label="INTEGRATION"/>
+                  <item ID="V8" label="VALIDATION"/>
+                  <item ID="V9" label="VERIFICATION"/>
+                  <item ID="V10" label="RESOLUTION"/>
+                  <item ID="V11" label="CORRECTION_SUSPENDUE"/>
+                  <item ID="V12" label="ANALYSE_SUSPENDUE"/>
+                  <item ID="V13" label="ATTENTE_ACCORD_SUSPENDUE"/>
+                  <item ID="V14" label="RELECTURE_SUSPENDUE"/>
+                  <item ID="V15" label="INTEGRATION_SUSPENDUE"/>
+                  <item ID="V16" label="VALIDATION_SUSPENDUE"/>
+                  <item ID="V17" label="VERIFICATION_SUSPENDUE"/>
+                </items>
+              </bind>
+            </formElement>
+            <formElement type="sb" ID="bug_priority" rank="6">
+              <name><![CDATA[priority]]></name>
+              <label><![CDATA[Priority]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="Vbug_priority_highest" label="Highest"/>
+                  <item ID="Vbug_priority_high" label="High"/>
+                  <item ID="Vbug_priority_medium" label="Medium"/>
+                  <item ID="Vbug_priority_low" label="Low"/>
+                  <item ID="Vbug_priority_lowest" label="Lowest"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="bug_custom_fieldset" rank="2">
+      <name><![CDATA[custom_fieldset]]></name>
+      <label><![CDATA[Custom Fields]]></label>
+      <formElements>
+        <formElement type="sb" ID="bug_customfield_10202" rank="5" required="1">
+          <name><![CDATA[customfield_10202]]></name>
+          <label><![CDATA[Categories]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10202_logiciel" label="Logiciel"/>
+              <item ID="Vbug_customfield_10202_electrique" label="Electrique"/>
+              <item ID="Vbug_customfield_10202_m__canique" label="M&#xE9;canique"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10204" rank="2" required="1">
+          <name><![CDATA[customfield_10204]]></name>
+          <label><![CDATA[Comment reproduire]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="msb" ID="bug_versions" rank="1" required="1">
+          <name><![CDATA[versions]]></name>
+          <label><![CDATA[Affecte la/les version(s)]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_versions_1_0" label="1.0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10215" rank="5" required="1">
+          <name><![CDATA[customfield_10215]]></name>
+          <label><![CDATA[Composants]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10215_composant_1" label="Composant_1"/>
+              <item ID="Vbug_customfield_10215_composant_2" label="Composant_2"/>
+              <item ID="Vbug_customfield_10215_composant_3" label="Composant_3"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10214" rank="5">
+          <name><![CDATA[customfield_10214]]></name>
+          <label><![CDATA[Version ciblée]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10214_agv4_11" label="Agv4_11"/>
+              <item ID="Vbug_customfield_10214_agv4_12" label="Agv4_12"/>
+              <item ID="Vbug_customfield_10214_agv4_13" label="Agv4_13"/>
+              <item ID="Vbug_customfield_10214_agv4_14" label="Agv4_14"/>
+              <item ID="Vbug_customfield_10214_agv4_15" label="Agv4_15"/>
+              <item ID="Vbug_customfield_10214_agv4_16" label="Agv4_16"/>
+              <item ID="Vbug_customfield_10214_agv4_17" label="Agv4_17"/>
+              <item ID="Vbug_customfield_10214_agv4_18" label="Agv4_18"/>
+              <item ID="Vbug_customfield_10214_agv4_19" label="Agv4_19"/>
+              <item ID="Vbug_customfield_10214_agv4_20" label="Agv4_20"/>
+              <item ID="Vbug_customfield_10214_agv4_21" label="Agv4_21"/>
+              <item ID="Vbug_customfield_10214_agv4_22" label="Agv4_22"/>
+              <item ID="Vbug_customfield_10214_agv4_23" label="Agv4_23"/>
+              <item ID="Vbug_customfield_10214_agv4_24" label="Agv4_24"/>
+              <item ID="Vbug_customfield_10214_agv4_25" label="Agv4_25"/>
+              <item ID="Vbug_customfield_10214_agv4_26" label="Agv4_26"/>
+              <item ID="Vbug_customfield_10214_agv4_26_1" label="Agv4_26_1"/>
+              <item ID="Vbug_customfield_10214_agv4_26_2" label="Agv4_26_2"/>
+              <item ID="Vbug_customfield_10214_agv4_27" label="Agv4_27"/>
+              <item ID="Vbug_customfield_10214_agv4_27_1" label="Agv4_27_1"/>
+              <item ID="Vbug_customfield_10214_agv4_27_2" label="Agv4_27_2"/>
+              <item ID="Vbug_customfield_10214_agv4_28" label="Agv4_28"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="msb" ID="bug_fixversions" rank="1">
+          <name><![CDATA[fixversions]]></name>
+          <label><![CDATA[Version(s) corrigée(s)]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_fixversions_1_0" label="1.0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="float" ID="bug_customfield_10401" rank="3">
+          <name><![CDATA[customfield_10401]]></name>
+          <label><![CDATA[Chiffrage (en heures)]]></label>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10290" rank="5">
+          <name><![CDATA[customfield_10290]]></name>
+          <label><![CDATA[Sévérité]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10290_bloquant" label="Bloquant"/>
+              <item ID="Vbug_customfield_10290_mineur" label="Mineur"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10231" rank="2" required="1">
+          <name><![CDATA[customfield_10231]]></name>
+          <label><![CDATA[Fil d'analyse]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10232" rank="2" required="1">
+          <name><![CDATA[customfield_10232]]></name>
+          <label><![CDATA[Revue de code]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10235" rank="2" required="1">
+          <name><![CDATA[customfield_10235]]></name>
+          <label><![CDATA[Tags doxygen]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10236" rank="2" required="1">
+          <name><![CDATA[customfield_10236]]></name>
+          <label><![CDATA[Revue de docs]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10229" rank="2" required="1">
+          <name><![CDATA[customfield_10229]]></name>
+          <label><![CDATA[Revue FTU]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10233" rank="2" required="1">
+          <name><![CDATA[customfield_10233]]></name>
+          <label><![CDATA[Comment tester]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="text" ID="bug_customfield_10234" rank="2" required="1">
+          <name><![CDATA[customfield_10234]]></name>
+          <label><![CDATA[Analyse d'impact]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10249" rank="5">
+          <name><![CDATA[customfield_10249]]></name>
+          <label><![CDATA[Branche intégration]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10249_backbone_itg" label="BACKBONE_ITG"/>
+              <item ID="Vbug_customfield_10249_ethercat_itg" label="ETHERCAT_ITG"/>
+              <item ID="Vbug_customfield_10249_std_itg_01_01" label="STD_ITG_01.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_02_01" label="STD_ITG_02.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_16_03" label="STD_ITG_16.03"/>
+              <item ID="Vbug_customfield_10249_std_itg" label="STD_ITG"/>
+              <item ID="Vbug_customfield_10249_laser_itg" label="LASER_ITG"/>
+              <item ID="Vbug_customfield_10249_-" label="-"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10287" rank="5">
+          <name><![CDATA[customfield_10287]]></name>
+          <label><![CDATA[Motif]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10287_impossible____reproduire" label="Impossible &#xE0; reproduire"/>
+              <item ID="Vbug_customfield_10287_doublon" label="doublon"/>
+              <item ID="Vbug_customfield_10287_no_fix" label="No fix"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="bug_customfield_10405" rank="5">
+          <name><![CDATA[customfield_10405]]></name>
+          <label><![CDATA[Ticket Jalon Client]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="Vbug_customfield_10405_oui" label="oui"/>
+              <item ID="Vbug_customfield_10405_non" label="non"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="date" ID="bug_duedate" rank="4">
+          <name><![CDATA[duedate]]></name>
+          <label><![CDATA[Date d'échéance]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="bug_attachment_fieldset" rank="3">
+      <name><![CDATA[attachment_fieldset]]></name>
+      <label><![CDATA[Attachments]]></label>
+      <formElements>
+        <formElement type="file" ID="bug_attachment" rank="1">
+          <name><![CDATA[attachment]]></name>
+          <label><![CDATA[Attachments]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+    <formElement type="fieldset" ID="bug_links_fieldset" rank="4">
+      <name><![CDATA[links_fieldset]]></name>
+      <label><![CDATA[Links]]></label>
+      <formElements>
+        <formElement type="art_link" ID="bug_issuelinks" rank="1">
+          <name><![CDATA[issuelinks]]></name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+        <formElement type="cross" ID="bug_orgtuleapcrossreferences" rank="2">
+          <name><![CDATA[orgtuleapcrossreferences]]></name>
+          <label><![CDATA[References]]></label>
+        </formElement>
+      </formElements>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="title">
+      <shortname>title</shortname>
+      <label>Title</label>
+      <description>Define the title of an artifact</description>
+      <field REF="bug_summary"/>
+    </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="bug_description"/>
+    </semantic>
+    <semantic type="status">
+      <shortname>status</shortname>
+      <label>Status</label>
+      <description>Define the status of an artifact</description>
+      <field REF="bug_status"/>
+      <open_values>
+        <open_value REF="V1"/>
+        <open_value REF="V2"/>
+        <open_value REF="V4"/>
+        <open_value REF="V5"/>
+        <open_value REF="V6"/>
+        <open_value REF="V7"/>
+        <open_value REF="V8"/>
+        <open_value REF="V9"/>
+        <open_value REF="V10"/>
+        <open_value REF="V11"/>
+        <open_value REF="V12"/>
+        <open_value REF="V13"/>
+        <open_value REF="V14"/>
+        <open_value REF="V15"/>
+        <open_value REF="V16"/>
+        <open_value REF="V17"/>
+      </open_values>
+    </semantic>
+    <semantic type="done">
+      <shortname><![CDATA[done]]></shortname>
+      <label><![CDATA[Done]]></label>
+      <description><![CDATA[Define the closed status that are considered Done]]></description>
+      <closed_values>
+        <closed_value REF="V3"/>
+      </closed_values>
+    </semantic>
+  </semantics>
+  <reports>
+    <report is_default="1">
+      <name><![CDATA[All issues]]></name>
+      <description><![CDATA[All the issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="1">
+          <field REF="bug_summary"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="bug_description"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="bug_status"/>
+        </criteria>
+        <criteria rank="4">
+          <field REF="bug_priority"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="bug_summary"/>
+            <field REF="bug_status"/>
+            <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report>
+      <name><![CDATA[Open issues]]></name>
+      <description><![CDATA[All open issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="0" is_advanced="1">
+          <field REF="bug_status"/>
+          <criteria_value type="list">
+            <selected_value REF="V1"/>
+            <selected_value REF="V2"/>
+            <selected_value REF="V4"/>
+            <selected_value REF="V5"/>
+            <selected_value REF="V6"/>
+            <selected_value REF="V7"/>
+            <selected_value REF="V8"/>
+            <selected_value REF="V9"/>
+            <selected_value REF="V10"/>
+            <selected_value REF="V11"/>
+            <selected_value REF="V12"/>
+            <selected_value REF="V13"/>
+            <selected_value REF="V14"/>
+            <selected_value REF="V15"/>
+            <selected_value REF="V16"/>
+            <selected_value REF="V17"/>
+          </criteria_value>
+        </criteria>
+        <criteria rank="1">
+          <field REF="bug_summary"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="bug_description"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="bug_priority"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="bug_summary"/>
+            <field REF="bug_status"/>
+            <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report>
+      <name><![CDATA[Done issues]]></name>
+      <description><![CDATA[All done issues in this tracker]]></description>
+      <criterias>
+        <criteria rank="0" is_advanced="1">
+          <field REF="bug_status"/>
+          <criteria_value type="list">
+            <selected_value REF="V3"/>
+          </criteria_value>
+        </criteria>
+        <criteria rank="1">
+          <field REF="bug_summary"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="bug_description"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="bug_priority"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="bug_summary"/>
+            <field REF="bug_status"/>
+            <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0" is_in_expert_mode="1" expert_query="created BETWEEN(NOW() - 1w, NOW())">
+      <name><![CDATA[Created recently]]></name>
+      <description><![CDATA[All issues created recently in this tracker]]></description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="bug_summary"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="bug_description"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="bug_priority"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="bug_created"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="bug_summary"/>
+            <field REF="bug_status"/>
+            <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
+            <field REF="bug_created"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+    <report is_default="0" is_in_expert_mode="1" expert_query="updated BETWEEN(NOW() - 1w, NOW())">
+      <name><![CDATA[Updated recently]]></name>
+      <description><![CDATA[All issues updated recently in this tracker]]></description>
+      <criterias>
+        <criteria rank="0">
+          <field REF="bug_summary"/>
+        </criteria>
+        <criteria rank="1">
+          <field REF="bug_description"/>
+        </criteria>
+        <criteria rank="2">
+          <field REF="bug_priority"/>
+        </criteria>
+        <criteria rank="3">
+          <field REF="bug_updated"/>
+        </criteria>
+      </criterias>
+      <renderers>
+        <renderer rank="0" type="table" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns>
+            <field REF="bug_summary"/>
+            <field REF="bug_status"/>
+            <field REF="bug_jira_issue_url"/>
+            <field REF="bug_priority"/>
+            <field REF="bug_updated"/>
+          </columns>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <permissions>
+    <permission scope="field" REF="bug_summary" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_summary" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_summary" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_description" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_description" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_description" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_artifact_id" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_jira_issue_url" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_creator" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_creator" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_creator" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_created" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_created" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_created" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_updated" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_updated" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_updated" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_resolutiondate" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_resolutiondate" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_resolutiondate" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_status" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_status" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_status" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_priority" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10202" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10204" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_versions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_customfield_10215" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10214" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10214" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_fixversions" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10401" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10401" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10290" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10290" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10231" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10231" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10232" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10232" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10235" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10235" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10236" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10236" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10229" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10229" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10233" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10233" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10234" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10234" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10249" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10249" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10287" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10287" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_customfield_10405" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_customfield_10405" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_duedate" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_duedate" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_attachment" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_attachment" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_attachment" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_issuelinks" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_issuelinks" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_issuelinks" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="bug_orgtuleapcrossreferences" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="bug_orgtuleapcrossreferences" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="bug_orgtuleapcrossreferences" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+  </permissions>
+  <artifacts>
+    <artifact id="10777">
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T10:56:18+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[1]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="text" field_name="customfield_10231">
+          <value format="html"><![CDATA[<p>-vcvd</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10232">
+          <value format="html"><![CDATA[<p>-</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10233">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10234">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10235">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10229">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
+        </field_change>
+        <field_change field_name="customfield_10215" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>gdg</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10204">
+          <value format="html"><![CDATA[<p>dgdg</p>]]></value>
+        </field_change>
+        <field_change field_name="customfield_10249" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10249_std_itg]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[bug1]]></value>
+        </field_change>
+        <field_change field_name="customfield_10202" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10236">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SBX-6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:06:46+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="duedate" type="date">
+          <value format="ISO8601"><![CDATA[2021-03-24T00:00:00+01:00]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+            <body format="html"><![CDATA[sdgdsg]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[2]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:17+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[4]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdv]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[5]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:27+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdvd]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+            <body format="html"><![CDATA[ffdfdgf]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[8]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10753">
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-02-25T18:12:24+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[1]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value/>
+        </field_change>
+        <field_change type="text" field_name="customfield_10231">
+          <value format="html"><![CDATA[<p>-</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10232">
+          <value format="html"><![CDATA[<p>-</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10233">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10234">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10235">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10229">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
+        </field_change>
+        <field_change field_name="customfield_10215" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks"/>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>dsfsdf</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10204">
+          <value format="html"><![CDATA[<p>fsfsf</p>]]></value>
+        </field_change>
+        <field_change field_name="customfield_10249" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10249_std_itg]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[bug2]]></value>
+        </field_change>
+        <field_change field_name="customfield_10202" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10236">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SBX-5]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:06:46+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="duedate" type="date">
+          <value format="ISO8601"><![CDATA[2021-03-24T00:00:00+01:00]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+            <body format="html"><![CDATA[sdgdsg]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[2]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:17+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[4]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdv]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[5]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:27+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdvd]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+            <body format="html"><![CDATA[ffdfdgf]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[8]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+    <artifact id="10747">
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-02-23T12:19:21+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[1]]></value>
+        </field_change>
+        <field_change field_name="fixversions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_fixversions_1_0]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10231">
+          <value format="html"><![CDATA[<p>-</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10232">
+          <value format="html"><![CDATA[<p>-</p>]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10233">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10234">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10235">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10229">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change field_name="priority" type="list" bind="static">
+          <value format="id"><![CDATA[bug_priority_low]]></value>
+        </field_change>
+        <field_change field_name="customfield_10215" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
+        </field_change>
+        <field_change field_name="versions" type="list" bind="static">
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
+        </field_change>
+        <field_change type="art_link" field_name="issuelinks">
+          <value nature="_is_child"><![CDATA[10750]]></value>
+          <value nature="_is_child"><![CDATA[10751]]></value>
+          <value nature="_is_child"><![CDATA[10752]]></value>
+        </field_change>
+        <field_change type="text" field_name="description">
+          <value format="html"><![CDATA[<p>cqsfqs</p>]]></value>
+        </field_change>
+        <field_change type="float" field_name="customfield_10401">
+          <value><![CDATA[10]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10204">
+          <value format="html"><![CDATA[<p>fsqf</p>]]></value>
+        </field_change>
+        <field_change field_name="customfield_10249" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10249_-]]></value>
+        </field_change>
+        <field_change type="string" field_name="summary">
+          <value><![CDATA[bug1]]></value>
+        </field_change>
+        <field_change field_name="customfield_10202" type="list" bind="static">
+          <value format="id"><![CDATA[bug_customfield_10202_logiciel]]></value>
+        </field_change>
+        <field_change type="text" field_name="customfield_10236">
+          <value format="html"><![CDATA[-]]></value>
+        </field_change>
+        <field_change type="string" field_name="jira_issue_url">
+          <value><![CDATA[https://jira.example.com/browse/SBX-1]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:06:46+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="duedate" type="date">
+          <value format="ISO8601"><![CDATA[2021-03-24T00:00:00+01:00]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:12+01:00]]></submitted_on>
+            <body format="html"><![CDATA[sdgdsg]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[2]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:17+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[4]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:22+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdv]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[5]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:27+01:00]]></submitted_on>
+        <comments/>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[6]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:32+01:00]]></submitted_on>
+            <body format="html"><![CDATA[vdvd]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[7]]></value>
+        </field_change>
+      </changeset>
+      <changeset>
+        <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+        <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+        <comments>
+          <comment>
+            <submitted_by format="username"><![CDATA[john_doe]]></submitted_by>
+            <submitted_on format="ISO8601"><![CDATA[2021-03-24T11:08:56+01:00]]></submitted_on>
+            <body format="html"><![CDATA[ffdfdgf]]></body>
+          </comment>
+        </comments>
+        <field_change field_name="status" type="list" bind="static">
+          <value format="id"><![CDATA[8]]></value>
+        </field_change>
+      </changeset>
+    </artifact>
+  </artifacts>
+</tracker>

@@ -1,0 +1,576 @@
+{
+    "permissions": {
+        "VIEW_WORKFLOW_READONLY": {
+            "id": "45",
+            "key": "VIEW_WORKFLOW_READONLY",
+            "name": "Voir le worflow en lecture seule",
+            "type": "PROJECT",
+            "description": "admin.permissions.descriptions.VIEW_WORKFLOW_READONLY",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "CREATE_ISSUES": {
+            "id": "11",
+            "key": "CREATE_ISSUES",
+            "name": "Créer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à créer des tickets.",
+            "havePermission": true
+        },
+        "VIEW_DEV_TOOLS": {
+            "id": "29",
+            "key": "VIEW_DEV_TOOLS",
+            "name": "Afficher les outils de développement",
+            "type": "PROJECT",
+            "description": "Permet aux utilisateurs d'un projet logiciel d'afficher les informations relatives au développement pour cette demande, telle que les informations relatives aux commits, aux revues et au build.",
+            "havePermission": true
+        },
+        "BULK_CHANGE": {
+            "id": "33",
+            "key": "BULK_CHANGE",
+            "name": "Changement en lot",
+            "type": "GLOBAL",
+            "description": "Capacité à modifier une série de tickets en une fois. Par exemple, traiter plusieurs tickets en une seule étape.",
+            "havePermission": true
+        },
+        "CREATE_ATTACHMENT": {
+            "id": "19",
+            "key": "CREATE_ATTACHMENT",
+            "name": "Créer des pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent créer des pièces jointes.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "DELETE_OWN_COMMENTS": {
+            "id": "37",
+            "key": "DELETE_OWN_COMMENTS",
+            "name": "Supprimer ses propres commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer ses propres commentaires sur les tickets.",
+            "havePermission": true
+        },
+        "WORK_ON_ISSUES": {
+            "id": "20",
+            "key": "WORK_ON_ISSUES",
+            "name": "Travailler sur des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à consigner le travail effectué sur un ticket. Utile uniquement si le suivi temporel est activé.",
+            "havePermission": true
+        },
+        "PROJECT_ADMIN": {
+            "id": "23",
+            "key": "PROJECT_ADMIN",
+            "name": "Gérer les projets",
+            "type": "PROJECT",
+            "description": "Capacité à gérer un projet dans Jira.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "COMMENT_EDIT_ALL": {
+            "id": "34",
+            "key": "COMMENT_EDIT_ALL",
+            "name": "Modifier tous les commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à modifier tous les commentaires sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "ATTACHMENT_DELETE_OWN": {
+            "id": "39",
+            "key": "ATTACHMENT_DELETE_OWN",
+            "name": "Supprimer ses propres pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent supprimer leurs propres pièces jointes.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "WORKLOG_DELETE_OWN": {
+            "id": "42",
+            "key": "WORKLOG_DELETE_OWN",
+            "name": "Supprimer ses propres journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer ses propres journaux de travail sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "CLOSE_ISSUE": {
+            "id": "18",
+            "key": "CLOSE_ISSUE",
+            "name": "Fermer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à fermer des tickets. Souvent utile lors de la résolution de tickets par vos développeurs et de leur fermeture par le service d'assurance qualité.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "MANAGE_WATCHER_LIST": {
+            "id": "32",
+            "key": "MANAGE_WATCHER_LIST",
+            "name": "Gérer les observateurs",
+            "type": "PROJECT",
+            "description": "Capacité à gérer les observateurs d'un ticket.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "VIEW_VOTERS_AND_WATCHERS": {
+            "id": "31",
+            "key": "VIEW_VOTERS_AND_WATCHERS",
+            "name": "Afficher les votants et les observateurs",
+            "type": "PROJECT",
+            "description": "Capacité à afficher les votants et les observateurs d'un ticket.",
+            "havePermission": true
+        },
+        "ADD_COMMENTS": {
+            "id": "15",
+            "key": "ADD_COMMENTS",
+            "name": "Ajouter des commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à commenter des tickets.",
+            "havePermission": true
+        },
+        "COMMENT_DELETE_ALL": {
+            "id": "36",
+            "key": "COMMENT_DELETE_ALL",
+            "name": "Supprimer tous les commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer tous les commentaires sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "CREATE_ISSUE": {
+            "id": "11",
+            "key": "CREATE_ISSUE",
+            "name": "Créer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à créer des tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "DELETE_OWN_ATTACHMENTS": {
+            "id": "39",
+            "key": "DELETE_OWN_ATTACHMENTS",
+            "name": "Supprimer ses propres pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent supprimer leurs propres pièces jointes.",
+            "havePermission": true
+        },
+        "DELETE_ALL_ATTACHMENTS": {
+            "id": "38",
+            "key": "DELETE_ALL_ATTACHMENTS",
+            "name": "Supprimer toutes les pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent supprimer toutes les pièces jointes.",
+            "havePermission": true
+        },
+        "ASSIGN_ISSUE": {
+            "id": "13",
+            "key": "ASSIGN_ISSUE",
+            "name": "Attribuer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à assigner des tickets à d'autres personnes.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "LINK_ISSUE": {
+            "id": "21",
+            "key": "LINK_ISSUE",
+            "name": "Lier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à lier ensemble des tickets et à créer des tickets liées. Utile uniquement si le suivi temporel est activé.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "EDIT_OWN_WORKLOGS": {
+            "id": "40",
+            "key": "EDIT_OWN_WORKLOGS",
+            "name": "Modifier ses propres journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à modifier ses propres journaux de travail sur les tickets.",
+            "havePermission": true
+        },
+        "CREATE_ATTACHMENTS": {
+            "id": "19",
+            "key": "CREATE_ATTACHMENTS",
+            "name": "Créer des pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent créer des pièces jointes.",
+            "havePermission": true
+        },
+        "EDIT_ALL_WORKLOGS": {
+            "id": "41",
+            "key": "EDIT_ALL_WORKLOGS",
+            "name": "Modifier tous les journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à modifier tous les commentaires journaux de travail sur les tickets.",
+            "havePermission": true
+        },
+        "SCHEDULE_ISSUE": {
+            "id": "28",
+            "key": "SCHEDULE_ISSUE",
+            "name": "Planifier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à afficher ou modifier la date d'échéance d'un ticket.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "CLOSE_ISSUES": {
+            "id": "18",
+            "key": "CLOSE_ISSUES",
+            "name": "Fermer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à fermer des tickets. Souvent utile lors de la résolution de tickets par vos développeurs et de leur fermeture par le service d'assurance qualité.",
+            "havePermission": true
+        },
+        "SET_ISSUE_SECURITY": {
+            "id": "26",
+            "key": "SET_ISSUE_SECURITY",
+            "name": "Configurer la sécurité du ticket",
+            "type": "PROJECT",
+            "description": "Capacité à configurer le niveau de sécurité d'un ticket afin que les seules personnes de ce niveau de sécurité puissent voir le ticket.",
+            "havePermission": true
+        },
+        "SCHEDULE_ISSUES": {
+            "id": "28",
+            "key": "SCHEDULE_ISSUES",
+            "name": "Planifier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à afficher ou modifier la date d'échéance d'un ticket.",
+            "havePermission": true
+        },
+        "WORKLOG_DELETE_ALL": {
+            "id": "43",
+            "key": "WORKLOG_DELETE_ALL",
+            "name": "Supprimer tous les journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer tous les commentaires journaux de travail sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "COMMENT_DELETE_OWN": {
+            "id": "37",
+            "key": "COMMENT_DELETE_OWN",
+            "name": "Supprimer ses propres commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer ses propres commentaires sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "ADMINISTER_PROJECTS": {
+            "id": "23",
+            "key": "ADMINISTER_PROJECTS",
+            "name": "Gérer les projets",
+            "type": "PROJECT",
+            "description": "Capacité à gérer un projet dans Jira.",
+            "havePermission": true
+        },
+        "DELETE_ALL_COMMENTS": {
+            "id": "36",
+            "key": "DELETE_ALL_COMMENTS",
+            "name": "Supprimer tous les commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer tous les commentaires sur les tickets.",
+            "havePermission": true
+        },
+        "RESOLVE_ISSUES": {
+            "id": "14",
+            "key": "RESOLVE_ISSUES",
+            "name": "Traiter les tickets",
+            "type": "PROJECT",
+            "description": "Capacité à traiter et rouvrir des tickets. Ceci inclut la capacité de configurer une version corrigée.",
+            "havePermission": true
+        },
+        "VIEW_READONLY_WORKFLOW": {
+            "id": "45",
+            "key": "VIEW_READONLY_WORKFLOW",
+            "name": "Voir le worflow en lecture seule",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent afficher une version en lecture seule d'un workflow.",
+            "havePermission": true
+        },
+        "ADMINISTER": {
+            "id": "0",
+            "key": "ADMINISTER",
+            "name": "Administrateurs Jira",
+            "type": "GLOBAL",
+            "description": "Capacité d'effectuer la plupart des fonctions administratives (à l'exception d'Importer et exporter, configuration SMTP, etc.).",
+            "havePermission": true
+        },
+        "GLOBAL_BROWSE_ARCHIVE": {
+            "id": "-1",
+            "key": "GLOBAL_BROWSE_ARCHIVE",
+            "name": "Parcourir les archives",
+            "type": "GLOBAL",
+            "description": "Capacité à parcourir tous les tickets archivés.",
+            "havePermission": false
+        },
+        "MOVE_ISSUES": {
+            "id": "25",
+            "key": "MOVE_ISSUES",
+            "name": "Déplacer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à déplacer les tickets entre les projets ou entre les workflows du même projet (le cas échéant). Notez que l'utilisateur ne peut déplacer des tickets que vers un projet qu'il a eu l'autorisation de créer.",
+            "havePermission": true
+        },
+        "TRANSITION_ISSUES": {
+            "id": "46",
+            "key": "TRANSITION_ISSUES",
+            "name": "Tickets de transition",
+            "type": "PROJECT",
+            "description": "Capacité à transitionner les tickets.",
+            "havePermission": true
+        },
+        "SYSTEM_ADMIN": {
+            "id": "44",
+            "key": "SYSTEM_ADMIN",
+            "name": "Administrateurs de système Jira",
+            "type": "GLOBAL",
+            "description": "Capacité d'effectuer toutes les fonctions administratives. Il doit y avoir au moins un groupe avec cette autorisation.",
+            "havePermission": true
+        },
+        "DELETE_OWN_WORKLOGS": {
+            "id": "42",
+            "key": "DELETE_OWN_WORKLOGS",
+            "name": "Supprimer ses propres journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer ses propres journaux de travail sur les tickets.",
+            "havePermission": true
+        },
+        "BROWSE": {
+            "id": "10",
+            "key": "BROWSE",
+            "name": "Parcourir les projets",
+            "type": "PROJECT",
+            "description": "Capacité à parcourir des projets et les tickets qu'ils comportent.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "EDIT_ISSUE": {
+            "id": "12",
+            "key": "EDIT_ISSUE",
+            "name": "Modifier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à modifier des tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "MODIFY_REPORTER": {
+            "id": "30",
+            "key": "MODIFY_REPORTER",
+            "name": "Modifier le rapporteur",
+            "type": "PROJECT",
+            "description": "Capacité à modifier le rapporteur lors de la création ou de la modification d'un ticket.",
+            "havePermission": true
+        },
+        "EDIT_ISSUES": {
+            "id": "12",
+            "key": "EDIT_ISSUES",
+            "name": "Modifier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à modifier des tickets.",
+            "havePermission": true
+        },
+        "MANAGE_WATCHERS": {
+            "id": "32",
+            "key": "MANAGE_WATCHERS",
+            "name": "Gérer les observateurs",
+            "type": "PROJECT",
+            "description": "Capacité à gérer les observateurs d'un ticket.",
+            "havePermission": true
+        },
+        "EDIT_OWN_COMMENTS": {
+            "id": "35",
+            "key": "EDIT_OWN_COMMENTS",
+            "name": "Modifier ses propres commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à modifier ses propres commentaires sur les tickets.",
+            "havePermission": true
+        },
+        "ASSIGN_ISSUES": {
+            "id": "13",
+            "key": "ASSIGN_ISSUES",
+            "name": "Attribuer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à assigner des tickets à d'autres personnes.",
+            "havePermission": true
+        },
+        "BROWSE_PROJECTS": {
+            "id": "10",
+            "key": "BROWSE_PROJECTS",
+            "name": "Parcourir les projets",
+            "type": "PROJECT",
+            "description": "Capacité à parcourir des projets et les tickets qu'ils comportent.",
+            "havePermission": true
+        },
+        "VIEW_VERSION_CONTROL": {
+            "id": "29",
+            "key": "VIEW_VERSION_CONTROL",
+            "name": "Afficher les outils de développement",
+            "type": "PROJECT",
+            "description": "Permet aux utilisateurs d'afficher les informations relatives au développement sur l'écran Afficher le ticket, notamment les informations en lien avec les validations, les revues et les builds.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "WORK_ISSUE": {
+            "id": "20",
+            "key": "WORK_ISSUE",
+            "name": "Travailler sur des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à consigner le travail effectué sur un ticket. Utile uniquement si le suivi temporel est activé.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "COMMENT_ISSUE": {
+            "id": "15",
+            "key": "COMMENT_ISSUE",
+            "name": "Ajouter des commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à commenter des tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "WORKLOG_EDIT_ALL": {
+            "id": "41",
+            "key": "WORKLOG_EDIT_ALL",
+            "name": "Modifier tous les journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à modifier tous les commentaires journaux de travail sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "EDIT_ALL_COMMENTS": {
+            "id": "34",
+            "key": "EDIT_ALL_COMMENTS",
+            "name": "Modifier tous les commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à modifier tous les commentaires sur les tickets.",
+            "havePermission": true
+        },
+        "DELETE_ISSUE": {
+            "id": "16",
+            "key": "DELETE_ISSUE",
+            "name": "Supprimer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer des tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "MANAGE_SPRINTS_PERMISSION": {
+            "id": "-1",
+            "key": "MANAGE_SPRINTS_PERMISSION",
+            "name": "Gérer les sprints",
+            "type": "PROJECT",
+            "description": "Capacité à gérer les sprints.",
+            "havePermission": true
+        },
+        "USER_PICKER": {
+            "id": "27",
+            "key": "USER_PICKER",
+            "name": "Parcourir les utilisateurs",
+            "type": "GLOBAL",
+            "description": "Capacité à sélectionner un utilisateur ou un groupe dans une fenêtre contextuelle et capacité à utiliser la fonctionnalité de partage des tickets. Les utilisateurs bénéficiant de cette autorisation pourront également voir les noms de tous les utilisateurs et groupes du système.",
+            "havePermission": true
+        },
+        "CREATE_SHARED_OBJECTS": {
+            "id": "22",
+            "key": "CREATE_SHARED_OBJECTS",
+            "name": "Créer des objets partagés",
+            "type": "GLOBAL",
+            "description": "Capacité à partager des tableaux de bord et des filtres avec d'autres utilisateurs, groupes et rôles.",
+            "havePermission": true
+        },
+        "ATTACHMENT_DELETE_ALL": {
+            "id": "38",
+            "key": "ATTACHMENT_DELETE_ALL",
+            "name": "Supprimer toutes les pièces jointes",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent supprimer toutes les pièces jointes.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "DELETE_ISSUES": {
+            "id": "16",
+            "key": "DELETE_ISSUES",
+            "name": "Supprimer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer des tickets.",
+            "havePermission": true
+        },
+        "MANAGE_GROUP_FILTER_SUBSCRIPTIONS": {
+            "id": "24",
+            "key": "MANAGE_GROUP_FILTER_SUBSCRIPTIONS",
+            "name": "Gérer les abonnements aux filtres de groupe",
+            "type": "GLOBAL",
+            "description": "Capacité à gérer (créer et supprimer) les abonnements aux filtres de groupe.",
+            "havePermission": true
+        },
+        "RESOLVE_ISSUE": {
+            "id": "14",
+            "key": "RESOLVE_ISSUE",
+            "name": "Traiter les tickets",
+            "type": "PROJECT",
+            "description": "Capacité à traiter et rouvrir des tickets. Ceci inclut la capacité de configurer une version corrigée.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "ASSIGNABLE_USER": {
+            "id": "17",
+            "key": "ASSIGNABLE_USER",
+            "name": "Utilisateur pouvant être attribué",
+            "type": "PROJECT",
+            "description": "Les utilisateurs bénéficiant de cette autorisation peuvent se voir assigner des tickets.",
+            "havePermission": true
+        },
+        "TRANSITION_ISSUE": {
+            "id": "46",
+            "key": "TRANSITION_ISSUE",
+            "name": "Tickets de transition",
+            "type": "PROJECT",
+            "description": "Capacité à transitionner les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "COMMENT_EDIT_OWN": {
+            "id": "35",
+            "key": "COMMENT_EDIT_OWN",
+            "name": "Modifier ses propres commentaires",
+            "type": "PROJECT",
+            "description": "Capacité à modifier ses propres commentaires sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "MOVE_ISSUE": {
+            "id": "25",
+            "key": "MOVE_ISSUE",
+            "name": "Déplacer des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à déplacer les tickets entre les projets ou entre les workflows du même projet (le cas échéant). Notez que l'utilisateur ne peut déplacer des tickets que vers un projet qu'il a eu l'autorisation de créer.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "WORKLOG_EDIT_OWN": {
+            "id": "40",
+            "key": "WORKLOG_EDIT_OWN",
+            "name": "Modifier ses propres journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à modifier ses propres journaux de travail sur les tickets.",
+            "havePermission": true,
+            "deprecatedKey": true
+        },
+        "DELETE_ALL_WORKLOGS": {
+            "id": "43",
+            "key": "DELETE_ALL_WORKLOGS",
+            "name": "Supprimer tous les journaux de travail",
+            "type": "PROJECT",
+            "description": "Capacité à supprimer tous les commentaires journaux de travail sur les tickets.",
+            "havePermission": true
+        },
+        "LINK_ISSUES": {
+            "id": "21",
+            "key": "LINK_ISSUES",
+            "name": "Lier des tickets",
+            "type": "PROJECT",
+            "description": "Capacité à lier ensemble des tickets et à créer des tickets liées. Utile uniquement si le suivi temporel est activé.",
+            "havePermission": true
+        }
+    }
+}
