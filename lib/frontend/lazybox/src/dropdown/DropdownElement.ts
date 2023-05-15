@@ -18,7 +18,6 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import type { SearchInput } from "../SearchInput";
 import type { LazyboxNewItemCallback, LazyboxTemplatingCallback } from "../Options";
 import type { SelectionElement } from "../selection/SelectionElement";
 import { getAllGroupsTemplate } from "./GroupTemplate";
@@ -35,7 +34,7 @@ export type DropdownElement = {
     new_item_callback: LazyboxNewItemCallback | undefined;
     new_item_button_label: string;
     templating_callback: LazyboxTemplatingCallback;
-    search_input: SearchInput & HTMLElement;
+    search_input: HTMLElement;
     selection: SelectionElement & HTMLElement;
 };
 type InternalDropdownElement = Readonly<DropdownElement> & {
@@ -53,9 +52,8 @@ export const observeOpen = (
         return;
     }
     if (new_value) {
-        dispatch(host, "open");
         host.content();
-        host.search_input.setFocus();
+        dispatch(host, "open");
         return;
     }
     dispatch(host, "close");

@@ -141,7 +141,7 @@ describe(`DropdownElement`, () => {
             return Object.assign(dropdown, {
                 open: false,
                 content: () => dropdown,
-                search_input: { setFocus: noop },
+                search_input: doc.createElement("span"),
             }) as HostElement;
         };
 
@@ -155,15 +155,12 @@ describe(`DropdownElement`, () => {
             expect(dispatch).not.toHaveBeenCalled();
         });
 
-        it(`when the dropdown opens, it dispatches an "open" event
-            and focuses the search input`, () => {
+        it(`when the dropdown opens, it dispatches an "open" event`, () => {
             const host = getHost();
-            const focusSearch = vi.spyOn(host.search_input, "setFocus");
             const dispatch = vi.spyOn(host, "dispatchEvent");
 
             observeOpen(host, true, false);
 
-            expect(focusSearch).toHaveBeenCalled();
             const event = dispatch.mock.calls[0][0];
             expect(event.type).toBe("open");
         });

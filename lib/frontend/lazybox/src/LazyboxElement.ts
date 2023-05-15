@@ -136,6 +136,7 @@ export const getSearchInput = (host: HostElement): SearchInput & HTMLElement => 
         ? "lazybox-multiple-search-section"
         : "lazybox-single-search-section";
     element.classList.add(classname);
+    element.setAttribute("tabindex", "0");
     element.addEventListener("search-input", () => {
         host.dropdown_element.open = true;
     });
@@ -187,6 +188,7 @@ const onOpen = (host: HostElement): void => {
     host.scrolling_manager?.lockScrolling();
     host.selection_element.classList.add("lazybox-with-open-dropdown");
     host.cleanupAutoUpdate = autoUpdate(host, host.dropdown_element, () => compute(host));
+    host.search_input_element.focus();
 };
 
 const onClose = (host: InternalLazyboxElement): void => {
