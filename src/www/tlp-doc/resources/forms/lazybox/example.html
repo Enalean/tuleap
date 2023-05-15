@@ -4,8 +4,16 @@
     <p class="tlp-text-info"><i class="fa-solid fa-circle-question" aria-hidden="true"></i>
         In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a remote endpoint.
     </p>
+    <p class="tlp-text-info">Focus buttons or items in the dropdown with the ⇆ Tabulation key. Cycle through the dropdown items with the ↑ up and ↓ down arrow keys.</p>
     <script type="text/javascript">
         import { createLazybox } from "@tuleap/lazybox";
+
+        const items_group = {
+            label: "✅ Matching items",
+            empty_message: "No matching item",
+            is_loading: false,
+            items: []
+        };
 
         const mount_point = document.getElementById("lazybox-link-selector");
         const lazybox = createLazybox(document);
@@ -15,7 +23,17 @@
             search_input_placeholder: "Type a number",
             new_item_button_label: "→ Create a new item…",
             new_item_callback: () => {
-                console.log("Clicked on new item");
+                lazybox.replaceDropdownContent([
+                    {
+                        ...items_group,
+                        items: [
+                            {
+                                value: { id: 108, color: "firemist-silver", xref: "story #108", title: "New item" },
+                                is_disabled: false,
+                            }
+                        ]
+                    }
+                ]);
             },
             templating_callback: (html, item) =>
                 html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">
@@ -27,19 +45,17 @@
             },
             search_input_callback: (query) => {
                 console.log("Search query : " + query);
-                lazybox.replaceDropdownContent([{
-                    label: "Matching items",
-                    empty_message: "No matching item",
-                    is_loading: false,
-                    items: [{
-                        value: {
-                            id: 105,
-                            color: "graffiti-yellow",
-                            xref: "story #105",
-                            title: "Do more stuff",
-                        }
-                    }]
-                }])
+                lazybox.replaceDropdownContent([
+                    {
+                        ...items_group,
+                        items :[
+                            {
+                                value: { id: 105, color: "graffiti-yellow", xref: "story #105", title: "Do more stuff" },
+                                is_disabled: false,
+                            }
+                        ]
+                    }
+                ]);
             }
         };
         mount_point.replaceWith(link_selector);

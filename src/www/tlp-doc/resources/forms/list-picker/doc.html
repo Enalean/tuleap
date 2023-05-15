@@ -1,29 +1,34 @@
 <p>
-    List pickers are the new Select2. They are meant to be easier to use and to customise while having a similar UX.
+    List picker offers an easier way to pick values from a <code class="code-inline">&lt;select&gt;</code>. It is meant to be easier to use and to customise than Select2, while having a similar user experience.
+    <br>
+    If you need an auto-completer, a way to search among a lot of values fetched asynchronously, if each group of items can be fetched separately from the others, if you need to add new values dynamically, please consider using <a href="#lazybox">Lazybox</a> instead.
     <br>
     <br>
-    Please note: There are predefined templates available by using special data-attributes on <code class="code-inline">option</code> tags:
+    Please note: There are predefined templates available by using special data-attributes on <code class="code-inline">&lt;option&gt;</code> tags:
     <ul>
-        <li>Use <code class="code-inline">data-avatar-url</code> with the value of avatar url to display user avatar. Example:  <code class="code-inline">data-avatar-url="https://my-avatar.example.com"</code> </li>
-        <li>Use <code class="code-inline">data-color-value</code> with the value of the color to display a colored circle next to the option label. The color must be either a tlp-color (i.e inca-silver) or in hexadecimal (i.e #8f8f8f). Example: <code class="code-inline">data-avatar-url="fiesta-red"</code></li>
+        <li>Use <code class="code-inline">data-avatar-url</code> with the value of avatar url to display user avatar. Example: <code class="code-inline">data-avatar-url="https://my-avatar.example.com"</code></li>
+        <li>Use <code class="code-inline">data-color-value</code> with the value of the color to display a colored circle next to the option label. The color must be either a tlp-color (for example <code class="code-inline">inca-silver</code>) or in hexadecimal (for example <code class="code-inline">#8f8f8f</code>). Example: <code class="code-inline">data-avatar-url="fiesta-red"</code></li>
     </ul>
-    You cannot have the both dataset in a same option. <br><br>
-    You can also use the <code class="code-inline">items_template_formatter</code> callback to display these templates. <br><br>
+    You cannot have both datasets on the same option.
+    <br>
+    <br>
+    You can also use the <code class="code-inline">items_template_formatter</code> callback to display these templates.
     <br>
     <br>
     Options:
     <ul>
-        <li><code class="code-inline">locale: string | undefined</code>: A locale string formatted with underscores. For example: "en_US", "fr_FR". It is used to localize ListPicker. If undefined, it will fallback to "en_US"</li>
-        <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the field</li>
-        <li><code class="code-inline">is_filterable (default: false)</code>: A boolean to add a search input in the list-picker dropdown</li>
+        <li><code class="code-inline">locale: string | undefined</code>: A locale string formatted with underscores. For example: "en_US", "fr_FR". It is used to localize List Picker. If undefined, it will fallback to "en_US"</li>
+        <li><code class="code-inline">placeholder (default: "")</code>: A (translated) text inviting the user to fill up the field.</li>
+        <li><code class="code-inline">is_filterable (default: false)</code>: A boolean to add a search input in the list picker dropdown</li>
+        <li><code class="code-inline">none_value: string (default: null)</code>: The none value given on the select. If not null, the option with this value will be automatically selected when no other value is selected. It will also be removed from the selection when any other value is selected.</li>
         <li>
-            <code class="code-inline">items_template_formatter (default: none)</code>: A callback function returning a lit/html template result to customise items templates
+            <code class="code-inline">items_template_formatter (default: none)</code>: A callback function returning a lit/html template result to customise items templates.
             <br>
             It takes three parameters:
             <ul>
                 <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer to build a secured TemplateResult</li>
-                <li><code class="code-inline">option_value: string</code> The value of the current select box option</li>
-                <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
+                <li><code class="code-inline">option_value: string</code> The value of the current select box <code class="code-inline">&lt;option&gt;</code></li>
+                <li><code class="code-inline">option_label: string</code> The text content of the current select box <code class="code-inline">&lt;option&gt;</code></li>
             </ul>
         </li>
     </ul>
