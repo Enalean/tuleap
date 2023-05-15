@@ -509,7 +509,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $aggregates = false;
 
         $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
-        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates);
 
         $html .= $this->fetchTBody(
             $matching_ids,
@@ -641,7 +641,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $columns              = $this->getTableColumns($only_one_column, $use_data_from_db);
         $limited_matching_ids = $this->getLimitedResult($store_in_session, $matching_ids, $offset, $aggregates);
-        $queries              = $this->buildOrderedQuery($limited_matching_ids, $columns, $aggregates, $store_in_session);
+        $queries              = $this->buildOrderedQuery($limited_matching_ids, $columns, $aggregates);
 
         $html .= $this->fetchTBody(
             $matching_ids,
@@ -1386,17 +1386,19 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         }
-        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, '', false);
-        $dao     = new DataAccessObject();
         $results = [];
-        foreach ($queries as $key => $sql) {
-            if ($key === 'aggregates_group_by') {
-                foreach ($sql as $k => $s) {
-                    $results[$k] = $dao->retrieve($s);
-                }
-            } else {
-                if ($dar = $dao->retrieve($sql)) {
-                    $results = array_merge($results, $dar->getRow());
+        if (count($aggregates) !== 0) {
+            $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates);
+            $dao     = new DataAccessObject();
+            foreach ($queries as $key => $sql) {
+                if ($key === 'aggregates_group_by') {
+                    foreach ($sql as $k => $s) {
+                        $results[$k] = $dao->retrieve($s);
+                    }
+                } else {
+                    if ($dar = $dao->retrieve($sql)) {
+                        $results = array_merge($results, $dar->getRow());
+                    }
                 }
             }
         }
@@ -1647,7 +1649,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return array of sql queries
      */
-    public function buildOrderedQuery($matching_ids, $columns, $aggregates = false, $store_in_session = true)
+    public function buildOrderedQuery($matching_ids, $columns, $aggregates = false)
     {
         $select = $this->getBaseQuerySelect($aggregates);
         $from   = $this->getBaseQueryFrom();
@@ -1994,7 +1996,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     $matching_ids,
                                     $columns,
                                     $aggregates,
-                                    $store_in_session,
                                 );
 
                                 echo $this->fetchTBody(
