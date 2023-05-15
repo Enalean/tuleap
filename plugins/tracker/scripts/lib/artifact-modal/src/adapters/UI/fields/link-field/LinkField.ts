@@ -47,12 +47,14 @@ import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
 import "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import "./creation/ArtifactCreatorElement";
+import type { LoadingChangeEvent } from "./creation/ArtifactCreatorElement";
+import type { ArtifactCreatorController } from "../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 
 export interface LinkField {
-    readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
-    link_selector: Option<Lazybox>;
+    readonly creatorController: ArtifactCreatorController;
     current_artifact_reference: Option<ArtifactCrossReference>;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
@@ -64,7 +66,13 @@ export interface LinkField {
     possible_parents_section: GroupCollection;
     search_results_section: GroupCollection;
 }
-export type HostElement = LinkField & HTMLElement;
+type InternalLinkField = LinkField & {
+    content(): HTMLElement;
+    link_selector: Option<Lazybox>;
+    is_artifact_creator_shown: boolean;
+    is_artifact_creator_loading: boolean;
+};
+export type HostElement = InternalLinkField & HTMLElement;
 
 export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
     if (
@@ -153,9 +161,9 @@ export const setAllowedTypes = (
 };
 
 export const dropdown_section_descriptor = {
-    set: (host: LinkField, collection: GroupCollection | undefined): GroupCollection =>
+    set: (host: InternalLinkField, collection: GroupCollection | undefined): GroupCollection =>
         collection ?? [],
-    observe: (host: LinkField): void => {
+    observe: (host: InternalLinkField): void => {
         host.link_selector.apply((lazybox) => {
             lazybox.replaceDropdownContent([
                 ...host.matching_artifact_section,
@@ -204,6 +212,31 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
     }, default_html);
 };
 
+const onLoadingChange = (host: InternalLinkField, event: CustomEvent<LoadingChangeEvent>): void => {
+    host.is_artifact_creator_loading = event.detail.is_loading;
+    // Force re-render, otherwise the link type selector stays enabled
+    host.content();
+};
+const onCancel = (host: InternalLinkField): void => {
+    host.is_artifact_creator_loading = false;
+    host.is_artifact_creator_shown = false;
+    // Force re-render, otherwise the artifact creator stays visible
+    host.content();
+    // Re-assign to call "replaceDropdownContent", otherwise the dropdown becomes empty
+    host.matching_artifact_section = [...host.matching_artifact_section];
+};
+
+const getTableFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> => {
+    if (host.is_artifact_creator_shown) {
+        return html`<tuleap-artifact-modal-link-artifact-creator
+            controller="${host.creatorController}"
+            oncancel="${onCancel}"
+            onloadingchange="${onLoadingChange}"
+        ></tuleap-artifact-modal-link-artifact-creator>`;
+    }
+    return host.link_selector.mapOr((element) => html`${element}`, html``);
+};
+
 export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
     host.current_link_type = event.detail.new_link_type;
 };
@@ -212,9 +245,7 @@ const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): voi
     const options_with_feature_flag = is_feature_flag_enabled
         ? {
               new_item_callback: (): void => {
-                  // Actual functionality will be added by next contributions
-                  // eslint-disable-next-line no-console
-                  console.log("Clicked on Create new item");
+                  host.is_artifact_creator_shown = true;
               },
               new_item_button_label: getCreateNewArtifactButtonInLinkLabel(),
           }
@@ -233,7 +264,7 @@ const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): voi
         selection_callback: (value) => {
             const artifact = getLinkableArtifact(value);
             if (artifact) {
-                host.link_selector.apply((lazybox) => lazybox.clearSelection());
+                link_selector.clearSelection();
                 host.new_links_presenter = host.controller.addNewLink(
                     artifact,
                     host.current_link_type
@@ -246,7 +277,7 @@ const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): voi
     host.link_selector = Option.fromValue(link_selector);
 };
 
-export const LinkField = define<LinkField>({
+export const LinkField = define<InternalLinkField>({
     tag: "tuleap-artifact-modal-link-field",
     link_selector: {
         set: (host, new_value) => new_value ?? Option.nothing(),
@@ -270,27 +301,22 @@ export const LinkField = define<LinkField>({
         },
     },
     autocompleter: undefined,
+    creatorController: undefined,
     current_artifact_reference: undefined,
     field_presenter: undefined,
-    allowed_link_types: {
-        set: setAllowedTypes,
-    },
-    linked_artifacts_presenter: {
-        set: setLinkedArtifacts,
-    },
-    new_links_presenter: {
-        set: setNewLinks,
-    },
+    allowed_link_types: { set: setAllowedTypes },
+    linked_artifacts_presenter: { set: setLinkedArtifacts },
+    new_links_presenter: { set: setNewLinks },
     current_link_type: current_link_type_descriptor,
     matching_artifact_section: dropdown_section_descriptor,
     recently_viewed_section: dropdown_section_descriptor,
     possible_parents_section: dropdown_section_descriptor,
     search_results_section: dropdown_section_descriptor,
+    is_artifact_creator_shown: false,
+    is_artifact_creator_loading: false,
     content: (host) => html`
         <div class="tracker-form-element" data-test="artifact-link-field">
-            <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
-                ${host.field_presenter.label}
-            </label>
+            <label class="tlp-label">${host.field_presenter.label}</label>
             ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
             <table id="tuleap-artifact-modal-link-table" class="tlp-table">
                 <tbody class="link-field-table-body">
@@ -309,10 +335,11 @@ export const LinkField = define<LinkField>({
                                 current_artifact_reference="${host.current_artifact_reference}"
                                 available_types="${host.allowed_link_types}"
                                 onvalue-changed="${onLinkTypeChanged}"
+                                disabled="${host.is_artifact_creator_loading}"
                             ></tuleap-artifact-modal-link-type-selector>
                         </td>
                         <td class="link-field-table-footer-input" colspan="3">
-                            ${host.link_selector.mapOr((element) => html`${element}`, html``)}
+                            ${getTableFooterTemplate(host)}
                         </td>
                     </tr>
                 </tfoot>

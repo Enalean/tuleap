@@ -22,7 +22,7 @@
 tuleap-lazybox-selection {
     display: flex;
     align-items: center;
-    height: var(--tlp-form-element-height);
+    height: var(--lazybox-selection-height, var(--tlp-form-element-height));
     padding: 0
         calc(
             (var(--tlp-form-element-padding-horizontal) * 2) +

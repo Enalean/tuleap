@@ -46,6 +46,11 @@ const webpack_config = {
         extensions: [".js", ".ts"],
         alias: {
             neverthrow: path.resolve(__dirname, "node_modules/neverthrow"),
+            hybrids: path.resolve(__dirname, "node_modules/hybrids"),
+            "@floating-ui/dom": path.resolve(
+                __dirname,
+                "../../../../../lib/frontend/lazybox/node_modules/@floating-ui/dom"
+            ),
         },
     },
     module: {

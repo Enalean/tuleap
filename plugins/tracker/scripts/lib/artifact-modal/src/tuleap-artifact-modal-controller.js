@@ -18,6 +18,7 @@
  */
 
 import { loadTooltips } from "@tuleap/tooltip";
+import { Option } from "@tuleap/option";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
@@ -66,6 +67,7 @@ import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 import { FormattedTextController } from "./domain/common/FormattedTextController";
 import { ParentTrackerIdentifierProxy } from "./adapters/REST/fields/link-field/ParentTrackerIdentifierProxy";
+import { ArtifactCreatorController } from "./domain/fields/link-field/creation/ArtifactCreatorController";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -131,7 +133,7 @@ function ArtifactModalController(
         title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
-        submit_disabling_reason: null,
+        submit_disabling_reason: Option.nothing(),
         new_followup_comment: {
             body: "",
             format: modal_model.text_fields_format,
@@ -203,6 +205,9 @@ function ArtifactModalController(
                 UserIdentifierProxy.fromUserId(modal_model.user_id)
             );
         },
+        getArtifactCreatorController() {
+            return ArtifactCreatorController(event_dispatcher);
+        },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id], event_dispatcher);
         },
@@ -238,7 +243,7 @@ function ArtifactModalController(
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
-        isSubmitDisabled: () => self.submit_disabling_reason !== null,
+        isSubmitDisabled: () => self.submit_disabling_reason.isValue(),
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,
@@ -264,11 +269,16 @@ function ArtifactModalController(
 
     function init() {
         event_dispatcher.addObserver("WillDisableSubmit", (event) => {
-            self.submit_disabling_reason = event.reason;
+            // Wrap into $q so that AngularJS notices something happened
+            $q.when(event.reason).then((reason) => {
+                self.submit_disabling_reason = Option.fromValue(reason);
+            });
         });
         event_dispatcher.addObserver("WillEnableSubmit", () => {
-            self.submit_disabling_reason = null;
-            $scope.$apply();
+            // Wrap into $q so that AngularJS notices something happened
+            $q.when().then(() => {
+                self.submit_disabling_reason = Option.nothing();
+            });
         });
         FieldDependenciesValuesHelper(event_dispatcher, self.tracker.workflow.rules.lists);
 

@@ -32,15 +32,16 @@ import { LinkTypeProxy } from "./LinkTypeProxy";
 
 export type LinkTypeSelectorElement = {
     readonly value: LinkType;
+    readonly disabled: boolean;
     readonly current_artifact_reference: Option<ArtifactCrossReference>;
     readonly available_types: CollectionOfAllowedLinksTypesPresenters;
+};
+type InternalLinkTypeSelector = LinkTypeSelectorElement & {
     content(): HTMLElement;
 };
-export type HostElement = LinkTypeSelectorElement & HTMLElement;
+export type HostElement = InternalLinkTypeSelector & HTMLElement;
 
-export type ValueChangedEvent = {
-    readonly new_link_type: LinkType;
-};
+export type ValueChangedEvent = { readonly new_link_type: LinkType };
 
 const getOption = (
     host: LinkTypeSelectorElement,
@@ -80,9 +81,10 @@ const onChange = (host: HostElement, event: Event): void => {
     dispatch(host, "value-changed", { detail: { new_link_type } });
 };
 
-export const LinkTypeSelectorElement = define<LinkTypeSelectorElement>({
+export const LinkTypeSelectorElement = define<InternalLinkTypeSelector>({
     tag: "tuleap-artifact-modal-link-type-selector",
     value: undefined,
+    disabled: false,
     current_artifact_reference: undefined,
     available_types: undefined,
     content: (host) => {
@@ -96,6 +98,7 @@ export const LinkTypeSelectorElement = define<LinkTypeSelectorElement>({
             data-test="link-type-select"
             required
             onchange="${onChange}"
+            disabled="${host.disabled}"
         >
             <optgroup label="${current_artifact_xref}" data-test="link-type-select-optgroup">
                 <option value=" forward" selected="${host.value.shortname === UNTYPED_LINK}">
