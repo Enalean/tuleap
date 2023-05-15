@@ -56,7 +56,7 @@ use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;

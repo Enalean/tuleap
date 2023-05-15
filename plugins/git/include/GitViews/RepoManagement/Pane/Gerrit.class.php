@@ -32,7 +32,7 @@ use Git_RemoteServer_GerritServer;
 use GitRepository;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 
 class Gerrit extends Pane
 {

@@ -21,7 +21,7 @@
 
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;

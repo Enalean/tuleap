@@ -118,7 +118,7 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $url_manager           = new Git_GitRepositoryUrlManager($git_plugin);
         $server                = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getServerById')->andReturns($server)->getMock();
-        $can_migrate_checker   = \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class)->shouldReceive('canMigrate')->andReturns(true)->getMock();
+        $can_migrate_checker   = \Mockery::spy(\Tuleap\Git\RemoteServer\GerritCanMigrateChecker::class)->shouldReceive('canMigrate')->andReturns(true)->getMock();
 
         $gerrit_driver = Mockery::mock(Git_Driver_Gerrit::class);
         $gerrit_driver->shouldReceive('doesTheProjectExist')->andReturn(false);

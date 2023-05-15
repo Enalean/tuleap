@@ -18,120 +18,92 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git;
+namespace Tuleap\Git\RemoteServer;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use EventManager;
+use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $can_migrate_checker;
-    private $gerrit_server_factory;
-    private $project;
+    private \Project $project;
+    private \Git_RemoteServer_GerritServerFactory&\PHPUnit\Framework\MockObject\MockObject $gerrit_server_factory;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->can_migrate_checker   = new GerritCanMigrateChecker(
-            EventManager::instance(),
-            $this->gerrit_server_factory
-        );
-
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
-    }
-
-    protected function tearDown(): void
-    {
-        EventManager::clearInstance();
-        parent::tearDown();
+        $this->gerrit_server_factory = $this->createMock(\Git_RemoteServer_GerritServerFactory::class);
+        $this->project               = ProjectTestBuilder::aProject()->withId(101)->withAccessPublic()->build();
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersNotSet()
     {
-        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
-        EventManager::instance()->addListener(
-            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            $plugin,
-            'git_event_platform_cannot_use_gerrit',
-            false
+        $checker = new GerritCanMigrateChecker(
+            EventDispatcherStub::withIdentityCallback(),
+            $this->gerrit_server_factory
         );
 
         $gerrit_servers = [];
-        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
+        $this->gerrit_server_factory
+            ->method('getAvailableServersForProject')
+            ->willReturn($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
+        $this->assertFalse($checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersSet()
     {
-        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
-        EventManager::instance()->addListener(
-            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            $plugin,
-            'git_event_platform_cannot_use_gerrit',
-            false
+        $checker = new GerritCanMigrateChecker(
+            EventDispatcherStub::withIdentityCallback(),
+            $this->gerrit_server_factory
         );
 
-        $gerrit_servers = [\Mockery::spy(\Git_RemoteServer_GerritServer::class)];
-        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
+        $gerrit_servers = ['IAmAServer'];
+        $this->gerrit_server_factory
+            ->method('getAvailableServersForProject')
+            ->willReturn($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
+        $this->assertFalse($checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCanUseGerritAndGerritServersNotSet()
     {
-        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
-        EventManager::instance()->addListener(
-            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            $plugin,
-            'git_event_platform_can_use_gerrit',
-            false
+        $checker = new GerritCanMigrateChecker(
+            EventDispatcherStub::withCallback(static function (GerritCanMigrateEvent $event): GerritCanMigrateEvent {
+                $event->platformCanUseGerrit();
+
+                return $event;
+            }),
+            $this->gerrit_server_factory
         );
 
         $gerrit_servers = [];
-        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
+        $this->gerrit_server_factory
+            ->method('getAvailableServersForProject')
+            ->willReturn($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
+        $this->assertFalse($checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsTrueIfPlatformCanUseGerritAndGerritServersSet()
     {
-        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
-        EventManager::instance()->addListener(
-            GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
-            $plugin,
-            'git_event_platform_can_use_gerrit',
-            false
+        $checker = new GerritCanMigrateChecker(
+            EventDispatcherStub::withCallback(static function (GerritCanMigrateEvent $event): GerritCanMigrateEvent {
+                $event->platformCanUseGerrit();
+
+                return $event;
+            }),
+            $this->gerrit_server_factory
         );
 
         $gerrit_servers = ['IAmAServer'];
-        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
+        $this->gerrit_server_factory
+            ->method('getAvailableServersForProject')
+            ->willReturn($gerrit_servers);
 
-        $this->assertTrue($this->can_migrate_checker->canMigrate($this->project));
-    }
-
-    private function buildGerritCanMigrateCheckerTestLDAPFakePlugin()
-    {
-        return new class
-        {
-            //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function git_event_platform_cannot_use_gerrit($params)
-            {
-                $params['platform_can_use_gerrit'] = false;
-            }
-
-            //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-            public function git_event_platform_can_use_gerrit($params)
-            {
-                $params['platform_can_use_gerrit'] = true;
-            }
-        };
+        $this->assertTrue($checker->canMigrate($this->project));
     }
 }

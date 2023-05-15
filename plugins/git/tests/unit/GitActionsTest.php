@@ -24,6 +24,7 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\GlobalLanguageMock;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -72,7 +73,7 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
                 \Mockery::spy(\Psr\Log\LoggerInterface::class),
                 Mockery::spy(ProjectHistoryDao::class),
                 \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-                \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+                \Mockery::spy(\Tuleap\Git\RemoteServer\GerritCanMigrateChecker::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
