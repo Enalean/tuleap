@@ -154,6 +154,11 @@ describe(`LazyboxElement`, () => {
                 dropdown_element: { open: false },
             }) as HostElement;
 
+        it(`makes the element focusable`, () => {
+            const search_input = getSearchInput(getHost());
+            expect(search_input.getAttribute("tabindex")).toBe("0");
+        });
+
         it(`when it receives "search-input" event, it will open the dropdown`, () => {
             const host = getHost();
             const search_input = getSearchInput(host);
@@ -248,13 +253,14 @@ describe(`LazyboxElement`, () => {
             Object.assign(doc.createElement("span"), {
                 options: OptionsBuilder.withSingle().withNewItemButton(noop, "New item").build(),
                 selection_element: doc.createElement("span"),
-                search_input_element: { clear: noop },
+                search_input_element: Object.assign(doc.createElement("span"), { clear: noop }),
                 cleanupAutoUpdate: noop,
             }) as HostElement;
 
         it(`while the dropdown is open, scrolling is locked,
             the selection element has an additional CSS class,
-            and the position of the dropdown is updated.
+            the position of the dropdown is updated,
+            and the search input is focused.
             When it is closed, the search input is cleared`, () => {
             const cleanup = vi.fn();
             const autoUpdate = vi.spyOn(floating_ui, "autoUpdate").mockReturnValue(cleanup);
@@ -266,6 +272,7 @@ describe(`LazyboxElement`, () => {
             const lock = vi.spyOn(host.scrolling_manager, "lockScrolling");
             const unlock = vi.spyOn(host.scrolling_manager, "unlockScrolling");
             const clearSearch = vi.spyOn(host.search_input_element, "clear");
+            const focusSearch = vi.spyOn(host.search_input_element, "focus");
             const focusSelection = vi.spyOn(host.selection_element, "focus");
             const dropdown = getDropdownElement(host);
 
@@ -276,6 +283,7 @@ describe(`LazyboxElement`, () => {
                 true
             );
             expect(autoUpdate).toHaveBeenCalled();
+            expect(focusSearch).toHaveBeenCalled();
 
             dropdown.dispatchEvent(new CustomEvent("close"));
 

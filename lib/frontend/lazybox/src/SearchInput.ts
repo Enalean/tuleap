@@ -26,7 +26,6 @@ export type SearchInput = {
     placeholder: string;
     search_callback: LazyboxSearchInputCallback;
     clear(): void;
-    setFocus(): void;
 };
 export type HostElement = HTMLElement & InternalSearchInput;
 type InternalSearchInput = Readonly<SearchInput> & {
@@ -92,8 +91,10 @@ export const buildClear = (host: InternalSearchInput) => (): void => {
     host.search_callback(host.query);
 };
 
-export const buildFocus = (host: InternalSearchInput) => (): void => {
-    host.content().querySelector("input")?.focus();
+export const connect = (host: HostElement): void => {
+    host.addEventListener("focus", () => {
+        host.content().querySelector("input")?.focus();
+    });
 };
 
 export const TAG = "tuleap-lazybox-search";
@@ -102,8 +103,7 @@ export const SearchInput = define<InternalSearchInput>({
     disabled: false,
     placeholder: "",
     query: "",
-    clear: { get: buildClear },
-    setFocus: { get: buildFocus },
+    clear: { get: buildClear, connect },
     search_callback: undefined,
     timeout_id: undefined,
     content: (host) => html`<input
@@ -111,7 +111,6 @@ export const SearchInput = define<InternalSearchInput>({
         disabled="${host.disabled}"
         data-test="lazybox-search-field"
         class="lazybox-search-field"
-        tabindex="0"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="none"

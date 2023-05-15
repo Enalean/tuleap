@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./SearchInput";
-import { buildClear, buildFocus, onInput, onKeyDown, onKeyUp } from "./SearchInput";
+import { buildClear, connect, onInput, onKeyDown, onKeyUp } from "./SearchInput";
 
 const noopSearchCallback = (query: string): void => {
     //Fake usage of query to prevent eslint from removing it
@@ -152,6 +152,20 @@ describe(`SearchInput`, () => {
 
             expect(host.query).toBe("a");
         });
+
+        it(`when focused, it transmits focus to the inner input element`, () => {
+            const focus = vi.spyOn(inner_input, "focus");
+            const target = doc.createElement("div");
+            target.append(inner_input);
+            const host = Object.assign(doc.createElement("span"), {
+                content: (): HTMLElement => target,
+            }) as HostElement;
+
+            connect(host);
+
+            host.dispatchEvent(new Event("focus"));
+            expect(focus).toHaveBeenCalled();
+        });
     });
 
     describe("clear()", () => {
@@ -166,21 +180,6 @@ describe(`SearchInput`, () => {
 
             expect(host.query).toBe("");
             expect(search_callback).toHaveBeenCalledWith("");
-        });
-    });
-
-    describe(`setFocus()`, () => {
-        it(`sets focus to the inner input element`, () => {
-            const focus = vi.spyOn(inner_input, "focus");
-            const target = doc.createElement("div");
-            target.append(inner_input);
-            const host = {
-                content: (): HTMLElement => target,
-            } as HostElement;
-
-            buildFocus(host)();
-
-            expect(focus).toHaveBeenCalled();
         });
     });
 });
