@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { createApp } from "vue";
 import App from "./components/App.vue";
@@ -48,7 +48,7 @@ export async function bootstrapVueMountPoint(
     app.use(
         await initVueGettext(
             createGettext,
-            (locale: string) => import(`../po/${getPOFileFromLocale(locale)}`)
+            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
         )
     );
 

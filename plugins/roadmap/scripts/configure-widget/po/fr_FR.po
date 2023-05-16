@@ -28,20 +28,11 @@ msgstr "Niveau 2 est supposé être une subdivision du niveau 1."
 msgid "Month"
 msgstr "Mois"
 
-msgid "No results found"
-msgstr "Aucun résultat trouvé"
-
-msgid "No values to select"
-msgstr "Aucune valeur à sélectionner"
-
 msgid "Please choose a tracker"
 msgstr "Veuillez choisir un outil de suivi"
 
 msgid "Quarter"
 msgstr "Trimestre"
-
-msgid "Remove all values"
-msgstr "Supprimer toutes les valeurs"
 
 msgid "Roadmap"
 msgstr "Feuille de route"

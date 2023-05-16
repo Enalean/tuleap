@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
-import { env } from "node:process";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-env.DISABLE_TS_TYPECHECK = "true";
-
-const configuration = defineJestConfiguration();
-
-export default {
-    ...configuration,
-    displayName: "roadmap",
-    transform: {
-        ...configuration.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
     },
-};
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "configure-roadmap-widget": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+    }
+);

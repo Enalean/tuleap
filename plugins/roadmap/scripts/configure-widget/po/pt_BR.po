@@ -20,19 +20,10 @@ msgstr ""
 msgid "Month"
 msgstr "Mês"
 
-msgid "No results found"
-msgstr ""
-
-msgid "No values to select"
-msgstr ""
-
 msgid "Please choose a tracker"
 msgstr ""
 
 msgid "Quarter"
-msgstr ""
-
-msgid "Remove all values"
 msgstr ""
 
 msgid "Roadmap"

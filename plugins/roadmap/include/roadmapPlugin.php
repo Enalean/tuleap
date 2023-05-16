@@ -23,7 +23,7 @@ declare(strict_types=1);
 use Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Roadmap\REST\ResourcesInjector;
 use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -127,16 +127,13 @@ class RoadmapPlugin extends Plugin
         $layout = $event->getLayout();
         $assets = $this->getConfigureWidgetAssets();
         $layout->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptAsset($assets, 'configure-roadmap-widget-script.js')
-        );
-        $layout->addCssAsset(
-            new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'configure-roadmap-widget-style')
+            new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts')
         );
     }
 
-    private function getConfigureWidgetAssets(): IncludeAssets
+    private function getConfigureWidgetAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
+        return new IncludeViteAssets(
             __DIR__ . '/../scripts/configure-widget/frontend-assets',
             '/assets/roadmap/configure-widget'
         );
