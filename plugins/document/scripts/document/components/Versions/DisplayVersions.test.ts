@@ -33,6 +33,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { Item } from "../../type";
 import * as router from "vue-router";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 jest.mock("vue-router");
 
@@ -58,6 +59,8 @@ describe("DisplayVersions", () => {
             } as Item);
         });
 
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
+
         const wrapper = shallowMount(DisplayVersions, {
             global: {
                 ...getGlobalTestOptions({
@@ -65,9 +68,6 @@ describe("DisplayVersions", () => {
                         loadDocumentWithAscendentHierarchy: load_with_hierarchy,
                     },
                 }),
-                provide: {
-                    should_display_history_in_document: true,
-                },
                 stubs: ["router-link"],
             },
         });
@@ -87,6 +87,8 @@ describe("DisplayVersions", () => {
             } as Item);
         });
 
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
+
         const wrapper = shallowMount(DisplayVersions, {
             global: {
                 ...getGlobalTestOptions({
@@ -94,9 +96,6 @@ describe("DisplayVersions", () => {
                         loadDocumentWithAscendentHierarchy: load_with_hierarchy,
                     },
                 }),
-                provide: {
-                    should_display_history_in_document: false,
-                },
                 stubs: ["router-link"],
             },
         });

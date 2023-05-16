@@ -141,8 +141,9 @@ import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { deleteFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 import { useGettext } from "vue3-gettext";
-import { FEEDBACK } from "../../injection-keys";
+import { FEEDBACK, SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 import { noop_feedack_handler } from "../../helpers/noop-feedback-handler";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const props = defineProps<{
     item: Item;
@@ -156,9 +157,8 @@ const delete_button = ref<HTMLButtonElement | null>(null);
 const is_deleting = ref(false);
 const got_error_while_trying_to_delete = ref(false);
 
-const should_display_source_column_for_versions = inject(
-    "should_display_source_column_for_versions",
-    false
+const should_display_source_column_for_versions = strictInject(
+    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS
 );
 
 const gettext_provider = useGettext();
