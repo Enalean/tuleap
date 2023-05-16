@@ -64,7 +64,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
             ! empty($sources)
         );
 
-        $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'scripts/account.ts'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));
 
         (new UserPreferencesHeader())->display(dgettext('tuleap-webauthn', 'Passkeys'), $layout);
         $this->renderer->renderToPage('account', $presenter);

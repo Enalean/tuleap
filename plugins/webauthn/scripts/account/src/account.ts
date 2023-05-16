@@ -19,26 +19,45 @@
 
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import type { GetText } from "@tuleap/gettext";
+import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import "../themes/style.scss";
 import { register } from "./register";
+import { authenticate } from "./authenticate";
 
 const HIDDEN = "webauthn-hidden";
 
 document.addEventListener("DOMContentLoaded", (): void => {
-    if (browserSupportsWebAuthn()) {
-        const register_section = document.querySelector("#webauthn-register-section");
-        if (register_section instanceof HTMLElement) {
-            register_section.classList.remove(HIDDEN);
-        }
+    prepareGettext().then((gettext_provider) => {
+        if (browserSupportsWebAuthn()) {
+            const webauthn_section = document.querySelector("#webauthn-section");
+            if (webauthn_section instanceof HTMLElement) {
+                webauthn_section.classList.remove(HIDDEN);
+            }
 
-        prepareRegistration();
-    } else {
-        const disabled_section = document.querySelector("#webauthn-disabled-section");
-        if (disabled_section instanceof HTMLElement) {
-            disabled_section.classList.remove(HIDDEN);
+            prepareRegistration();
+            prepareAuthentication(gettext_provider);
+        } else {
+            const disabled_section = document.querySelector("#webauthn-disabled-section");
+            if (disabled_section instanceof HTMLElement) {
+                disabled_section.classList.remove(HIDDEN);
+            }
         }
-    }
+    });
 });
+
+function prepareGettext(): Promise<GetText> {
+    let language = document.body.dataset.userLocale;
+    if (language === undefined) {
+        language = "en_US";
+    }
+
+    return initGettext(
+        language,
+        "webauthn",
+        (locale) => import(`./po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+    );
+}
 
 function prepareRegistration(): void {
     const form_name_modal = document.querySelector("#webauthn-name-modal");
@@ -88,5 +107,37 @@ function prepareRegistration(): void {
 
         add_button_icon.classList.remove(HIDDEN);
         registration(name);
+    });
+}
+
+function prepareAuthentication(gettext_provider: GetText): void {
+    const check_button = document.querySelector("#webauthn-check-button");
+    const button_icon = document.querySelector("#webauthn-check-button > i");
+    const message = document.querySelector("#webauthn-message");
+    if (
+        !(check_button instanceof HTMLButtonElement) ||
+        !(button_icon instanceof HTMLElement) ||
+        !(message instanceof HTMLElement)
+    ) {
+        return;
+    }
+
+    check_button.addEventListener("click", () => {
+        button_icon.classList.remove(HIDDEN);
+
+        authenticate().match(
+            () => {
+                button_icon.classList.add(HIDDEN);
+                message.innerText = gettext_provider.gettext("Success!");
+                message.classList.add("tlp-text-success");
+                message.classList.remove(HIDDEN);
+            },
+            (fault) => {
+                button_icon.classList.add(HIDDEN);
+                message.innerText = fault.toString();
+                message.classList.add("tlp-text-danger");
+                message.classList.remove(HIDDEN);
+            }
+        );
     });
 }

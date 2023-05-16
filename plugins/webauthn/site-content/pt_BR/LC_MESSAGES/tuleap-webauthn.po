@@ -21,6 +21,9 @@ msgstr ""
 msgid "Authentication with passkeys"
 msgstr ""
 
+msgid "Check it"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
