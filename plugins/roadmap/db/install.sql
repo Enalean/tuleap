@@ -15,3 +15,9 @@ CREATE TABLE IF NOT EXISTS plugin_roadmap_widget_trackers (
     tracker_id INT(11) NOT NULL,
     PRIMARY KEY (plugin_roadmap_widget_id, tracker_id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_roadmap_widget_filter (
+    widget_id INT UNSIGNED NOT NULL PRIMARY KEY,
+    report_id INT NOT NULL,
+    INDEX report_id_idx(report_id)
+) ENGINE=InnoDB;

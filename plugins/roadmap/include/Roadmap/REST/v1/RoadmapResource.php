@@ -25,7 +25,9 @@ namespace Tuleap\Roadmap\REST\v1;
 use Luracast\Restler\RestException;
 use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
+use Tuleap\Roadmap\FilterReportDao;
 use Tuleap\Roadmap\NatureForRoadmapDao;
+use Tuleap\Roadmap\ReportToFilterArtifactsRetriever;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -110,7 +112,8 @@ final class RoadmapResource
                     )
                 )
             ),
-            \BackendLogger::getDefaultLogger()
+            \BackendLogger::getDefaultLogger(),
+            new ReportToFilterArtifactsRetriever(new FilterReportDao(), \Tracker_ReportFactory::instance()),
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);

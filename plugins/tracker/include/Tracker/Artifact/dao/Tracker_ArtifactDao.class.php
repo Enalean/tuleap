@@ -88,29 +88,6 @@ class Tracker_ArtifactDao extends DataAccessObject
     }
 
     /**
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
-     */
-    public function searchPaginatedByListOfTrackerIds(array $tracker_ids, int $limit, int $offset)
-    {
-        $tracker_ids = $this->da->quoteSmartImplode(',', $tracker_ids);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title, CVT.body_format AS title_format
-                FROM tracker_artifact AS A
-                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id IN ($tracker_ids))
-                    LEFT JOIN (
-                        tracker_changeset_value AS CV
-                        INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
-                    ) ON (A.last_changeset_id = CV.changeset_id)
-                    ORDER BY T.id ASC, A.id ASC
-                    LIMIT $limit OFFSET $offset";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
      * @param string $artifact_ids "2,14,15"
      */
     public function searchLastChangesetIds($artifact_ids, array $ugroups, $user_is_admin)

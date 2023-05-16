@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
+use Tuleap\Tracker\Artifact\PaginatedArtifactDao;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
@@ -149,11 +150,12 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      */
     public function getPaginatedArtifactsByListOfTrackerIds(array $tracker_ids, int $limit, int $offset): Tracker_Artifact_PaginatedArtifacts
     {
-        if (! $tracker_ids) {
+        if (empty($tracker_ids)) {
             return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
-        $paginated_by_list_of_tracker_ids = $this->getDao()->searchPaginatedByListOfTrackerIds(
+        $dao                              = new PaginatedArtifactDao();
+        $paginated_by_list_of_tracker_ids = $dao->searchPaginatedByListOfTrackerIds(
             $tracker_ids,
             $limit,
             $offset
@@ -162,12 +164,36 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
             return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
-        $size      = (int) $this->getDao()->foundRows();
+        $size      = $dao->foundRows();
         $artifacts = [];
         foreach ($paginated_by_list_of_tracker_ids as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
 
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
+    }
+
+    /**
+     * @param int[] $artifact_ids
+     */
+    public function getPaginatedArtifactsByListOfArtifactIds(array $artifact_ids, int $limit, int $offset): Tracker_Artifact_PaginatedArtifacts
+    {
+        if (empty($artifact_ids)) {
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
+        }
+
+        $dao       = new PaginatedArtifactDao();
+        $paginated = $dao->searchPaginatedByListOfArtifactIds($artifact_ids, $limit, $offset);
+        if (! $paginated) {
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
+        }
+
+        $size      = $dao->foundRows();
+        $artifacts = [];
+        foreach ($paginated as $row) {
+            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+        }
 
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
