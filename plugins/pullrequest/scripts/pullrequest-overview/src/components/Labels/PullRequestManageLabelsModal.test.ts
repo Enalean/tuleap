@@ -18,15 +18,21 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { okAsync, errAsync } from "neverthrow";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
+import { Fault } from "@tuleap/fault";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { LazyboxVueStub } from "../../../tests/stubs/LazyboxVueStub";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
+import * as tuleap_api from "../../api/tuleap-rest-querier";
+import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import type { ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestManageLabelsModal from "./PullRequestManageLabelsModal.vue";
 
+const pull_request_id = 50;
 const emergency_label: ProjectLabel = {
     id: 1,
     label: "Emergency",
@@ -41,6 +47,7 @@ const easy_fix_label: ProjectLabel = {
 };
 const project_labels = [emergency_label, easy_fix_label];
 
+vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
@@ -49,11 +56,13 @@ vi.mock("@tuleap/tlp-modal", () => ({
 describe("PullRequestManageLabelsModal", () => {
     let post_edition_callback: (new_labels: ReadonlyArray<ProjectLabel>) => void,
         on_cancel_callback: () => void,
+        display_api_error_callback: () => void,
         modal_instance: Modal;
 
     beforeEach(() => {
         post_edition_callback = vi.fn();
         on_cancel_callback = vi.fn();
+        display_api_error_callback = vi.fn();
 
         modal_instance = {
             show: vi.fn(),
@@ -65,6 +74,17 @@ describe("PullRequestManageLabelsModal", () => {
     });
 
     const getWrapper = (current_labels: ReadonlyArray<ProjectLabel>): VueWrapper => {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
+            switch (key) {
+                case PULL_REQUEST_ID_KEY:
+                    return pull_request_id;
+                case DISPLAY_TULEAP_API_ERROR:
+                    return display_api_error_callback;
+                default:
+                    throw new Error("Tried to strictInject a value while it was not mocked");
+            }
+        });
+
         return shallowMount(PullRequestManageLabelsModal, {
             global: {
                 ...getGlobalTestOptions(),
@@ -101,16 +121,37 @@ describe("PullRequestManageLabelsModal", () => {
         });
     });
 
-    it("[Save changes] button should trigger the post_edition_callback when clicked", async () => {
+    it("[Save changes] button should save the labels and trigger the post_edition_callback when done", async () => {
+        vi.spyOn(tuleap_api, "patchPullRequestLabels").mockReturnValue(okAsync(new Response()));
+
         const wrapper = getWrapper([]);
-        const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
+        const button = wrapper.find("[data-test=save-labels-button]");
 
-        lazybox_stub.vm.selectItems([easy_fix_label]);
+        wrapper.findComponent(LazyboxVueStub).vm.selectItems([easy_fix_label]);
 
-        await wrapper.find("[data-test=save-labels-button]").trigger("click");
+        await button.trigger("click");
 
+        expect(tuleap_api.patchPullRequestLabels).toHaveBeenCalledWith(
+            pull_request_id,
+            [easy_fix_label.id],
+            []
+        );
         expect(modal_instance.hide).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledOnce();
         expect(post_edition_callback).toHaveBeenCalledWith([easy_fix_label]);
+    });
+
+    it("When an error occurs while saving the labels, Then it should call the display_api_error_callback", async () => {
+        const tuleap_api_fault = Fault.fromMessage("Niet!");
+        vi.spyOn(tuleap_api, "patchPullRequestLabels").mockReturnValue(errAsync(tuleap_api_fault));
+
+        const wrapper = getWrapper([]);
+        const button = wrapper.find("[data-test=save-labels-button]");
+
+        wrapper.findComponent(LazyboxVueStub).vm.selectItems([easy_fix_label]);
+
+        await button.trigger("click");
+
+        expect(display_api_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
     });
 });

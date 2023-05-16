@@ -51,6 +51,7 @@
                 type="button"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
+                v-bind:disabled="is_saving"
             >
                 {{ $gettext("Cancel") }}
             </button>
@@ -91,8 +92,13 @@ import {
     getSelectedLabels,
 } from "./autocomplete/AssignableLabelTemplate";
 import { findLabelsWithIds } from "./autocomplete/LabelFinder";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
+import { patchPullRequestLabels } from "../../api/tuleap-rest-querier";
 
 const { $gettext } = useGettext();
+const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
+const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
 
 const props = defineProps<{
     current_labels: ReadonlyArray<ProjectLabel>;
@@ -105,18 +111,32 @@ const modal_element = ref<Element | undefined>();
 const modal_instance = ref<Modal | null>(null);
 const is_saving = ref(false);
 const labels_input = ref<Lazybox | undefined>();
-const currently_selected_labels = ref<ProjectLabel[]>([]);
+const newly_selected_labels = ref<ProjectLabel[]>([]);
+const current_labels_ids = props.current_labels.map(({ id }) => id);
 
 const cancel = () => {
     props.on_cancel_callback();
 };
 
 function saveLabels() {
-    if (modal_instance.value) {
-        modal_instance.value.hide();
-    }
+    const newly_selected_labels_ids = newly_selected_labels.value.map(({ id }) => id);
+    const added_labels_ids = newly_selected_labels_ids.filter(
+        (id) => !current_labels_ids.includes(id)
+    );
+    const removed_labels_ids = current_labels_ids.filter(
+        (id) => !newly_selected_labels_ids.includes(id)
+    );
 
-    props.post_edition_callback(currently_selected_labels.value);
+    is_saving.value = true;
+
+    patchPullRequestLabels(pull_request_id, added_labels_ids, removed_labels_ids)
+        .match(() => {
+            modal_instance.value?.hide();
+            props.post_edition_callback(newly_selected_labels.value);
+        }, displayTuleapAPIFault)
+        .finally(() => {
+            is_saving.value = false;
+        });
 }
 
 onMounted((): void => {
@@ -145,7 +165,6 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
     const group_builder = GroupOfLabelsBuilder($gettext);
     const autocompleter = LabelsAutocompleter(group_builder);
 
-    const current_labels_ids = props.current_labels.map(({ id }) => id);
     const project_labels = props.project_labels.map((label) => ({
         value: {
             ...label,
@@ -159,15 +178,10 @@ function initlabelsAutocompleter(lazybox: Lazybox): void {
         templating_callback: getAssignableLabelsTemplate,
         selection_badge_callback: getAssignedLabelTemplate,
         search_input_callback: (query) => {
-            autocompleter.autocomplete(
-                lazybox,
-                project_labels,
-                currently_selected_labels.value,
-                query
-            );
+            autocompleter.autocomplete(lazybox, project_labels, newly_selected_labels.value, query);
         },
         selection_callback: (selected_labels) => {
-            currently_selected_labels.value = getSelectedLabels(selected_labels);
+            newly_selected_labels.value = getSelectedLabels(selected_labels);
         },
     };
 
