@@ -1,30 +1,39 @@
 import * as fetch from "@microsoft/fetch-event-source";
 import { EventStreamContentType } from "@microsoft/fetch-event-source";
 
-class RetriableError extends Error {}
+export class RetriableError extends Error {}
 
-class FatalError extends Error {}
+export class FatalError extends Error {}
 export class RealtimeMercure {
     mercureEventSourceController: AbortController;
     token: string | null = null;
     url: string | null = null;
     lastid: string;
     eventDispatcher: (event: fetch.EventSourceMessage) => void;
+    errCallback: (err?: Error) => void;
+    sucessCallback: () => void;
+
     constructor(
         token: string,
         url: string,
-        eventDispatcher: (event: fetch.EventSourceMessage) => void
+        eventDispatcher: (event: fetch.EventSourceMessage) => void,
+        errorCallback: (err?: Error) => void,
+        sucessCallback: () => void
     ) {
         this.token = token;
         this.mercureEventSourceController = new AbortController();
         this.url = url;
         this.eventDispatcher = eventDispatcher;
-        fetch.fetchEventSource(this.url, this.buildEventSourceInit());
+        this.errCallback = errorCallback;
+        this.sucessCallback = sucessCallback;
         this.lastid = "";
+        fetch.fetchEventSource(this.url, this.buildEventSourceInit());
     }
 
     buildEventSourceInit(): fetch.FetchEventSourceInit {
         const eventDispatcher = this.eventDispatcher;
+        const errorCallback = this.errCallback;
+        const sucessCallback = this.sucessCallback;
         return {
             headers: {
                 Authorization: "Bearer " + this.token,
@@ -40,6 +49,7 @@ export class RealtimeMercure {
                     response.ok &&
                     response.headers.get("content-type") === EventStreamContentType
                 ) {
+                    sucessCallback();
                     return new Promise<void>((resolve) => resolve());
                 } else if (
                     response.status >= 400 &&
@@ -52,10 +62,11 @@ export class RealtimeMercure {
                 }
             },
             onclose(): void {
-                throw new RetriableError();
+                errorCallback(new RetriableError());
             },
             onerror(err): void {
-                if (err instanceof FatalError && err.message !== "401") {
+                errorCallback(err);
+                if (err instanceof FatalError) {
                     throw err;
                 }
             },

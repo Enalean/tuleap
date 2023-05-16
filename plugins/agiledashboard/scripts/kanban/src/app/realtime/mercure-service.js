@@ -1,7 +1,8 @@
 import { post } from "@tuleap/tlp-fetch";
-import { RealtimeMercure } from "./realtime-mercure";
+import { RealtimeMercure, RetriableError, FatalError } from "./realtime-mercure";
 import { buildEventDispatcher } from "./buildEventDispatcher";
 import { get } from "@tuleap/tlp-fetch";
+import { resetError, setError } from "../feedback-state";
 export default MercureService;
 
 MercureService.$inject = [
@@ -14,6 +15,7 @@ MercureService.$inject = [
     "jwtHelper",
     "KanbanItemRestService",
     "KanbanService",
+    "gettextCatalog",
 ];
 function MercureService(
     $timeout,
@@ -24,15 +26,16 @@ function MercureService(
     SharedPropertiesService,
     jwtHelper,
     KanbanItemRestService,
-    KanbanService
+    KanbanService,
+    gettextCatalog
 ) {
     const self = this;
     let realtime_mercure;
     let realtime_token;
     let loadColumnsFunction;
+    let mercureRetryNumber = 0;
     Object.assign(self, {
         init,
-        listenTokenExpired,
         listenKanbanItemUpdate,
         listenKanbanItemMoved,
         listenKanbanItemCreate,
@@ -52,9 +55,10 @@ function MercureService(
                     listenKanbanItemMoved,
                     listenKanbanItemCreate,
                     listenKanbanStructuralUpdate
-                )
+                ),
+                errCallback,
+                sucessCallback
             );
-            listenTokenExpired();
         });
         loadColumnsFunction = loadColumns;
     }
@@ -63,22 +67,10 @@ function MercureService(
             post(encodeURI("mercure_realtime_token/" + id)).then((response) => response.text())
         );
     }
-    function listenTokenExpired() {
-        var expired_date = new Date(jwtHelper.getTokenExpirationDate(realtime_token) - 30 * 1000);
-        var timeout = Math.abs(new Date() - expired_date);
-        if (expired_date < 0) {
-            requestJWTToRefreshToken();
-        } else {
-            $timeout(() => {
-                requestJWTToRefreshToken();
-            }, timeout);
-        }
-    }
     function requestJWTToRefreshToken() {
         getToken(SharedPropertiesService.getKanban().id).then((data) => {
             realtime_token = data;
             realtime_mercure.editToken(realtime_token);
-            listenTokenExpired();
         });
     }
 
@@ -197,5 +189,26 @@ function MercureService(
             ...kanban.columns
         );
         callLoadColumn();
+    }
+    function errCallback(err) {
+        realtime_mercure.abortConnection();
+        if (mercureRetryNumber > 1) {
+            setError(
+                gettextCatalog.getString(
+                    "You are disconnected from real time. Please reload your page."
+                )
+            );
+        }
+        if (err instanceof RetriableError || err instanceof FatalError) {
+            let timeout = Math.pow(2, mercureRetryNumber) * 1000 + Math.floor(Math.random() * 1000);
+            setTimeout(requestJWTToRefreshToken, timeout);
+            mercureRetryNumber = mercureRetryNumber + 1;
+        }
+    }
+    function sucessCallback() {
+        if (mercureRetryNumber > 1) {
+            resetError();
+        }
+        mercureRetryNumber = 0;
     }
 }
