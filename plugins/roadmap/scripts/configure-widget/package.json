@@ -8,19 +8,19 @@
   "dependencies": {
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "vue3-gettext": "^2.2.1",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue3-gettext": "^2.2.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@vue/test-utils": "^2.0.0",
-    "@vitejs/plugin-vue": "^2.0.0"
+    "@vitejs/plugin-vue": "^2.0.0",
+    "@vue/test-utils": "^2.3.2"
   },
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "jest",
+    "test": "vitest",
     "typecheck": "vue-tsc --noEmit"
   }
 }

@@ -17,15 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import type { Tracker } from "../type";
 import * as list_picker from "@tuleap/list-picker";
 import { createGettext } from "vue3-gettext";
 
+vi.mock("@tuleap/list-picker");
+
 describe("App", () => {
     beforeEach(() => {
-        jest.spyOn(list_picker, "createListPicker").mockReturnValue({
+        vi.spyOn(list_picker, "createListPicker").mockReturnValue({
             destroy: () => {
                 // Nothing to do since we did not really create something
             },
