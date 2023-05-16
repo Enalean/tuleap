@@ -24,7 +24,7 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import type { LinkField } from "./LinkField";
 import { getRemoveLabel } from "../../../../gettext-catalog";
 import "./LinkTypeSelectorElement";
-import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -55,7 +55,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
         host.new_links_presenter = host.controller.removeNewLink(link);
     };
 
-    const onValueChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
+    const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
         host.new_links_presenter = host.controller.changeNewLinkType(
             link,
             event.detail.new_link_type
@@ -68,7 +68,7 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
                 value="${link.link_type}"
                 current_artifact_reference="${host.current_artifact_reference}"
                 available_types="${host.allowed_link_types}"
-                onvalue-changed="${onValueChanged}"
+                ontype-changed="${onTypeChanged}"
             ></tuleap-artifact-modal-link-type-selector></span
         ><span class="link-field-row-xref"
             ><a

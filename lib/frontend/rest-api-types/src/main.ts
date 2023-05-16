@@ -25,6 +25,14 @@ export type ProjectReference = {
     readonly icon: string;
 };
 
+/**
+ * ⚠️ The label already contains the icon of the project as a prefix:
+ * `label = icon + " " + label`
+ */
+export type ProjectResponse = ProjectReference & {
+    readonly shortname: string;
+};
+
 export type QuickLink = {
     readonly name: string;
     readonly html_url: string;

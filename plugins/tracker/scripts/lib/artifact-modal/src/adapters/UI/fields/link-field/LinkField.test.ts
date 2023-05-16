@@ -53,7 +53,7 @@ import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGr
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
 
@@ -318,7 +318,7 @@ describe("LinkField", () => {
     });
 
     describe(`events`, () => {
-        it(`when it receives a value-changed event from the link type selector element,
+        it(`when it receives a type-changed event from the link type selector element,
             it will set the current link type`, () => {
             const host = {
                 current_link_type: LinkTypeStub.buildUntyped(),
@@ -326,7 +326,7 @@ describe("LinkField", () => {
 
             onLinkTypeChanged(
                 host,
-                new CustomEvent<ValueChangedEvent>("value-changed", {
+                new CustomEvent<TypeChangedEvent>("type-changed", {
                     detail: { new_link_type: LinkTypeStub.buildChildLinkType() },
                 })
             );

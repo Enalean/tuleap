@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
+import type { ProjectReference, ProjectResponse } from "@tuleap/core-rest-api-types";
 import { ProjectProxy } from "./ProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 
@@ -36,4 +36,14 @@ describe(`ProjectProxy`, () => {
             expect(result.label).toBe(expected_label);
         }
     );
+
+    it.each([
+        ["with an icon", { id: 169, label: "🦁 Saturday's Venom" } as ProjectResponse],
+        ["without an icon", { id: 195, label: "Hidden Street" } as ProjectResponse],
+    ])(`builds from a project %s from the API`, (_condition, project: ProjectResponse) => {
+        const result = ProjectProxy.fromAPIProject(project);
+
+        expect(result.id).toBe(project.id);
+        expect(result.label).toBe(project.label);
+    });
 });

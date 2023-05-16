@@ -41,7 +41,7 @@ type InternalLinkTypeSelector = LinkTypeSelectorElement & {
 };
 export type HostElement = InternalLinkTypeSelector & HTMLElement;
 
-export type ValueChangedEvent = { readonly new_link_type: LinkType };
+export type TypeChangedEvent = { readonly new_link_type: LinkType };
 
 const getOption = (
     host: LinkTypeSelectorElement,
@@ -53,11 +53,9 @@ const getOption = (
         host.value.direction === link_type.direction;
     const is_disabled =
         LinkType.isReverseChild(link_type) && host.available_types.is_parent_type_disabled;
-    return html`
-        <option value="${value}" selected="${is_selected}" disabled="${is_disabled}">
-            ${link_type.label}
-        </option>
-    `;
+    return html`<option value="${value}" selected="${is_selected}" disabled="${is_disabled}">
+        ${link_type.label}
+    </option>`;
 };
 
 const getOptions = (
@@ -65,10 +63,8 @@ const getOptions = (
     types_container: AllowedLinkTypesPresenterContainer
 ): UpdateFunction<LinkTypeSelectorElement> => {
     const { forward_type_presenter, reverse_type_presenter } = types_container;
-    return html`
-        <option disabled>–</option>
-        ${getOption(host, forward_type_presenter)} ${getOption(host, reverse_type_presenter)}
-    `;
+    return html`<option disabled>–</option>
+        ${getOption(host, forward_type_presenter)} ${getOption(host, reverse_type_presenter)}`;
 };
 
 const onChange = (host: HostElement, event: Event): void => {
@@ -76,9 +72,7 @@ const onChange = (host: HostElement, event: Event): void => {
     if (!new_link_type) {
         return;
     }
-    // Event type is value-changed to avoid interference with native "change" event
-    // which will bubble since the element does not use shadow DOM
-    dispatch(host, "value-changed", { detail: { new_link_type } });
+    dispatch(host, "type-changed", { bubbles: true, detail: { new_link_type } });
 };
 
 export const LinkTypeSelectorElement = define<InternalLinkTypeSelector>({

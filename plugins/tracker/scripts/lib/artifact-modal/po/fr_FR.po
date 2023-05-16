@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-16 16:44+0200\n"
+"PO-Revision-Date: 2023-05-19 17:31+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -172,6 +172,9 @@ msgstr "Parents possibles"
 msgid "Preview"
 msgstr "Aperçu"
 
+msgid "Project"
+msgstr "Projet"
+
 msgid "Projects and trackers are loading"
 msgstr "Les projets et les outils de suivi sont en cours de chargement"
 
@@ -214,6 +217,9 @@ msgstr ""
 "Quelqu'un a modifié l'artéfact pendant que vous l'éditiez. Merci de noter "
 "que vos modification seront appliquées par dessus les autres changements. "
 "Vous devez confirmer pour soumettre vos modifications."
+
+msgid "Something went wrong during the artifact creation."
+msgstr "Quelque chose s'est mal passé pendant la création d'artéfact."
 
 msgid "Text"
 msgstr "Texte"

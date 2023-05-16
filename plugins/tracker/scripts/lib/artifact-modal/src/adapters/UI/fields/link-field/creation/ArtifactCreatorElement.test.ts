@@ -23,6 +23,11 @@ import { ArtifactCreatorController } from "../../../../../domain/fields/link-fie
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
 import { setCatalog } from "../../../../../gettext-catalog";
 import { selectOrThrow } from "@tuleap/dom";
+import { RetrieveProjectsStub } from "../../../../../../tests/stubs/RetrieveProjectsStub";
+import type { Project } from "../../../../../domain/Project";
+import { Option } from "@tuleap/option";
+import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
+import { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedLinksTypesPresenters";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -34,17 +39,26 @@ describe(`ArtifactCreatorElement`, () => {
     describe(`events`, () => {
         let controller: ArtifactCreatorController, dispatchEvent: jest.SpyInstance;
         beforeEach(() => {
-            controller = ArtifactCreatorController(DispatchEventsStub.buildNoOp());
+            const project: Project = { id: 144, label: "Next Omega" };
+            controller = ArtifactCreatorController(
+                DispatchEventsStub.buildNoOp(),
+                RetrieveProjectsStub.withProjects(project)
+            );
             dispatchEvent = jest.fn();
         });
 
         const getHost = (): HostElement => {
             const element = doc.createElement("span");
             return Object.assign(element, {
-                is_loading: false,
                 controller,
-                dispatchEvent,
+                current_artifact_reference: Option.nothing(),
+                available_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
+                current_link_type: LinkTypeStub.buildUntyped(),
+                is_loading: false,
+                error_message: Option.nothing(),
+                projects: [],
                 content: () => element,
+                dispatchEvent,
             }) as HostElement;
         };
 
@@ -60,50 +74,51 @@ describe(`ArtifactCreatorElement`, () => {
             expect(event.type).toBe("cancel");
         });
 
-        it(`when is_loading becomes true, it will dispatch a "loadingchange" event
-            and will disable the modal submit`, () => {
+        it(`when is_loading becomes true, it will disable the modal submit`, () => {
             const host = getHost();
             const disableSubmit = jest.spyOn(controller, "disableSubmit");
 
             observeIsLoading(host, true);
 
             expect(disableSubmit).toHaveBeenCalled();
-            const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toBe("loadingchange");
-            expect(event.detail.is_loading).toBe(true);
         });
 
-        it(`when is_loading becomes false, it will dispatch a "loadingchange" event
-            and will enable the modal submit`, () => {
+        it(`when is_loading becomes false, it will enable the modal submit`, () => {
             const host = getHost();
             const enableSubmit = jest.spyOn(controller, "enableSubmit");
 
             observeIsLoading(host, false);
 
             expect(enableSubmit).toHaveBeenCalled();
-            const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toBe("loadingchange");
-            expect(event.detail.is_loading).toBe(false);
         });
     });
 
     describe(`render`, () => {
-        let target: ShadowRoot, is_loading: boolean;
+        let is_loading: boolean, error_message: Option<string>;
 
         beforeEach(() => {
-            target = doc.createElement("div") as unknown as ShadowRoot;
             is_loading = true;
+            error_message = Option.nothing();
         });
-        const render = (): void => {
-            const host = {
+        const render = (): HTMLElement => {
+            const target = doc.createElement("div");
+            const host = Object.assign(target, {
+                controller: {} as ArtifactCreatorController,
+                current_artifact_reference: Option.nothing(),
+                available_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
+                current_link_type: LinkTypeStub.buildUntyped(),
                 is_loading,
-            } as HostElement;
+                error_message,
+                projects: [],
+                content: () => target,
+            }) as HostElement;
             const updateFunction = ArtifactCreatorElement.content(host);
-            updateFunction(host, target);
+            updateFunction(host, target as unknown as ShadowRoot);
+            return target;
         };
 
         it(`when it is loading, it will disable inputs and buttons and will show a spinner icon`, () => {
-            render();
+            const target = render();
             const input = selectOrThrow(
                 target,
                 "[data-test=artifact-creator-title]",
@@ -117,7 +132,13 @@ describe(`ArtifactCreatorElement`, () => {
 
             expect(input.disabled).toBe(true);
             expect(submit.disabled).toBe(true);
-            expect(target.querySelector("[data-test=artifact-creator-spinner]")).toBeDefined();
+            expect(target.querySelector("[data-test=artifact-creator-spinner]")).not.toBeNull();
+        });
+
+        it(`when there is an error, it will show it`, () => {
+            error_message = Option.fromValue("Shtopp dat cart!");
+            const target = render();
+            expect(target.querySelector("[data-test=creation-error]")).not.toBeNull();
         });
     });
 });

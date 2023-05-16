@@ -24,6 +24,7 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import type { GetAllOptions } from "@tuleap/fetch-result";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
@@ -43,6 +44,7 @@ import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
+import type { Project } from "../../domain/Project";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -409,6 +411,45 @@ describe(`TuleapAPIClient`, () => {
             expect(getAllSpy).toHaveBeenCalledWith(expect.anything(), {
                 params: expect.objectContaining({ order: "asc" }),
             });
+        });
+    });
+
+    describe(`getProjects()`, () => {
+        const FIRST_PROJECT_ID = 113,
+            SECOND_PROJECT_ID = 161,
+            FIRST_PROJECT_LABEL = "🐷 Guinea Pig",
+            SECOND_PROJECT_LABEL = "Hidden Street";
+
+        const getProjects = (): ResultAsync<readonly Project[], Fault> => {
+            const client = TuleapAPIClient(current_artifact_option);
+            return client.getProjects();
+        };
+
+        it(`will return an array of Projects`, async () => {
+            const first_project = {
+                id: FIRST_PROJECT_ID,
+                label: FIRST_PROJECT_LABEL,
+            } as ProjectResponse;
+            const second_project = {
+                id: SECOND_PROJECT_ID,
+                label: SECOND_PROJECT_LABEL,
+            } as ProjectResponse;
+            const getAllJSON = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([first_project, second_project]));
+
+            const result = await getProjects();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_project, second_returned_project] = result.value;
+            expect(first_returned_project.id).toBe(FIRST_PROJECT_ID);
+            expect(first_returned_project.label).toBe(FIRST_PROJECT_LABEL);
+            expect(second_returned_project.id).toBe(SECOND_PROJECT_ID);
+            expect(second_returned_project.label).toBe(SECOND_PROJECT_LABEL);
+            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects`, { params: { limit: 50 } });
         });
     });
 });

@@ -43,12 +43,11 @@ import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 import "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import "./creation/ArtifactCreatorElement";
-import type { LoadingChangeEvent } from "./creation/ArtifactCreatorElement";
 import type { ArtifactCreatorController } from "../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 
 export interface LinkField {
@@ -70,7 +69,6 @@ type InternalLinkField = LinkField & {
     content(): HTMLElement;
     link_selector: Option<Lazybox>;
     is_artifact_creator_shown: boolean;
-    is_artifact_creator_loading: boolean;
 };
 export type HostElement = InternalLinkField & HTMLElement;
 
@@ -192,33 +190,39 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
     }, default_html);
 };
 
-const onLoadingChange = (host: InternalLinkField, event: CustomEvent<LoadingChangeEvent>): void => {
-    host.is_artifact_creator_loading = event.detail.is_loading;
-    // Force re-render, otherwise the link type selector stays enabled
-    host.content();
-};
 const onCancel = (host: InternalLinkField): void => {
-    host.is_artifact_creator_loading = false;
     host.is_artifact_creator_shown = false;
-    // Force re-render, otherwise the artifact creator stays visible
-    host.content();
     // Re-assign to call "replaceDropdownContent", otherwise the dropdown becomes empty
     host.matching_artifact_section = [...host.matching_artifact_section];
+};
+
+export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
+    host.current_link_type = event.detail.new_link_type;
 };
 
 const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> => {
     if (host.is_artifact_creator_shown) {
         return html`<tuleap-artifact-modal-link-artifact-creator
             controller="${host.creatorController}"
+            current_link_type="${host.current_link_type}"
+            current_artifact_reference="${host.current_artifact_reference}"
+            available_types="${host.allowed_link_types}"
             oncancel="${onCancel}"
-            onloadingchange="${onLoadingChange}"
+            ontype-changed="${onLinkTypeChanged}"
         ></tuleap-artifact-modal-link-artifact-creator>`;
     }
-    return host.link_selector.mapOr((element) => html`${element}`, html``);
-};
-
-export const onLinkTypeChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
-    host.current_link_type = event.detail.new_link_type;
+    const link_selector = host.link_selector.mapOr((element) => html`${element}`, html``);
+    return html`<div class="link-field-add-link-row">
+        <span class="link-field-row-type">
+            <tuleap-artifact-modal-link-type-selector
+                value="${host.current_link_type}"
+                current_artifact_reference="${host.current_artifact_reference}"
+                available_types="${host.allowed_link_types}"
+                ontype-changed="${onLinkTypeChanged}"
+            ></tuleap-artifact-modal-link-type-selector>
+        </span>
+        <div class="link-field-add-link-input">${link_selector}</div>
+    </div>`;
 };
 
 const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): void => {
@@ -282,7 +286,7 @@ export const LinkField = define<InternalLinkField>({
     },
     autocompleter: undefined,
     creatorController: undefined,
-    current_artifact_reference: undefined,
+    current_artifact_reference: { set: (host, new_value) => new_value ?? Option.nothing() },
     field_presenter: undefined,
     allowed_link_types: { set: setAllowedTypes },
     linked_artifacts_presenter: { set: setLinkedArtifacts },
@@ -293,7 +297,6 @@ export const LinkField = define<InternalLinkField>({
     possible_parents_section: dropdown_section_descriptor,
     search_results_section: dropdown_section_descriptor,
     is_artifact_creator_shown: false,
-    is_artifact_creator_loading: false,
     content: (host) => html`<div class="tracker-form-element" data-test="artifact-link-field">
         <label class="tlp-label">${host.field_presenter.label}</label>
         ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
@@ -304,19 +307,6 @@ export const LinkField = define<InternalLinkField>({
             ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
             ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}${getEmptyStateIfNeeded(host)}
         </div>
-        <div class="link-field-add-link-section">
-            <div class="link-field-add-link-row">
-                <span class="link-field-row-type">
-                    <tuleap-artifact-modal-link-type-selector
-                        value="${host.current_link_type}"
-                        current_artifact_reference="${host.current_artifact_reference}"
-                        available_types="${host.allowed_link_types}"
-                        onvalue-changed="${onLinkTypeChanged}"
-                        disabled="${host.is_artifact_creator_loading}"
-                    ></tuleap-artifact-modal-link-type-selector>
-                </span>
-                <span class="link-field-add-link-input">${getFooterTemplate(host)}</span>
-            </div>
-        </div>
+        <div class="link-field-add-link-section">${getFooterTemplate(host)}</div>
     </div>`,
 });
