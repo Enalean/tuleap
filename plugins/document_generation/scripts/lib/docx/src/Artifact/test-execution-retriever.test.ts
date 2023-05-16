@@ -19,7 +19,11 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
-import type { ArtifactReportResponseUserRepresentation, TestExecutionResponse } from "../type";
+import type {
+    ArtifactReportResponseUserRepresentation,
+    ArtifactResponse,
+    TestExecutionResponse,
+} from "../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getTestManagementExecution } from "./test-execution-retriever";
 
@@ -32,6 +36,9 @@ describe("getTestManagementExecution", () => {
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {
+                artifact: {
+                    id: 101,
+                } as ArtifactResponse,
                 id: 101,
                 summary: "Summary",
                 description: "",

@@ -314,6 +314,7 @@ export interface TestExecutionResponse {
             xref: string;
             tracker: { readonly id: number };
         }>;
+        artifact: ArtifactResponse;
     };
     steps_results: {
         [key: string]: {

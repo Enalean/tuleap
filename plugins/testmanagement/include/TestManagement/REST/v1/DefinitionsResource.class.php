@@ -30,6 +30,14 @@ use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use UserManager;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -73,7 +81,20 @@ class DefinitionsResource
             $this->conformance_validator,
             $retriever,
             $purifier,
-            CommonMarkInterpreter::build($purifier)
+            CommonMarkInterpreter::build($purifier),
+            new ArtifactRepresentationBuilder(
+                Tracker_FormElementFactory::instance(),
+                Tracker_ArtifactFactory::instance(),
+                new TypeDao(),
+                new ChangesetRepresentationBuilder(
+                    UserManager::instance(),
+                    Tracker_FormElementFactory::instance(),
+                    new CommentRepresentationBuilder(
+                        CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                    ),
+                    new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
+                )
+            ),
         );
     }
 

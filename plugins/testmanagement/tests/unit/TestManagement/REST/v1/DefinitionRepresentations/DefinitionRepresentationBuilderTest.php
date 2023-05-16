@@ -29,9 +29,14 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -61,27 +66,40 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var DefinitionRepresentationBuilder
      */
     private $definition_representation_builder;
+    /**
+     * @var ArtifactRepresentationBuilder&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $artifact_representation_builder;
 
     protected function setUp(): void
     {
-        $this->tracker_form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->conformance_validator        = Mockery::mock(ConfigConformanceValidator::class);
-        $this->requirement_retriever        = Mockery::mock(RequirementRetriever::class);
-        $this->purifier                     = Mockery::mock(\Codendi_HTMLPurifier::class);
-        $this->interpreter                  = Mockery::mock(ContentInterpretor::class);
+        $this->tracker_form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->conformance_validator           = Mockery::mock(ConfigConformanceValidator::class);
+        $this->requirement_retriever           = Mockery::mock(RequirementRetriever::class);
+        $this->purifier                        = Mockery::mock(\Codendi_HTMLPurifier::class);
+        $this->interpreter                     = Mockery::mock(ContentInterpretor::class);
+        $this->artifact_representation_builder = $this->createMock(ArtifactRepresentationBuilder::class);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->tracker_form_element_factory,
             $this->conformance_validator,
             $this->requirement_retriever,
             $this->purifier,
-            $this->interpreter
+            $this->interpreter,
+            $this->artifact_representation_builder,
         );
+    }
+
+    protected function tearDown(): void
+    {
+        \Tracker_Semantic_Status::clearInstances();
+
+        parent::tearDown();
     }
 
     public function testItGetsTheTextDefinitionRepresentation(): void
     {
-        $user       = Mockery::mock(PFUser::class);
+        $user       = UserTestBuilder::aUser()->build();
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
         $field      = Mockery::mock(\Tracker_FormElement_Field::class);
         $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
@@ -101,6 +119,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $text_field->shouldReceive('getFormat')->andReturn('text');
 
+        $this->mockArtifactRepresentationBuilder($definition_artifact);
+
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
             $definition_artifact,
@@ -112,7 +132,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsDefaultEmptyTextRepresentationIfTheDescriptionFieldIsNull(): void
     {
-        $user       = Mockery::mock(PFUser::class);
+        $user       = UserTestBuilder::aUser()->build();
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
         $field      = Mockery::mock(\Tracker_FormElement_Field::class);
         $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
@@ -131,6 +151,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                                            ->andReturnNull();
         $this->tracker_form_element_factory->shouldReceive('getSelectboxFieldByNameForUser')->andReturnNull();
 
+        $this->mockArtifactRepresentationBuilder($definition_artifact);
+
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
             $definition_artifact,
@@ -142,7 +164,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsTheHTMLDefinitionRepresentation(): void
     {
-        $user       = Mockery::mock(PFUser::class);
+        $user       = UserTestBuilder::aUser()->build();
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
         $field      = Mockery::mock(\Tracker_FormElement_Field::class);
         $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
@@ -162,6 +184,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $text_field->shouldReceive('getFormat')->andReturn('html');
 
+        $this->mockArtifactRepresentationBuilder($definition_artifact);
+
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
             $definition_artifact,
@@ -173,7 +197,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsTheCommonmarkDefinitionRepresentation(): void
     {
-        $user       = Mockery::mock(PFUser::class);
+        $user       = UserTestBuilder::aUser()->build();
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
         $field      = Mockery::mock(\Tracker_FormElement_Field::class);
         $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
@@ -202,6 +226,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->purifier->shouldReceive('purify')->andReturn('wololo');
 
         $this->interpreter->shouldReceive('getInterpretedContentWithReferences')->andReturn('wololo');
+
+        $this->mockArtifactRepresentationBuilder($definition_artifact);
 
         $text_field->shouldReceive('getFormat')->andReturn('commonmark');
         $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
@@ -234,6 +260,8 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $text_field->shouldReceive('getText')->andReturn('');
         $text_field->shouldReceive('getFormat')->andReturn('wololo');
 
+        $this->mockArtifactRepresentationBuilder($definition_artifact);
+
         $this->expectException(DefinitionDescriptionFormatNotFoundException::class);
 
         $this->definition_representation_builder->getDefinitionRepresentation(
@@ -263,11 +291,10 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $definition_artifact->shouldReceive('getId')->andReturn(1);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $tracker = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject(ProjectTestBuilder::aProject()->build())->build();
         $definition_artifact->shouldReceive('getTracker')->andReturn($tracker);
-
         $definition_artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);
+        $definition_artifact->shouldReceive('getStatus')->andReturn("open");
 
         $this->conformance_validator->shouldReceive('isArtifactADefinition')->with(
             $definition_artifact
@@ -291,5 +318,19 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     ): void {
         $definition_artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
         $definition_artifact->shouldReceive('getValue')->with($field, $changeset)->andReturn($text_field, null);
+    }
+
+    private function mockArtifactRepresentationBuilder(Artifact $definition_artifact): void
+    {
+        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status->method("getColor");
+        \Tracker_Semantic_Status::setInstance(
+            $semantic_status,
+            $definition_artifact->getTracker(),
+        );
+
+        $this->artifact_representation_builder->method("getArtifactRepresentationWithFieldValues")->willReturn(
+            $this->createMock(ArtifactRepresentation::class)
+        );
     }
 }

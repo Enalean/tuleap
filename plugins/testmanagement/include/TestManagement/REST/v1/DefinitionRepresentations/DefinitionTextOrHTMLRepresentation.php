@@ -73,13 +73,14 @@ final class DefinitionTextOrHTMLRepresentation extends MinimalDefinitionRepresen
         \Codendi_HTMLPurifier $purifier,
         ContentInterpretor $interpreter,
         Artifact $artifact,
+        ArtifactRepresentation $artifact_representation,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         string $description_format,
         array $all_requirements,
         ?Tracker_Artifact_Changeset $changeset = null,
     ) {
-        parent::__construct($artifact, $form_element_factory, $user, $changeset);
+        parent::__construct($artifact, $artifact_representation, $form_element_factory, $user, $changeset);
 
         $this->description = self::getTextFieldValueWithCrossReferences(
             $purifier,

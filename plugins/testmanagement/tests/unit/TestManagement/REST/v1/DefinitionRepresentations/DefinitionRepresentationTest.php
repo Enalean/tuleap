@@ -25,6 +25,8 @@ namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -52,14 +54,13 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->shouldReceive('getGroupId')->andReturn(107);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
-        $user = \Mockery::mock(\PFUser::class);
+        $user = UserTestBuilder::aUser()->build();
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
 
         $value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Text::class);
         $value->shouldReceive('getText')->andReturn("description");
         $artifact->shouldReceive('getValue')->once()->withArgs([$field, null])->andReturn($value);
-
 
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_STEPS, null);
         $this->useFieldByName($tracker_id, $user, DefinitionRepresentation::FIELD_SUMMARY, null);
@@ -73,6 +74,7 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             $purifier,
             $commonmark_interpreter,
             $artifact,
+            $this->createMock(ArtifactRepresentation::class),
             $this->form_element_factory,
             $user,
             'text',
@@ -80,9 +82,10 @@ class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->assertEquals("description", $representation->description);
-        $this->assertEquals([], $representation->steps);
-        $this->assertEquals("", $representation->requirement);
+        self::assertEquals("description", $representation->description);
+        self::assertEquals([], $representation->steps);
+        self::assertEquals("", $representation->requirement);
+        self::assertInstanceOf(ArtifactRepresentation::class, $representation->artifact);
     }
 
     private function useFieldByName(int $tracker_id, $user, string $name, ?\Tracker_FormElement_Field $value): void
