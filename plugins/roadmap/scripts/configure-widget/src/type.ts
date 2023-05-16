@@ -21,3 +21,9 @@ export interface Tracker {
     readonly id: number;
     readonly title: string;
 }
+
+export interface ReportDefinition {
+    readonly id: number;
+    readonly label: string;
+    readonly is_public: boolean;
+}

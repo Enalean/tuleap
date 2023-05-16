@@ -50,6 +50,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: "",
                 is_in_creation: false,
@@ -85,6 +86,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -120,6 +122,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -155,6 +158,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [3],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -190,6 +194,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -225,6 +230,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [3],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -260,6 +266,7 @@ describe("App", () => {
                     { id: 4, title: "Stories" },
                 ] as Tracker[],
                 selected_tracker_ids: [3],
+                selected_filter_report_id: "",
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
@@ -283,5 +290,59 @@ describe("App", () => {
         await lvl1_select.setValue("");
 
         expect(lvl2_select.value).toBe("");
+    });
+
+    it("should not allow to filter when more than one tracker is selected", async () => {
+        const wrapper = shallowMount(App, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
+                widget_id: 101,
+                title: "Roadmap",
+                trackers: [
+                    { id: 1, title: "Releases" },
+                    { id: 2, title: "Sprints" },
+                    { id: 3, title: "Epics" },
+                    { id: 4, title: "Stories" },
+                ] as Tracker[],
+                selected_tracker_ids: [3, 4],
+                selected_filter_report_id: "",
+                selected_lvl1_iteration_tracker_id: 1,
+                selected_lvl2_iteration_tracker_id: "",
+                is_in_creation: false,
+                selected_default_timescale: "week",
+            },
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=report]").exists()).toBe(false);
+    });
+
+    it("should allow to filter when more than one tracker is selected", async () => {
+        const wrapper = shallowMount(App, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+            },
+            props: {
+                widget_id: 101,
+                title: "Roadmap",
+                trackers: [
+                    { id: 1, title: "Releases" },
+                    { id: 2, title: "Sprints" },
+                    { id: 3, title: "Epics" },
+                    { id: 4, title: "Stories" },
+                ] as Tracker[],
+                selected_tracker_ids: [4],
+                selected_filter_report_id: "",
+                selected_lvl1_iteration_tracker_id: 1,
+                selected_lvl2_iteration_tracker_id: "",
+                is_in_creation: false,
+                selected_default_timescale: "week",
+            },
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=report]").exists()).toBe(true);
     });
 });

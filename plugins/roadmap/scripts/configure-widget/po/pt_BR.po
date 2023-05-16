@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occurred while loading the reports for the filter"
+msgstr ""
+
 msgid ""
 "Artifacts of the selected tracker will appear in the upper part of the "
 "Roadmap, below the Quarters/Months/Weeks."
@@ -14,11 +17,17 @@ msgstr ""
 msgid "Default timescale"
 msgstr ""
 
+msgid "Filter"
+msgstr ""
+
 msgid "Level 2 is expected to be a sub-division of level 1."
 msgstr ""
 
 msgid "Month"
 msgstr "Mês"
+
+msgid "None"
+msgstr ""
 
 msgid "Please choose a tracker"
 msgstr ""

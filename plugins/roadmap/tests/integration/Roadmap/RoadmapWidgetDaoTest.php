@@ -36,8 +36,8 @@ final class RoadmapWidgetDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testWidgetDeletionDeleteAssociatedData(): void
     {
-        $dao = new RoadmapWidgetDao();
-        $id  = $dao->insertContent(101, 'g', 'My Roadmap', [666], 'month', null, null);
+        $dao = new RoadmapWidgetDao(new FilterReportDao());
+        $id  = $dao->insertContent(101, 'g', 'My Roadmap', [666], 0, 'month', null, null);
 
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run("INSERT INTO plugin_roadmap_widget_filter(widget_id, report_id) VALUES (?, 979)", $id);

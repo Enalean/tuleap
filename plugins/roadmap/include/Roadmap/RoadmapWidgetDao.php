@@ -27,6 +27,11 @@ use Tuleap\DB\DataAccessObject;
 
 class RoadmapWidgetDao extends DataAccessObject
 {
+    public function __construct(private readonly FilterReportDao $filter_report_dao)
+    {
+        parent::__construct();
+    }
+
     /**
      * @param int[] $tracker_ids
      */
@@ -35,12 +40,13 @@ class RoadmapWidgetDao extends DataAccessObject
         string $owner_type,
         string $title,
         array $tracker_ids,
+        int $report_id,
         string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
     ): int {
         return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
+            function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $report_id, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
                 $new_id = (int) $db->insertReturnId(
                     'plugin_roadmap_widget',
                     [
@@ -60,6 +66,10 @@ class RoadmapWidgetDao extends DataAccessObject
                         $tracker_ids,
                     )
                 );
+
+                if (count($tracker_ids) === 1 && $report_id) {
+                    $this->filter_report_dao->saveReportId($new_id, $report_id);
+                }
 
                 return $new_id;
             }
@@ -143,12 +153,13 @@ class RoadmapWidgetDao extends DataAccessObject
         string $owner_type,
         string $title,
         array $tracker_ids,
+        int $report_id,
         string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
     ): void {
         $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {
+            function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $report_id, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {
                 $db->update(
                     'plugin_roadmap_widget',
                     [
@@ -173,6 +184,12 @@ class RoadmapWidgetDao extends DataAccessObject
                         $tracker_ids,
                     )
                 );
+
+                if (count($tracker_ids) === 1 && $report_id) {
+                    $this->filter_report_dao->saveReportId($id, $report_id);
+                } else {
+                    $this->filter_report_dao->deleteByWidget($id);
+                }
             }
         );
     }
@@ -190,7 +207,8 @@ class RoadmapWidgetDao extends DataAccessObject
                     ]
                 );
                 $db->delete('plugin_roadmap_widget_trackers', ['plugin_roadmap_widget_id' => $id]);
-                $db->delete('plugin_roadmap_widget_filter', ['widget_id' => $id]);
+
+                $this->filter_report_dao->deleteByWidget($id);
             }
         );
     }

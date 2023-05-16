@@ -56,46 +56,21 @@ final class RoadmapProjectWidget extends \Widget
      * @var ?string
      */
     private $title;
-    /**
-     * @var \MustacheRenderer|\TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var RoadmapWidgetDao
-     */
-    private $dao;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var RoadmapWidgetPresenterBuilder
-     */
-    private $presenter_builder;
 
     public function __construct(
         Project $project,
-        RoadmapWidgetDao $dao,
-        DBTransactionExecutor $transaction_executor,
-        TemplateRenderer $renderer,
-        RoadmapWidgetPresenterBuilder $presenter_builder,
-        TrackerFactory $tracker_factory,
+        private readonly RoadmapWidgetDao $dao,
+        private readonly DBTransactionExecutor $transaction_executor,
+        private readonly TemplateRenderer $renderer,
+        private readonly RoadmapWidgetPresenterBuilder $presenter_builder,
+        private TrackerFactory $tracker_factory,
+        private readonly FilterReportDao $filter_report_dao,
     ) {
         parent::__construct(self::ID);
         $this->setOwner(
             (int) $project->getID(),
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
-
-        $this->dao                  = $dao;
-        $this->transaction_executor = $transaction_executor;
-        $this->renderer             = $renderer;
-        $this->presenter_builder    = $presenter_builder;
-        $this->tracker_factory      = $tracker_factory;
     }
 
     public function getContent(): string
@@ -158,6 +133,7 @@ final class RoadmapProjectWidget extends \Widget
                 (string) $widget_id,
                 $this->getTitle(),
                 $this->tracker_ids,
+                $this->filter_report_dao->getReportIdToFilterArtifacts($content_id),
                 $this->default_timescale,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
@@ -176,6 +152,7 @@ final class RoadmapProjectWidget extends \Widget
             new PreferencePresenter(
                 self::ID,
                 $this->getTitle(),
+                null,
                 null,
                 self::DEFAULT_TIMESCALE_MONTH,
                 null,
@@ -232,6 +209,7 @@ final class RoadmapProjectWidget extends \Widget
                         static fn(int $tracker_id): int => $tracker_mapping[$tracker_id] ?? $tracker_id,
                         $this->dao->searchSelectedTrackers((int) $id) ?? [],
                     ),
+                    0,
                     $data['default_timescale'],
                     $lvl1_iteration_tracker_id,
                     $lvl2_iteration_tracker_id,
@@ -290,11 +268,14 @@ final class RoadmapProjectWidget extends \Widget
 
         $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
 
+        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? "");
+
         return $this->dao->insertContent(
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
+            $report_id,
             $default_timescale,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,
@@ -341,12 +322,15 @@ final class RoadmapProjectWidget extends \Widget
 
         $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
 
+        $report_id = (int) ($roadmap_parameters['filter_report_id'] ?? "");
+
         $this->dao->update(
             $id,
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
+            $report_id,
             $default_timescale,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,

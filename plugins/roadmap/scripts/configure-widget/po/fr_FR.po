@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "An error occurred while loading the reports for the filter"
+msgstr "Une erreur est survenue lors du chargement des rapports pour le filtre"
+
 msgid ""
 "Artifacts of the selected tracker will appear in the upper part of the "
 "Roadmap, below the Quarters/Months/Weeks."
@@ -22,11 +25,17 @@ msgstr ""
 msgid "Default timescale"
 msgstr "Échelle de temps par défaut"
 
+msgid "Filter"
+msgstr "Filtrer"
+
 msgid "Level 2 is expected to be a sub-division of level 1."
 msgstr "Niveau 2 est supposé être une subdivision du niveau 1."
 
 msgid "Month"
 msgstr "Mois"
+
+msgid "None"
+msgstr "Aucun"
 
 msgid "Please choose a tracker"
 msgstr "Veuillez choisir un outil de suivi"

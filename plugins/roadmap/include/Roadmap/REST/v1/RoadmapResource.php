@@ -86,7 +86,7 @@ final class RoadmapResource
 
         $progress_dao = new SemanticProgressDao();
         $retriever    = new RoadmapTasksRetriever(
-            new RoadmapWidgetDao(),
+            new RoadmapWidgetDao(new FilterReportDao()),
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
@@ -169,7 +169,7 @@ final class RoadmapResource
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $retriever = new IterationsRetriever(
-            new RoadmapWidgetDao(),
+            new RoadmapWidgetDao(new FilterReportDao()),
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
