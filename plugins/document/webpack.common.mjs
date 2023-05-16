@@ -60,6 +60,9 @@ export default [
                     loader: "vue-loader",
                     options: {
                         compilerOptions: {
+                            isCustomElement: tag => {
+                                return 'tlp-relative-date' === tag;
+                            },
                             compatConfig: {
                                 MODE: 2,
                             },
