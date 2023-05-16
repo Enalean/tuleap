@@ -44,7 +44,7 @@ describe("DropDownMenu", () => {
             should_display_history_in_document
         );
         return shallowMount(DropDownMenu, {
-            props: { isInFolderEmptyState: false, isInQuickLookMode: false, item },
+            props: { item },
             global: {
                 ...getGlobalTestOptions({
                     modules: {

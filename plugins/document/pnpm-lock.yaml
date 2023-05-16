@@ -41,11 +41,8 @@ specifiers:
   sprintf-js: ^1.1.2
   tus-js-client: ^2.3.1
   vue: ^3.2.47
-  vue-class-component: ^7.2.6
   vue-dompurify-html: ^4.0.0
-  vue-frag: ^1.4.1
   vue-loader: ^17.0.1
-  vue-property-decorator: ^9.1.2
   vue-router: ^4.1.6
   vue3-gettext: 2.2.1
   vuex: ^4.1.0
@@ -100,11 +97,8 @@ devDependencies:
   '@vue/test-utils': 2.3.2_vue@3.2.47
   moment-timezone-data-webpack-plugin: 1.5.1_moment-timezone@0.5.41
   neverthrow: 6.0.0
-  vue-class-component: 7.2.6_vue@3.2.47
-  vue-frag: 1.4.1_vue@3.2.47
   vue-loader: 17.0.1_vue@3.2.47
-  vue-property-decorator: 9.1.2_2gdggpz2srkrgwqk2qsy6jdpyq
-  vuex-class: 0.3.2_z7luszd64oqglz7ia4gxipjwbi
+  vuex-class: 0.3.2_vue@3.2.47+vuex@4.1.0
 
 packages:
 
@@ -999,14 +993,6 @@ packages:
       requires-port: 1.0.0
     dev: false
 
-  /vue-class-component/7.2.6_vue@3.2.47:
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
-    peerDependencies:
-      vue: ^2.0.0
-    dependencies:
-      vue: 3.2.47
-    dev: true
-
   /vue-demi/0.13.11_vue@3.2.47:
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
     engines: {node: '>=12'}
@@ -1033,14 +1019,6 @@ packages:
       - '@vue/composition-api'
     dev: false
 
-  /vue-frag/1.4.1_vue@3.2.47:
-    resolution: {integrity: sha512-1EAPTI/F6huKp8U7lgjCDT119mrJgjrsNJY0j4MD+mNAVqE9LyIBXuWlMpPTFiTH45XDEhiKa4UZoUoW8V72Jg==}
-    peerDependencies:
-      vue: ^2.6.0
-    dependencies:
-      vue: 3.2.47
-    dev: true
-
   /vue-loader/17.0.1_vue@3.2.47:
     resolution: {integrity: sha512-/OOyugJnImKCkAKrAvdsWMuwoCqGxWT5USLsjohzWbMgOwpA5wQmzQiLMzZd7DjhIfunzAGIApTOgIylz/kwcg==}
     peerDependencies:
@@ -1057,16 +1035,6 @@ packages:
       hash-sum: 2.0.0
       loader-utils: 2.0.4
       vue: 3.2.47
-    dev: true
-
-  /vue-property-decorator/9.1.2_2gdggpz2srkrgwqk2qsy6jdpyq:
-    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
-    peerDependencies:
-      vue: '*'
-      vue-class-component: '*'
-    dependencies:
-      vue: 3.2.47
-      vue-class-component: 7.2.6_vue@3.2.47
     dev: true
 
   /vue-router/4.1.6_vue@3.2.47:
@@ -1105,7 +1073,7 @@ packages:
       vue: 3.2.47
     dev: false
 
-  /vuex-class/0.3.2_z7luszd64oqglz7ia4gxipjwbi:
+  /vuex-class/0.3.2_vue@3.2.47+vuex@4.1.0:
     resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
     peerDependencies:
       vue: ^2.5.0
@@ -1113,7 +1081,6 @@ packages:
       vuex: ^3.0.0
     dependencies:
       vue: 3.2.47
-      vue-class-component: 7.2.6_vue@3.2.47
       vuex: 4.1.0_vue@3.2.47
     dev: true
 

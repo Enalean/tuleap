@@ -18,9 +18,11 @@
   -->
 
 <template>
-    <fragment v-if="is_filename_pattern_enforced">
+    <template v-if="is_filename_pattern_enforced">
         <hr class="tlp-modal-separator document-file-version-separator" />
-        <h2 class="tlp-modal-subtitle">{{ $gettext("Latest versions") }}</h2>
+        <h2 class="tlp-modal-subtitle">
+            {{ $gettext("Latest versions") }}
+        </h2>
         <p v-if="display_latest_version_text">
             {{ $gettext("Only the last 5 versions are displayed.") }}
             <a v-bind:href="history_url" target="_blank" rel="noopener noreferrer">
@@ -31,9 +33,15 @@
         <table class="tlp-table" v-if="!get_has_error">
             <thead>
                 <tr>
-                    <th class="document-file-version-version">{{ $gettext("Version") }}</th>
-                    <th class="document-file-version-name">{{ $gettext("Version name") }}</th>
-                    <th class="document-file-version-filename">{{ $gettext("Filename") }}</th>
+                    <th class="document-file-version-version">
+                        {{ $gettext("Version") }}
+                    </th>
+                    <th class="document-file-version-name">
+                        {{ $gettext("Version name") }}
+                    </th>
+                    <th class="document-file-version-filename">
+                        {{ $gettext("Filename") }}
+                    </th>
                 </tr>
             </thead>
             <tbody v-if="!get_has_error">
@@ -55,14 +63,13 @@
         <div v-if="get_has_error" class="tlp-alert-danger">
             {{ error_message }}
         </div>
-    </fragment>
+    </template>
 </template>
 
 <script setup lang="ts">
 import type { FileHistory, ItemFile } from "../../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import FileVersionHistoryContent from "./FileVersionHistoryContent.vue";
-import { Fragment } from "vue-frag";
 import { getVersionHistory } from "../../../../../helpers/version-history-retriever";
 import { handleErrorForHistoryVersion } from "../../../../../helpers/properties-helpers/error-handler-helper";
 import { useNamespacedState } from "vuex-composition-helpers";

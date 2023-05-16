@@ -18,99 +18,96 @@
   -->
 
 <template>
-    <fragment>
-        <slot name="download" />
+    <slot name="download" />
 
-        <slot name="new-item-version" />
-        <slot name="new-document" />
+    <slot name="new-item-version" />
+    <slot name="new-document" />
 
-        <slot name="lock-item" />
-        <slot name="unlock-item" />
+    <slot name="lock-item" />
+    <slot name="unlock-item" />
 
-        <slot name="display-item-title-separator" />
-        <slot name="display-item-title" />
+    <slot name="display-item-title-separator" />
+    <slot name="display-item-title" />
 
-        <slot name="update-properties" />
+    <slot name="update-properties" />
 
-        <a
-            v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-shortcut-notifications
-        >
-            <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
-            <span>{{ $gettext("Notifications") }}</span>
-        </a>
-        <router-link
-            v-if="should_display_versions_link"
-            v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-shortcut-history
-            data-test="document-versions"
-        >
-            <i
-                class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"
-                aria-hidden="true"
-            ></i>
-            <span>{{ $gettext("Versions") }}</span>
-        </router-link>
-        <a
-            v-if="!should_display_history_in_document"
-            v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-shortcut-history
-            data-test="document-history"
-        >
-            <i class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"></i>
-            <span>{{ $gettext("History") }}</span>
-        </a>
-        <router-link
-            v-else
-            v-bind:to="{ name: 'history', params: { item_id: item.id } }"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-shortcut-history
-            data-test="document-history"
-        >
-            <i class="fa-solid fa-fw fa-list tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-            <span>{{ $gettext("Logs") }}</span>
-        </router-link>
+    <a
+        v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-shortcut-notifications
+    >
+        <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
+        <span>{{ $gettext("Notifications") }}</span>
+    </a>
+    <router-link
+        v-if="should_display_versions_link"
+        v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-shortcut-history
+        data-test="document-versions"
+    >
+        <i
+            class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"
+            aria-hidden="true"
+        ></i>
+        <span>{{ $gettext("Versions") }}</span>
+    </router-link>
+    <a
+        v-if="!should_display_history_in_document"
+        v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-shortcut-history
+        data-test="document-history"
+    >
+        <i class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"></i>
+        <span>{{ $gettext("History") }}</span>
+    </a>
+    <router-link
+        v-else
+        v-bind:to="{ name: 'history', params: { item_id: item.id } }"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-shortcut-history
+        data-test="document-history"
+    >
+        <i class="fa-solid fa-fw fa-list tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+        <span>{{ $gettext("Logs") }}</span>
+    </router-link>
 
-        <slot name="update-permissions" />
-        <a
-            v-if="!is_item_an_empty_document"
-            v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-test="document-dropdown-approval-tables"
-            data-shortcut-approval-tables
-        >
-            <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
-            <span>{{ $gettext("Approval tables") }}</span>
-        </a>
+    <slot name="update-permissions" />
+    <a
+        v-if="!is_item_an_empty_document"
+        v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-test="document-dropdown-approval-tables"
+        data-shortcut-approval-tables
+    >
+        <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
+        <span>{{ $gettext("Approval tables") }}</span>
+    </a>
 
-        <drop-down-separator v-if="item.user_can_write" />
+    <drop-down-separator v-if="item.user_can_write" />
 
-        <cut-item v-bind:item="item" v-if="item.user_can_write" />
-        <copy-item v-bind:item="item" v-if="item.user_can_write" />
-        <paste-item v-bind:destination="item" v-if="item.user_can_write" />
+    <cut-item v-bind:item="item" v-if="item.user_can_write" />
+    <copy-item v-bind:item="item" v-if="item.user_can_write" />
+    <paste-item v-bind:destination="item" v-if="item.user_can_write" />
 
-        <template v-if="is_item_a_folder">
-            <drop-down-separator />
-            <download-folder-as-zip
-                data-test="document-dropdown-download-folder-as-zip"
-                v-bind:item="item"
-            />
-        </template>
+    <template v-if="is_item_a_folder">
+        <drop-down-separator />
+        <download-folder-as-zip
+            data-test="document-dropdown-download-folder-as-zip"
+            v-bind:item="item"
+        />
+    </template>
 
-        <slot name="delete-item-separator" v-if="is_deletion_allowed" />
-        <slot name="delete-item" v-if="is_deletion_allowed" />
-    </fragment>
+    <slot name="delete-item-separator" v-if="is_deletion_allowed" />
+    <slot name="delete-item" v-if="is_deletion_allowed" />
 </template>
 <script setup lang="ts">
-import { Fragment } from "vue-frag";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";

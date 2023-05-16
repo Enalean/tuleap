@@ -271,6 +271,7 @@ module.exports = {
                 "plugins/git/scripts/artifact-create-branch-action/**/*.vue",
                 "plugins/onlyoffice/scripts/siteadmin/**/*.vue",
                 "plugins/roadmap/scripts/configure-widget/**/*.vue",
+                "plugins/document/scripts/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {
@@ -300,6 +301,17 @@ module.exports = {
                 "vue/match-component-file-name": "error",
                 // Typescript
                 "@typescript-eslint/explicit-function-return-type": "error",
+            },
+        },
+        {
+            // Disable some rules enabled (re-enabled) by the Vue 3 recommended rules for document until remaining
+            // migrations compat issues can be resolved
+            files: ["plugins/document/**/*.vue"],
+            rules: {
+                "@typescript-eslint/explicit-function-return-type": "off",
+                "vue/prop-name-casing": "off",
+                "vue/no-deprecated-destroyed-lifecycle": "off",
+                "vue/no-deprecated-slot-attribute": "off",
             },
         },
         {
