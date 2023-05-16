@@ -33,12 +33,16 @@ import {
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 import { nextTick } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 describe("DropDownMenu", () => {
     function createWrapper(
         item: Item,
         should_display_history_in_document = false
     ): VueWrapper<InstanceType<typeof DropDownMenu>> {
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(
+            should_display_history_in_document
+        );
         return shallowMount(DropDownMenu, {
             props: { isInFolderEmptyState: false, isInQuickLookMode: false, item },
             global: {
@@ -53,9 +57,6 @@ describe("DropDownMenu", () => {
                         },
                     },
                 }),
-                provide: {
-                    should_display_history_in_document,
-                },
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },

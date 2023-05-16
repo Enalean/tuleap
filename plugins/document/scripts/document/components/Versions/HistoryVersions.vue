@@ -72,7 +72,7 @@ import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
 import type { EmbeddedFileVersion, FileHistory, Item, LinkVersion } from "../../type";
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
     getAllEmbeddedFileVersionHistory,
     getAllFileVersionHistory,
@@ -80,6 +80,8 @@ import {
 } from "../../api/version-rest-querier";
 import { isEmbedded, isLink } from "../../helpers/type-check-helper";
 import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
 const props = defineProps<{ item: Item }>();
 
@@ -91,9 +93,8 @@ const is_empty = computed(
     (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0
 );
 
-const should_display_source_column_for_versions = inject(
-    "should_display_source_column_for_versions",
-    false
+const should_display_source_column_for_versions = strictInject(
+    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS
 );
 
 const is_link = computed((): boolean => isLink(props.item));

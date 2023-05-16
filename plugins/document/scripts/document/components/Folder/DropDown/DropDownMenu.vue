@@ -120,7 +120,9 @@ import { isFolder, isEmpty, isFile, isLink, isEmbedded } from "../../../helpers/
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
-import { computed, inject } from "vue";
+import { computed } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_HISTORY_IN_DOCUMENT } from "../../../injection-keys";
 
 const props = defineProps<{ item: Item }>();
 
@@ -136,7 +138,7 @@ const is_item_a_folder = computed((): boolean => isFolder(props.item));
 
 const is_item_an_empty_document = computed((): boolean => isEmpty(props.item));
 
-const should_display_history_in_document = inject("should_display_history_in_document", false);
+const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT);
 
 const should_display_versions_link = computed(
     (): boolean =>

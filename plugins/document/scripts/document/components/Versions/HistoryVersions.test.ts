@@ -46,8 +46,13 @@ import type {
     LinkVersion,
 } from "../../type";
 import { nextTick } from "vue";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 describe("HistoryVersions", () => {
+    beforeEach(() => {
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
+    });
+
     it("should display a loading state", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 

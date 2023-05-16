@@ -45,12 +45,14 @@
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useRoute } from "vue-router";
 import { useActions } from "vuex-composition-helpers";
-import { computed, inject, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryLogs from "./HistoryLogs.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_HISTORY_IN_DOCUMENT } from "../../injection-keys";
 
-const should_display_history_in_document = inject("should_display_history_in_document", false);
+const should_display_history_in_document = strictInject(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT);
 
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue, { createApp } from "vue";
+import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import App from "./components/App.vue";
@@ -30,12 +30,14 @@ import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
+import {
+    NEW_ITEMS_ALTERNATIVES,
+    SHOULD_DISPLAY_HISTORY_IN_DOCUMENT,
+    SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
+} from "./injection-keys";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(VueDOMPurifyHTML);
-
     let user_locale = document.body.dataset.userLocale;
-    Vue.config.language = user_locale;
     user_locale = user_locale.replace(/_/g, "-");
 
     const vue_mount_point = document.getElementById("document-tree-view");
@@ -150,9 +152,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(gettext);
     app.use(createInitializedRouter(store, project_name, gettext));
 
-    app.provide(should_display_history_in_document);
-    app.provide(should_display_source_column_for_versions);
-    app.provide(create_new_item_alternatives);
+    app.provide(SHOULD_DISPLAY_HISTORY_IN_DOCUMENT, should_display_history_in_document);
+    app.provide(
+        SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
+        should_display_source_column_for_versions
+    );
+    app.provide(NEW_ITEMS_ALTERNATIVES, create_new_item_alternatives);
+    app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);
 

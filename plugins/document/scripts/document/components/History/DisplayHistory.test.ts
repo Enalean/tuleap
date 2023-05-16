@@ -33,6 +33,7 @@ import { nextTick } from "vue";
 
 import * as router from "vue-router";
 import type { Item } from "../../type";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 jest.mock("vue-router");
 describe("DisplayHistory", () => {
@@ -47,6 +48,7 @@ describe("DisplayHistory", () => {
 
     it("should not display anything if user tries direct access while feature flag is off", async () => {
         load_document.mockReturnValue({ id: 10 } as Item);
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
         const wrapper = shallowMount(DisplayHistory, {
             global: {
                 ...getGlobalTestOptions({
@@ -54,9 +56,6 @@ describe("DisplayHistory", () => {
                         loadDocumentWithAscendentHierarchy: load_document,
                     },
                 }),
-                provide: {
-                    should_display_history_in_document: false,
-                },
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },
@@ -72,6 +71,7 @@ describe("DisplayHistory", () => {
 
     it("should display logs", async () => {
         load_document.mockReturnValue({ id: 10 } as Item);
+        jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
         const wrapper = shallowMount(DisplayHistory, {
             global: {
                 ...getGlobalTestOptions({
@@ -79,9 +79,6 @@ describe("DisplayHistory", () => {
                         loadDocumentWithAscendentHierarchy: load_document,
                     },
                 }),
-                provide: {
-                    should_display_history_in_document: true,
-                },
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },
@@ -106,6 +103,7 @@ describe("DisplayHistory", () => {
         `should display a Versions link for %s: %s`,
         async (type, should_versions_link_be_displayed) => {
             load_document.mockReturnValue({ id: 10, type } as Item);
+            jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
             const wrapper = shallowMount(DisplayHistory, {
                 global: {
                     ...getGlobalTestOptions({
@@ -113,9 +111,6 @@ describe("DisplayHistory", () => {
                             loadDocumentWithAscendentHierarchy: load_document,
                         },
                     }),
-                    provide: {
-                        should_display_history_in_document: true,
-                    },
                     stubs: {
                         RouterLink: RouterLinkStub,
                     },

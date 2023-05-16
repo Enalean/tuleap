@@ -126,18 +126,15 @@ import {
 import emitter from "../../../../helpers/emitter";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { inject } from "vue";
-import type { NewItemAlternativeArray } from "../../../../type";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { NEW_ITEMS_ALTERNATIVES } from "../../../../injection-keys";
 
 const { embedded_are_allowed, user_can_create_wiki } = useNamespacedState<
     Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki">
 >("configuration", ["embedded_are_allowed", "user_can_create_wiki"]);
 
-const create_new_item_alternatives = inject<NewItemAlternativeArray>(
-    "create_new_item_alternatives",
-    []
-);
+const create_new_item_alternatives = strictInject(NEW_ITEMS_ALTERNATIVES);
 
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {

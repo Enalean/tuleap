@@ -22,6 +22,7 @@ specifiers:
   '@tuleap/tlp-popovers': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
+  '@tuleap/vue-strict-inject': workspace:*
   '@tuleap/vue3-breadcrumb-privacy': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@tuleap/vuex-store-wrapper-jest': workspace:*
@@ -67,6 +68,7 @@ dependencies:
   '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/vue-strict-inject': link:../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-breadcrumb-privacy': link:../../lib/frontend/vue3-breadcrumb-privacy
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
   '@vue/compat': 3.2.47_vue@3.2.47
