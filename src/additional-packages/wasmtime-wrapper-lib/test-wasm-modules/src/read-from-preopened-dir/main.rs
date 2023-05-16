@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use std::fs::File;
+use std::io::{Read, Error};
 
-declare(strict_types=1);
-
-namespace Tuleap\WebAssembly;
-
-use Tuleap\NeverThrow\Fault;
-use Tuleap\Option\Option;
-
-/**
- * This class is preloaded, you need to restart PHP FPM to have changes made to it taken into account
- */
-interface WASMCaller
-{
-    /**
-     * @psalm-return Option<\Tuleap\NeverThrow\Ok<string>|\Tuleap\NeverThrow\Err<Fault>>
-     */
-    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option;
+fn main() -> Result<(), Error> {
+    let mut file = File::open("/git-dir-0000/ReadTest.txt")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    print!("{}", contents);
+    Ok(())
 }

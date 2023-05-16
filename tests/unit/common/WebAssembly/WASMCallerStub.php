@@ -55,7 +55,7 @@ final class WASMCallerStub implements WASMCaller
     /**
      * @psalm-return Option<Result<string, Fault>>
      */
-    public function call(string $wasm_path, string $input): Option
+    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option
     {
         $this->has_been_called = true;
         return $this->return_value;

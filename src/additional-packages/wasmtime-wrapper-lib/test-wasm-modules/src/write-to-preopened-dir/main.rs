@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use std::fs::File;
+use std::path::Path;
+use std::io::Error;
 
-declare(strict_types=1);
+fn main() -> Result<(), Error> {
 
-namespace Tuleap\WebAssembly;
-
-use Tuleap\NeverThrow\Fault;
-use Tuleap\Option\Option;
-
-/**
- * This class is preloaded, you need to restart PHP FPM to have changes made to it taken into account
- */
-interface WASMCaller
-{
-    /**
-     * @psalm-return Option<\Tuleap\NeverThrow\Ok<string>|\Tuleap\NeverThrow\Err<Fault>>
-     */
-    public function call(string $wasm_path, string $input, string $read_only_dir_path, string $read_only_dir_guest_path): Option;
+    let dir = Path::new("/git-dir-7331/");
+    let temp_file = dir.join(".write_test");
+    match File::create(&temp_file) {
+        Ok(_) => {
+            print!("Write permissions are granted.");
+        }
+        Err(err) => {
+            print!("Write permissions are denied: {}", err);
+        }
+    }
+    Ok(())
 }

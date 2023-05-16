@@ -34,14 +34,14 @@ final class PreReceiveHookData
     /**
      * @param array<string,PreReceiveHookUpdatedReference> $updated_references
      */
-    private function __construct(public readonly array $updated_references)
+    private function __construct(public readonly array $updated_references, public readonly string $pre_opened_dir)
     {
     }
 
     /**
      * @psalm-return Ok<self>|Err<Fault>
      */
-    public static function fromRawStdinHook(string $stdin, LoggerInterface $logger): Ok|Err
+    public static function fromRawStdinHook(string $stdin, string $repository_path, string $guest_repository_path, LoggerInterface $logger): Ok|Err
     {
         $updated_references = [];
         $separator          = "\r\n";
@@ -61,6 +61,6 @@ final class PreReceiveHookData
             $line = strtok($separator);
         }
 
-        return Result::ok(new self($updated_references));
+        return Result::ok(new self($updated_references, $guest_repository_path));
     }
 }
