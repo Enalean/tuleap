@@ -24,7 +24,7 @@ import type {
 } from "@simplewebauthn/typescript-types";
 import { ResultAsync } from "neverthrow";
 import { startRegistration } from "@simplewebauthn/browser";
-import { RegistrationFault } from "./RegistrationFault";
+import { RegistrationFault } from "./CustomFault";
 import type { Fault } from "@tuleap/fault";
 
 export function register(name: string): ResultAsync<null, Fault> {
