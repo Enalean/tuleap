@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\GitViews\RepoManagement\Pane\CIBuilds;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;

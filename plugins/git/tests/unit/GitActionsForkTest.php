@@ -63,7 +63,7 @@ final class GitActionsForkTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
             \Mockery::spy(\ProjectHistoryDao::class),
             \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+            \Mockery::spy(\Tuleap\Git\RemoteServer\GerritCanMigrateChecker::class),
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
             \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),

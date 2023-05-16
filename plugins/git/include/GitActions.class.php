@@ -21,7 +21,7 @@
 
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\RemoteServer\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;

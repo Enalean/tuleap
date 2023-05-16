@@ -27,7 +27,7 @@ require_once __DIR__ . '/constants.php';
 
 use FastRoute\RouteCollector;
 use Tuleap\CLI\Command\ConfigDumpEvent;
-use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\Git\RemoteServer\GerritCanMigrateEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
@@ -1059,8 +1059,8 @@ class LdapPlugin extends Plugin
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(GerritCanMigrateChecker::GIT_EVENT_PLATFORM_CAN_USE_GERRIT)]
-    public function gitEventPlatformCanUseGerrit($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function gerritCanMigrateEvent(GerritCanMigrateEvent $event): void
     {
         $ldap_params = $this->getLDAPParams();
 
@@ -1068,7 +1068,7 @@ class LdapPlugin extends Plugin
         $ldap_write_server_is_configured       = isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '';
 
         if ($platform_uses_ldap_for_authentication || $ldap_write_server_is_configured) {
-            $params['platform_can_use_gerrit'] = true;
+            $event->platformCanUseGerrit();
         }
     }
 
