@@ -19,7 +19,7 @@
 
 import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { ArtifactCrossReferenceProxy } from "../../ArtifactCrossReferenceProxy";
-import { ArtifactProjectProxy } from "../../ArtifactProjectProxy";
+import { ProjectProxy } from "../../ProjectProxy";
 import type { ArtifactWithStatus } from "../../ArtifactWithStatus";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 
@@ -31,7 +31,7 @@ export const LinkableArtifactProxy = {
         uri: artifact.html_url,
         status: artifact.full_status,
         is_open: artifact.is_open,
-        project: ArtifactProjectProxy.fromAPIArtifact(artifact),
+        project: ProjectProxy.fromAPIArtifact(artifact),
     }),
 
     fromAPIUserHistory: (entry: UserHistoryEntry): LinkableArtifact => ({

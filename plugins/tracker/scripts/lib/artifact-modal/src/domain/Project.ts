@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ArtifactProject = {
+export type Project = {
     readonly id: number;
     readonly label: string;
 };
