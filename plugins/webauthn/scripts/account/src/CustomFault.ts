@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,22 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { Fault } from "@tuleap/fault";
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
+export const RegistrationFault = {
+    fromError: (error: unknown): Fault =>
+        error instanceof Error
+            ? Fault.fromError(error)
+            : Fault.fromMessage("Failed to register passkey"),
+};
 
-export default vite.defineAppConfig(
-    { plugin_name: "webauthn" },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    account: path.resolve(__dirname, "scripts/account.ts"),
-                },
-            },
-        },
-        resolve: {
-            dedupe: ["neverthrow"],
-        },
-    }
-);
+export const AuthenticationFault = {
+    fromError: (error: unknown): Fault =>
+        error instanceof Error
+            ? Fault.fromError(error)
+            : Fault.fromMessage("Failed to authenticate with your passkey"),
+};

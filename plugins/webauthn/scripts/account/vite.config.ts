@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,11 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { Fault } from "@tuleap/fault";
 
-export const RegistrationFault = {
-    fromError: (error: unknown): Fault =>
-        error instanceof Error
-            ? Fault.fromError(error)
-            : Fault.fromMessage("Failed to register passkey"),
-};
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+
+export default vite.defineAppConfig(
+    {
+        plugin_name: "webauthn",
+        sub_app_name: "account",
+    },
+    {
+        plugins: [POGettextPlugin.vite()],
+        build: {
+            rollupOptions: {
+                input: {
+                    account: path.resolve(__dirname, "src/account.ts"),
+                },
+            },
+        },
+        resolve: {
+            dedupe: ["neverthrow"],
+        },
+    }
+);
