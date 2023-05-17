@@ -190,6 +190,7 @@ class RoadmapWidgetDao extends DataAccessObject
                     ]
                 );
                 $db->delete('plugin_roadmap_widget_trackers', ['plugin_roadmap_widget_id' => $id]);
+                $db->delete('plugin_roadmap_widget_filter', ['widget_id' => $id]);
             }
         );
     }

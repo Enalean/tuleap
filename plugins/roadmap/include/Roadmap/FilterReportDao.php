@@ -49,4 +49,9 @@ final class FilterReportDao extends \Tuleap\DB\DataAccessObject
             return $report_id ?: null;
         });
     }
+
+    public function deleteByReport(int $report_id): void
+    {
+        $this->getDB()->delete('plugin_roadmap_widget_filter', ['report_id' => $report_id]);
+    }
 }
