@@ -18,6 +18,7 @@
  */
 
 @use "@tuleap/lazybox";
+@use "creation/artifact-creator";
 
 $link-table-cell-padding: 8px;
 $link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
@@ -73,8 +74,8 @@ $link-table-cell-background: transparent;
 .link-field-table-footer-input {
     width: 100%;
 
-    > tuleap-lazybox > tuleap-lazybox-selection {
-        height: 32px;
+    > tuleap-lazybox {
+        --lazybox-selection-height: var(--tlp-form-element-small-height);
     }
 }
 

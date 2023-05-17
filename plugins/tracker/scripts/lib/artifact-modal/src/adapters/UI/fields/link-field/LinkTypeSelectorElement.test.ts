@@ -35,8 +35,7 @@ const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupEleme
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
 
 describe("LinkTypeSelectorElement", () => {
-    let host: HostElement,
-        allowed_link_types: CollectionOfAllowedLinksTypesPresenters,
+    let allowed_link_types: CollectionOfAllowedLinksTypesPresenters,
         cross_reference: Option<ArtifactCrossReference>,
         dispatchEvent: jest.SpyInstance;
 
@@ -52,15 +51,17 @@ describe("LinkTypeSelectorElement", () => {
     });
 
     const render = (): HTMLSelectElement => {
-        const target = document.implementation
-            .createHTMLDocument()
-            .createElement("div") as unknown as ShadowRoot;
-        host = {
+        const doc = document.implementation.createHTMLDocument();
+        const target = doc.createElement("div") as unknown as ShadowRoot;
+        const element = doc.createElement("span");
+        const host = Object.assign(element, {
             value: LinkTypeStub.buildUntyped(),
+            disabled: false,
             current_artifact_reference: cross_reference,
             available_types: allowed_link_types,
             dispatchEvent,
-        } as unknown as HostElement;
+            content: () => element,
+        }) as HostElement;
 
         const render = LinkTypeSelectorElement.content(host);
         render(host, target);

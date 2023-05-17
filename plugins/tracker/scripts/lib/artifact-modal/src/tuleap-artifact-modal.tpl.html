@@ -140,6 +140,7 @@
 <tuleap-artifact-modal-link-field
     controller="modal.getLinkFieldController(field)"
     autocompleter="modal.getLinkFieldAutoCompleter()"
+    creator-controller="modal.getArtifactCreatorController()"
     ce-one-way
 ></tuleap-artifact-modal-link-field>
 </script>
@@ -366,7 +367,7 @@
             ng-value="modal.getButtonText()"
             ng-click="modal.reopenFieldsetsWithInvalidInput($event.target.form)"
             ng-disabled="modal.isSubmitDisabled()"
-            title="{{ modal.submit_disabling_reason }}"
+            title="{{ modal.submit_disabling_reason.unwrapOr('') }}"
         >
     </div>
 </form>

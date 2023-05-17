@@ -3,12 +3,11 @@
 # Benjamin Dauton <benjamin.dauton@enalean.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: AgileDashboard Planning\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-17 11:55+0200\n"
+"PO-Revision-Date: 2023-05-16 16:44+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
-"fr/)\n"
+"Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +52,9 @@ msgstr "Valeur calculée :"
 
 msgid "Confirm to apply your modifications"
 msgstr "Confirmer pour appliquer vos modifications"
+
+msgid "Create"
+msgstr "Créer"
 
 msgid "Create a new {{ modal.title }}"
 msgstr "Créer un nouveau {{ modal.title }}"
@@ -112,7 +114,7 @@ msgid "Keep the file"
 msgstr "Garder le fichier"
 
 msgid "Linked artifacts are loading"
-msgstr "Les artéfacts liés sont en chargement"
+msgstr "Les artéfacts liés sont en cours de chargement"
 
 msgid "Mark for removal"
 msgstr "Marquer pour suppression"
@@ -170,6 +172,9 @@ msgstr "Parents possibles"
 msgid "Preview"
 msgstr "Aperçu"
 
+msgid "Projects and trackers are loading"
+msgstr "Les projets et les outils de suivi sont en cours de chargement"
+
 msgid "Recently viewed artifacts"
 msgstr "Artéfacts vus récemment"
 
@@ -221,6 +226,9 @@ msgstr "Il y a eu une erreur dans l'aperçu Markdown :"
 
 msgid "This artifact is already linked"
 msgstr "Cet artéfact est déjà lié"
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "Type..."
 msgstr "Ecrivez..."

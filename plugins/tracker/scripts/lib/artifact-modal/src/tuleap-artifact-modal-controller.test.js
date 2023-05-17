@@ -23,13 +23,14 @@ import "angular-mocks";
 
 import BaseModalController from "./tuleap-artifact-modal-controller.js";
 
+import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
+import { Option } from "@tuleap/option";
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
-import { okAsync } from "neverthrow";
-import * as fetch_result from "@tuleap/fetch-result";
 
 const PROJECT_ID = 133;
 
@@ -192,7 +193,7 @@ describe("TuleapArtifactModalController", () => {
 
         it(`when submit is disabled, it does nothing`, () => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
-            ArtifactModalController.submit_disabling_reason = "Disabled";
+            ArtifactModalController.submit_disabling_reason = Option.fromValue("Disabled");
             ArtifactModalController.submit();
             $scope.$apply();
 

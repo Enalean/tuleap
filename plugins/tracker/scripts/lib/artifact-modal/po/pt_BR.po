@@ -42,6 +42,9 @@ msgstr ""
 msgid "Confirm to apply your modifications"
 msgstr ""
 
+msgid "Create"
+msgstr ""
+
 msgid "Create a new {{ modal.title }}"
 msgstr ""
 
@@ -156,6 +159,9 @@ msgstr ""
 msgid "Preview"
 msgstr "Pré-visualização"
 
+msgid "Projects and trackers are loading"
+msgstr ""
+
 msgid "Recently viewed artifacts"
 msgstr ""
 
@@ -202,6 +208,9 @@ msgid "There was an error in the Markdown preview:"
 msgstr "Houve um erro na pré-visualização do Markdown:"
 
 msgid "This artifact is already linked"
+msgstr ""
+
+msgid "Title"
 msgstr ""
 
 msgid "Type..."

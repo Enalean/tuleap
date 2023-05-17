@@ -166,7 +166,7 @@ describe("LinkField", () => {
                 link_selector = LazyboxStub.build();
             });
 
-            const getHost = (): LinkField => {
+            const getHost = (): HostElement => {
                 const initial_dropdown_content: GroupCollection = [];
                 return {
                     controller: {} as LinkFieldControllerType,
@@ -176,7 +176,7 @@ describe("LinkField", () => {
                     possible_parents_section: initial_dropdown_content,
                     recently_viewed_section: initial_dropdown_content,
                     search_results_section: initial_dropdown_content,
-                } as LinkField;
+                } as HostElement;
             };
 
             it(`defaults property value to empty array`, () => {
