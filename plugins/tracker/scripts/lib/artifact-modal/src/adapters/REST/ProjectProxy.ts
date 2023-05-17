@@ -18,7 +18,7 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { ArtifactProject } from "../../domain/ArtifactProject";
+import type { Project } from "../../domain/Project";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
 function getLabel(project: ProjectReference): string {
@@ -28,8 +28,8 @@ function getLabel(project: ProjectReference): string {
     return project.label;
 }
 
-export const ArtifactProjectProxy = {
-    fromAPIArtifact: (artifact: ArtifactWithStatus): ArtifactProject => ({
+export const ProjectProxy = {
+    fromAPIArtifact: (artifact: ArtifactWithStatus): Project => ({
         id: artifact.tracker.project.id,
         label: getLabel(artifact.tracker.project),
     }),

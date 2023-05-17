@@ -19,7 +19,7 @@
 
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
-import type { ArtifactProject } from "../../ArtifactProject";
+import type { Project } from "../../Project";
 
 export type Status = {
     readonly value: string;
@@ -33,5 +33,5 @@ export type LinkableArtifact = {
     readonly uri: string;
     readonly status: Status | null;
     readonly is_open: boolean;
-    readonly project: ArtifactProject;
+    readonly project: Project;
 };
