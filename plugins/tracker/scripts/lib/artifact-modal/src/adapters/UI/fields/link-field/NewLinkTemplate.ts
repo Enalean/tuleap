@@ -43,12 +43,10 @@ export const getArtifactStatusBadgeClasses = (
 };
 
 export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink): MapOfClasses => {
-    const badge_color = `tlp-swatch-${artifact.xref.color}`;
     const classes: MapOfClasses = {
         "cross-ref-badge": true,
-        "link-field-xref-badge": true,
     };
-    classes[badge_color] = true;
+    classes[`tlp-swatch-${artifact.xref.color}`] = true;
     return classes;
 };
 
@@ -64,50 +62,38 @@ export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFuncti
         );
     };
 
-    return html`
-        <tr class="link-field-table-row tlp-table-row-success" data-test="link-row">
-            <td class="link-field-table-cell-type">
-                <tuleap-artifact-modal-link-type-selector
-                    value="${link.link_type}"
-                    current_artifact_reference="${host.current_artifact_reference}"
-                    available_types="${host.allowed_link_types}"
-                    onvalue-changed="${onValueChanged}"
-                ></tuleap-artifact-modal-link-type-selector>
-            </td>
-            <td class="link-field-table-cell-xref">
-                <a
-                    href="${link.uri}"
-                    class="link-field-artifact-link"
-                    title="${link.title}"
-                    data-test="link-link"
+    return html`<div class="link-field-row link-field-new-row" data-test="link-row">
+        <span class="link-field-row-type"
+            ><tuleap-artifact-modal-link-type-selector
+                value="${link.link_type}"
+                current_artifact_reference="${host.current_artifact_reference}"
+                available_types="${host.allowed_link_types}"
+                onvalue-changed="${onValueChanged}"
+            ></tuleap-artifact-modal-link-type-selector></span
+        ><span class="link-field-row-xref"
+            ><a
+                href="${link.uri}"
+                class="link-field-artifact-link"
+                title="${link.title}"
+                data-test="link-link"
+                ><span class="${getCrossRefClasses(link)}" data-test="link-xref"
+                    >${link.xref.ref}</span
                 >
-                    <span class="${getCrossRefClasses(link)}" data-test="link-xref">
-                        ${link.xref.ref}
-                    </span>
-                    <span class="link-field-artifact-title" data-test="link-title">
-                        ${link.title}
-                    </span>
-                </a>
-            </td>
-            <td class="link-field-table-cell-status">
-                ${link.status &&
-                html`
-                    <span class="${getArtifactStatusBadgeClasses(link)}" data-test="link-status">
-                        ${link.status.value}
-                    </span>
-                `}
-            </td>
-            <td class="link-field-table-cell-action">
-                <button
-                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                    type="button"
-                    onclick="${removeNewLink}"
-                    data-test="action-button"
-                >
-                    <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
-                    ${getRemoveLabel()}
-                </button>
-            </td>
-        </tr>
-    `;
+                <span class="link-field-artifact-title" data-test="link-title"
+                    >${link.title}</span
+                ></a
+            ></span
+        >${link.status &&
+        html`<span class="${getArtifactStatusBadgeClasses(link)}" data-test="link-status"
+            >${link.status.value}</span
+        >`}<button
+            class="tlp-button-small tlp-button-danger tlp-button-outline"
+            type="button"
+            onclick="${removeNewLink}"
+            data-test="action-button"
+        >
+            <i class="fa-regular fa-trash-alt tlp-button-icon" aria-hidden="true"></i
+            >${getRemoveLabel()}
+        </button>
+    </div>`;
 };

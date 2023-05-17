@@ -17,27 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-tuleap-artifact-modal-link-artifact-creator {
+.link-field-item {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     width: 100%;
-    gap: 10px;
 }
 
-.link-field-artifact-creator-inputs {
-    display: flex;
-    position: relative;
-    flex: 1;
-    flex-direction: column;
+.link-field-item-xref-badge {
+    margin: 0 6px 0 0;
 }
 
-.link-field-artifact-creator-spinner {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0.5;
+.link-field-item-title {
+    flex: 0 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.link-field-artifact-creator-actions {
-    display: flex;
-    gap: 10px;
+.link-field-disabled-item-already-linked-info {
+    flex: 0 1 auto;
+    margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
+    white-space: nowrap;
+}
+
+.link-field-item-status {
+    margin: 0 0 0 auto;
+}
+
+.link-field-item-project {
+    flex: 1 1 100%;
+    margin: 2px 0 0;
+    font-size: 0.65rem;
 }

@@ -83,13 +83,9 @@ export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField
         return html``;
     }
 
-    return html`
-        <tr class="link-field-table-row link-field-no-links-row" data-test="link-table-empty-state">
-            <td class="link-field-table-cell-no-links tlp-table-cell-empty" colspan="4">
-                ${getLinkFieldTableEmptyStateText()}
-            </td>
-        </tr>
-    `;
+    return html`<div class="link-field-no-links-row" data-test="link-table-empty-state">
+        ${getLinkFieldTableEmptyStateText()}
+    </div>`;
 };
 
 export const getSkeletonIfNeeded = (
@@ -98,30 +94,20 @@ export const getSkeletonIfNeeded = (
     if (!presenter.is_loading) {
         return html``;
     }
-
-    return html`
-        <tr
-            class="link-field-table-row link-field-skeleton-row"
-            data-test="link-field-table-skeleton"
-        >
-            <td class="link-field-table-cell-type link-field-skeleton-cell">
-                <span class="tlp-skeleton-text"></span>
-            </td>
-            <td class="link-field-table-cell-xref link-field-skeleton-cell">
-                <i
-                    class="fas fa-hashtag tlp-skeleton-text-icon tlp-skeleton-icon"
+    return html`<div
+        class="link-field-row link-field-skeleton-row"
+        data-test="link-field-table-skeleton"
+    >
+        <span class="link-field-row-type"><span class="tlp-skeleton-text"></span></span
+        ><span class="link-field-row-xref"
+            ><span class="link-field-artifact-link"
+                ><i
+                    class="fa-solid fa-hashtag tlp-skeleton-text-icon tlp-skeleton-icon"
                     aria-hidden="true"
-                ></i>
-                <span class="tlp-skeleton-text"></span>
-            </td>
-            <td class="link-field-table-cell-status link-field-skeleton-cell">
-                <span class="tlp-skeleton-text"></span>
-            </td>
-            <td class="link-field-table-cell-status link-field-table-cell-action">
-                <span class="tlp-skeleton-text"></span>
-            </td>
-        </tr>
-    `;
+                ></i
+                ><span class="link-field-artifact-title tlp-skeleton-text"></span></span></span
+        ><span class="tlp-skeleton-text"></span><span class="tlp-skeleton-text"></span>
+    </div>`;
 };
 
 export const setNewLinks = (
@@ -190,25 +176,19 @@ export const current_link_type_descriptor = {
 export const getLinkFieldCanOnlyHaveOneParentNote = (
     current_artifact_option: Option<ArtifactCrossReference>
 ): UpdateFunction<LinkField> => {
-    const default_html = html`
-        <p class="link-field-artifact-can-have-only-one-parent-note">${getLinkFieldNoteText()}</p>
-    `;
+    const default_html = html`<p class="link-field-artifact-can-have-only-one-parent-note">
+        ${getLinkFieldNoteText()}
+    </p>`;
     return current_artifact_option.mapOr((current_artifact_reference) => {
         const { ref: artifact_reference, color } = current_artifact_reference;
-        const badge_classes = [
-            `tlp-swatch-${color}`,
-            "cross-ref-badge",
-            "link-field-parent-note-xref-badge",
-        ];
-        return html`
-            <p class="link-field-artifact-can-have-only-one-parent-note">
-                ${getLinkFieldNoteStartText()}
-                <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
-                    ${artifact_reference}
-                </span>
-                ${getLinkFieldCanHaveOnlyOneParent()}
-            </p>
-        `;
+        const badge_classes = [`tlp-swatch-${color}`, "cross-ref-badge"];
+        return html`<p class="link-field-artifact-can-have-only-one-parent-note">
+            ${getLinkFieldNoteStartText()}<span
+                data-test="artifact-cross-ref-badge"
+                class="${badge_classes}"
+                >${artifact_reference}</span
+            >${getLinkFieldCanHaveOnlyOneParent()}
+        </p>`;
     }, default_html);
 };
 
@@ -226,7 +206,7 @@ const onCancel = (host: InternalLinkField): void => {
     host.matching_artifact_section = [...host.matching_artifact_section];
 };
 
-const getTableFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> => {
+const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> => {
     if (host.is_artifact_creator_shown) {
         return html`<tuleap-artifact-modal-link-artifact-creator
             controller="${host.creatorController}"
@@ -314,36 +294,29 @@ export const LinkField = define<InternalLinkField>({
     search_results_section: dropdown_section_descriptor,
     is_artifact_creator_shown: false,
     is_artifact_creator_loading: false,
-    content: (host) => html`
-        <div class="tracker-form-element" data-test="artifact-link-field">
-            <label class="tlp-label">${host.field_presenter.label}</label>
-            ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
-            <table id="tuleap-artifact-modal-link-table" class="tlp-table">
-                <tbody class="link-field-table-body">
-                    ${host.linked_artifacts_presenter.linked_artifacts.map((link) =>
-                        getLinkedArtifactTemplate(host, link)
-                    )}
-                    ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
-                    ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
-                    ${getEmptyStateIfNeeded(host)}
-                </tbody>
-                <tfoot class="link-field-table-footer" data-test="link-field-table-footer">
-                    <tr class="link-field-table-row">
-                        <td class="link-field-table-footer-type">
-                            <tuleap-artifact-modal-link-type-selector
-                                value="${host.current_link_type}"
-                                current_artifact_reference="${host.current_artifact_reference}"
-                                available_types="${host.allowed_link_types}"
-                                onvalue-changed="${onLinkTypeChanged}"
-                                disabled="${host.is_artifact_creator_loading}"
-                            ></tuleap-artifact-modal-link-type-selector>
-                        </td>
-                        <td class="link-field-table-footer-input" colspan="3">
-                            ${getTableFooterTemplate(host)}
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+    content: (host) => html`<div class="tracker-form-element" data-test="artifact-link-field">
+        <label class="tlp-label">${host.field_presenter.label}</label>
+        ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
+        <div class="link-field-rows-wrapper">
+            ${host.linked_artifacts_presenter.linked_artifacts.map((link) =>
+                getLinkedArtifactTemplate(host, link)
+            )}
+            ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
+            ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}${getEmptyStateIfNeeded(host)}
         </div>
-    `,
+        <div class="link-field-add-link-section">
+            <div class="link-field-add-link-row">
+                <span class="link-field-row-type">
+                    <tuleap-artifact-modal-link-type-selector
+                        value="${host.current_link_type}"
+                        current_artifact_reference="${host.current_artifact_reference}"
+                        available_types="${host.allowed_link_types}"
+                        onvalue-changed="${onLinkTypeChanged}"
+                        disabled="${host.is_artifact_creator_loading}"
+                    ></tuleap-artifact-modal-link-type-selector>
+                </span>
+                <span class="link-field-add-link-input">${getFooterTemplate(host)}</span>
+            </div>
+        </div>
+    </div>`,
 });
