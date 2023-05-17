@@ -27,18 +27,22 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class PaginatedArtifactDaoTest extends TestCase
 {
+    private int $stories_id;
+    private int $tasks_id;
+    private int $bugs_id;
+
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
 
-        $db->run("INSERT INTO tracker(id) VALUES (101)");
-        $db->run("INSERT INTO tracker(id) VALUES (102)");
-        $db->run("INSERT INTO tracker(id) VALUES (103)");
+        $this->stories_id = (int) $db->insertReturnId('tracker', []);
+        $this->tasks_id   = (int) $db->insertReturnId('tracker', []);
+        $this->bugs_id    = (int) $db->insertReturnId('tracker', []);
 
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (1, 101)");
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (2, 102)");
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (3, 103)");
-        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (4, 101)");
+        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (1, ?)", $this->stories_id);
+        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (2, ?)", $this->tasks_id);
+        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (3, ?)", $this->bugs_id);
+        $db->run("INSERT INTO tracker_artifact(id, tracker_id) VALUES (4, ?)", $this->stories_id);
     }
 
     protected function tearDown(): void
@@ -51,7 +55,7 @@ final class PaginatedArtifactDaoTest extends TestCase
     public function testSearchPaginatedByListOfTrackerIds(): void
     {
         $dao     = new PaginatedArtifactDao();
-        $results = $dao->searchPaginatedByListOfTrackerIds([101, 102], 1, 0);
+        $results = $dao->searchPaginatedByListOfTrackerIds([$this->stories_id, $this->tasks_id], 1, 0);
 
         self::assertEquals(1, $results[0]['id']);
         self::assertEquals(3, $dao->foundRows());
