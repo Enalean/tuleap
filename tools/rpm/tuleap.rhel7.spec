@@ -595,7 +595,7 @@ echo '@@VERSION@@-@@RELEASE@@' > VERSION
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools plugins site-content src VERSION LICENSE; do
+for i in tools plugins site-content src VERSION LICENSE preload.php; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 %if %{with enterprise}
@@ -662,6 +662,10 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/conf
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins/pluginsadministration
+
+# PHP configuration
+%{__install} -d $RPM_BUILD_ROOT/etc/opt/remi/php81/php.d/
+%{__install} src/etc/php.d/99-tuleap.ini $RPM_BUILD_ROOT/etc/opt/remi/php81/php.d/
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1092,6 +1096,7 @@ fi
 %{APP_DIR}/site-content
 %{APP_DIR}/VERSION
 %{APP_DIR}/LICENSE
+%{APP_DIR}/preload.php
 %if %{with enterprise}
 %{APP_DIR}/ENTERPRISE_BUILD
 %endif
@@ -1155,6 +1160,10 @@ fi
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/conf
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins/pluginsadministration
+
+# PHP Configuration
+%attr(00755,root,root) /etc/opt/remi/php81/php.d/
+%attr(00644,root,root) /etc/opt/remi/php81/php.d/99-tuleap.ini
 
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}

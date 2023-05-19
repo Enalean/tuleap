@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,11 +19,7 @@
  *
  */
 
-$loader = static fn (string $file_name) => is_file($file_name . '/vendor/preload.php') && require $file_name . '/vendor/preload.php';
+declare(strict_types=1);
 
-$loader(__DIR__ . '/src');
-$loader(__DIR__ . '/src/themes/BurningParrot');
-$loader(__DIR__ . '/src/themes/FlamingParrot');
-foreach (glob(__DIR__ . '/plugins/*') as $plugin) {
-    $loader($plugin);
-}
+opcache_compile_file(__DIR__ . '/src/common/WebAssembly/WASMCaller.php');
+opcache_compile_file(__DIR__ . '/src/common/WebAssembly/FFIWASMCaller.php');
