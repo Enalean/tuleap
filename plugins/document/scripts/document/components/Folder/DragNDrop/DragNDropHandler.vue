@@ -136,7 +136,7 @@ export default {
         this.main.addEventListener("dragleave", this.ondragleave);
         this.main.addEventListener("drop", this.ondrop);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.main.removeEventListener("dragover", this.ondragover);
         this.main.removeEventListener("dragleave", this.ondragleave);
         this.main.removeEventListener("drop", this.ondrop);

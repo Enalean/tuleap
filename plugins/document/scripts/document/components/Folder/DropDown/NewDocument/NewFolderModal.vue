@@ -113,7 +113,7 @@ export default {
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("show-new-folder-modal", this.show);
         emitter.off(
             "update-multiple-properties-list-value",

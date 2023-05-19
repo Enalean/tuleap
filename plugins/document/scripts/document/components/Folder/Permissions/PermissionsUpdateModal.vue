@@ -120,7 +120,7 @@ export default {
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.show();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("show-update-permissions-modal", this.show);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },

@@ -196,7 +196,7 @@ export default {
         emitter.on("show-changelog-modal", this.showChangelogModal);
         emitter.on("show-file-creation-modal", this.showFileCreationModal);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         emitter.off(

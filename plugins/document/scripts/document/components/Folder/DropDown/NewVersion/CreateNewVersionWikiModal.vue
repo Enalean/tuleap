@@ -95,7 +95,7 @@ export default {
 
         this.show();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("update-lock", this.updateLock);
     },
     methods: {

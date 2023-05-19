@@ -123,7 +123,7 @@ export default {
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("properties-recursion-list", this.setPropertiesListUpdate);
         emitter.off("properties-recursion-option", this.setRecursionOption);
         emitter.off(
