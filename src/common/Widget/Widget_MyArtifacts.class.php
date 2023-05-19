@@ -26,17 +26,17 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Artifact assigned to or submitted by this person
 */
-class Widget_MyArtifacts extends Widget
+class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public $_artifact_show;
+    private bool|string $artifact_show;
 
     public function __construct()
     {
         parent::__construct('myartifacts');
-        $this->_artifact_show = user_get_preference('my_artifacts_show');
-        if ($this->_artifact_show === false) {
-            $this->_artifact_show = 'AS';
-            user_set_preference('my_artifacts_show', $this->_artifact_show);
+        $this->artifact_show = user_get_preference('my_artifacts_show');
+        if ($this->artifact_show === false) {
+            $this->artifact_show = 'AS';
+            user_set_preference('my_artifacts_show', $this->artifact_show);
         }
     }
 
@@ -54,19 +54,19 @@ class Widget_MyArtifacts extends Widget
             if ($request->valid($vShow)) {
                 switch ($request->get('show')) {
                     case 'A':
-                        $this->_artifact_show = 'A';
+                        $this->artifact_show = 'A';
                         break;
                     case 'S':
-                        $this->_artifact_show = 'S';
+                        $this->artifact_show = 'S';
                         break;
                     case 'N':
-                        $this->_artifact_show = 'N';
+                        $this->artifact_show = 'N';
                         break;
                     case 'AS':
                     default:
-                        $this->_artifact_show = 'AS';
+                        $this->artifact_show = 'AS';
                 }
-                user_set_preference('my_artifacts_show', $this->_artifact_show);
+                user_set_preference('my_artifacts_show', $this->artifact_show);
             }
         }
         return true;
@@ -77,22 +77,22 @@ class Widget_MyArtifacts extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $selected_a  = $this->_artifact_show === 'A'  ? 'selected="selected"' : '';
-        $selected_s  = $this->_artifact_show === 'S'  ? 'selected="selected"' : '';
-        $selected_as = $this->_artifact_show === 'AS' ? 'selected="selected"' : '';
+        $selected_a  = $this->artifact_show === 'A'  ? 'selected="selected"' : '';
+        $selected_s  = $this->artifact_show === 'S'  ? 'selected="selected"' : '';
+        $selected_as = $this->artifact_show === 'AS' ? 'selected="selected"' : '';
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="show-' . (int) $widget_id . '">
+                <label class="tlp-label" for="show-' . $widget_id . '">
                     ' . $purifier->purify($GLOBALS['Language']->getText('my_index', 'display_arts')) . '
                 </label>
                 <select type="text"
                     class="tlp-select"
-                    id="show-' . (int) $widget_id . '"
+                    id="show-' . $widget_id . '"
                     name="show"
                 >
                     <option value="A" ' . $selected_a . '>
@@ -118,14 +118,14 @@ class Widget_MyArtifacts extends Widget
     {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
-            $my_artifacts = $atf->getMyArtifacts(UserManager::instance()->getCurrentUser()->getId(), $this->_artifact_show);
+            $my_artifacts = $atf->getMyArtifacts(UserManager::instance()->getCurrentUser()->getId(), $this->artifact_show);
             if (db_numrows($my_artifacts) > 0) {
-                $html_my_artifacts .= $this->_display_artifacts($my_artifacts, 0);
+                $html_my_artifacts .= $this->displayArtifacts($my_artifacts, 0);
             }
         } else {
             $html_my_artifacts = $GLOBALS['Language']->getText('my_index', 'err_artf');
         }
-        $html_my_artifacts .= '<TR><TD COLSPAN="3">' . (($this->_artifact_show == 'N' || db_numrows($my_artifacts) > 0) ? '&nbsp;' : $GLOBALS['Language']->getText('global', 'none')) . '</TD></TR>';
+        $html_my_artifacts .= '<TR><TD COLSPAN="3">' . (($this->artifact_show == 'N' || db_numrows($my_artifacts) > 0) ? '&nbsp;' : $GLOBALS['Language']->getText('global', 'none')) . '</TD></TR>';
         $html_my_artifacts .= '</table>';
         $html_my_artifacts .= $this->getPriorityColorsKey();
         return $html_my_artifacts;
@@ -144,7 +144,7 @@ class Widget_MyArtifacts extends Widget
         return $html;
     }
 
-    public function _display_artifacts($list_trackers, $print_box_begin)
+    private function displayArtifacts($list_trackers, $print_box_begin): string
     {
         $request = HTTPRequest::instance();
 
@@ -226,12 +226,12 @@ class Widget_MyArtifacts extends Widget
                 if ($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']) {
                     //work on the tracker of the last round if there was one
                     if ($atid != $atid_old && $count_aids != 0) {
-                        list($hide_now,$count_diff,$hide_url) =
+                        [$hide_now, $count_diff, $hide_url] =
                             my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
-                        $html_hdr                             = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
+                        $html_hdr                           = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
                         $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
                         $group_name . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
-                        $count_new                            = max(0, $count_diff);
+                        $count_new                          = max(0, $count_diff);
 
                         $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';
                         $html_my_artifacts .= $html_hdr . $html;
@@ -297,11 +297,11 @@ class Widget_MyArtifacts extends Widget
 
         //work on the tracker of the last round if there was one
         if ($atid_old != 0 && $count_aids != 0) {
-            list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
-            $html_hdr                             = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
+            [$hide_now, $count_diff, $hide_url] = my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
+            $html_hdr                           = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
               $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
               $purifier->purify($group_name) . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
-            $count_new                            = max(0, $count_diff);
+            $count_new                          = max(0, $count_diff);
 
             $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';
             $html_my_artifacts .= $html_hdr . $html;

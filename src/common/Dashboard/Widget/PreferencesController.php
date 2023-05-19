@@ -64,7 +64,7 @@ class PreferencesController
         $this->checkWidgetCanBeEdited($row, $user);
         $this->forceGroupIdToBePresentInRequest($request, $row);
 
-        echo $this->getWidget($row)->getPreferences($row['id']);
+        echo $this->getWidget($row)->getPreferences($row['id'], $row['content_id']);
     }
 
     public function update(HTTPRequest $request)
@@ -128,7 +128,7 @@ class PreferencesController
         $request->set('content_id', $row['content_id']);
     }
 
-    protected function getWidget(array $row)
+    protected function getWidget(array $row): \Widget
     {
         $widget             = $this->widget_factory->getInstanceByWidgetName($row['name']);
         $widget->owner_type = $row['project_id'] ? 'g' : 'u';

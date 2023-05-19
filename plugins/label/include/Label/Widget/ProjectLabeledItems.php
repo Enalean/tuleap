@@ -137,7 +137,7 @@ class ProjectLabeledItems extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $selected_labels = $this->getProjectSelectedLabelsPresenter();
         $project_id      = $this->getProject()->getID();

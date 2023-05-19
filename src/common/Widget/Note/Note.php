@@ -84,10 +84,7 @@ abstract class Note extends \Widget
         return true;
     }
 
-    /**
-     * @param string $widget_id
-     */
-    public function getPreferences($widget_id): string
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         return $this->renderer->renderToString(
             'note-preferences',

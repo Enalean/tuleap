@@ -66,9 +66,9 @@ abstract class HudsonJobWidget extends HudsonWidget
         );
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
-        $select_id = 'job-' . (int) $widget_id;
+        $select_id = 'job-' . $widget_id;
 
         return $this->buildPreferencesForm($select_id);
     }

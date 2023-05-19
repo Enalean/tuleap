@@ -93,7 +93,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -103,12 +103,12 @@ class Tracker_Widget_MyArtifacts extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="show-' . (int) $widget_id . '">
+                <label class="tlp-label" for="show-' . $widget_id . '">
                     ' . $purifier->purify(dgettext('tuleap-tracker', 'Display artifacts:')) . '
                 </label>
                 <select type="text"
                     class="tlp-select"
-                    id="show-' . (int) $widget_id . '"
+                    id="show-' . $widget_id . '"
                     name="show"
                 >
                     <option value="A" ' . $selected_a . '>

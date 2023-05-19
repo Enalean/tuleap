@@ -200,31 +200,31 @@ class Git_Widget_UserPushes extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="offset-' . (int) $widget_id . '">
+                <label class="tlp-label" for="offset-' . $widget_id . '">
                     ' . $purifier->purify(dgettext('tuleap-git', 'Maximum number of push by repository')) . '
                 </label>
                 <input type="number"
                        size="2"
                        class="tlp-input"
-                       id="offset-' . (int) $widget_id . '"
+                       id="offset-' . $widget_id . '"
                        name="plugin_git_user_pushes_offset"
                        value="' . $purifier->purify($this->offset) . '"
                        placeholder="5">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="days-' . (int) $widget_id . '">
+                <label class="tlp-label" for="days-' . $widget_id . '">
                     ' . $purifier->purify(dgettext('tuleap-git', 'Maximum number of days ago')) . '
                 </label>
                 <input type="number"
                        size="2"
                        class="tlp-input"
-                       id="days-' . (int) $widget_id . '"
+                       id="days-' . $widget_id . '"
                        name="plugin_git_user_pushes_past_days"
                        value="' . $purifier->purify($this->pastDays) . '"
                        placeholder="30">
