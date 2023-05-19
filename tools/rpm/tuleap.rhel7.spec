@@ -723,9 +723,6 @@ done
 %{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
-# Special custom include script
-%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
-%{__sed} -i "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
 #
 ## Install logrotate.d script
 %{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
@@ -1183,7 +1180,6 @@ fi
 %endif
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
-%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
