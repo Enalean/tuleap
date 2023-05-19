@@ -105,6 +105,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public const TYPE_CRITERIA          = 'criteria';
     public const TYPE_TABLE             = 'table';
     public const COMMENT_CRITERION_NAME = 'comment';
+    public const XML_ID_PREFIX          = 'REPORT_';
 
     /**
      * @var int|string
@@ -1736,6 +1737,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function exportToXml(SimpleXMLElement $roott, $xmlMapping): void
     {
         $root = $roott->addChild('report');
+        $root->addAttribute('id', self::XML_ID_PREFIX . $this->id);
+
         // only add if different from default values
         if (! $this->is_default) {
             $root->addAttribute('is_default', '0');
