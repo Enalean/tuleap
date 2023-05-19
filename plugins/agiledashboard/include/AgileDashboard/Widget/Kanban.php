@@ -274,7 +274,7 @@ abstract class Kanban extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $tracker_reports_builder = new TrackerReportBuilder(
             $this->tracker_report_factory,

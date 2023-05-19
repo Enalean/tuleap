@@ -139,7 +139,7 @@ class ProjectMilestonesWidgetRetriever
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
             return $this->renderer->renderToString(
                 'projectmilestones-preferences',
-                new ProjectMilestonesPreferencesPresenter((int) $widget_id, $project, $csrf_token)
+                new ProjectMilestonesPreferencesPresenter($widget_id, $project, $csrf_token)
             );
         } catch (\Project_AccessException $e) {
             return $this->renderer->renderToString(

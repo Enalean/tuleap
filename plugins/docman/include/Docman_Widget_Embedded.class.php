@@ -125,27 +125,27 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-' . (int) $widget_id . '">' . $purifier->purify(_('Title')) . '</label>
+                <label class="tlp-label" for="title-' . $widget_id . '">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-' . (int) $widget_id . '"
+                       id="title-' . $widget_id . '"
                        name="plugin_docman_widget_embedded[title]"
                        value="' . $purifier->purify($this->getTitle()) . '">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="item-id-' . (int) $widget_id . '">
+                <label class="tlp-label" for="item-id-' . $widget_id . '">
                     Item_id <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
                        class="tlp-input"
-                       id="item-id-' . (int) $widget_id . '"
+                       id="item-id-' . $widget_id . '"
                        name="plugin_docman_widget_embedded[item_id]"
                        value="' . $purifier->purify($this->plugin_docman_widget_embedded_item_id) . '"
                        required

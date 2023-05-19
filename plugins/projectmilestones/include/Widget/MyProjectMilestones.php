@@ -153,7 +153,7 @@ class MyProjectMilestones extends Widget
         return $this->project_milestones_widget_retriever->getContent($this->project, $this->root_planning);
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         if (! $this->project) {
             $this->project = $this->http->getProject();

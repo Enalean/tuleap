@@ -83,27 +83,27 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-' . (int) $widget_id . '">' . $purifier->purify(_('Title')) . '</label>
+                <label class="tlp-label" for="title-' . $widget_id . '">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-' . (int) $widget_id . '"
+                       id="title-' . $widget_id . '"
                        name="rss[title]"
                        value="' . $purifier->purify($this->getTitle()) . '"
                        placeholder="RSS">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="url-' . (int) $widget_id . '">
+                <label class="tlp-label" for="url-' . $widget_id . '">
                     URL <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"
-                       id="url-' . (int) $widget_id . '"
+                       id="url-' . $widget_id . '"
                        name="rss[url]"
                        value="' . $purifier->purify($this->rss_url) . '"
                        pattern="https?://.*"

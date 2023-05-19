@@ -86,7 +86,7 @@ use Tuleap\Project\MappingRegistry;
         return false;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         return '';
     }

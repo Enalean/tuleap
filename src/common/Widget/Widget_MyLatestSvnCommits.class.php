@@ -73,20 +73,20 @@ class Widget_MyLatestSvnCommits extends Widget // phpcs:ignore PSR1.Classes.Clas
         return false;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-' . (int) $widget_id . '">
+                <label class="tlp-label" for="title-' . $widget_id . '">
                     ' . $purifier->purify($GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_nb_prefs')) . '
                 </label>
                 <input type="text"
                        size="2"
                        maxlength="3"
                        class="tlp-input"
-                       id="title-' . (int) $widget_id . '"
+                       id="title-' . $widget_id . '"
                        name="nb_svn_commits"
                        value="' . $purifier->purify(user_get_preference('my_latests_svn_commits_nb_display')) . '"
                        placeholder="' . $purifier->purify(self::NB_COMMITS_TO_DISPLAY) . '">

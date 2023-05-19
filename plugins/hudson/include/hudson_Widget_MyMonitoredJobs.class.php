@@ -86,7 +86,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 

@@ -71,7 +71,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return true;
     }
 
-    public function getPreferences($widget_id)
+    public function getPreferences(int $widget_id, int $content_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
 

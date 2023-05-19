@@ -67303,8 +67303,8 @@
       <code>db_numrows($res)</code>
       <code>db_query($sql)</code>
       <code><![CDATA[db_result($res, 0, 'value')]]></code>
-      <code><![CDATA[user_set_preference('my_artifacts_show', $this->_artifact_show)]]></code>
-      <code><![CDATA[user_set_preference('my_artifacts_show', $this->_artifact_show)]]></code>
+      <code><![CDATA[user_set_preference('my_artifacts_show', $this->artifact_show)]]></code>
+      <code><![CDATA[user_set_preference('my_artifacts_show', $this->artifact_show)]]></code>
     </DeprecatedFunction>
     <MissingParamType>
       <code>$dashboard_id</code>
