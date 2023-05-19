@@ -130,7 +130,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
             $ugroup_members = $static_ugroup->getMembers();
             foreach ($ugroup_members as $ugroup_member) {
                 if ($ugroup_member->isRestricted()) {
-                    $static_ugroup->removeUser($ugroup_member);
+                    $static_ugroup->removeUser($ugroup_member, UserManager::instance()->getUserAnonymous());
                 }
             }
         }

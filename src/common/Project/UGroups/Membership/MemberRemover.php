@@ -50,7 +50,7 @@ class MemberRemover
      * @throws CannotModifyBoundGroupException
      * @throws CannotRemoveUserMembershipToUserGroupException
      */
-    public function removeMember(PFUser $user, ProjectUGroup $ugroup): void
+    public function removeMember(PFUser $user, PFUser $project_administrator, ProjectUGroup $ugroup): void
     {
         if ($ugroup->isBound()) {
             throw new CannotModifyBoundGroupException();
@@ -61,6 +61,6 @@ class MemberRemover
             return;
         }
 
-        $this->dynamic_ugroup_members_updater->removeUser($ugroup->getProject(), $ugroup, $user);
+        $this->dynamic_ugroup_members_updater->removeUser($ugroup->getProject(), $ugroup, $user, $project_administrator);
     }
 }

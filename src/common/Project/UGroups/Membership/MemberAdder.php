@@ -26,6 +26,7 @@ use EventManager;
 use ForgeConfig;
 use PFUser;
 use Project;
+use ProjectHistoryDao;
 use ProjectUGroup;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -76,7 +77,8 @@ class MemberAdder
                     DBFactory::getMainTuleapDBConnection()
                 ),
                 $project_member_adder,
-                EventManager::instance()
+                EventManager::instance(),
+                new ProjectHistoryDao(),
             ),
             $project_member_adder,
             new SynchronizedProjectMembershipDetector(

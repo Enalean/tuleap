@@ -27,8 +27,9 @@ use Mockery as M;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -41,36 +42,37 @@ class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\MockInterface|StaticMemberRemover
      */
     private $static_member_remover;
-    /**
-     * @var MemberRemover
-     */
-    private $member_remover;
-    /**
-     * @var \PFUser
-     */
-    private $user_to_remove;
+    private MemberRemover $member_remover;
+    private \PFUser $user_to_remove;
+    private \PFUser $project_administrator;
 
     protected function setUp(): void
     {
         $this->dynamic_ugroup_members_updater = M::mock(DynamicUGroupMembersUpdater::class);
         $this->static_member_remover          = M::mock(StaticMemberRemover::class);
-        $this->user_to_remove                 = new \PFUser(['user_id' => 303]);
+        $this->user_to_remove                 = UserTestBuilder::aUser()->withId(303)->build();
+        $this->project_administrator          = UserTestBuilder::aUser()->withId(158)->build();
         $this->member_remover                 = new MemberRemover($this->dynamic_ugroup_members_updater, $this->static_member_remover);
     }
 
-    public function testItRemovesFromDynamicUGroup()
+    public function testItRemovesFromDynamicUGroup(): void
     {
         $project = new \Project(['group_id' => 101]);
 
         $ugroup = M::mock(\ProjectUGroup::class, ['getProject' => $project, 'getId' => 202, 'isBound' => false, 'isStatic' => false]);
 
         $this->static_member_remover->shouldNotReceive('removeUser');
-        $this->dynamic_ugroup_members_updater->shouldReceive('removeUser')->with($project, $ugroup, $this->user_to_remove);
+        $this->dynamic_ugroup_members_updater->shouldReceive('removeUser')->with(
+            $project,
+            $ugroup,
+            $this->user_to_remove,
+            $this->project_administrator,
+        );
 
-        $this->member_remover->removeMember($this->user_to_remove, $ugroup);
+        $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
     }
 
-    public function testItRemovesFromStaticUGroup()
+    public function testItRemovesFromStaticUGroup(): void
     {
         $project = new \Project(['group_id' => 101]);
 
@@ -79,10 +81,10 @@ class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->static_member_remover->shouldReceive('removeUser')->with($ugroup, $this->user_to_remove);
         $this->dynamic_ugroup_members_updater->shouldNotReceive('removeUser');
 
-        $this->member_remover->removeMember($this->user_to_remove, $ugroup);
+        $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
     }
 
-    public function testItRemovesNothingFromBoundGroup()
+    public function testItRemovesNothingFromBoundGroup(): void
     {
         $ugroup = M::mock(\ProjectUGroup::class, ['getId' => 202, 'isBound' => true]);
 
@@ -91,6 +93,6 @@ class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotModifyBoundGroupException::class);
 
-        $this->member_remover->removeMember($this->user_to_remove, $ugroup);
+        $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
     }
 }
