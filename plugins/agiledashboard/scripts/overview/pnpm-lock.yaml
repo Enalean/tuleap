@@ -1,13 +1,14 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/plugin-agiledashboard-scrum-header': workspace:*
-  '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/plugin-agiledashboard-scrum-header': link:../lib/scrum-header
-  '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:../lib/scrum-milestone-header
+  '@tuleap/plugin-agiledashboard-scrum-header':
+    specifier: workspace:*
+    version: link:../lib/scrum-header
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header':
+    specifier: workspace:*
+    version: link:../lib/scrum-milestone-header
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator

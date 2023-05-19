@@ -1,158 +1,188 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@microsoft/fetch-event-source': ^2.0.1
-  '@tuleap/angular-async': workspace:*
-  '@tuleap/angular-tlp': workspace:*
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
-  '@tuleap/html-escaper': workspace:*
-  '@tuleap/plugin-agiledashboard-card-fields': workspace:*
-  '@tuleap/plugin-agiledashboard-shared': workspace:*
-  '@tuleap/plugin-tracker-artifact-modal': workspace:*
-  '@tuleap/project-background': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  angular: ^1.8.2
-  angular-gettext: ^2.4.2
-  angular-jwt: ^0.1.11
-  angular-locker: ^2.0.4
-  angular-mocks: ^1.8.2
-  angular-moment: ^1.3.0
-  angular-sanitize: ^1.8.2
-  angular-socket-io: 0.7.0
-  d3-array: ^3.1.6
-  d3-axis: ^3.0.0
-  d3-scale: ^4.0.0
-  d3-selection: ^3.0.0
-  d3-shape: ^3.0.1
-  dragular: 4.2.0
-  jquery: ^3.6.0
-  lodash-es: ^4.17.21
-  moment: ^2.29.4
-  ng-scrollbar: 0.0.7
-  socket.io-client: ^4.6.1
+lockfileVersion: '6.0'
 
 dependencies:
-  '@microsoft/fetch-event-source': 2.0.1
-  '@tuleap/angular-async': link:../../../../lib/frontend/angular-async
-  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
-  '@tuleap/burningparrot-theme': link:../../../../src/themes/BurningParrot
-  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
-  '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
-  '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
-  '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/project-background': link:../../../../lib/frontend/project-background
-  '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-swatch-colors': link:../../../../lib/frontend/tlp-swatch-colors
-  angular: 1.8.2
-  angular-gettext: 2.4.2
-  angular-jwt: 0.1.11
-  angular-locker: 2.0.5
-  angular-moment: 1.3.0
-  angular-sanitize: 1.8.2
-  angular-socket-io: 0.7.0
-  d3-array: 3.1.6
-  d3-axis: 3.0.0
-  d3-scale: 4.0.0
-  d3-selection: 3.0.0
-  d3-shape: 3.0.1
-  dragular: 4.2.0
-  lodash-es: 4.17.21
-  moment: 2.29.4
-  ng-scrollbar: 0.0.7
-  socket.io-client: 4.6.1
+  '@microsoft/fetch-event-source':
+    specifier: ^2.0.1
+    version: 2.0.1
+  '@tuleap/angular-async':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/angular-async
+  '@tuleap/angular-tlp':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/angular-tlp
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../../../src/themes/BurningParrot
+  '@tuleap/html-escaper':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/html-escaper
+  '@tuleap/plugin-agiledashboard-card-fields':
+    specifier: workspace:*
+    version: link:../lib/card-fields
+  '@tuleap/plugin-agiledashboard-shared':
+    specifier: workspace:*
+    version: link:../lib/shared
+  '@tuleap/plugin-tracker-artifact-modal':
+    specifier: workspace:*
+    version: link:../../../tracker/scripts/lib/artifact-modal
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-swatch-colors
+  angular:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-gettext:
+    specifier: ^2.4.2
+    version: 2.4.2
+  angular-jwt:
+    specifier: ^0.1.11
+    version: 0.1.11
+  angular-locker:
+    specifier: ^2.0.4
+    version: 2.0.5
+  angular-moment:
+    specifier: ^1.3.0
+    version: 1.3.0
+  angular-sanitize:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-socket-io:
+    specifier: 0.7.0
+    version: 0.7.0
+  d3-array:
+    specifier: ^3.1.6
+    version: 3.1.6
+  d3-axis:
+    specifier: ^3.0.0
+    version: 3.0.0
+  d3-scale:
+    specifier: ^4.0.0
+    version: 4.0.0
+  d3-selection:
+    specifier: ^3.0.0
+    version: 3.0.0
+  d3-shape:
+    specifier: ^3.0.1
+    version: 3.0.1
+  dragular:
+    specifier: 4.2.0
+    version: 4.2.0
+  lodash-es:
+    specifier: ^4.17.21
+    version: 4.17.21
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
+  ng-scrollbar:
+    specifier: 0.0.7
+    version: 0.0.7
+  socket.io-client:
+    specifier: ^4.6.1
+    version: 4.6.1
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  angular-mocks: 1.8.2
-  jquery: 3.6.0
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  angular-mocks:
+    specifier: ^1.8.2
+    version: 1.8.2
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.0
 
 packages:
 
-  /@microsoft/fetch-event-source/2.0.1:
+  /@microsoft/fetch-event-source@2.0.1:
     resolution: {integrity: sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==}
     dev: false
 
-  /@socket.io/component-emitter/3.1.0:
+  /@socket.io/component-emitter@3.1.0:
     resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
     dev: false
 
-  /angular-gettext/2.4.2:
+  /angular-gettext@2.4.2:
     resolution: {integrity: sha512-J9Zy76VmN5otw6GyIqJjoLjl+0wwsZSCUPgPfQwM4Mx//hP3leqyS/fgf2MDiMLLyKgoHWkMMzzWbP4iH3+5vQ==}
     dev: false
 
-  /angular-jwt/0.1.11:
+  /angular-jwt@0.1.11:
     resolution: {integrity: sha512-793dv5vXOXaW5/cweMd+sqSf9dPhbazDya3szTVOQ84MDEj1nYLJrixBBa7WNtZeMqz7ylWX7djnFgqLjEWcHw==}
     engines: {node: '>=0.8.0'}
     dev: false
 
-  /angular-locker/2.0.5:
+  /angular-locker@2.0.5:
     resolution: {integrity: sha1-VBClVxhUpP72YzVHT27HCooKaVk=}
     dependencies:
       angular: 1.8.2
     dev: false
 
-  /angular-mocks/1.8.2:
+  /angular-mocks@1.8.2:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular-moment/1.3.0:
+  /angular-moment@1.3.0:
     resolution: {integrity: sha512-KG8rvO9MoaBLwtGnxTeUveSyNtrL+RNgGl1zqWN36+HDCCVGk2DGWOzqKWB6o+eTTbO3Opn4hupWKIElc8XETA==}
     engines: {node: '>=0.10.0'}
     dependencies:
       moment: 2.29.4
     dev: false
 
-  /angular-sanitize/1.8.2:
+  /angular-sanitize@1.8.2:
     resolution: {integrity: sha512-OB6Goa+QN3byf5asQ7XRl7DKZejm/F/ZOqa9z1skqYVOWA2hoBxoCmt9E7+i7T/TbxZP5zYzKxNZVVJNu860Hg==}
     dev: false
 
-  /angular-socket-io/0.7.0:
+  /angular-socket-io@0.7.0:
     resolution: {integrity: sha1-eKjWCqVxlKAzC8MTfU2hCGmLl88=}
     dev: false
 
-  /angular/1.8.2:
+  /angular@1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: false
 
-  /d3-array/3.1.6:
+  /d3-array@3.1.6:
     resolution: {integrity: sha512-DCbBBNuKOeiR9h04ySRBMW52TFVc91O9wJziuyXw6Ztmy8D3oZbmCkOO3UHKC7ceNJsN2Mavo9+vwV8EAEUXzA==}
     engines: {node: '>=12'}
     dependencies:
       internmap: 2.0.3
     dev: false
 
-  /d3-axis/3.0.0:
+  /d3-axis@3.0.0:
     resolution: {integrity: sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-color/3.1.0:
+  /d3-color@3.1.0:
     resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-format/3.1.0:
+  /d3-format@3.1.0:
     resolution: {integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-interpolate/3.0.1:
+  /d3-interpolate@3.0.1:
     resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
     engines: {node: '>=12'}
     dependencies:
       d3-color: 3.1.0
     dev: false
 
-  /d3-path/3.0.1:
+  /d3-path@3.0.1:
     resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-scale/4.0.0:
+  /d3-scale@4.0.0:
     resolution: {integrity: sha512-foHQYKpWQcyndH1CGoHdUC4PECxTxonzwwBXGT8qu+Drb1FIc6ON6dG2P5f4hRRMkLiIKeWK7iFtdznDUrnuPQ==}
     engines: {node: '>=12'}
     dependencies:
@@ -163,33 +193,33 @@ packages:
       d3-time-format: 4.1.0
     dev: false
 
-  /d3-selection/3.0.0:
+  /d3-selection@3.0.0:
     resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-shape/3.0.1:
+  /d3-shape@3.0.1:
     resolution: {integrity: sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==}
     engines: {node: '>=12'}
     dependencies:
       d3-path: 3.0.1
     dev: false
 
-  /d3-time-format/4.1.0:
+  /d3-time-format@4.1.0:
     resolution: {integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==}
     engines: {node: '>=12'}
     dependencies:
       d3-time: 3.0.0
     dev: false
 
-  /d3-time/3.0.0:
+  /d3-time@3.0.0:
     resolution: {integrity: sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==}
     engines: {node: '>=12'}
     dependencies:
       d3-array: 3.1.6
     dev: false
 
-  /debug/4.3.3:
+  /debug@4.3.3:
     resolution: {integrity: sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==}
     engines: {node: '>=6.0'}
     peerDependencies:
@@ -201,13 +231,13 @@ packages:
       ms: 2.1.2
     dev: false
 
-  /dragular/4.2.0:
+  /dragular@4.2.0:
     resolution: {integrity: sha1-RGMl6Xb8uIqbQYbDHI4SpvhfztI=}
     dependencies:
       angular: 1.8.2
     dev: false
 
-  /engine.io-client/6.4.0:
+  /engine.io-client@6.4.0:
     resolution: {integrity: sha512-GyKPDyoEha+XZ7iEqam49vz6auPnNJ9ZBfy89f+rMMas8AuiMWOZ9PVzu8xb9ZC6rafUqiGHSCfu22ih66E+1g==}
     dependencies:
       '@socket.io/component-emitter': 3.1.0
@@ -221,37 +251,37 @@ packages:
       - utf-8-validate
     dev: false
 
-  /engine.io-parser/5.0.6:
+  /engine.io-parser@5.0.6:
     resolution: {integrity: sha512-tjuoZDMAdEhVnSFleYPCtdL2GXwVTGtNjoeJd9IhIG3C1xs9uwxqRNEu5WpnDZCaozwVlK/nuQhpodhXSIMaxw==}
     engines: {node: '>=10.0.0'}
     dev: false
 
-  /internmap/2.0.3:
+  /internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
     dev: false
 
-  /jquery/3.6.0:
+  /jquery@3.6.0:
     resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true
 
-  /lodash-es/4.17.21:
+  /lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /ms/2.1.2:
+  /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: false
 
-  /ng-scrollbar/0.0.7:
+  /ng-scrollbar@0.0.7:
     resolution: {integrity: sha1-te8H+PjkfWK2IQIUpdpgCcJVvPM=}
     dev: false
 
-  /socket.io-client/4.6.1:
+  /socket.io-client@4.6.1:
     resolution: {integrity: sha512-5UswCV6hpaRsNg5kkEHVcbBIXEYoVbMQaHJBXJCyEQ+CiFPV1NIOY0XOFWG4XR4GZcB8Kn6AsRs/9cy9TbqVMQ==}
     engines: {node: '>=10.0.0'}
     dependencies:
@@ -265,7 +295,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /socket.io-parser/4.2.2:
+  /socket.io-parser@4.2.2:
     resolution: {integrity: sha512-DJtziuKypFkMMHCm2uIshOYC7QaylbtzQwiMYDuCKy3OPkjLzu4B2vAhTlqipRHHzrI0NJeBAizTK7X+6m1jVw==}
     engines: {node: '>=10.0.0'}
     dependencies:
@@ -275,7 +305,7 @@ packages:
       - supports-color
     dev: false
 
-  /ws/8.11.0:
+  /ws@8.11.0:
     resolution: {integrity: sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -288,7 +318,7 @@ packages:
         optional: true
     dev: false
 
-  /xmlhttprequest-ssl/2.0.0:
+  /xmlhttprequest-ssl@2.0.0:
     resolution: {integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==}
     engines: {node: '>=0.4.0'}
     dev: false

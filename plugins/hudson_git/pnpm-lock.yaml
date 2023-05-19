@@ -1,39 +1,42 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@types/bootstrap': ^3.4.0
-  '@types/jquery': ^3.5.5
-  jquery: ^3.6.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../lib/frontend/gettext
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@types/bootstrap': 3.4.0
-  '@types/jquery': 3.5.5
-  jquery: 3.6.0
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator
+  '@types/bootstrap':
+    specifier: ^3.4.0
+    version: 3.4.0
+  '@types/jquery':
+    specifier: ^3.5.5
+    version: 3.5.5
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.0
 
 packages:
 
-  /@types/bootstrap/3.4.0:
+  /@types/bootstrap@3.4.0:
     resolution: {integrity: sha512-LS05hVAAsX86qbHg7W+ydwBlNHrVCoFw6wEP3/uW4eYmRXl08bWmPeN/+onM+8qZTFfDgUlG/OItJI8SW972oQ==}
     dependencies:
       '@types/jquery': 3.5.5
     dev: true
 
-  /@types/jquery/3.5.5:
+  /@types/jquery@3.5.5:
     resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
     dependencies:
       '@types/sizzle': 2.3.2
     dev: true
 
-  /@types/sizzle/2.3.2:
+  /@types/sizzle@2.3.2:
     resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
     dev: true
 
-  /jquery/3.6.0:
+  /jquery@3.6.0:
     resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true

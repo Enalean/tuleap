@@ -1,70 +1,85 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/date-helper': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/fault': workspace:*
-  '@tuleap/fetch-result': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/plugin-pullrequest-constants': workspace:*
-  '@tuleap/plugin-pullrequest-rest-api-types': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-relative-date': workspace:*
-  '@tuleap/tooltip': workspace:*
-  '@types/dompurify': ^2.3.4
-  dompurify: ^2.3.6
-  hybrids: ^8.1.8
-  moment: ^2.29.4
-  neverthrow: 6.0.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
-  '@tuleap/dom': link:../../../../../lib/frontend/dom
-  '@tuleap/fault': link:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  '@tuleap/gettext': link:../../../../../lib/frontend/gettext
-  '@tuleap/plugin-pullrequest-constants': link:../constants
-  '@tuleap/plugin-pullrequest-rest-api-types': link:../rest-api-types
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date': link:../../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../../../lib/frontend/tooltip
-  dompurify: 2.4.0
-  hybrids: 8.1.8
-  moment: 2.29.4
-  neverthrow: 6.0.0
+  '@tuleap/date-helper':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/date-helper
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/gettext
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../constants
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tooltip
+  dompurify:
+    specifier: ^2.3.6
+    version: 2.4.0
+  hybrids:
+    specifier: ^8.1.8
+    version: 8.1.8
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
-  '@types/dompurify': 2.3.4
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/po-gettext-plugin
+  '@types/dompurify':
+    specifier: ^2.3.4
+    version: 2.3.4
 
 packages:
 
-  /@types/dompurify/2.3.4:
+  /@types/dompurify@2.3.4:
     resolution: {integrity: sha512-EXzDatIb5EspL2eb/xPGmaC8pePcTHrkDCONjeisusLFrVfl38Pjea/R0YJGu3k9ZQadSvMqW0WXPI2hEo2Ajg==}
     dependencies:
       '@types/trusted-types': 2.0.2
     dev: true
 
-  /@types/trusted-types/2.0.2:
+  /@types/trusted-types@2.0.2:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: true
 
-  /dompurify/2.4.0:
+  /dompurify@2.4.0:
     resolution: {integrity: sha512-Be9tbQMZds4a3C6xTmz68NlMfeONA//4dOavl/1rNw50E+/QO0KVpbcU0PcaW0nsQxurXls9ZocqFxk8R2mWEA==}
     dev: false
 
-  /hybrids/8.1.8:
+  /hybrids@8.1.8:
     resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /neverthrow/6.0.0:
+  /neverthrow@6.0.0:
     resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false

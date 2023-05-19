@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/core-constants': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/core-constants': link:../../../../../lib/frontend/constants
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/constants
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator

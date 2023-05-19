@@ -1,51 +1,55 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/cross-ref-badges': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/project-background': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  dragula: ^3.7.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
-  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
-  '@tuleap/project-background': link:../../../lib/frontend/project-background
-  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
-  dragula: 3.7.3
+  '@tuleap/cross-ref-badges':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/cross-ref-badges
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/list-picker
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/project-background
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-swatch-colors
+  dragula:
+    specifier: ^3.7.2
+    version: 3.7.3
 
 packages:
 
-  /atoa/1.0.0:
+  /atoa@1.0.0:
     resolution: {integrity: sha1-DMDpGkgOc4+SPrwQNnZHF3mzSkk=}
     dev: false
 
-  /contra/1.9.4:
+  /contra@1.9.4:
     resolution: {integrity: sha1-9TveQtfltZhcrk2ZqNYQUm3o8o0=}
     dependencies:
       atoa: 1.0.0
       ticky: 1.0.1
     dev: false
 
-  /crossvent/1.5.5:
+  /crossvent@1.5.5:
     resolution: {integrity: sha1-rSCHjkkh6b5z2daXb4suzQ9xoLE=}
     dependencies:
       custom-event: 1.0.1
     dev: false
 
-  /custom-event/1.0.1:
+  /custom-event@1.0.1:
     resolution: {integrity: sha512-GAj5FOq0Hd+RsCGVJxZuKaIDXDf3h6GQoNEjFgbLLI/trgtavwUbSnZ5pVfg27DVCaWjIohryS0JFwIJyT2cMg==}
     dev: false
 
-  /dragula/3.7.3:
+  /dragula@3.7.3:
     resolution: {integrity: sha512-/rRg4zRhcpf81TyDhaHLtXt6sEywdfpv1cRUMeFFy7DuypH2U0WUL0GTdyAQvXegviT4PJK4KuMmOaIDpICseQ==}
     dependencies:
       contra: 1.9.4
       crossvent: 1.5.5
     dev: false
 
-  /ticky/1.0.1:
+  /ticky@1.0.1:
     resolution: {integrity: sha1-t8+nHnaPHJAAxJe5FRswlHxQ5G0=}
     dev: false

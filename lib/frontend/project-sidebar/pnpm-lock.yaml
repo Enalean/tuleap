@@ -1,20 +1,22 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@fortawesome/fontawesome-free': ^6.1.1
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/project-sidebar-internal': workspace:*
-  '@tuleap/tlp': workspace:*
+lockfileVersion: '6.0'
 
 devDependencies:
-  '@fortawesome/fontawesome-free': 6.1.1
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@tuleap/project-sidebar-internal': link:../project-sidebar-internal
-  '@tuleap/tlp': link:../../../src/themes/tlp
+  '@fortawesome/fontawesome-free':
+    specifier: ^6.1.1
+    version: 6.1.1
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/project-sidebar-internal':
+    specifier: workspace:*
+    version: link:../project-sidebar-internal
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../../src/themes/tlp
 
 packages:
 
-  /@fortawesome/fontawesome-free/6.1.1:
+  /@fortawesome/fontawesome-free@6.1.1:
     resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
     engines: {node: '>=6'}
     requiresBuild: true

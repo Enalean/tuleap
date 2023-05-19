@@ -1,22 +1,22 @@
-lockfileVersion: 5.4
-
-specifiers:
-  pegjs: ^0.10.0
-  phpegjs: ^1.0.0-beta7
+lockfileVersion: '6.0'
 
 dependencies:
-  pegjs: 0.10.0
-  phpegjs: 1.0.0-beta7_pegjs@0.10.0
+  pegjs:
+    specifier: ^0.10.0
+    version: 0.10.0
+  phpegjs:
+    specifier: ^1.0.0-beta7
+    version: 1.0.0-beta7(pegjs@0.10.0)
 
 packages:
 
-  /pegjs/0.10.0:
+  /pegjs@0.10.0:
     resolution: {integrity: sha1-z4uvrm7d/0tafvsYUmnqr0YQ3b0=}
     engines: {node: '>=0.10'}
     hasBin: true
     dev: false
 
-  /phpegjs/1.0.0-beta7_pegjs@0.10.0:
+  /phpegjs@1.0.0-beta7(pegjs@0.10.0):
     resolution: {integrity: sha1-uLbthQGYB//Q7+ID4AKj5e2LTZQ=}
     peerDependencies:
       pegjs: ^0.10.0

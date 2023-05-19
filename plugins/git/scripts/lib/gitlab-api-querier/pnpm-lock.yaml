@@ -1,21 +1,23 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/fault': workspace:*
-  '@tuleap/fetch-result': workspace:*
-  neverthrow: ^6.0.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/fault': link:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  neverthrow: 6.0.0
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fetch-result
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator
 
 packages:
 
-  /neverthrow/6.0.0:
+  /neverthrow@6.0.0:
     resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false

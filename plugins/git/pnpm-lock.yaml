@@ -1,11 +1,12 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/cypress-configurator': workspace:*
-  '@tuleap/cypress-utilities-support': workspace:*
-  '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
+lockfileVersion: '6.0'
 
 devDependencies:
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/cypress-configurator':
+    specifier: workspace:*
+    version: link:../../lib/test-utils/cypress-configurator
+  '@tuleap/cypress-utilities-support':
+    specifier: workspace:*
+    version: link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/potentially-dangerous-bidirectional-characters':
+    specifier: workspace:*
+    version: link:../../lib/frontend/potentially-dangerous-bidirectional-characters

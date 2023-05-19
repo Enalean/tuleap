@@ -1,27 +1,30 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@types/canvas-confetti': ^1.6.0
-  canvas-confetti: ^1.6.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
-  canvas-confetti: 1.6.0
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-modal
+  canvas-confetti:
+    specifier: ^1.6.0
+    version: 1.6.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
-  '@tuleap/burningparrot-theme': link:../../themes/BurningParrot
-  '@types/canvas-confetti': 1.6.0
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../themes/BurningParrot
+  '@types/canvas-confetti':
+    specifier: ^1.6.0
+    version: 1.6.0
 
 packages:
 
-  /@types/canvas-confetti/1.6.0:
+  /@types/canvas-confetti@1.6.0:
     resolution: {integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==}
     dev: true
 
-  /canvas-confetti/1.6.0:
+  /canvas-confetti@1.6.0:
     resolution: {integrity: sha512-ej+w/m8Jzpv9Z7W7uJZer14Ke8P2ogsjg4ZMGIuq4iqUOqY2Jq8BNW42iGmNfRwREaaEfFIczLuZZiEVSYNHAA==}
     dev: false

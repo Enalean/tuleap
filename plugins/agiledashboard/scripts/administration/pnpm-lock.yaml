@@ -1,17 +1,20 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
-  '@tuleap/project-background': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/burningparrot-theme': link:../../../../src/themes/BurningParrot
-  '@tuleap/project-background': link:../../../../lib/frontend/project-background
-  '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../../../../lib/frontend/tlp-popovers
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../../../src/themes/BurningParrot
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-popovers
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator

@@ -1,105 +1,116 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@types/d3-scale': 4.0.0
-  '@types/d3-selection': 3.0.0
-  '@types/d3-shape': 3.0.1
-  d3-array: 3.0.1
-  d3-axis: 3.0.0
-  d3-scale: 4.0.0
-  d3-selection: 3.0.0
-  d3-shape: 3.0.1
-  moment: 2.29.4
-  sprintf-js: 1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/gettext': link:../gettext
-  d3-array: 3.0.1
-  d3-axis: 3.0.0
-  d3-scale: 4.0.0
-  d3-selection: 3.0.0
-  d3-shape: 3.0.1
-  moment: 2.29.4
-  sprintf-js: 1.1.2
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../gettext
+  d3-array:
+    specifier: 3.0.1
+    version: 3.0.1
+  d3-axis:
+    specifier: 3.0.0
+    version: 3.0.0
+  d3-scale:
+    specifier: 4.0.0
+    version: 4.0.0
+  d3-selection:
+    specifier: 3.0.0
+    version: 3.0.0
+  d3-shape:
+    specifier: 3.0.1
+    version: 3.0.1
+  moment:
+    specifier: 2.29.4
+    version: 2.29.4
+  sprintf-js:
+    specifier: 1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
-  '@types/d3-scale': 4.0.0
-  '@types/d3-selection': 3.0.0
-  '@types/d3-shape': 3.0.1
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../po-gettext-plugin
+  '@types/d3-scale':
+    specifier: 4.0.0
+    version: 4.0.0
+  '@types/d3-selection':
+    specifier: 3.0.0
+    version: 3.0.0
+  '@types/d3-shape':
+    specifier: 3.0.1
+    version: 3.0.1
 
 packages:
 
-  /@types/d3-path/3.0.0:
+  /@types/d3-path@3.0.0:
     resolution: {integrity: sha512-0g/A+mZXgFkQxN3HniRDbXMN79K3CdTpLsevj+PXiTcb2hVyvkZUBg37StmgCQkaD84cUJ4uaDAWq7UJOQy2Tg==}
     dev: true
 
-  /@types/d3-scale/4.0.0:
+  /@types/d3-scale@4.0.0:
     resolution: {integrity: sha512-uX3oIzwNu2z85qE2G7fDSS5swWpx8HwMBG8HjEZeevRNX2zwCTPlMqglBr1/zOhDlV4cpw5sjgpBBbnnewB8mw==}
     dependencies:
       '@types/d3-time': 3.0.0
     dev: true
 
-  /@types/d3-selection/3.0.0:
+  /@types/d3-selection@3.0.0:
     resolution: {integrity: sha512-SZsDWFG1dLV9ivX2wGDPFWgLUf71tF4aupfEMTYMrbArHwEMLhmv3TS1CZECLQgoTttdpM1g5Z6JwRP7zoInWg==}
     dev: true
 
-  /@types/d3-shape/3.0.1:
+  /@types/d3-shape@3.0.1:
     resolution: {integrity: sha512-HnpwE2zl45cOaXLLo0zR4OfRQM9u9sI/ESb0w41PrrsQfkibj8pVIS8VYMSem2Wf5RuWxcgy3/8Kw2/FcIqAEQ==}
     dependencies:
       '@types/d3-path': 3.0.0
     dev: true
 
-  /@types/d3-time/3.0.0:
+  /@types/d3-time@3.0.0:
     resolution: {integrity: sha512-sZLCdHvBUcNby1cB6Fd3ZBrABbjz3v1Vm90nysCQ6Vt7vd6e/h9Lt7SiJUoEX0l4Dzc7P5llKyhqSi1ycSf1Hg==}
     dev: true
 
-  /d3-array/3.0.1:
+  /d3-array@3.0.1:
     resolution: {integrity: sha512-l3Bh5o8RSoC3SBm5ix6ogaFW+J6rOUm42yOtZ2sQPCEvCqUMepeX7zgrlLLGIemxgOyo9s2CsWEidnLv5PwwRw==}
     engines: {node: '>=12'}
     dependencies:
       internmap: 2.0.3
     dev: false
 
-  /d3-array/3.1.6:
+  /d3-array@3.1.6:
     resolution: {integrity: sha512-DCbBBNuKOeiR9h04ySRBMW52TFVc91O9wJziuyXw6Ztmy8D3oZbmCkOO3UHKC7ceNJsN2Mavo9+vwV8EAEUXzA==}
     engines: {node: '>=12'}
     dependencies:
       internmap: 2.0.3
     dev: false
 
-  /d3-axis/3.0.0:
+  /d3-axis@3.0.0:
     resolution: {integrity: sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-color/3.1.0:
+  /d3-color@3.1.0:
     resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-format/3.1.0:
+  /d3-format@3.1.0:
     resolution: {integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-interpolate/3.0.1:
+  /d3-interpolate@3.0.1:
     resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
     engines: {node: '>=12'}
     dependencies:
       d3-color: 3.1.0
     dev: false
 
-  /d3-path/3.0.1:
+  /d3-path@3.0.1:
     resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-scale/4.0.0:
+  /d3-scale@4.0.0:
     resolution: {integrity: sha512-foHQYKpWQcyndH1CGoHdUC4PECxTxonzwwBXGT8qu+Drb1FIc6ON6dG2P5f4hRRMkLiIKeWK7iFtdznDUrnuPQ==}
     engines: {node: '>=12'}
     dependencies:
@@ -110,41 +121,41 @@ packages:
       d3-time-format: 4.1.0
     dev: false
 
-  /d3-selection/3.0.0:
+  /d3-selection@3.0.0:
     resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
     engines: {node: '>=12'}
     dev: false
 
-  /d3-shape/3.0.1:
+  /d3-shape@3.0.1:
     resolution: {integrity: sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==}
     engines: {node: '>=12'}
     dependencies:
       d3-path: 3.0.1
     dev: false
 
-  /d3-time-format/4.1.0:
+  /d3-time-format@4.1.0:
     resolution: {integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==}
     engines: {node: '>=12'}
     dependencies:
       d3-time: 3.0.0
     dev: false
 
-  /d3-time/3.0.0:
+  /d3-time@3.0.0:
     resolution: {integrity: sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==}
     engines: {node: '>=12'}
     dependencies:
       d3-array: 3.1.6
     dev: false
 
-  /internmap/2.0.3:
+  /internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
     engines: {node: '>=12'}
     dev: false
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

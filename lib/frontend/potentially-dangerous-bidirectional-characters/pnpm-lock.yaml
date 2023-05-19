@@ -1,13 +1,12 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@types/node': ^18.0.3
+lockfileVersion: '6.0'
 
 devDependencies:
-  '@types/node': 18.0.3
+  '@types/node':
+    specifier: ^18.0.3
+    version: 18.0.3
 
 packages:
 
-  /@types/node/18.0.3:
+  /@types/node@18.0.3:
     resolution: {integrity: sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==}
     dev: true

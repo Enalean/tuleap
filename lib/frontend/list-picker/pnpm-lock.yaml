@@ -1,49 +1,54 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@tuleap/tlp': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  lit: ^2.2.3
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/gettext': link:../gettext
-  '@tuleap/tlp': link:../../../src/themes/tlp
-  '@tuleap/tlp-swatch-colors': link:../tlp-swatch-colors
-  lit: 2.2.3
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../gettext
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../../src/themes/tlp
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../tlp-swatch-colors
+  lit:
+    specifier: ^2.2.3
+    version: 2.2.3
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@tuleap/dom': link:../dom
-  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../dom
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../po-gettext-plugin
 
 packages:
 
-  /@lit/reactive-element/1.3.2:
+  /@lit/reactive-element@1.3.2:
     resolution: {integrity: sha512-A2e18XzPMrIh35nhIdE4uoqRzoIpEU5vZYuQN4S3Ee1zkGdYC27DP12pewbw/RLgPHzaE4kx/YqxMzebOpm0dA==}
     dev: false
 
-  /@types/trusted-types/2.0.3:
+  /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: false
 
-  /lit-element/3.2.0:
+  /lit-element@3.2.0:
     resolution: {integrity: sha512-HbE7yt2SnUtg5DCrWt028oaU4D5F4k/1cntAFHTkzY8ZIa8N0Wmu92PxSxucsQSOXlODFrICkQ5x/tEshKi13g==}
     dependencies:
       '@lit/reactive-element': 1.3.2
       lit-html: 2.2.3
     dev: false
 
-  /lit-html/2.2.3:
+  /lit-html@2.2.3:
     resolution: {integrity: sha512-vI4j3eWwtQaR8q/O63juZVliBIFMio716X719/lSsGH4UWPy2/7Qf377jsNs4cx3gCHgIbx8yxFgXFQ/igZyXQ==}
     dependencies:
       '@types/trusted-types': 2.0.3
     dev: false
 
-  /lit/2.2.3:
+  /lit@2.2.3:
     resolution: {integrity: sha512-5/v+r9dH3Pw/o0rhp/qYk3ERvOUclNF31bWb0FiW6MPgwdQIr+/KCt/p3zcd8aPl8lIGnxdGrVcZA+gWS6oFOQ==}
     dependencies:
       '@lit/reactive-element': 1.3.2

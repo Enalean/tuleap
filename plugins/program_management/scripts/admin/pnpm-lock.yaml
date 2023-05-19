@@ -1,37 +1,45 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@tuleap/project-background': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@types/sprintf-js': ^1.1.2
-  sprintf-js: ^1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/burningparrot-theme': link:../../../../src/themes/BurningParrot
-  '@tuleap/gettext': link:../../../../lib/frontend/gettext
-  '@tuleap/list-picker': link:../../../../lib/frontend/list-picker
-  '@tuleap/project-background': link:../../../../lib/frontend/project-background
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
-  sprintf-js: 1.1.2
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../../../src/themes/BurningParrot
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/list-picker
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/project-background
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
-  '@types/sprintf-js': 1.1.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/po-gettext-plugin
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.2
 
 packages:
 
-  /@types/sprintf-js/1.1.2:
+  /@types/sprintf-js@1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/html-escaper': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/html-escaper': link:../html-escaper
+  '@tuleap/html-escaper':
+    specifier: workspace:*
+    version: link:../html-escaper
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator

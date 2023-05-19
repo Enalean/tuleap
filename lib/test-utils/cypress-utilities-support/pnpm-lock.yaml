@@ -1,7 +1,6 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/plugin-tracker-rest-api-types': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/plugin-tracker-rest-api-types': link:../../../plugins/tracker/scripts/lib/rest-api-types
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../plugins/tracker/scripts/lib/rest-api-types

@@ -1,28 +1,29 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@types/node-gettext': ^3.0.1
-  node-gettext: ^3.0.0
+lockfileVersion: '6.0'
 
 dependencies:
-  node-gettext: 3.0.0
+  node-gettext:
+    specifier: ^3.0.0
+    version: 3.0.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@types/node-gettext': 3.0.3
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@types/node-gettext':
+    specifier: ^3.0.1
+    version: 3.0.3
 
 packages:
 
-  /@types/node-gettext/3.0.3:
+  /@types/node-gettext@3.0.3:
     resolution: {integrity: sha512-SA5ojwtVq4kVjJDriE20y4BYoS+m6wMJmARsDBF11qock6WNixoYEJH79sHuXLQSjMsmvvwqxrnjZLB5cWDLgg==}
     dev: true
 
-  /lodash.get/4.4.2:
+  /lodash.get@4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
     dev: false
 
-  /node-gettext/3.0.0:
+  /node-gettext@3.0.0:
     resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}
     dependencies:
       lodash.get: 4.4.2

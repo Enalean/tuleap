@@ -1,15 +1,17 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/autocomplete-for-select2': workspace:*
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/filter-inline-table': workspace:*
-  '@tuleap/pie-chart': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
-  '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
-  '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
+  '@tuleap/autocomplete-for-select2':
+    specifier: workspace:*
+    version: link:../../lib/frontend/autocomplete-for-select2
+  '@tuleap/filter-inline-table':
+    specifier: workspace:*
+    version: link:../../lib/frontend/filter-table
+  '@tuleap/pie-chart':
+    specifier: workspace:*
+    version: link:../../lib/frontend/pie-chart
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

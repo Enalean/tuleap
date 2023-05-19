@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/filter-inline-table': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
+  '@tuleap/filter-inline-table':
+    specifier: workspace:*
+    version: link:../../lib/frontend/filter-table
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

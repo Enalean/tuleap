@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-fetch
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator

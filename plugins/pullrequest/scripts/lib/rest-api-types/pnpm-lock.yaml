@@ -1,11 +1,12 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/core-constants': workspace:*
-  '@tuleap/core-rest-api-types': workspace:*
-  '@tuleap/plugin-pullrequest-constants': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/core-constants': link:../../../../../lib/frontend/constants
-  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
-  '@tuleap/plugin-pullrequest-constants': link:../constants
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../constants

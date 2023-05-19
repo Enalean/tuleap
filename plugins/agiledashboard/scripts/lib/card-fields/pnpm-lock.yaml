@@ -1,56 +1,62 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  '@types/dompurify': ^2.4.0
-  angular: ^1.8.2
-  angular-mocks: ^1.8.2
-  angular-sanitize: ^1.8.2
-  dompurify: ^3.0.0
-  escape-string-regexp: ^2.0.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
-  dompurify: 3.0.0
-  escape-string-regexp: 2.0.0
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-swatch-colors
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.0
+  escape-string-regexp:
+    specifier: ^2.0.0
+    version: 2.0.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@types/dompurify': 2.4.0
-  angular: 1.8.2
-  angular-mocks: 1.8.2
-  angular-sanitize: 1.8.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator
+  '@types/dompurify':
+    specifier: ^2.4.0
+    version: 2.4.0
+  angular:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-mocks:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-sanitize:
+    specifier: ^1.8.2
+    version: 1.8.2
 
 packages:
 
-  /@types/dompurify/2.4.0:
+  /@types/dompurify@2.4.0:
     resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
       '@types/trusted-types': 2.0.3
     dev: true
 
-  /@types/trusted-types/2.0.3:
+  /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
-  /angular-mocks/1.8.2:
+  /angular-mocks@1.8.2:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular-sanitize/1.8.2:
+  /angular-sanitize@1.8.2:
     resolution: {integrity: sha512-OB6Goa+QN3byf5asQ7XRl7DKZejm/F/ZOqa9z1skqYVOWA2hoBxoCmt9E7+i7T/TbxZP5zYzKxNZVVJNu860Hg==}
     dev: true
 
-  /angular/1.8.2:
+  /angular@1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
 
-  /dompurify/3.0.0:
+  /dompurify@3.0.0:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
-  /escape-string-regexp/2.0.0:
+  /escape-string-regexp@2.0.0:
     resolution: {integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==}
     engines: {node: '>=8'}
     dev: false
