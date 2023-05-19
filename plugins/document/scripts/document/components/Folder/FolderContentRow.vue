@@ -115,6 +115,7 @@ import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import { defineAsyncComponent } from "vue";
 
 export default {
     name: "FolderContentRow",
@@ -165,40 +166,47 @@ export default {
             switch (this.item.type) {
                 case TYPE_FILE:
                     if (this.item.is_uploading) {
-                        return () =>
+                        return defineAsyncComponent(() =>
                             import(
                                 /* webpackChunkName: "document-cell-title-file-uploading" */ `./ItemTitle/FileUploadingCellTitle.vue`
-                            );
+                            )
+                        );
                     }
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-file" */ `./ItemTitle/FileCellTitle.vue`
-                        );
+                        )
+                    );
                 case TYPE_EMBEDDED:
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-embedded" */ `./ItemTitle/EmbeddedCellTitle.vue`
-                        );
+                        )
+                    );
                 case TYPE_FOLDER:
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-folder" */ `./ItemTitle/FolderCellTitle.vue`
-                        );
+                        )
+                    );
                 case TYPE_LINK:
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-link" */ `./ItemTitle/LinkCellTitle.vue`
-                        );
+                        )
+                    );
                 case TYPE_WIKI:
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-wiki" */ `./ItemTitle/WikiCellTitle.vue`
-                        );
+                        )
+                    );
                 default:
-                    return () =>
+                    return defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-cell-title-document" */ `./ItemTitle/DocumentCellTitle.vue`
-                        );
+                        )
+                    );
             }
         },
         colspan() {

@@ -26,6 +26,7 @@
             v-bind:error_reason="dragover_error_reason"
         />
         <component
+            v-if="error_modal_name !== null"
             v-bind:is="error_modal_name"
             v-bind:reasons="error_modal_reasons"
             v-on:error-modal-hidden="errorModalHasBeenClosed"
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { highlightItem } from "../../../helpers/highlight-items-helper";
@@ -79,55 +81,60 @@ export default {
         },
         error_modal_name() {
             if (!this.error_modal_shown) {
-                return () => {
-                    return "";
-                };
+                return null;
             }
 
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
-                    );
+                    )
+                );
             }
 
             if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
-                    );
+                    )
+                );
             }
 
             if (this.error_modal_shown === this.CREATION_ERROR) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
-                    );
+                    )
+                );
             }
 
             if (this.error_modal_shown === this.EDITION_LOCKED) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
-                    );
+                    )
+                );
             }
 
             if (this.error_modal_shown === this.DROPPED_ITEM_IS_NOT_A_FILE) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
-                    );
+                    )
+                );
             }
             if (this.error_modal_shown === this.FILENAME_PATTERN_IS_SET_ERROR) {
-                return () =>
+                return defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
-                    );
+                    )
+                );
             }
-            return () =>
+            return defineAsyncComponent(() =>
                 import(
                     /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
-                );
+                )
+            );
         },
     },
     created() {

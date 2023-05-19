@@ -36,6 +36,7 @@
                 v-bind:item="currently_previewed_item"
             />
             <component
+                v-if="quick_look_component_action !== null"
                 v-bind:is="quick_look_component_action"
                 v-bind:item="currently_previewed_item"
             />
@@ -72,7 +73,7 @@ import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
 import { useState } from "vuex-composition-helpers";
 import type { State } from "../../type";
-import { computed } from "vue";
+import { computed, defineAsyncComponent } from "vue";
 import { isFile } from "../../helpers/type-check-helper";
 
 const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
@@ -119,22 +120,35 @@ const quick_look_component_action = computed(() => {
     }
     switch (currently_previewed_item.value.type) {
         case TYPE_FILE:
-            return () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`);
+            return defineAsyncComponent(
+                () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`)
+            );
         case TYPE_WIKI:
-            return () => import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`);
+            return defineAsyncComponent(
+                () => import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`)
+            );
         case TYPE_FOLDER:
-            return () =>
-                import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`);
+            return defineAsyncComponent(
+                () => import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`)
+            );
         case TYPE_LINK:
-            return () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`);
+            return defineAsyncComponent(
+                () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`)
+            );
         case TYPE_EMPTY:
-            return () =>
-                import(/* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmpty.vue`);
+            return defineAsyncComponent(
+                () =>
+                    import(
+                        /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmpty.vue`
+                    )
+            );
         case TYPE_EMBEDDED:
-            return () =>
-                import(
-                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmbedded.vue`
-                );
+            return defineAsyncComponent(
+                () =>
+                    import(
+                        /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmbedded.vue`
+                    )
+            );
         default:
             return null;
     }

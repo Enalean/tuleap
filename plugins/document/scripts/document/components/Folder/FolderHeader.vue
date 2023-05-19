@@ -36,12 +36,14 @@
                 <new-item-modal />
                 <new-folder-modal />
                 <create-new-item-version-modal
+                    v-if="shown_new_version_modal !== null"
                     v-bind:is="shown_new_version_modal"
                     v-bind:item="updated_item"
                     v-bind:type="updated_empty_new_type"
                     data-test="document-new-version-modal"
                 />
                 <update-properties-modal
+                    v-if="shown_update_properties_modal !== null"
                     v-bind:is="shown_update_properties_modal"
                     v-bind:item="updated_properties"
                     data-test="document-update-properties-modal"
@@ -106,6 +108,7 @@ import FolderHeaderAction from "./FolderHeaderAction.vue";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 import FileCreationModal from "./DropDown/NewDocument/FileCreationModal.vue";
+import { defineAsyncComponent } from "vue";
 
 export default {
     name: "FolderHeader",
@@ -116,40 +119,46 @@ export default {
         SearchBox,
         NewItemModal,
         FileUploadManager,
-        "confirm-deletion-modal": () =>
+        "confirm-deletion-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-confirm-item-deletion-modal" */
                 "./DropDown/Delete/ModalConfirmDeletion.vue"
-            ),
-        "permissions-update-modal": () =>
+            )
+        ),
+        "permissions-update-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue"
-            ),
-        "download-folder-size-threshold-exceeded-modal": () =>
+            )
+        ),
+        "download-folder-size-threshold-exceeded-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
-            ),
-        "download-folder-size-warning-modal": () =>
+            )
+        ),
+        "download-folder-size-warning-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "document-download-folder-size-warning-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
-            ),
-        "file-changelog-modal": () =>
+            )
+        ),
+        "file-changelog-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "file-changelog-modal" */
                 "./DropDown/NewVersion/FileVersionChangelogModal.vue"
-            ),
-        "file-creation-modal": () =>
+            )
+        ),
+        "file-creation-modal": defineAsyncComponent(() =>
             import(
                 /* webpackChunkName: "file-creation-modal" */
                 "./DropDown/NewDocument/FileCreationModal.vue"
-            ),
+            )
+        ),
     },
     data() {
         return {
-            shown_new_version_modal: "",
-            shown_update_properties_modal: "",
+            shown_new_version_modal: null,
+            shown_update_properties_modal: null,
             updated_item: null,
             updated_properties: null,
             item_to_delete: null,
@@ -217,40 +226,45 @@ export default {
         showCreateNewVersionModalForEmpty(event) {
             this.updated_item = event.item;
             this.updated_empty_new_type = event.type;
-            this.shown_new_version_modal = () =>
+            this.shown_new_version_modal = defineAsyncComponent(() =>
                 import(
                     /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
-                );
+                )
+            );
         },
         showCreateNewItemVersionModal(event) {
             this.updated_item = event.detail.current_item;
 
             switch (this.updated_item.type) {
                 case TYPE_FILE:
-                    this.shown_new_version_modal = () =>
+                    this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-file-version-modal" */ "./DropDown/NewVersion/CreateNewVersionFileModal.vue"
-                        );
+                        )
+                    );
                     break;
                 case TYPE_EMBEDDED:
-                    this.shown_new_version_modal = () =>
+                    this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-embedded-version-file-modal" */ "./DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                        );
+                        )
+                    );
                     break;
                 case TYPE_WIKI:
-                    this.shown_new_version_modal = () =>
+                    this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-wiki-version-modal" */ "./DropDown/NewVersion/CreateNewVersionWikiModal.vue"
-                        );
+                        )
+                    );
                     break;
                 case TYPE_LINK:
-                    this.shown_new_version_modal = () =>
+                    this.shown_new_version_modal = defineAsyncComponent(() =>
                         import(
                             /* webpackChunkName: "document-new-link-version-modal" */ "./DropDown/NewVersion/CreateNewVersionLinkModal.vue"
-                        );
+                        )
+                    );
                     break;
-                default: //nothing
+                default:
             }
         },
         showChangelogModal(event) {
@@ -266,15 +280,17 @@ export default {
             }
             this.updated_properties = event.detail.current_item;
             if (!this.isItemAFolder(this.updated_properties)) {
-                this.shown_update_properties_modal = () =>
+                this.shown_update_properties_modal = defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "update-properties-modal" */ "./DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                    );
+                    )
+                );
             } else {
-                this.shown_update_properties_modal = () =>
+                this.shown_update_properties_modal = defineAsyncComponent(() =>
                     import(
                         /* webpackChunkName: "update-folder-properties-modal" */ "./DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
-                    );
+                    )
+                );
             }
         },
         showMaxArchiveSizeThresholdExceededErrorModal(event) {

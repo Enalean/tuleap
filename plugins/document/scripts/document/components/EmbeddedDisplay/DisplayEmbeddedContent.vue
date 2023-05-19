@@ -26,7 +26,9 @@
                 v-bind:is-displaying-in-header="true"
             />
 
-            <h1 class="document-header-title">{{ embedded_file.title }}</h1>
+            <h1 class="document-header-title">
+                {{ embedded_file.title }}
+            </h1>
 
             <actions-header v-bind:item="embedded_file" />
 
@@ -47,8 +49,9 @@
                         name: 'item',
                         params: { folder_id: embedded_file.parent_id, item_id: embedded_file.id },
                     }"
-                    >{{ go_to_last_version }}</router-link
                 >
+                    {{ go_to_last_version }}
+                </router-link>
             </div>
         </div>
 
@@ -183,7 +186,7 @@ function hideDeleteItemModal(): void {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineAsyncComponent, defineComponent } from "vue";
 import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
@@ -197,22 +200,30 @@ export default defineComponent({
         ApprovalBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
-        "permissions-update-modal": () =>
-            import(
-                /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
-            ),
-        "create-new-embedded-file-version-modal": () =>
-            import(
-                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-            ),
-        "confirm-deletion-modal": () =>
-            import(
-                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
-            ),
-        "update-properties-modal": () =>
-            import(
-                /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-            ),
+        "permissions-update-modal": defineAsyncComponent(
+            () =>
+                import(
+                    /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
+                )
+        ),
+        "create-new-embedded-file-version-modal": defineAsyncComponent(
+            () =>
+                import(
+                    /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
+                )
+        ),
+        "confirm-deletion-modal": defineAsyncComponent(
+            () =>
+                import(
+                    /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
+                )
+        ),
+        "update-properties-modal": defineAsyncComponent(
+            () =>
+                import(
+                    /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
+                )
+        ),
     },
 });
 </script>
