@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.8.0@9cf4f60a333f779ad3bc704a555920e81d4fdcda">
+<files psalm-version="5.11.0@c9b192ab8400fdaf04b2b13d110575adc879aa90">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -214,17 +214,11 @@
       <code>$artifacts_for_planning</code>
       <code>$artifacts_for_planning</code>
     </DeprecatedMethod>
-    <LessSpecificReturnStatement>
-      <code>$children</code>
-    </LessSpecificReturnStatement>
     <MissingReturnType>
       <code>filterBacklogIds</code>
       <code>getMatchingIdsForMilestone</code>
       <code>getMatchingIdsForTopBacklog</code>
     </MissingReturnType>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array{tracker_id: int, id: int}>]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemDao.class.php">
     <DeprecatedMethod>
@@ -467,6 +461,15 @@
       <code><![CDATA[(int) $tracker->getId()]]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/XMLExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FieldPriorityAugmenter.php">
     <MissingParamType>
       <code>$additional_criteria</code>
@@ -668,6 +671,9 @@
       <code>cacheYesterdayValues</code>
       <code>process</code>
     </MissingReturnType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[date('Y-m-d H:i:s', $yesterday)]]></code>
+    </PossiblyFalseOperand>
     <RedundantCast>
       <code>(int) $yesterday</code>
     </RedundantCast>
@@ -722,6 +728,12 @@
       <code>isArchive</code>
       <code>isBacklog</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/KanbanXMLExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/KanbanXmlImporter.php">
     <MissingReturnType>
@@ -1922,14 +1934,10 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
     <LessSpecificReturnStatement>
-      <code>$ids</code>
-      <code>$ids</code>
       <code><![CDATA[$this->getDB()->safeQuery($sql, $in_statement->values())]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[list<array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}>]]></code>
-      <code><![CDATA[list<int>]]></code>
-      <code><![CDATA[list<int>]]></code>
     </MoreSpecificReturnType>
     <RedundantCastGivenDocblockType>
       <code>(int) $backlog_tracker_id</code>
@@ -2768,6 +2776,10 @@
     <PossiblyNullPropertyAssignmentValue>
       <code>$initial_effort_field</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <PropertyTypeCoercion>
       <code>$field</code>
     </PropertyTypeCoercion>
@@ -2776,6 +2788,12 @@
     <RedundantPropertyInitializationCheck>
       <code>isset(self::$instance)</code>
     </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/XML/SemanticsExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/SequenceIdManager.php">
     <MissingParamType>
@@ -2834,6 +2852,12 @@
     </PossiblyInvalidArgument>
     <PossiblyNullReference>
       <code>getName</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/Widget/ProjectKanban.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
     </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Widget/WidgetAddToDashboardDropdownRepresentation.php">
@@ -3006,11 +3030,12 @@
     <MissingReturnType>
       <code>exportFull</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$agiledashboard_node</code>
+      <code>$agiledashboard_node</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/XMLFullStructureExporter.php">
-    <InvalidReturnType>
-      <code>SimpleXMLElement</code>
-    </InvalidReturnType>
     <PossiblyUndefinedVariable>
       <code>$params</code>
     </PossiblyUndefinedVariable>
@@ -3428,9 +3453,6 @@
       <code>$rows</code>
       <code>$rows</code>
     </DeprecatedMethod>
-    <InvalidArgument>
-      <code>array_keys($tracker_mapping)</code>
-    </InvalidArgument>
     <InvalidOperand>
       <code>$key</code>
     </InvalidOperand>
@@ -3756,6 +3778,17 @@
       <code>$value_denomination</code>
       <code>$value_denomination</code>
     </MissingParamType>
+    <PossiblyNullArgument>
+      <code>$plannings_node</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/agiledashboard/include/Planning/XML/XMLPlanning.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/agiledashboardPlugin.php">
     <DeprecatedMethod>
@@ -3839,17 +3872,11 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$parameters</code>
       <code>$parameters</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -3906,7 +3933,6 @@
       <code>isFieldPriority</code>
       <code>isHomepageURL</code>
       <code>isInOverviewTab</code>
-      <code>item_priority_change</code>
       <code>moveArtifactActionAllowedByPluginRetriever</code>
       <code>moveArtifactGetExternalSemanticCheckers</code>
       <code>moveArtifactParseFieldChangeNodes</code>
@@ -3926,7 +3952,6 @@
       <code>trackerReportProcessAdditionalQuery</code>
       <code>trackerReportSetToPrivate</code>
       <code>tracker_artifact_editrenderer_add_view_in_collection</code>
-      <code>tracker_event_artifact_association_edited</code>
       <code>tracker_event_field_augment_data_for_report</code>
       <code>tracker_event_general_settings</code>
       <code>tracker_event_get_semantic_duplicators</code>
@@ -3947,9 +3972,6 @@
     <PossiblyFalseReference>
       <code>getId</code>
     </PossiblyFalseReference>
-    <PossiblyNullArgument>
-      <code>$milestone</code>
-    </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -3978,325 +4000,6 @@
     <MissingReturnType>
       <code>getWellFormattedArchivePath</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/bin/convert_from_folders_to_scrum.php">
-    <MissingReturnType>
-      <code>usage</code>
-    </MissingReturnType>
-    <PossiblyUndefinedGlobalVariable>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$username</code>
-      <code>$username</code>
-    </PossiblyUndefinedGlobalVariable>
-  </file>
-  <file src="plugins/artifactsfolders/include/Converter/AncestorFolderChecker.php">
-    <MissingReturnType>
-      <code>isAncestorInSameFolder</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Converter/ArtifactsFoldersToScrumV2Converter.php">
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>buildLinksToAddCollection</code>
-      <code>convertFromArtifactsFoldersToScrumV2</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Converter/CollectionOfLinksToAdd.php">
-    <MissingReturnType>
-      <code>addALink</code>
-      <code>getLinksToAddToFolder</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Converter/ConverterDao.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>disableFolderConfigurationsForProject</code>
-      <code>getFolderConfigurationForProject</code>
-      <code>searchArtifactsLinkedToFolderInProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/ArtifactLinkInformationPrepender.php">
-    <MissingParamType>
-      <code>$read_only</code>
-      <code>$reverse_artifact_links</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>fetchFolderLabel</code>
-      <code>fetchLinkToFolder</code>
-      <code>fetchSelectBox</code>
-      <code>prependArtifactLinkInformation</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/ArtifactPresenter.php">
-    <MissingPropertyType>
-      <code>$assignees</code>
-      <code>$folder_hierarchy</code>
-      <code>$html_url</code>
-      <code>$id</code>
-      <code>$last_modified_date</code>
-      <code>$status</code>
-      <code>$submitter</code>
-      <code>$title</code>
-      <code>$xref</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>build</code>
-      <code>getDisplayName</code>
-      <code>getFolderHierarchyPresenter</code>
-      <code>getTitle</code>
-      <code>getUserPresenter</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/ArtifactPresenterBuilder.php">
-    <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$list_of_artifact_ids</code>
-      <code>$list_of_artifact_ids</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$artifact_representation->id]]></code>
-      <code><![CDATA[$artifact_representation->id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getArtifactRepresentation</code>
-      <code>getListOfArtifactRepresentation</code>
-      <code>getListOfChildrenRepresentation</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/Controller.php">
-    <MissingReturnType>
-      <code>getChildren</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/Dao.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeIntImplode</code>
-      <code>query</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$artifact_folder_id</code>
-      <code>$artifact_folder_id</code>
-      <code>$artifact_id</code>
-      <code>$changeset_id</code>
-      <code>$changeset_id</code>
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$nature</code>
-      <code>$project_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addInFolderNature</code>
-      <code>create</code>
-      <code>isTrackerConfiguredToContainFolders</code>
-      <code>projectUsesArtifactsFolders</code>
-      <code>removeInFolderLink</code>
-      <code>searchFoldersInProject</code>
-      <code>searchFoldersTheArtifactBelongsTo</code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
-    </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/DataFromRequestAugmentor.php">
-    <MissingParamType>
-      <code>$folder_id</code>
-      <code>$new_artifact_folder_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addFolderInFieldsData</code>
-      <code>augmentDataFromRequest</code>
-      <code>getExistingFolderForArtifactInRequest</code>
-      <code>removeFolderFromFieldsData</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/FolderHierarchicalRepresentation.php">
-    <MissingParamType>
-      <code>$parent_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addChild</code>
-      <code>getChildren</code>
-      <code>getFolder</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/FolderHierarchicalRepresentationCollection.php">
-    <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$prefix</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>add</code>
-      <code>collectOptions</code>
-      <code>contains</code>
-      <code>toArray</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/FolderHierarchicalRepresentationCollectionBuilder.php">
-    <MissingParamType>
-      <code>$parent_id</code>
-    </MissingParamType>
-    <NullableReturnStatement>
-      <code>null</code>
-      <code>null</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/FolderUsageRetriever.php">
-    <MissingReturnType>
-      <code>doesProjectHaveAFolderTracker</code>
-      <code>projectUsesArtifactsFolders</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/HierarchyOfFolderBuilder.php">
-    <MissingParamType>
-      <code>$ancestors</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getFirstParentThatIsAFolder</code>
-      <code>getHierarchyOfFolder</code>
-      <code>getHierarchyOfFolderForArtifact</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/PostSaveNewChangesetCommand.php">
-    <MissingReturnType>
-      <code>execute</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/Presenter.php">
-    <MissingPropertyType>
-      <code>$artifacts</code>
-      <code>$assigned_to_label</code>
-      <code>$empty_state</code>
-      <code>$id_label</code>
-      <code>$last_update_label</code>
-      <code>$project_label</code>
-      <code>$status_label</code>
-      <code>$submitted_by_label</code>
-      <code>$summary_label</code>
-      <code>$tracker_label</code>
-    </MissingPropertyType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->folder_label]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/artifactsfolders/include/Folder/Router.php">
-    <MissingParamType>
-      <code>$code</code>
-      <code>$reason</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>error</code>
-      <code>getArtifactFromRequest</code>
-      <code>route</code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code>userCanView</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/artifactsfolders/include/artifactsfoldersPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>add_property_to_tracker</code>
-      <code>after_augment_data_from_request</code>
-      <code>canAddOurView</code>
-      <code>checkRequestConcernsArtifactFoldersWithSetParameters</code>
-      <code>cssfile</code>
-      <code>display_copy_of_artifact</code>
-      <code>event_get_artifactlink_types</code>
-      <code>event_get_type_presenter</code>
-      <code>getDao</code>
-      <code>getHierarchyOfFolderBuilder</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getPresenterBuilder</code>
-      <code>getTypeIsChildLinkRetriever</code>
-      <code>get_post_save_new_changeset_queue</code>
-      <code>hide_artifact</code>
-      <code>isViewAddableForArtifact</code>
-      <code>prepend_artifactlink_information</code>
-      <code>setFolderProperty</code>
-      <code>tracker_add_system_types</code>
-      <code>tracker_artifact_editrenderer_add_view_in_collection</code>
-      <code>tracker_artifact_link_can_be_unused</code>
-      <code>tracker_get_editable_type_in_project</code>
-      <code>tracker_is_type_valid</code>
-      <code>tracker_xml_import_artifact_link_can_be_disabled</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
     <ArgumentTypeCoercion>
@@ -4472,22 +4175,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/baseline/include/baselinePlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
       <code>getPluginInfo</code>
-      <code>rest_resources</code>
     </MissingReturnType>
   </file>
   <file src="plugins/botmattermost/include/BotMattermost/Bot/BotDao.php">
@@ -6531,6 +6224,13 @@
       <code>extractBackgroundColor</code>
       <code>extractCardFields</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$child</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/cardwall/include/Semantic/CardFieldXmlExtractor.php">
     <MissingReturnType>
@@ -6726,6 +6426,41 @@
       <code>$should_display_avatars</code>
     </MissingParamType>
   </file>
+  <file src="plugins/cardwall/include/XML/XMLCardwall.php">
+    <PossiblyNullArgument>
+      <code>$trackers_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/cardwall/include/XML/XMLCardwallColumn.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/cardwall/include/XML/XMLCardwallMapping.php">
+    <PossiblyNullArgument>
+      <code>$values_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/cardwall/include/XML/XMLCardwallMappingValue.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/cardwall/include/XML/XMLCardwallTracker.php">
+    <PossiblyNullArgument>
+      <code>$columns_node</code>
+      <code>$mappings_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/cardwall/include/cardwallPlugin.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$event_retriever->getField()]]></code>
@@ -6781,11 +6516,9 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
       <code>agiledashboard_event_get_card_fields</code>
-      <code>agiledashboard_event_index_page</code>
       <code>agiledashboard_event_is_cardwall_enabled</code>
       <code>agiledashboard_event_milestone_selector_redirect</code>
       <code>agiledashboard_event_planning_config</code>
@@ -6938,6 +6671,12 @@
       <code>addCData</code>
       <code>assertEmailUnique</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$parent</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/Exception/InvalidPasswordException.php">
     <MissingPropertyType>
@@ -6989,25 +6728,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/create_test_env/include/create_test_envPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>getHooksAndCallbacks</code>
-      <code>serviceAccessEvent</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/bin/migrate_old_crosstracker_widgets.php">
     <DeprecatedMethod>
@@ -7760,26 +7483,11 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/crosstracker/include/crosstrackerPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getProjectWidgetList</code>
-      <code>getUserWidgetList</code>
-      <code>restResources</code>
-      <code>trackerEventProjectCreationTrackersRequired</code>
       <code>uninstall</code>
-      <code>widgetInstance</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/bin/DocmanExport/Docman_ExportException.class.php">
@@ -8151,6 +7859,31 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyNullArgument>
+      <code><![CDATA[$node->xpath('item')]]></code>
+      <code>$nodeList</code>
+      <code>$nodeList</code>
+      <code><![CDATA[$rootNode->xpath('item')]]></code>
+      <code><![CDATA[$this->doc->xpath('//author | //owner')]]></code>
+      <code>$values</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code>$nodeList[0]</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$node->xpath('permissions/permission')]]></code>
+      <code><![CDATA[$node->xpath('properties/property')]]></code>
+      <code><![CDATA[$node->xpath('versions/version')]]></code>
+      <code><![CDATA[$node->xpath('versions/version')]]></code>
+      <code>$nodes</code>
+      <code>$permissions</code>
+      <code>$propdefs</code>
+      <code>$propertiesList</code>
+      <code>$propertyList</code>
+      <code>$ugroups</code>
+      <code>$values</code>
+      <code>$versionedItems</code>
+    </PossiblyNullIterator>
     <PossiblyNullPropertyAssignmentValue>
       <code>simplexml_import_dom($dom)</code>
     </PossiblyNullPropertyAssignmentValue>
@@ -8233,6 +7966,12 @@
       <code>updatePath</code>
       <code>updateWiki</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$versions</code>
+      <code>$versions</code>
+      <code>$versions</code>
+      <code>$versions</code>
+    </PossiblyNullArgument>
     <PossiblyUndefinedVariable>
       <code>$tree</code>
       <code>$tree2</code>
@@ -13839,11 +13578,25 @@
       <code><![CDATA[(int) $this->version_factory->getNextVersionNumber($item)]]></code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/docman/include/XML/Export/PermissionsExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/docman/include/XML/Export/XMLExportVisitor.php">
     <MissingParamType>
       <code>$label</code>
       <code>$value</code>
     </MissingParamType>
+    <PossiblyNullArgument>
+      <code>$node</code>
+      <code>$node_for_versions</code>
+      <code>$properties</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/docman/include/XML/Import/NodeImporter.php">
     <MissingReturnType>
@@ -13855,68 +13608,16 @@
       <code>import</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/docman/include/XML/XMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$docman</code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/docman/include/docmanPlugin.php">
     <ArgumentTypeCoercion>
       <code><![CDATA['DocmanPluginInfo']]></code>
     </ArgumentTypeCoercion>
     <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
       <code>addHook</code>
       <code>getRow</code>
       <code>rowCount</code>
@@ -13935,9 +13636,6 @@
       <code>$nbVersions</code>
       <code>$offset</code>
       <code>$offset</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -15963,11 +15661,6 @@
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/embed/include/embedPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/DueLicencesDao.php">
     <InvalidReturnStatement>
       <code><![CDATA[$this->getDB()->safeQuery($sql, $parameters)]]></code>
@@ -16044,9 +15737,6 @@
   </file>
   <file src="plugins/enalean_licensemanager/include/enalean_licensemanagerPlugin.php">
     <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
@@ -16658,21 +16348,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/frs/include/frsPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code>$artifact_id</code>
     </InvalidArgument>
@@ -16683,30 +16358,8 @@
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>artifactPartialUpdate</code>
-      <code>codendiDailyStart</code>
-      <code>collectRoutesEvent</code>
       <code>doesRequestContainsAdditionalInformation</code>
-      <code>frsOngoingUploadChecker</code>
-      <code>frs_edit_form_additional_info</code>
-      <code>frs_process_edit_form</code>
-      <code>getHooksAndCallbacks</code>
-      <code>moveArtifactActionAllowedByPluginRetriever</code>
-      <code>rest_project_resources</code>
-      <code>rest_resources</code>
-      <code>tracker_artifact_editrenderer_add_view_in_collection</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/fts_common/include/FullTextSearchBackendPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/fts_common/tests/unit/CLI/ProgressQueueIndexItemCategorySymfonyOutputTest.php">
     <InvalidOperand>
@@ -16718,13 +16371,6 @@
     <PossiblyUndefinedArrayOffset>
       <code>$first_badge_representation</code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/fts_meilisearch/include/fts_meilisearchPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/git/include/AccessRightsPresenterOptionsBuilder.php">
     <MissingParamType>
@@ -16894,7 +16540,6 @@
       <code><![CDATA[(int) $this->groupId]]></code>
       <code><![CDATA[(int) $this->groupId]]></code>
       <code><![CDATA[(int) $this->groupId]]></code>
-      <code><![CDATA[(int) $this->groupId]]></code>
     </RedundantCastGivenDocblockType>
     <TooManyArguments>
       <code><![CDATA[new Valid_GroupId('group_id')]]></code>
@@ -17029,7 +16674,6 @@
   <file src="plugins/git/include/Git/AdminGitoliteConfigPresenter.php">
     <MissingParamType>
       <code>$authorized_projects</code>
-      <code>$show_big_objects_config</code>
       <code>$title</code>
     </MissingParamType>
     <MissingPropertyType>
@@ -17051,7 +16695,6 @@
       <code>gitolite_config_description</code>
       <code>gitolite_config_title</code>
       <code>project_name_placeholder</code>
-      <code>show_big_objects_config</code>
       <code>submit</code>
       <code>there_are_no_projects</code>
       <code>update_allowed_projects_action</code>
@@ -17826,6 +17469,9 @@
       <code>storeCacheInDb</code>
       <code>updateLastAccessDates</code>
     </MissingReturnType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[date("Y-m", strtotime("-1 month"))]]></code>
+    </PossiblyFalseOperand>
   </file>
   <file src="plugins/git/include/Git/Gitolite/GitoliteAccessURLGenerator.php">
     <MissingParamType>
@@ -17843,13 +17489,7 @@
       <code>$content</code>
       <code>$dir_path</code>
       <code>$file_path</code>
-      <code>$file_path</code>
       <code>$gitolite_administration_path</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
-      <code>$hostname</code>
       <code>$hostname</code>
       <code>$hostname</code>
       <code>$hostname</code>
@@ -17860,15 +17500,7 @@
       <code>$new_name</code>
       <code>$new_name</code>
       <code>$new_name</code>
-      <code>$new_name</code>
-      <code>$new_name</code>
-      <code>$new_name</code>
-      <code>$new_name</code>
       <code>$old_file</code>
-      <code>$old_name</code>
-      <code>$old_name</code>
-      <code>$old_name</code>
-      <code>$old_name</code>
       <code>$old_name</code>
       <code>$old_name</code>
       <code>$old_name</code>
@@ -17949,12 +17581,6 @@
       <code>getGitoliteRCPath</code>
       <code>getHostname</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->version_detector]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->version_detector]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ProjectSerializer.class.php">
     <MissingParamType>
@@ -18134,24 +17760,6 @@
   <file src="plugins/git/include/Git/HTTP/CommandFactory.class.php">
     <MissingReturnType>
       <code>getCommandForUser</code>
-      <code>getGitoliteCommand</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/HTTP/CommandGitolite.class.php">
-    <MissingParamType>
-      <code>$command</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$gitolite_home</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getCommand</code>
-      <code>sudo</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/HTTP/CommandGitolite3.class.php">
-    <MissingReturnType>
-      <code>getCommand</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/HTTP/HTTPAccessControl.php">
@@ -19816,7 +19424,6 @@
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$project_id</code>
       <code>$redirect_url</code>
       <code>$remote_server_id</code>
       <code>$repoAccess</code>
@@ -20060,7 +19667,6 @@
   </file>
   <file src="plugins/git/include/GitPHP/Commit/CommitPresenter.php">
     <MissingPropertyType>
-      <code>$description</code>
       <code>$has_description</code>
       <code>$number_of_parents</code>
     </MissingPropertyType>
@@ -20748,12 +20354,6 @@
       <code>\Iterator</code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/git/include/GitPHP/smartyplugins/function.scripturl.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['HTTP_HOST']]]></code>
-      <code><![CDATA[$_SERVER['PHP_SELF']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="plugins/git/include/GitPHP/smartyplugins/modifier.agestring.php">
     <RedundantCastGivenDocblockType>
       <code>(int) $age</code>
@@ -21266,10 +20866,6 @@
       <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->groupId]]></code>
-      <code><![CDATA[$this->user]]></code>
-      <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
       <code><![CDATA[$this->user]]></code>
@@ -21420,8 +21016,17 @@
       <code>getLabelForUgroup</code>
     </MissingReturnType>
     <PossiblyNullArgument>
+      <code>$last_push_node</code>
+      <code>$read_node</code>
+      <code>$root_node</code>
+      <code>$root_node</code>
       <code>$user</code>
+      <code>$wplus_node</code>
+      <code>$write_node</code>
     </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/GitXmlImporter.class.php">
     <InvalidArgument>
@@ -21447,6 +21052,16 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$this->user_finder->getUser($push_informations->user)->getId()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArrayAccess>
+      <code>$children[0]</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$fine_grained_xmlnode->children()]]></code>
+      <code><![CDATA[$permission_xmlnodes->children()]]></code>
+    </PossiblyNullIterator>
+    <PossiblyNullReference>
+      <code>getName</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/Git_Backend_Gitolite.class.php">
     <DeprecatedMethod>
@@ -22098,6 +21713,12 @@
       <code>$ssh_key_dumper</code>
     </PropertyTypeCoercion>
   </file>
+  <file src="plugins/git/include/XmlUgroupRetriever.php">
+    <PossiblyNullIterator>
+      <code><![CDATA[$permission_xmlnode->children()]]></code>
+      <code><![CDATA[$permission_xmlnode->children()]]></code>
+    </PossiblyNullIterator>
+  </file>
   <file src="plugins/git/include/exceptions/GitBackendException.class.php">
     <MissingParamType>
       <code>$msg</code>
@@ -22229,8 +21850,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
       <code>load</code>
       <code>load</code>
     </DeprecatedMethod>
@@ -22238,8 +21857,6 @@
       <code>$error</code>
       <code>$id</code>
       <code>$newName</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -22524,25 +22141,6 @@
     <NamedArgumentNotAllowed>
       <code>$references_collections</code>
     </NamedArgumentNotAllowed>
-  </file>
-  <file src="plugins/gitlab/include/gitlabPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType>
@@ -23069,6 +22667,13 @@
       <code>setCharts</code>
       <code>setSession</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$grandchild</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <TooManyArguments>
       <code>fetchAdditionalButton</code>
     </TooManyArguments>
@@ -23140,6 +22745,11 @@
     <NullArgument>
       <code>null</code>
     </NullArgument>
+  </file>
+  <file src="plugins/graphontrackersv5/include/XML/XMLChart.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/graphontrackersv5/include/common/HTML_Element_Selectbox_TrackerFields_DatesV5.class.php">
     <MissingParamType>
@@ -24144,6 +23754,9 @@
       <code>getColorPerLegend</code>
       <code>sort</code>
     </MissingReturnType>
+    <TypeDoesNotContainNull>
+      <code><![CDATA[is_null($this->xaxis)]]></code>
+    </TypeDoesNotContainNull>
     <UndefinedConstant>
       <code>SIDE_DOWN</code>
     </UndefinedConstant>
@@ -24894,6 +24507,12 @@
       <code>process</code>
     </InvalidReturnType>
   </file>
+  <file src="plugins/hudson_git/include/HudsonGit/Git/Administration/XML/XMLExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/hudson_git/include/HudsonGit/GitWebhooksSettingsCreateJenkinsButtonPresenter.php">
     <MissingParamType>
       <code>$has_already_a_jenkins</code>
@@ -24952,9 +24571,6 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/hudson_git/include/HudsonGit/JenkinsWebhookPresenter.php">
-    <MissingParamType>
-      <code>$url</code>
-    </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$this->hooklogs]]></code>
     </MissingPropertyType>
@@ -25182,15 +24798,251 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
+  <file src="plugins/jira_import/include/JiraAgile/JiraAgileImporter.php">
+    <PossiblyNullArgument>
+      <code>$xml_agiledashboard</code>
+      <code>$xml_plannings</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/jira_import/include/JiraAgile/JiraSprintIssuesRetrieverFromAPI.php">
     <PossiblyNullArgument>
       <code><![CDATA[$issue['id'] ?? 'null']]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/jira_import/include/jira_importPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-    </DeprecatedMethod>
+  <file src="plugins/jira_import/include/Project/CreateProjectFromJira.php">
+    <PossiblyNullArgument>
+      <code>$trackers_xml</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/jira_import/include/Project/Dashboard/RoadmapDashboardCreator.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/jira_import/tests/unit/JiraAgile/JiraAgileImporterTest.php">
+    <PossiblyNullArgument>
+      <code>$completed_date_column</code>
+      <code>$completed_date_criteria</code>
+      <code>$completed_date_field</code>
+      <code>$completed_date_field_change</code>
+      <code>$end_date_column</code>
+      <code>$end_date_criteria</code>
+      <code>$end_date_field</code>
+      <code>$end_date_field_change</code>
+      <code>$field</code>
+      <code>$field</code>
+      <code>$field_change</code>
+      <code><![CDATA[$field_change[0]->value]]></code>
+      <code>$permissions</code>
+      <code>$permissions</code>
+      <code>$permissions</code>
+      <code>$permissions</code>
+      <code>$permissions</code>
+      <code>$permissions</code>
+      <code>$selected_criterion_value</code>
+      <code>$start_date_column</code>
+      <code>$start_date_criteria</code>
+      <code>$start_date_field</code>
+      <code>$start_date_field_change</code>
+      <code>$status_column</code>
+      <code>$status_criterion_field</code>
+      <code><![CDATA[$status_field->bind->items->item]]></code>
+      <code>$status_semantic</code>
+      <code>$status_semantic</code>
+      <code><![CDATA[$status_semantic[0]->closed_values->closed_value]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value]]></code>
+      <code>$timeframe_semantic</code>
+      <code>$title_semantic</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code>$completed_date_field[0]</code>
+      <code><![CDATA[$completed_date_field[0]->properties['display_time']]]></code>
+      <code><![CDATA[$completed_date_field[0]['ID']]]></code>
+      <code><![CDATA[$completed_date_field[0]['type']]]></code>
+      <code>$completed_date_field_change[0]</code>
+      <code><![CDATA[$completed_date_field_change[0]['type']]]></code>
+      <code>$end_date_field[0]</code>
+      <code>$end_date_field[0]</code>
+      <code><![CDATA[$end_date_field[0]->properties['display_time']]]></code>
+      <code><![CDATA[$end_date_field[0]['ID']]]></code>
+      <code><![CDATA[$end_date_field[0]['ID']]]></code>
+      <code><![CDATA[$end_date_field[0]['type']]]></code>
+      <code>$end_date_field_change[0]</code>
+      <code><![CDATA[$end_date_field_change[0]['type']]]></code>
+      <code><![CDATA[$field['ID']]]></code>
+      <code><![CDATA[$field['type']]]></code>
+      <code>$field_change[0]</code>
+      <code><![CDATA[$field_change[0]->value[0]]]></code>
+      <code><![CDATA[$field_change[0]->value[1]]]></code>
+      <code>$name_field[0]</code>
+      <code><![CDATA[$name_field[0]['ID']]]></code>
+      <code>$permissions[0]</code>
+      <code>$permissions[0]</code>
+      <code>$permissions[0]</code>
+      <code>$permissions[0]</code>
+      <code>$permissions[0]</code>
+      <code>$permissions[0]</code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['type']]]></code>
+      <code><![CDATA[$permissions[0]['ugroup']]]></code>
+      <code><![CDATA[$permissions[0]['ugroup']]]></code>
+      <code><![CDATA[$permissions[0]['ugroup']]]></code>
+      <code><![CDATA[$permissions[0]['ugroup']]]></code>
+      <code><![CDATA[$permissions[0]['ugroup']]]></code>
+      <code>$permissions[1]</code>
+      <code>$permissions[1]</code>
+      <code>$permissions[1]</code>
+      <code>$permissions[1]</code>
+      <code>$permissions[1]</code>
+      <code>$permissions[1]</code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['type']]]></code>
+      <code><![CDATA[$permissions[1]['ugroup']]]></code>
+      <code><![CDATA[$permissions[1]['ugroup']]]></code>
+      <code><![CDATA[$permissions[1]['ugroup']]]></code>
+      <code><![CDATA[$permissions[1]['ugroup']]]></code>
+      <code><![CDATA[$permissions[1]['ugroup']]]></code>
+      <code>$permissions[2]</code>
+      <code>$permissions[2]</code>
+      <code>$permissions[2]</code>
+      <code>$permissions[2]</code>
+      <code>$permissions[2]</code>
+      <code>$permissions[2]</code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['type']]]></code>
+      <code><![CDATA[$permissions[2]['ugroup']]]></code>
+      <code><![CDATA[$permissions[2]['ugroup']]]></code>
+      <code><![CDATA[$permissions[2]['ugroup']]]></code>
+      <code><![CDATA[$permissions[2]['ugroup']]]></code>
+      <code><![CDATA[$permissions[2]['ugroup']]]></code>
+      <code>$selected_criterion_value[0]</code>
+      <code><![CDATA[$selected_criterion_value[0]['REF']]]></code>
+      <code>$sprints[0]</code>
+      <code><![CDATA[$sprints[0]->xpath('../field_change[@field_name="status"]')[0]]]></code>
+      <code>$sprints[1]</code>
+      <code><![CDATA[$sprints[1]->xpath('../field_change[@field_name="status"]')[0]]]></code>
+      <code>$sprints[2]</code>
+      <code><![CDATA[$sprints[2]->xpath('../field_change[@field_name="status"]')[0]]]></code>
+      <code>$start_date_field[0]</code>
+      <code>$start_date_field[0]</code>
+      <code><![CDATA[$start_date_field[0]->properties['display_time']]]></code>
+      <code><![CDATA[$start_date_field[0]['ID']]]></code>
+      <code><![CDATA[$start_date_field[0]['ID']]]></code>
+      <code><![CDATA[$start_date_field[0]['type']]]></code>
+      <code>$start_date_field_change[0]</code>
+      <code><![CDATA[$start_date_field_change[0]['type']]]></code>
+      <code>$status_criterion_field[0]</code>
+      <code><![CDATA[$status_field->bind['type']]]></code>
+      <code><![CDATA[$status_field['ID']]]></code>
+      <code><![CDATA[$status_field['type']]]></code>
+      <code>$status_semantic[0]</code>
+      <code>$status_semantic[0]</code>
+      <code><![CDATA[$status_semantic[0]->closed_values->closed_value[0]]]></code>
+      <code><![CDATA[$status_semantic[0]->closed_values->closed_value[0]['REF']]]></code>
+      <code><![CDATA[$status_semantic[0]->field['REF']]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value[0]]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value[0]['REF']]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value[1]]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value[1]['REF']]]></code>
+      <code><![CDATA[$status_value->value[0]]]></code>
+      <code><![CDATA[$status_value->value[0]]]></code>
+      <code><![CDATA[$status_value->value[0]]]></code>
+      <code><![CDATA[$status_value['bind']]]></code>
+      <code><![CDATA[$status_value['bind']]]></code>
+      <code><![CDATA[$status_value['bind']]]></code>
+      <code><![CDATA[$status_value['type']]]></code>
+      <code><![CDATA[$status_value['type']]]></code>
+      <code><![CDATA[$status_value['type']]]></code>
+      <code>$timeframe_semantic[0]</code>
+      <code><![CDATA[$timeframe_semantic[0]->end_date_field['REF']]]></code>
+      <code><![CDATA[$timeframe_semantic[0]->start_date_field['REF']]]></code>
+      <code>$title_semantic[0]</code>
+      <code><![CDATA[$title_semantic[0]->field['REF']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="capacity"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="active"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="closed"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="closed"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="closed"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="closed"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID']]]></code>
+      <code><![CDATA[$xml->xpath('/project/trackers/tracker/formElements//formElement[name="status"]/bind/items/item[@label="future"]')[0]['ID']]]></code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$completed_date_field[0]->properties]]></code>
+      <code><![CDATA[$completed_date_field_change[0]->value]]></code>
+      <code><![CDATA[$end_date_field[0]->properties]]></code>
+      <code><![CDATA[$end_date_field_change[0]->value]]></code>
+      <code><![CDATA[$field_change[0]->value]]></code>
+      <code><![CDATA[$sprints[0]->value]]></code>
+      <code><![CDATA[$sprints[1]->value]]></code>
+      <code><![CDATA[$sprints[2]->value]]></code>
+      <code><![CDATA[$start_date_field[0]->properties]]></code>
+      <code><![CDATA[$start_date_field_change[0]->value]]></code>
+      <code><![CDATA[$status_field->bind]]></code>
+      <code><![CDATA[$status_field->bind->items]]></code>
+      <code><![CDATA[$status_field->bind->items->item]]></code>
+      <code><![CDATA[$status_semantic[0]->closed_values]]></code>
+      <code><![CDATA[$status_semantic[0]->closed_values->closed_value]]></code>
+      <code><![CDATA[$status_semantic[0]->field]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values]]></code>
+      <code><![CDATA[$status_semantic[0]->open_values->open_value]]></code>
+      <code><![CDATA[$status_value->value]]></code>
+      <code><![CDATA[$status_value->value]]></code>
+      <code><![CDATA[$status_value->value]]></code>
+      <code><![CDATA[$timeframe_semantic[0]->end_date_field]]></code>
+      <code><![CDATA[$timeframe_semantic[0]->start_date_field]]></code>
+      <code><![CDATA[$title_semantic[0]->field]]></code>
+    </PossiblyNullPropertyFetch>
+    <PossiblyNullReference>
+      <code>xpath</code>
+      <code>xpath</code>
+      <code>xpath</code>
+      <code>xpath</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/label/include/Label/REST/ResourcesInjector.php">
     <MissingReturnType>
@@ -25352,27 +25204,9 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/label/include/labelPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>getHooksAndCallbacks</code>
-      <code>getProjectWidgetList</code>
-      <code>mergeLabel</code>
-      <code>removeLabel</code>
-      <code>restProjectResources</code>
-      <code>restResources</code>
-      <code>widgetInstance</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/ldap/bin/convertSvnToLdap.php">
     <DeprecatedFunction>
@@ -25434,7 +25268,6 @@
   <file src="plugins/ldap/include/LDAP.class.php">
     <InvalidArgument>
       <code>$ds</code>
-      <code>$peopleDn</code>
       <code><![CDATA[$this->ds]]></code>
     </InvalidArgument>
     <MissingClosureParamType>
@@ -25928,7 +25761,6 @@
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
-      <code>retrieve</code>
       <code>rowCount</code>
       <code>rowCount</code>
       <code>rowCount</code>
@@ -25948,7 +25780,6 @@
     <MissingReturnType>
       <code>getActiveUsers</code>
       <code>getNbrActiveUsers</code>
-      <code>searchNonUniqueLdapUid</code>
     </MissingReturnType>
     <PossiblyFalseReference>
       <code>rowCount</code>
@@ -26162,11 +25993,6 @@
       <code>account_login_login_with_tuleap</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/ldap/include/NonUniqueUidRetriever.php">
-    <MissingReturnType>
-      <code>getNonUniqueLdapUid</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/ldap/include/WelcomeDisplayController.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$request->getCurrentUser()->getId()]]></code>
@@ -26217,56 +26043,6 @@
       <code><![CDATA[db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
       <code>getRow</code>
     </DeprecatedMethod>
     <InvalidArgument>
@@ -26275,15 +26051,8 @@
                 ForgeConfig::get('codendi_dir') . '/src/templates/search',
             ]]]></code>
     </InvalidArgument>
-    <InvalidReturnStatement>
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>void</code>
-    </InvalidReturnType>
     <MissingParamType>
       <code>$id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -26309,53 +26078,25 @@
       <code>$ldapInstance</code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>accountInformationCollection</code>
-      <code>addLdapInput</code>
-      <code>additional_details</code>
-      <code>bindingAdditionalModalPresenterCollection</code>
       <code>buildLinkToDirectory</code>
-      <code>cancelChange</code>
-      <code>collectRoutesEvent</code>
       <code>currentRequestIsForProjectUgroupAdmin</code>
       <code>getAdministrationOptions</code>
       <code>getBindOption</code>
       <code>getConfigFilePath</code>
       <code>getEtcDir</code>
-      <code>getHooksAndCallbacks</code>
       <code>getLDAPUserWrite</code>
       <code>getLdapLoginInfo</code>
       <code>getSearchTemplateRenderer</code>
-      <code>getSvnLoginName</code>
       <code>getSynchro</code>
-      <code>getUserByLoginName</code>
       <code>getUserRemover</code>
-      <code>get_ldap_login_name_for_user</code>
-      <code>get_system_event_class</code>
-      <code>git_event_platform_can_use_gerrit</code>
       <code>hasLDAPWrite</code>
       <code>instanciateLDAP</code>
       <code>isLDAPGroupsUsageEnabled</code>
       <code>isLDAPUserManagementEnabled</code>
       <code>isLdapAuthType</code>
-      <code>login_presenter</code>
-      <code>membersEditProcessAction</code>
-      <code>passwordPreUpdateEvent</code>
-      <code>personalInformationEntry</code>
-      <code>project_admin_ugroup_deletion</code>
-      <code>rootDailyStart</code>
-      <code>search_type</code>
-      <code>svn_check_access_username</code>
-      <code>svn_intro</code>
       <code>synchronizeProjectMembers</code>
       <code>synchronizeStaticUgroupMembers</code>
-      <code>system_event_get_types_for_default_queue</code>
-      <code>ugroupEditProcessAction</code>
-      <code>ugroup_duplication</code>
       <code>updateAdministrationOptions</code>
-      <code>user_manager_find_user</code>
-      <code>user_manager_get_user_by_identifier</code>
-      <code>user_manager_update_db</code>
-      <code>warnNoPwChange</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$account_information->getUser()->getId()]]></code>
@@ -26417,8 +26158,6 @@
       <code>! $ignore_file[$file]</code>
       <code>! $ignore_file[$file]</code>
       <code>! $ignore_file[$file]</code>
-      <code>! isset($ignore_file[$file]) || ! $ignore_file[$file]</code>
-      <code>! isset($ignore_file[$file]) || ! $ignore_file[$file]</code>
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/mediawiki/include/Maintenance/CleanUnused.php">
@@ -27331,6 +27070,13 @@
       <code>getBaseDir</code>
       <code>getLabelForUgroup</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$reader_node</code>
+      <code>$writer_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/mediawiki/include/events/SystemEvent_MEDIAWIKI_TO_CENTRAL_DB.php">
     <MissingReturnType>
@@ -27514,6 +27260,14 @@
       <code>new self($identifier)</code>
     </InvalidReturnStatement>
   </file>
+  <file src="plugins/mediawiki_standalone/include/XML/XMLMediaWikiExporter.php">
+    <PossiblyNullArgument>
+      <code>$root_node</code>
+      <code><![CDATA[$xml_content->addChild('admin-access')]]></code>
+      <code><![CDATA[$xml_content->addChild('read-access')]]></code>
+      <code><![CDATA[$xml_content->addChild('write-access')]]></code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/mediawiki_standalone/tests/unit/Permissions/ISearchByProjectStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->permissions]]></code>
@@ -27570,29 +27324,16 @@
     </MissingParamType>
   </file>
   <file src="plugins/mytuleap_contact_support/include/mytuleap_contact_supportPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>burning_parrot_get_javascript_files</code>
-      <code>burning_parrot_get_stylesheets</code>
-      <code>cssfile</code>
       <code>getContactSupportFormController</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
       <code>getRenderer</code>
       <code>getSendMailSupportController</code>
-      <code>javascript_file</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -27617,38 +27358,42 @@
       <code><![CDATA[$this->getSupportedScopeIdentifiers()]]></code>
     </ArgumentTypeCoercion>
   </file>
-  <file src="plugins/oauth2_server/include/oauth2_serverPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/oauth2_server/tests/unit/User/AuthorizationComparatorTest.php">
     <ArgumentTypeCoercion>
       <code>$requested_scopes</code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="plugins/onlyoffice/include/Open/OnlyOfficeEditorController.php">
+    <InvalidArgument>
+      <code><![CDATA[function (string $config_token) use ($document_server_url, $csp_nonce): ResponseInterface {
+                $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
+
+                $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads; report-uri /csp-violation;";
+                $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
+
+                return $this->response_factory->createResponse()
+                    ->withHeader(
+                        'Content-Security-Policy',
+                        $csp_header
+                    )
+                    ->withBody(
+                        $this->stream_factory->createStream($this->template_renderer->renderToString(
+                            'editor',
+                            new OnlyOfficeEditorPresenter(
+                                (new JavascriptViteAsset($this->assets, 'src/onlyoffice-editor.ts'))->getFileURL(),
+                                $csp_nonce,
+                                $document_server_url,
+                                $config_token,
+                            )
+                        ))
+                    );
+            }]]></code>
+    </InvalidArgument>
+  </file>
   <file src="plugins/onlyoffice/include/Save/OnlyOfficeCallbackDocumentSaver.php">
     <ArgumentTypeCoercion>
       <code>$co_authors</code>
     </ArgumentTypeCoercion>
-  </file>
-  <file src="plugins/onlyoffice/include/onlyofficePlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/onlyoffice/tests/unit/Stubs/IRetrieveDocumentServersStub.php">
     <ArgumentTypeCoercion>
@@ -28030,7 +27775,6 @@
     <MissingReturnType>
       <code>deleteById</code>
       <code>isAProviderConfiguredAsUniqueEndPointProvider</code>
-      <code>searchById</code>
       <code>searchProviders</code>
       <code>searchProvidersUsableToLogIn</code>
     </MissingReturnType>
@@ -28996,52 +28740,11 @@
       <code><![CDATA[non-empty-list<ProgramUserGroup>]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="plugins/program_management/include/program_managementPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
+  <file src="plugins/program_management/tests/unit/Adapter/Program/Backlog/TopBacklog/Workflow/AddToTopBacklogPostActionTest.php">
+    <PossiblyNullReference>
+      <code>count</code>
+      <code>getName</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/program_management/tests/unit/Stub/GatherSynchronizedFieldsStub.php">
     <InvalidArgument>
@@ -29139,35 +28842,13 @@
     </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/project_ownershipPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>approveProjectAdministratorRemoval</code>
-      <code>collectProjectAdminNavigationItems</code>
-      <code>collectRoutesEvent</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
       <code>getSystemEventManager</code>
-      <code>get_system_event_class</code>
-      <code>projectUGroupMemberUpdatable</code>
-      <code>restResources</code>
-      <code>system_event_get_types_for_default_queue</code>
-      <code>userWithStarBadgeCollector</code>
     </MissingReturnType>
   </file>
   <file src="plugins/projectlinks/include/ProjectLinksDao.class.php">
@@ -29586,7 +29267,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
       <code>rowCount</code>
     </DeprecatedMethod>
     <MissingParamType>
@@ -29620,7 +29300,6 @@
       <code>_link_unique_update</code>
       <code>adminPageUpdate_Service</code>
       <code>collectProjectAdminNavigationItems</code>
-      <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
       <code>getProjectWidgetList</code>
       <code>registerProjectAbandon</code>
@@ -29696,24 +29375,9 @@
     </RedundantCast>
   </file>
   <file src="plugins/projectmilestones/include/projectmilestonesPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType>
-      <code>burning_parrot_get_javascript_files</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getProjectWidgetList</code>
-      <code>getUserWidgetList</code>
-      <code>widgetInstance</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/prometheus_metrics/include/MetricsCollector.php">
     <MissingParamType>
@@ -29806,7 +29470,6 @@
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
-      <code>$pull_request_id</code>
       <code>$repo_dest_id</code>
       <code>$repository_id</code>
       <code>$repository_id</code>
@@ -29881,7 +29544,6 @@
       <code>$merge_status</code>
       <code>$new_rev</code>
       <code>$new_rev</code>
-      <code>$project_id</code>
       <code>$project_id</code>
       <code>$rows</code>
     </MissingParamType>
@@ -30838,257 +30500,19 @@
       <code>rest_resources</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesBuilder.php">
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$project_id</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesImporter.php">
-    <MissingParamType>
-      <code>$xref</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$xref_kind</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>crossRefKind</code>
-      <code>importCompatRefXML</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_core/include/referencealias_corePlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>importCompatRefXML</code>
-      <code>registerExtraReferences</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_git/include/ReferenceAliasGit/Reference.php">
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$sha1</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/referencealias_git/include/ReferenceAliasGit/ReferencesBuilder.php">
-    <InvalidNullableReturnType>
-      <code>ReferenceInstance</code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$project_id</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingParamType>
-    <NullableReturnStatement>
-      <code>null</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/referencealias_git/include/ReferenceAliasGit/ReferencesImporter.php">
-    <MissingParamType>
-      <code>$reference</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getReferenceKeyword</code>
-      <code>importCompatRefXML</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_git/include/referencealias_gitPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getCompatDao</code>
-      <code>getGitDao</code>
-      <code>getReferencesBuilder</code>
-      <code>get_plugins_extra_references</code>
-      <code>import_compat_ref_xml</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_mediawiki/include/ReferencesBuilder.php">
-    <InvalidNullableReturnType>
-      <code>ReferenceInstance</code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$project_id</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingParamType>
-    <NullableReturnStatement>
-      <code>null</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/referencealias_mediawiki/include/ReferencesImporter.php">
-    <MissingParamType>
-      <code>$reference</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getReferenceKeyword</code>
-      <code>importCompatRefXML</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_mediawiki/include/referencealias_mediawikiPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getReferencesBuilder</code>
-      <code>get_plugins_extra_references</code>
-      <code>import_compat_ref_xml</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->dao]]></code>
-      <code><![CDATA[$this->dao]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/referencealias_svn/include/ReferenceAliasSVN/ReferencesBuilder.php">
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$project_id</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/referencealias_svn/include/ReferenceAliasSVN/ReferencesImporter.php">
-    <MissingParamType>
-      <code>$reference</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getReferenceKeyword</code>
-      <code>importCompatRefXML</code>
-    </MissingReturnType>
-    <RedundantCast>
-      <code><![CDATA[(int) $repository->getId()]]></code>
-    </RedundantCast>
-  </file>
-  <file src="plugins/referencealias_svn/include/referencealias_svnPlugin.php">
-    <ArgumentTypeCoercion>
-      <code>Backend::instance(Backend::SVN)</code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getAccessFileHistoryFactory</code>
-      <code>getCompatDao</code>
-      <code>getDestructor</code>
-      <code>getLogger</code>
-      <code>getReferencesBuilder</code>
-      <code>getSVNDao</code>
-      <code>getSvnAdmin</code>
-      <code>getSystemCommand</code>
-      <code>get_plugins_extra_references</code>
-      <code>import_compat_ref_xml</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_tracker/include/ReferenceAliasTracker/OriginalReferencesBuilder.php">
-    <InvalidNullableReturnType>
-      <code>ReferenceInstance</code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$project_id</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingParamType>
-    <NullableReturnStatement>
-      <code>null</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/referencealias_tracker/include/ReferenceAliasTracker/Reference/ArtifactReference.php">
-    <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$keyword</code>
-      <code>$project_id</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/referencealias_tracker/include/ReferenceAliasTracker/Reference/TrackerReference.php">
-    <MissingParamType>
-      <code>$keyword</code>
-      <code>$project_id</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/referencealias_tracker/include/ReferenceAliasTracker/ReferencesImporter.php">
-    <MissingParamType>
-      <code>$reference</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getReferenceKeyword</code>
-      <code>importCompatRefXML</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/referencealias_tracker/include/referencealias_trackerPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>importCompatRefXML</code>
-      <code>registerExtraReferences</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/roadmap/include/roadmapPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
+  <file src="plugins/roadmap/include/Roadmap/Widget/RoadmapConfigureAtXMLImport.php">
+    <PossiblyNullArgument>
+      <code>$timescale_nodes</code>
+      <code>$title_nodes</code>
+      <code>$tracker_id_nodes</code>
+      <code>$tracker_id_nodes</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code>$tracker_id_nodes[0]</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code>$tracker_id_nodes</code>
+    </PossiblyNullIterator>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
     <UndefinedClass>
@@ -31203,6 +30627,9 @@
       <code>$date</code>
       <code>$header</code>
     </MissingPropertyType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$this->date]]></code>
+    </PossiblyFalseArgument>
     <UndefinedThisPropertyAssignment>
       <code><![CDATA[$this->no_data]]></code>
       <code><![CDATA[$this->pane_title]]></code>
@@ -31606,6 +31033,9 @@
       <code>getDayDataSQLQuery</code>
       <code>getMonthDataSQLQuery</code>
     </MissingReturnType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[date("t", mktime(0, 0, 0, date('m', $this->start), 1, date('Y', $this->start)))]]></code>
+    </PossiblyFalseOperand>
     <PossiblyUndefinedVariable>
       <code>$nbr</code>
     </PossiblyUndefinedVariable>
@@ -31639,6 +31069,9 @@
       <code>$titlePeriod</code>
       <code>$year</code>
     </MissingPropertyType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[date('F', mktime(0, 0, 0, $m, $d, $y))]]></code>
+    </PossiblyFalseOperand>
     <PossiblyUndefinedVariable>
       <code>$databarx</code>
       <code>$databarx</code>
@@ -32066,6 +31499,9 @@
       <code>searchTopUsers</code>
       <code>searchTotalUserSize</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$date</code>
+    </PossiblyNullArgument>
     <PossiblyUndefinedVariable>
       <code>$interval</code>
     </PossiblyUndefinedVariable>
@@ -32266,6 +31702,12 @@
       <code>purgeDataBetweenTwoYearsAndThreeMonths</code>
       <code>purgeDataOlderThanTwoYears</code>
     </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code>$first_day_of_month</code>
+      <code>$first_day_of_month</code>
+      <code>$first_day_of_week</code>
+      <code>$first_day_of_week</code>
+    </PossiblyFalseArgument>
   </file>
   <file src="plugins/statistics/include/Statistics_Formatter.class.php">
     <MissingParamType>
@@ -34721,6 +34163,13 @@
       <code>exportToXml</code>
       <code>getExportDumpFile</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$root_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/svn/include/SvnPluginInfo.class.php">
     <MissingParamType>
@@ -34862,21 +34311,10 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/taskboardPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
@@ -35156,49 +34594,30 @@
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
+  <file src="plugins/testmanagement/include/TestManagement/XML/Exporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/testmanagement/include/TestManagement/XML/StepXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$xml_step</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/testmanagement/include/TestManagement/XML/TrackerXMLExporterChangesetValueStepDefinitionXMLExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/testmanagement/include/TestManagement/XML/XMLImport.php">
     <RedundantCastGivenDocblockType>
       <code>(int) $issue_tracker_id</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/testmanagementPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -35257,15 +34676,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testplan/include/testplanPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -35378,6 +34788,16 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/timetracking/include/Timetracking/JiraImporter/JiraXMLExport.php">
+    <PossiblyNullArgument>
+      <code>$xml_timetracking_permission_write</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/timetracking/include/Timetracking/JiraImporter/Worklog/Worklog.php">
     <InvalidArgument>
@@ -35670,25 +35090,19 @@
       <code>isUnique</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/timetracking/include/Timetracking/XML/XMLExport.php">
+    <PossiblyNullArgument>
+      <code>$xml_timetracking_permission_read</code>
+      <code>$xml_timetracking_permission_write</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/timetracking/include/timetrackingPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$params</code>
@@ -35696,20 +35110,7 @@
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>cssfile</code>
-      <code>fill_project_history_sub_events</code>
-      <code>getAdditionalCriteria</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
-      <code>getProjectsWithCriteria</code>
-      <code>getTrackersWithCriteria</code>
-      <code>getUserWidgetList</code>
-      <code>permission_get_name</code>
-      <code>project_admin_ugroup_deletion</code>
-      <code>restResources</code>
-      <code>trackerEventFetchAdminButtons</code>
-      <code>tracker_artifact_editrenderer_add_view_in_collection</code>
-      <code>widgetInstance</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -36324,7 +35725,6 @@
   </file>
   <file src="plugins/tracker/include/REST/v1/ProjectTrackersResource.class.php">
     <MissingParamType>
-      <code>$filter_on_tracker_administration_permission</code>
       <code>$json_query</code>
       <code>$limit</code>
       <code>$offset</code>
@@ -36558,9 +35958,6 @@
     <MissingReturnType>
       <code>getDefaultServiceData</code>
     </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->project->getId()]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/include/SystemEventManager.class.php">
     <InvalidArgument>
@@ -36597,6 +35994,9 @@
       <code>redirectToTracker</code>
       <code>removeArtLinksValueNodeFromXML</code>
     </MissingReturnType>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml_artifacts->children()]]></code>
+    </PossiblyNullIterator>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -36619,7 +36019,6 @@
       <code>executeRedirect</code>
       <code>getRedirect</code>
       <code>isFromOverlay</code>
-      <code>isParentCreationRequested</code>
       <code>process</code>
       <code>processCreate</code>
       <code>redirect</code>
@@ -37483,6 +36882,11 @@
       <code>execute</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/XML/XMLChangeset.php">
+    <PossiblyNullArgument>
+      <code>$changeset_xml</code>
+    </PossiblyNullArgument>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ChangesetValue/ArtifactLink/AddedLinkByTypeCollection.php">
     <MissingParamType>
       <code>$format</code>
@@ -38050,11 +37454,8 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php">
     <DeprecatedMethod>
-      <code>$paginated_by_list_of_tracker_ids</code>
-      <code>$paginated_by_list_of_tracker_ids</code>
       <code>$result</code>
       <code>$result</code>
-      <code>foundRows</code>
       <code>foundRows</code>
       <code>foundRows</code>
       <code>foundRows</code>
@@ -38097,7 +37498,6 @@
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactLinkInfo.class.php">
     <MissingParamType>
       <code>$tracker_id</code>
-      <code>$type</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$artifact_id</code>
@@ -38109,7 +37509,6 @@
     <MissingReturnType>
       <code>getUrl</code>
       <code>setType</code>
-      <code>shouldLinkBeHidden</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$tracker->getGroupId()]]></code>
@@ -38569,6 +37968,10 @@
     <NullableReturnStatement>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyNullArgument>
+      <code>$comment_node</code>
+      <code>$private_ugroups</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php">
     <FalsableReturnStatement>
@@ -38759,6 +38162,11 @@
       <code>fetchRequestedView</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/XML/XMLArtifact.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLArtifactSourcePlatformExtractor.php">
     <MissingReturnType>
       <code>getSourcePlatform</code>
@@ -38780,6 +38188,12 @@
       <code>exportBunchOfArtifacts</code>
       <code>exportBunchOfArtifactsForArchive</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$artifacts_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>asXML</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport.class.php">
     <InvalidScalarArgument>
@@ -38844,12 +38258,8 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportFieldStrategyArtifactLink.class.php">
     <MissingParamType>
-      <code>$children_id</code>
       <code>$linked_artifact_id</code>
       <code>$linked_type</code>
-      <code>$mapped_artifact_id</code>
-      <code>$tracker_id</code>
-      <code>$type</code>
     </MissingParamType>
     <MissingReturnType>
       <code>checkTypeExistOnPlateform</code>
@@ -39053,8 +38463,6 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
@@ -39099,8 +38507,6 @@
       <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
-      <code>quoteSmartImplode</code>
-      <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
@@ -39681,7 +39087,18 @@
       <code><![CDATA[(int) $e->getCode()]]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/ArtifactsXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$artifacts_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Attachment/AttachmentXMLExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <RedundantCast>
       <code><![CDATA[(string) $attachment->getMimeType()]]></code>
     </RedundantCast>
@@ -39707,10 +39124,23 @@
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Comment/CommentXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$comment_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Comment/CommentXMLValueEnhancer.php">
     <RedundantCast>
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/DataChangesetXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$changeset_node</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/ArtifactLinkValue.php">
     <PropertyTypeCoercion>
@@ -39732,6 +39162,14 @@
     </InvalidArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/JiraXmlExporter.php">
+    <PossiblyNullArgument>
+      <code>$requested_node</code>
+      <code>$requested_node[0]</code>
+      <code>$trackers_xml</code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayAccess>
+      <code>$requested_node[0]</code>
+    </PossiblyNullArrayAccess>
     <TypeDoesNotContainType>
       <code>! $dom_node</code>
       <code>! $dom_tracker</code>
@@ -39743,7 +39181,55 @@
       <code>$dom_trackers</code>
     </TypeDoesNotContainType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Reports/XmlReportDoneIssuesExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Reports/XmlReportExporter.php">
+    <PossiblyNullArgument>
+      <code>$reports_node</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Reports/XmlReportOpenIssuesExporter.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Reports/XmlTQLReportExporter.php">
+    <PossiblyNullArgument>
+      <code>$criterias_node</code>
+      <code><![CDATA[$report_node->addChild('renderers')]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Semantic/SemanticsXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$semantics_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <RedundantCast>
       <code><![CDATA[(string) $status_field->getXMLId()]]></code>
     </RedundantCast>
@@ -40634,9 +40120,6 @@
       <code>$type</code>
       <code>$type_label</code>
     </MissingPropertyType>
-    <MissingReturnType>
-      <code>buildForHeader</code>
-    </MissingReturnType>
     <PossiblyNullArgument>
       <code>$artifact</code>
     </PossiblyNullArgument>
@@ -40939,6 +40422,11 @@
       <code>getArtifactsByFieldAndValue</code>
       <code>keep</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/XML/XMLDateField.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/FieldDao.php">
     <DeprecatedMethod>
@@ -41393,6 +40881,14 @@
       <code>searchByFieldId</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindDecoratorExporter.php">
+    <PossiblyNullArgument>
+      <code>$child</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindDecoratorRetriever.php">
     <MissingReturnType>
       <code>getFirstBindValueId</code>
@@ -41434,17 +40930,21 @@
       <code>escapeInt</code>
       <code>escapeIntImplode</code>
       <code>getDa</code>
-      <code>quoteLikeValueSurround</code>
-      <code>quoteLikeValueSurround</code>
       <code>retrieve</code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$keyword</code>
-      <code>$keyword</code>
       <code>$ugroup_name</code>
     </MissingParamType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindStatic/XML/XMLBindStaticValue.php">
+    <PossiblyNullArgument>
+      <code>$decorators</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindStaticDao.php">
     <DeprecatedMethod>
@@ -41598,6 +41098,18 @@
       <code><![CDATA[$this->retrieve($sql)]]></code>
     </PossiblyFalseIterator>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindStaticXmlExporter.php">
+    <PossiblyNullArgument>
+      <code>$child</code>
+      <code>$child</code>
+      <code>$child</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindUgroupsValueDao.php">
     <DeprecatedMethod>
       <code>escapeInt</code>
@@ -41642,6 +41154,11 @@
       <code>show</code>
       <code>toggleHidden</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindUsers/XML/XMLBindUsersValue.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindUsersDao.php">
     <DeprecatedMethod>
@@ -41879,6 +41396,19 @@
       <code>searchByKeyword</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/XML/XMLDecorator.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/XML/XMLListField.php">
+    <PossiblyNullArgument>
+      <code>$items</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/NumericField/NumericFieldValueDao.php">
     <DeprecatedMethod>
       <code>escapeInt</code>
@@ -42040,6 +41570,21 @@
       <code>keep</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/Text/XML/XMLTextField.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/XML/XMLChangesetValue.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/XML/XMLFieldPermission.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/FieldCalculator.php">
     <MissingParamType>
       <code>$stop_on_manual_value</code>
@@ -42135,7 +41680,6 @@
       <code>$force_absolute_ranking</code>
       <code>$format</code>
       <code>$ignore_perms</code>
-      <code>$ignore_perms</code>
       <code>$notifications</code>
       <code>$p</code>
       <code>$parent_id</code>
@@ -42184,10 +41728,13 @@
       <code>$original_field</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <UndefinedMethod>
       <code>accept</code>
       <code>duplicate</code>
-      <code>getFormElements</code>
       <code>save</code>
       <code>searchByFieldId</code>
     </UndefinedMethod>
@@ -42264,7 +41811,6 @@
       <code>$parent_id</code>
       <code>$parent_id</code>
       <code>$row</code>
-      <code>$tracker</code>
       <code>$tracker</code>
       <code>$tracker</code>
       <code>$tracker</code>
@@ -42801,6 +42347,9 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$artifact->getTracker()->getGroupId()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -42890,6 +42439,7 @@
       <code>retrieveValueFromJson</code>
     </MissingReturnType>
     <PossiblyNullReference>
+      <code>addAttribute</code>
       <code>getId</code>
       <code>getValue</code>
       <code>getValue</code>
@@ -43027,6 +42577,10 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyNullArgument>
+      <code>$child</code>
+      <code>$child</code>
+    </PossiblyNullArgument>
     <PossiblyNullReference>
       <code>getValue</code>
     </PossiblyNullReference>
@@ -43331,6 +42885,9 @@
       <code><![CDATA[$artifact->getLastChangeset()->id]]></code>
     </PossiblyNullPropertyFetch>
     <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
       <code>getListValues</code>
     </PossiblyNullReference>
     <PossiblyUndefinedVariable>
@@ -43410,9 +42967,6 @@
     <MoreSpecificReturnType>
       <code>Tracker_FormElement_Field_List</code>
     </MoreSpecificReturnType>
-    <TooManyArguments>
-      <code>getAllValues</code>
-    </TooManyArguments>
     <UndefinedDocblockClass>
       <code>Field</code>
     </UndefinedDocblockClass>
@@ -43706,6 +43260,12 @@
       <code>hideUnwantedValues</code>
       <code>isValid</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <UndefinedDocblockClass>
       <code>Field</code>
     </UndefinedDocblockClass>
@@ -43800,6 +43360,13 @@
     <MissingTemplateParam>
       <code>Tracker_FormElement_Field_List_Bind_Users</code>
     </MissingTemplateParam>
+    <PossiblyNullArgument>
+      <code>$default_values_root</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <TypeDoesNotContainType>
       <code><![CDATA[static::class == 'Tracker_FormElement_Field_String']]></code>
       <code><![CDATA[static::class == 'Tracker_FormElement_Field_Text']]></code>
@@ -43836,7 +43403,6 @@
       <code>getJsonValue</code>
       <code>getLabel</code>
       <code>getLink</code>
-      <code>getUser</code>
       <code>getUserHelper</code>
       <code>getUserManager</code>
       <code>getUserUrl</code>
@@ -44633,6 +44199,11 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/XML/XMLFormElement.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/XML/XMLFormElementFlattenedCollection.php">
     <MissingTemplateParam>
@@ -48683,6 +48254,11 @@
       <code>setRowKey</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/Column/XML/XMLTableColumn.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/GetExportOptionsMenuItemsEvent.php">
     <MissingParamType>
       <code>$additional_content_as_html</code>
@@ -48703,13 +48279,10 @@
       <code>hasKeyInParameters</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/TableRendererForReportRetriever.php">
-    <LessSpecificReturnStatement>
-      <code>$table_renderers</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<Tracker_Report_Renderer_Table>]]></code>
-    </MoreSpecificReturnType>
+  <file src="plugins/tracker/include/Tracker/Report/Renderer/XML/XMLRenderer.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/ResultJoiner.class.php">
     <MissingReturnType>
@@ -48921,6 +48494,18 @@
     <PossiblyInvalidArgument>
       <code>$group_id</code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code>$grandchild</code>
+      <code>$root</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code>$criterion_opts</code>
       <code>$matchingIds</code>
@@ -49011,6 +48596,9 @@
       <code>setIsAdvanced</code>
       <code>updateValue</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_CriteriaFactory.class.php">
     <MissingParamType>
@@ -49292,7 +48880,6 @@
       <code>$store_in_session</code>
       <code>$store_in_session</code>
       <code>$store_in_session</code>
-      <code>$store_in_session</code>
       <code>$to</code>
       <code>$total_rows</code>
       <code>$total_rows</code>
@@ -49381,6 +48968,15 @@
     <PossiblyFalseArgument>
       <code>array_search($key, $xmlMapping)</code>
     </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code>$child</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code>$queries[0]</code>
     </PossiblyUndefinedArrayOffset>
@@ -49507,6 +49103,26 @@
       <code>$new_artifact</code>
       <code>$url_artifact_submit</code>
     </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Report/XML/XMLReport.php">
+    <PossiblyNullArgument>
+      <code>$criterias</code>
+      <code>$renderers</code>
+      <code>$xml_report</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Report/XML/XMLReportCriterion.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_ReportDao.class.php">
     <DeprecatedMethod>
@@ -50197,7 +49813,6 @@
   <file src="plugins/tracker/include/Tracker/Rule/Date/Factory.class.php">
     <InvalidNullableReturnType>
       <code>Tracker_Rule_Date</code>
-      <code>\Tracker_Rule_Date</code>
     </InvalidNullableReturnType>
     <MissingParamType>
       <code>$field_id</code>
@@ -50214,9 +49829,15 @@
       <code>save</code>
     </MissingReturnType>
     <NullableReturnStatement>
-      <code>$date_rule</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code>$duplicate_source_field_id</code>
       <code>$duplicate_target_field_id</code>
@@ -50292,6 +49913,16 @@
       <code><![CDATA[array_search($rule->source_field, $xmlMapping)]]></code>
       <code><![CDATA[array_search($rule->target_field, $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedVariable>
       <code>$duplicate_source_field_id</code>
       <code>$duplicate_source_value_id</code>
@@ -50587,10 +50218,51 @@
       <code>add</code>
     </UndefinedInterfaceMethod>
   </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Contributor/XML/XMLContributorSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Description/XML/XMLDescriptionSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnEffort.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnLinksCount.php">
     <DeprecatedMethod>
       <code>getAnArtifactLinkField</code>
     </DeprecatedMethod>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDone.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/XML/XMLDoneSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Status/XML/XMLStatusSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframe.php">
     <MissingReturnType>
@@ -50607,6 +50279,89 @@
     <RedundantCast>
       <code><![CDATA[(int) $tracker->getId()]]></code>
     </RedundantCast>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeImpliedFromAnotherTracker.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeWithDuration.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeWithEndDate.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/XML/XMLTimeframeSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Title/XML/XMLTitleSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltip.php">
+    <InvalidReturnType>
+      <code>bool</code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code>$fields</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$fields</code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getDao</code>
+      <code>setFields</code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($field->id, $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltipDao.php">
+    <DeprecatedMethod>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>parent::__construct()</code>
+      <code>prepareRanking</code>
+      <code>retrieve</code>
+      <code>update</code>
+      <code>update</code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code>$field_id</code>
+      <code>$field_id</code>
+      <code>$rank</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>add</code>
+      <code>remove</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic.class.php">
     <MissingReturnType>
@@ -50679,6 +50434,10 @@
     <PossiblyNullPropertyAssignmentValue>
       <code>$list_field</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_ContributorFactory.class.php">
     <MissingReturnType>
@@ -50703,6 +50462,10 @@
     <PossiblyNullPropertyAssignmentValue>
       <code>$text_field</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_DescriptionFactory.class.php">
     <MissingReturnType>
@@ -50738,6 +50501,12 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Title.class.php">
     <ArgumentTypeCoercion>
@@ -50757,11 +50526,20 @@
     <PossiblyNullPropertyAssignmentValue>
       <code>$text_field</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_TitleFactory.class.php">
-    <MissingReturnType>
-      <code>getByTracker</code>
-    </MissingReturnType>
+  <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLSemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_ContributorDao.class.php">
     <DeprecatedMethod>
@@ -50908,55 +50686,6 @@
     <MissingReturnType>
       <code>getLabel</code>
       <code>getName</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltip.php">
-    <InvalidReturnType>
-      <code>bool</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$fields</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$fields</code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getDao</code>
-      <code>getFields</code>
-      <code>setFields</code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($field->id, $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltipDao.php">
-    <DeprecatedMethod>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>parent::__construct()</code>
-      <code>prepareRanking</code>
-      <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$rank</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>add</code>
-      <code>remove</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker.class.php">
@@ -51140,10 +50869,18 @@
       <code><![CDATA[$this->getGroupId()]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
+      <code>$child</code>
+      <code>$child</code>
+      <code>$child</code>
+      <code>$child</code>
+      <code>$child</code>
+      <code>$node_perms</code>
       <code>$source_artifact</code>
       <code>$user</code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
       <code>getId</code>
     </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
@@ -51197,7 +50934,6 @@
     <MissingParamType>
       <code>$description</code>
       <code>$description</code>
-      <code>$group_id</code>
       <code>$id_template</code>
       <code>$itemname</code>
       <code>$itemname</code>
@@ -51230,7 +50966,6 @@
       <code>clearInstance</code>
       <code>createFromTV3LegacyService</code>
       <code>createTracker</code>
-      <code>duplicate</code>
       <code>duplicateTracker</code>
       <code>duplicateWebhooks</code>
       <code>markAsDeleted</code>
@@ -51295,7 +51030,6 @@
       <code>displayFooter</code>
       <code>displayMigrateFromTV3Option</code>
       <code>doCreateTracker</code>
-      <code>duplicate</code>
       <code>duplicateReferences</code>
       <code>getArtifactFactory</code>
       <code>getArtifactReportFactory</code>
@@ -51593,6 +51327,10 @@
     <MissingReturnType>
       <code>exportTrackerWebhooksInXML</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/ProjectRendererWidgetXMLImporter.php">
     <MissingParamType>
@@ -51644,6 +51382,10 @@
     <MissingReturnType>
       <code>isAjax</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_Renderer.class.php">
     <DeprecatedFunction>
@@ -51743,6 +51485,15 @@
       <code><![CDATA[(int) $tracker->getId()]]></code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Workflow/XML/XMLSimpleWorkflow.php">
+    <PossiblyNullArgument>
+      <code>$workflow</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/XML/ChildrenCollector.php">
     <InvalidNullableReturnType>
       <code>int</code>
@@ -51782,6 +51533,10 @@
       <code>exportFullHistory</code>
       <code>exportSnapshotWithoutComments</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ArtifactXMLExporterBuilder.php">
     <MissingParamType>
@@ -51850,6 +51605,9 @@
       <code>getFieldChangeType</code>
       <code>getFileInfoIdForXML</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $file_info->getId()]]></code>
     </RedundantCastGivenDocblockType>
@@ -51921,6 +51679,9 @@
       <code>getFieldChangeType</code>
       <code>isUsed</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <UndefinedMethod>
       <code>getPerms</code>
       <code>getUgroupNamesFromPerms</code>
@@ -51956,6 +51717,9 @@
       <code>export</code>
       <code>getFieldChangeType</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValueXMLExporterVisitor.class.php">
     <MissingReturnType>
@@ -51995,6 +51759,14 @@
       <code>exportFullHistory</code>
       <code>exportWithoutComments</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$changeset_xml</code>
+      <code>$comments_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ChildrenXMLExporter.php">
     <MissingReturnType>
@@ -52004,11 +51776,52 @@
       <code>$last_changeset</code>
     </PossiblyNullArgument>
   </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeArtifactLinksBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeDateBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeFileBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeFloatBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeListBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeStringBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/FieldChange/FieldChangeTextBuilder.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/FileInfoXMLExporter.php">
     <MissingReturnType>
       <code>appendFileToArtifactNode</code>
       <code>getFileInfoIdForXML</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $artifact->getId()]]></code>
       <code><![CDATA[(int) $artifact->getId()]]></code>
@@ -52128,6 +51941,9 @@
       <code>removeExistingUgroupNodes</code>
       <code>update</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Updater/FieldChange/FieldChangeStringXMLUpdater.class.php">
     <MissingReturnType>
@@ -52234,6 +52050,13 @@
       <code><![CDATA[date('c', $moved_time)]]></code>
       <code><![CDATA[date('c', $moved_time)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code>$comment_tag</code>
+      <code>$last_changeset</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Updater/TemporaryFileCreator.class.php">
     <MissingReturnType>
@@ -52246,6 +52069,11 @@
     <MissingReturnType>
       <code>update</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/XMLTracker.php">
+    <PossiblyNullArgument>
+      <code>$tracker_xml</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/dao/ProjectDao.php">
     <MissingParamType>
@@ -52595,6 +52423,17 @@
       <code><![CDATA[$project->getID()]]></code>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code>$child</code>
+      <code>$natures</code>
+      <code>$tracker_xml_node</code>
+      <code>$triggers_xml</code>
+      <code>$xml_content</code>
+      <code>$xml_trackers</code>
+      <code>$xml_trackers</code>
+      <code>$xml_trackers</code>
+      <code>$xml_trackers</code>
+    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/TrackerXmlFieldsMapping.php">
     <MissingParamType>
@@ -52652,7 +52491,6 @@
       <code>$extraction_path</code>
       <code>$extraction_path</code>
       <code>$filepath</code>
-      <code>$tracker_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$tracker->cannedResponses]]></code>
@@ -52662,7 +52500,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code>activateArtlinkV2</code>
-      <code>addTrackerProperties</code>
       <code>disableArtifactLinkTypes</code>
       <code>displayWarnings</code>
       <code>fillFieldMappingFromExistingTracker</code>
@@ -52676,6 +52513,17 @@
     <PossiblyNullArrayAccess>
       <code>$tracker_attributes[$attribute_name]</code>
     </PossiblyNullArrayAccess>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <RedundantCast>
       <code>(string) $description</code>
       <code>(string) $itemname</code>
@@ -52794,6 +52642,9 @@
     <MissingReturnType>
       <code>accept</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildDao.class.php">
     <DeprecatedMethod>
@@ -52887,6 +52738,10 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -52901,6 +52756,10 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field_Int.class.php">
     <InvalidScalarArgument>
@@ -52912,6 +52771,10 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/dao/Transition_PostAction_FieldDao.class.php">
     <DeprecatedMethod>
@@ -53010,6 +52873,10 @@
     <MissingReturnType>
       <code>accept</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $field->getId()]]></code>
     </RedundantCastGivenDocblockType>
@@ -53037,6 +52904,10 @@
     <MissingReturnType>
       <code>accept</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $fieldset->getID()]]></code>
     </RedundantCastGivenDocblockType>
@@ -53105,6 +52976,9 @@
       <code>setFrozenFieldsFactory</code>
       <code>setHiddenFieldsetsFactory</code>
     </MissingReturnType>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml->children()]]></code>
+    </PossiblyNullIterator>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/CIBuildValue.php">
     <MissingReturnType>
@@ -53282,6 +53156,17 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($workflow->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code>$states_xml</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/SimpleMode/State/TransitionRetriever.php">
     <DeprecatedMethod>
@@ -53333,6 +53218,13 @@
       <code><![CDATA[WorkflowFactory::instance()->getWorkflow($this->workflow_id)]]></code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition.class.php">
     <MissingParamType>
@@ -53353,6 +53245,9 @@
       <code>accept</code>
       <code>saveObject</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/CommentNotEmpty/Dao.class.php">
     <MissingParamType>
@@ -53401,6 +53296,10 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($field->getId(), $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/FieldNotEmpty/Dao.class.php">
     <DeprecatedMethod>
@@ -53486,6 +53385,11 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$tracker->getGroupId()]]></code>
     </PossiblyInvalidArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/Permissions/Factory.class.php">
     <DeprecatedMethod>
@@ -53726,6 +53630,14 @@
       <code>$field</code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
+      <code>addChild</code>
       <code>getAllValues</code>
     </PossiblyNullReference>
     <PossiblyUndefinedVariable>
@@ -53818,10 +53730,16 @@
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->field_id, $xmlMapping)]]></code>
     </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code>$child</code>
+    </PossiblyNullArgument>
     <PossiblyNullPropertyAssignmentValue>
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <UndefinedMethod>
       <code>getBind</code>
     </UndefinedMethod>
@@ -54026,10 +53944,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code>$project_with_tracker_administration</code>
@@ -54068,9 +53982,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$version</code>
     </MissingParamType>
     <MissingPropertyType>
@@ -54081,14 +53992,12 @@
     <MissingReturnType>
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
-      <code>agiledashboard_event_rest_options_burndown</code>
       <code>agiledashboard_export_xml</code>
       <code>backend_alias_get_aliases</code>
       <code>buildRightVersionOfMilestonesBurndownResource</code>
       <code>build_reference</code>
       <code>burning_parrot_get_stylesheets</code>
       <code>can_user_access_ugroup_info</code>
-      <code>checkTypesExistsOnPlateform</code>
       <code>clearRecentlyVisitedArtifacts</code>
       <code>collectGlyphLocations</code>
       <code>collectRoutesEvent</code>
@@ -54136,7 +54045,6 @@
       <code>project_admin_ugroup_deletion</code>
       <code>project_creation_remove_legacy_services</code>
       <code>project_registration_activate_service</code>
-      <code>referenceGetTooltipContentEvent</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
       <code>service_public_areas</code>
@@ -54708,14 +54616,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker_encryption/include/tracker_encryptionPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$key</code>
@@ -54732,12 +54632,7 @@
     <MissingReturnType>
       <code>displayTrackerKeyForm</code>
       <code>editTrackerKey</code>
-      <code>fill_project_history_sub_events</code>
-      <code>getHooksAndCallbacks</code>
       <code>tracker_encryption_add_key</code>
-      <code>tracker_event_delete_tracker</code>
-      <code>tracker_event_fetch_admin_buttons</code>
-      <code>tracker_formelement_get_classnames</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -54891,16 +54786,10 @@
     </MissingParamType>
   </file>
   <file src="plugins/tuleap_synchro/include/tuleap_synchroPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>collectRoutesEvent</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
@@ -54962,6 +54851,7 @@
       <code>groupLogsByTimestamp</code>
     </MissingReturnType>
     <PossiblyFalseOperand>
+      <code><![CDATA[date('H', $timestamp)]]></code>
       <code><![CDATA[date('d M Y', $timestamp)]]></code>
     </PossiblyFalseOperand>
   </file>
@@ -55190,6 +55080,10 @@
     <PossiblyNullPropertyAssignmentValue>
       <code>$velocity_field</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $field->getId()]]></code>
     </RedundantCastGivenDocblockType>
@@ -55261,6 +55155,11 @@
     <MissingReturnType>
       <code>hasAtLeastOneTrackerCorrectlyConfigured</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/velocity/include/Velocity/Semantic/XML/XMLVelocitySemantic.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/velocity/include/Velocity/VelocityCalculator.php">
     <MissingReturnType>
@@ -55335,18 +55234,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/velocity/include/velocityPlugin.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
       <code>$parameters</code>
@@ -55354,17 +55241,9 @@
       <code>$params</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>additionalPlanningConfigurationWarningsRetriever</code>
-      <code>burningParrotGetJavascriptFiles</code>
-      <code>burningParrotGetStylesheets</code>
-      <code>cssfile</code>
-      <code>detailsChartPresentersRetriever</code>
-      <code>getHooksAndCallbacks</code>
       <code>getPluginInfo</code>
       <code>isAPlanningOverviewRequest</code>
       <code>isAPlanningTrackers</code>
-      <code>tracker_event_manage_semantics</code>
-      <code>tracker_event_semantic_from_xml</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -55549,11 +55428,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/CLI/Command/ConfigGetCommand.php">
-    <MissingReturnType>
-      <code>configure</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/CLI/Command/ConfigSetCommand.php">
     <MissingReturnType>
       <code>configure</code>
     </MissingReturnType>
@@ -55926,6 +55800,13 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Dashboard/Project/DashboardXMLExporter.php">
+    <PossiblyNullArgument>
+      <code>$dashboards_element</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <TypeDoesNotContainType>
       <code>! $dom</code>
       <code>$dom</code>
@@ -56389,10 +56270,7 @@
       <code>commit</code>
       <code>commit</code>
       <code>commit</code>
-      <code>commit</code>
       <code>enableExceptionsOnError</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
@@ -56490,13 +56368,10 @@
       <code>rollBack</code>
       <code>rollBack</code>
       <code>rollBack</code>
-      <code>rollBack</code>
       <code>startTransaction</code>
       <code>startTransaction</code>
       <code>startTransaction</code>
       <code>startTransaction</code>
-      <code>startTransaction</code>
-      <code>update</code>
       <code>update</code>
       <code>update</code>
       <code>update</code>
@@ -56555,12 +56430,6 @@
       <code>$dashboard_id</code>
       <code>$dashboard_id</code>
       <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
-      <code>$dashboard_id</code>
-      <code>$dashboard_type</code>
-      <code>$dashboard_type</code>
-      <code>$dashboard_type</code>
       <code>$dashboard_type</code>
       <code>$dashboard_type</code>
       <code>$dashboard_type</code>
@@ -56601,9 +56470,6 @@
       <code>$owner_id</code>
       <code>$owner_id</code>
       <code>$owner_id</code>
-      <code>$owner_id</code>
-      <code>$owner_id</code>
-      <code>$owner_id</code>
       <code>$owner_type</code>
       <code>$project_id</code>
       <code>$rank</code>
@@ -56618,9 +56484,6 @@
       <code>$template_widget_id</code>
       <code>$user_id</code>
       <code>$user_id</code>
-      <code>$widget_id</code>
-      <code>$widget_id</code>
-      <code>$widget_id</code>
       <code>$widget_id</code>
       <code>$widget_id</code>
       <code>$widget_id</code>
@@ -56877,6 +56740,24 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
+  </file>
+  <file src="src/common/Dashboard/XML/XMLColumn.php">
+    <PossiblyNullArgument>
+      <code>$column</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/common/Dashboard/XML/XMLDashboard.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/Dashboard/XML/XMLLine.php">
+    <PossiblyNullArgument>
+      <code>$line</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/Error/ErrorDependenciesInjector.php">
     <MissingReturnType>
@@ -57142,6 +57023,12 @@
     <InvalidOperand>
       <code><![CDATA[$this->purgeFile($file, $backend)]]></code>
     </InvalidOperand>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->release_factory]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>Object{FRSReleaseFactory}</code>
+    </InvalidReturnType>
     <MissingParamType>
       <code>$array</code>
       <code>$backend</code>
@@ -57820,6 +57707,11 @@
       <code><![CDATA[$attrs['src']]]></code>
       <code><![CDATA[$attrs['url']]]></code>
     </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml_file->children()]]></code>
+      <code><![CDATA[$xml_pkg->children()]]></code>
+      <code><![CDATA[$xml_rel->xpath('file')]]></code>
+    </PossiblyNullIterator>
     <PossiblyNullPropertyAssignmentValue>
       <code>$filetype_dao</code>
       <code>$permission_manager</code>
@@ -60045,11 +59937,6 @@
       <code>setPluginRestricted</code>
       <code>unsetPluginRestricted</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Plugin/PluginWithLegacyInternalRouting.php">
-    <DeprecatedMethod>
-      <code>addHook</code>
-    </DeprecatedMethod>
   </file>
   <file src="src/common/Plugin/SerializedPluginProxy.php">
     <LessSpecificReturnStatement>
@@ -62419,6 +62306,16 @@
       <code>exportProjectUgroup</code>
       <code>exportProjectUgroups</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$members_node</code>
+      <code>$ugroups_node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addChild</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/Project/ProjectXMLImporter.class.php">
     <MissingDocblockType>
@@ -62852,6 +62749,11 @@
       <code><![CDATA[(int) $service->getId()]]></code>
     </RedundantCast>
   </file>
+  <file src="src/common/Project/Service/XML/XMLService.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
   <file src="src/common/Project/ServiceAccessEvent.php">
     <MissingParamType>
       <code>$service_name</code>
@@ -63029,6 +62931,14 @@
       <code>$project_id</code>
       <code><![CDATA[$user->getId()]]></code>
     </PossiblyInvalidArgument>
+  </file>
+  <file src="src/common/Project/UGroups/XML/XMLUserGroup.php">
+    <PossiblyNullArgument>
+      <code>$members</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/Project/UgroupDuplicator.php">
     <MissingParamType>
@@ -63356,6 +63266,15 @@
       <code>getUsersXML</code>
     </MissingReturnType>
   </file>
+  <file src="src/common/Project/XML/Import/ExternalFieldsExtractor.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$xml_element->xpath("//*[@REF='$external_field_id']")[0]]]></code>
+      <code><![CDATA[$xml_element->xpath("//*[@REF='$external_field_id']")[0][0]]]></code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullIterator>
+      <code><![CDATA[$xml_element->xpath("//*[@REF='$external_field_id']")]]></code>
+    </PossiblyNullIterator>
+  </file>
   <file src="src/common/Project/XML/Import/ImportConfig.php">
     <MissingParamType>
       <code>$force</code>
@@ -63404,6 +63323,17 @@
     <TypeDoesNotContainType>
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
+  </file>
+  <file src="src/common/Project/XML/XMLProject.php">
+    <PossiblyNullArgument>
+      <code>$dashboards</code>
+      <code>$services</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/common/Project/XML/XMLUserGroups.php">
+    <PossiblyNullArgument>
+      <code>$ugroups</code>
+    </PossiblyNullArgument>
   </file>
   <file src="src/common/Queue/Noop/PersistentQueue.php">
     <MissingParamType>
@@ -63964,11 +63894,7 @@
       <code>rowCount</code>
       <code>rowCount</code>
     </DeprecatedMethod>
-    <LessSpecificReturnStatement>
-      <code>$referencesInstances</code>
-    </LessSpecificReturnStatement>
     <MissingClosureReturnType>
-      <code>function ($m) use ($self, $group_id, $reftype) {</code>
       <code>function ($match) {</code>
     </MissingClosureReturnType>
     <MissingParamType>
@@ -64084,7 +64010,6 @@
       <code>insertLinksForMentions</code>
       <code>insertMentionCallback</code>
       <code>insertReferences</code>
-      <code>loadExtraFormats</code>
       <code>loadReference</code>
       <code>loadReferenceFromKeyword</code>
       <code>loadReferenceFromKeywordAndNumArgs</code>
@@ -64094,9 +64019,6 @@
       <code>updateProjectReferenceShortName</code>
       <code>updateReference</code>
     </MissingReturnType>
-    <MoreSpecificReturnType>
-      <code>array</code>
-    </MoreSpecificReturnType>
     <NullableReturnStatement>
       <code>null</code>
       <code>null</code>
@@ -64252,40 +64174,6 @@
       <code>$handle_resource</code>
     </MissingParamType>
   </file>
-  <file src="src/common/SVNCore/SVNAccessFile.class.php">
-    <InvalidReturnStatement>
-      <code>$currentSection</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>String</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$contents</code>
-      <code>$contents</code>
-      <code>$svn_dir</code>
-      <code>$svn_dir</code>
-      <code>$verbose</code>
-      <code>$verbose</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$platformBlock</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>parseGroup</code>
-      <code>parseGroupLinesByRepositories</code>
-      <code>setPlatformBlock</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code>$currentSection</code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullArgument>
-      <code>$verbose</code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyAssignmentValue>
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
   <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
     <MissingReturnType>
       <code>invalidateProjectCache</code>
@@ -64294,77 +64182,19 @@
   <file src="src/common/SVNCore/SVN_AccessFile_DAO.class.php">
     <DeprecatedMethod>
       <code>DataAccessObject</code>
-      <code>commit</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>quoteSmart</code>
       <code>retrieve</code>
       <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>rollBack</code>
-      <code>startTransaction</code>
-      <code>update</code>
-      <code>updateAndGetLastId</code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code>$content</code>
       <code>$group_id</code>
       <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$version_id</code>
-      <code>$version_id</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>addNewVersion</code>
       <code>getAllVersions</code>
       <code>getCurrentVersionNumber</code>
-      <code>getLastVersionNumber</code>
-      <code>getVersionContent</code>
-      <code>linkNewVersionIdToProject</code>
-      <code>saveNewAccessFileVersionInProject</code>
-      <code>updateAccessFileVersionInProject</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_NoFilePresenter.php">
-    <MissingReturnType>
-      <code>access_form_title</code>
-      <code>repo_not_created_label</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_Presenter.php">
-    <MissingParamType>
-      <code>$content</code>
-      <code>$current_version_title</code>
-      <code>$default_content</code>
-      <code>$version_number</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>access_ctrl_file</code>
-      <code>access_form_title</code>
-      <code>button_new_version_label</code>
-      <code>button_other_version_label</code>
-      <code>default_formatted_content</code>
-      <code>other_version_title</code>
-      <code>permissions_warning</code>
-      <code>policy</code>
-      <code>project_id</code>
-      <code>saved_on</code>
-      <code>select_version</code>
-      <code>version_number</code>
     </MissingReturnType>
   </file>
   <file src="src/common/SVNCore/SVN_AccessFile_Writer.class.php">
@@ -64680,26 +64510,6 @@
     <PossiblyFalseArgument>
       <code>strpos($content, $content_type_line)</code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="src/common/SVNCore/general-settings/SVN_GeneralSettingsPresenter.php">
-    <MissingReturnType>
-      <code>btn_submit</code>
-      <code>mandatory_ref_comment</code>
-      <code>mandatory_ref_title</code>
-      <code>off</code>
-      <code>on</code>
-      <code>preamble_title</code>
-      <code>project_id</code>
-      <code>svn_can_change_log</code>
-      <code>svn_can_change_log_comment</code>
-      <code>svn_can_change_log_title</code>
-      <code>svn_mandatory_ref</code>
-      <code>svn_preamble</code>
-      <code>svn_tracked</code>
-      <code>title</code>
-      <code>tracking_comment</code>
-      <code>tracking_title</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
     <MissingParamType>
@@ -67068,6 +66878,9 @@
     <MissingReturnType>
       <code>add</code>
     </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$user_node</code>
+    </PossiblyNullArgument>
   </file>
   <file src="src/common/User/XML/UserXMLExporter.class.php">
     <MissingParamType>
@@ -67082,6 +66895,11 @@
       <code>exportUserByMail</code>
       <code>exportUserByUserId</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/Webhook/Emitter.php">
     <MissingReturnType>
@@ -67234,6 +67052,9 @@
     <MissingReturnType>
       <code>cloneContent</code>
     </MissingReturnType>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/Widget/ProjectHeartbeat.php">
     <MissingReturnType>
@@ -67860,6 +67681,21 @@
       <code>setIcon</code>
       <code>setTitle</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/Widget/XML/XMLPreference.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/Widget/XML/XMLPreferenceValue.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/Widget/XML/XMLWidget.php">
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/common/account/RegisterAdminPrefillValuesPresenter.class.php">
     <MissingParamType>
@@ -71960,15 +71796,21 @@
     </MissingReturnType>
   </file>
   <file src="src/common/date/TimePeriodWithoutWeekEnd.class.php">
+    <InvalidReturnStatement>
+      <code>$dates</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>string[]</code>
+    </InvalidReturnType>
     <MissingParamType>
       <code>$day</code>
       <code>$duration</code>
     </MissingParamType>
-    <RedundantCastGivenDocblockType>
+    <RedundantCast>
       <code><![CDATA[(string) date('Y-m-d')]]></code>
       <code><![CDATA[(string) date('Y-m-d', $_SERVER['REQUEST_TIME'])]]></code>
       <code><![CDATA[(string) date('Y-m-d', $day)]]></code>
-    </RedundantCastGivenDocblockType>
+    </RedundantCast>
   </file>
   <file src="src/common/docmanv1/XMLExport.class.php">
     <InvalidPropertyAssignmentValue>
@@ -72886,7 +72728,6 @@
       <code>invalidateFrontRouter</code>
       <code>invalidateLanguage</code>
       <code>invalidatePlugin</code>
-      <code>invalidatePluginBasedCaches</code>
       <code>invalidateRestler</code>
       <code>invalidateTemplateEngine</code>
       <code>invalidateWSDL</code>
@@ -73046,34 +72887,6 @@
             new PlaceHolderBuilder(ProjectManager::instance())
         )]]></code>
     </TooManyArguments>
-  </file>
-  <file src="src/common/include/lib/PHP_BigFile.class.php">
-    <ForbiddenCode>
-      <code>`$cmd`</code>
-      <code>`$cmd`</code>
-      <code>`$cmd`</code>
-      <code><![CDATA[`md5sum $filename| awk '{ print $1 }'`]]></code>
-      <code>`stat -c%s $filename`</code>
-    </ForbiddenCode>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->offset >= $this->filesize]]></code>
-      <code>$written</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>Return</code>
-      <code>Should</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$file</code>
-    </MissingParamType>
-    <PossiblyInvalidOperand>
-      <code>$written</code>
-    </PossiblyInvalidOperand>
-    <UndefinedDocblockClass>
-      <code>Return</code>
-      <code>Return</code>
-      <code>Should</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/language/BaseLanguage.class.php">
     <MissingParamType>
@@ -74273,12 +74086,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEvent_SVN_AUTH_CACHE_CHANGE.class.php">
-    <MissingReturnType>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/system_event/include/SystemEvent_SVN_UPDATE_HOOKS.class.php">
     <MissingReturnType>
       <code>injectDependencies</code>
       <code>process</code>
@@ -78074,6 +77881,9 @@
       <code>displayAdd</code>
       <code>displayRSS</code>
     </MissingReturnType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[gmdate('D, d M Y h:i:s', db_result($orig_date, 0, 'date'))]]></code>
+    </PossiblyFalseOperand>
     <PossiblyNullArgument>
       <code>$user</code>
       <code>$user</code>
@@ -80342,12 +80152,22 @@
     <MissingReturnType>
       <code>merge</code>
     </MissingReturnType>
+    <PossiblyNullIterator>
+      <code><![CDATA[$source2->children()]]></code>
+    </PossiblyNullIterator>
   </file>
   <file src="src/common/xml/SimpleXMLCDATAFactory.class.php">
     <MissingParamType>
       <code>$node_value</code>
       <code>$node_value</code>
     </MissingParamType>
+    <PossiblyNullArgument>
+      <code>$node</code>
+      <code>$node</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>addAttribute</code>
+    </PossiblyNullReference>
     <RedundantCastGivenDocblockType>
       <code>(string) $name</code>
       <code>(string) $value</code>
@@ -80959,6 +80779,12 @@
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
+  </file>
+  <file src="src/www/empty2.php">
+    <ForbiddenCode>
+      <code>var_dump($non_unique_uids)</code>
+      <code><![CDATA[var_dump(ForgeConfig::get('sys_auth_type'))]]></code>
+    </ForbiddenCode>
   </file>
   <file src="src/www/file/admin/editproc.php">
     <DeprecatedFunction>
@@ -82257,6 +82083,12 @@
       <code>null</code>
     </NullArgument>
     <PossiblyFalseArgument>
+      <code>$datestr</code>
+      <code>$datestr</code>
+      <code>$datestr</code>
+      <code>$datestr</code>
+      <code>$datestr</code>
+      <code>$datestr</code>
       <code><![CDATA[strpos($domain, ';')]]></code>
       <code><![CDATA[strpos($expires, ';')]]></code>
       <code><![CDATA[strpos($name, ':')]]></code>
@@ -83435,7 +83267,6 @@
       <code>groupAddHistory</code>
       <code>quoteLikeValueSuffix</code>
       <code>quoteLikeValueSurround</code>
-      <code>quoteLikeValueSurround</code>
     </DeprecatedMethod>
     <InvalidReturnStatement>
       <code>true</code>
@@ -83460,7 +83291,6 @@
       <code>$group_id</code>
       <code>$group_templates</code>
       <code>$instances</code>
-      <code>$keyword</code>
       <code>$keyword</code>
       <code>$show_suspended</code>
       <code>$ugroup_description</code>
@@ -83765,6 +83595,10 @@
     </DeprecatedFunction>
   </file>
   <file src="src/www/soap/common/group.php">
+    <InvalidArgument>
+      <code>$group</code>
+      <code>$project</code>
+    </InvalidArgument>
     <InvalidReturnStatement>
       <code>$e</code>
       <code>$e</code>
@@ -83908,6 +83742,11 @@
     </UndefinedMethod>
   </file>
   <file src="src/www/soap/frs/frs.php">
+    <InvalidArgument>
+      <code>$file</code>
+      <code>$package</code>
+      <code>$release</code>
+    </InvalidArgument>
     <InvalidNullableReturnType>
       <code>array</code>
       <code>array</code>
@@ -84245,6 +84084,7 @@
       <code>getRequired</code>
     </DeprecatedMethod>
     <InvalidArgument>
+      <code>$a</code>
       <code>$artifact</code>
       <code>$artifact</code>
       <code>$artifact</code>
@@ -85131,22 +84971,8 @@
       <code>$HTML</code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/svn/admin/access_control.php">
-    <UndefinedGlobalVariable>
-      <code>$group_id</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/svn/admin/general_settings.php">
-    <UndefinedGlobalVariable>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-    </UndefinedGlobalVariable>
-  </file>
   <file src="src/www/svn/admin/immutable_tags.php">
     <UndefinedGlobalVariable>
-      <code>$Language</code>
       <code>$Language</code>
       <code>$group_id</code>
       <code>$group_id</code>
@@ -85174,7 +85000,6 @@
       <code>$svnNotificationsDetails</code>
     </DeprecatedMethod>
     <UndefinedGlobalVariable>
-      <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
@@ -85270,15 +85095,9 @@
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
-      <code>db_ei($group_id)</code>
       <code>db_ei($rev_id)</code>
-      <code>db_ei($svn_can_change_log)</code>
-      <code>db_ei($svn_mandatory_ref)</code>
-      <code>db_ei($svn_tracked)</code>
       <code><![CDATA[db_ei((gmdate('U') - $period))]]></code>
-      <code>db_es(htmlspecialchars($svn_preamble))</code>
       <code>db_es(substr($no_access, 1))</code>
-      <code>db_query($query)</code>
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
@@ -85288,20 +85107,14 @@
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
-      <code>$group_id</code>
       <code>$order</code>
       <code>$period</code>
       <code>$rev_id</code>
-      <code>$svn_can_change_log</code>
-      <code>$svn_mandatory_ref</code>
-      <code>$svn_preamble</code>
-      <code>$svn_tracked</code>
     </MissingParamType>
     <MissingReturnType>
       <code>svn_data_get_revision_detail</code>
       <code>svn_data_get_svn_history</code>
       <code>svn_data_get_technicians</code>
-      <code>svn_data_update_general_settings</code>
     </MissingReturnType>
   </file>
   <file src="src/www/svn/svn_intro.php">
@@ -85355,11 +85168,8 @@
       <code>$chunksz</code>
       <code>$commit_id</code>
       <code>$commiter</code>
-      <code>$contents</code>
-      <code>$contents</code>
       <code>$criteria_list</code>
       <code>$criteria_list</code>
-      <code>$display</code>
       <code>$filename</code>
       <code>$foundRows</code>
       <code>$group_id</code>
@@ -85378,10 +85188,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$path</code>
-      <code>$project_svnroot</code>
-      <code>$project_svnroot</code>
-      <code>$project_svnroot</code>
-      <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
       <code>$project_svnroot</code>
@@ -85412,13 +85218,9 @@
       <code>svn_utils_make_viewlink</code>
       <code>svn_utils_parse_access_file</code>
       <code>svn_utils_read_svn_access_file</code>
-      <code>svn_utils_read_svn_access_file_defaults</code>
       <code>svn_utils_show_revision_detail</code>
       <code>svn_utils_show_revision_list</code>
-      <code>svn_utils_svn_repo_exists</code>
       <code>svn_utils_technician_box</code>
-      <code>svn_utils_write_svn_access_file</code>
-      <code>svn_utils_write_svn_access_file_with_defaults</code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code>$idx</code>

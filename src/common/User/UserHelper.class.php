@@ -201,7 +201,7 @@ class UserHelper implements BuildDisplayName
      *
      * @see getDisplayName
      *
-     * @template T as PFUser|null
+     * @template T of PFUser|null
      * @psalm-param T $user
      * @psalm-return (T is PFUser ? string : null)
      */
