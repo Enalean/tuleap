@@ -7,6 +7,9 @@ dependencies:
   '@simplewebauthn/typescript-types':
     specifier: ^7.0.0
     version: 7.0.0
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fault

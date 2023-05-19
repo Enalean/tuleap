@@ -34,6 +34,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\UserPreferencesHeader;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSourceDao;
 
 final class AccountController implements DispatchableWithRequest, DispatchableWithBurningParrot
@@ -61,7 +62,10 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
 
         $presenter = new AccountPresenter(
             $tabs,
-            ! empty($sources)
+            array_map(
+                static fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source),
+                $sources
+            )
         );
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->vite_assets, 'src/account.ts'));

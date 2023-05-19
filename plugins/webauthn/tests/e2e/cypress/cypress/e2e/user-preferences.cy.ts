@@ -31,10 +31,10 @@ describe("User preferences | WebAuthn", () => {
             cy.get("[data-test=name-modal-input]").type("My awesome key");
             cy.get("[data-test=name-modal-button]").click();
 
-            cy.get("[data-test=registered-section]").should("be.visible");
+            cy.get("[data-test=check-button]").should("be.visible");
 
             cy.get("[data-test=check-button]").click();
-            cy.get("[data-test=webauthn-message]").contains("Success!");
+            cy.get("[data-test=webauthn-alert]").contains("Success!");
         });
     });
 });
