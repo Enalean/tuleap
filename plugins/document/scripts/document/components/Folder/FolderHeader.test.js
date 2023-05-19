@@ -105,7 +105,6 @@ describe("FolderHeader", () => {
             const event = { detail: { current_item: { type: TYPE_LINK } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
             await nextTick();
-            await wrapper.vm.shown_new_version_modal();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
         });
 
@@ -115,7 +114,6 @@ describe("FolderHeader", () => {
             const event = { item: { type: TYPE_EMPTY }, type: TYPE_LINK };
             wrapper.vm.showCreateNewVersionModalForEmpty(event);
             await nextTick();
-            await wrapper.vm.shown_new_version_modal();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
         });
 
@@ -136,7 +134,6 @@ describe("FolderHeader", () => {
             const event = { detail: { current_item: { type: TYPE_EMPTY, status: "" } } };
             wrapper.vm.showUpdateItemPropertiesModal(event);
             await nextTick();
-            await wrapper.vm.shown_update_properties_modal();
             expect(wrapper.find("[data-test=document-update-properties-modal]").exists()).toBe(
                 true
             );
