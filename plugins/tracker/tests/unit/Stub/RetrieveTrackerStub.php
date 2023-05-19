@@ -24,31 +24,38 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use Tracker;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class RetrieveTrackerStub implements RetrieveTracker
 {
-    private function __construct(private ?Tracker $tracker)
+    /**
+     * @param array<int, Tracker> $trackers
+     */
+    private function __construct(private array $trackers)
     {
     }
 
     public function getTrackerById($tracker_id): ?Tracker
     {
-        return $this->tracker;
-    }
-
-    public static function withDefaultTracker(): self
-    {
-        return new self(TrackerTestBuilder::aTracker()->build());
+        return $this->trackers[$tracker_id] ?? null;
     }
 
     public static function withoutTracker(): self
     {
-        return new self(null);
+        return new self([]);
     }
 
     public static function withTracker(Tracker $tracker): self
     {
-        return new self($tracker);
+        return self::withTrackers($tracker);
+    }
+
+    public static function withTrackers(Tracker $tracker, Tracker ...$other_trackers): self
+    {
+        $trackers = [];
+        foreach ([$tracker, ...$other_trackers] as $t) {
+            $trackers[$t->getId()] = $t;
+        }
+
+        return new self($trackers);
     }
 }
