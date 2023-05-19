@@ -34,7 +34,7 @@ use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
 use Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager;
 use Tuleap\LDAP\LdapLogger;
 use Tuleap\LDAP\LinkModalContentPresenter;
-use Tuleap\LDAP\NonUniqueUidRetriever;
+use Tuleap\LDAP\NonUniqueUidDAO;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 use Tuleap\LDAP\User\AccountCreation;
@@ -925,14 +925,28 @@ class LdapPlugin extends Plugin
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function rootDailyStart(RootDailyStartEvent $event): void
     {
-        if ($this->isLdapAuthType()) {
-            $retriever       = new NonUniqueUidRetriever(new LDAP_UserDao());
-            $non_unique_uids = $retriever->getNonUniqueLdapUid();
-            if ($non_unique_uids) {
-                $event->addWarning('The following ldap_uids are non unique: ' . implode(', ', $non_unique_uids)
-                                      . PHP_EOL . ' This might lead to some SVN misbehaviours for concerned users');
-            }
+        if (! $this->isLdapAuthType()) {
+            return;
         }
+
+        $non_unique_uid_dao = new NonUniqueUidDAO();
+        $non_unique_uids    = $non_unique_uid_dao->searchNonUniqueLdapUid();
+        if (empty($non_unique_uids)) {
+            return;
+        }
+
+        $message = 'The following ldap_uids are non unique:' . PHP_EOL;
+        foreach ($non_unique_uids as $non_unique_uid => $non_unique_user_names) {
+            $user_names = [];
+            foreach ($non_unique_user_names as $non_unique_user_name) {
+                $user_names[] = $non_unique_user_name['user_name'];
+            }
+            $message .= "\"$non_unique_uid\" (" . implode(', ', $user_names) . ")" . PHP_EOL;
+        }
+
+        $message .= 'This might lead to some SVN misbehaviours for concerned users';
+
+        $event->addWarning($message);
     }
 
     private function isLdapAuthType()

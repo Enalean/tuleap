@@ -194,16 +194,4 @@ class LDAP_UserDao extends DataAccessObject
         AND ldap_id <> ""';
         return $this->retrieve($sql);
     }
-
-    public function searchNonUniqueLdapUid()
-    {
-        $sql = "SELECT ldap_uid
-                FROM user
-                    JOIN plugin_ldap_user ON (plugin_ldap_user.user_id=user.user_id)
-                WHERE user.status IN ('A', 'R')
-                GROUP BY ldap_uid
-                HAVING COUNT(ldap_uid) >= 2";
-
-        return $this->retrieve($sql);
-    }
 }
