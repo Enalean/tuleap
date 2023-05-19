@@ -55,7 +55,7 @@ export default {
     created() {
         emitter.on("item-has-been-created-under-the-fold", this.show);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("item-has-been-created-under-the-fold", this.show);
     },
     methods: {

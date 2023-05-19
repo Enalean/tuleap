@@ -174,7 +174,7 @@ export default {
         emitter.on("update-custom-property", this.updateCustomProperty);
         emitter.on("update-obsolescence-date-property", this.updateObsolescenceDate);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("createItem", this.show);
         emitter.off(
             "update-multiple-properties-list-value",

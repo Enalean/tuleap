@@ -112,7 +112,7 @@ export default {
         emitter.on("update-changelog-property", this.updateChangelogValue);
         emitter.on("update-lock", this.updateLock);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("update-version-title", this.updateTitleValue);
         emitter.off("update-changelog-property", this.updateChangelogValue);
         emitter.off("update-lock", this.updateLock);

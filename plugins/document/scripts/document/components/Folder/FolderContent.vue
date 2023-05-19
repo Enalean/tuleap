@@ -107,7 +107,7 @@ export default {
     created() {
         emitter.on("toggle-quick-look", this.toggleQuickLook);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         emitter.off("toggle-quick-look", this.toggleQuickLook);
     },
     methods: {
