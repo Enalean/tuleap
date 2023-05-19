@@ -21,6 +21,9 @@ msgstr "Ajouter une clé d'authentification"
 msgid "Authentication with passkeys"
 msgstr "Authentification avec des clés d'authentification"
 
+msgid "Check it"
+msgstr "La vérifier"
+
 msgid "Close"
 msgstr "Fermer"
 

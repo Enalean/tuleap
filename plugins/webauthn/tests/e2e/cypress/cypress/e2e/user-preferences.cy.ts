@@ -24,7 +24,7 @@ describe("User preferences | WebAuthn", () => {
     });
 
     it("can register a new passkey", () => {
-        cy.createAuthenticator().then((id) => {
+        cy.createAuthenticator().then(() => {
             cy.get("[data-test=add-button]").should("be.visible");
             cy.get("[data-test=add-button]").click();
 
@@ -33,7 +33,8 @@ describe("User preferences | WebAuthn", () => {
 
             cy.get("[data-test=registered-section]").should("be.visible");
 
-            cy.removeAuthenticator(id);
+            cy.get("[data-test=check-button]").click();
+            cy.get("[data-test=webauthn-message]").contains("Success!");
         });
     });
 });

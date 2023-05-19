@@ -22,20 +22,18 @@ declare global {
     namespace Cypress {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
-            createAuthenticator(): Promise<number>;
-
-            removeAuthenticator(authenticator_id: number): void;
+            createAuthenticator(): Promise<string>;
         }
     }
 }
 
-Cypress.Commands.add("createAuthenticator", () => {
-    return Cypress.automation("remote:debugger:protocol", {
+Cypress.Commands.add("createAuthenticator", () =>
+    Cypress.automation("remote:debugger:protocol", {
         command: "WebAuthn.enable",
         params: {},
     })
-        .then(() => {
-            return Cypress.automation("remote:debugger:protocol", {
+        .then(() =>
+            Cypress.automation("remote:debugger:protocol", {
                 command: "WebAuthn.addVirtualAuthenticator",
                 params: {
                     options: {
@@ -46,18 +44,9 @@ Cypress.Commands.add("createAuthenticator", () => {
                         isUserVerified: true,
                     },
                 },
-            });
-        })
-        .then((result) => result.authenticatorId);
-});
-
-Cypress.Commands.add("removeAuthenticator", (authenticator_id) => {
-    Cypress.automation("remote:debugger:protocol", {
-        command: "WebAuthn.removeVirtualAuthenticator",
-        params: {
-            authenticator_id,
-        },
-    });
-});
+            })
+        )
+        .then((result) => result.authenticatorId)
+);
 
 export {};

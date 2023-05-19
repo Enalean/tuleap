@@ -19,7 +19,7 @@
                     </div>
 
                     {{^ has_passkey }}
-                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-register-section">
+                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-section">
                             <button type="button" class="tlp-button-primary" id="webauthn-add-button"
                                     data-test="add-button" data-target-modal-id="webauthn-name-modal">
                                 <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden"
@@ -33,9 +33,16 @@
                     {{/ has_passkey }}
 
                     {{# has_passkey }}
-                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-register-section"
+                        <div class="tlp-pane-section webauthn-hidden" id="webauthn-section"
                              data-test="registered-section">
-                            {{# dgettext }} tuleap-webauthn | You have a registered passkey {{/ dgettext }}
+                            <p>{{# dgettext }} tuleap-webauthn | You have a registered passkey {{/ dgettext }}</p>
+                            <button type="button" class="tlp-button-primary" id="webauthn-check-button"
+                                    data-test="check-button">
+                                <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden"
+                                   aria-hidden="true"></i>
+                                {{# dgettext }} tuleap-webauthn | Check it {{/ dgettext }}
+                            </button>
+                            <p class="webauthn-hidden" id="webauthn-message" data-test="webauthn-message"></p>
                         </div>
                     {{/ has_passkey }}
 
