@@ -33,12 +33,12 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
     {
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->log_stack[] = "[$level] " . $this->generateLogWithException($level, $message, $context);
     }
 
-    private function generateLogWithException($level, $message, array $context): string
+    private function generateLogWithException($level, string|\Stringable $message, array $context): string|\Stringable
     {
         $log_string = $message;
         if ($level === LogLevel::ERROR || $level === LogLevel::CRITICAL || $level === LogLevel::ALERT || $level === LogLevel::EMERGENCY) {

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 
 final class EventDispatcherWithFallbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {

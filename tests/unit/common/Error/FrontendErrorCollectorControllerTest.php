@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Error;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -80,7 +80,7 @@ final class FrontendErrorCollectorControllerTest extends TestCase
 
         self::assertEquals(204, $response->getStatusCode());
         self::assertTrue($this->logger->hasErrorThatContains('My User Agent'));
-        self::assertTrue($this->logger->hasErrorThatContains(self::CURRENT_USER_ID));
+        self::assertTrue($this->logger->hasErrorThatContains((string) self::CURRENT_USER_ID));
         self::assertTrue($this->logger->hasErrorThatContains($expected_error_string));
         self::assertStringContainsString('collected_frontend_errors_total 1', $this->prometheus->renderText());
     }

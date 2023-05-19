@@ -21,7 +21,7 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\TeamSynchronizationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;

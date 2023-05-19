@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackersWithUnreadableStatusCollectionTest extends \Tuleap\Test\PHPUnit\TestCase

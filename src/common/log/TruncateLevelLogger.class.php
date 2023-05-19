@@ -48,33 +48,33 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
-    public function debug($message, array $context = [])
+    public function debug(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::DEBUG]) {
             $this->logger->debug($message, $context);
         }
     }
 
-    public function info($message, array $context = [])
+    public function info(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::INFO]) {
             $this->logger->info($message, $context);
         }
     }
 
-    public function warning($message, array $context = [])
+    public function warning(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::WARNING]) {
             $this->logger->warning($message, $context);
         }
     }
 
-    public function error($message, array $context = [])
+    public function error(string|\Stringable $message, array $context = []): void
     {
         $this->logger->error($message, $context);
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         switch ($level) {
             case \Psr\Log\LogLevel::DEBUG:
@@ -104,22 +104,22 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
-    public function emergency($message, array $context = [])
+    public function emergency(string|\Stringable $message, array $context = []): void
     {
         $this->logger->emergency($message, $context);
     }
 
-    public function alert($message, array $context = [])
+    public function alert(string|\Stringable $message, array $context = []): void
     {
         $this->logger->alert($message, $context);
     }
 
-    public function critical($message, array $context = [])
+    public function critical(string|\Stringable $message, array $context = []): void
     {
         $this->logger->critical($message, $context);
     }
 
-    public function notice($message, array $context = [])
+    public function notice(string|\Stringable $message, array $context = []): void
     {
         if ($this->should_log[\Psr\Log\LogLevel::DEBUG]) {
             $this->logger->notice($message, $context);

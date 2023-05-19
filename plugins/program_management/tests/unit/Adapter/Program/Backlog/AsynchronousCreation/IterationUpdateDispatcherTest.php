@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Adapter\JSON\PendingIterationUpdateRepresentation;
 use Tuleap\ProgramManagement\Domain\Events\IterationUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;

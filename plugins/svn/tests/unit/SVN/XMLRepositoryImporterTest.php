@@ -26,11 +26,12 @@ namespace Tuleap\SVN;
 use Backend;
 use BackendSVN;
 use BackendSystem;
-use Logger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 use Project;
+use Psr\Log\LogLevel;
 use SimpleXMLElement;
 use SVN_AccessFile_Writer;
 use SystemEvent;
@@ -77,10 +78,7 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
      */
     private $project;
-    /**
-     * @var Logger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $logger;
+    private TestLogger $logger;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ImportConfig
      */
@@ -163,7 +161,7 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->configuration              = \Mockery::mock(ImportConfig::class);
-        $this->logger                     = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger                     = new TestLogger();
         $this->project                    = \Mockery::mock(Project::class);
         $this->accessfile_history_creator = \Mockery::mock(AccessFileHistoryCreator::class);
         $this->mail_notification_manager  = \Mockery::mock(MailNotificationManager::class);
@@ -264,9 +262,6 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(XMLImporterException::class);
 
-        $this->logger->shouldReceive('info')->once();
-        $this->logger->shouldReceive('error')->once();
-
         $this->repository_importer->import(
             $this->configuration,
             $this->logger,
@@ -276,6 +271,9 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->rule_name,
             $this->committer
         );
+
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testItShouldImportNotifications(): void
@@ -301,9 +299,6 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $event->shouldReceive('getStatus')->andReturn(SystemEvent::STATUS_DONE);
         $event->shouldReceive('getLog')->once();
 
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('debug')->once();
-
         $this->project->shouldReceive('getId')->andReturn(101);
 
         $this->backend_svn->shouldReceive('setUserAndGroup')->once();
@@ -323,6 +318,9 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->rule_name,
             $this->committer
         );
+
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertTrue($this->logger->hasDebugRecords());
     }
 
     public function testItShouldImportSvnAccessFile(): void
@@ -347,9 +345,6 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $event->shouldReceive('process')->once();
         $event->shouldReceive('getStatus')->andReturn(SystemEvent::STATUS_DONE);
         $event->shouldReceive('getLog')->once();
-
-        $this->logger->shouldReceive('info')->times(3);
-        $this->logger->shouldReceive('debug')->once();
 
         $this->project->shouldReceive('getId')->andReturn(101);
 
@@ -377,5 +372,7 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->rule_name,
             $this->committer
         );
+
+        self::assertCount(3, $this->logger->recordsByLevel[LogLevel::INFO]);
     }
 }

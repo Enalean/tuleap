@@ -33,12 +33,12 @@ class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->prefix[] = $prefix;
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         $this->logger->log($level, $this->formatMessage($message), $context);
     }
 
-    private function formatMessage($message)
+    private function formatMessage(string|\Stringable $message): string
     {
         return '[' . implode('][', $this->prefix) . '] ' . $message;
     }

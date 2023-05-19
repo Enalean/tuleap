@@ -28,7 +28,7 @@ class Log_ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\Logg
     public const BG_RED  = "\033[41m";
     public const NOCOLOR = "\033[0m";
 
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         fwrite(STDERR, $this->colorize($level, $level . ' ' . $message) . PHP_EOL);
         fflush(STDERR);

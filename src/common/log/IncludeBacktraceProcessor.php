@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Log;
 
+use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 
 final class IncludeBacktraceProcessor implements ProcessorInterface
 {
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         $record['extra']['backtrace'] = '';
         foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $line) {

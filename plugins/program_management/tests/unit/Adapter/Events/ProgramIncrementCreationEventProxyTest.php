@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;

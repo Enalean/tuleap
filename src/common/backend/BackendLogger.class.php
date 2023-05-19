@@ -92,7 +92,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
         return $level;
     }
 
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         $pid = getmypid();
 

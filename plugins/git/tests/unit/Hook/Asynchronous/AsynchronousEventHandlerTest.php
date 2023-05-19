@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\Asynchronous;
 
 use Psr\Log\NullLogger;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 use Tuleap\Git\Stub\BuildDefaultBranchPushProcessorStub;
 use Tuleap\Git\Stub\RetrieveAuthorStub;

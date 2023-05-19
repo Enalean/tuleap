@@ -20,7 +20,7 @@
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Queue\WorkerEvent;
 
 class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase

@@ -22,14 +22,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
 {
     public const NAME = 'MOVE_FRS_FILE';
 
-    /**
-     * Set multiple logs
-     *
-     * @param String $log Log string
-     *
-     * @return void
-     */
-    public function setLog($log)
+    public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
             $this->log = $log;
