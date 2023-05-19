@@ -59,6 +59,43 @@
                 </option>
             </select>
         </div>
+        <blockquote v-if="user_selected_tracker_ids.length === 1">
+            <div
+                class="tlp-form-element"
+                v-bind:class="{ 'tlp-form-element-error': load_reports_error }"
+            >
+                <label class="tlp-label" v-bind:for="filter_report_id">
+                    {{ $gettext("Filter") }}
+                </label>
+
+                <select
+                    v-bind:id="filter_report_id"
+                    name="roadmap[filter_report_id]"
+                    v-model="user_selected_filter_report_id"
+                    data-test="report"
+                    class="tlp-select tlp-select-adjusted roadmap-widget-configuration-filter"
+                >
+                    <option value="" selected>
+                        {{ $gettext("None") }}
+                    </option>
+                    <option
+                        v-for="report of reports_to_display"
+                        v-bind:key="report.id"
+                        v-bind:value="report.id"
+                    >
+                        {{ report.label }}
+                    </option>
+                </select>
+                <i
+                    class="fa-solid fa-circle-notch fa-spin roadmap-widget-configuration-filter-loading"
+                    aria-hidden="true"
+                    v-if="is_loading_reports"
+                ></i>
+                <p class="tlp-text-danger" v-if="load_reports_error">
+                    {{ load_reports_error }}
+                </p>
+            </div>
+        </blockquote>
         <div class="tlp-form-element">
             <label class="tlp-label" v-bind:for="timescale_id">
                 {{ $gettext("Default timescale") }}
@@ -70,9 +107,15 @@
                 data-test="timescale"
                 v-model="user_selected_default_timescale"
             >
-                <option value="week">{{ $gettext("Week") }}</option>
-                <option value="month">{{ $gettext("Month") }}</option>
-                <option value="quarter">{{ $gettext("Quarter") }}</option>
+                <option value="week">
+                    {{ $gettext("Week") }}
+                </option>
+                <option value="month">
+                    {{ $gettext("Month") }}
+                </option>
+                <option value="quarter">
+                    {{ $gettext("Quarter") }}
+                </option>
             </select>
         </div>
         <hr class="roadmap-widget-configuration-separator" />
@@ -152,11 +195,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import type { Tracker } from "../type";
+import type { ReportDefinition, Tracker } from "../type";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import type { TimeScale } from "../../../roadmap-widget/src/type";
 import { useGettext } from "vue3-gettext";
+import { getAllJSON, uri } from "@tuleap/fetch-result";
+import { ok } from "neverthrow";
 
 const trackers_picker = ref<HTMLSelectElement | null>(null);
 
@@ -165,6 +210,7 @@ interface AppProps {
     title: string;
     trackers: Tracker[];
     selected_tracker_ids: number[];
+    selected_filter_report_id: number | "";
     selected_default_timescale: TimeScale;
     selected_lvl1_iteration_tracker_id: number | "";
     selected_lvl2_iteration_tracker_id: number | "";
@@ -192,6 +238,12 @@ const user_selected_lvl2_iteration_tracker_id = ref<number | "">(
 const user_selected_default_timescale = ref<TimeScale>(props.selected_default_timescale);
 const user_selected_title = ref<string>(props.title);
 
+const cached_reports = ref<Map<number, ReportDefinition[]>>(new Map());
+const reports_to_display = ref<ReportDefinition[]>([]);
+const is_loading_reports = ref(false);
+const load_reports_error = ref<string | null>(null);
+const user_selected_filter_report_id = ref<number | "">(props.selected_filter_report_id);
+
 let list_picker: ListPicker | undefined = undefined;
 
 onMounted(() => {
@@ -203,6 +255,7 @@ onMounted(() => {
             placeholder: $gettext("Please choose a tracker"),
         });
     }
+    loadReportsAccordingToSelectedTracker();
 });
 
 onUnmounted((): void => {
@@ -214,10 +267,13 @@ watch(user_selected_lvl1_iteration_tracker_id, (): void => {
         user_selected_lvl2_iteration_tracker_id.value = "";
     }
 });
+watch(user_selected_tracker_ids, loadReportsAccordingToSelectedTracker);
 
 const title_id = computed((): string => "title-" + props.widget_id);
 
 const progress_of_id = computed((): string => "roadmap-tracker-" + props.widget_id);
+
+const filter_report_id = computed((): string => "roadmap-filter-report-" + props.widget_id);
 
 const timescale_id = computed((): string => "roadmap-timescale-" + props.widget_id);
 
@@ -259,9 +315,59 @@ const is_lvl2_disabled = computed((): boolean => {
         !user_selected_lvl2_iteration_tracker_id.value
     );
 });
+
+function loadReportsAccordingToSelectedTracker(): void {
+    const selected_trackers = user_selected_tracker_ids.value;
+    if (selected_trackers.length !== 1) {
+        return;
+    }
+
+    const selected_tracker_id = selected_trackers[0];
+    const reports = cached_reports.value.get(selected_tracker_id);
+    if (reports !== undefined) {
+        reports_to_display.value = reports;
+        return;
+    }
+
+    is_loading_reports.value = true;
+    reports_to_display.value = [];
+    load_reports_error.value = null;
+
+    getAllJSON<ReportDefinition[], ReportDefinition>(
+        uri`/api/v1/trackers/${selected_tracker_id}/tracker_reports`,
+        {
+            params: { limit: 1000, offset: 0 },
+        }
+    )
+        .map((reports: readonly ReportDefinition[]) =>
+            reports.reduce((public_reports: ReportDefinition[], report) => {
+                if (report.is_public) {
+                    public_reports.push(report);
+                }
+
+                return public_reports;
+            }, [])
+        )
+        .andThen((reports: ReportDefinition[]) => {
+            is_loading_reports.value = false;
+
+            return ok(reports);
+        })
+        .match(
+            (reports: ReportDefinition[]) => {
+                cached_reports.value.set(selected_tracker_id, reports);
+                reports_to_display.value = reports;
+            },
+            () => {
+                load_reports_error.value = $gettext(
+                    "An error occurred while loading the reports for the filter"
+                );
+            }
+        );
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use "@tuleap/list-picker/style";
 
 .roadmap-widget-configuration-separator {
@@ -272,5 +378,13 @@ const is_lvl2_disabled = computed((): boolean => {
 .roadmap-widget-configuration-subtitle {
     color: var(--tlp-dark-color);
     font-size: 1rem;
+}
+
+.roadmap-widget-configuration-filter {
+    display: inline-block;
+}
+
+.roadmap-widget-configuration-filter-loading {
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 </style>

@@ -54,4 +54,36 @@ final class FilterReportDao extends \Tuleap\DB\DataAccessObject
     {
         $this->getDB()->delete('plugin_roadmap_widget_filter', ['report_id' => $report_id]);
     }
+
+    public function deleteByWidget(int $widget_id): void
+    {
+        $this->getDB()->delete('plugin_roadmap_widget_filter', ['widget_id' => $widget_id]);
+    }
+
+    public function saveReportId(int $widget_id, int $report_id): void
+    {
+        $this->getDB()->tryFlatTransaction(function () use ($widget_id, $report_id): void {
+            $this->deleteByWidget($widget_id);
+
+            $is_existing_public_report = $this->getDB()->cell(
+                "SELECT report.id
+                    FROM tracker_report AS report
+                        INNER JOIN plugin_roadmap_widget_trackers USING (tracker_id)
+                    WHERE plugin_roadmap_widget_id = ? AND report.id = ? AND report.user_id IS NULL",
+                $widget_id,
+                $report_id
+            );
+            if (! $is_existing_public_report) {
+                return;
+            }
+
+            $this->getDB()->insert(
+                'plugin_roadmap_widget_filter',
+                [
+                    'widget_id' => $widget_id,
+                    'report_id' => $report_id,
+                ]
+            );
+        });
+    }
 }

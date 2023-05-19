@@ -70,6 +70,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             $template_render,
             $this->presenter_builder,
             Mockery::mock(\TrackerFactory::class),
+            new FilterReportDao(),
         );
     }
 
@@ -155,7 +156,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [110], 'week', 120, 130)
+            ->with(102, "g", 'Roadmap', [110], 0, 'week', 120, 130)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);
@@ -190,7 +191,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [1110], 'week', 1210, 1310)
+            ->with(102, "g", 'Roadmap', [1110], 0, 'week', 1210, 1310)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);

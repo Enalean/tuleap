@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\Widget;
 use Mockery;
 use SimpleXMLElement;
 use TemplateRenderer;
+use Tuleap\Roadmap\FilterReportDao;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
@@ -62,6 +63,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -93,6 +95,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -127,6 +130,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -143,7 +147,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "week", null, null);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "week", null, null);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -164,6 +168,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -200,6 +205,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -216,7 +222,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", 1235, null);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", 1235, null);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -237,6 +243,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -273,6 +280,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -289,7 +297,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", null, 1236);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", null, 1236);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -313,6 +321,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -330,7 +339,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", 1235, 1236);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", 1235, 1236);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -356,6 +365,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                 Mockery::mock(TemplateRenderer::class),
                 Mockery::mock(RoadmapWidgetPresenterBuilder::class),
                 Mockery::mock(\TrackerFactory::class),
+                new FilterReportDao(),
             ),
             new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
@@ -375,7 +385,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234, 1235, 1236], "month", 1237, 1238);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234, 1235, 1236], 0, "month", 1237, 1238);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);

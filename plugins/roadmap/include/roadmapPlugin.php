@@ -73,16 +73,19 @@ class RoadmapPlugin extends Plugin
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === RoadmapProjectWidget::ID) {
+            $filter_report_dao = new \Tuleap\Roadmap\FilterReportDao();
+
             $get_widget_event->setWidget(new RoadmapProjectWidget(
                 HTTPRequest::instance()->getProject(),
-                new RoadmapWidgetDao(),
+                new RoadmapWidgetDao($filter_report_dao),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
                 new RoadmapWidgetPresenterBuilder(
                     new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                     TrackerFactory::instance(),
                 ),
-                TrackerFactory::instance()
+                TrackerFactory::instance(),
+                $filter_report_dao,
             ));
         }
     }

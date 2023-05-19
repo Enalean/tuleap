@@ -2,17 +2,21 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/fetch-result': workspace:*
   '@tuleap/list-picker': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@vitejs/plugin-vue': ^2.0.0
   '@vue/test-utils': ^2.3.2
+  neverthrow: ^6.0.0
   vue: ^3.2.47
   vue3-gettext: ^2.2.1
 
 dependencies:
+  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/list-picker': link:../../../../lib/frontend/list-picker
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
+  neverthrow: 6.0.0
   vue: 3.3.1
   vue3-gettext: 2.2.1_vue@3.3.1
 
@@ -512,6 +516,10 @@ packages:
     resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /neverthrow/6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
 
   /nopt/6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
