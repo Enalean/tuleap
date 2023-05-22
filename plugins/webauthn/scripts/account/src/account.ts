@@ -21,6 +21,7 @@ import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import type { GetText } from "@tuleap/gettext";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
+import { selectOrThrow } from "@tuleap/dom";
 import "../themes/style.scss";
 import { register } from "./register";
 import { authenticate } from "./authenticate";
@@ -47,41 +48,26 @@ document.addEventListener("DOMContentLoaded", (): void => {
 });
 
 function prepareGettext(): Promise<GetText> {
-    let language = document.body.dataset.userLocale;
-    if (language === undefined) {
-        language = "en_US";
-    }
+    const language = document.body.dataset.userLocale ?? "en_US";
 
     return initGettext(
         language,
         "webauthn",
-        (locale) => import(`./po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 }
 
 function prepareRegistration(): void {
-    const form_name_modal = document.querySelector("#webauthn-name-modal");
-    if (!(form_name_modal instanceof HTMLElement)) {
-        return;
-    }
-
-    const name_modal_input = form_name_modal.querySelector("#webauthn-name-input");
-    const error = document.querySelector("#webauthn-error");
-    const add_button_icon = document.querySelector("#webauthn-add-button > i");
-
-    if (
-        !(name_modal_input instanceof HTMLInputElement) ||
-        !(error instanceof HTMLElement) ||
-        !(add_button_icon instanceof HTMLElement)
-    ) {
-        return;
-    }
+    const form_name_modal = selectOrThrow(document, "#webauthn-name-modal");
+    const name_modal_input = selectOrThrow(
+        form_name_modal,
+        "#webauthn-name-input",
+        HTMLInputElement
+    );
+    const error = selectOrThrow(document, "#webauthn-add-error");
+    const add_button_icon = selectOrThrow(document, "#webauthn-modal-add");
 
     function registration(name: string): void {
-        if (!(error instanceof HTMLElement) || !(add_button_icon instanceof HTMLElement)) {
-            return;
-        }
-
         register(name).match(
             () => {
                 location.reload();
@@ -100,11 +86,10 @@ function prepareRegistration(): void {
     }
     form_name_modal.addEventListener("submit", (event) => {
         event.preventDefault();
-        name_modal.hide();
 
         const name = name_modal_input.value.trim();
-        name_modal_input.value = "";
 
+        error.classList.add(HIDDEN);
         add_button_icon.classList.remove(HIDDEN);
         registration(name);
     });
@@ -113,7 +98,7 @@ function prepareRegistration(): void {
 function prepareAuthentication(gettext_provider: GetText): void {
     const check_button = document.querySelector("#webauthn-check-button");
     const button_icon = document.querySelector("#webauthn-check-button > i");
-    const message = document.querySelector("#webauthn-message");
+    const message = document.querySelector("#webauthn-alert");
     if (
         !(check_button instanceof HTMLButtonElement) ||
         !(button_icon instanceof HTMLElement) ||
@@ -129,13 +114,16 @@ function prepareAuthentication(gettext_provider: GetText): void {
             () => {
                 button_icon.classList.add(HIDDEN);
                 message.innerText = gettext_provider.gettext("Success!");
-                message.classList.add("tlp-text-success");
+                message.classList.remove("tlp-alert-danger");
+                message.classList.add("tlp-alert-success");
                 message.classList.remove(HIDDEN);
+                setTimeout(() => message.classList.add(HIDDEN), 5000);
             },
             (fault) => {
                 button_icon.classList.add(HIDDEN);
                 message.innerText = fault.toString();
-                message.classList.add("tlp-text-danger");
+                message.classList.remove("tlp-alert-success");
+                message.classList.add("tlp-alert-danger");
                 message.classList.remove(HIDDEN);
             }
         );

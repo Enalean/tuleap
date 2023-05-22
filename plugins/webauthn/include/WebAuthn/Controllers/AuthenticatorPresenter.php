@@ -22,21 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
-use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 
-final class AccountPresenter
+final class AuthenticatorPresenter
 {
-    public readonly bool $need_more_authenticators;
-    public readonly bool $has_authenticator;
+    public readonly string $name;
+    public readonly string $created_at;
+    public readonly string $last_use;
 
-    /**
-     * @param AuthenticatorPresenter[] $authenticators
-     */
     public function __construct(
-        public readonly AccountTabPresenterCollection $tabs,
-        public readonly array $authenticators,
+        WebAuthnCredentialSource $source,
     ) {
-        $this->has_authenticator        = ! empty($this->authenticators);
-        $this->need_more_authenticators = count($this->authenticators) < 2;
+        $this->name       = $source->getName();
+        $this->created_at = $source->getCreatedAt()->format($GLOBALS['Language']->getText('system', 'datefmt'));
+        $this->last_use   = $source->getLastUse()->format($GLOBALS['Language']->getText('system', 'datefmt'));
     }
 }

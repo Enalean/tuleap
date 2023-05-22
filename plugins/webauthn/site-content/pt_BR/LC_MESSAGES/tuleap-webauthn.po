@@ -21,28 +21,40 @@ msgstr ""
 msgid "Authentication with passkeys"
 msgstr ""
 
-msgid "Check it"
+msgid "Cancel"
+msgstr ""
+
+msgid "Check"
 msgstr ""
 
 msgid "Close"
 msgstr ""
 
+msgid "Created at"
+msgstr ""
+
+msgid "It's recommended to register at least 2 keys"
+msgstr ""
+
+msgid "Last use"
+msgstr ""
+
 msgid "My key"
+msgstr ""
+
+msgid "Name"
 msgstr ""
 
 msgid "Name of passkey"
 msgstr ""
 
+msgid "No registered passkeys"
+msgstr ""
+
 msgid "Passkeys"
 msgstr ""
 
-msgid "Unable to register your passkey"
-msgstr ""
-
 msgid "WebAuthn"
-msgstr ""
-
-msgid "You have a registered passkey"
 msgstr ""
 
 msgid "Your browser doesn't support WebAuthn"
