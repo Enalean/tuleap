@@ -25,25 +25,26 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Psr\Log\LoggerInterface;
-use TrackerFactory;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\User\ProvideCurrentUser;
 use URLVerification;
-use UserManager;
 
 final class RoadmapTasksRetriever
 {
     public function __construct(
         private readonly RoadmapWidgetDao $dao,
-        private readonly \ProjectManager $project_manager,
-        private readonly UserManager $user_manager,
+        private readonly ProjectByIDFactory $project_manager,
+        private readonly ProvideCurrentUser $user_manager,
         private readonly URLVerification $url_verification,
-        private readonly TrackerFactory $tracker_factory,
+        private readonly RetrieveTracker $tracker_factory,
         private readonly SemanticTimeframeBuilder $semantic_timeframe_builder,
         private readonly \Tracker_ArtifactFactory $artifact_factory,
         private readonly IRetrieveDependencies $dependencies_retriever,
@@ -230,7 +231,7 @@ final class RoadmapTasksRetriever
      */
     private function checkUserCanAccessProject(int $project_id, \PFUser $user): void
     {
-        $project = $this->project_manager->getProject($project_id);
+        $project = $this->project_manager->getProjectById($project_id);
         ProjectAuthorization::userCanAccessProject($user, $project, $this->url_verification);
     }
 }

@@ -23,21 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
-use ProjectManager;
 use Psr\Log\NullLogger;
 use Tracker;
-use TrackerFactory;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Roadmap\Stub\RetrieveReportToFilterArtifactsStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
@@ -48,87 +48,49 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\TrackerColor;
 
-class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const ROADMAP_ID         = 42;
     private const PROJECT_ID         = 101;
     private const TRACKER_ID         = 111;
     private const ANOTHER_TRACKER_ID = 112;
 
-    /**
-     * @var RoadmapTasksRetriever
-     */
-    private $retriever;
-    /**
-     * @var \PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapWidgetDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\URLVerification
-     */
-    private $url_verification;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapTasksOutOfDateFilter
-     */
-    private $tasks_filter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticProgressBuilder
-     */
-    private $progress_builder;
+    private \PFUser $user;
+    private \Project $project;
+    private RoadmapWidgetDao|MockObject $dao;
+    private \URLVerification|MockObject $url_verification;
+    private SemanticTimeframeBuilder|MockObject $semantic_timeframe_builder;
+    private \Tracker_ArtifactFactory|MockObject $artifact_factory;
+    private RoadmapTasksOutOfDateFilter|MockObject $tasks_filter;
+    private SemanticProgressBuilder|MockObject $progress_builder;
 
     protected function setUp(): void
     {
-        $this->dao                        = Mockery::mock(RoadmapWidgetDao::class);
-        $this->project_manager            = Mockery::mock(ProjectManager::class);
-        $this->user_manager               = Mockery::mock(\UserManager::class);
-        $this->url_verification           = Mockery::mock(\URLVerification::class);
-        $this->tracker_factory            = Mockery::mock(TrackerFactory::class);
-        $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->tasks_filter               = Mockery::mock(RoadmapTasksOutOfDateFilter::class);
-        $this->progress_builder           = Mockery::mock(SemanticProgressBuilder::class);
+        $this->dao                        = $this->createMock(RoadmapWidgetDao::class);
+        $this->url_verification           = $this->createMock(\URLVerification::class);
+        $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
+        $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->tasks_filter               = $this->createMock(RoadmapTasksOutOfDateFilter::class);
+        $this->progress_builder           = $this->createMock(SemanticProgressBuilder::class);
 
-        $this->user = UserTestBuilder::anActiveUser()->build();
+        $this->user    = UserTestBuilder::anActiveUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
     }
 
     private function getRetriever(
+        RetrieveTracker $tracker_factory,
         IRetrieveDependencies $dependencies_retriever,
         RetrieveReportToFilterArtifacts $report_to_filter_retriever,
     ): RoadmapTasksRetriever {
         return new RoadmapTasksRetriever(
             $this->dao,
-            $this->project_manager,
-            $this->user_manager,
+            ProjectByIDFactoryStub::buildWith($this->project),
+            ProvideCurrentUserStub::buildWithUser($this->user),
             $this->url_verification,
-            $this->tracker_factory,
+            $tracker_factory,
             $this->semantic_timeframe_builder,
             $this->artifact_factory,
             $dependencies_retriever,
@@ -139,37 +101,41 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getRetrieverWithoutDependencies(): RoadmapTasksRetriever
+    private function getRetrieverWithoutDependencies(RetrieveTracker $tracker_factory): RoadmapTasksRetriever
     {
-        return $this->getRetriever(new class implements IRetrieveDependencies {
-            public function getDependencies(Artifact $artifact): array
-            {
-                return [];
-            }
-        }, RetrieveReportToFilterArtifactsStub::withoutReport());
+        return $this->getRetriever(
+            $tracker_factory,
+            new class implements IRetrieveDependencies {
+                public function getDependencies(Artifact $artifact): array
+                {
+                    return [];
+                }
+            },
+            RetrieveReportToFilterArtifactsStub::withoutReport()
+        );
     }
 
     public function test404IfRoadmapNotFound(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withoutTracker())->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfProjectNotFound(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -178,35 +144,26 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->once()
-            ->andThrow(Project_AccessProjectNotFoundException::class);
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->willThrowException($this->createMock(Project_AccessProjectNotFoundException::class));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withoutTracker())->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test403IfUserCannotAccessProject(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -215,35 +172,26 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->once()
-            ->andThrow(Mockery::spy(Project_AccessException::class));
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->willThrowException($this->createMock(Project_AccessException::class));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withoutTracker())->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerNotFound(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -252,41 +200,27 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn(ProjectTestBuilder::aProject()->build());
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
-
-        $this->url_verification->shouldReceive('userCanAccessProject')->once();
-
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturnNull();
+        $this->url_verification
+            ->expects(self::once())
+            ->method('userCanAccessProject');
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withoutTracker())->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerIsNotActive(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -295,45 +229,32 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn(ProjectTestBuilder::aProject()->build());
+        $this->url_verification
+            ->expects(self::once())
+            ->method('userCanAccessProject');
 
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
-
-        $this->url_verification->shouldReceive('userCanAccessProject')->once();
-
-        $tracker = Mockery::mock(
-            Tracker::class,
-            ['isActive' => false, 'userCanView' => true]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(false);
+        $tracker->method('userCanView')->willReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test404IfTrackerIsNotAccessibleForUser(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -342,49 +263,34 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $tracker = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => false]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(false);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTrackerDoesNotHaveTitleField(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -393,49 +299,35 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $tracker = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => null]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn(null);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTitleFieldIsNotReadable(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -444,50 +336,37 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
-
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
+            ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => false]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => $title_field]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(false);
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfTimeframeIsNotDefined(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -496,56 +375,44 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => $title_field]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->expects(self::once())
+            ->method('getSemantic')
             ->with($tracker)
-            ->once()
-            ->andReturn(new SemanticTimeframe($tracker, new TimeframeNotConfigured()));
+            ->willReturn(new SemanticTimeframe($tracker, new TimeframeNotConfigured()));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfStartDateIsNotReadable(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -554,47 +421,41 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => $title_field]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(false);
+
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->expects(self::once())
+            ->method('getSemantic')
             ->with($tracker)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new SemanticTimeframe(
                     $tracker,
                     new TimeframeWithEndDate(
-                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
-                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
+                        $start_date_field,
+                        $end_date_field,
                     )
                 )
             );
@@ -602,16 +463,16 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfEndDateIsNotReadable(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -620,47 +481,41 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => $title_field]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->expects(self::once())
+            ->method('getSemantic')
             ->with($tracker)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new SemanticTimeframe(
                     $tracker,
                     new TimeframeWithEndDate(
-                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
+                        $start_date_field,
+                        $end_date_field,
                     )
                 )
             );
@@ -668,16 +523,16 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function test400IfDurationIsNotReadable(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -686,47 +541,41 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            ['isActive' => true, 'userCanView' => true, 'getTitleField' => $title_field]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+
+        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => false]);
+        $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->expects(self::once())
+            ->method('getSemantic')
             ->with($tracker)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new SemanticTimeframe(
                     $tracker,
                     new TimeframeWithDuration(
-                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                        Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => false])
+                        $start_date_field,
+                        $duration_field,
                     )
                 )
             );
@@ -734,16 +583,16 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->getRetrieverWithoutDependencies()->getTasks(self::ROADMAP_ID, 0, 10);
+        $this->getRetrieverWithoutDependencies(RetrieveTrackerStub::withTracker($tracker))->getTasks(self::ROADMAP_ID, 0, 10);
     }
 
     public function testItReturnsAPaginatedListOfReadableTaskRepresentation(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -752,149 +601,83 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
-
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
+            ->willReturn([self::TRACKER_ID]);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            [
-                'isActive'      => true,
-                'userCanView'   => true,
-                'getTitleField' => $title_field,
-                'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project,
-            ]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
 
-        $start_date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $end_date_field         = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $total_effort_field     = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getItemName')->willReturn('task');
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
+
+        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field->method('userCanRead')->willReturn(true);
+
+        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
 
         $this->progress_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticProgress(
                     $tracker,
                     new MethodBasedOnEffort(
-                        Mockery::mock(SemanticProgressDao::class),
+                        $this->createMock(SemanticProgressDao::class),
                         $total_effort_field,
                         $remaining_effort_field
                     )
                 )
             );
 
-        $task_201 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 201,
-                'getXRef'     => 'task #201',
-                'getUri'      => '/plugins/tracker?aid=201',
-                'getTitle'    => 'Do this',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_202 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => false,
-                'getId'       => 202,
-                'getXRef'     => 'task #202',
-                'getUri'      => '/plugins/tracker?aid=202',
-                'getTitle'    => 'Do that',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_203 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 203,
-                'getXRef'     => 'task #203',
-                'getUri'      => '/plugins/tracker?aid=203',
-                'getTitle'    => 'Do those',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_204 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 204,
-                'getXRef'     => 'task #204',
-                'getUri'      => '/plugins/tracker?aid=204',
-                'getTitle'    => 'Done more than 1 year ago',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
+        $task_203 = $this->anArtifact(203, 'Do those', $tracker, true);
+        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true);
 
-        $this->mockDate($task_201, $start_date_field, 1234567890);
-        $this->mockDate($task_201, $end_date_field, 1234567890);
-        $this->mockDate($task_203, $start_date_field, null);
-        $this->mockDate($task_203, $end_date_field, 1234567890);
+        $this->mockDate($start_date_field, [201 => 1234567890]);
+        $this->mockDate($end_date_field, [201 => 1234567890, 203 => 1234567890]);
 
-        $this->mockEffort($task_201, $total_effort_field, 8);
-        $this->mockEffort($task_201, $remaining_effort_field, 5);
-        $this->mockEffort($task_203, $total_effort_field, 3);
-        $this->mockEffort($task_203, $remaining_effort_field, 0.75);
+        $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
+        $this->mockEffort($remaining_effort_field, [201 => 5, 203 => 0.75]);
 
         $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
-            ->shouldReceive('getPaginatedArtifactsByListOfTrackerIds')
+            ->expects(self::once())
+            ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID], 0, 10)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new \Tracker_Artifact_PaginatedArtifacts($artifacts, 4)
             );
 
-        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
-            ->with(
-                $artifacts,
-                Mockery::type(\DateTimeImmutable::class),
-                $this->user,
-                Mockery::type(TrackersWithUnreadableStatusCollection::class)
-            )
-            ->once()
-            ->andReturn([$task_201, $task_202, $task_203]);
+        $this->tasks_filter
+            ->expects(self::once())
+            ->method('filterOutOfDateArtifacts')
+            ->willReturn([$task_201, $task_202, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
             public function getDependencies(Artifact $artifact): array
@@ -908,7 +691,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $collection = $this
-            ->getRetriever($dependency_retriever, RetrieveReportToFilterArtifactsStub::withoutReport())
+            ->getRetriever(RetrieveTrackerStub::withTracker($tracker), $dependency_retriever, RetrieveReportToFilterArtifactsStub::withoutReport())
             ->getTasks(self::ROADMAP_ID, 0, 10);
 
         self::assertEquals(4, $collection->getTotalSize());
@@ -929,7 +712,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [new DependenciesByNature('depends_on', [202, 203])],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
                 new TaskRepresentation(
                     203,
@@ -945,7 +728,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
             ],
             $collection->getRepresentations()
@@ -955,10 +738,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAPaginatedListOfReadableTaskRepresentationFromReport(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -967,149 +750,80 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            [
-                'isActive'      => true,
-                'userCanView'   => true,
-                'getTitleField' => $title_field,
-                'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project,
-            ]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
 
-        $start_date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $end_date_field         = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $total_effort_field     = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getItemName')->willReturn('task');
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
+        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field->method('userCanRead')->willReturn(true);
+        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
 
         $this->progress_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticProgress(
                     $tracker,
                     new MethodBasedOnEffort(
-                        Mockery::mock(SemanticProgressDao::class),
+                        $this->createMock(SemanticProgressDao::class),
                         $total_effort_field,
                         $remaining_effort_field
                     )
                 )
             );
 
-        $task_201 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 201,
-                'getXRef'     => 'task #201',
-                'getUri'      => '/plugins/tracker?aid=201',
-                'getTitle'    => 'Do this',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_202 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => false,
-                'getId'       => 202,
-                'getXRef'     => 'task #202',
-                'getUri'      => '/plugins/tracker?aid=202',
-                'getTitle'    => 'Do that',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_203 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 203,
-                'getXRef'     => 'task #203',
-                'getUri'      => '/plugins/tracker?aid=203',
-                'getTitle'    => 'Do those',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_204 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 204,
-                'getXRef'     => 'task #204',
-                'getUri'      => '/plugins/tracker?aid=204',
-                'getTitle'    => 'Done more than 1 year ago',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
+        $task_203 = $this->anArtifact(203, 'Do those', $tracker, true);
+        $task_204 = $this->anArtifact(204, 'Done more than 1 year ago', $tracker, true);
 
-        $this->mockDate($task_201, $start_date_field, 1234567890);
-        $this->mockDate($task_201, $end_date_field, 1234567890);
-        $this->mockDate($task_203, $start_date_field, null);
-        $this->mockDate($task_203, $end_date_field, 1234567890);
+        $this->mockDate($start_date_field, [201 => 1234567890]);
+        $this->mockDate($end_date_field, [201 => 1234567890, 203 => 1234567890]);
 
-        $this->mockEffort($task_201, $total_effort_field, 8);
-        $this->mockEffort($task_201, $remaining_effort_field, 5);
-        $this->mockEffort($task_203, $total_effort_field, 3);
-        $this->mockEffort($task_203, $remaining_effort_field, 0.75);
+        $this->mockEffort($total_effort_field, [201 => 8, 203 => 3]);
+        $this->mockEffort($remaining_effort_field, [201 => 5, 203 => 0.75]);
 
         $artifacts = [$task_201, $task_202, $task_203, $task_204];
         $this->artifact_factory
-            ->shouldReceive('getPaginatedArtifactsByListOfArtifactIds')
+            ->expects(self::once())
+            ->method('getPaginatedArtifactsByListOfArtifactIds')
             ->with([201, 202], 0, 10)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new \Tracker_Artifact_PaginatedArtifacts($artifacts, 4)
             );
 
-        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
-            ->with(
-                $artifacts,
-                Mockery::type(\DateTimeImmutable::class),
-                $this->user,
-                Mockery::type(TrackersWithUnreadableStatusCollection::class)
-            )
-            ->once()
-            ->andReturn([$task_201, $task_202, $task_203]);
+        $this->tasks_filter
+            ->expects(self::once())
+            ->method('filterOutOfDateArtifacts')
+            ->willReturn([$task_201, $task_202, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
             public function getDependencies(Artifact $artifact): array
@@ -1126,7 +840,11 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $report->method('getMatchingIds')->willReturn(['id' => '201,202']);
 
         $collection = $this
-            ->getRetriever($dependency_retriever, RetrieveReportToFilterArtifactsStub::withReport($report))
+            ->getRetriever(
+                RetrieveTrackerStub::withTracker($tracker),
+                $dependency_retriever,
+                RetrieveReportToFilterArtifactsStub::withReport($report)
+            )
             ->getTasks(self::ROADMAP_ID, 0, 10);
 
         self::assertEquals(4, $collection->getTotalSize());
@@ -1147,7 +865,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [new DependenciesByNature('depends_on', [202, 203])],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
                 new TaskRepresentation(
                     203,
@@ -1163,7 +881,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
             ],
             $collection->getRepresentations()
@@ -1173,10 +891,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItExcludesArtifactsThatAreChildOfAnArtifactOfTheSameTracker(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -1185,123 +903,78 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([self::TRACKER_ID]);
+            ->willReturn([self::TRACKER_ID]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $tracker     = Mockery::mock(
-            Tracker::class,
-            [
-                'isActive'      => true,
-                'userCanView'   => true,
-                'getTitleField' => $title_field,
-                'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project,
-            ]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
 
-        $start_date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $end_date_field         = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $total_effort_field     = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
-        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => true]);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getItemName')->willReturn('task');
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
+        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field->method('userCanRead')->willReturn(true);
+        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
+            ->willReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
 
         $this->progress_builder
-            ->shouldReceive('getSemantic')
+            ->method('getSemantic')
             ->with($tracker)
-            ->andReturn(
+            ->willReturn(
                 new SemanticProgress(
                     $tracker,
                     new MethodBasedOnEffort(
-                        Mockery::mock(SemanticProgressDao::class),
+                        $this->createMock(SemanticProgressDao::class),
                         $total_effort_field,
                         $remaining_effort_field
                     )
                 )
             );
 
-        $task_201 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 201,
-                'getXRef'     => 'task #201',
-                'getUri'      => '/plugins/tracker?aid=201',
-                'getTitle'    => 'Do this',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_202 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => false,
-                'getId'       => 202,
-                'getXRef'     => 'task #202',
-                'getUri'      => '/plugins/tracker?aid=202',
-                'getTitle'    => 'Do that',
-                'getTracker'  => $tracker,
-                'getParent'   => $task_201,
-                'isOpen'      => true,
-            ]
-        );
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
+        $task_202 = $this->anArtifact(202, 'Do that', $tracker, false);
 
-        $this->mockDate($task_201, $start_date_field, 1234567890);
-        $this->mockDate($task_201, $end_date_field, 1234567890);
-        $this->mockDate($task_202, $start_date_field, null);
-        $this->mockDate($task_202, $end_date_field, 1234567890);
+        $this->mockDate($start_date_field, [201 => 1234567890]);
+        $this->mockDate($end_date_field, [201 => 1234567890, 202 => 1234567890]);
 
-        $this->mockEffort($task_201, $total_effort_field, 8);
-        $this->mockEffort($task_201, $remaining_effort_field, 5);
-        $this->mockEffort($task_202, $total_effort_field, 3);
-        $this->mockEffort($task_202, $remaining_effort_field, 0.75);
+        $this->mockEffort($total_effort_field, [201 => 8, 202 => 3]);
+        $this->mockEffort($remaining_effort_field, [201 => 5, 202 => 0.75]);
 
         $artifacts = [$task_201, $task_202];
         $this->artifact_factory
-            ->shouldReceive('getPaginatedArtifactsByListOfTrackerIds')
+            ->expects(self::once())
+            ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID], 0, 10)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new \Tracker_Artifact_PaginatedArtifacts($artifacts, 2)
             );
 
-        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
-            ->with(
-                $artifacts,
-                Mockery::type(\DateTimeImmutable::class),
-                $this->user,
-                Mockery::type(TrackersWithUnreadableStatusCollection::class)
-            )
-            ->once()
-            ->andReturn([$task_201, $task_202]);
+        $this->tasks_filter
+            ->expects(self::once())
+            ->method('filterOutOfDateArtifacts')
+            ->willReturn([$task_201, $task_202]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
             public function getDependencies(Artifact $artifact): array
@@ -1311,7 +984,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $collection = $this
-            ->getRetriever($dependency_retriever, RetrieveReportToFilterArtifactsStub::withoutReport())
+            ->getRetriever(RetrieveTrackerStub::withTracker($tracker), $dependency_retriever, RetrieveReportToFilterArtifactsStub::withoutReport())
             ->getTasks(self::ROADMAP_ID, 0, 10);
 
         self::assertEquals(2, $collection->getTotalSize());
@@ -1332,7 +1005,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
             ],
             $collection->getRepresentations()
@@ -1342,10 +1015,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsAPaginatedListOfReadableTaskRepresentationBelongingToDifferentTrackers(): void
     {
         $this->dao
-            ->shouldReceive('searchById')
+            ->expects(self::once())
+            ->method('searchById')
             ->with(self::ROADMAP_ID)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id'         => self::ROADMAP_ID,
                     'owner_id'   => self::PROJECT_ID,
@@ -1354,148 +1027,94 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->method('searchSelectedTrackers')
             ->with(self::ROADMAP_ID)
-            ->andReturn([
+            ->willReturn([
                 self::TRACKER_ID,
                 self::ANOTHER_TRACKER_ID,
             ]);
 
-        $project = ProjectTestBuilder::aProject()->build();
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(self::PROJECT_ID)
-            ->once()
-            ->andReturn($project);
-
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($this->user);
 
         $this->url_verification
-            ->shouldReceive('userCanAccessProject')
-            ->with($this->user, $project)
-            ->once();
+            ->expects(self::once())
+            ->method('userCanAccessProject')
+            ->with($this->user, $this->project);
 
-        $title_field         = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
-        $another_title_field = Mockery::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true]);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+        $another_title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $another_title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = Mockery::mock(
-            Tracker::class,
-            [
-                'isActive'      => true,
-                'userCanView'   => true,
-                'getTitleField' => $title_field,
-                'getId'         => self::TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('acid-green'),
-                'getProject'    => $project,
-            ]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::TRACKER_ID)
-            ->andReturn($tracker);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('isActive')->willReturn(true);
+        $tracker->method('userCanView')->willReturn(true);
+        $tracker->method('getTitleField')->willReturn($title_field);
+        $tracker->method('getId')->willReturn(self::TRACKER_ID);
+        $tracker->method('getColor')->willReturn(TrackerColor::fromName('acid-green'));
+        $tracker->method('getProject')->willReturn($this->project);
+        $tracker->method('getItemName')->willReturn('task');
 
-        $another_tracker = Mockery::mock(
-            Tracker::class,
-            [
-                'isActive'      => true,
-                'userCanView'   => true,
-                'getTitleField' => $another_title_field,
-                'getId'         => self::ANOTHER_TRACKER_ID,
-                'getColor'      => TrackerColor::fromName('red-wine'),
-                'getProject'    => $project,
-            ]
-        );
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(self::ANOTHER_TRACKER_ID)
-            ->andReturn($another_tracker);
+        $another_tracker = $this->createMock(Tracker::class);
+        $another_tracker->method('isActive')->willReturn(true);
+        $another_tracker->method('userCanView')->willReturn(true);
+        $another_tracker->method('getTitleField')->willReturn($another_title_field);
+        $another_tracker->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
+        $another_tracker->method('getColor')->willReturn(TrackerColor::fromName('red-wine'));
+        $another_tracker->method('getProject')->willReturn($this->project);
+        $another_tracker->method('getItemName')->willReturn('bug');
 
-        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
 
-        $another_start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
-        $another_end_date_field   = Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]);
+        $another_start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $another_start_date_field->method('userCanRead')->willReturn(true);
+        $another_end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $another_end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
-            ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
-        $this->semantic_timeframe_builder
-            ->shouldReceive('getSemantic')
-            ->with($another_tracker)
-            ->andReturn(
-                new SemanticTimeframe(
+            ->method('getSemantic')
+            ->willReturnCallback(static fn (Tracker $arg) => match ($arg) {
+                $tracker => new SemanticTimeframe(
+                    $tracker,
+                    new TimeframeWithEndDate($start_date_field, $end_date_field)
+                ),
+                $another_tracker => new SemanticTimeframe(
                     $another_tracker,
                     new TimeframeWithEndDate($another_start_date_field, $another_end_date_field)
                 )
-            );
+            });
 
         $this->progress_builder
-            ->shouldReceive('getSemantic')
-            ->with($tracker)
-            ->andReturn(
-                new SemanticProgress($tracker, new MethodNotConfigured())
-            );
-        $this->progress_builder
-            ->shouldReceive('getSemantic')
-            ->with($another_tracker)
-            ->andReturn(
-                new SemanticProgress($another_tracker, new MethodNotConfigured())
-            );
+            ->method('getSemantic')
+            ->willReturnCallback(static fn (Tracker $arg) => match ($arg) {
+                $tracker => new SemanticProgress($tracker, new MethodNotConfigured()),
+                $another_tracker => new SemanticProgress($another_tracker, new MethodNotConfigured()),
+            });
 
-        $task_201 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 201,
-                'getXRef'     => 'task #201',
-                'getUri'      => '/plugins/tracker?aid=201',
-                'getTitle'    => 'Do this',
-                'getTracker'  => $tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
-        $task_203 = Mockery::mock(
-            Artifact::class,
-            [
-                'userCanView' => true,
-                'getId'       => 203,
-                'getXRef'     => 'task #203',
-                'getUri'      => '/plugins/tracker?aid=203',
-                'getTitle'    => 'Do those',
-                'getTracker'  => $another_tracker,
-                'getParent'   => null,
-                'isOpen'      => true,
-            ]
-        );
+        $task_201 = $this->anArtifact(201, 'Do this', $tracker, true);
+        $task_203 = $this->anArtifact(203, 'Do those', $another_tracker, true);
 
-        $this->mockDate($task_201, $start_date_field, 1234567890);
-        $this->mockDate($task_201, $end_date_field, 1234567890);
-        $this->mockDate($task_203, $another_start_date_field, null);
-        $this->mockDate($task_203, $another_end_date_field, 1234567890);
+        $this->mockDate($start_date_field, [201 => 1234567890]);
+        $this->mockDate($end_date_field, [201 => 1234567890]);
+        $this->mockDate($another_start_date_field, []);
+        $this->mockDate($another_end_date_field, [203 => 1234567890]);
+
 
         $artifacts = [$task_201, $task_203];
         $this->artifact_factory
-            ->shouldReceive('getPaginatedArtifactsByListOfTrackerIds')
+            ->expects(self::once())
+            ->method('getPaginatedArtifactsByListOfTrackerIds')
             ->with([self::TRACKER_ID, self::ANOTHER_TRACKER_ID], 0, 10)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 new \Tracker_Artifact_PaginatedArtifacts($artifacts, 2)
             );
 
-        $this->tasks_filter->shouldReceive('filterOutOfDateArtifacts')
-            ->with(
-                $artifacts,
-                Mockery::type(\DateTimeImmutable::class),
-                $this->user,
-                Mockery::type(TrackersWithUnreadableStatusCollection::class)
-            )
-            ->once()
-            ->andReturn([$task_201, $task_203]);
+        $this->tasks_filter
+            ->expects(self::once())
+            ->method('filterOutOfDateArtifacts')
+            ->willReturn([$task_201, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
             public function getDependencies(Artifact $artifact): array
@@ -1505,7 +1124,11 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $collection = $this
-            ->getRetriever($dependency_retriever, RetrieveReportToFilterArtifactsStub::withoutReport())
+            ->getRetriever(
+                RetrieveTrackerStub::withTrackers($tracker, $another_tracker),
+                $dependency_retriever,
+                RetrieveReportToFilterArtifactsStub::withoutReport()
+            )
             ->getTasks(self::ROADMAP_ID, 0, 10);
 
         self::assertEquals(2, $collection->getTotalSize());
@@ -1526,11 +1149,11 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
                 new TaskRepresentation(
                     203,
-                    'task #203',
+                    'bug #203',
                     '/plugins/tracker?aid=203',
                     'Do those',
                     'red-wine',
@@ -1542,50 +1165,73 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     true,
                     '',
                     [],
-                    new ProjectReference($project),
+                    new ProjectReference($this->project),
                 ),
             ],
             $collection->getRepresentations()
         );
     }
 
-    private function mockDate(Artifact $artifact, Mockery\MockInterface $date_field, ?int $timestamp): void
+    private function mockDate(MockObject $date_field, array $values): void
     {
-        if (! $timestamp) {
-            $date_field
-                ->shouldReceive('getLastChangesetValue')
-                ->with($artifact)
-                ->andReturn(null);
-
-            return;
-        }
-
-        $value = new \Tracker_Artifact_ChangesetValue_Date(
-            1,
-            Mockery::mock(\Tracker_Artifact_Changeset::class),
-            $date_field,
-            false,
-            $timestamp
-        );
-
         $date_field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($artifact)
-            ->andReturn($value);
+            ->method('getLastChangesetValue')
+            ->willReturnCallback(
+                fn (Artifact $artifact) => $this->getChangesetValueDate($artifact, $date_field, $values)
+            );
     }
 
-    private function mockEffort(Artifact $artifact, Mockery\MockInterface $effort_field, float $effort)
+    private function mockEffort(MockObject $effort_field, array $values): void
     {
-        $effort_field->shouldReceive('getLastChangesetValue')
-            ->with($artifact)
-            ->andReturn(
-                new \Tracker_Artifact_ChangesetValue_Float(
-                    1,
-                    Mockery::mock(\Tracker_Artifact_Changeset::class),
-                    $effort_field,
-                    false,
-                    $effort
-                )
+        $effort_field
+            ->method('getLastChangesetValue')
+            ->willReturnCallback(
+                fn (Artifact $artifact) => $this->getChangesetValueFloat($artifact, $effort_field, $values)
             );
+    }
+
+    private function getChangesetValueDate(Artifact $artifact, \Tracker_FormElement_Field_Date $field, array $values): ?\Tracker_Artifact_ChangesetValue_Date
+    {
+        if (! isset($values[$artifact->getId()])) {
+            return null;
+        }
+
+        return new \Tracker_Artifact_ChangesetValue_Date(
+            1,
+            $this->createMock(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            $values[$artifact->getId()],
+        );
+    }
+
+    private function getChangesetValueFloat(Artifact $artifact, \Tracker_FormElement_Field_Numeric $field, array $values): ?\Tracker_Artifact_ChangesetValue_Float
+    {
+        if (! isset($values[$artifact->getId()])) {
+            return null;
+        }
+
+        return new \Tracker_Artifact_ChangesetValue_Float(
+            1,
+            $this->createMock(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            $values[$artifact->getId()],
+        );
+    }
+
+    private function anArtifact(int $id, string $title, Tracker $tracker, bool $readable): Artifact
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn($id);
+        $artifact->method('getTitle')->willReturn($title);
+        $artifact->method('getXRef')->willReturn($tracker->getItemName() . ' #' . $id);
+        $artifact->method('getUri')->willReturn('/plugins/tracker?aid=' . $id);
+        $artifact->method('userCanView')->willReturn($readable);
+        $artifact->method('getParent')->willReturn(null);
+        $artifact->method('isOpen')->willReturn(true);
+        $artifact->method('getTracker')->willReturn($tracker);
+
+        return $artifact;
     }
 }
