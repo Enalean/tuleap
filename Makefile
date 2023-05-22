@@ -25,6 +25,8 @@ else
 COMPOSER_INSTALL=composer --quiet install --prefer-dist
 endif
 
+XDG_RUNTIME_DIR ?= /tmp
+
 PHP=php
 PRELOAD_GENERATOR=$(PHP) $(CURDIR)/tools/utils/preload/generate-preload.php
 
@@ -52,7 +54,7 @@ preload:
 		-d opcache.enable_cli=1 \
 		-d display_errors=1 \
 		-d display_startup_errors=1 \
-		-d opcache.lockfile_path=${TMP} \
+		-d opcache.lockfile_path="$(XDG_RUNTIME_DIR)" \
 		-d memory_limit=256M \
 		-d opcache.preload=$(CURDIR)/tools/utils/preload/verification-loader.php \
 		 tools/utils/preload/check-preload.php
