@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\Widget;
 
-use Mockery;
 use SimpleXMLElement;
 use TemplateRenderer;
 use Tuleap\Roadmap\FilterReportDao;
@@ -35,12 +34,10 @@ use Tuleap\XML\MappingsRegistry;
 
 final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItDoesNothingIfWidgetIsNotRoadmap(): void
     {
         $event = new ConfigureAtXMLImport(
-            new ProjectNote(Mockery::mock(NoteDao::class), Mockery::mock(TemplateRenderer::class)),
+            new ProjectNote($this->createStub(NoteDao::class), $this->createStub(TemplateRenderer::class)),
             new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><widget name="note"></widget>'),
             new MappingsRegistry(),
             ProjectTestBuilder::aProject()->build()
@@ -58,11 +55,11 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $event   = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
-                Mockery::mock(RoadmapWidgetDao::class),
+                $this->createStub(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -90,11 +87,11 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $event   = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
-                Mockery::mock(RoadmapWidgetDao::class),
+                $this->createStub(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -121,15 +118,15 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $project  = ProjectTestBuilder::aProject()->build();
         $registry = new MappingsRegistry();
         $registry->addReference("T754", 1234);
-        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -145,9 +142,26 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "week", null, null);
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234]
+                && $report_id === 0
+                && $default_timescale === "week"
+                && $lvl1_iteration_tracker_id === null
+                && $lvl2_iteration_tracker_id === null
+                    => 1
+            });
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -163,11 +177,11 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
-                Mockery::mock(RoadmapWidgetDao::class),
+                $this->createStub(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -196,15 +210,15 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $registry = new MappingsRegistry();
         $registry->addReference("T754", 1234);
         $registry->addReference("T755", 1235);
-        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $dao   = $this->createStub(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -220,9 +234,26 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", 1235, null);
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234]
+                && $report_id === 0
+                && $default_timescale === "month"
+                && $lvl1_iteration_tracker_id === 1235
+                && $lvl2_iteration_tracker_id === null
+                => 1
+            });
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -238,11 +269,11 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
-                Mockery::mock(RoadmapWidgetDao::class),
+                $this->createStub(RoadmapWidgetDao::class),
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -271,15 +302,15 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $registry = new MappingsRegistry();
         $registry->addReference("T754", 1234);
         $registry->addReference("T756", 1236);
-        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $dao   = $this->createStub(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -295,9 +326,26 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", null, 1236);
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234]
+                && $report_id === 0
+                && $default_timescale === "month"
+                && $lvl1_iteration_tracker_id === null
+                && $lvl2_iteration_tracker_id === 1236
+                => 1
+            });
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -312,15 +360,15 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $registry->addReference("T754", 1234);
         $registry->addReference("T755", 1235);
         $registry->addReference("T756", 1236);
-        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $dao   = $this->createMock(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -337,9 +385,26 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 0, "month", 1235, 1236);
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234]
+                && $report_id === 0
+                && $default_timescale === "month"
+                && $lvl1_iteration_tracker_id === 1235
+                && $lvl2_iteration_tracker_id === 1236
+                => 1
+            });
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -356,15 +421,15 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $registry->addReference("T756", 1236);
         $registry->addReference("T757", 1237);
         $registry->addReference("T758", 1238);
-        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $dao   = $this->createStub(RoadmapWidgetDao::class);
         $event = new ConfigureAtXMLImport(
             new \Tuleap\Roadmap\RoadmapProjectWidget(
                 $project,
                 $dao,
                 new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-                Mockery::mock(TemplateRenderer::class),
-                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
-                Mockery::mock(\TrackerFactory::class),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
                 new FilterReportDao(),
             ),
             new SimpleXMLElement(
@@ -383,9 +448,26 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
             $registry,
             $project
         );
-        $dao->shouldReceive('insertContent')
-            ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234, 1235, 1236], 0, "month", 1237, 1238);
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234, 1235, 1236]
+                && $report_id === 0
+                && $default_timescale === "month"
+                && $lvl1_iteration_tracker_id === 1237
+                && $lvl2_iteration_tracker_id === 1238
+                => 1
+            });
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
