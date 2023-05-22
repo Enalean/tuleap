@@ -377,4 +377,61 @@ final class RoadmapProjectWidget extends \Widget
             '/assets/roadmap/configure-widget'
         );
     }
+
+    public function exportAsXML(): ?\SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        $preference = $widget->addChild('preference');
+        if ($preference === null) {
+            return null;
+        }
+        $preference->addAttribute('name', 'roadmap');
+
+        $cdata_factory = new \XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            (string) $this->title,
+            ['name' => 'title']
+        );
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            $this->default_timescale,
+            ['name' => 'default_timescale']
+        );
+
+        if ($this->tracker_ids) {
+            foreach ($this->tracker_ids as $tracker_id) {
+                $this->addPreferenceXmlNodeValue($preference, 'tracker_id', \Tracker::XML_ID_PREFIX . $tracker_id);
+            }
+        }
+
+        $report_id = $this->filter_report_dao->getReportIdToFilterArtifacts((int) $this->content_id);
+        if ($report_id) {
+            $this->addPreferenceXmlNodeValue($preference, 'report_id', \Tracker_Report::XML_ID_PREFIX . $report_id);
+        }
+
+        if ($this->lvl1_iteration_tracker_id) {
+            $this->addPreferenceXmlNodeValue($preference, 'lvl1_iteration_tracker_id', \Tracker::XML_ID_PREFIX . $this->lvl1_iteration_tracker_id);
+        }
+
+        if ($this->lvl2_iteration_tracker_id) {
+            $this->addPreferenceXmlNodeValue($preference, 'lvl2_iteration_tracker_id', \Tracker::XML_ID_PREFIX . $this->lvl2_iteration_tracker_id);
+        }
+
+        return $widget;
+    }
+
+    private function addPreferenceXmlNodeValue(\SimpleXMLElement $preference, string $name, string $value): void
+    {
+        $child = $preference->addChild('value', $value);
+        if ($child === null) {
+            return;
+        }
+
+        $child->addAttribute('name', $name);
+    }
 }
