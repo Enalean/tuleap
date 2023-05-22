@@ -22,18 +22,12 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 class VisitCleaner
 {
-    /**
-     * @var RecentlyVisitedDao
-     */
-    private $dao;
-
-    public function __construct(RecentlyVisitedDao $dao)
+    public function __construct(private readonly RecentlyVisitedDao $dao)
     {
-        $this->dao = $dao;
     }
 
-    public function clearVisitedArtifacts(\PFUser $user)
+    public function clearVisitedArtifacts(\PFUser $user): void
     {
-        $this->dao->deleteVisitByUserId($user->getId());
+        $this->dao->deleteVisitByUserId((int) $user->getId());
     }
 }
