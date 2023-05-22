@@ -201,6 +201,12 @@ final class RoadmapProjectWidget extends \Widget
                 $lvl1_iteration_tracker_id = $tracker_mapping[$data['lvl1_iteration_tracker_id']] ?? $data['lvl1_iteration_tracker_id'];
                 $lvl2_iteration_tracker_id = $tracker_mapping[$data['lvl2_iteration_tracker_id']] ?? $data['lvl2_iteration_tracker_id'];
 
+                $report_id = 0;
+                if ($mapping_registry->hasCustomMapping(\Tracker_ReportFactory::MAPPING_KEY)) {
+                    $report_mapping = $mapping_registry->getCustomMapping(\Tracker_ReportFactory::MAPPING_KEY);
+                    $report_id      = $report_mapping[$data['report_id']] ?? 0;
+                }
+
                 return $this->dao->insertContent(
                     (int) $owner_id,
                     $owner_type,
@@ -209,7 +215,7 @@ final class RoadmapProjectWidget extends \Widget
                         static fn(int $tracker_id): int => $tracker_mapping[$tracker_id] ?? $tracker_id,
                         $this->dao->searchSelectedTrackers((int) $id) ?? [],
                     ),
-                    0,
+                    $report_id,
                     $data['default_timescale'],
                     $lvl1_iteration_tracker_id,
                     $lvl2_iteration_tracker_id,

@@ -23,6 +23,8 @@ use Tuleap\Project\MappingRegistry;
 
 class Tracker_ReportFactory
 {
+    public const MAPPING_KEY = 'plugin_tracker_report';
+
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -177,6 +179,14 @@ class Tracker_ReportFactory
         $report = null;
         //duplicate report info
         if ($id = $this->getDao()->duplicate($from_report->id, $to_tracker_id)) {
+            if (! $mapping_registry->hasCustomMapping(self::MAPPING_KEY)) {
+                $renderer_mapping = new ArrayObject();
+                $mapping_registry->setCustomMapping(self::MAPPING_KEY, $renderer_mapping);
+            } else {
+                $renderer_mapping = $mapping_registry->getCustomMapping(self::MAPPING_KEY);
+            }
+            $renderer_mapping[$from_report->id] = $id;
+
             //duplicate report
             $report = $this->getReportById($id, $current_user_id);
             $report->duplicate($from_report, $field_mapping, $mapping_registry);
