@@ -3,7 +3,7 @@
 let
     node = pkgs.nodejs-18_x;
     nodePackages = (import ./pnpm { inherit pkgs; nodejs = node; });
-    pnpm = nodePackages."pnpm-^7".override { dontNpmInstall = true; };
+    pnpm = nodePackages."pnpm-^8".override { dontNpmInstall = true; };
     nodeBaseBin = pkgs.stdenv.mkDerivation {
         name = "node-base-bin";
         unpackPhase = "true";
