@@ -56,7 +56,7 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeprecationMessageForOutdatedVersionsOfSupportedBrowsersCanBeDisabledWithASpecialForNonSiteAdminUsers(): void
     {
-        \ForgeConfig::set('disable_old_browsers_warning', 'W41_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
+        \ForgeConfig::set('disable_old_browsers_warning', 'W21_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
 
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::VERY_OLD_FIREFOX_USER_AGENT_STRING);
         $user             = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
@@ -67,7 +67,7 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeprecationMessageForOutdatedVersionsOfSupportedBrowsersCannotBeDisabledWithASpecialForSiteAdminUsers(): void
     {
-        \ForgeConfig::set('disable_old_browsers_warning', 'W41_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
+        \ForgeConfig::set('disable_old_browsers_warning', 'W21_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
 
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::VERY_OLD_FIREFOX_USER_AGENT_STRING);
         $user             = UserTestBuilder::buildSiteAdministrator();

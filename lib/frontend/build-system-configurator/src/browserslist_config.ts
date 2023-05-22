@@ -20,7 +20,7 @@
 import browserslist from "browserslist";
 
 export const browserlist_config =
-    "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions,chrome 87,firefox 78";
+    "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions,chrome 103,firefox 102";
 
 export const esbuild_target = browserslist(browserlist_config).map((target: string) =>
     target.replace(" ", "")

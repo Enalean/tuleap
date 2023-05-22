@@ -31,7 +31,7 @@ final class BrowserDeprecationMessage
 {
     #[ConfigKey("Allow to disable old browser warning message")]
     public const DISABLE_OLD_BROWSER_WARNING                       = 'disable_old_browsers_warning';
-    private const DISABLE_OLD_BROWSER_WARNING_CONFIRMATION_MESSAGE = 'W41_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present';
+    private const DISABLE_OLD_BROWSER_WARNING_CONFIRMATION_MESSAGE = 'W21_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present';
 
 
     /**

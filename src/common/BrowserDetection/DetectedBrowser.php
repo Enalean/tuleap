@@ -58,10 +58,10 @@ final class DetectedBrowser
     ];
     // Only the latest version of these browsers is supported.
     // Versions considered "very old" are very likely to break in some ways when using Tuleap.
-    // Everything older than the previous ESR (as of October 14 2022) is Really Old
+    // Everything older than the current ESR (as of May 22 2023) is Really Old
     // Shall be updated when we start to see that Old Browsers pops up too often in support channel
-    private const REALLY_OLD_FIREFOX_VERSION = 90;
-    private const REALLY_OLD_CHROME_VERSION  = 92;
+    private const REALLY_OLD_FIREFOX_VERSION = 101;
+    private const REALLY_OLD_CHROME_VERSION  = 102;
 
     /**
      * @var string|null
