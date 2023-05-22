@@ -1,22 +1,22 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  vuex-mock-store: ^0.0.8
+lockfileVersion: '6.0'
 
 dependencies:
-  vuex-mock-store: 0.0.8
+  vuex-mock-store:
+    specifier: ^0.0.8
+    version: 0.0.8
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
 
 packages:
 
-  /lodash.clonedeep/4.5.0:
+  /lodash.clonedeep@4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
     dev: false
 
-  /vuex-mock-store/0.0.8:
+  /vuex-mock-store@0.0.8:
     resolution: {integrity: sha512-pRCNdUuS4KRtycDuJKLNFqSJB8vb2XeVilM+QUVPM5Tp6HKFSdAVOmpbwWoMbEnPnJEypkb7s6Ee4fFxp1b32g==}
     peerDependencies:
       '@types/jest': '>=24.0.0'

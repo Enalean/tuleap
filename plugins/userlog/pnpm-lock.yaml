@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../src/themes/tlp
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

@@ -1,17 +1,20 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/fp-feedback': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
-  '@tuleap/gettext': link:../../../../lib/frontend/gettext
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/fp-feedback':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fp-feedback
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-fetch
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/po-gettext-plugin

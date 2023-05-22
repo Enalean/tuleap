@@ -1,102 +1,131 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/angular-tlp': workspace:*
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/core': workspace:*
-  '@tuleap/core-rest-api-types': workspace:*
-  '@tuleap/date-helper': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/fault': workspace:*
-  '@tuleap/fetch-result': workspace:*
-  '@tuleap/plugin-pullrequest-comments': workspace:*
-  '@tuleap/plugin-pullrequest-constants': workspace:*
-  '@tuleap/plugin-pullrequest-rest-api-types': workspace:*
-  '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-relative-date': workspace:*
-  '@tuleap/tooltip': workspace:*
-  '@types/codemirror': ^5.60.5
-  '@types/dompurify': ^2.4.0
-  '@uirouter/angularjs': ^1.0.29
-  angular: ^1.8.2
-  angular-custom-elements: ^2.1.0
-  angular-gettext: ^2.4.2
-  angular-mocks: ^1.8.2
-  angular-sanitize: ^1.8.2
-  codemirror: ^5.62.0
-  dompurify: ^3.0.0
-  hybrids: ^8.1.8
-  jquery: ^3.6.0
-  moment: ^2.29.4
-  neverthrow: 6.0.0
-  sprintf-js: ^1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
-  '@tuleap/core': link:../../../../src/scripts/main
-  '@tuleap/core-rest-api-types': link:../../../../lib/frontend/rest-api-types
-  '@tuleap/date-helper': link:../../../../lib/frontend/date-helper
-  '@tuleap/fault': link:../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
-  '@tuleap/plugin-pullrequest-comments': link:../lib/pullrequest-comments
-  '@tuleap/plugin-pullrequest-constants': link:../lib/constants
-  '@tuleap/plugin-pullrequest-rest-api-types': link:../lib/rest-api-types
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../../lib/frontend/tooltip
-  '@uirouter/angularjs': 1.0.30_angular@1.8.3
-  angular: 1.8.3
-  angular-custom-elements: 2.1.0
-  angular-gettext: 2.4.2
-  angular-sanitize: 1.8.3
-  codemirror: 5.65.9
-  dompurify: 3.0.0
-  hybrids: 8.1.8
-  moment: 2.29.4
-  neverthrow: 6.0.0
-  sprintf-js: 1.1.2
+  '@tuleap/angular-tlp':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/angular-tlp
+  '@tuleap/core':
+    specifier: workspace:*
+    version: link:../../../../src/scripts/main
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
+  '@tuleap/date-helper':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/date-helper
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/plugin-pullrequest-comments':
+    specifier: workspace:*
+    version: link:../lib/pullrequest-comments
+  '@tuleap/plugin-pullrequest-constants':
+    specifier: workspace:*
+    version: link:../lib/constants
+  '@tuleap/plugin-pullrequest-rest-api-types':
+    specifier: workspace:*
+    version: link:../lib/rest-api-types
+  '@tuleap/potentially-dangerous-bidirectional-characters':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tooltip
+  '@uirouter/angularjs':
+    specifier: ^1.0.29
+    version: 1.0.30(angular@1.8.3)
+  angular:
+    specifier: ^1.8.2
+    version: 1.8.3
+  angular-custom-elements:
+    specifier: ^2.1.0
+    version: 2.1.0
+  angular-gettext:
+    specifier: ^2.4.2
+    version: 2.4.2
+  angular-sanitize:
+    specifier: ^1.8.2
+    version: 1.8.3
+  codemirror:
+    specifier: ^5.62.0
+    version: 5.65.9
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.0
+  hybrids:
+    specifier: ^8.1.8
+    version: 8.1.8
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/dom': link:../../../../lib/frontend/dom
-  '@types/codemirror': 5.60.5
-  '@types/dompurify': 2.4.0
-  angular-mocks: 1.8.3
-  jquery: 3.6.1
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
+  '@types/codemirror':
+    specifier: ^5.60.5
+    version: 5.60.5
+  '@types/dompurify':
+    specifier: ^2.4.0
+    version: 2.4.0
+  angular-mocks:
+    specifier: ^1.8.2
+    version: 1.8.3
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.1
 
 packages:
 
-  /@types/codemirror/5.60.5:
+  /@types/codemirror@5.60.5:
     resolution: {integrity: sha512-TiECZmm8St5YxjFUp64LK0c8WU5bxMDt9YaAek1UqUb9swrSCoJhh92fWu1p3mTEqlHjhB5sY7OFBhWroJXZVg==}
     dependencies:
       '@types/tern': 0.23.4
     dev: true
 
-  /@types/dompurify/2.4.0:
+  /@types/dompurify@2.4.0:
     resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
     dependencies:
       '@types/trusted-types': 2.0.3
     dev: true
 
-  /@types/estree/1.0.0:
+  /@types/estree@1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
-  /@types/tern/0.23.4:
+  /@types/tern@0.23.4:
     resolution: {integrity: sha512-JAUw1iXGO1qaWwEOzxTKJZ/5JxVeON9kvGZ/osgZaJImBnyjyn0cjovPsf6FNLmyGY8Vw9DoXZCMlfMkMwHRWg==}
     dependencies:
       '@types/estree': 1.0.0
     dev: true
 
-  /@types/trusted-types/2.0.3:
+  /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
-  /@uirouter/angularjs/1.0.30_angular@1.8.3:
+  /@uirouter/angularjs@1.0.30(angular@1.8.3):
     resolution: {integrity: sha512-qkc3RFZc91S5K0gc/QVAXc9LGDPXjR04vDgG/11j8+yyZEuQojXxKxdLhKIepiPzqLmGRVqzBmBc27gtqaEeZg==}
     engines: {node: '>=4.0.0'}
     peerDependencies:
@@ -106,58 +135,58 @@ packages:
       angular: 1.8.3
     dev: false
 
-  /@uirouter/core/6.0.8:
+  /@uirouter/core@6.0.8:
     resolution: {integrity: sha512-Gc/BAW47i4L54p8dqYCJJZuv2s3tqlXQ0fvl6Zp2xrblELPVfxmjnc0eurx3XwfQdaqm3T6uls6tQKkof/4QMw==}
     engines: {node: '>=4.0.0'}
     dev: false
 
-  /angular-custom-elements/2.1.0:
+  /angular-custom-elements@2.1.0:
     resolution: {integrity: sha512-WPvM/ZA5IKUdzmgj4/BgSXbFUfGRcD/aWbOTvyqm48TMrrCQGWYXcJDMBcIK+CjMelobwyb92KnLCGeiyrSmfA==}
     dev: false
 
-  /angular-gettext/2.4.2:
+  /angular-gettext@2.4.2:
     resolution: {integrity: sha512-J9Zy76VmN5otw6GyIqJjoLjl+0wwsZSCUPgPfQwM4Mx//hP3leqyS/fgf2MDiMLLyKgoHWkMMzzWbP4iH3+5vQ==}
     dev: false
 
-  /angular-mocks/1.8.3:
+  /angular-mocks@1.8.3:
     resolution: {integrity: sha512-vqsT6zwu80cZ8RY7qRQBZuy6Fq5X7/N5hkV9LzNT0c8b546rw4ErGK6muW1u2JnDKYa7+jJuaGM702bWir4HGw==}
     dev: true
 
-  /angular-sanitize/1.8.3:
+  /angular-sanitize@1.8.3:
     resolution: {integrity: sha512-2rxdqzlUVafUeWOwvY/FtyWk1pFTyCtzreeiTytG9m4smpuAEKaIJAjYeVwWsoV+nlTOcgpwV4W1OCmR+BQbUg==}
     deprecated: For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward.
     dev: false
 
-  /angular/1.8.3:
+  /angular@1.8.3:
     resolution: {integrity: sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==}
     deprecated: For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward.
     dev: false
 
-  /codemirror/5.65.9:
+  /codemirror@5.65.9:
     resolution: {integrity: sha512-19Jox5sAKpusTDgqgKB5dawPpQcY+ipQK7xoEI+MVucEF9qqFaXpeqY1KaoyGBso/wHQoDa4HMMxMjdsS3Zzzw==}
     dev: false
 
-  /dompurify/3.0.0:
+  /dompurify@3.0.0:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
-  /hybrids/8.1.8:
+  /hybrids@8.1.8:
     resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 
-  /jquery/3.6.1:
+  /jquery@3.6.1:
     resolution: {integrity: sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==}
     dev: true
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /neverthrow/6.0.0:
+  /neverthrow@6.0.0:
     resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

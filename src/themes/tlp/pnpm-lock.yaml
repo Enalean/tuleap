@@ -1,59 +1,68 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@fortawesome/fontawesome-free': ^6.1.1
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp-badge': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  '@types/jquery': ^3.5.5
-  flatpickr: ^4.6.9
-  jquery: ^3.6.0
-  select2: ^4.0.13
+lockfileVersion: '6.0'
 
 dependencies:
-  '@fortawesome/fontawesome-free': 6.1.1
-  '@tuleap/tlp-badge': link:../../../lib/frontend/tlp-badge
-  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
-  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
-  flatpickr: 4.6.9
-  jquery: 3.6.0
-  select2: 4.0.13
+  '@fortawesome/fontawesome-free':
+    specifier: ^6.1.1
+    version: 6.1.1
+  '@tuleap/tlp-badge':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-badge
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-swatch-colors
+  flatpickr:
+    specifier: ^4.6.9
+    version: 4.6.9
+  jquery:
+    specifier: ^3.6.0
+    version: 3.6.0
+  select2:
+    specifier: ^4.0.13
+    version: 4.0.13
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
-  '@types/jquery': 3.5.5
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
+  '@types/jquery':
+    specifier: ^3.5.5
+    version: 3.5.5
 
 packages:
 
-  /@fortawesome/fontawesome-free/6.1.1:
+  /@fortawesome/fontawesome-free@6.1.1:
     resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: false
 
-  /@types/jquery/3.5.5:
+  /@types/jquery@3.5.5:
     resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
     dependencies:
       '@types/sizzle': 2.3.2
     dev: true
 
-  /@types/sizzle/2.3.2:
+  /@types/sizzle@2.3.2:
     resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
     dev: true
 
-  /flatpickr/4.6.9:
+  /flatpickr@4.6.9:
     resolution: {integrity: sha512-F0azNNi8foVWKSF+8X+ZJzz8r9sE1G4hl06RyceIaLvyltKvDl6vqk9Lm/6AUUCi5HWaIjiUbk7UpeE/fOXOpw==}
     dev: false
 
-  /jquery/3.6.0:
+  /jquery@3.6.0:
     resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: false
 
-  /select2/4.0.13:
+  /select2@4.0.13:
     resolution: {integrity: sha512-1JeB87s6oN/TDxQQYCvS5EFoQyvV6eYMZZ0AeA4tdFDYWN3BAGZ8npr17UBFddU0lgAt3H0yjX3X6/ekOj1yjw==}
     dev: false

@@ -1,27 +1,30 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  angular: ^1.8.2
-  angular-mocks: ^1.8.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp': link:../../../src/themes/tlp
-  '@tuleap/tlp-modal': link:../tlp-modal
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../../src/themes/tlp
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../tlp-modal
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  angular: 1.8.2
-  angular-mocks: 1.8.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  angular:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-mocks:
+    specifier: ^1.8.2
+    version: 1.8.2
 
 packages:
 
-  /angular-mocks/1.8.2:
+  /angular-mocks@1.8.2:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular/1.8.2:
+  /angular@1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true

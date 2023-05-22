@@ -1,44 +1,48 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/chart-builder': workspace:*
-  d3-selection: ^3.0.0
-  moment: ^2.29.4
-  node-gettext: ^3.0.0
-  sprintf-js: ^1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
-  d3-selection: 3.0.0
-  moment: 2.29.4
-  node-gettext: 3.0.0
-  sprintf-js: 1.1.2
+  '@tuleap/chart-builder':
+    specifier: workspace:*
+    version: link:../../lib/frontend/chart-builder
+  d3-selection:
+    specifier: ^3.0.0
+    version: 3.0.0
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
+  node-gettext:
+    specifier: ^3.0.0
+    version: 3.0.0
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator
 
 packages:
 
-  /d3-selection/3.0.0:
+  /d3-selection@3.0.0:
     resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
     engines: {node: '>=12'}
     dev: false
 
-  /lodash.get/4.4.2:
+  /lodash.get@4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
     dev: false
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /node-gettext/3.0.0:
+  /node-gettext@3.0.0:
     resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}
     dependencies:
       lodash.get: 4.4.2
     dev: false
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

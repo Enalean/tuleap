@@ -1,13 +1,14 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
-  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/list-picker
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-popovers
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator

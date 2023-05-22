@@ -1,33 +1,39 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/copy-to-clipboard': workspace:*
-  '@tuleap/cypress-configurator': workspace:*
-  '@tuleap/cypress-utilities-support': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@types/sprintf-js': ^1.1.2
-  sprintf-js: ^1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
-  '@tuleap/gettext': link:../../lib/frontend/gettext
-  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
-  sprintf-js: 1.1.2
+  '@tuleap/copy-to-clipboard':
+    specifier: workspace:*
+    version: link:../../lib/frontend/copy-to-clipboard
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../lib/frontend/gettext
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@types/sprintf-js': 1.1.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-configurator':
+    specifier: workspace:*
+    version: link:../../lib/test-utils/cypress-configurator
+  '@tuleap/cypress-utilities-support':
+    specifier: workspace:*
+    version: link:../../lib/test-utils/cypress-utilities-support
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.2
 
 packages:
 
-  /@types/sprintf-js/1.1.2:
+  /@types/sprintf-js@1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

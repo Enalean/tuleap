@@ -1,9 +1,9 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/burningparrot-theme': workspace:*
-  '@tuleap/project-background': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/burningparrot-theme': link:../../../../../src/themes/BurningParrot
-  '@tuleap/project-background': link:../../../../../lib/frontend/project-background
+  '@tuleap/burningparrot-theme':
+    specifier: workspace:*
+    version: link:../../../../../src/themes/BurningParrot
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/project-background

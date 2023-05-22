@@ -1,41 +1,51 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/filter-inline-table': workspace:*
-  '@tuleap/lazybox': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/tlp': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
-  '@tuleap/tlp-relative-date': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
-  codemirror: ^5.62.0
-  dompurify: ^3.0.0
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/filter-inline-table': link:../../../lib/frontend/filter-table
-  '@tuleap/lazybox': link:../../../lib/frontend/lazybox
-  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
-  '@tuleap/tlp': link:../../themes/tlp
-  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
-  '@tuleap/tlp-relative-date': link:../../../lib/frontend/tlp-relative-date
-  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
-  codemirror: 5.62.0
-  dompurify: 3.0.0
+  '@tuleap/filter-inline-table':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/filter-table
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/lazybox
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/list-picker
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../themes/tlp
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-relative-date
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-swatch-colors
+  codemirror:
+    specifier: ^5.62.0
+    version: 5.62.0
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.0
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/build-system-configurator
 
 packages:
 
-  /codemirror/5.62.0:
+  /codemirror@5.62.0:
     resolution: {integrity: sha512-Xnl3304iCc8nyVZuRkzDVVwc794uc9QNX0UcPGeNic1fbzkSrO4l4GVXho9tRNKBgPYZXgocUqXyfIv3BILhCQ==}
     dev: false
 
-  /dompurify/3.0.0:
+  /dompurify@3.0.0:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false

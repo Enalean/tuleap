@@ -1,45 +1,55 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/fault': workspace:*
-  '@tuleap/fetch-result': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/plugin-git-gitlab-api-querier': workspace:*
-  '@tuleap/plugin-gitlab-administration-theme': workspace:*
-  '@tuleap/po-gettext-plugin': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@types/sprintf-js': ^1.1.2
-  neverthrow: ^6.0.0
-  sprintf-js: ^1.1.2
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/dom': link:../../../../lib/frontend/dom
-  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
-  '@tuleap/gettext': link:../../../../lib/frontend/gettext
-  '@tuleap/plugin-git-gitlab-api-querier': link:../../../git/scripts/lib/gitlab-api-querier
-  '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
-  '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
-  sprintf-js: 1.1.2
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/dom
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/gettext
+  '@tuleap/plugin-git-gitlab-api-querier':
+    specifier: workspace:*
+    version: link:../../../git/scripts/lib/gitlab-api-querier
+  '@tuleap/plugin-gitlab-administration-theme':
+    specifier: workspace:*
+    version: link:../lib/administration-theme
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-modal
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/fault': link:../../../../lib/frontend/fault
-  '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
-  '@types/sprintf-js': 1.1.2
-  neverthrow: 6.0.0
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/po-gettext-plugin
+  '@types/sprintf-js':
+    specifier: ^1.1.2
+    version: 1.1.2
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
 
 packages:
 
-  /@types/sprintf-js/1.1.2:
+  /@types/sprintf-js@1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
     dev: true
 
-  /neverthrow/6.0.0:
+  /neverthrow@6.0.0:
     resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: true
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false

@@ -1,27 +1,28 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@types/dompurify': ^3.0.2
-  dompurify: ^3.0.0
+lockfileVersion: '6.0'
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@types/dompurify': 3.0.2
-  dompurify: 3.0.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@types/dompurify':
+    specifier: ^3.0.2
+    version: 3.0.2
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.2
 
 packages:
 
-  /@types/dompurify/3.0.2:
+  /@types/dompurify@3.0.2:
     resolution: {integrity: sha512-YBL4ziFebbbfQfH5mlC+QTJsvh0oJUrWbmxKMyEdL7emlHJqGR2Qb34TEFKj+VCayBvjKy3xczMFNhugThUsfQ==}
     dependencies:
       '@types/trusted-types': 2.0.3
     dev: true
 
-  /@types/trusted-types/2.0.3:
+  /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
     dev: true
 
-  /dompurify/3.0.2:
+  /dompurify@3.0.2:
     resolution: {integrity: sha512-B8c6JdiEpxAKnd8Dm++QQxJL4lfuc757scZtcapj6qjTjrQzyq5iAyznLKVvK+77eYNiFblHBlt7MM0fOeqoKw==}
     dev: true

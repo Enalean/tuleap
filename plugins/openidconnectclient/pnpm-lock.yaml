@@ -1,15 +1,17 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
-  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-swatch-colors
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

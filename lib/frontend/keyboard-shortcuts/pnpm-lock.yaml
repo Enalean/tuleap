@@ -1,19 +1,20 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/dom': workspace:*
-  hotkeys-js: ^3.8.3
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/dom': link:../dom
-  hotkeys-js: 3.8.3
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../dom
+  hotkeys-js:
+    specifier: ^3.8.3
+    version: 3.8.3
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
 
 packages:
 
-  /hotkeys-js/3.8.3:
+  /hotkeys-js@3.8.3:
     resolution: {integrity: sha512-rUmoryG4lEAtkjF5tcYaihrVoE86Fdw1BLqO/UiBWOOF56h32a6ax8oV4urBlinVtNNtArLlBq8igGfZf2tQnw==}
     dev: false

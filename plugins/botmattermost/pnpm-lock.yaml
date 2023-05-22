@@ -1,11 +1,11 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/tlp-modal': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

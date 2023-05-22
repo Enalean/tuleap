@@ -1,30 +1,37 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@fortawesome/fontawesome-free': ^6.1.1
-  '@tuleap/cross-ref-badges': workspace:*
-  '@tuleap/fp-feedback': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/project-background': workspace:*
-  '@tuleap/project-sidebar-internal': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@fortawesome/fontawesome-free': 6.1.1
-  '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
-  '@tuleap/fp-feedback': link:../../../lib/frontend/fp-feedback
-  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
-  '@tuleap/project-background': link:../../../lib/frontend/project-background
-  '@tuleap/project-sidebar-internal': link:../../../lib/frontend/project-sidebar-internal
-  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
-  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
+  '@fortawesome/fontawesome-free':
+    specifier: ^6.1.1
+    version: 6.1.1
+  '@tuleap/cross-ref-badges':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/cross-ref-badges
+  '@tuleap/fp-feedback':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fp-feedback
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/list-picker
+  '@tuleap/project-background':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/project-background
+  '@tuleap/project-sidebar-internal':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/project-sidebar-internal
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/tlp-swatch-colors
 
 packages:
 
-  /@fortawesome/fontawesome-free/6.1.1:
+  /@fortawesome/fontawesome-free@6.1.1:
     resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
     engines: {node: '>=6'}
     requiresBuild: true

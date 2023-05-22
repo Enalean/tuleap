@@ -1,17 +1,20 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/html-escaper': workspace:*
-  '@tuleap/tlp-modal': workspace:*
-  '@tuleap/tlp-popovers': workspace:*
-  '@tuleap/user-and-ugroup-autocompleter': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
-  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
-  '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
+  '@tuleap/html-escaper':
+    specifier: workspace:*
+    version: link:../../lib/frontend/html-escaper
+  '@tuleap/tlp-modal':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
+    specifier: workspace:*
+    version: link:../../lib/frontend/tlp-popovers
+  '@tuleap/user-and-ugroup-autocompleter':
+    specifier: workspace:*
+    version: link:../../lib/frontend/user-and-ugroup-autocompleter
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../lib/frontend/build-system-configurator

@@ -1,40 +1,46 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@floating-ui/dom': 1.2.7
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/core-constants': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/focus-navigation': workspace:*
-  '@tuleap/tlp': workspace:*
-  '@tuleap/tlp-badge': workspace:*
-  hybrids: 8.1.8
+lockfileVersion: '6.0'
 
 dependencies:
-  '@floating-ui/dom': 1.2.7
-  '@tuleap/core-constants': link:../constants
-  '@tuleap/focus-navigation': link:../focus-navigation
-  '@tuleap/tlp': link:../../../src/themes/tlp
-  '@tuleap/tlp-badge': link:../tlp-badge
-  hybrids: 8.1.8
+  '@floating-ui/dom':
+    specifier: 1.2.7
+    version: 1.2.7
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../constants
+  '@tuleap/focus-navigation':
+    specifier: workspace:*
+    version: link:../focus-navigation
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../../src/themes/tlp
+  '@tuleap/tlp-badge':
+    specifier: workspace:*
+    version: link:../tlp-badge
+  hybrids:
+    specifier: 8.1.8
+    version: 8.1.8
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@tuleap/dom': link:../dom
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../dom
 
 packages:
 
-  /@floating-ui/core/1.2.6:
+  /@floating-ui/core@1.2.6:
     resolution: {integrity: sha512-EvYTiXet5XqweYGClEmpu3BoxmsQ4hkj3QaYA6qEnigCWffTP3vNRwBReTdrwDwo7OoJ3wM8Uoe9Uk4n+d4hfg==}
     dev: false
 
-  /@floating-ui/dom/1.2.7:
+  /@floating-ui/dom@1.2.7:
     resolution: {integrity: sha512-DyqylONj1ZaBnzj+uBnVfzdjjCkFCL2aA9ESHLyUOGSqb03RpbLMImP1ekIQXYs4KLk9jAjJfZAU8hXfWSahEg==}
     dependencies:
       '@floating-ui/core': 1.2.6
     dev: false
 
-  /hybrids/8.1.8:
+  /hybrids@8.1.8:
     resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false

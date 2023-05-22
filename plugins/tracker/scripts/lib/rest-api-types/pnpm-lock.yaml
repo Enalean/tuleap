@@ -1,9 +1,9 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/core-rest-api-types': workspace:*
-  '@tuleap/plugin-tracker-constants': workspace:*
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
-  '@tuleap/plugin-tracker-constants': link:../constants
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/rest-api-types
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:*
+    version: link:../constants

@@ -1,194 +1,224 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@tuleap/angular-tlp': workspace:*
-  '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/ckeditor-image-upload': workspace:*
-  '@tuleap/core-constants': workspace:*
-  '@tuleap/core-rest-api-types': workspace:*
-  '@tuleap/date-helper': workspace:*
-  '@tuleap/dom': workspace:*
-  '@tuleap/fault': workspace:*
-  '@tuleap/fetch-result': workspace:*
-  '@tuleap/lazybox': workspace:*
-  '@tuleap/list-picker': workspace:*
-  '@tuleap/option': workspace:*
-  '@tuleap/plugin-tracker-constants': workspace:*
-  '@tuleap/plugin-tracker-rest-api-types': workspace:*
-  '@tuleap/plugin-tracker-rich-text-editor': workspace:*
-  '@tuleap/tlp': workspace:*
-  '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-relative-date': workspace:*
-  '@tuleap/tooltip': workspace:*
-  '@types/ckeditor': ^4.9.10
-  angular: ^1.8.2
-  angular-custom-elements: ^2.1.0
-  angular-gettext: ^2.4.2
-  angular-mocks: ^1.8.2
-  dompurify: ^3.0.0
-  hybrids: ^8.1.8
-  lodash-es: ^4.17.21
-  moment: ^2.29.4
-  neverthrow: ^6.0.0
-  pretty-kibibytes: ^4.0.4
-  sprintf-js: ^1.1.2
-  tus-js-client: ^3.0.1
+lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/angular-tlp': link:../../../../../lib/frontend/angular-tlp
-  '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
-  '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
-  '@tuleap/fault': link:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  '@tuleap/lazybox': link:../../../../../lib/frontend/lazybox
-  '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
-  '@tuleap/option': link:../../../../../lib/frontend/option
-  '@tuleap/plugin-tracker-constants': link:../constants
-  '@tuleap/plugin-tracker-rest-api-types': link:../rest-api-types
-  '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
-  '@tuleap/tlp': link:../../../../../src/themes/tlp
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date': link:../../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../../../lib/frontend/tooltip
-  angular-custom-elements: 2.1.0
-  angular-gettext: 2.4.2
-  dompurify: 3.0.0
-  hybrids: 8.1.8
-  lodash-es: 4.17.21
-  moment: 2.29.4
-  neverthrow: 6.0.0
-  pretty-kibibytes: 4.0.4
-  sprintf-js: 1.1.2
-  tus-js-client: 3.0.1
+  '@tuleap/angular-tlp':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/angular-tlp
+  '@tuleap/ckeditor-image-upload':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/rest-api-types
+  '@tuleap/date-helper':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/date-helper
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/fetch-result
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/lazybox
+  '@tuleap/list-picker':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/list-picker
+  '@tuleap/option':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/option
+  '@tuleap/plugin-tracker-constants':
+    specifier: workspace:*
+    version: link:../constants
+  '@tuleap/plugin-tracker-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+  '@tuleap/plugin-tracker-rich-text-editor':
+    specifier: workspace:*
+    version: link:../rich-text-editor
+  '@tuleap/tlp':
+    specifier: workspace:*
+    version: link:../../../../../src/themes/tlp
+  '@tuleap/tlp-fetch':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/tooltip
+  angular-custom-elements:
+    specifier: ^2.1.0
+    version: 2.1.0
+  angular-gettext:
+    specifier: ^2.4.2
+    version: 2.4.2
+  dompurify:
+    specifier: ^3.0.0
+    version: 3.0.0
+  hybrids:
+    specifier: ^8.1.8
+    version: 8.1.8
+  lodash-es:
+    specifier: ^4.17.21
+    version: 4.17.21
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
+  pretty-kibibytes:
+    specifier: ^4.0.4
+    version: 4.0.4
+  sprintf-js:
+    specifier: ^1.1.2
+    version: 1.1.2
+  tus-js-client:
+    specifier: ^3.0.1
+    version: 3.0.1
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/core-constants': link:../../../../../lib/frontend/constants
-  '@tuleap/dom': link:../../../../../lib/frontend/dom
-  '@types/ckeditor': 4.9.10
-  angular: 1.8.2
-  angular-mocks: 1.8.2
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/constants
+  '@tuleap/dom':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/dom
+  '@types/ckeditor':
+    specifier: ^4.9.10
+    version: 4.9.10
+  angular:
+    specifier: ^1.8.2
+    version: 1.8.2
+  angular-mocks:
+    specifier: ^1.8.2
+    version: 1.8.2
 
 packages:
 
-  /@types/ckeditor/4.9.10:
+  /@types/ckeditor@4.9.10:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /angular-custom-elements/2.1.0:
+  /angular-custom-elements@2.1.0:
     resolution: {integrity: sha1-pEiW4XK/IAxYFESHA6GheId/hXU=}
     dev: false
 
-  /angular-gettext/2.4.2:
+  /angular-gettext@2.4.2:
     resolution: {integrity: sha512-J9Zy76VmN5otw6GyIqJjoLjl+0wwsZSCUPgPfQwM4Mx//hP3leqyS/fgf2MDiMLLyKgoHWkMMzzWbP4iH3+5vQ==}
     dev: false
 
-  /angular-mocks/1.8.2:
+  /angular-mocks@1.8.2:
     resolution: {integrity: sha512-I5L3P0l21HPdVsP4A4qWmENt4ePjjbkDFdAzOaM7QiibFySbt14DptPbt2IjeG4vFBr4vSLbhIz8Fk03DISl8Q==}
     dev: true
 
-  /angular/1.8.2:
+  /angular@1.8.2:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: true
 
-  /buffer-from/1.1.2:
+  /buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: false
 
-  /combine-errors/3.0.3:
+  /combine-errors@3.0.3:
     resolution: {integrity: sha512-C8ikRNRMygCwaTx+Ek3Yr+OuZzgZjduCOfSQBjbM8V3MfgcjSTeto/GXP6PAwKvJz/v15b7GHZvx5rOlczFw/Q==}
     dependencies:
       custom-error-instance: 2.1.1
       lodash.uniqby: 4.5.0
     dev: false
 
-  /custom-error-instance/2.1.1:
+  /custom-error-instance@2.1.1:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}
     dev: false
 
-  /dompurify/3.0.0:
+  /dompurify@3.0.0:
     resolution: {integrity: sha512-0g/yr2IJn4nTbxwL785YxS7/AvvgGFJw6LLWP+BzWzB1+BYOqPUT9Hy0rXrZh5HLdHnxH72aDdzvC9SdTjsuaA==}
     dev: false
 
-  /graceful-fs/4.2.10:
+  /graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: false
 
-  /hybrids/8.1.8:
+  /hybrids@8.1.8:
     resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 
-  /is-stream/2.0.1:
+  /is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
     dev: false
 
-  /js-base64/3.7.2:
+  /js-base64@3.7.2:
     resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
     dev: false
 
-  /lodash-es/4.17.21:
+  /lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
-  /lodash._baseiteratee/4.7.0:
+  /lodash._baseiteratee@4.7.0:
     resolution: {integrity: sha512-nqB9M+wITz0BX/Q2xg6fQ8mLkyfF7MU7eE+MNBNjTHFKeKaZAPEzEg+E8LWxKWf1DQVflNEn9N49yAuqKh2mWQ==}
     dependencies:
       lodash._stringtopath: 4.8.0
     dev: false
 
-  /lodash._basetostring/4.12.0:
+  /lodash._basetostring@4.12.0:
     resolution: {integrity: sha512-SwcRIbyxnN6CFEEK4K1y+zuApvWdpQdBHM/swxP962s8HIxPO3alBH5t3m/dl+f4CMUug6sJb7Pww8d13/9WSw==}
     dev: false
 
-  /lodash._baseuniq/4.6.0:
+  /lodash._baseuniq@4.6.0:
     resolution: {integrity: sha512-Ja1YevpHZctlI5beLA7oc5KNDhGcPixFhcqSiORHNsp/1QTv7amAXzw+gu4YOvErqVlMVyIJGgtzeepCnnur0A==}
     dependencies:
       lodash._createset: 4.0.3
       lodash._root: 3.0.1
     dev: false
 
-  /lodash._createset/4.0.3:
+  /lodash._createset@4.0.3:
     resolution: {integrity: sha512-GTkC6YMprrJZCYU3zcqZj+jkXkrXzq3IPBcF/fIPpNEAB4hZEtXU8zp/RwKOvZl43NUmwDbyRk3+ZTbeRdEBXA==}
     dev: false
 
-  /lodash._root/3.0.1:
+  /lodash._root@3.0.1:
     resolution: {integrity: sha512-O0pWuFSK6x4EXhM1dhZ8gchNtG7JMqBtrHdoUFUWXD7dJnNSUze1GuyQr5sOs0aCvgGeI3o/OJW8f4ca7FDxmQ==}
     dev: false
 
-  /lodash._stringtopath/4.8.0:
+  /lodash._stringtopath@4.8.0:
     resolution: {integrity: sha512-SXL66C731p0xPDC5LZg4wI5H+dJo/EO4KTqOMwLYCH3+FmmfAKJEZCm6ohGpI+T1xwsDsJCfL4OnhorllvlTPQ==}
     dependencies:
       lodash._basetostring: 4.12.0
     dev: false
 
-  /lodash.throttle/4.1.1:
+  /lodash.throttle@4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
     dev: false
 
-  /lodash.uniqby/4.5.0:
+  /lodash.uniqby@4.5.0:
     resolution: {integrity: sha512-IRt7cfTtHy6f1aRVA5n7kT8rgN3N1nH6MOWLcHfpWG2SH19E3JksLK38MktLxZDhlAjCP9jpIXkOnRXlu6oByQ==}
     dependencies:
       lodash._baseiteratee: 4.7.0
       lodash._baseuniq: 4.6.0
     dev: false
 
-  /moment/2.29.4:
+  /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /neverthrow/6.0.0:
+  /neverthrow@6.0.0:
     resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false
 
-  /pretty-kibibytes/4.0.4:
+  /pretty-kibibytes@4.0.4:
     resolution: {integrity: sha1-JGKqemGMKjqLQ5Rm4isEolBG3s4=}
     engines: {node: '>=4'}
     dev: false
 
-  /proper-lockfile/4.1.2:
+  /proper-lockfile@4.1.2:
     resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
     dependencies:
       graceful-fs: 4.2.10
@@ -196,28 +226,28 @@ packages:
       signal-exit: 3.0.7
     dev: false
 
-  /querystringify/2.2.0:
+  /querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
     dev: false
 
-  /requires-port/1.0.0:
+  /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
     dev: false
 
-  /retry/0.12.0:
+  /retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
     dev: false
 
-  /signal-exit/3.0.7:
+  /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: false
 
-  /sprintf-js/1.1.2:
+  /sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false
 
-  /tus-js-client/3.0.1:
+  /tus-js-client@3.0.1:
     resolution: {integrity: sha512-2EZIUvswv1xG3KtzJO9FZ2wvTtVzltUN23Nse/nZwWE06dbn/8RBeRqi2clV/ilpEomOQOOMdHkIPUQmTum/xg==}
     dependencies:
       buffer-from: 1.1.2
@@ -229,7 +259,7 @@ packages:
       url-parse: 1.5.10
     dev: false
 
-  /url-parse/1.5.10:
+  /url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
     dependencies:
       querystringify: 2.2.0
