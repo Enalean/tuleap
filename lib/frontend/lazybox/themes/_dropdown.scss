@@ -134,7 +134,7 @@
         padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
         color: var(--tlp-main-color);
 
-        &.focus,
+        &:focus,
         &:hover {
             color: var(--tlp-white-color);
         }
