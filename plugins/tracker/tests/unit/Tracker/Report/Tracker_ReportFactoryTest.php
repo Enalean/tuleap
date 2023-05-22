@@ -68,16 +68,19 @@ final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
         $reports               = [];
+        $reports_xml_mapping   = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
             $empty_array = [];
-            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
+            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $reports_xml_mapping, $renderers_xml_mapping, 0);
         }
 
         //general settings
         $this->assertEquals('Default', $reports[0]->name);
         $this->assertEquals('The system default artifact report', $reports[0]->description);
         $this->assertEquals(0, $reports[0]->is_default);
+
+        $this->assertEquals($reports[0], $reports_xml_mapping['REPORT_979']);
 
         //default values
         $this->assertEquals(1, $reports[0]->is_query_displayed);
@@ -92,10 +95,11 @@ final class Tracker_ReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/tracker_with_renderer_id.xml'));
         $reports               = [];
+        $reports_xml_mapping   = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
             $empty_array = [];
-            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
+            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $reports_xml_mapping, $renderers_xml_mapping, 0);
         }
 
         //general settings

@@ -432,7 +432,7 @@ tracker =
         attribute is_in_expert_mode { "0" | "1" }?, # default is false
         attribute expert_query { xsd:string }?,
         # these ids are initial ids of the exported report
-        attribute id { xsd:long }?,
+        attribute id { xsd:string }?,
         attribute tracker_id { xsd:long }?,
         attribute current_renderer_id { xsd:long }?,
         attribute user_id { xsd:long }?,

@@ -417,7 +417,7 @@ final class RoadmapProjectWidget extends \Widget
 
         $report_id = $this->filter_report_dao->getReportIdToFilterArtifacts((int) $this->content_id);
         if ($report_id) {
-            $this->addPreferenceXmlNodeValue($preference, 'report_id', \Tracker_Report::XML_ID_PREFIX . $report_id);
+            $this->addPreferenceXmlNodeValue($preference, 'filter_report_id', \Tracker_Report::XML_ID_PREFIX . $report_id);
         }
 
         if ($this->lvl1_iteration_tracker_id) {

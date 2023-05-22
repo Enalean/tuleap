@@ -236,7 +236,7 @@
 		<field REF="F9" />
 	</tooltip>
 	<reports>
-		<report is_default="0">
+		<report id="REPORT_979" is_default="0">
 			<name>Default</name>
 			<description>The system default artifact report</description>
 			<criterias>
