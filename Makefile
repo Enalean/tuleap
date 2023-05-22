@@ -46,8 +46,6 @@ composer:  ## Install PHP dependencies with Composer
 	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
 
 preload:
-	@find . src/themes/ plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
-		xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -I{} bash -c 'echo "Generating preload for {}" && cd "`dirname "{}"`" && $(PRELOAD_GENERATOR) composer.json'
 	@echo "Verify preload validity"
 	@$(PHP) \
 		-d error_reporting=2147483647 \
@@ -130,7 +128,7 @@ generate-templates-plugins:
 # Tests and all
 #
 
-post-checkout-build: composer generate-mo generate-templates js-build ## Rebuild the application, can be run without stack up
+post-checkout-build: composer preload generate-mo generate-templates js-build ## Rebuild the application, can be run without stack up
 
 post-checkout-reload-env: dev-clear-cache dev-forgeupgrade restart-services ## Clear caches, forgeupgrade and restart services
 

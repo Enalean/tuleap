@@ -25,6 +25,9 @@ namespace Tuleap\WebAssembly;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Option\Option;
 
+/**
+ * This class is preloaded, you need to restart PHP FPM to have changes made to it taken into account
+ */
 interface WASMCaller
 {
     /**

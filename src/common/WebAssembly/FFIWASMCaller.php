@@ -32,16 +32,17 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
+/**
+ * This class is preloaded, you need to restart PHP FPM to have changes made to it taken into account
+ */
 final class FFIWASMCaller implements WASMCaller
 {
     /**
-     * @var \FFI&FFIWASMCallerStub $ffi
+     * @var (\FFI&FFIWASMCallerStub)|null
      */
-    private \FFI $ffi;
-    private readonly Prometheus $prometheus;
+    private static ?\FFI $ffi              = null;
     private const MAX_EXEC_TIME_IN_MS      = 10;
     private const MAX_MEMORY_SIZE_IN_BYTES = 4194304; /* 4 Mo */
-    private const HEADER_PATH              = '/usr/lib/tuleap/wasm/libwasmtimewrapper.h';
 
     private const RESPONSE_TYPE_NAME = 'wasm_response_total';
     private const RESPONSE_TYPE_HELP = 'Total number of wasm response received';
@@ -58,26 +59,17 @@ final class FFIWASMCaller implements WASMCaller
 
     public function __construct(
         private readonly TreeMapper $mapper,
-        Prometheus $prometheus,
+        private readonly Prometheus $prometheus,
     ) {
-        /**
-         * @var ?(\FFI&FFIWASMCallerStub) $ffi_tmp
-         */
-        $ffi_tmp = \FFI::load(self::HEADER_PATH);
-        if ($ffi_tmp === null) {
-            throw new \LogicException("Could not load C declaration from " . self::HEADER_PATH);
-        }
-        $this->ffi        = $ffi_tmp;
-        $this->prometheus = $prometheus;
     }
 
     public function call(string $wasm_path, string $input): Option
     {
         $start_time = microtime(true);
 
-        $output     = $this->ffi->callWasmModule($wasm_path, $input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
+        $output     = self::getFFIModule()->callWasmModule($wasm_path, $input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
         $output_php = \FFI::string($output);
-        $this->ffi->freeCallWasmModuleOutput($output);
+        self::getFFIModule()->freeCallWasmModuleOutput($output);
 
         $end_time = microtime(true);
         Prometheus::instance()->histogram(
@@ -153,5 +145,18 @@ final class FFIWASMCaller implements WASMCaller
             [],
             self::MEMORY_CONSUMPTION_BUCKETS
         );
+    }
+
+    /**
+     * @return \FFI&FFIWASMCallerStub $ffi
+     */
+    private static function getFFIModule(): \FFI
+    {
+        if (self::$ffi !== null) {
+            return self::$ffi;
+        }
+        $ffi       = \FFI::scope('WASMTIME_WRAPPER');
+        self::$ffi = $ffi;
+        return $ffi;
     }
 }

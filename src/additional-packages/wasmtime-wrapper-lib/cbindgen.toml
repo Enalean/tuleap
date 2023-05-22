@@ -1,2 +1,2 @@
 language = "C"
-header = "#define FFI_LIB \"/usr/lib/tuleap/wasm/libwasmtimewrapper.so\""
+header = "#define FFI_LIB \"/usr/lib/tuleap/wasm/libwasmtimewrapper.so\"\n#define FFI_SCOPE \"WASMTIME_WRAPPER\""
