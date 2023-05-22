@@ -37,7 +37,6 @@ final class FilteredOutboundRequestJustificationTest extends TestCase
     public function testExtractsInformationForFilteredRequests(): void
     {
         $reason                         = 'Something bad';
-        $trace_id                       = '1';
         $response_from_filtered_request = HTTPFactoryBuilder::responseFactory()->createResponse(407)
             ->withHeader('X-Smokescreen-Error', $reason);
 
@@ -45,5 +44,15 @@ final class FilteredOutboundRequestJustificationTest extends TestCase
 
         self::assertTrue($justification->isValue());
         self::assertSame($reason, $justification->unwrapOr(null)?->reason);
+    }
+
+    public function testRejectedRequestsWithoutA407StatusCodeAreNotSSRFFiltered(): void
+    {
+        $response_from_filtered_request = HTTPFactoryBuilder::responseFactory()->createResponse(502)
+            ->withHeader('X-Smokescreen-Error', 'Failed to connect to remote host: ...');
+
+        $justification = FilteredOutboundRequestJustification::fromResponse($response_from_filtered_request);
+
+        self::assertTrue($justification->isNothing());
     }
 }

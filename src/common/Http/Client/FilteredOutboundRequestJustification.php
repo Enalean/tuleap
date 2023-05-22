@@ -41,6 +41,9 @@ final class FilteredOutboundRequestJustification
      */
     public static function fromResponse(ResponseInterface $response): Option
     {
+        if ($response->getStatusCode() !== 407) {
+            return Option::nothing(self::class);
+        }
         $filtered_request_header = $response->getHeaderLine(self::SMOKESCREEN_ERROR_HEADER);
         if ($filtered_request_header === '') {
             return Option::nothing(self::class);
