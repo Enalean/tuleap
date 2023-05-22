@@ -57,8 +57,8 @@ final class PaginatedArtifactDaoTest extends TestCase
         $dao     = new PaginatedArtifactDao();
         $results = $dao->searchPaginatedByListOfTrackerIds([$this->stories_id, $this->tasks_id], 1, 0);
 
-        self::assertEquals(1, $results[0]['id']);
-        self::assertEquals(3, $dao->foundRows());
+        self::assertEquals(1, $results->artifact_rows[0]['id']);
+        self::assertEquals(3, $results->total_size);
     }
 
     public function testSearchPaginatedByListOfArtifactIds(): void
@@ -66,7 +66,7 @@ final class PaginatedArtifactDaoTest extends TestCase
         $dao     = new PaginatedArtifactDao();
         $results = $dao->searchPaginatedByListOfArtifactIds([1, 4], 1, 0);
 
-        self::assertEquals(1, $results[0]['id']);
-        self::assertEquals(2, $dao->foundRows());
+        self::assertEquals(1, $results->artifact_rows[0]['id']);
+        self::assertEquals(2, $results->total_size);
     }
 }

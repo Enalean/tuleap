@@ -160,13 +160,13 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
             $limit,
             $offset
         );
-        if (! $paginated_by_list_of_tracker_ids) {
+        $size                             = $paginated_by_list_of_tracker_ids->total_size;
+        if (! $size) {
             return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
-        $size      = $dao->foundRows();
         $artifacts = [];
-        foreach ($paginated_by_list_of_tracker_ids as $row) {
+        foreach ($paginated_by_list_of_tracker_ids->artifact_rows as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
 
@@ -185,13 +185,13 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
 
         $dao       = new PaginatedArtifactDao();
         $paginated = $dao->searchPaginatedByListOfArtifactIds($artifact_ids, $limit, $offset);
-        if (! $paginated) {
+        $size      = $paginated->total_size;
+        if (! $size) {
             return new Tracker_Artifact_PaginatedArtifacts([], 0);
         }
 
-        $size      = $dao->foundRows();
         $artifacts = [];
-        foreach ($paginated as $row) {
+        foreach ($paginated->artifact_rows as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
 

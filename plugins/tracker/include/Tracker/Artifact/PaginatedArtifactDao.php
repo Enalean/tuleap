@@ -24,11 +24,21 @@ namespace Tuleap\Tracker\Artifact;
 
 final class PaginatedArtifactDao extends \Tuleap\DB\DataAccessObject
 {
-    public function searchPaginatedByListOfTrackerIds(array $tracker_ids, int $limit, int $offset): array
+    public function searchPaginatedByListOfTrackerIds(array $tracker_ids, int $limit, int $offset): PaginatedArtifactRows
     {
-        $ids_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $tracker_ids);
+        return $this->getDB()->tryFlatTransaction(function () use ($tracker_ids, $limit, $offset) {
+            $ids_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $tracker_ids);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title, CVT.body_format AS title_format
+            $total_size = $this->getDB()->cell(
+                "SELECT count(*) FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id IN ($ids_condition))",
+                ...$ids_condition->values()
+            );
+            if (! $total_size) {
+                return new PaginatedArtifactRows([], 0);
+            }
+
+            $sql = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id IN ($ids_condition))
                     LEFT JOIN (
@@ -39,16 +49,29 @@ final class PaginatedArtifactDao extends \Tuleap\DB\DataAccessObject
                     ORDER BY T.id ASC, A.id ASC
                     LIMIT ? OFFSET ?";
 
-        $params = [...$ids_condition->values(), $limit, $offset];
+            $params = [...$ids_condition->values(), $limit, $offset];
 
-        return $this->getDB()->run($sql, ...$params);
+            return new PaginatedArtifactRows(
+                $this->getDB()->run($sql, ...$params),
+                $total_size,
+            );
+        });
     }
 
-    public function searchPaginatedByListOfArtifactIds(array $artifact_ids, int $limit, int $offset): array
+    public function searchPaginatedByListOfArtifactIds(array $artifact_ids, int $limit, int $offset): PaginatedArtifactRows
     {
-        $ids_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $artifact_ids);
+        return $this->getDB()->tryFlatTransaction(function () use ($artifact_ids, $limit, $offset) {
+            $ids_condition = \ParagonIE\EasyDB\EasyStatement::open()->in('?*', $artifact_ids);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, CVT.value AS title, CVT.body_format AS title_format
+            $total_size = $this->getDB()->cell(
+                "SELECT count(*) FROM tracker_artifact AS A WHERE A.id IN ($ids_condition)",
+                ...$ids_condition->values()
+            );
+            if (! $total_size) {
+                return new PaginatedArtifactRows([], 0);
+            }
+
+            $sql = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     LEFT JOIN (
                         tracker_changeset_value AS CV
@@ -59,8 +82,12 @@ final class PaginatedArtifactDao extends \Tuleap\DB\DataAccessObject
                     ORDER BY A.id ASC
                     LIMIT ? OFFSET ?";
 
-        $params = [...$ids_condition->values(), $limit, $offset];
+            $params = [...$ids_condition->values(), $limit, $offset];
 
-        return $this->getDB()->run($sql, ...$params);
+            return new PaginatedArtifactRows(
+                $this->getDB()->run($sql, ...$params),
+                $total_size,
+            );
+        });
     }
 }
