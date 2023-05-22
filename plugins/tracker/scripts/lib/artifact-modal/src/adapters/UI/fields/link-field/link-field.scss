@@ -18,76 +18,55 @@
  */
 
 @use "@tuleap/lazybox";
-@use "creation/artifact-creator";
+@use "./dropdown/linkable_item";
+@use "./creation/artifact-creator";
 
-$link-table-cell-padding: 8px;
-$link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
-$link-table-cell-background: transparent;
+$link-row-padding: 8px;
+$link-rows-border-color: var(--tlp-background-color-darker-05);
+$link-type-width: 150px;
 
-.link-field-xref-badge {
-    margin: 0 6px 0 0;
+.link-field-rows-wrapper {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $link-rows-border-color;
+    border-bottom-width: 0;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.875rem;
 }
 
-#tuleap-artifact-modal-link-table {
-    width: unset;
-    margin: 0 0 var(--tlp-medium-spacing);
-    overflow: hidden;
-    border: 1px solid var(--tlp-background-color-darker-05);
-    border-bottom: 0;
-    border-radius: 5px;
+.link-field-row {
+    display: flex;
+    align-items: center;
+    padding: $link-row-padding;
+    border: 0 solid $link-rows-border-color;
+    border-bottom-width: 1px;
+    gap: $link-row-padding;
 
-    > .link-field-table-body {
-        > .link-field-table-row {
-            > :is(
-                    .link-field-table-cell-type,
-                    .link-field-table-cell-xref,
-                    .link-field-table-cell-status,
-                    .link-field-table-cell-action,
-                    .link-field-table-cell-no-links
-                ) {
-                padding: $link-table-cell-padding;
-                border-bottom: $link-table-cell-border-bottom;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-                background: $link-table-cell-background;
-            }
-
-            > .link-field-table-cell-type {
-                padding-right: 0;
-            }
-
-            > .link-field-table-cell-no-links {
-                height: 75px;
-                padding: 0;
-            }
-        }
+    &:hover {
+        background: var(--tlp-main-color-lighter-90);
     }
 }
 
-.link-field-table-footer-input,
-.link-field-table-footer-type {
-    padding: $link-table-cell-padding;
-    border-bottom: $link-table-cell-border-bottom;
-    background: $link-table-cell-background;
+.link-field-add-link-section {
+    display: flex;
+    margin: 0 0 var(--tlp-medium-spacing);
+    border: 1px solid $link-rows-border-color;
+    border-top-width: 0;
+    border-radius: 0 0 5px 5px;
 }
 
-.link-field-table-footer-input {
-    width: 100%;
+.link-field-add-link-row {
+    display: flex;
+    flex: 1;
+    padding: $link-row-padding;
+    gap: $link-row-padding;
+}
+
+.link-field-add-link-input {
+    flex: auto;
 
     > tuleap-lazybox {
         --lazybox-selection-height: var(--tlp-form-element-small-height);
-    }
-}
-
-.link-field-table-footer-type {
-    min-width: 150px;
-    padding: $link-table-cell-padding 0 $link-table-cell-padding $link-table-cell-padding;
-    vertical-align: middle;
-}
-
-.link-field-table-row {
-    &:hover {
-        background: var(--tlp-main-color-lighter-90);
     }
 }
 
@@ -96,55 +75,60 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-no-links-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 75px;
+    border: 0 solid $link-rows-border-color;
+    border-bottom-width: 1px;
     background: var(--tlp-fade-background-color);
-
-    &:hover {
-        background: var(--tlp-fade-background-color);
-    }
-}
-
-.link-field-table-row-muted {
-    background: var(--tlp-dimmed-color-lighter-95);
-
-    > .link-field-table-cell-xref > .link-field-artifact-link {
-        color: var(--tlp-dimmed-color);
-    }
-
-    &:hover {
-        background: var(--tlp-main-color-lighter-90);
-    }
+    color: var(--tlp-dimmed-color);
+    font-style: italic;
 }
 
 .link-field-link-to-remove {
     text-decoration: line-through;
 }
 
-.link-field-skeleton-cell {
-    min-width: 65px;
+.link-field-new-row {
+    background: var(--tlp-success-color-lighter-90);
+
+    &:hover {
+        background: var(--tlp-success-color-lighter-80);
+    }
 }
 
-.link-field-table-cell-type {
-    color: var(--tlp-dimmed-color);
-    font-size: 0.8125rem;
-    font-weight: 500;
+.link-field-row-muted {
+    background: var(--tlp-dimmed-color-lighter-95);
+
+    > .link-field-row-xref > .link-field-artifact-link {
+        color: var(--tlp-dimmed-color);
+    }
+}
+
+.link-field-row-type {
+    width: $link-type-width;
     text-align: right;
-    white-space: nowrap;
-}
-
-.link-field-table-cell-xref {
-    position: relative;
-    width: 100%;
 }
 
 .link-field-artifact-readonly-type {
+    color: var(--tlp-dimmed-color);
+    font-size: 0.8125rem;
+    font-weight: 500;
     line-height: var(--tlp-form-element-small-height);
+}
+
+.link-field-row-xref {
+    position: relative;
+    flex: auto;
 }
 
 .link-field-artifact-link {
     display: flex;
+    gap: 6px;
     position: absolute;
     inset: 0;
-    padding: ($link-table-cell-padding + 4px) $link-table-cell-padding;
+    align-items: center;
     color: var(--tlp-dark-color);
 }
 
@@ -154,53 +138,11 @@ $link-table-cell-background: transparent;
     white-space: nowrap;
 }
 
-.link-field-table-cell-status {
-    text-align: right;
-}
-
-.link-field-table-cell-action,
-.link-field-artifact-title {
-    vertical-align: middle;
-}
-
-.link-field-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 100%;
-}
-
-.link-field-item-title {
-    flex: 0 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.link-field-disabled-item-already-linked-info {
-    flex: 0 1 auto;
-    margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
-    white-space: nowrap;
-}
-
-.link-field-item-status {
-    margin: 0 0 0 auto;
-}
-
-.link-field-item-project {
-    flex: 1 1 100%;
-    margin: 2px 0 0;
-    font-size: 0.65rem;
-}
-
 .link-field-artifact-can-have-only-one-parent-note {
     display: flex;
+    gap: 6px;
     align-items: center;
     margin-bottom: var(--tlp-small-spacing);
     font-size: 0.875rem;
     line-height: normal;
-}
-
-.link-field-parent-note-xref-badge {
-    margin: 0 6px;
 }

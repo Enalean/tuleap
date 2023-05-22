@@ -53,7 +53,7 @@ export const getLinkableArtifactTemplate = (
     const item_classes = [
         `tlp-swatch-${artifact.xref.color}`,
         "cross-ref-badge",
-        "link-field-xref-badge",
+        "link-field-item-xref-badge",
     ];
 
     if (item.is_disabled) {

@@ -126,7 +126,7 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
 
-        expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
+        expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
         expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
     });
@@ -158,7 +158,7 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
 
-        expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
+        expect(row.classList.contains("link-field-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
