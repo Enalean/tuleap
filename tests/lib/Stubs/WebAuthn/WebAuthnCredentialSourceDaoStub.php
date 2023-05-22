@@ -128,12 +128,13 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function getAllByUserId(int $user_id): array
     {
+        $time = new \DateTimeImmutable();
         return array_map(
             static fn(PublicKeyCredentialSource $source) => new WebAuthnCredentialSource(
                 $source,
                 'name',
-                new \DateTimeImmutable(),
-                new \DateTimeImmutable()
+                $time,
+                $time
             ),
             $this->findAllForUserEntity(new PublicKeyCredentialUserEntity('', '', ''))
         );

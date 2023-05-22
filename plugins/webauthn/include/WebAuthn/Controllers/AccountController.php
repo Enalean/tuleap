@@ -63,7 +63,7 @@ final class AccountController implements DispatchableWithRequest, DispatchableWi
         $presenter = new AccountPresenter(
             $tabs,
             array_map(
-                static fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source),
+                fn(WebAuthnCredentialSource $source) => new AuthenticatorPresenter($source, $user),
                 $sources
             )
         );
