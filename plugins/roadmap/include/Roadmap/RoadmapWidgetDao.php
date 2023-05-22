@@ -135,8 +135,10 @@ class RoadmapWidgetDao extends DataAccessObject
 
     public function searchContent(int $id, int $owner_id, string $owner_type): ?array
     {
-        $sql = "SELECT *
+        $sql = "SELECT plugin_roadmap_widget.*, plugin_roadmap_widget_filter.report_id
                 FROM plugin_roadmap_widget
+                    LEFT JOIN plugin_roadmap_widget_filter
+                        ON (plugin_roadmap_widget.id = plugin_roadmap_widget_filter.widget_id)
                 WHERE id = ?
                   AND owner_id = ?
                   AND owner_type = ?";

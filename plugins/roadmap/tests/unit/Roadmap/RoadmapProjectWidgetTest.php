@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenter;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
@@ -33,14 +31,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const WIDGET_CONTENT_ID = 13;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapWidgetDao
-     */
-    private $dao;
     /**
      * @var RoadmapProjectWidget
      */
@@ -52,7 +44,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao = Mockery::mock(RoadmapWidgetDao::class);
+        $this->dao = $this->createMock(RoadmapWidgetDao::class);
 
         $template_render = new class extends \TemplateRenderer {
             public function renderToString($template_name, $presenter): string
@@ -69,7 +61,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $template_render,
             $this->presenter_builder,
-            Mockery::mock(\TrackerFactory::class),
+            $this->createStub(\TrackerFactory::class),
             new FilterReportDao(),
         );
     }
@@ -97,9 +89,9 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentBlindlyCloneContentIfNoTrackerMapping(): void
     {
         $this->dao
-            ->shouldReceive('cloneContent')
-            ->with(42, 102, "g")
-            ->once();
+            ->expects(self::once())
+            ->method('cloneContent')
+            ->with(42, 102, "g");
 
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
@@ -114,15 +106,15 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentBlindlyCloneContentIfContentIdCannotBeFound(): void
     {
         $this->dao
-            ->shouldReceive('searchContent')
+            ->expects(self::once())
+            ->method('searchContent')
             ->with(42, 101, "g")
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->dao
-            ->shouldReceive('cloneContent')
-            ->with(42, 102, "g")
-            ->once();
+            ->expects(self::once())
+            ->method('cloneContent')
+            ->with(42, 102, "g");
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [111 => 222]);
@@ -139,25 +131,25 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentTakeThePreviousTrackerIdIfItIsNotPartOfTheMapping(): void
     {
         $this->dao
-            ->shouldReceive('searchContent')
+            ->expects(self::once())
+            ->method('searchContent')
             ->with(42, 101, "g")
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 120,
                 'lvl2_iteration_tracker_id' => 130,
                 'default_timescale'         => 'week',
             ]);
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->expects(self::once())
+            ->method('searchSelectedTrackers')
             ->with(42)
-            ->once()
-            ->andReturn([110]);
+            ->willReturn([110]);
 
         $this->dao
-            ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [110], 0, 'week', 120, 130)
-            ->once();
+            ->expects(self::once())
+            ->method('insertContent')
+            ->with(102, "g", 'Roadmap', [110], 0, 'week', 120, 130);
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [111 => 222]);
@@ -174,31 +166,78 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCloneContentTakeTheTrackerIdFromTheMapping(): void
     {
         $this->dao
-            ->shouldReceive('searchContent')
+            ->expects(self::once())
+            ->method('searchContent')
             ->with(42, 101, "g")
-            ->once()
-            ->andReturn([
+            ->willReturn([
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 121,
                 'lvl2_iteration_tracker_id' => 131,
                 'default_timescale'         => 'week',
             ]);
         $this->dao
-            ->shouldReceive('searchSelectedTrackers')
+            ->expects(self::once())
+            ->method('searchSelectedTrackers')
             ->with(42)
-            ->once()
-            ->andReturn([111]);
+            ->willReturn([111]);
 
         $this->dao
-            ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [1110], 0, 'week', 1210, 1310)
-            ->once();
+            ->expects(self::once())
+            ->method('insertContent')
+            ->with(102, "g", 'Roadmap', [1110], 0, 'week', 1210, 1310);
 
         $mapping_registry = new MappingRegistry([]);
         $mapping_registry->setCustomMapping(
             \TrackerFactory::TRACKER_MAPPING_KEY,
             [111 => 1110, 121 => 1210, 131 => 1310]
         );
+        $this->widget->cloneContent(
+            ProjectTestBuilder::aProject()->build(),
+            ProjectTestBuilder::aProject()->build(),
+            "42",
+            "102",
+            "g",
+            $mapping_registry
+        );
+    }
+
+    public function testCloneContentTakeTheReportIdFromTheMapping(): void
+    {
+        $old_report_id = 979;
+        $new_report_id = 9790;
+
+        $mapping_registry = new MappingRegistry([]);
+        $mapping_registry->setCustomMapping(
+            \TrackerFactory::TRACKER_MAPPING_KEY,
+            [111 => 1110, 121 => 1210, 131 => 1310]
+        );
+        $mapping_registry->setCustomMapping(
+            \Tracker_ReportFactory::MAPPING_KEY,
+            [$old_report_id => $new_report_id],
+        );
+
+        $this->dao
+            ->expects(self::once())
+            ->method('searchContent')
+            ->with(42, 101, "g")
+            ->willReturn([
+                'title'                     => 'Roadmap',
+                'lvl1_iteration_tracker_id' => 121,
+                'lvl2_iteration_tracker_id' => 131,
+                'default_timescale'         => 'week',
+                'report_id'                 => $old_report_id,
+            ]);
+        $this->dao
+            ->expects(self::once())
+            ->method('searchSelectedTrackers')
+            ->with(42)
+            ->willReturn([111]);
+
+        $this->dao
+            ->expects(self::once())
+            ->method('insertContent')
+            ->with(102, "g", 'Roadmap', [1110], $new_report_id, 'week', 1210, 1310);
+
         $this->widget->cloneContent(
             ProjectTestBuilder::aProject()->build(),
             ProjectTestBuilder::aProject()->build(),
