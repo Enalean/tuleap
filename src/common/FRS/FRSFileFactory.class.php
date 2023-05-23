@@ -435,15 +435,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     public function getSrcDir(Project $project)
     {
-        $src_dir = ForgeConfig::get('ftp_incoming_dir');
-        $params  = [
-            'project' => $project,
-            'src_dir' => &$src_dir,
-        ];
-
-        EventManager::instance()->processEvent(Event::GET_FTP_INCOMING_DIR, $params);
-
-        return $src_dir;
+        return ForgeConfig::get('ftp_incoming_dir');
     }
 
     /**

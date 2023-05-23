@@ -582,18 +582,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
 
     /**
-     * Gives the path to the ftp incoming folder
-     *
-     * Parameters:
-     *  'project' => Project
-     *  'src_dir' => string
-     *
-     * Expected result:
-     *  'src_dir' => string
-     */
-    public const GET_FTP_INCOMING_DIR = 'get_ftp_incoming_dir';
-
-    /**
      * Sends-out an event to see if the user can access a page.
      * E.g. a mediawiki page in a private project and the user has
      * been delegated mediawiki admin rights across the forge
