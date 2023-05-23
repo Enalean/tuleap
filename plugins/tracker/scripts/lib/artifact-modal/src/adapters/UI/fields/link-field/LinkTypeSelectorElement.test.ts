@@ -112,13 +112,14 @@ describe("LinkTypeSelectorElement", () => {
         expect(getSelectMainOptionsGroup(select).label).toBe("New artifact");
     });
 
-    it(`will dispatch a value-changed event when there's a change in the select`, () => {
+    it(`will dispatch a bubbling type-changed event when there's a change in the select`, () => {
         const select = render();
         select.value = `${IS_CHILD_LINK_TYPE} ${FORWARD_DIRECTION}`;
         select.dispatchEvent(new Event("change"));
 
         const event = dispatchEvent.mock.calls[0][0];
-        expect(event.type).toBe("value-changed");
+        expect(event.type).toBe("type-changed");
+        expect(event.bubbles).toBe(true);
         expect(LinkType.isForwardChild(event.detail.new_link_type)).toBe(true);
     });
 });

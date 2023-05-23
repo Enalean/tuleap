@@ -78,14 +78,8 @@ export const ModalFeedback = define<ModalFeedback>({
             return controller;
         },
     },
-    parent_option: {
-        get: (host, last_value) => last_value ?? Option.nothing(),
-        set: (host, new_value) => new_value,
-    },
-    error_message_option: {
-        get: (host, last_value) => last_value ?? Option.nothing(),
-        set: (host, presenter) => presenter,
-    },
+    parent_option: { set: (host, new_value) => new_value ?? Option.nothing() },
+    error_message_option: { set: (host, new_value) => new_value ?? Option.nothing() },
     content: (host) => {
         if (noFeedbackToShow(host)) {
             return html``;

@@ -26,9 +26,10 @@ import type {
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
+    FeatureFlagResponse,
+    ProjectResponse,
     SearchResultEntry,
     UserHistoryResponse,
-    FeatureFlagResponse,
 } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
@@ -57,6 +58,9 @@ import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
 import { LinkableArtifactRESTFilter } from "./fields/link-field/LinkableArtifactRESTFilter";
 import type { RetrieveFeatureFlag } from "../../domain/RetrieveFeatureFlag";
+import type { RetrieveProjects } from "../../domain/fields/link-field/creation/RetrieveProjects";
+import type { Project } from "../../domain/Project";
+import { ProjectProxy } from "./ProjectProxy";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -71,7 +75,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveUserHistory &
     SearchArtifacts &
     RetrieveComments &
-    RetrieveFeatureFlag;
+    RetrieveFeatureFlag &
+    RetrieveProjects;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -190,5 +195,11 @@ export const TuleapAPIClient = (
         ).map((feature_flag) => {
             return feature_flag.value === "1";
         });
+    },
+
+    getProjects(): ResultAsync<readonly Project[], Fault> {
+        return getAllJSON<readonly ProjectResponse[], ProjectResponse>(uri`/api/projects`, {
+            params: { limit: 50 },
+        }).map((projects) => projects.map(ProjectProxy.fromAPIProject));
     },
 });

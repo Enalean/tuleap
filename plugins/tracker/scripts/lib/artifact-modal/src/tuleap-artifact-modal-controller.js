@@ -206,7 +206,7 @@ function ArtifactModalController(
             );
         },
         getArtifactCreatorController() {
-            return ArtifactCreatorController(event_dispatcher);
+            return ArtifactCreatorController(event_dispatcher, api_client);
         },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id], event_dispatcher);

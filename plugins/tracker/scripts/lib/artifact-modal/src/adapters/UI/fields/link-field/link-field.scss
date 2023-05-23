@@ -18,10 +18,10 @@
  */
 
 @use "@tuleap/lazybox";
+@use "./variables";
 @use "./dropdown/linkable_item";
 @use "./creation/artifact-creator";
 
-$link-row-padding: 8px;
 $link-rows-border-color: var(--tlp-background-color-darker-05);
 $link-type-width: 150px;
 
@@ -37,10 +37,10 @@ $link-type-width: 150px;
 .link-field-row {
     display: flex;
     align-items: center;
-    padding: $link-row-padding;
+    padding: variables.$link-row-padding;
     border: 0 solid $link-rows-border-color;
     border-bottom-width: 1px;
-    gap: $link-row-padding;
+    gap: variables.$link-row-padding;
 
     &:hover {
         background: var(--tlp-main-color-lighter-90);
@@ -58,8 +58,8 @@ $link-type-width: 150px;
 .link-field-add-link-row {
     display: flex;
     flex: 1;
-    padding: $link-row-padding;
-    gap: $link-row-padding;
+    padding: variables.$link-row-padding;
+    gap: variables.$link-row-padding;
 }
 
 .link-field-add-link-input {

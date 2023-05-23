@@ -159,6 +159,9 @@ msgstr ""
 msgid "Preview"
 msgstr "Pré-visualização"
 
+msgid "Project"
+msgstr ""
+
 msgid "Projects and trackers are loading"
 msgstr ""
 
@@ -196,6 +199,9 @@ msgid ""
 "Someone updated this artifact while you were editing it. Please note that "
 "your modifications will be applied on top of previous changes. You need to "
 "confirm your action to submit your modification."
+msgstr ""
+
+msgid "Something went wrong during the artifact creation."
 msgstr ""
 
 msgid "Text"

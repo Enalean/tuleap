@@ -24,7 +24,7 @@ import { getRestoreLabel, getUnlinkLabel } from "../../../../gettext-catalog";
 import type { LinkField } from "./LinkField";
 import { getArtifactStatusBadgeClasses, getCrossRefClasses } from "./NewLinkTemplate";
 import "./LinkTypeSelectorElement";
-import type { ValueChangedEvent } from "./LinkTypeSelectorElement";
+import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 
 type MapOfClasses = Record<string, boolean>;
 
@@ -57,7 +57,7 @@ export const getTypeTemplate = (
             >${artifact.link_type.label}</span
         >`;
     }
-    const onValueChanged = (host: LinkField, event: CustomEvent<ValueChangedEvent>): void => {
+    const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
         host.linked_artifacts_presenter = host.controller.changeLinkType(
             artifact,
             event.detail.new_link_type
@@ -68,7 +68,7 @@ export const getTypeTemplate = (
         value="${artifact.link_type}"
         current_artifact_reference="${host.current_artifact_reference}"
         available_types="${host.allowed_link_types}"
-        onvalue-changed="${onValueChanged}"
+        ontype-changed="${onTypeChanged}"
         data-test="type-selector"
     ></tuleap-artifact-modal-link-type-selector>`;
 };

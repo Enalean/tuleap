@@ -17,8 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "../variables";
+
 tuleap-artifact-modal-link-artifact-creator {
     display: flex;
+    flex: auto;
+    flex-wrap: wrap;
+    padding: variables.$link-row-padding;
+    column-gap: variables.$link-row-padding;
+}
+
+.link-field-artifact-creator-alert {
+    width: 100%;
+}
+
+.link-field-artifact-creator-form {
+    display: flex;
+    flex: auto;
     gap: 10px;
 }
 
@@ -27,16 +42,17 @@ tuleap-artifact-modal-link-artifact-creator {
     position: relative;
     flex: 1;
     flex-direction: column;
+    gap: var(--tlp-small-spacing);
 }
 
 .link-field-artifact-creator-spinner {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     opacity: 0.5;
 }
 
-.link-field-artifact-creator-actions {
-    display: flex;
-    gap: 10px;
+// Override a more specific rule in the artifact modal for tlp-form-element
+#artifact-modal-link-creator-project-wrapper {
+    margin: 0;
 }

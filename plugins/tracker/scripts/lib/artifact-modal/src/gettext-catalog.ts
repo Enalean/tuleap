@@ -136,3 +136,6 @@ export const getArtifactCreationInputPlaceholderText = (): string =>
     gettextCatalog.getString("Title");
 export const getSubmitDisabledForProjectsAndTrackersReason = (): string =>
     gettextCatalog.getString("Projects and trackers are loading");
+export const getArtifactCreationProjectLabel = (): string => gettextCatalog.getString("Project");
+export const getArtifactCreationFeedbackErrorMessage = (): string =>
+    gettextCatalog.getString("Something went wrong during the artifact creation.");
