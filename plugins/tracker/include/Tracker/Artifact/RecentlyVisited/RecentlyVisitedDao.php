@@ -20,80 +20,54 @@
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyDB;
+use Tuleap\DB\DataAccessObject;
 
 class RecentlyVisitedDao extends DataAccessObject
 {
-    public function __construct()
+    public function save(int $user_id, int $artifact_id, int $created_on): void
     {
-        parent::__construct();
-        $this->enableExceptionsOnError();
-    }
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($user_id, $artifact_id, $created_on): void {
+            $sql_update = 'INSERT INTO plugin_tracker_recently_visited(user_id, artifact_id, created_on)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE created_on=?';
+            $db->run($sql_update, $user_id, $artifact_id, $created_on, $created_on);
 
-    /**
-     * @return bool
-     */
-    public function save($user_id, $artifact_id, $created_on)
-    {
-        $user_id     = $this->da->escapeInt($user_id);
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $created_on  = $this->da->escapeInt($created_on);
-
-        $sql_update     = "INSERT INTO plugin_tracker_recently_visited(user_id, artifact_id, created_on)
-                VALUES ($user_id, $artifact_id, $created_on)
-                ON DUPLICATE KEY UPDATE created_on=$created_on";
-        $has_been_saved = $this->update($sql_update);
-        if (! $has_been_saved) {
-            throw new \RuntimeException('Recently updated was to saved');
-        }
-
-        $sql_clean_history        = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id AND created_on <= (
+            $sql_clean_history = 'DELETE FROM plugin_tracker_recently_visited WHERE user_id = ? AND created_on <= (
                                     SELECT created_on FROM (
-                                      SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = $user_id ORDER BY created_on DESC LIMIT 1 OFFSET 30
+                                      SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = ? ORDER BY created_on DESC LIMIT 1 OFFSET 30
                                     ) oldest_entry_to_keep
-                                  )";
-        $has_history_been_cleaned = $this->update($sql_clean_history);
-
-        if (! $has_history_been_cleaned) {
-            throw new \RuntimeException('Recently updated was not cleaned');
-        }
-
-        return true;
+                                  )';
+            $db->run($sql_clean_history, $user_id, $user_id);
+        });
     }
 
     /**
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
+     * @psalm-return array{artifact_id: int, created_on: int}[]
      */
-    public function searchVisitByUserId($user_id, $maximum_visits)
+    public function searchVisitByUserId(int $user_id, int $maximum_visits): array
     {
-        $user_id        = $this->da->escapeInt($user_id);
-        $maximum_visits = $this->da->escapeInt($maximum_visits);
-
-        $sql = "SELECT artifact_id, created_on
+        $sql = 'SELECT artifact_id, created_on
                 FROM plugin_tracker_recently_visited
-                WHERE user_id = $user_id
+                WHERE user_id = ?
                 ORDER BY created_on DESC
-                LIMIT $maximum_visits";
+                LIMIT ?';
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $user_id, $maximum_visits);
     }
 
-    public function deleteVisitByUserId($user_id)
+    public function deleteVisitByUserId(int $user_id): void
     {
-        $user_id = $this->da->escapeInt($user_id);
+        $sql = 'DELETE FROM plugin_tracker_recently_visited WHERE user_id = ?';
 
-        $sql = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id";
-
-        $this->update($sql);
+        $this->getDB()->run($sql, $user_id);
     }
 
-    public function deleteVisitByArtifactId($artifact_id)
+    public function deleteVisitByArtifactId(int $artifact_id): void
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = 'DELETE FROM plugin_tracker_recently_visited
+                WHERE artifact_id = ?';
 
-        $sql = "DELETE FROM plugin_tracker_recently_visited
-                WHERE artifact_id = $artifact_id";
-
-        $this->update($sql);
+        $this->getDB()->run($sql, $artifact_id);
     }
 }

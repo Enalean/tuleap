@@ -20,38 +20,19 @@
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 
 class VisitRecorder
 {
-    /**
-     * @var RecentlyVisitedDao
-     */
-    private $dao;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-
-    public function __construct(RecentlyVisitedDao $dao, ?DBTransactionExecutor $transaction_executor = null)
+    public function __construct(private readonly RecentlyVisitedDao $dao)
     {
-        $this->dao                  = $dao;
-        $this->transaction_executor = $transaction_executor ?? new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
     }
 
-    /**
-     * @throws \DataAccessException
-     */
     public function record(\PFUser $user, \Tuleap\Tracker\Artifact\Artifact $artifact): void
     {
         if ($user->isAnonymous()) {
             return;
         }
 
-        $this->transaction_executor->execute(function () use ($user, $artifact) {
-            $this->dao->save($user->getId(), $artifact->getId(), $_SERVER['REQUEST_TIME']);
-        });
+        $this->dao->save((int) $user->getId(), $artifact->getId(), $_SERVER['REQUEST_TIME']);
     }
 }
