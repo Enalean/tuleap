@@ -81,7 +81,7 @@ describe(`Link field of Artifact Modal`, function () {
         });
         cy.get("[data-test=artifact-modal-form]").within(() => {
             cy.getContains("[data-test=artifact-link-field]", LINKS_FIELD_NAME).within(() => {
-                cy.get("[data-test=link-field-table-footer]")
+                cy.get("[data-test=link-field-add-link-section]")
                     .find("[data-test=link-type-select]")
                     .select("is Linked to");
             });

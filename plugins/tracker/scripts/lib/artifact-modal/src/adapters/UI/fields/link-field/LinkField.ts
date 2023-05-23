@@ -307,6 +307,8 @@ export const LinkField = define<InternalLinkField>({
             ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
             ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}${getEmptyStateIfNeeded(host)}
         </div>
-        <div class="link-field-add-link-section">${getFooterTemplate(host)}</div>
+        <div class="link-field-add-link-section" data-test="link-field-add-link-section">
+            ${getFooterTemplate(host)}
+        </div>
     </div>`,
 });
