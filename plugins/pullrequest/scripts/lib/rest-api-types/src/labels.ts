@@ -21,9 +21,22 @@ type ProjectLabelId = {
     readonly id: number;
 };
 
-type ReadonlyProjectLabelIdsArrayWithAtLeastOneValue = [ProjectLabelId, ...ProjectLabelId[]];
+type ProjectLabelToCreate = {
+    readonly label: string;
+};
+
+type AddedProjectLabel = ProjectLabelId | ProjectLabelToCreate;
+
+type ReadonlyProjectLabelToAddArrayWithAtLeastOneValue = [
+    AddedProjectLabel,
+    ...AddedProjectLabel[]
+];
+type ReadonlyProjectLabelIdsToRemoveArrayWithAtLeastOneValue = [
+    ProjectLabelId,
+    ...ProjectLabelId[]
+];
 
 export type PatchPullRequestLabelsPayload = {
-    add?: ReadonlyProjectLabelIdsArrayWithAtLeastOneValue;
-    remove?: ReadonlyProjectLabelIdsArrayWithAtLeastOneValue;
+    add?: ReadonlyProjectLabelToAddArrayWithAtLeastOneValue;
+    remove?: ReadonlyProjectLabelIdsToRemoveArrayWithAtLeastOneValue;
 };

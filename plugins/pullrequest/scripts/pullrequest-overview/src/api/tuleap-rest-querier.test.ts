@@ -323,34 +323,41 @@ describe("tuleap-rest-querier", () => {
     });
 
     describe("patchPullRequestLabels", () => {
+        let added_labels: number[], removed_labels: number[], labels_to_create: string[];
+
         beforeEach(() => {
             vi.spyOn(fetch_result, "patch").mockReturnValue(okAsync(new Response()));
+
+            added_labels = [];
+            removed_labels = [];
+            labels_to_create = [];
         });
 
         it("when there are no added labels nor removed labels, then it should do nothing", () => {
-            patchPullRequestLabels(pull_request_id, [], []);
+            patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
             expect(fetch_result.patch).not.toHaveBeenCalled();
         });
 
         it('when there are only added labels, then it should not send a "remove" key in the payload', () => {
-            patchPullRequestLabels(pull_request_id, [12], []);
+            added_labels = [12];
+            labels_to_create = ["gluten-free"];
+
+            patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
             expect(fetch_result.patch).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
                 {},
                 {
-                    add: [
-                        {
-                            id: 12,
-                        },
-                    ],
+                    add: [{ id: 12 }, { label: "gluten-free" }],
                 }
             );
         });
 
         it('when there are only removed labels, then it should not send an "add" key in the payload', () => {
-            patchPullRequestLabels(pull_request_id, [], [12]);
+            removed_labels = [12];
+
+            patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
             expect(fetch_result.patch).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
@@ -366,7 +373,10 @@ describe("tuleap-rest-querier", () => {
         });
 
         it('when there are removed and added labels, then it should send a payload containing an "add" and a "remove" keys', () => {
-            patchPullRequestLabels(pull_request_id, [8], [12]);
+            added_labels = [8];
+            removed_labels = [12];
+
+            patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
             expect(fetch_result.patch).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,

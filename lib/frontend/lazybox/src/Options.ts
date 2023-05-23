@@ -32,7 +32,7 @@ export type LazyboxTemplatingCallback = (
     item: LazyboxItem
 ) => HTMLTemplateResult;
 
-export type LazyboxNewItemCallback = () => void;
+export type LazyboxNewItemCallback = (item_name: string) => void;
 
 export type LazyboxSelectionBadgeCallback = (item: LazyboxItem) => SelectionBadge & HTMLElement;
 

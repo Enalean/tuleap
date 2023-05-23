@@ -90,7 +90,7 @@ const are_project_labels_loading = ref(true);
 const is_modal_shown = ref(false);
 
 const is_loading_labels = computed(
-    () => are_project_labels_loading.value && are_pull_request_labels_loading.value
+    () => are_project_labels_loading.value || are_pull_request_labels_loading.value
 );
 const has_no_labels = computed(
     () => pull_request_labels.value.length === 0 && !are_pull_request_labels_loading.value
@@ -113,8 +113,29 @@ const openModal = (): void => {
     is_modal_shown.value = true;
 };
 
-const post_edition_callback = (new_labels: ReadonlyArray<ProjectLabel>): void => {
-    pull_request_labels.value = new_labels;
+const fetchAllLabels = (pull_request: PullRequest) => {
+    fetchProjectLabels(pull_request.repository.project.id)
+        .match((result) => {
+            project_labels.value = result;
+        }, displayTuleapAPIFault)
+        .finally(() => {
+            are_project_labels_loading.value = false;
+        });
+
+    fetchPullRequestLabels(pull_request_id)
+        .match((result) => {
+            pull_request_labels.value = result;
+        }, displayTuleapAPIFault)
+        .finally(() => {
+            are_pull_request_labels_loading.value = false;
+        });
+};
+
+const post_edition_callback = (): void => {
+    if (props.pull_request) {
+        fetchAllLabels(props.pull_request);
+    }
+
     is_modal_shown.value = false;
 };
 
@@ -128,21 +149,8 @@ watch(
         if (!props.pull_request) {
             return;
         }
-        fetchProjectLabels(props.pull_request.repository.project.id)
-            .match((result) => {
-                project_labels.value = result;
-            }, displayTuleapAPIFault)
-            .finally(() => {
-                are_project_labels_loading.value = false;
-            });
 
-        fetchPullRequestLabels(pull_request_id)
-            .match((result) => {
-                pull_request_labels.value = result;
-            }, displayTuleapAPIFault)
-            .finally(() => {
-                are_pull_request_labels_loading.value = false;
-            });
+        fetchAllLabels(props.pull_request);
     }
 );
 </script>

@@ -54,6 +54,9 @@ msgstr "Copier"
 msgid "Copy to clipboard"
 msgstr "Copier dans le presse-papiers"
 
+msgid "Create a new label"
+msgstr "Créer un nouveau label"
+
 msgid "Creation date"
 msgstr "Date de création"
 
