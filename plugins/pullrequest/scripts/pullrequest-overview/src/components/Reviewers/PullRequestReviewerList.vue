@@ -114,9 +114,15 @@ const on_cancel_callback = (): void => {
 </script>
 
 <style lang="scss">
+@use "../../../themes/common";
+
 .pull-request-reviewers-empty-state {
     color: var(--tlp-dark-color);
     font-style: italic;
+
+    + .pull-request-edit-reviewers-button {
+        margin: 0 0 0 var(--tlp-small-spacing);
+    }
 }
 
 .pullrequest-reviewer-info {
@@ -126,14 +132,11 @@ const on_cancel_callback = (): void => {
 }
 
 .pull-request-edit-reviewers-button {
-    width: 32px;
-    height: 32px;
-    margin: 0 0 0 8px;
-    padding: 0;
-    border-radius: 50%;
+    @include common.edit-button-icon-only;
 
     .pull-request-edit-reviewers-button-icon {
         margin: 0;
+        font-size: 0.65rem;
     }
 }
 </style>

@@ -60,6 +60,7 @@
                 type="button"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
+                v-bind:disabled="is_saving"
             >
                 {{ $gettext("Cancel") }}
             </button>
@@ -70,14 +71,11 @@
                 v-bind:disabled="is_saving"
                 v-on:click="saveReviewers"
             >
-                <i
-                    class="tlp-button-icon fa-solid"
-                    v-bind:class="{
-                        'fa-circle-notch fa-spin': is_saving,
-                        'fa-pencil': !is_saving,
-                    }"
-                ></i>
                 {{ $gettext("Save changes") }}
+                <i
+                    v-if="is_saving"
+                    class="tlp-button-icon-right fa-solid fa-circle-notch fa-spin"
+                ></i>
             </button>
         </div>
     </div>

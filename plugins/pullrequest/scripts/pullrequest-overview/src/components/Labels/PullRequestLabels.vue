@@ -29,8 +29,7 @@
                 v-bind:class="getBadgeClasses(label)"
                 data-test="pull-request-label"
             >
-                <i class="fa-solid fa-tag tlp-badge-icon" aria-hidden="true"></i>
-                {{ label.label }}
+                <i class="fa-solid fa-tag tlp-badge-icon" aria-hidden="true"></i>{{ label.label }}
             </span>
             <span
                 v-if="has_no_labels"
@@ -156,10 +155,13 @@ watch(
 </script>
 
 <style lang="scss">
+@use "../../../themes/common";
+
 .pull-request-labels {
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .pull-request-no-labels-empty-state-text {
@@ -172,14 +174,11 @@ watch(
 }
 
 .pull-request-manage-labels-button {
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    border-radius: 50%;
+    @include common.edit-button-icon-only;
 
     .pull-request-manage-labels-button-icon {
         margin: 0;
-        font-size: 0.5em;
+        font-size: 0.65rem;
     }
 }
 </style>
