@@ -770,6 +770,6 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
 
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
-        $event->addConfigClass(\Tuleap\PullRequest\PullRequestPresenter::class);
+        $event->addConfigClass(\Tuleap\PullRequest\PullRequestV2FeatureFlag::class);
     }
 }

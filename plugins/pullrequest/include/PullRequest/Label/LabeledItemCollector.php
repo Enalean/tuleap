@@ -123,7 +123,7 @@ class LabeledItemCollector
                         $this->glyph_finder->get('tuleap-pullrequest'),
                         $this->glyph_finder->get('tuleap-pullrequest-small'),
                         $this->getHTMLMessage($pull_request),
-                        $this->html_url_builder->getPullRequestOverviewUrl($pull_request, $project_id)
+                        $this->html_url_builder->getPullRequestOverviewUrl($pull_request)
                     )
                 );
             } catch (GitRepoNotFoundException $e) {

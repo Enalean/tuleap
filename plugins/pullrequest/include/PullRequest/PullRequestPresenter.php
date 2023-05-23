@@ -20,16 +20,11 @@
 
 namespace Tuleap\PullRequest;
 
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
 final class PullRequestPresenter
 {
-    #[FeatureFlagConfigKey("Feature flag to allow use pullrequest v2 in some projects. Comma separated list of project ids.")]
-    public const FEATURE_FLAG_KEY = 'allow_pullrequest_v2';
-
-
     public bool $is_there_at_least_one_pull_request;
     public bool $is_merge_commit_allowed;
     public bool $allow_pullrequest_v2;
@@ -46,9 +41,7 @@ final class PullRequestPresenter
         $this->project_id                         = $repository->getProjectId();
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
-        $comma_separated_project_ids              = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
-        $allowed_project_ids                      = explode(',', $comma_separated_project_ids);
-        $this->allow_pullrequest_v2               = in_array((string) $repository->getProjectId(), $allowed_project_ids, true);
+        $this->allow_pullrequest_v2               = PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository);
         $this->user_id                            = (int) $user->getId();
         $this->user_avatar_url                    = $user->getAvatarUrl();
         $this->language                           = $user->getShortLocale();
