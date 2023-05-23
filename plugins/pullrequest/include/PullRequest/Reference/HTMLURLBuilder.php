@@ -20,9 +20,10 @@
 
 namespace Tuleap\PullRequest\Reference;
 
+use GitRepoNotFoundException;
 use GitRepository;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequestPresenter;
+use Tuleap\PullRequest\PullRequestV2FeatureFlag;
 use Tuleap\ServerHostname;
 
 class HTMLURLBuilder
@@ -40,15 +41,18 @@ class HTMLURLBuilder
     public function getPullRequestOverviewUrl(PullRequest $pull_request): string
     {
         $repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
-        $project_id = $repository->getProject()->getID();
+        if (! $repository) {
+            throw new GitRepoNotFoundException();
+        }
 
+        $project_id   = $repository->getProject()->getID();
         $query_params = [
-            'action' => 'pull-requests',
-            'repo_id' => $pull_request->getRepositoryId(),
+            'action'   => 'pull-requests',
+            'repo_id'  => $pull_request->getRepositoryId(),
             'group_id' => $project_id,
         ];
 
-        if (\ForgeConfig::getFeatureFlag(PullRequestPresenter::FEATURE_FLAG_KEY)) {
+        if (PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository)) {
             $query_params['tab'] = 'overview';
         }
 

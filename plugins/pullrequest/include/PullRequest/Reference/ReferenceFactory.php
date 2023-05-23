@@ -77,7 +77,7 @@ class ReferenceFactory
             $html_url = $this->html_url_builder->getPullRequestOverviewUrl($pull_request);
 
             return new Reference($keyword, $html_url, $project_id);
-        } catch (PullRequestNotFoundException $ex) {
+        } catch (PullRequestNotFoundException | \GitRepoNotFoundException $ex) {
             return null;
         }
     }

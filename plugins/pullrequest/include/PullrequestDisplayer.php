@@ -67,7 +67,7 @@ class PullrequestDisplayer
             )
         );
 
-        $is_vue_overview_shown = \ForgeConfig::getFeatureFlag(PullRequestPresenter::FEATURE_FLAG_KEY) && $request->get("tab") === "overview";
+        $is_vue_overview_shown = $request->get("tab") === "overview" && PullRequestV2FeatureFlag::isPullRequestV2Displayed($repository);
         if ($is_vue_overview_shown) {
             $layout->addJavascriptAsset(
                 new JavascriptViteAsset(

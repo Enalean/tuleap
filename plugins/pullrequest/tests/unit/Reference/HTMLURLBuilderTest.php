@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\Reference;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\PullRequestV2FeatureFlag;
 
 final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -64,6 +65,8 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->html_url_builder = new HTMLURLBuilder(
             $this->git_repository_factory
         );
+
+        \ForgeConfig::set("feature_flag_" . PullRequestV2FeatureFlag::FEATURE_FLAG_KEY, "1");
     }
 
     public function testItReturnsTheWebURLToPullRequestOverview(): void
