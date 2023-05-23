@@ -88,7 +88,8 @@ class TrackerXmlImport
     /**
      * @var array
      */
-    private $renderers_xml_mapping = [];
+    private $renderers_xml_mapping     = [];
+    private array $reports_xml_mapping = [];
 
     /** @var Tracker_Artifact_XMLImport */
     private $xml_import;
@@ -293,6 +294,9 @@ class TrackerXmlImport
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {
             $registery->addReference($xml_reference, $renderer_xml_mapping);
+        }
+        foreach ($this->reports_xml_mapping as $xml_reference => $report_xml_mapping) {
+            $registery->addReference($xml_reference, $report_xml_mapping);
         }
 
         $xml_field_values_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_fields_mapping);
@@ -1093,6 +1097,7 @@ class TrackerXmlImport
             $tracker->reports[] = $this->report_factory->getInstanceFromXML(
                 $report,
                 $this->xml_fields_mapping,
+                $this->reports_xml_mapping,
                 $this->renderers_xml_mapping,
                 $project->getId()
             );

@@ -89,11 +89,11 @@ class BurnupCalculator
 
         $total_effort = 0;
         $team_effort  = 0;
-        if ($initial_effort_field && $this->artifactMustBeAddedInBurnupCalculation($changeset, $semantic_done)) {
+        if ($changeset !== null && $initial_effort_field && $this->artifactMustBeAddedInBurnupCalculation($changeset, $semantic_done)) {
             if ($artifact->getValue($initial_effort_field, $changeset)) {
                 $total_effort = $artifact->getValue($initial_effort_field, $changeset)->getValue();
             }
-            if ($changeset !== null && $semantic_done !== null && $semantic_done->isDone($changeset)) {
+            if ($semantic_done !== null && $semantic_done->isDone($changeset)) {
                 $team_effort = $total_effort;
             }
         }

@@ -943,7 +943,7 @@
     <optional>
       <!-- these ids are initial ids of the exported report -->
       <attribute name="id">
-        <data type="long"/>
+        <data type="string"/>
       </attribute>
     </optional>
     <optional>

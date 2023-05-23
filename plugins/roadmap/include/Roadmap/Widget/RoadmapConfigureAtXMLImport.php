@@ -48,12 +48,13 @@ final class RoadmapConfigureAtXMLImport
     }
 
     /**
-     * @psalm-return array{roadmap: array{tracker_ids: string[], title: string, default_timescale: string, lvl1_iteration_tracker_id?: string, lvl2_iteration_tracker_id?: string}}
+     * @psalm-return array{roadmap: array{tracker_ids: string[], filter_report_id: ?string, title: string, default_timescale: string, lvl1_iteration_tracker_id?: string, lvl2_iteration_tracker_id?: string}}
      */
     private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
         $params = [
             'tracker_ids'       => $this->getReferencedTrackerIdsFromXML($xml, $mapping_registry),
+            'filter_report_id'  => $this->getReferencedReportIdFromXML($xml, $mapping_registry, 'filter_report_id'),
             'title'             => $this->getWidgetTitleFromXML($xml),
             'default_timescale' => $this->getDefaultTimescaleFromXML($xml),
         ];
@@ -62,7 +63,7 @@ final class RoadmapConfigureAtXMLImport
             $iteration_tracker_id = $this->getReferencedIterationTrackerIdFromXML(
                 $xml,
                 $mapping_registry,
-                $iteration_tracker_name
+                $iteration_tracker_name,
             );
             if ($iteration_tracker_id) {
                 $params[$iteration_tracker_name] = $iteration_tracker_id;
@@ -130,5 +131,24 @@ final class RoadmapConfigureAtXMLImport
         }
 
         return (string) $imported_tracker_id;
+    }
+
+    private function getReferencedReportIdFromXML(
+        \SimpleXMLElement $xml,
+        MappingsRegistry $mapping_registry,
+        string $name,
+    ): ?string {
+        $matching_nodes = $xml->xpath("preference/value[@name='$name']");
+        if ($matching_nodes === null || count($matching_nodes) === 0) {
+            return null;
+        }
+        $ref = (string) $matching_nodes[0];
+
+        $reference = $mapping_registry->getReference($ref);
+        if ($reference === null) {
+            throw new \RuntimeException("Reference $name for roadmap widget was not found");
+        }
+
+        return (string) $reference->getId();
     }
 }

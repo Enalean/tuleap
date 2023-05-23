@@ -1790,6 +1790,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->id;
     }
 
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getName()
     {
         return $this->name;

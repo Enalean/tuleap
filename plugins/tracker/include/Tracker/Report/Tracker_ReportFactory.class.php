@@ -276,6 +276,7 @@ class Tracker_ReportFactory
     public function getInstanceFromXML(
         $xml,
         &$xmlMapping,
+        array &$reports_xml_mapping,
         array &$renderers_xml_mapping,
         $group_id,
     ) {
@@ -296,6 +297,9 @@ class Tracker_ReportFactory
         $row['updated_by']          = null;
         $row['updated_at']          = null;
         $report                     = $this->getInstanceFromRow($row);
+        if (isset($att['id'])) {
+            $reports_xml_mapping[(string) $att['id']] = $report;
+        }
         // create criteria
         $report->criterias = [];
         foreach ($xml->criterias->criteria as $criteria) {

@@ -1691,7 +1691,7 @@
     <optional>
       <!-- these ids are initial ids of the exported report -->
       <attribute name="id">
-        <data type="long" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+        <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
       </attribute>
     </optional>
     <optional>

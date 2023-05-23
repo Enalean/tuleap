@@ -169,6 +169,101 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         self::assertTrue($event->isWidgetConfigured());
     }
 
+    public function testItThrowsAnErrorWhenFilterReportIdReferenceIsNotFoundInRegistry(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                $this->createStub(RoadmapWidgetDao::class),
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
+                new FilterReportDao(),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="filter_report_id">REPORT_979</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Reference filter_report_id for roadmap widget was not found");
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+    }
+
+    public function testItConfiguresWidgetWithFilterReport(): void
+    {
+        $created_report = $this->createMock(\Tracker_Report::class);
+        $created_report->method('getId')->willReturn(1979);
+
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $registry->addReference("REPORT_979", $created_report);
+        $dao   = $this->createStub(RoadmapWidgetDao::class);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                $dao,
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                $this->createStub(TemplateRenderer::class),
+                $this->createStub(RoadmapWidgetPresenterBuilder::class),
+                $this->createStub(\TrackerFactory::class),
+                new FilterReportDao(),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="title">My Roadmap</value>
+                      <value name="filter_report_id">REPORT_979</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+        $dao->expects(self::once())
+            ->method('insertContent')
+            ->willReturnCallback(fn (
+                int $owner_id,
+                string $owner_type,
+                string $title,
+                array $tracker_ids,
+                int $report_id,
+                string $default_timescale,
+                ?int $lvl1_iteration_tracker_id,
+                ?int $lvl2_iteration_tracker_id,
+            ) => match (true) {
+                $title === "My Roadmap"
+                && $tracker_ids === [1234]
+                && $report_id === 1979
+                && $default_timescale === "month"
+                && $lvl1_iteration_tracker_id === null
+                && $lvl2_iteration_tracker_id === null
+                => 1
+            });
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+
+        self::assertTrue($event->isWidgetConfigured());
+    }
+
     public function testItThrowsAnErrorWhenLevel1IterationTrackerIdReferenceIsNotFoundInRegistry(): void
     {
         $project  = ProjectTestBuilder::aProject()->build();

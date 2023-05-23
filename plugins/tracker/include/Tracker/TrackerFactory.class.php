@@ -743,7 +743,8 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByGroupIdAndUse
                     }
                     //create report
                     foreach ($tracker->reports as $report) {
-                        Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
+                        $id = Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
+                        $report->setId($id);
                     }
                     //create semantics
                     if (isset($tracker->semantics)) {
