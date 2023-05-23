@@ -22,10 +22,8 @@
 
 .lazybox-badge {
     display: flex;
-    flex: 0 0 auto;
     align-items: center;
     margin: 6px 5px 0 0;
-    vertical-align: middle;
     white-space: nowrap;
 }
 
@@ -33,10 +31,11 @@
     @include common.unset-button-style;
     @include common.focusable-button;
 
+    height: 0.875rem;
     margin: 0 5px 0 0;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    text-align: center;
+    line-height: var(--tlp-badge-line-height);
     cursor: pointer;
 
     &:hover {

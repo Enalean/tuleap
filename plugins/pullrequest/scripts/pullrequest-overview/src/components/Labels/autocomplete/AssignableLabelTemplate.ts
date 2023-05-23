@@ -57,12 +57,7 @@ export const getAssignableLabelsTemplate = (
         "tlp-badge-outline": label.is_outline,
     };
 
-    return html`
-        <span class="${badge_classes}">
-            <i class="fa-solid fa-tag tlp-badge-icon" aria-hidden="true"></i>
-            ${label.label}
-        </span>
-    `;
+    return html` <span class="${badge_classes}">${label.label}</span> `;
 };
 
 export const getAssignedLabelTemplate = (item: LazyboxItem): SelectionBadge & HTMLElement => {
@@ -75,14 +70,7 @@ export const getAssignedLabelTemplate = (item: LazyboxItem): SelectionBadge & HT
 
     badge.color = label.color;
     badge.outline = label.is_outline;
-
-    const badge_label = document.createTextNode(label.label);
-    const icon = document.createElement("i");
-
-    icon.classList.add("fa-solid", "fa-tag", "tlp-badge-icon");
-    icon.ariaHidden = "true";
-
-    badge.append(icon, badge_label);
+    badge.append(document.createTextNode(label.label));
 
     return badge;
 };

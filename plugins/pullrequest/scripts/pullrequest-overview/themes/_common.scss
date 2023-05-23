@@ -17,16 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin unset-button-style {
+@mixin edit-button-icon-only {
+    width: 32px;
+    height: 32px;
     padding: 0;
-    border: unset;
-    background: unset;
-    color: unset;
-    text-align: unset;
-}
-
-@mixin focusable-button {
-    &:focus {
-        box-shadow: var(--tlp-shadow-focus);
-    }
+    border-radius: 50%;
 }
