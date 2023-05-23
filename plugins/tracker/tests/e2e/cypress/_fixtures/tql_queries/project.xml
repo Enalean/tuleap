@@ -34,7 +34,6 @@
     <service shortname="plugin_mediawiki" enabled="0"/>
     <service shortname="hudson" enabled="0"/>
     <service shortname="plugin_git" enabled="0"/>
-    <service shortname="plugin_proftpd" enabled="0"/>
   </services>
   <ugroups>
     <ugroup name="project_admins" description="Project administrators">

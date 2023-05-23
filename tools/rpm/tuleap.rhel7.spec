@@ -289,13 +289,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-openidconnectclient
 Connect to Tuleap using an OpenID Connect provider
 
-%package plugin-proftpd
-Summary: Proftpd plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-proftpd
-Control and interfact with Proftpd as FTP server
-
 %package plugin-frs
 AutoReqProv: no
 Summary: File release system plugin
@@ -850,9 +843,6 @@ done
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
 
 #
-## Plugin proftpd
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
-#
 ## Plugin bugzilla
 %{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
@@ -1390,11 +1380,6 @@ fi
 %{APP_DIR}/plugins/openidconnectclient
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
-
-%files plugin-proftpd
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/proftpd
-%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 %files plugin-frs
 %defattr(-,root,root,-)

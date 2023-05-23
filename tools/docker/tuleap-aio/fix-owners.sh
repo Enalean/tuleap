@@ -35,7 +35,6 @@ chown codendiadm:codendiadm \
     /data/lib/tuleap/svnroot
 
 chown codendiadm \
-    /data/lib/tuleap/secure_ftp/* \
     /data/lib/tuleap/ftp/tuleap/*
 
 chown -R codendiadm \

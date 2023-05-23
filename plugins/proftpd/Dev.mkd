@@ -1,2 +1,0 @@
-setfacl -m d:u:codendiadm:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx /var/lib/tuleap/secure_ftp/gpig
-setfacl -m u:codendiadm:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx /var/lib/tuleap/secure_ftp/gpig

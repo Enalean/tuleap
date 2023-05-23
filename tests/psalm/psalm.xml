@@ -57,7 +57,6 @@
             <directory name="plugins/mediawiki/tests/unit/"/>
             <directory name="plugins/openidconnectclient/tests/unit/"/>
             <directory name="plugins/pluginsadministration/tests/unit/"/>
-            <directory name="plugins/proftpd/tests/unit/"/>
             <directory name="plugins/projectmilestones/tests/unit/"/>
             <directory name="plugins/prometheus_metrics/tests/unit/"/>
             <directory name="plugins/pullrequest/tests/unit/"/>

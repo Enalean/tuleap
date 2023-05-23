@@ -18,7 +18,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     dnf install --setopt=skip_missing_names_on_install=False -y epel-release sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
     dnf update -y && \
     dnf install -y --setopt=skip_missing_names_on_install=False \
-        --exclude='tuleap-plugin-tracker-encryption,tuleap-plugin-proftpd' \
+        --exclude='tuleap-plugin-tracker-encryption' \
     cronie \
     glibc-locale-source \
     postfix \

@@ -18,12 +18,12 @@ We use the *domain* feature provided by gettext in order to have i18n in
 plugins.
 
 ``` php
-echo dgettext('tuleap-proftpd', 'File');
+echo dgettext('tuleap-myplugin', 'File');
 ```
 
 The command `xgettext` extracts strings without being able to interpret
 PHP constants or variables. Don\'t try to be too smart and don\'t put
-the domain `tuleap-proftpd` in a variable or a constant, we **need** to
+the domain `tuleap-myplugin` in a variable or a constant, we **need** to
 repeat ourselves.
 
 You can use localized strings from core or other plugins (beware of
