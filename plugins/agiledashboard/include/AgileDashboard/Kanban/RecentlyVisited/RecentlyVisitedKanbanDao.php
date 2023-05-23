@@ -28,35 +28,15 @@ class RecentlyVisitedKanbanDao extends DataAccessObject
 {
     public function save(int $user_id, int $kanban_id, int $created_on): void
     {
-        $this->getDB()->tryFlatTransaction(function () use ($user_id, $kanban_id, $created_on): void {
-            $this->getDB()->run(
-                'INSERT INTO plugin_agiledashboard_kanban_recently_visited(user_id, kanban_id, created_on)
+        $this->getDB()->run(
+            'INSERT INTO plugin_agiledashboard_kanban_recently_visited(user_id, kanban_id, created_on)
                 VALUES (?, ?, ?)
                 ON DUPLICATE KEY UPDATE created_on = ?',
-                $user_id,
-                $kanban_id,
-                $created_on,
-                $created_on
-            );
-
-            $this->getDB()->run(
-                'DELETE
-                FROM plugin_agiledashboard_kanban_recently_visited
-                WHERE user_id = ?
-                  AND created_on <= (
-                        SELECT created_on
-                        FROM (
-                          SELECT created_on
-                          FROM plugin_agiledashboard_kanban_recently_visited
-                          WHERE user_id = ?
-                          ORDER BY created_on DESC
-                          LIMIT 1 OFFSET 30
-                        ) oldest_entry_to_keep
-                )',
-                $user_id,
-                $user_id
-            );
-        });
+            $user_id,
+            $kanban_id,
+            $created_on,
+            $created_on
+        );
     }
 
     public function searchVisitByUserId(int $user_id, int $maximum_visits): array
@@ -78,5 +58,21 @@ class RecentlyVisitedKanbanDao extends DataAccessObject
     public function deleteVisitByKanbanId(int $kanban_id): void
     {
         $this->getDB()->delete('plugin_agiledashboard_kanban_recently_visited', ['kanban_id' => $kanban_id]);
+    }
+
+    public function deleteOldVisits(): void
+    {
+        $sql = 'DELETE FROM plugin_agiledashboard_kanban_recently_visited
+                WHERE (user_id, kanban_id) IN (
+                SELECT * FROM (
+                    SELECT RV1.user_id, RV1.kanban_id
+                    FROM plugin_agiledashboard_kanban_recently_visited AS RV1
+                    WHERE (
+                        SELECT COUNT(*)
+                        FROM plugin_agiledashboard_kanban_recently_visited AS RV2
+                        WHERE RV1.user_id = RV2.user_id AND RV1.created_on <= RV2.created_on
+                    ) > 30 -- Number of items to keep
+                ) AS TMP)';
+        $this->getDB()->run($sql);
     }
 }

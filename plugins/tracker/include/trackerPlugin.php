@@ -1833,10 +1833,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addPane($admin_permission_pane, $rank_in_project);
     }
 
-    private function dailyCleanup(\Psr\Log\LoggerInterface $logger)
+    private function dailyCleanup(\Psr\Log\LoggerInterface $logger): void
     {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
+
+        (new RecentlyVisitedDao())->deleteOldVisits();
 
         $current_time = new \DateTimeImmutable();
 
