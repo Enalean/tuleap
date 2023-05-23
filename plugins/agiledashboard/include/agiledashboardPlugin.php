@@ -1352,7 +1352,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $widget_kanban_config_updater->deleteConfigurationForWidgetMatchingReportId($report);
     }
 
-    public function codendi_daily_start($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function codendi_daily_start($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         SystemEventManager::instance()->createEvent(
             SystemEvent_BURNUP_DAILY::class,
@@ -1360,6 +1360,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_APP
         );
+        (new RecentlyVisitedKanbanDao())->deleteOldVisits();
     }
 
     public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

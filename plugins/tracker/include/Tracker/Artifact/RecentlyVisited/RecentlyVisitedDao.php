@@ -20,26 +20,21 @@
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
 class RecentlyVisitedDao extends DataAccessObject
 {
     public function save(int $user_id, int $artifact_id, int $created_on): void
     {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($user_id, $artifact_id, $created_on): void {
-            $sql_update = 'INSERT INTO plugin_tracker_recently_visited(user_id, artifact_id, created_on)
+        $this->getDB()->run(
+            'INSERT INTO plugin_tracker_recently_visited(user_id, artifact_id, created_on)
                 VALUES (?, ?, ?)
-                ON DUPLICATE KEY UPDATE created_on=?';
-            $db->run($sql_update, $user_id, $artifact_id, $created_on, $created_on);
-
-            $sql_clean_history = 'DELETE FROM plugin_tracker_recently_visited WHERE user_id = ? AND created_on <= (
-                                    SELECT created_on FROM (
-                                      SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = ? ORDER BY created_on DESC LIMIT 1 OFFSET 30
-                                    ) oldest_entry_to_keep
-                                  )';
-            $db->run($sql_clean_history, $user_id, $user_id);
-        });
+                ON DUPLICATE KEY UPDATE created_on=?',
+            $user_id,
+            $artifact_id,
+            $created_on,
+            $created_on,
+        );
     }
 
     /**
@@ -69,5 +64,21 @@ class RecentlyVisitedDao extends DataAccessObject
                 WHERE artifact_id = ?';
 
         $this->getDB()->run($sql, $artifact_id);
+    }
+
+    public function deleteOldVisits(): void
+    {
+        $sql = 'DELETE FROM plugin_tracker_recently_visited
+                WHERE (user_id, artifact_id) IN (
+                SELECT * FROM (
+                    SELECT RV1.user_id, RV1.artifact_id
+                    FROM plugin_tracker_recently_visited AS RV1
+                    WHERE (
+                        SELECT COUNT(*)
+                        FROM plugin_tracker_recently_visited AS RV2
+                        WHERE RV1.user_id = RV2.user_id AND RV1.created_on <= RV2.created_on
+                    ) > 30 -- Number of items to keep
+                ) AS TMP)';
+        $this->getDB()->run($sql);
     }
 }
