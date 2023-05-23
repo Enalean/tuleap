@@ -24,6 +24,7 @@ import {
     getArtifactCreationFeedbackErrorMessage,
     getArtifactCreationInputPlaceholderText,
     getArtifactCreationProjectLabel,
+    getArtifactFeedbackShowMoreLabel,
     getCancelArtifactCreationLabel,
     getCreateArtifactButtonInCreatorLabel,
     getSubmitDisabledForProjectsAndTrackersReason,
@@ -34,6 +35,7 @@ import type { LinkType } from "../../../../../domain/fields/link-field/LinkType"
 import type { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedLinksTypesPresenters";
 import type { ArtifactCrossReference } from "../../../../../domain/ArtifactCrossReference";
 import "../LinkTypeSelectorElement";
+import { FaultDisplayer } from "./FaultDisplayer";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;
@@ -44,22 +46,36 @@ export type ArtifactCreatorElement = {
 type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     is_loading: boolean;
     error_message: Option<string>;
+    show_error_details: boolean;
     projects: ReadonlyArray<Project>;
     content(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
 
+const onClickShowMore = (host: InternalArtifactCreator): void => {
+    host.show_error_details = true;
+};
+
 const getErrorTemplate = (host: InternalArtifactCreator): UpdateFunction<ArtifactCreatorElement> =>
-    host.error_message.mapOr(
-        () =>
-            html`<div
-                class="tlp-alert-danger link-field-artifact-creator-alert"
-                data-test="creation-error"
-            >
-                ${getArtifactCreationFeedbackErrorMessage()}
-            </div>`,
-        html``
-    );
+    host.error_message.mapOr((error_message) => {
+        const buttonOrDetails = !host.show_error_details
+            ? html`<button
+                  type="button"
+                  class="tlp-button-primary tlp-button-outline tlp-button-small"
+                  onclick="${onClickShowMore}"
+              >
+                  ${getArtifactFeedbackShowMoreLabel()}
+              </button>`
+            : html`<p data-test="creation-error-details">${error_message}</p>`;
+
+        return html`<div
+            class="tlp-alert-danger link-field-artifact-creator-alert"
+            data-test="creation-error"
+        >
+            <p>${getArtifactCreationFeedbackErrorMessage()}</p>
+            ${buttonOrDetails}
+        </div>`;
+    }, html``);
 
 export const observeIsLoading = (host: HostElement, new_value: boolean): void => {
     if (new_value) {
@@ -69,7 +85,7 @@ export const observeIsLoading = (host: HostElement, new_value: boolean): void =>
     host.controller.enableSubmit();
 };
 
-export const onClick = (host: HostElement): void => {
+export const onClickCancel = (host: HostElement): void => {
     host.controller.enableSubmit();
     dispatch(host, "cancel");
 };
@@ -77,12 +93,24 @@ export const onClick = (host: HostElement): void => {
 const getOptions = (host: InternalArtifactCreator): UpdateFunction<ArtifactCreatorElement>[] =>
     host.projects.map((project) => html`<option>${project.label}</option>`);
 
+export const setErrorMessage = (
+    host: HostElement,
+    new_value: Option<string> | undefined
+): Option<string> => {
+    if (new_value) {
+        host.content().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
+        return new_value;
+    }
+    return Option.nothing();
+};
+
 export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     tag: "tuleap-artifact-modal-link-artifact-creator",
     controller: {
         set(host, controller: ArtifactCreatorController) {
+            const displayer = FaultDisplayer();
             controller.registerFaultListener((fault) => {
-                host.error_message = Option.fromValue(String(fault));
+                host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
             });
             host.is_loading = true;
             controller.getProjects().then((projects) => {
@@ -96,7 +124,8 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     available_types: undefined,
     current_link_type: undefined,
     is_loading: { value: false, observe: observeIsLoading },
-    error_message: { set: (host, new_value) => new_value ?? Option.nothing() },
+    error_message: { set: setErrorMessage },
+    show_error_details: false,
     projects: { set: (host, new_value) => new_value ?? [] },
     content: (host) =>
         html`${getErrorTemplate(host)}<span class="link-field-row-type"
@@ -107,7 +136,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                     disabled="${host.is_loading}"
                 ></tuleap-artifact-modal-link-type-selector
             ></span>
-            <div class="link-field-artifact-creator-form">
+            <div class="link-field-artifact-creator-form" data-form>
                 <div class="link-field-artifact-creator-inputs">
                     <input
                         type="text"
@@ -151,7 +180,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                 <button
                     type="button"
                     class="tlp-button-secondary tlp-button-small link-field-artifact-creator-button"
-                    onclick="${onClick}"
+                    onclick="${onClickCancel}"
                 >
                     ${getCancelArtifactCreationLabel()}
                 </button>

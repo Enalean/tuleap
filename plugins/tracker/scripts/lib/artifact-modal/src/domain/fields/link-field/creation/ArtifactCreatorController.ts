@@ -24,6 +24,7 @@ import { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../../../submit/WillEnableSubmit";
 import type { RetrieveProjects } from "./RetrieveProjects";
 import type { Project } from "../../../Project";
+import { ProjectsRetrievalFault } from "./ProjectsRetrievalFault";
 
 type OnFaultHandler = (fault: Fault) => void;
 
@@ -48,7 +49,7 @@ export const ArtifactCreatorController = (
             projects_retriever.getProjects().match(
                 (projects) => projects,
                 (fault) => {
-                    _handler.apply((handler) => handler(fault));
+                    _handler.apply((handler) => handler(ProjectsRetrievalFault(fault)));
                     return [];
                 }
             ),

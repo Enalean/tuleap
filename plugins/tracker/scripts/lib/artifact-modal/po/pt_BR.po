@@ -66,6 +66,9 @@ msgstr ""
 msgid "Error while retrieving the comments: %s"
 msgstr ""
 
+msgid "Error while retrieving the list of projects: %s"
+msgstr ""
+
 msgid "Error while retrieving the possible parents: %s"
 msgstr ""
 
@@ -232,6 +235,9 @@ msgid "Unable to upload the file"
 msgstr "Impossível carregar o arquivo"
 
 msgid "Unlink"
+msgstr ""
+
+msgid "View details"
 msgstr ""
 
 msgid "You are not allowed to paste images here"
