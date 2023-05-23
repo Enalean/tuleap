@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git\Hook;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 
 final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 {

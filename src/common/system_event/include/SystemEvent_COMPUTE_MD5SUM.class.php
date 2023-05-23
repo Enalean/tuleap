@@ -26,14 +26,7 @@
  */
 class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
 {
-    /**
-     * Set multiple logs
-     *
-     * @param String $log Log string
-     *
-     * @return void
-     */
-    public function setLog($log)
+    public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
             $this->log = $log;

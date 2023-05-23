@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use Psr\Log\NullLogger;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;

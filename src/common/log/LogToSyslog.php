@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Log;
 
 use Monolog\Handler\SyslogHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -31,7 +32,7 @@ final class LogToSyslog
 {
     public const CONFIG_LOGGER_SYSLOG = 'syslog';
 
-    public function configure(Logger $logger, int $level): LoggerInterface
+    public function configure(Logger $logger, int|Level $level): LoggerInterface
     {
         $stream_handler = new SyslogHandler(
             'tuleap',

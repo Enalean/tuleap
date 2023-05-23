@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\IterationUpdateEvent;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;

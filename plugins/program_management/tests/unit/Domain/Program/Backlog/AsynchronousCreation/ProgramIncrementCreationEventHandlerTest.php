@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ProgramIncrementCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;

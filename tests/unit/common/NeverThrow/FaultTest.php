@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\NeverThrow;
 
 use Psr\Log\LogLevel;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
 {

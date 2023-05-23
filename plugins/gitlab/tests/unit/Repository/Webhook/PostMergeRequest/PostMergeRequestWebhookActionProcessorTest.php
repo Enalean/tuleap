@@ -21,7 +21,7 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Reference;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;

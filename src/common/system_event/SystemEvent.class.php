@@ -208,9 +208,9 @@ abstract class SystemEvent
         return $this->status;
     }
 
-    public function getLog()
+    public function getLog(): string
     {
-        return $this->log;
+        return $this->log ?? '';
     }
 
     public function setStatus($status)
@@ -218,7 +218,7 @@ abstract class SystemEvent
         $this->status = $status;
     }
 
-    public function setLog($log)
+    public function setLog(string $log): void
     {
         $this->log = $log;
     }

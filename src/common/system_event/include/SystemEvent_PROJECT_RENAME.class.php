@@ -28,14 +28,7 @@ require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_PROJECT_RENAME extends SystemEvent
 {
-    /**
-     * Set multiple logs
-     *
-     * @param String $log Log string
-     *
-     * @return void
-     */
-    public function setLog($log)
+    public function setLog(string $log): void
     {
         if (! isset($this->log) || $this->log == '') {
             $this->log = $log;

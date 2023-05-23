@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

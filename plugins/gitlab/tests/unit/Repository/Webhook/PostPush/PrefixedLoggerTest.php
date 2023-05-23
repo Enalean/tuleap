@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Psr\Log\LogLevel;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 
 final class PrefixedLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

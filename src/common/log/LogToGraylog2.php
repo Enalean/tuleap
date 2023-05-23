@@ -31,6 +31,7 @@ use Gelf\Transport\SslOptions;
 use Gelf\Transport\TcpTransport;
 use Gelf\Transport\TransportInterface;
 use Monolog\Handler\GelfHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Psr\Log\LoggerInterface;
@@ -54,7 +55,7 @@ final class LogToGraylog2
     #[ConfigKey("Toggle debug mode of communication between Tuleap and Graylog2 server")]
     public const CONFIG_GRAYLOG2_DEBUG = 'graylog2_debug';
 
-    public function configure(Logger $logger, int $level): LoggerInterface
+    public function configure(Logger $logger, int|Level $level): LoggerInterface
     {
         $server = ForgeConfig::get(self::CONFIG_GRAYLOG2_SERVER);
         $port   = ForgeConfig::getInt(self::CONFIG_GRAYLOG2_PORT);

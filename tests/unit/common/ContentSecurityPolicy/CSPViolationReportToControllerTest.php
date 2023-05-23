@@ -21,7 +21,7 @@
 namespace Tuleap\ContentSecurityPolicy;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 

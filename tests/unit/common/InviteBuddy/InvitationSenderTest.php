@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;

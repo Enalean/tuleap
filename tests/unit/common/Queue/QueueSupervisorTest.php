@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class QueueSupervisorTest extends TestCase

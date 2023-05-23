@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;

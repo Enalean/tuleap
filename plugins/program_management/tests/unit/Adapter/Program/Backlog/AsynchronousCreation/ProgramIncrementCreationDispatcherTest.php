@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;

@@ -27,7 +27,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;

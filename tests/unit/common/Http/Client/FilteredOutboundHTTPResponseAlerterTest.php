@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Http\Client;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

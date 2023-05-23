@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;

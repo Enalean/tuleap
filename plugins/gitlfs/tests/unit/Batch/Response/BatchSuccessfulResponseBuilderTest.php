@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Admin\AdminDao;

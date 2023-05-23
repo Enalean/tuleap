@@ -24,7 +24,7 @@ namespace Tuleap\PluginsAdministration\LifecycleHookCommand;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\CLI\AssertRunner;
 use Tuleap\Plugin\LifecycleHookCommand\PluginExecuteUpdateHookEvent;

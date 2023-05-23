@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 
 final class LDAPTest extends \Tuleap\Test\PHPUnit\TestCase
 {

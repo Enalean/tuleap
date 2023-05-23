@@ -152,7 +152,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
 
     public function testItRaisesAnErrorIfUnkownType(): void
     {
-        $logger  = new \Psr\Log\Test\TestLogger();
+        $logger  = new \ColinODell\PsrTestLogger\TestLogger();
         $factory = new Tracker_FormElement_Field_List_BindFactory($this->createStub(UGroupManager::class), $logger);
 
         self::assertInstanceOf(

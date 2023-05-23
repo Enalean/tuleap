@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\NullLogger;
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationsCreator;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;

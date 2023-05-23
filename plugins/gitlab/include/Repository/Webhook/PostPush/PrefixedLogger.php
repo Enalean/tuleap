@@ -31,7 +31,7 @@ final class PrefixedLogger extends AbstractLogger
     {
     }
 
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         $prefixed_message = $this->prefix . $message;
         $this->logger->log($level, $prefixed_message, $context);

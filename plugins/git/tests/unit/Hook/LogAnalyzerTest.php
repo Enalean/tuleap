@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git\Hook;
 
-use Psr\Log\Test\TestLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
