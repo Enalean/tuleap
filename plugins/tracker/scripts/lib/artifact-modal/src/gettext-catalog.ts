@@ -139,3 +139,7 @@ export const getSubmitDisabledForProjectsAndTrackersReason = (): string =>
 export const getArtifactCreationProjectLabel = (): string => gettextCatalog.getString("Project");
 export const getArtifactCreationFeedbackErrorMessage = (): string =>
     gettextCatalog.getString("Something went wrong during the artifact creation.");
+export const getArtifactFeedbackShowMoreLabel = (): string =>
+    gettextCatalog.getString("View details");
+export const getProjectsRetrievalErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the list of projects: %s");

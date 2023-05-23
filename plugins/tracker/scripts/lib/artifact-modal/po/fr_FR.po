@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-19 17:31+0200\n"
+"PO-Revision-Date: 2023-05-23 15:45+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -76,6 +76,9 @@ msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
 
 msgid "Error while retrieving the comments: %s"
 msgstr "Erreur pendant la récupération des commentaires : %s"
+
+msgid "Error while retrieving the list of projects: %s"
+msgstr "Erreur pendant la récupération de la liste des projets : %s"
 
 msgid "Error while retrieving the possible parents: %s"
 msgstr "Erreur pendant la récupération des parents possibles : %s"
@@ -250,6 +253,9 @@ msgstr "Impossible de téléverser le fichier"
 
 msgid "Unlink"
 msgstr "Délier"
+
+msgid "View details"
+msgstr "Voir les détails"
 
 msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"

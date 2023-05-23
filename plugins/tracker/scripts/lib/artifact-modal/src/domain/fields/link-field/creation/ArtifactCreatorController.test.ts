@@ -54,7 +54,7 @@ describe(`ArtifactCreatorController`, () => {
             const projects = await controller.getProjects();
 
             expect(projects).toHaveLength(0);
-            expect(handler).toHaveBeenCalledWith(fault);
+            expect(handler).toHaveBeenCalled();
         });
     });
 

@@ -18,7 +18,12 @@
  */
 
 import type { HostElement } from "./ArtifactCreatorElement";
-import { ArtifactCreatorElement, observeIsLoading, onClick } from "./ArtifactCreatorElement";
+import {
+    ArtifactCreatorElement,
+    observeIsLoading,
+    onClickCancel,
+    setErrorMessage,
+} from "./ArtifactCreatorElement";
 import { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
 import { setCatalog } from "../../../../../gettext-catalog";
@@ -56,6 +61,7 @@ describe(`ArtifactCreatorElement`, () => {
                 current_link_type: LinkTypeStub.buildUntyped(),
                 is_loading: false,
                 error_message: Option.nothing(),
+                show_error_details: false,
                 projects: [],
                 content: () => element,
                 dispatchEvent,
@@ -67,7 +73,7 @@ describe(`ArtifactCreatorElement`, () => {
             const host = getHost();
             const enableSubmit = jest.spyOn(controller, "enableSubmit");
 
-            onClick(host);
+            onClickCancel(host);
 
             expect(enableSubmit).toHaveBeenCalled();
             const event = dispatchEvent.mock.calls[0][0];
@@ -94,11 +100,12 @@ describe(`ArtifactCreatorElement`, () => {
     });
 
     describe(`render`, () => {
-        let is_loading: boolean, error_message: Option<string>;
+        let is_loading: boolean, error_message: Option<string>, show_error_details: boolean;
 
         beforeEach(() => {
             is_loading = true;
             error_message = Option.nothing();
+            show_error_details = false;
         });
         const render = (): HTMLElement => {
             const target = doc.createElement("div");
@@ -109,6 +116,7 @@ describe(`ArtifactCreatorElement`, () => {
                 current_link_type: LinkTypeStub.buildUntyped(),
                 is_loading,
                 error_message,
+                show_error_details,
                 projects: [],
                 content: () => target,
             }) as HostElement;
@@ -139,6 +147,46 @@ describe(`ArtifactCreatorElement`, () => {
             error_message = Option.fromValue("Shtopp dat cart!");
             const target = render();
             expect(target.querySelector("[data-test=creation-error]")).not.toBeNull();
+        });
+
+        it(`when I have clicked on the error details, it will show the error message details`, () => {
+            error_message = Option.fromValue("Shtopp dat cart!");
+            show_error_details = true;
+            const target = render();
+            expect(target.querySelector("[data-test=creation-error-details]")).not.toBeNull();
+        });
+    });
+
+    describe(`setters`, () => {
+        let form: HTMLElement;
+
+        beforeEach(() => {
+            form = doc.createElement("div");
+            form.setAttribute("data-form", "");
+        });
+        const getHost = (): HostElement => {
+            const target = doc.createElement("div");
+            target.append(form);
+            return Object.assign(target, {
+                content: () => target,
+            }) as unknown as HostElement;
+        };
+
+        it(`defaults error message to Nothing`, () => {
+            const result = setErrorMessage(getHost(), undefined);
+            expect(result.isNothing()).toBe(true);
+        });
+
+        it(`scrolls the form into view when given an actual error message`, () => {
+            const host = getHost();
+            const scrollIntoView = jest.fn();
+            Object.assign(form, { scrollIntoView });
+            const option = Option.fromValue("Error message");
+
+            const result = setErrorMessage(host, option);
+
+            expect(scrollIntoView).toHaveBeenCalled();
+            expect(result).toBe(option);
         });
     });
 });
