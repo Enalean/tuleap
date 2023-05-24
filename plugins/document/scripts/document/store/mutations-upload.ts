@@ -18,8 +18,7 @@
  */
 
 import type { FakeItem, Folder, State, ApprovableDocument, ItemFile, Item } from "../type";
-import { isFolder } from "../helpers/type-check-helper";
-import Vue from "vue";
+import { isFakeItem, isFolder } from "../helpers/type-check-helper";
 
 export function addFileInUploadsList(state: State, file: FakeItem): void {
     removeFileFromUploadsList(state, file);
@@ -61,13 +60,15 @@ export function emptyFilesUploadsList(state: State): void {
 }
 
 export function initializeFolderProperties(state: State, folder: Folder): void {
-    const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
-    if (folder_index === -1) {
+    const item = state.folder_content.find((item) => item.id === folder.id);
+    if (item === undefined) {
         return;
     }
 
-    Vue.set(state.folder_content[folder_index], "is_uploading_in_collapsed_folder", false);
-    Vue.set(state.folder_content[folder_index], "progress", null);
+    if (isFakeItem(item) || isFolder(item)) {
+        item.is_uploading_in_collapsed_folder = false;
+        item.progress = null;
+    }
 }
 
 export interface CollapseFolderPayload {
