@@ -18,7 +18,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "docx": "^7.3.0",
     "vue": "^3.2.37",
-    "vue3-gettext": "^2.2.1",
+    "vue3-gettext": "^2.4.0",
     "vuex": "^4.0.2",
     "vuex-composition-helpers": "^2.0.1",
     "xlsx": "git+https://git.sheetjs.com/sheetjs/sheetjs.git#333e4e40f9c5603bd22a811f54c61c20bc9e17ab"

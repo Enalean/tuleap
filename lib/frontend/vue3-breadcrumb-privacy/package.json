@@ -18,7 +18,7 @@
     "@tuleap/project-privacy-helper": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "vue3-gettext": "2.2.1"
+    "vue3-gettext": "2.4.0"
   },
   "peerDependencies": {
     "vue": "^3.2.47"
