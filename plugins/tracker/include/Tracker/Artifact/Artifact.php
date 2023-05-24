@@ -579,8 +579,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this, $action_buttons_fetcher);
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+            __DIR__ . '/../../../scripts/move-artifact-action/frontend-assets',
+            '/assets/trackers/move-artifact-action'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));

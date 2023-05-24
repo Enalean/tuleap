@@ -64,6 +64,7 @@ const config_for_flaming_parrot = {
         "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
         "tracker-semantic-status": "./scripts/semantics/status/status-picker.ts",
         "tracker-semantic-done": "./scripts/semantics/status/done-picker.ts",
+        TrackerAdminFields: "./scripts/TrackerAdminFields.js",
     },
     context,
     output,
@@ -82,37 +83,6 @@ const config_for_flaming_parrot = {
         ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
-};
-
-const config_for_vue_flaming_parrot = {
-    entry: {
-        MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
-        TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-    },
-    context,
-    output,
-    externals: {
-        codendi: "codendi",
-        jquery: "jQuery",
-    },
-    resolve: {
-        extensions: [".js", ".ts", ".vue"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
-    },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
-    ],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
 };
 
 const config_for_burning_parrot = {
@@ -178,7 +148,6 @@ const config_for_themes = {
 module.exports = [
     webpack_config_for_burndown_chart,
     config_for_flaming_parrot,
-    config_for_vue_flaming_parrot,
     config_for_burning_parrot,
     config_for_themes,
 ];
