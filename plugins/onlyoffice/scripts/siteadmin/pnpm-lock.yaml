@@ -26,8 +26,8 @@ dependencies:
     specifier: 3.2.37
     version: 3.2.37
   vue3-gettext:
-    specifier: ^2.2.1
-    version: 2.3.4(vue@3.2.37)
+    specifier: ^2.4.0
+    version: 2.4.0(vue@3.2.37)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -45,8 +45,8 @@ devDependencies:
 
 packages:
 
-  /@babel/code-frame@7.18.6:
-    resolution: {integrity: sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==}
+  /@babel/code-frame@7.21.4:
+    resolution: {integrity: sha512-LYvhNKfwWSPpocw8GI7gpK2nq3HSDuEPC/uSYaALSJu9xjsalaaYFOq0Pwt5KmVqwEbZlDu81aLXwBOmD/Fv9g==}
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/highlight': 7.18.6
@@ -88,15 +88,15 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.11.18
+      '@types/node': 20.2.3
     dev: false
 
   /@types/minimatch@5.1.2:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: false
 
-  /@types/node@18.11.18:
-    resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
+  /@types/node@20.2.3:
+    resolution: {integrity: sha512-pg9d0yC4rVNWQzX8U7xb4olIOFuuVL9za3bzMT2pu2SU0SNEi66i2qrvhE2qt0HvkhuCaWJu7pLNOt/Pj8BIrw==}
     dev: false
 
   /@types/parse-json@4.0.0:
@@ -272,7 +272,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: false
 
   /cosmiconfig@7.1.0:
@@ -318,8 +318,8 @@ packages:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: false
 
-  /gettext-extractor@3.6.0:
-    resolution: {integrity: sha512-fHbvp5toU3NcMOAI7M2b99OkguzBu7v9LADF0Ad1q/ltZvNttcIB65uVIBt+fehPCgy37T+NeEcvtaI+t/+gtw==}
+  /gettext-extractor@3.7.2:
+    resolution: {integrity: sha512-nXZDMevReplyum9HsHkU+Y9DemC2kKUkzLL0bu27tSola9TCpUfVkyMpnhvKv1sLj3CcgtMvw3x2FxC4GpsW7A==}
     engines: {node: '>=6'}
     dependencies:
       '@types/glob': 7.2.0
@@ -328,7 +328,7 @@ packages:
       glob: 7.2.3
       parse5: 6.0.1
       pofile: 1.0.11
-      typescript: 4.9.4
+      typescript: 5.0.4
     dev: false
 
   /glob@7.2.3:
@@ -432,7 +432,7 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
@@ -512,13 +512,13 @@ packages:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
 
-  /tslib@2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+  /tslib@2.5.2:
+    resolution: {integrity: sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA==}
     dev: false
 
-  /typescript@4.9.4:
-    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
-    engines: {node: '>=4.2.0'}
+  /typescript@5.0.4:
+    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
+    engines: {node: '>=12.20'}
     hasBin: true
     dev: false
 
@@ -527,8 +527,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /vue3-gettext@2.3.4(vue@3.2.37):
-    resolution: {integrity: sha512-X+dibsUhiSRz2LW5de6NkDl+GNZoo9JMGmlJ+wuzez/UJYvJ6GKofOeoUxbtwOk2vPY+/wesmyyzhkMoR3Z/AA==}
+  /vue3-gettext@2.4.0(vue@3.2.37):
+    resolution: {integrity: sha512-xnCndk88nzC+EiUJpNKykUulvPhivM1AQuT6oa72PA4DUOFPjJvpy5hZ/GbxLUJiqvYJebMDMTWywCJwIw+biA==}
     engines: {node: '>= 12.0.0'}
     hasBin: true
     peerDependencies:
@@ -538,12 +538,12 @@ packages:
       chalk: 4.1.2
       command-line-args: 5.2.1
       cosmiconfig: 7.1.0
-      gettext-extractor: 3.6.0
+      gettext-extractor: 3.7.2
       glob: 7.2.3
       parse5: 6.0.1
       parse5-htmlparser2-tree-adapter: 6.0.1
       pofile: 1.1.4
-      tslib: 2.4.1
+      tslib: 2.5.2
       vue: 3.2.37
     dev: false
 

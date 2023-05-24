@@ -36,7 +36,7 @@
     "vue": "^3.2.47",
     "vue-dompurify-html": "^4.0.0",
     "vue-router": "^4.1.6",
-    "vue3-gettext": "2.2.1",
+    "vue3-gettext": "2.4.0",
     "vuex": "^4.1.0",
     "vuex-composition-helpers": "^2.0.1"
   },

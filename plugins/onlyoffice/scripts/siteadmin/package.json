@@ -20,7 +20,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "mitt": "^3.0.0",
     "vue": "3.2.37",
-    "vue3-gettext": "^2.2.1"
+    "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

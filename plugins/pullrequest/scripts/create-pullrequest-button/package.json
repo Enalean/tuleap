@@ -10,7 +10,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "@vue/compat": "^3.2.47",
     "vue": "^3.2.47",
-    "vue3-gettext": "2.5.0-alpha.1",
+    "vue3-gettext": "2.4.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
