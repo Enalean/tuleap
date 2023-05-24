@@ -18,16 +18,24 @@
  */
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../support/local-vue.js";
-import * as tlp from "tlp";
+import { createLocalVueForTests } from "../../support/local-vue.js";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import WorkflowFieldChange from "./WorkflowFieldChange.vue";
 
-jest.mock("tlp");
+const noop = () => {
+    //Do nothing
+};
 
 describe(`WorkflowFieldChange`, () => {
-    let wrapper, store;
+    let store;
 
-    function createWrapper() {
+    beforeEach(() => {
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
+            show: noop,
+        });
+    });
+
+    async function createWrapper() {
         store = createStoreMock({
             state: {
                 is_operation_running: false,
@@ -37,23 +45,24 @@ describe(`WorkflowFieldChange`, () => {
                 current_tracker_id: 145,
             },
         });
-        wrapper = shallowMount(WorkflowFieldChange, {
-            localVue,
+        return shallowMount(WorkflowFieldChange, {
+            localVue: await createLocalVueForTests(),
             mocks: { $store: store },
         });
     }
 
-    it(`when mounted(), it will create a TLP modal`, () => {
-        createWrapper();
-        expect(tlp.createModal).toHaveBeenCalled();
+    it(`when mounted(), it will create a TLP modal`, async () => {
+        const createModal = jest.spyOn(tlp_modal, "createModal");
+        await createWrapper();
+        expect(createModal).toHaveBeenCalled();
     });
 
-    it(`when I click the "Change or remove" button, it will open a confirmation modal`, () => {
+    it(`when I click the "Change or remove" button, it will open a confirmation modal`, async () => {
         const modal = {
             show: jest.fn(),
         };
-        jest.spyOn(tlp, "createModal").mockReturnValue(modal);
-        createWrapper();
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal);
+        const wrapper = await createWrapper();
 
         const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
         change_remove_button.trigger("click");
@@ -63,7 +72,7 @@ describe(`WorkflowFieldChange`, () => {
 
     describe(`when an operation is running`, () => {
         it(`will disable the "Change or remove" button`, async () => {
-            createWrapper();
+            const wrapper = await createWrapper();
             store.state.is_operation_running = true;
             await wrapper.vm.$nextTick();
             const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");

@@ -18,15 +18,15 @@
  */
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import EmptyPostAction from "./EmptyPostAction.vue";
 
 describe(`EmptyPostAction`, () => {
     it(`When I click on the "Add action" button,
-        it will commit a mutation to create a new post action`, () => {
+        it will commit a mutation to create a new post action`, async () => {
         const store = createStoreMock({});
         const wrapper = shallowMount(EmptyPostAction, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store: store },
         });
 

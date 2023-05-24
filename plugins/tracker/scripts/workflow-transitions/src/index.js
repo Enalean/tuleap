@@ -1,9 +1,5 @@
-/**
- * Copyright Enalean (c) 2020-present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,13 +19,12 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import store_options from "./store";
-import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import store_options from "./store/index.js";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-workflow-transitions");
 
     if (!vue_mount_point) {
@@ -43,16 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const used_services_names = JSON.parse(service_name_list);
 
     Vue.use(Vuex);
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import("../po/" + getPOFileFromLocale(locale))
+    );
     Vue.use(VueDOMPurifyHTML);
 
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    Vue.config.language = document.body.dataset.userLocale ?? "en_US";
 
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);

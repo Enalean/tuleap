@@ -76,13 +76,12 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/trackers'
+        $workflow_assets = new IncludeAssets(
+            __DIR__ . '/../../../scripts/workflow-transitions/frontend-assets',
+            '/assets/trackers/workflow-transitions'
         );
-        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-email-copy-paste-bp.js'));
-        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'tracker-workflow-transitions.js'));
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'workflow'));
+        $layout->addJavascriptAsset(new JavascriptAsset($workflow_assets, 'tracker-workflow-transitions.js'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($workflow_assets, 'workflow'));
 
         $event = new GetExternalPostActionPluginsEvent($tracker);
         $this->event_manager->processEvent($event);

@@ -19,15 +19,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import AddToBacklogAgileDashboardPostAction from "./AddToBacklogAgileDashboardPostAction.vue";
 import PostAction from "../PostAction/PostAction.vue";
 
 describe("AddToBacklogAgileDashboardPostAction", () => {
-    it("spawns the component", () => {
+    it("spawns the component", async () => {
         const wrapper = shallowMount(AddToBacklogAgileDashboardPostAction, {
             propsData: { post_action: { type: "add_to_backlog" } },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
         expect(wrapper.findComponent(PostAction).exists()).toBe(true);
         expect(wrapper.find("[data-test=add-to-backlog-post-action-description]").exists()).toBe(

@@ -96,7 +96,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import WorkflowModeSwitchModal from "./WorkflowModeSwitchModal.vue";
 
 export default {

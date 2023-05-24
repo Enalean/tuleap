@@ -20,15 +20,15 @@
 
 import { shallowMount } from "@vue/test-utils";
 import IntInput from "./IntInput.vue";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 
 describe("IntInput", () => {
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(IntInput, {
             propsData: { value: 2 },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 
@@ -49,7 +49,7 @@ describe("IntInput", () => {
 
         it("emits input event with corresponding value", () => {
             expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toEqual([6]);
+            expect(wrapper.emitted().input[0]).toStrictEqual([6]);
         });
     });
 

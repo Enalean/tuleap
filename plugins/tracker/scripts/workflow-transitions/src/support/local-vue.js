@@ -19,14 +19,12 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
+import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true,
-});
-
-export default localVue;
+export async function createLocalVueForTests() {
+    const local_vue = createLocalVue();
+    await initVueGettext(local_vue, () => {
+        throw Error("Fallback to default");
+    });
+    return local_vue;
+}

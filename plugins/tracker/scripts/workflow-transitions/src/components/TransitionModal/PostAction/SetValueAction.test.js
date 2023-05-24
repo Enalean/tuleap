@@ -24,7 +24,7 @@ import SetValueAction from "./SetValueAction.vue";
 import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import { DATE_FIELD } from "@tuleap/plugin-tracker-constants";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -40,7 +40,7 @@ describe("SetValueAction", () => {
 
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const current_tracker = {
             fields: [date_field, int_field, float_field],
         };
@@ -68,7 +68,7 @@ describe("SetValueAction", () => {
         wrapper = mount(SetValueAction, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 
@@ -118,7 +118,7 @@ describe("SetValueAction", () => {
         beforeEach(() => wrapper.setProps({ post_action }));
 
         it("select corresponding date field", () => {
-            expect(wrapper.vm.post_action_field).toEqual(date_field);
+            expect(wrapper.vm.post_action_field).toBe(date_field);
         });
 
         it("shows post action value", () => {
@@ -136,7 +136,7 @@ describe("SetValueAction", () => {
         beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
-            expect(wrapper.vm.post_action_field).toEqual(int_field);
+            expect(wrapper.vm.post_action_field).toBe(int_field);
             expect(wrapper.findComponent(IntInput).props().value).toBe(200);
         });
     });
@@ -151,7 +151,7 @@ describe("SetValueAction", () => {
         beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
-            expect(wrapper.vm.post_action_field).toEqual(float_field);
+            expect(wrapper.vm.post_action_field).toBe(float_field);
             expect(wrapper.findComponent(FloatInput).props().value).toBe(12.34);
         });
     });

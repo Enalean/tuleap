@@ -20,15 +20,15 @@
 
 import { shallowMount } from "@vue/test-utils";
 import FloatInput from "./FloatInput.vue";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 
 describe("FloatInput", () => {
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(FloatInput, {
             propsData: { value: 1.23 },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 
@@ -49,7 +49,7 @@ describe("FloatInput", () => {
 
         it("emits input event with corresponding value", () => {
             expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toEqual([4.56]);
+            expect(wrapper.emitted().input[0]).toStrictEqual([4.56]);
         });
     });
 
