@@ -90,7 +90,6 @@ const config_for_burning_parrot = {
         "admin-type": "./scripts/admin-type.js",
         "global-admin-artifact-links": "./scripts/global-admin/artifact-links.js",
         "global-admin-trackers": "./scripts/global-admin/trackers.ts",
-        "tracker-creation": "./scripts/tracker-creation/index.ts",
         "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
@@ -129,7 +128,6 @@ let entry_points = {
     "burndown-chart": "./themes/burndown-chart.scss",
     colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
     "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
-    "tracker-creation": "./themes/BurningParrot/css/tracker-creation/tracker-creation.scss",
     "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
 };
 

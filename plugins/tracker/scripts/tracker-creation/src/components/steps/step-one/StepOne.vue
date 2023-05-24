@@ -58,7 +58,6 @@ import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
 import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/TrackerFromAnotherProjectCard.vue";
 import type { Tracker } from "../../../store/type";
 import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
-import { sprintf } from "sprintf-js";
 import TrackerFromJiraCard from "./cards/FromJira/TrackerFromJiraCard.vue";
 
 @Component({
@@ -96,7 +95,9 @@ export default class StepOne extends Vue {
     get title_company_name(): string {
         return this.company_name === "Tuleap"
             ? this.$gettext("Custom templates")
-            : sprintf(this.$gettext("%s templates"), this.company_name);
+            : this.$gettextInterpolate(this.$gettext("%{ company_name } templates"), {
+                  company_name: this.company_name,
+              });
     }
 
     get advanced_users_title(): string {
