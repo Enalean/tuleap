@@ -107,24 +107,6 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             throw new \Exception('Hashbase is required');
         }
 
-        $taglist = $this->project->GetTags(17);
-        if ($taglist) {
-            if (count($taglist) > 16) {
-                $this->tpl->assign('hasmoretags', true);
-                $taglist = array_slice($taglist, 0, 16);
-            }
-            $this->tpl->assign('taglist', $taglist);
-        }
-
-        $headlist = $this->project->GetHeads(17);
-        if ($headlist) {
-            if (count($headlist) > 17) {
-                $this->tpl->assign('hasmoreheads', true);
-                $headlist = array_slice($headlist, 0, 16);
-            }
-            $this->tpl->assign('headlist', $headlist);
-        }
-
         $commit = $this->project->GetCommit($this->params['hashbase']);
 
         $this->tpl->assign('commit', $commit);
