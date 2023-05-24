@@ -1,0 +1,21 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tlp-swatch-colors
+  mustache:
+    specifier: ^4.2.0
+    version: 4.2.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
+
+packages:
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+    dev: false

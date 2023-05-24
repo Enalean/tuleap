@@ -23,7 +23,11 @@
             class="labeled-items-loading"
             v-bind:class="{ error: error !== false }"
         ></div>
-        <div v-if="error !== false" class="tlp-alert-danger labeled-items-error">
+        <div
+            v-if="error !== false"
+            class="tlp-alert-danger labeled-items-error"
+            data-test="widget-error"
+        >
             <translate>Please select one or more labels by editing this widget.</translate>
         </div>
         <div class="empty-state-pane" v-if="empty && !loading && error === false">
@@ -35,13 +39,18 @@
                 v-bind:translate-n="labels_id.length"
                 translate-plural="There isn't any item corresponding to labels."
                 class="empty-state-text"
+                data-test="items-list-empty-state"
             >
                 There isn't any item corresponding to label.
             </translate>
         </div>
         <labeled-item v-for="item in items" v-bind:item="item" v-bind:key="item.html_url" />
-        <div class="labeled-items-list-more" v-if="has_more_items">
-            <button class="tlp-button-primary tlp-button-outline" v-on:click="loadMore">
+        <div class="labeled-items-list-more" v-if="has_more_items" data-test="load-more-section">
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadMore"
+                data-test="load-more-button"
+            >
                 <i class="tlp-button-icon fa fa-spinner fa-spin" v-if="is_loading_more"></i>
                 <translate>Load more</translate>
             </button>
@@ -56,8 +65,14 @@ export default {
     name: "LabeledItemsList",
     components: { LabeledItem },
     props: {
-        labelsId: String,
-        projectId: String,
+        labelsId: {
+            type: String,
+            default: "",
+        },
+        projectId: {
+            type: String,
+            default: "",
+        },
     },
     data() {
         return {

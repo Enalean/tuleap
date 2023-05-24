@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/label.scss";
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
 import LabeledItemsList from "./LabeledItemsList.vue";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML, {
         namedConfigurations: {
             svg: {
@@ -31,15 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
             },
         },
     });
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
 
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+    );
+
     const widgets = document.getElementsByClassName("labeled-items-widget");
     const RootComponent = Vue.extend(LabeledItemsList);
 
