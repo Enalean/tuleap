@@ -27,7 +27,7 @@
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/jquery": "^3.5.5",
     "@types/sprintf-js": "^1.1.2",
-    "@vitejs/plugin-vue": "^2.0.0",
+    "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.0.2",
     "jquery": "^3.6.0",
     "neverthrow": "^6.0.0"
