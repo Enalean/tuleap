@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...defineJestConfiguration(),
-    displayName: "tracker/artifact-action-buttons",
-};
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+
+export default webpack_configurator.extendDevConfiguration(common);

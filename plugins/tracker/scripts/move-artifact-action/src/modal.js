@@ -20,18 +20,13 @@
 import Vue from "vue";
 import MoveModal from "./components/MoveModal.vue";
 import { setFromTracker } from "./from-tracker-presenter.js";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 
-export function init(vue_mount_point) {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    Vue.config.language = document.body.dataset.userLocale;
+export async function init(vue_mount_point) {
+    Vue.config.language = document.body.dataset.userLocale ?? "en_US";
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import("../po/" + getPOFileFromLocale(locale))
+    );
 
     const RootComponent = Vue.extend(MoveModal);
 

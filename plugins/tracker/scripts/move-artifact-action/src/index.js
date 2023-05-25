@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import codendi from "codendi";
+import { addFeedback } from "@tuleap/fp-feedback";
 
 document.addEventListener("DOMContentLoaded", () => {
     const move_link = document.getElementById("tracker-action-button-move");
@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal.js");
 
-            init(vue_mount_point);
+            await init(vue_mount_point);
         } catch (e) {
-            codendi.feedback.log("error", "Error while loading the Move Artifact modal.");
+            addFeedback("error", "Error while loading the Move Artifact modal.");
         } finally {
             move_dropdown_icon.classList.remove("fa-spin", "fa-spinner");
             move_link.classList.remove("disabled");
