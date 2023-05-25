@@ -70,7 +70,8 @@ export default {
                 }
 
                 this.nb_uploads_in_error = uploads_in_error.length;
-            }
+            },
+            { deep: true }
         );
     },
 };
