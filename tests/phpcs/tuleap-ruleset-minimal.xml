@@ -23,7 +23,6 @@
     <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
       <exclude-pattern>*/phpwiki/*</exclude-pattern>
       <exclude-pattern>*/embedded_vendor/*</exclude-pattern>
-      <exclude-pattern>*/www/include/nusoap.php$</exclude-pattern>
       <exclude-pattern>*/fusionforge/FusionForge.php$</exclude-pattern>
       <exclude-pattern>*/mediawiki/www/skins/Tuleap123/Tuleap123.php$</exclude-pattern>
       <exclude-pattern>*/mediawiki/www/LocalSettings.php$</exclude-pattern>

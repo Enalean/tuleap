@@ -401,12 +401,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName('soap')]
-    public function soap($arams): void
-    {
-        require_once('soap.php');
-    }
-
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function widgetInstance(GetWidget $get_widget_event): void
     {
@@ -477,11 +471,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
 
         $proxy->process($request, $user);
-    }
-
-    public function processSOAP($request)
-    {
-        return $this->getSOAPController($request)->process();
     }
 
     #[\Tuleap\Plugin\ListeningToEventName('wiki_page_updated')]
@@ -1028,11 +1017,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $request = HTTPRequest::instance();
         }
         return $this->getController('Docman_HTTPController', $request);
-    }
-
-    protected function getSOAPController($request)
-    {
-        return $this->getController('Docman_SOAPController', $request);
     }
 
     protected function getController($controller, $request)

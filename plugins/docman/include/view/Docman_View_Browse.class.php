@@ -164,10 +164,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return $li_classes;
     }
 
-    public static function isViewAllowed($view)
+    public static function isViewAllowed($view): bool
     {
-        //List is part of SOAP api
-        return in_array($view, array_merge(array_keys(self::getDefaultViews()), ['List']));
+        return array_key_exists($view, self::getDefaultViews());
     }
 
     public static function getViewForCurrentUser($group_id, $report = '')

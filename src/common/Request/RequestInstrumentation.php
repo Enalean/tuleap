@@ -64,15 +64,6 @@ class RequestInstrumentation
         $this->updateRequestDurationHistogram('rest');
     }
 
-    /**
-     * Soap will also increment legacy router due to pre.php
-     * It's not worth fixing it.
-     */
-    public function incrementSoap(DetectedBrowser $detected_browser): void
-    {
-        $this->incrementCodeRouter('200', 'soap', $detected_browser);
-    }
-
     private function incrementCodeRouter(string $code, string $router, DetectedBrowser $detected_browser): void
     {
         $this->prometheus->increment(

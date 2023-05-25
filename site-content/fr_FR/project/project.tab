@@ -699,12 +699,5 @@ project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs
 project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
 project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
 
-project_admin	generic_member_settings	Paramètres de l'utilisateur générique
-project_admin	generic_member_updated	Paramètres de l'utilisateur générique mis à jour
-project_admin	generic_member_not_updated	Erreur pendant la mise à jour des paramètres de l'utilisateur générique
-project_admin	generic_member_not_changed	Les parmètres de l'utilisateur générique n'ont pas été mis à jour
-project_admin	generic_member_leave_blank	Laisser vide si vous souhaitez conserver le mot de passe actuel
-project_admin	edit_generic_user_settings	éditer les paramètres
-
 project_import	invalid_user	L'utilisateur $1 n'est pas valide. Il doit être administrateur du projet et actif
 project_import	invalid_xml	La structure du fichier n'est pas du XML valide

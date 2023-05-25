@@ -22,7 +22,6 @@ that some points may be irrelevant for some type of fields.
     -   Import/Export XML
     -   Field is duplicated on tracker inheritance (both tracker and
         project creation)
-    -   Definition is NOT given through SOAP \@deprecated
     -   Definition is given through REST (representations)
     -   Migrate field from TV3 (if not done)
     -   Does new field can be used for burndown?
@@ -35,7 +34,6 @@ that some points may be irrelevant for some type of fields.
     -   Field is involved in notifications
     -   New value is sent in notifications
     -   Diff of the field appears in changesets
-    -   Get/create/update NOT through SOAP \@deprecated
     -   New value is Copyed on Artifact copy
     -   New value can be used in semantic
     -   New value can be updated on masschanges

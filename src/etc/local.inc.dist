@@ -314,11 +314,6 @@ $sys_lists_suffix = '';
 // If disabled (0), only the project name is displayed
 $sys_display_project_privacy_in_service_bar = 1;
 
-// Set a custom suffix for Generic Users
-// This suffix should respect user login name constraints (number of chars, allowed
-// chars, etc)
-$sys_generic_user_suffix = '';
-
 // Hard limit to number of emailed people when the news admin choose to send a news
 // by email.
 // Only used in news service for now
@@ -372,11 +367,6 @@ $sys_trusted_proxies = '';
 
 // When 0 mail sent to everybody can lead to information leak, non projects members can receive mails of private projects
 $sys_mail_secure_mode = 0;
-
-// Is your ssl certificate legit or not
-// This is useful for intra-application https call (like SOAP) starting PHP 5.6
-// Should be toggled to 1 in dev only otherwise it means that your server is exposed to security vulnerabilities
-$sys_use_unsecure_ssl_certificate = 0;
 
 // Backend workers
 //

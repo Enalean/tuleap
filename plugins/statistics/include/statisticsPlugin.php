@@ -31,11 +31,8 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Quota\ProjectQuotaInformation;
 use Tuleap\Project\Quota\ProjectQuotaRequester;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Retriever as CVSRetriever;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
@@ -59,7 +56,6 @@ class StatisticsPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook('usergroup_data', 'usergroup_data');
         $this->addHook('groupedit_data', 'groupedit_data');
-        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types');
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(GetSystemEventQueuesEvent::NAME);
@@ -262,48 +258,6 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    public function processSOAP(Codendi_Request $request)
-    {
-        $uri           = $this->getSoapUri();
-        $service_class = 'Statistics_SOAPServer';
-        require_once $service_class . '.class.php';
-
-        if ($request->exist('wsdl')) {
-            $this->dumpWSDL($uri, $service_class);
-        } else {
-            $this->instantiateSOAPServer($uri, $service_class);
-        }
-    }
-
-    private function dumpWSDL($uri, $service_class)
-    {
-        $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
-        $wsdlGen->dumpWSDL();
-    }
-
-    private function instantiateSOAPServer($uri, $service_class)
-    {
-        require_once 'Statistics_DiskUsageManager.class.php';
-        $user_manager           = UserManager::instance();
-        $project_manager        = ProjectManager::instance();
-        $soap_request_validator = new SOAPRequestValidatorImplementation(
-            $project_manager,
-            $user_manager,
-            new ProjectAccessChecker(
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            )
-        );
-        $disk_usage_manager     = $this->getDiskUsageManager();
-        $project_quota_manager  = new ProjectQuotaManager();
-
-        $server = new TuleapSOAPServer($uri . '/?wsdl', ['cache_wsdl' => WSDL_CACHE_NONE]);
-        $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
-        XML_Security::enableExternalLoadOfEntities(function () use ($server) {
-            $server->handle();
-        });
-    }
-
     /**
      * @return Statistics_DiskUsageManager
      */
@@ -323,25 +277,6 @@ class StatisticsPlugin extends Plugin
             $cvs_collector,
             EventManager::instance()
         );
-    }
-
-    private function getSoapUri()
-    {
-        return \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/statistics/soap';
-    }
-
-    public function renderWSDL()
-    {
-        $uri           = $this->getSoapUri();
-        $wsdl_renderer = new SOAP_WSDLRenderer();
-        $wsdl_renderer->render($uri . '/?wsdl');
-    }
-
-    public function wsdl_doc2soap_types($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], [
-            'arrayofstatistics' => 'tns:ArrayOfStatistics',
-        ]);
     }
 
     public function aggregate_statistics($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

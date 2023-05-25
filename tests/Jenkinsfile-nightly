@@ -63,10 +63,6 @@ pipeline {
                             steps { script { actions.runDBTests('mariadb103', '81') } }
                             post { always { junit 'results/db/*/db_tests.xml' } }
                         }
-                        stage('SOAP CentOS 7 PHP 8.1 MariaDB 10.3') {
-                            steps { script { actions.runSOAPTests('mariadb103', '81') } }
-                            post { always { junit 'results/soap/*/soap_tests.xml' } }
-                        }
                     }
                 }
                 stage ('MySQL 5.7') {
@@ -78,10 +74,6 @@ pipeline {
                         stage('DB CentOS 7 PHP 8.1 MySQL 5.7') {
                             steps { script { actions.runDBTests('mysql57', '81') } }
                             post { always { junit 'results/db/*/db_tests.xml' } }
-                        }
-                        stage('SOAP CentOS 7 PHP 8.1 MySQL 5.7') {
-                            steps { script { actions.runSOAPTests('mysql57', '81') } }
-                            post { always { junit 'results/soap/*/soap_tests.xml' } }
                         }
                     }
                 }

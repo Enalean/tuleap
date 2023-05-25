@@ -290,51 +290,6 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($k2, $res[2]);
     }
 
-    public function testActiveUserCanSeePeopleNotInHisProjects(): void
-    {
-        $activeUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $activeUser->setId(123);
-        $activeUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-            102 => [],
-        ]);
-        $activeUser->setStatus(PFUser::STATUS_ACTIVE);
-
-        $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $notProjectMember->shouldReceive('getUserGroupData')->andReturns([103 => []]);
-
-        $this->assertTrue($activeUser->canSee($notProjectMember));
-    }
-
-    public function testRestrictedUserCanSeePeopleInHisProjects(): void
-    {
-        $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $restrictedUser->setId(123);
-        $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-            102 => [],
-        ]);
-        $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
-
-        $otherProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $otherProjectMember->shouldReceive('getUserGroupData')->andReturns([102 => []]);
-
-        $this->assertTrue($restrictedUser->canSee($otherProjectMember));
-    }
-
-    public function testRestrictedUserCannotSeePeopleNotInHisProjects(): void
-    {
-        $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $restrictedUser->setId(123);
-        $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-            102 => [],
-        ]);
-        $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
-
-        $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $notProjectMember->shouldReceive('getUserGroupData')->andReturns([103 => []]);
-
-        $this->assertFalse($restrictedUser->canSee($notProjectMember));
-    }
-
     public function testGetAuthorizedKeysSplitedWithoutKey(): void
     {
         $user = new PFUser(['language_id'     => 'en_US',

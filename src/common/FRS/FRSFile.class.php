@@ -490,7 +490,7 @@ class FRSFile
     /**
      * Log the download of the file in the log system
      *
-     * Only log one download attempt per file/user/hour. Driven by SOAP:getFileChunk
+     * Only log one download attempt per file/user/hour.
      * in order to reduce the amount of download attempt logged.
      *
      * @param int $user_id the user that download the file (if 0, the current user will be taken)

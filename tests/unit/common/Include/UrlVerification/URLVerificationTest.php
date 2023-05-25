@@ -85,14 +85,6 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse((bool) $urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar']));
     }
 
-    public function testItDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions(): void
-    {
-        $urlVerification = new URLVerification();
-        $this->assertFalse(
-            (bool) $urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php'])
-        );
-    }
-
     public function testItDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions(): void
     {
         $urlVerification = new URLVerification();
@@ -100,20 +92,6 @@ final class URLVerificationTest extends \Tuleap\Test\PHPUnit\TestCase
             (bool) $urlVerification->isException(
                 ['SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross']
             )
-        );
-    }
-
-    public function testItTreatsSOAPApiAsException(): void
-    {
-        $urlVerification = new URLVerification();
-        $this->assertTrue((bool) $urlVerification->isException(['SCRIPT_NAME' => '/soap/index.php']));
-    }
-
-    public function testItTreatsSOAPApiOfPluginsAsException(): void
-    {
-        $urlVerification = new URLVerification();
-        $this->assertTrue(
-            (bool) $urlVerification->isException(['SCRIPT_NAME' => '/plugins/docman/soap/index.php'])
         );
     }
 

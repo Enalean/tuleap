@@ -561,30 +561,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
 
     /**
-     * Check if user can see the existance of given user.
-     *
-     * A user can see another one if
-     * - the "querying" user is Active
-     * - the "querying" user is Restricted AND the user to see is
-     *   member of a project the restricted user is member too.
-     *
-     * @param PFUser $user A user to test
-     *
-     * @return bool
-     */
-    public function canSee($user)
-    {
-        if ($this->isRestricted()) {
-            $myGroupData   = $this->getUserGroupData();
-            $userGroupData = $user->getUserGroupData();
-            $commonGroups  = array_intersect_key($myGroupData, $userGroupData);
-            return count($commonGroups) > 0;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * User's language object corresponding to user's locale
      *
      * @return BaseLanguage

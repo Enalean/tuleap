@@ -25,7 +25,6 @@ let
         readline
         session
         simplexml
-        soap
         sodium
         tokenizer
         xmlreader

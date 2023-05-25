@@ -2,9 +2,9 @@ LDAP Plugin
 ===========
 
 This is the LDAP plugin for Tuleap. It provides:
-- LDAP authentication for web access (both browsing & soap) and SVN http(s).
+- LDAP authentication for web access and SVN http(s).
 - Querying for directory in "global search"
-- Binding with LDAP groups. Ability to bind a Tuleap user group or project 
+- Binding with LDAP groups. Ability to bind a Tuleap user group or project
   members with any LDAP group.
 - Autocompletion of ldap logins where user name is required
 - Automatic registeration of ldap users when they are referenced. You can add

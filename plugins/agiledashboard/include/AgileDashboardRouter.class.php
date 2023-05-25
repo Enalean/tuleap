@@ -49,7 +49,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
- * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
+ * Routes HTTP requests to the appropriate controllers
  * (e.g. PlanningController, MilestoneController...).
  *
  * See AgileDashboardRouter::route()

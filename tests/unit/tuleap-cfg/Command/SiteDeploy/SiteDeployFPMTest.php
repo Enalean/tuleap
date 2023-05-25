@@ -81,7 +81,6 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFileExists($this->php_configuration_folder . '/php-fpm.d/tuleap_sessions.part');
 
         $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/session');
-        $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/wsdlcache');
 
         $tuleap_conf = file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part');
         $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);

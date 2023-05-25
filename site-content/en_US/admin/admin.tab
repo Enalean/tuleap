@@ -462,17 +462,6 @@ admin_show_pending_documents	wiki_restore_attachment	Wiki attachment restored
 admin_show_pending_documents	wiki_restore_error	Wiki attachment not restored
 admin_show_pending_documents	wiki_bad_id	Bad attachment id
 
-admin_generic_user	title	Generic user
-admin_generic_user	help	"Generic users" are per project users meant to be used in automated processes like continuous integration. Note: As of today, they can only be activated by a SOAP API call, projet by project, with project administrator access right.
-admin_generic_user	help_update	This page shows the default settings that apply to all project s. The generic user suffix can be customised with '$1' variable in local.inc
-admin_generic_user	invalid_suffix	Invalid suffix configuration, please change $1 in local.inc ASAP!
-admin_generic_user	unix_name_template	%project_name%
-admin_generic_user	name_template	%Project name%
-admin_generic_user	back	« Back
-admin_generic_user	set_by_project	Configured at project level (each project administrator can configure it in project administration page)
-admin_generic_user	email	Email
-admin_generic_user	password	Password
-
 admin_permission_delegation	page_title	Permission delegation
 admin_permission_delegation	page_description	Here you can assign plateform roles to user groups.
 admin_permission_delegation	group_action_add	Add group

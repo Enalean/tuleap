@@ -33,7 +33,6 @@ plugins/*/resources/templates/*
 tools/utils/setup_templates/*/*_template.xml
 tools/utils/setup_templates/*/*_generated.xml
 test_results*
-tests/soap/vendor
 tests/rest/vendor
 tests/phpunit/phpunit_test_results.xml
 .metrics_secret.key

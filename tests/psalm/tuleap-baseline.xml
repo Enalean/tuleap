@@ -617,9 +617,6 @@
     <MissingReturnType>
       <code>getPlanningLinkedArtifactAtTimestamp</code>
     </MissingReturnType>
-    <PossiblyNullArgument>
-      <code>$changeset</code>
-    </PossiblyNullArgument>
     <PossiblyNullReference>
       <code>getValue</code>
     </PossiblyNullReference>
@@ -2823,7 +2820,6 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$kanban_id</code>
@@ -2837,7 +2833,6 @@
       <code>getCategory</code>
       <code>getContent</code>
       <code>getDescription</code>
-      <code>getPreferences</code>
       <code>getSelectedReport</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
@@ -3084,6 +3079,9 @@
     <TooManyArguments>
       <code>userIsAdmin</code>
     </TooManyArguments>
+    <UndefinedConstant>
+      <code>IS_SCRIPT</code>
+    </UndefinedConstant>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboardRouterBuilder.php">
     <MissingReturnType>
@@ -3905,7 +3903,6 @@
     <MissingReturnType>
       <code>cardwall_event_get_swimline_tracker</code>
       <code>cardwall_event_use_standard_javascript</code>
-      <code>codendi_daily_start</code>
       <code>collectRoutesEvent</code>
       <code>collect_errors_without_importing_xml_project</code>
       <code>configureAtXMLImport</code>
@@ -7576,446 +7573,6 @@
       <code>usage</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/bin/DocmanImport/DateParser.class.php">
-    <InvalidScalarArgument>
-      <code>$day</code>
-      <code>$day</code>
-      <code>$hour</code>
-      <code>$minute</code>
-      <code>$month</code>
-      <code>$month</code>
-      <code>$year</code>
-      <code>$year</code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$isodate</code>
-    </MissingParamType>
-    <PossiblyUndefinedVariable>
-      <code>$hour</code>
-      <code>$localOffset</code>
-      <code>$minute</code>
-      <code>$offsetHour</code>
-      <code>$offsetMinute</code>
-      <code>$second</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass>
-      <code>The</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php">
-    <ForbiddenCode>
-      <code><![CDATA[shell_exec('file -bi "' . escapeshellcmd($r->getPathname()) . '"')]]></code>
-      <code><![CDATA[shell_exec('stty -echo')]]></code>
-      <code><![CDATA[shell_exec('stty echo')]]></code>
-    </ForbiddenCode>
-    <MissingParamType>
-      <code>$filePath</code>
-      <code>$name</code>
-      <code>$offset</code>
-      <code>$size</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getChunk</code>
-      <code>uploadAllowed</code>
-    </MissingReturnType>
-    <NullArgument>
-      <code>null</code>
-    </NullArgument>
-    <PossiblyUndefinedGlobalVariable>
-      <code>$folderhash</code>
-    </PossiblyUndefinedGlobalVariable>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/ImportFromDocmanV1.class.php">
-    <MissingParamType>
-      <code>$folder_id</code>
-      <code>$login</code>
-      <code>$password</code>
-      <code>$wsdl_url</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$temporary_directory</code>
-      <code>$user_login</code>
-      <code>$user_password</code>
-      <code>$wsdl_url</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>createTarget</code>
-      <code>createTemporaryDirectory</code>
-      <code>dumpDocmanV1</code>
-      <code>importDump</code>
-      <code>migrate</code>
-      <code>removeTemporaryDirectory</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/Trees.class.php">
-    <MissingParamType>
-      <code>$array1</code>
-      <code>$array2</code>
-      <code>$listOfNodes</code>
-      <code>$listOfNodes</code>
-      <code>$listOfNodes</code>
-      <code>$nodeId</code>
-      <code>$tag</code>
-      <code>$tree</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>findRoot</code>
-      <code>mergeTag</code>
-      <code>mergeTagRec</code>
-      <code>nodeListToTree</code>
-      <code>nodeListToTreeRec</code>
-      <code>tagTree</code>
-    </MissingReturnType>
-    <PossiblyNullArrayAssignment>
-      <code><![CDATA[$res['children']]]></code>
-      <code><![CDATA[$res['children']]]></code>
-      <code><![CDATA[$res['children']]]></code>
-    </PossiblyNullArrayAssignment>
-    <PossiblyUndefinedVariable>
-      <code>$res</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/XMLDocmanImport.class.php">
-    <ArgumentTypeCoercion>
-      <code>$e</code>
-      <code>$e</code>
-    </ArgumentTypeCoercion>
-    <InvalidDocblockParamName>
-      <code>$groupId</code>
-      <code>$groupId</code>
-    </InvalidDocblockParamName>
-    <InvalidNullableReturnType>
-      <code>string</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code>$local_checksum == $distant_checksum</code>
-      <code>$s</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>The</code>
-      <code>true</code>
-    </InvalidReturnType>
-    <MissingClosureReturnType>
-      <code>static function ($node1, $node2) {</code>
-    </MissingClosureReturnType>
-    <MissingParamType>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$autoRetry</code>
-      <code>$changeLog</code>
-      <code>$changeLog</code>
-      <code>$command</code>
-      <code>$createDate</code>
-      <code>$createDate</code>
-      <code>$createDate</code>
-      <code>$createDate</code>
-      <code>$createDate</code>
-      <code>$createDate</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$file</code>
-      <code>$file</code>
-      <code>$file</code>
-      <code>$file</code>
-      <code>$fileName</code>
-      <code>$fileName</code>
-      <code>$fileType</code>
-      <code>$fileType</code>
-      <code>$filename</code>
-      <code>$force</code>
-      <code>$importMessageMetadata</code>
-      <code>$item</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$item_id</code>
-      <code>$label</code>
-      <code>$label</code>
-      <code>$message</code>
-      <code>$node1</code>
-      <code>$node2</code>
-      <code>$obsolescenceDate</code>
-      <code>$obsolescenceDate</code>
-      <code>$obsolescenceDate</code>
-      <code>$obsolescenceDate</code>
-      <code>$obsolescenceDate</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$pagename</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$project</code>
-      <code>$projectId</code>
-      <code>$reorder</code>
-      <code>$rootPath</code>
-      <code>$s</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$text</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$updateDate</code>
-      <code>$updateDate</code>
-      <code>$updateDate</code>
-      <code>$updateDate</code>
-      <code>$updateDate</code>
-      <code>$updateDate</code>
-      <code>$url</code>
-      <code>$userNode</code>
-      <code>$userNode</code>
-      <code>$xmlDoc</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$autoRetry</code>
-      <code>$force</code>
-      <code>$groupId</code>
-      <code>$hash</code>
-      <code>$importMessageMetadata</code>
-      <code>$logger</code>
-      <code>$reorder</code>
-      <code>$soap</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>addImportMessageOnItem</code>
-      <code>adjustChunkSize</code>
-      <code>appendTextToNode</code>
-      <code>askWhatToDo</code>
-      <code>buildMetadataMap</code>
-      <code>buildUgroupMap</code>
-      <code>buildUserMap</code>
-      <code>checkHardCodedMetadataUsage</code>
-      <code>checkMetadataDefinition</code>
-      <code>checkMetadataUsage</code>
-      <code>checkUgroupDefinition</code>
-      <code>checkUgroupsUsage</code>
-      <code>compareItemNodes</code>
-      <code>createEmbeddedFile</code>
-      <code>createEmbeddedFileVersion</code>
-      <code>createEmpty</code>
-      <code>createFile</code>
-      <code>createFileVersion</code>
-      <code>createFolder</code>
-      <code>createLink</code>
-      <code>createWiki</code>
-      <code>extractOneMetadata</code>
-      <code>extractOnePermission</code>
-      <code>findPath</code>
-      <code>getItemInformation</code>
-      <code>getVersionInformation</code>
-      <code>importPath</code>
-      <code>initRetryCounter</code>
-      <code>loadXML</code>
-      <code>printException</code>
-      <code>printSoapResponseAndThrow</code>
-      <code>recurseOnNode</code>
-      <code>reorderItemNodes</code>
-      <code>requestEntityTooLarge</code>
-      <code>typeCodeToString</code>
-      <code>typeStringToCode</code>
-    </MissingReturnType>
-    <NullArgument>
-      <code>null</code>
-      <code>null</code>
-    </NullArgument>
-    <NullableReturnStatement>
-      <code>null</code>
-      <code>null</code>
-    </NullableReturnStatement>
-    <PossiblyNullArgument>
-      <code><![CDATA[$node->xpath('item')]]></code>
-      <code>$nodeList</code>
-      <code>$nodeList</code>
-      <code><![CDATA[$rootNode->xpath('item')]]></code>
-      <code><![CDATA[$this->doc->xpath('//author | //owner')]]></code>
-      <code>$values</code>
-    </PossiblyNullArgument>
-    <PossiblyNullArrayAccess>
-      <code>$nodeList[0]</code>
-    </PossiblyNullArrayAccess>
-    <PossiblyNullIterator>
-      <code><![CDATA[$node->xpath('permissions/permission')]]></code>
-      <code><![CDATA[$node->xpath('properties/property')]]></code>
-      <code><![CDATA[$node->xpath('versions/version')]]></code>
-      <code><![CDATA[$node->xpath('versions/version')]]></code>
-      <code>$nodes</code>
-      <code>$permissions</code>
-      <code>$propdefs</code>
-      <code>$propertiesList</code>
-      <code>$propertyList</code>
-      <code>$ugroups</code>
-      <code>$values</code>
-      <code>$versionedItems</code>
-    </PossiblyNullIterator>
-    <PossiblyNullPropertyAssignmentValue>
-      <code>simplexml_import_dom($dom)</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUndefinedVariable>
-      <code>$members</code>
-      <code>$members</code>
-      <code>$missingProp</code>
-    </PossiblyUndefinedVariable>
-    <RedundantCast>
-      <code><![CDATA[(string) (string) $node->properties->obsolescence_date]]></code>
-    </RedundantCast>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$errorMsg != '']]></code>
-    </TypeDoesNotContainType>
-    <UndefinedDocblockClass>
-      <code>The</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/XMLDocmanUpdate.class.php">
-    <InvalidPassByReference>
-      <code><![CDATA[$this->buildDistantTreeFromSoapArray()]]></code>
-      <code>Trees::mergeTag($remoteTree, $localTree)</code>
-    </InvalidPassByReference>
-    <MissingParamType>
-      <code>$array</code>
-      <code>$id</code>
-      <code>$itemElement</code>
-      <code>$itemElement</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemId</code>
-      <code>$itemInfo</code>
-      <code>$itemInfo</code>
-      <code>$itemInfo</code>
-      <code>$itemInfo</code>
-      <code>$itemInfo</code>
-      <code>$itemInfo</code>
-      <code>$node</code>
-      <code>$node</code>
-      <code>$node</code>
-      <code>$pageName</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$parentId</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$tree</code>
-      <code>$tree</code>
-      <code>$tree</code>
-      <code>$url</code>
-      <code>$xmlDoc</code>
-      <code>$xmlDoc</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>buildDistantTreeFromSoapArray</code>
-      <code>continuePath</code>
-      <code>deleteItem</code>
-      <code>getAllVersionsMD5sum</code>
-      <code>getItemTitle</code>
-      <code>getTitleTreeFromIdTree</code>
-      <code>getTreeFromItemElement</code>
-      <code>getTreeFromItemElement_rec</code>
-      <code>recurseUpdateTree</code>
-      <code>sortChildrenArray</code>
-      <code>tagCount</code>
-      <code>updateEmbeddedFile</code>
-      <code>updateEmpty</code>
-      <code>updateFile</code>
-      <code>updateFolder</code>
-      <code>updateItem</code>
-      <code>updateLink</code>
-      <code>updatePath</code>
-      <code>updateWiki</code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code>$versions</code>
-      <code>$versions</code>
-      <code>$versions</code>
-      <code>$versions</code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedVariable>
-      <code>$tree</code>
-      <code>$tree2</code>
-      <code>$tree2</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/import.php">
-    <ForbiddenCode>
-      <code><![CDATA[shell_exec('stty -echo')]]></code>
-      <code><![CDATA[shell_exec('stty echo')]]></code>
-    </ForbiddenCode>
-    <MissingParamType>
-      <code>$console</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>help</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/bin/DocmanImport/parameters.php">
-    <MissingParamType>
-      <code>$parameter</code>
-      <code>$parameter_array</code>
-      <code>$require_value</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getParameter</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code>$passed_value</code>
-      <code>$passed_value</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/bin/import_from_docman_v1.php">
-    <ForbiddenCode>
-      <code><![CDATA[shell_exec('stty -echo')]]></code>
-      <code><![CDATA[shell_exec('stty echo')]]></code>
-    </ForbiddenCode>
-    <MissingParamType>
-      <code>$login</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getPasswordFromStdin</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/ApprovalTable/ApprovalTable.class.php">
     <MissingParamType>
       <code>$id</code>
@@ -9181,7 +8738,6 @@
       <code>$plugin</code>
       <code>$reportId</code>
       <code>$themePath</code>
-      <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
       <code><![CDATA[$this->groupId]]></code>
       <code>$user_can_admin</code>
@@ -12030,59 +11586,6 @@
       <code>toHtml</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_SOAPActions.class.php">
-    <DeprecatedMethod>
-      <code>getFromLabel</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$item</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>appendFileChunk</code>
-      <code>getFileChunk</code>
-      <code>getFileContents</code>
-      <code>getFileMD5sum</code>
-      <code>getMetadataListOfValues</code>
-      <code>getProjectMetadata</code>
-      <code>getTreeInfo</code>
-      <code>storeFileChunk</code>
-    </MissingReturnType>
-    <NullArgument>
-      <code>null</code>
-    </NullArgument>
-    <PossiblyUndefinedVariable>
-      <code>$params</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/include/Docman_SOAPController.class.php">
-    <MissingParamType>
-      <code>$get_show_view</code>
-      <code>$get_show_view</code>
-      <code>$group</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$plugin</code>
-      <code>$pluginPath</code>
-      <code>$request</code>
-      <code>$root</code>
-      <code>$themePath</code>
-      <code>$view</code>
-      <code>$view</code>
-      <code>$view</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>_dispatch</code>
-      <code>_includeView</code>
-      <code>_setView</code>
-      <code>_set_createItemView_afterCreate</code>
-      <code>_set_createItemView_errorParentDoesNotExist</code>
-      <code>_set_deleteView_errorPerms</code>
-      <code>_set_doesnot_belong_to_project_error</code>
-      <code>_set_moveView_errorPerms</code>
-      <code>_set_redirectView</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/Docman_SettingsBo.class.php">
     <MissingParamType>
       <code>$dstGroupId</code>
@@ -12705,13 +12208,11 @@
       <code>$params</code>
       <code>$params</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>destroy</code>
       <code>getDescription</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>hasPreferences</code>
       <code>loadContent</code>
       <code>visitDocument</code>
@@ -13623,7 +13124,6 @@
       <code>rowCount</code>
     </DeprecatedMethod>
     <MissingParamType>
-      <code>$arams</code>
       <code>$controller</code>
       <code>$groupId</code>
       <code>$groupId</code>
@@ -13661,8 +13161,6 @@
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
       <code>$res</code>
       <code>$versions</code>
     </MissingParamType>
@@ -13677,7 +13175,6 @@
       <code>getNotificationsForProjectMemberCleaner</code>
       <code>getNotifiedPeopleRetriever</code>
       <code>getPluginInfo</code>
-      <code>getSOAPController</code>
       <code>getSystemDocmanReferenceByKeyword</code>
       <code>getUGroupManager</code>
       <code>getUGroupToNotifyDao</code>
@@ -13690,7 +13187,6 @@
       <code>getUsersUpdater</code>
       <code>getWikiController</code>
       <code>process</code>
-      <code>processSOAP</code>
       <code>showPendingItems</code>
       <code>showPendingVersions</code>
       <code>uninstall</code>
@@ -13702,370 +13198,6 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/docman/include/soap.php">
-    <InvalidArgument>
-      <code>PLUGIN_DOCMAN_ITEM_TYPE_FOLDER</code>
-    </InvalidArgument>
-    <MissingParamType>
-      <code>$action</code>
-      <code>$array1</code>
-      <code>$array2</code>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$author</code>
-      <code>$changelog</code>
-      <code>$changelog</code>
-      <code>$chunk_offset</code>
-      <code>$chunk_offset</code>
-      <code>$chunk_offset</code>
-      <code>$chunk_offset</code>
-      <code>$chunk_size</code>
-      <code>$chunk_size</code>
-      <code>$chunk_size</code>
-      <code>$chunk_size</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$content</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$criterias</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$date</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$doc</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$file_name</code>
-      <code>$file_name</code>
-      <code>$file_size</code>
-      <code>$file_size</code>
-      <code>$functions</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$item_id</code>
-      <code>$label</code>
-      <code>$label</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$metadata</code>
-      <code>$mime_type</code>
-      <code>$mime_type</code>
-      <code>$name</code>
-      <code>$new_parent</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$obsolescence_date</code>
-      <code>$operator</code>
-      <code>$operator</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$ordering</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$owner</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$perm_item_id</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-      <code>$response</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$userName</code>
-      <code>$version_number</code>
-      <code>$version_number</code>
-      <code>$version_number</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>_buildItemParams</code>
-      <code>_createDocmanDocument</code>
-      <code>_createDocmanItem</code>
-      <code>_getUserIdByUserName</code>
-      <code>_get_metadata_as_array</code>
-      <code>_get_permissions_as_array</code>
-      <code>_get_status_value</code>
-      <code>_registerFunction</code>
-      <code>_registerFunctions</code>
-      <code>_safe_array_merge_recursive</code>
-      <code>_updateDocmanDocument</code>
-      <code>_updateDocmanItem</code>
-      <code>appendDocmanFileChunk</code>
-      <code>createDocmanEmbeddedFile</code>
-      <code>createDocmanEmbeddedFileVersion</code>
-      <code>createDocmanEmptyDocument</code>
-      <code>createDocmanFile</code>
-      <code>createDocmanFileVersion</code>
-      <code>createDocmanFolder</code>
-      <code>createDocmanLink</code>
-      <code>createDocmanWikiPage</code>
-      <code>deleteDocmanItem</code>
-      <code>getDocmanFileAllVersionsMD5sum</code>
-      <code>getDocmanFileChunk</code>
-      <code>getDocmanFileContents</code>
-      <code>getDocmanFileMD5sum</code>
-      <code>getDocmanProjectMetadata</code>
-      <code>getDocmanTreeInfo</code>
-      <code>getRootFolder</code>
-      <code>isValidOperator</code>
-      <code>listFolder</code>
-      <code>monitorDocmanItem</code>
-      <code>moveDocmanItem</code>
-      <code>operatorToValue</code>
-      <code>searchDocmanItem</code>
-      <code>updateDocmanEmbeddedFile</code>
-      <code>updateDocmanEmptyDocument</code>
-      <code>updateDocmanFile</code>
-      <code>updateDocmanFolder</code>
-      <code>updateDocmanLink</code>
-      <code>updateDocmanWikiPage</code>
-    </MissingReturnType>
-    <PossiblyUndefinedGlobalVariable>
-      <code>$soapFunctions</code>
-    </PossiblyUndefinedGlobalVariable>
-    <PossiblyUndefinedVariable>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$extraParams</code>
-      <code>$permParams</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedConstant>
-      <code>INVALID_SESSION_FAULT</code>
-    </UndefinedConstant>
   </file>
   <file src="plugins/docman/include/view/Admin/AdminView.php">
     <InvalidReturnStatement>
@@ -14208,7 +13340,6 @@
       <code>getTitleWhenFilterIsSet</code>
       <code>getUnconvertedTitle</code>
       <code>getViewForCurrentUser</code>
-      <code>isViewAllowed</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Delete.class.php">
@@ -15455,37 +14586,6 @@
       <code>ItemVisitor</code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/docman/include/view/soap/Docman_View_SOAP_List.class.php">
-    <MissingParamType>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>display</code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code>getAllItems</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/docman/include/view/soap/Docman_View_SOAP_SOAP.class.php">
-    <MissingParamType>
-      <code>$controller</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$_controller</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>display</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/soap/Docman_View_SOAP_Search.class.php">
-    <MissingParamType>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>display</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/document/include/Config/Admin/FilesDownloadLimitsAdminSaveController.php">
     <InvalidReturnType>
       <code>process</code>
@@ -15657,9 +14757,6 @@
       <code>restResources</code>
       <code>userManagerGetUserInstance</code>
     </MissingReturnType>
-    <TypeDoesNotContainType>
-      <code>IS_SCRIPT</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/DueLicencesDao.php">
     <InvalidReturnStatement>
@@ -21332,7 +20429,6 @@
     </DeprecatedMethod>
     <MissingParamType>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$offset</code>
@@ -21340,7 +20436,6 @@
       <code>$pluginPath</code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>getPreferences</code>
       <code>hasPreferences</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
@@ -22722,7 +21817,6 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$chart_id</code>
@@ -22734,7 +21828,6 @@
       <code>getCategory</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isAjax</code>
@@ -23997,7 +23090,6 @@
       <code>$id</code>
       <code>$select_id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$group_id</code>
@@ -24008,7 +23100,6 @@
       <code>buildPreferencesForm</code>
       <code>destroy</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>hasPreferences</code>
       <code>initContent</code>
       <code>isUnique</code>
@@ -24470,13 +23561,11 @@
     <MissingParamType>
       <code>$user_id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>_getMonitoredJobsByUser</code>
       <code>getContent</code>
       <code>getDescription</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>updatePreferences</code>
@@ -25167,7 +24256,6 @@
       <code>$project_labels</code>
       <code>$template_content_id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>cloneContent</code>
@@ -25177,7 +24265,6 @@
       <code>getContent</code>
       <code>getDescription</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getProjectAllLabelsPresenter</code>
       <code>getProjectLabels</code>
       <code>getProjectSelectedLabelsPresenter</code>
@@ -28171,554 +27258,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/proftpd/bin/switch_to_unix_password.php">
-    <DeprecatedMethod>
-      <code>query</code>
-    </DeprecatedMethod>
-  </file>
-  <file src="plugins/proftpd/include/PermissionsPerGroup/ProftpdPermissionsPerGroupPresenterBuilder.php">
-    <MissingParamType>
-      <code>$selected_ugroup_id</code>
-      <code>$selected_ugroup_id</code>
-      <code>$selected_ugroup_id</code>
-      <code>$selected_ugroup_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>build</code>
-      <code>extractReadersPermissions</code>
-      <code>extractWritersPermissions</code>
-      <code>getAdminQuickLink</code>
-      <code>getPermissions</code>
-      <code>removeNobodyUgroupFromUgroups</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/ACLBuilder.class.php">
-    <MissingParamType>
-      <code>$group</code>
-      <code>$group</code>
-      <code>$http_user</code>
-      <code>$http_user</code>
-      <code>$http_user</code>
-      <code>$label</code>
-      <code>$label</code>
-      <code>$readers</code>
-      <code>$readers</code>
-      <code>$readers</code>
-      <code>$user</code>
-      <code>$writers</code>
-      <code>$writers</code>
-      <code>$writers</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getACL</code>
-      <code>getACLGroupReaders</code>
-      <code>getACLGroupWriters</code>
-      <code>getACLList</code>
-      <code>getACLReaders</code>
-      <code>getACLUserWriter</code>
-      <code>getACLWriters</code>
-      <code>getEffectiveACL</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/ACLBuilderForDirectory.class.php">
-    <MissingParamType>
-      <code>$http_user</code>
-      <code>$http_user</code>
-      <code>$label</code>
-      <code>$label</code>
-      <code>$readers</code>
-      <code>$readers</code>
-      <code>$writers</code>
-      <code>$writers</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getACL</code>
-      <code>getACLReaders</code>
-      <code>getACLWriters</code>
-      <code>getDefaultACL</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/ACLBuilderForFile.class.php">
-    <MissingParamType>
-      <code>$http_user</code>
-      <code>$label</code>
-      <code>$label</code>
-      <code>$readers</code>
-      <code>$writers</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getACL</code>
-      <code>getACLReaders</code>
-      <code>getACLWriters</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/ACLUpdater.class.php">
-    <MissingParamType>
-      <code>$file</code>
-      <code>$filename</code>
-      <code>$http_user</code>
-      <code>$http_user</code>
-      <code>$http_user</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$readers</code>
-      <code>$readers</code>
-      <code>$readers</code>
-      <code>$writers</code>
-      <code>$writers</code>
-      <code>$writers</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>applyOnChildren</code>
-      <code>fileCanBeUpdated</code>
-      <code>getBuilderFromType</code>
-      <code>recursivelyApplyACL</code>
-      <code>updateACL</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/AdminController.class.php">
-    <DeprecatedMethod>
-      <code>userIsAdmin</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$permission</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>checkUserIsAdmin</code>
-      <code>getName</code>
-      <code>getPresenter</code>
-      <code>getUGroupsForPermission</code>
-      <code>index</code>
-      <code>save</code>
-      <code>saveForAdmin</code>
-      <code>saveForProject</code>
-      <code>savePermissions</code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code>userIsAdmin</code>
-    </TooManyArguments>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Admin/PermissionsManager.class.php">
-    <DeprecatedFunction>
-      <code><![CDATA[permission_process_selection_form(
-            $project->getGroupId(),
-            $permission,
-            $project->getGroupId(),
-            $ugroups
-        )]]></code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$permission</code>
-      <code>$permissions</code>
-      <code>$permissions</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>duplicatePermissions</code>
-      <code>duplicateReaders</code>
-      <code>duplicateWriters</code>
-      <code>getSelectUGroupFor</code>
-      <code>getUGroupSystemNameFor</code>
-      <code>getUGroups</code>
-      <code>savePermission</code>
-      <code>userCanBrowseSFTP</code>
-      <code>userCanReadSFTP</code>
-      <code>userCanWriteSFTP</code>
-      <code>userIsAdmin</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
-    </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Directory/DirectoryItem.class.php">
-    <MissingParamType>
-      <code>$last_modified_date</code>
-      <code>$name</code>
-      <code>$size</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getLastModifiedDate</code>
-      <code>getName</code>
-      <code>getSize</code>
-      <code>getType</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Directory/DirectoryItemCollection.class.php">
-    <MissingReturnType>
-      <code>isForbidden</code>
-      <code>setAsForbidden</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Directory/DirectoryParser.class.php">
-    <MissingParamType>
-      <code>$base_dir</code>
-      <code>$file_info</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$remove_parent_directory_listing</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$base_dir</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>addItemInRightSection</code>
-      <code>createForbiddenDirectoryContents</code>
-      <code>createNaturalAlphabeticallyItemsCollection</code>
-      <code>getDirectoryOperator</code>
-      <code>getFullPath</code>
-      <code>isFile</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Directory/DirectoryPathCollection.class.php">
-    <MissingPropertyType>
-      <code>$collection</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>add</code>
-      <code>count</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Directory/DirectoryPathParser.class.php">
-    <MissingParamType>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$safe_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getParentDirectory</code>
-      <code>getSafeParentDirectoryPath</code>
-      <code>shouldGoToParentDirectory</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Explorer/ExplorerController.class.php">
-    <MissingParamType>
-      <code>$path</code>
-      <code>$project_path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getName</code>
-      <code>index</code>
-      <code>renderDirectoryContent</code>
-      <code>renderFileContent</code>
-      <code>renderIndex</code>
-      <code>userHasPermissionToExploreSFTP</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Plugin/ProftpdPluginInfo.php">
-    <MissingParamType>
-      <code>$plugin</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Presenter/AdminPresenter.class.php">
-    <MissingParamType>
-      <code>$project_id</code>
-      <code>$readers_ugroup_id</code>
-      <code>$selected</code>
-      <code>$selected</code>
-      <code>$writers_ugroup_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>admin_action</code>
-      <code>admin_title</code>
-      <code>getNoneOption</code>
-      <code>getSelectorOptions</code>
-      <code>permissions_create</code>
-      <code>permissions_create_modify</code>
-      <code>permissions_pitch</code>
-      <code>permissions_title</code>
-      <code>project_id</code>
-      <code>readers_header</code>
-      <code>readers_selector</code>
-      <code>some_usergroups_exists</code>
-      <code>submit</code>
-      <code>writers_header</code>
-      <code>writers_selector</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Presenter/ExplorerPresenter.class.php">
-    <MissingParamType>
-      <code>$path</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$group_id</code>
-      <code>$project_name</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>current_directory</code>
-      <code>current_directory_url</code>
-      <code>date_added_column_name</code>
-      <code>file_column_name</code>
-      <code>file_list</code>
-      <code>folder_list</code>
-      <code>getPathUrlParameter</code>
-      <code>is_in_subdirectory</code>
-      <code>nav_url</code>
-      <code>parent_directories</code>
-      <code>size_column_name</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->path]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->path]]></code>
-      <code><![CDATA[$this->path]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/ProftpdRouter.class.php">
-    <MissingParamType>
-      <code>$action</code>
-      <code>$controller</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$controllers</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>getControllerFromRequest</code>
-      <code>useDefaultRoute</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/ServiceProFTPd.class.php">
-    <DeprecatedMethod>
-      <code>userIsAdmin</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$presenter</code>
-      <code>$template</code>
-      <code>$title</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>displayServiceHeader</code>
-      <code>getRenderer</code>
-      <code>renderInPage</code>
-    </MissingReturnType>
-    <TooManyArguments>
-      <code>userIsAdmin</code>
-    </TooManyArguments>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/SystemEvent/PROFTPD_DIRECTORY_CREATE.class.php">
-    <MissingParamType>
-      <code>$ftp_directory</code>
-      <code>$ftp_directory</code>
-      <code>$group_name</code>
-      <code>$group_name</code>
-      <code>$path</code>
-      <code>$path</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getProjectName</code>
-      <code>injectDependencies</code>
-      <code>makeRepository</code>
-      <code>process</code>
-      <code>setPermissions</code>
-      <code>setfacl</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/SystemEvent/PROFTPD_UPDATE_ACL.class.php">
-    <InvalidPropertyAssignmentValue>
-      <code>$permissions_manager</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code>$ftp_directory</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getDirectoryPath</code>
-      <code>getProjectFromParameters</code>
-      <code>getReaders</code>
-      <code>getWriters</code>
-      <code>injectDependencies</code>
-      <code>process</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$this->permissions_manager]]></code>
-      <code><![CDATA[$this->permissions_manager]]></code>
-      <code>PermissionsManager</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/SystemEventManager.class.php">
-    <InvalidPropertyAssignmentValue>
-      <code>$system_event_manager</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code>$dependencies</code>
-      <code>$proftpd_base_directory</code>
-      <code>$project_name</code>
-      <code>$project_name</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getTypes</code>
-      <code>instanciateEvents</code>
-      <code>queueACLUpdate</code>
-      <code>queueDirectoryCreate</code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code>createEvent</code>
-      <code>createEvent</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Xferlog/Dao.class.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>getRow</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>rowCount</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$current_time</code>
-      <code>$file_path</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$user_id</code>
-      <code>$user_id</code>
-      <code>$where_conditions</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getLogQuery</code>
-      <code>searchLatestEntryTimestamp</code>
-      <code>store</code>
-      <code>storeWebDownload</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Xferlog/Entry.class.php">
-    <MissingParamType>
-      <code>$access_mode</code>
-      <code>$authenticated_user_id</code>
-      <code>$authentication_method</code>
-      <code>$completion_status</code>
-      <code>$current_time</code>
-      <code>$direction</code>
-      <code>$file_size</code>
-      <code>$filename</code>
-      <code>$remote_host</code>
-      <code>$service_name</code>
-      <code>$special_action_flag</code>
-      <code>$transfer_time</code>
-      <code>$transfer_type</code>
-      <code>$username</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Xferlog/FileImporter.class.php">
-    <MissingParamType>
-      <code>$base_dir</code>
-      <code>$filepath</code>
-      <code>$filepath</code>
-      <code>$latest_timestamp</code>
-      <code>$latest_timestamp</code>
-      <code>$line</code>
-      <code>$line</code>
-      <code>$line</code>
-      <code>$timestamp</code>
-      <code>$user_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>cacheUserLastAccessDate</code>
-      <code>getErrors</code>
-      <code>getNbImportedLines</code>
-      <code>getProjectId</code>
-      <code>getProjectUnixName</code>
-      <code>getUserId</code>
-      <code>import</code>
-      <code>parseFile</code>
-      <code>parseLine</code>
-      <code>updateLastAccessDates</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/proftpd/include/ProFTPd/Xferlog/InvalidEntryException.class.php">
-    <MissingParamType>
-      <code>$line</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/proftpd/include/proftpdPlugin.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['ProftpdPluginInfo']]></code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-      <code>addHook</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$group_id</code>
-      <code>$id</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>approve_pending_project</code>
-      <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
-      <code>createDirectory</code>
-      <code>cssfile</code>
-      <code>getAdminController</code>
-      <code>getExplorerController</code>
-      <code>getHooksAndCallbacks</code>
-      <code>getPermissionsManager</code>
-      <code>getPluginInfo</code>
-      <code>getProftpdSystemEventManager</code>
-      <code>getProject</code>
-      <code>getRouter</code>
-      <code>get_ftp_incoming_dir</code>
-      <code>get_system_event_class</code>
-      <code>logs_daily</code>
-      <code>permissionPerGroupPaneCollector</code>
-      <code>process</code>
-      <code>rename_project</code>
-      <code>system_event_get_types_for_default_queue</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <UndefinedClass>
-      <code><![CDATA['ProftpdPluginInfo']]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/program_management/include/Adapter/Program/Feature/FeaturesDao.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->getDB()->safeQuery($sql, array_merge($project_ids_condition->values(), [\Project::STATUS_ACTIVE], $limit_parameters))]]></code>
@@ -29322,14 +27861,12 @@
     <MissingParamType>
       <code>$id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>destroy</code>
       <code>getCategory</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>hasPreferences</code>
       <code>isUnique</code>
       <code>loadContent</code>
@@ -29344,14 +27881,12 @@
       <code>$id</code>
       <code>$id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>destroy</code>
       <code>getCategory</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>hasPreferences</code>
       <code>isUnique</code>
       <code>loadContent</code>
@@ -29368,11 +27903,6 @@
       <code><![CDATA[isset($this->planning_virtual_top_milestone)]]></code>
       <code><![CDATA[isset($this->semantic_timeframe)]]></code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="plugins/projectmilestones/include/Widget/ProjectMilestonesWidgetRetriever.php">
-    <RedundantCast>
-      <code>(int) $widget_id</code>
-    </RedundantCast>
   </file>
   <file src="plugins/projectmilestones/include/projectmilestonesPlugin.php">
     <MissingParamType>
@@ -29789,9 +28319,6 @@
     <PossiblyNullReference>
       <code>getHTMLLink</code>
     </PossiblyNullReference>
-    <TooManyArguments>
-      <code>getPullRequestOverviewUrl</code>
-    </TooManyArguments>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Label/LabeledPullRequestPresenter.php">
     <MissingParamType>
@@ -30260,9 +28787,6 @@
     <MissingReturnType>
       <code>getPullRequestDashboardUrl</code>
     </MissingReturnType>
-    <PossiblyNullReference>
-      <code>getProject</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/ProjectReferenceRetriever.php">
     <MissingParamType>
@@ -31780,29 +30304,6 @@
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/statistics/include/Statistics_SOAPServer.class.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-    </InvalidReturnStatement>
-    <MissingParamType>
-      <code>$gigabytes</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$user</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>assertUserCanAccessProject</code>
-      <code>getAllowedQuotaInBytes</code>
-      <code>getDiskStatsForUser</code>
-      <code>gigabytesToBytes</code>
-      <code>userHasAdminPrivileges</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code>ArrayOfStatistics</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/statistics/include/Statistics_ScmCvsDao.class.php">
     <DeprecatedMethod>
       <code>escapeInt</code>
@@ -32067,7 +30568,6 @@
       <code>addHook</code>
       <code>addHook</code>
       <code>addHook</code>
-      <code>addHook</code>
     </DeprecatedMethod>
     <MissingParamType>
       <code>$id</code>
@@ -32079,11 +30579,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
-      <code>$service_class</code>
-      <code>$service_class</code>
-      <code>$uri</code>
-      <code>$uri</code>
     </MissingParamType>
     <MissingReturnType>
       <code>after_massmail_to_project_admins</code>
@@ -32093,23 +30588,17 @@
       <code>burning_parrot_get_stylesheets</code>
       <code>collectProjectAdminNavigationItems</code>
       <code>cssFile</code>
-      <code>dumpWSDL</code>
       <code>getConfigurationManager</code>
       <code>getDiskUsagePurger</code>
       <code>getPluginInfo</code>
       <code>getProjectQuota</code>
       <code>getProjectWidgetList</code>
-      <code>getSoapUri</code>
       <code>get_more_info_links</code>
       <code>get_statistics_aggregation</code>
       <code>get_system_event_class</code>
-      <code>instantiateSOAPServer</code>
-      <code>processSOAP</code>
-      <code>renderWSDL</code>
       <code>rootDailyStart</code>
       <code>system_event_get_types_for_custom_queue</code>
       <code>uninstall</code>
-      <code>wsdl_doc2soap_types</code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
@@ -35060,7 +33549,6 @@
       <code>$content_id</code>
       <code>$id</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>destroy</code>
@@ -35068,7 +33556,6 @@
       <code>getContent</code>
       <code>getDescription</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>getUserPreferences</code>
       <code>hasPreferences</code>
@@ -37259,54 +35746,10 @@
       <code>no_comment</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/RecentlyVisitedDao.php">
-    <DeprecatedMethod>
-      <code>enableExceptionsOnError</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>parent::__construct()</code>
-      <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$created_on</code>
-      <code>$maximum_visits</code>
-      <code>$user_id</code>
-      <code>$user_id</code>
-      <code>$user_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>deleteVisitByArtifactId</code>
-      <code>deleteVisitByUserId</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitCleaner.php">
-    <MissingReturnType>
-      <code>clearVisitedArtifacts</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitRecorder.php">
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
     </PossiblyUndefinedArrayOffset>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitRetriever.php">
-    <DeprecatedMethod>
-      <code>$recently_visited_rows</code>
-      <code>$recently_visited_rows</code>
-      <code>$recently_visited_rows</code>
-      <code>$recently_visited_rows</code>
-    </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Redirect.class.php">
     <RedundantCastGivenDocblockType>
@@ -44393,7 +42836,6 @@
   <file src="plugins/tracker/include/Tracker/Migration/MailLogger.class.php">
     <MissingParamType>
       <code>$level</code>
-      <code>$message</code>
       <code>$tracker_name</code>
       <code>$tracker_name</code>
       <code>$tv3_id</code>
@@ -48496,12 +46938,8 @@
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code>$grandchild</code>
-      <code>$root</code>
     </PossiblyNullArgument>
     <PossiblyNullReference>
-      <code>addAttribute</code>
-      <code>addAttribute</code>
-      <code>addAttribute</code>
       <code>addAttribute</code>
       <code>addChild</code>
       <code>addChild</code>
@@ -51350,7 +49788,6 @@
       <code>$owner_id</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$artifact_show</code>
@@ -51361,7 +49798,6 @@
       <code>getCategory</code>
       <code>getContent</code>
       <code>getDescription</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isAjax</code>
@@ -51431,7 +49867,6 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$renderer_id</code>
@@ -51443,7 +49878,6 @@
       <code>getCategory</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isAjax</code>
@@ -54004,7 +52438,6 @@
       <code>collect_errors_without_importing_xml_project</code>
       <code>configureAtXMLImport</code>
       <code>cssFile</code>
-      <code>dailyCleanup</code>
       <code>default_widgets_for_new_user</code>
       <code>display_deleted_trackers</code>
       <code>event_additional_admin_buttons</code>
@@ -56686,7 +55119,6 @@
       <code>display</code>
       <code>forceContentIdToBePresentInRequest</code>
       <code>forceGroupIdToBePresentInRequest</code>
-      <code>getWidget</code>
       <code>redirectToDashboard</code>
       <code>update</code>
     </MissingReturnType>
@@ -58826,6 +57258,9 @@
       <code>instantiateTheme</code>
       <code>themeExists</code>
     </MissingReturnType>
+    <UndefinedConstant>
+      <code>IS_SCRIPT</code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/Mail/Codendi_Mail.class.php">
     <InvalidArrayOffset>
@@ -62181,7 +60616,6 @@
     <MissingReturnType>
       <code>activateWithoutNotifications</code>
       <code>assertProjectIsValid</code>
-      <code>checkGroupIdForSoap</code>
       <code>clear</code>
       <code>clearProjectFromCache</code>
       <code>countRegisteredProjectsBefore</code>
@@ -62348,48 +60782,6 @@
     <MissingParamType>
       <code>$message</code>
     </MissingParamType>
-  </file>
-  <file src="src/common/Project/Project_SOAPServer.class.php">
-    <InvalidReturnStatement>
-      <code>$soap_return</code>
-      <code>$soap_return</code>
-      <code><![CDATA[user_to_soap($user->getId(), $user, $this->userManager->getCurrentUser())]]></code>
-      <code><![CDATA[user_to_soap($user->getId(), $user, $this->userManager->getCurrentUser())]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>ArrayOfDescFields</code>
-      <code>ArrayOfServicesValues</code>
-      <code>UserInfo</code>
-      <code>UserInfo</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$field_id_to_update</code>
-      <code>$group_id</code>
-      <code>$project_id</code>
-      <code>$sessionKey</code>
-      <code>$session_key</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addGenericUserInProject</code>
-      <code>descriptionFieldExists</code>
-      <code>extractDescFieldSOAPDatas</code>
-      <code>extractServicesUsageSOAPDatas</code>
-      <code>feedbackToSoapFault</code>
-      <code>isRequesterAdmin</code>
-      <code>setProjectDescriptionFieldValue</code>
-      <code>unsetGenericUser</code>
-    </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$user->getId()]]></code>
-      <code><![CDATA[$user->getId()]]></code>
-    </PossiblyInvalidArgument>
-    <UndefinedDocblockClass>
-      <code>ArrayOfDescFields</code>
-      <code>ArrayOfDescFieldsValues</code>
-      <code>ArrayOfServicesValues</code>
-      <code>UserInfo</code>
-      <code>UserInfo</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/Quota/ProjectQuotaChecker.php">
     <MissingParamType>
@@ -63318,11 +61710,6 @@
       <code>getProjectXML</code>
       <code>getUsersXML</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Project/XML/XMLFileContentRetriever.php">
-    <TypeDoesNotContainType>
-      <code>IS_SCRIPT</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/Project/XML/XMLProject.php">
     <PossiblyNullArgument>
@@ -64273,23 +62660,6 @@
       <code>getRow</code>
     </PossiblyFalseReference>
   </file>
-  <file src="src/common/SVNCore/SVN_LogFactory.class.php">
-    <DeprecatedFunction>
-      <code>db_es(substr($no_access, 1))</code>
-      <code>db_fetch_array($raw_revisions)</code>
-    </DeprecatedFunction>
-    <MissingParamType>
-      <code>$limit</code>
-      <code>$limit</code>
-      <code>$limit</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getDao</code>
-      <code>getRawRevisions</code>
-      <code>getRawRevisionsAndCount</code>
-      <code>getTopModifiedFiles</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/SVNCore/SVN_PermissionsManager.class.php">
     <MissingParamType>
       <code>$svnpath</code>
@@ -64297,83 +62667,6 @@
     <MissingReturnType>
       <code>userCanRead</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_RepositoryListing.class.php">
-    <MissingParamType>
-      <code>$date_based_path</code>
-      <code>$line</code>
-      <code>$revision</code>
-      <code>$sort</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$user_name</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>extractDirectoryContent</code>
-      <code>flattenTimestampBasedArrayOfPathInfo</code>
-      <code>getRevisionInfo</code>
-      <code>getSvnPaths</code>
-      <code>getSvnSinglePathWithLogDetails</code>
-      <code>getUserId</code>
-      <code>sortSvnPathByTimestamp</code>
-      <code>splitHistory</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_RevisionPathInfo.class.php">
-    <MissingParamType>
-      <code>$author_id</code>
-      <code>$commit_message</code>
-      <code>$path</code>
-      <code>$timestamp</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$author_id</code>
-      <code>$commit_message</code>
-      <code>$path</code>
-      <code>$timestamp</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>exportToSoap</code>
-      <code>getTimestamp</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_SOAPServer.class.php">
-    <InvalidArgument>
-      <code>$limit</code>
-      <code><![CDATA['3005']]></code>
-      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
-      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code>$data</code>
-      <code>$revisions</code>
-      <code>$revisions</code>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-      <code><![CDATA[new SoapFault((string) $e->getCode(), $e->getMessage())]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>ArrayOfCommiter</code>
-      <code>ArrayOfRevision</code>
-      <code>ArrayOfSvnPathDetails</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$author_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getUser</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code>ArrayOfCommiter</code>
-      <code>ArrayOfRevision</code>
-      <code>ArrayOfString</code>
-      <code>ArrayOfSvnPathDetails</code>
-      <code>ArrayOfSvnPathInfo</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/SVNCore/SVN_Svnlook.class.php">
     <InvalidScalarArgument>
@@ -65886,19 +64179,6 @@
       <code>userIsAlreadyInTheGroup</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/User/GenericUser.class.php">
-    <MissingParamType>
-      <code>$suffix</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/User/GenericUserFactory.class.php">
-    <MissingReturnType>
-      <code>getGenericUser</code>
-    </MissingReturnType>
-    <PossiblyNullArgument>
-      <code>$pfuser</code>
-    </PossiblyNullArgument>
-  </file>
   <file src="src/common/User/History/HistoryCleaner.php">
     <MissingReturnType>
       <code>clearHistory</code>
@@ -66579,6 +64859,9 @@
     <TooManyArguments>
       <code><![CDATA[new User_SSHKeyValidator($this, $this->_getEventManager())]]></code>
     </TooManyArguments>
+    <UndefinedConstant>
+      <code>IS_SCRIPT</code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/User/UserNotActiveException.class.php">
     <MissingParamType>
@@ -66634,11 +64917,6 @@
     <PossiblyFalseReference>
       <code>getTimestamp</code>
     </PossiblyFalseReference>
-  </file>
-  <file src="src/common/User/User_SOAPServer.class.php">
-    <ImplicitToStringCast>
-      <code>string</code>
-    </ImplicitToStringCast>
   </file>
   <file src="src/common/User/User_SSHKeyDumper.class.php">
     <InvalidArgument>
@@ -67148,7 +65426,6 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingPropertyType>
       <code>$content_id</code>
@@ -67168,7 +65445,6 @@
       <code>getId</code>
       <code>getInstallPreferences</code>
       <code>getInstanceId</code>
-      <code>getPreferences</code>
       <code>getPurifiedCustomTitle</code>
       <code>getRssUrl</code>
       <code>getTitle</code>
@@ -67237,14 +65513,12 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>cloneContent</code>
       <code>destroy</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isUnique</code>
@@ -67313,18 +65587,12 @@
       <code>$owner_type</code>
       <code>$print_box_begin</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$_artifact_show</code>
-    </MissingPropertyType>
     <MissingReturnType>
-      <code>_display_artifacts</code>
       <code>getAjaxUrl</code>
       <code>getCategory</code>
       <code>getContent</code>
       <code>getDescription</code>
-      <code>getPreferences</code>
       <code>getPriorityColorsKey</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
@@ -67373,7 +65641,6 @@
       <code>$owner_id</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>_getLinkToCommit</code>
@@ -67382,7 +65649,6 @@
       <code>getCategory</code>
       <code>getContent</code>
       <code>getDescription</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isAjax</code>
@@ -67650,14 +65916,12 @@
       <code>$owner_type</code>
       <code>$owner_type</code>
       <code>$widget_id</code>
-      <code>$widget_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>cloneContent</code>
       <code>destroy</code>
       <code>getContent</code>
       <code>getInstallPreferences</code>
-      <code>getPreferences</code>
       <code>getTitle</code>
       <code>hasPreferences</code>
       <code>isAjax</code>
@@ -70044,26 +68308,6 @@
       <code>searchExactMatch</code>
     </TooManyArguments>
   </file>
-  <file src="src/common/dao/GenericUserDao.class.php">
-    <DeprecatedMethod>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>parent::__construct($da)</code>
-      <code>retrieve</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$da</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$user_id</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>fetch</code>
-      <code>save</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/dao/IPermissionsNGDao.php">
     <MissingParamType>
       <code>$object_id</code>
@@ -71812,115 +70056,6 @@
       <code><![CDATA[(string) date('Y-m-d', $day)]]></code>
     </RedundantCast>
   </file>
-  <file src="src/common/docmanv1/XMLExport.class.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA['no']]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code>$admin_name</code>
-      <code>$archive_name</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$admin_user</code>
-      <code>$archive_name</code>
-      <code>$data_path</code>
-      <code>$package_path</code>
-      <code>$project</code>
-      <code>$user_manager</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>appendDocman</code>
-      <code>createDirectories</code>
-      <code>createDomDocument</code>
-      <code>dump</code>
-      <code>dumpPackage</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/docmanv1/XMLExportDao.class.php">
-    <DeprecatedMethod>
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$doc_group_id</code>
-      <code>$group_id</code>
-      <code>$object_id</code>
-      <code>$permission_type</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>searchAllDocs</code>
-      <code>searchAllNonEmptyGroups</code>
-      <code>searchUGroupForObjectPermission</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/docmanv1/XMLExportData.class.php">
-    <DeprecatedMethod>
-      <code>$results</code>
-      <code>$results</code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code>$create_date</code>
-      <code>$create_date</code>
-      <code>$creator_name</code>
-      <code>$data_path</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$description</code>
-      <code>$doc_group_id</code>
-      <code>$field</code>
-      <code>$id</code>
-      <code>$label</code>
-      <code>$name</code>
-      <code>$object_id</code>
-      <code>$owner_name</code>
-      <code>$owner_name</code>
-      <code>$permission_type</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$ugroup_id</code>
-      <code>$ugroup_id</code>
-      <code>$update_date</code>
-      <code>$update_date</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$data_path</code>
-      <code>$file_counter</code>
-      <code>$minimal_permissions</code>
-      <code>$ugroups</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>appendChild</code>
-      <code>appendDocuments</code>
-      <code>appendFile</code>
-      <code>appendGroups</code>
-      <code>appendMembersForStaticGroups</code>
-      <code>appendPermissions</code>
-      <code>appendPermissionsFor</code>
-      <code>appendPermissionsTypesFor</code>
-      <code>appendUGroups</code>
-      <code>cleanDocumentField</code>
-      <code>createDocument</code>
-      <code>createFolder</code>
-      <code>createItem</code>
-      <code>createPermissionFor</code>
-      <code>createUGroupNode</code>
-      <code>getDocumentPermissions</code>
-      <code>getTree</code>
-    </MissingReturnType>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_TIME']]]></code>
-    </PossiblyUndefinedArrayOffset>
-  </file>
   <file src="src/common/encoding/SupportedXmlCharEncoding.class.php">
     <MissingParamType>
       <code>$string</code>
@@ -72191,9 +70326,9 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
-    <TypeDoesNotContainType>
+    <UndefinedConstant>
       <code>IS_SCRIPT</code>
-    </TypeDoesNotContainType>
+    </UndefinedConstant>
   </file>
   <file src="src/common/include/BurningParrotCompatiblePageEvent.php">
     <MissingPropertyType>
@@ -72848,12 +70983,10 @@
       <code>Url</code>
     </InvalidClass>
     <InvalidReturnStatement>
-      <code><![CDATA[preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME'])]]></code>
       <code>true</code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code>Void</code>
-      <code>bool</code>
       <code>void</code>
       <code>void</code>
       <code>void</code>
@@ -73019,15 +71152,6 @@
   <file src="src/common/log/LogForwarderTrait.php">
     <MissingParamType>
       <code>$level</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
     </MissingParamType>
   </file>
   <file src="src/common/log/TruncateLevelLogger.class.php">
@@ -73046,7 +71170,6 @@
   </file>
   <file src="src/common/log/WrapperLogger.class.php">
     <MissingParamType>
-      <code>$message</code>
       <code>$prefix</code>
       <code>$prefix</code>
     </MissingParamType>
@@ -73054,7 +71177,6 @@
       <code>$prefix</code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code>formatMessage</code>
       <code>pop</code>
       <code>push</code>
     </MissingReturnType>
@@ -73406,89 +71528,6 @@
       <code>unsetResourceRestricted</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/soap/SOAPRequestValidator.php">
-    <MissingParamType>
-      <code>$method_name</code>
-      <code>$method_name</code>
-      <code>$project_id</code>
-      <code>$project_name</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getProjectById</code>
-      <code>getProjectByName</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/soap/SOAPRequestValidatorImplementation.php">
-    <MissingParamType>
-      <code>$method_name</code>
-      <code>$method_name</code>
-      <code>$project_id</code>
-      <code>$project_name</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getProjectById</code>
-      <code>getProjectByName</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/soap/SOAP_NusoapWSDL.class.php">
-    <MissingParamType>
-      <code>$className</code>
-      <code>$server</code>
-      <code>$serviceName</code>
-      <code>$uri</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$className</code>
-      <code>$serviceName</code>
-      <code>$uri</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>appendMethods</code>
-      <code>appendOneMethod</code>
-      <code>appendTypes</code>
-      <code>dumpWSDL</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/soap/SOAP_WSDLMethodGenerator.class.php">
-    <MissingParamType>
-      <code>$paramName</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$comment</code>
-      <code>$parameters</code>
-      <code>$returnType</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>augmentDoc2SoapTypes</code>
-      <code>docParamToSoap</code>
-      <code>parseDescription</code>
-      <code>parseDocComment</code>
-      <code>parseParameters</code>
-      <code>parseReturnType</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/soap/SOAP_WSDLRenderer.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[\file_get_contents(__DIR__ . '/../../www/soap/wsdl-viewer.xsl')]]></code>
-    </ArgumentTypeCoercion>
-    <MissingParamType>
-      <code>$wsdl_uri</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getHTTPContext</code>
-      <code>getWSDL</code>
-      <code>render</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/soap/TuleapSOAPServer.class.php">
-    <InvalidScalarArgument>
-      <code>255</code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$wsdl</code>
-      <code>$wsdl_url</code>
-    </MissingParamType>
-  </file>
   <file src="src/common/system_event/IRunInAMutex.php">
     <MissingParamType>
       <code>$queue</code>
@@ -73583,7 +71622,6 @@
       <code>$end_date</code>
       <code>$index</code>
       <code>$index</code>
-      <code>$log</code>
       <code>$owner</code>
       <code>$params</code>
       <code>$process_date</code>
@@ -73610,7 +71648,6 @@
       <code>getEndDate</code>
       <code>getId</code>
       <code>getIdFromParam</code>
-      <code>getLog</code>
       <code>getOwner</code>
       <code>getParameter</code>
       <code>getParameters</code>
@@ -73627,7 +71664,6 @@
       <code>process</code>
       <code>setEndDate</code>
       <code>setErrorBadParam</code>
-      <code>setLog</code>
       <code>setParameters</code>
       <code>setProcessDate</code>
       <code>setStatus</code>
@@ -78875,14 +76911,6 @@
       <code>isEmptyValue</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/valid/Valid_GenericUserNameSuffix.php">
-    <MissingParamType>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>validate</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/valid/Valid_GroupId.php">
     <MissingParamType>
       <code>$value</code>
@@ -80782,9 +78810,11 @@
   </file>
   <file src="src/www/empty2.php">
     <ForbiddenCode>
-      <code>var_dump($non_unique_uids)</code>
-      <code><![CDATA[var_dump(ForgeConfig::get('sys_auth_type'))]]></code>
+      <code><![CDATA[var_dump($tree->GetContents())]]></code>
     </ForbiddenCode>
+    <PossiblyNullReference>
+      <code>GetTree</code>
+    </PossiblyNullReference>
   </file>
   <file src="src/www/file/admin/editproc.php">
     <DeprecatedFunction>
@@ -81569,28 +79599,17 @@
   </file>
   <file src="src/www/include/exit.php">
     <MissingParamType>
-      <code>$fault_code</code>
-      <code>$fault_detail</code>
-      <code>$fault_factor</code>
-      <code>$fault_string</code>
       <code>$text</code>
       <code>$title</code>
     </MissingParamType>
     <MissingReturnType>
-      <code>exit_display_soap_error</code>
       <code>exit_missing_param</code>
       <code>exit_not_logged_in</code>
       <code>exit_permission_denied</code>
-      <code>print_soap_fault</code>
     </MissingReturnType>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
-      <code><![CDATA[$_SERVER['SCRIPT_NAME']]]></code>
     </PossiblyUndefinedArrayOffset>
-    <PossiblyUndefinedVariable>
-      <code>$text</code>
-      <code>$text</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/www/include/help.php">
     <MissingReturnType>
@@ -81736,537 +79755,6 @@
       <code>mail_is_list_active</code>
       <code>mail_is_list_public</code>
     </MissingReturnType>
-  </file>
-  <file src="src/www/include/nusoap.php">
-    <ArgumentTypeCoercion>
-      <code>$v</code>
-    </ArgumentTypeCoercion>
-    <DeprecatedMethod>
-      <code>serializeTypeDef</code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <ForbiddenCode>
-      <code>var_dump($data)</code>
-    </ForbiddenCode>
-    <InvalidArgument>
-      <code>$attrs</code>
-      <code>$attrs</code>
-      <code>$namespaces</code>
-      <code><![CDATA[$parser->getDebug()]]></code>
-      <code><![CDATA[$this->currentSchema->getDebug()]]></code>
-      <code><![CDATA[$this->decode_utf8]]></code>
-      <code><![CDATA[$this->namespaces]]></code>
-      <code><![CDATA[$this->wsdl->getDebug()]]></code>
-      <code><![CDATA[$this->wsdl->getDebug()]]></code>
-      <code><![CDATA[$this->wsdl->namespaces]]></code>
-      <code><![CDATA[$tr->getDebug()]]></code>
-      <code>$v</code>
-      <code>$v</code>
-    </InvalidArgument>
-    <InvalidClass>
-      <code>xmlschema</code>
-      <code>xmlschema</code>
-    </InvalidClass>
-    <InvalidFalsableReturnType>
-      <code>string</code>
-    </InvalidFalsableReturnType>
-    <InvalidIterator>
-      <code>$attrs</code>
-      <code>$attrs</code>
-    </InvalidIterator>
-    <InvalidOperand>
-      <code>$content_length</code>
-      <code><![CDATA[$parser->getDebug()]]></code>
-      <code>$regs[4]</code>
-      <code>$regs[4]</code>
-      <code>$regs[5]</code>
-      <code>$regs[5]</code>
-    </InvalidOperand>
-    <InvalidParamDefault>
-      <code>array</code>
-      <code>array</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-      <code>string</code>
-    </InvalidParamDefault>
-    <InvalidPropertyAssignmentValue>
-      <code>$v</code>
-      <code><![CDATA['']]></code>
-      <code><![CDATA['']]></code>
-      <code>true</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement>
-      <code><![CDATA["<!--\n" . $this->debug_str . "\n-->"]]></code>
-      <code><![CDATA[$this->debug_str]]></code>
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>always</code>
-      <code>always</code>
-      <code>bool</code>
-      <code>debug</code>
-      <code>debug</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$timestamp</code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code>$arrayType</code>
-      <code>$arrayType</code>
-      <code>$attrs</code>
-      <code>$attrs</code>
-      <code>$binding</code>
-      <code>$bool</code>
-      <code>$charset</code>
-      <code>$compositor</code>
-      <code>$compositor</code>
-      <code>$connection_timeout</code>
-      <code>$cookie_str</code>
-      <code>$cookies</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$direction</code>
-      <code>$elements</code>
-      <code>$elements</code>
-      <code>$endpoint</code>
-      <code>$headers</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$ns</code>
-      <code>$operation</code>
-      <code>$parameters</code>
-      <code>$phpType</code>
-      <code>$phpType</code>
-      <code>$r</code>
-      <code>$response_timeout</code>
-      <code>$restrictionBase</code>
-      <code>$restrictionBase</code>
-      <code>$str</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$typeClass</code>
-      <code>$typeClass</code>
-      <code>$url</code>
-      <code>$url</code>
-      <code>$utc</code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code>$attributes</code>
-      <code>$authtype</code>
-      <code>$authtype</code>
-      <code>$bindings</code>
-      <code>$body_position</code>
-      <code>$certRequest</code>
-      <code>$certRequest</code>
-      <code>$ch</code>
-      <code>$complexTypeStack</code>
-      <code>$complexTypes</code>
-      <code>$complexTypes</code>
-      <code>$cookies</code>
-      <code>$currentBinding</code>
-      <code>$currentComplexType</code>
-      <code>$currentElement</code>
-      <code>$currentMessage</code>
-      <code>$currentOperation</code>
-      <code>$currentPort</code>
-      <code>$currentPortType</code>
-      <code>$currentSchema</code>
-      <code>$currentSimpleType</code>
-      <code>$debug_flag</code>
-      <code>$decode_utf8</code>
-      <code>$decode_utf8</code>
-      <code>$defaultNamespace</code>
-      <code>$defaultRpcParams</code>
-      <code>$default_namespace</code>
-      <code>$depth</code>
-      <code>$depth</code>
-      <code>$depth</code>
-      <code>$depth_array</code>
-      <code>$depth_array</code>
-      <code>$depth_array</code>
-      <code>$digestRequest</code>
-      <code>$digest_uri</code>
-      <code>$document</code>
-      <code>$document</code>
-      <code>$documentation</code>
-      <code>$elementStack</code>
-      <code>$elements</code>
-      <code>$enclosingNamespaces</code>
-      <code>$encoding</code>
-      <code>$endpoint</code>
-      <code>$endpoint</code>
-      <code>$endpointType</code>
-      <code>$errno</code>
-      <code>$fault</code>
-      <code>$fault_code</code>
-      <code>$fault_detail</code>
-      <code>$fault_str</code>
-      <code>$forceEndpoint</code>
-      <code>$fp</code>
-      <code>$host</code>
-      <code>$http_encoding</code>
-      <code>$ids</code>
-      <code>$import</code>
-      <code>$imports</code>
-      <code>$incoming_cookies</code>
-      <code>$incoming_headers</code>
-      <code>$incoming_payload</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$message</code>
-      <code>$messages</code>
-      <code>$method</code>
-      <code>$multirefs</code>
-      <code>$opData</code>
-      <code>$operations</code>
-      <code>$outgoing_headers</code>
-      <code>$outgoing_payload</code>
-      <code>$parent</code>
-      <code>$parser</code>
-      <code>$parser</code>
-      <code><![CDATA[$parser->document]]></code>
-      <code><![CDATA[$parser->document]]></code>
-      <code><![CDATA[$parser->root_struct_name]]></code>
-      <code><![CDATA[$parser->root_struct_namespace]]></code>
-      <code>$password</code>
-      <code>$password</code>
-      <code>$path</code>
-      <code>$persistentConnection</code>
-      <code>$persistentConnection</code>
-      <code>$port</code>
-      <code>$portTypes</code>
-      <code>$ports</code>
-      <code>$position</code>
-      <code>$position</code>
-      <code>$position</code>
-      <code>$protocol_version</code>
-      <code>$proxyhost</code>
-      <code>$proxyhost</code>
-      <code>$proxypassword</code>
-      <code>$proxypassword</code>
-      <code>$proxyport</code>
-      <code>$proxyport</code>
-      <code>$proxyusername</code>
-      <code>$proxyusername</code>
-      <code>$request</code>
-      <code>$requestHeaders</code>
-      <code>$request_method</code>
-      <code>$response</code>
-      <code>$responseData</code>
-      <code>$responseHeaders</code>
-      <code>$responseHeaders</code>
-      <code>$response_timeout</code>
-      <code>$response_timeout</code>
-      <code>$root_header</code>
-      <code>$root_struct</code>
-      <code>$root_struct_name</code>
-      <code>$root_struct_namespace</code>
-      <code>$schema</code>
-      <code>$schemaInfo</code>
-      <code>$schemaTargetNamespace</code>
-      <code>$schemas</code>
-      <code>$scheme</code>
-      <code>$simpleTypeStack</code>
-      <code>$simpleTypes</code>
-      <code>$soapresponse</code>
-      <code>$status</code>
-      <code>$status</code>
-      <code><![CDATA[$this->proxyhost]]></code>
-      <code><![CDATA[$this->proxypassword]]></code>
-      <code><![CDATA[$this->proxyport]]></code>
-      <code><![CDATA[$this->proxyusername]]></code>
-      <code><![CDATA[$this->response_timeout]]></code>
-      <code><![CDATA[$this->timeout]]></code>
-      <code><![CDATA[$this->wsdl->bindings]]></code>
-      <code><![CDATA[$this->wsdl->ports]]></code>
-      <code><![CDATA[$this->wsdl->schemas]]></code>
-      <code><![CDATA[$this->wsdl->schemas[$schemaTargetNamespace][0]->imports]]></code>
-      <code><![CDATA[$this->wsdl->wsdl]]></code>
-      <code><![CDATA[$this->wsdl->wsdl]]></code>
-      <code>$timeout</code>
-      <code>$timeout</code>
-      <code>$uri</code>
-      <code>$url</code>
-      <code>$useSOAPAction</code>
-      <code>$username</code>
-      <code>$username</code>
-      <code>$wsdl</code>
-      <code>$xml</code>
-      <code>$xml</code>
-      <code>$xml_encoding</code>
-      <code>$xml_encoding</code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code>addComplexType</code>
-      <code>addComplexType</code>
-      <code>addElement</code>
-      <code>addElement</code>
-      <code>addOperation</code>
-      <code>addSimpleType</code>
-      <code>addSimpleType</code>
-      <code>add_to_map</code>
-      <code>appendDebug</code>
-      <code>buildPayload</code>
-      <code>character_data</code>
-      <code>character_data</code>
-      <code>clearDebug</code>
-      <code>configureWSDL</code>
-      <code>connect</code>
-      <code>debug</code>
-      <code>decodeChunked</code>
-      <code>decodeUTF8</code>
-      <code>end_element</code>
-      <code>end_element</code>
-      <code>expandEntities</code>
-      <code>fault</code>
-      <code>getBindingData</code>
-      <code>getResponse</code>
-      <code>invoke_method</code>
-      <code>iso8601_to_timestamp</code>
-      <code>parseString</code>
-      <code>parseWSDL</code>
-      <code>parse_http_headers</code>
-      <code>parse_request</code>
-      <code>register</code>
-      <code>schemaCharacterData</code>
-      <code>schemaEndElement</code>
-      <code>schemaStartElement</code>
-      <code>sendRequest</code>
-      <code>send_response</code>
-      <code>serializeSchema</code>
-      <code>serialize_return</code>
-      <code>service</code>
-      <code>setContentType</code>
-      <code>setCredentials</code>
-      <code>setCredentials</code>
-      <code>setDebugLevel</code>
-      <code>setDefaultRpcParams</code>
-      <code>setEncoding</code>
-      <code>setEndpoint</code>
-      <code>setHTTPEncoding</code>
-      <code>setHTTPProxy</code>
-      <code>setHeaders</code>
-      <code>setProxy</code>
-      <code>setSOAPAction</code>
-      <code>setURL</code>
-      <code>start_element</code>
-      <code>start_element</code>
-      <code>timestamp_to_iso8601</code>
-      <code>useHTTPPersistentConnection</code>
-      <code>usePersistentConnection</code>
-      <code>usleepWindows</code>
-      <code>webDescription</code>
-      <code>xdebug</code>
-    </MissingReturnType>
-    <NullArgument>
-      <code>null</code>
-    </NullArgument>
-    <PossiblyFalseArgument>
-      <code>$datestr</code>
-      <code>$datestr</code>
-      <code>$datestr</code>
-      <code>$datestr</code>
-      <code>$datestr</code>
-      <code>$datestr</code>
-      <code><![CDATA[strpos($domain, ';')]]></code>
-      <code><![CDATA[strpos($expires, ';')]]></code>
-      <code><![CDATA[strpos($name, ':')]]></code>
-      <code><![CDATA[strpos($name, ':')]]></code>
-      <code><![CDATA[strpos($path, ';')]]></code>
-      <code><![CDATA[strpos($qname, ':')]]></code>
-      <code><![CDATA[strpos($this->methodname, $delim)]]></code>
-      <code><![CDATA[strpos($this->methodname, $delim)]]></code>
-      <code><![CDATA[strrpos($qname, ':')]]></code>
-      <code><![CDATA[strrpos($t['type'], ':')]]></code>
-      <code><![CDATA[strrpos($this->elements[$type]['type'], ':')]]></code>
-      <code><![CDATA[strrpos($this->simpleTypes[$type]['type'], ':')]]></code>
-      <code><![CDATA[strrpos($type, ':')]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyFalseOperand>
-      <code>strpos($buffer, $lb, $chunkstart)</code>
-      <code><![CDATA[strpos($this->methodname, $delim)]]></code>
-      <code><![CDATA[strpos($xml, '?>', $pos_xml + 2)]]></code>
-      <code><![CDATA[strrpos($attrs['location'], '/')]]></code>
-      <code><![CDATA[strrpos($qname, ':')]]></code>
-      <code><![CDATA[strrpos($t['type'], ':')]]></code>
-      <code><![CDATA[strrpos($this->elements[$type]['type'], ':')]]></code>
-      <code><![CDATA[strrpos($this->simpleTypes[$type]['type'], ':')]]></code>
-      <code><![CDATA[strrpos($type, ':')]]></code>
-    </PossiblyFalseOperand>
-    <PossiblyFalsePropertyAssignmentValue>
-      <code>false</code>
-    </PossiblyFalsePropertyAssignmentValue>
-    <PossiblyInvalidArgument>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$digestRequest</code>
-    </PossiblyInvalidArgument>
-    <PossiblyInvalidArrayOffset>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$child_pos]]]></code>
-      <code><![CDATA[$this->message[$kv[1]]]]></code>
-      <code><![CDATA[$this->message[$kv[2]]]]></code>
-      <code><![CDATA[$this->messages[$name . 'Response'][$pName]]]></code>
-    </PossiblyInvalidArrayOffset>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['SCRIPT_NAME']]]></code>
-      <code><![CDATA[$_SERVER['SCRIPT_NAME']]]></code>
-      <code><![CDATA[$_SERVER['SERVER_NAME']]]></code>
-      <code><![CDATA[$_SERVER['SERVER_NAME']]]></code>
-      <code><![CDATA[$_SERVER['SERVER_PORT']]]></code>
-      <code>$arr[1]</code>
-      <code><![CDATA[$digestRequest['realm']]]></code>
-      <code>$tempElement[1]</code>
-    </PossiblyUndefinedArrayOffset>
-    <PossiblyUndefinedVariable>
-      <code>$HTTPS</code>
-      <code>$SCRIPT_NAME</code>
-      <code>$SCRIPT_NAME</code>
-      <code>$SERVER_NAME</code>
-      <code>$SERVER_NAME</code>
-      <code>$SERVER_NAME</code>
-      <code>$SERVER_PORT</code>
-      <code>$aa</code>
-      <code>$aa</code>
-      <code>$array_types</code>
-      <code>$cols</code>
-      <code>$curl_headers</code>
-      <code>$curl_headers</code>
-      <code>$curl_headers</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$digestRequest</code>
-      <code>$eAttrs</code>
-      <code>$eAttrs</code>
-      <code>$eElements</code>
-      <code>$eElements</code>
-      <code>$ee</code>
-      <code>$ee</code>
-      <code>$header_array</code>
-      <code>$header_data</code>
-      <code>$lb</code>
-      <code>$lb</code>
-      <code>$lb</code>
-      <code>$lb</code>
-      <code>$pXml</code>
-      <code>$paramArrayStr</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$pos</code>
-      <code>$respdata</code>
-      <code>$tt_ns</code>
-      <code>$tt_ns</code>
-      <code>$typeDef</code>
-    </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType>
-      <code>(string) $value</code>
-      <code>(string) $value</code>
-    </RedundantCastGivenDocblockType>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$encodingStyle = '']]></code>
-      <code><![CDATA[get_class($this->methodreturn) == 'soap_fault']]></code>
-    </TypeDoesNotContainType>
-    <UndefinedDocblockClass>
-      <code>always</code>
-      <code>always</code>
-      <code>debug</code>
-      <code>debug</code>
-      <code>fault</code>
-      <code>faultcode</code>
-      <code>faultdetail</code>
-      <code>faultstring</code>
-    </UndefinedDocblockClass>
-    <UndefinedFunction>
-      <code><![CDATA['character_data']]></code>
-      <code><![CDATA['character_data']]></code>
-      <code><![CDATA['schemaCharacterData']]></code>
-      <code><![CDATA['xmlCharacterData']]></code>
-    </UndefinedFunction>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->methodNamespace]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->operation]]></code>
-      <code><![CDATA[$this->parser]]></code>
-      <code><![CDATA[$this->return]]></code>
-      <code><![CDATA[$this->tryagain]]></code>
-      <code><![CDATA[$this->tryagain]]></code>
-      <code><![CDATA[$this->tryagain]]></code>
-      <code><![CDATA[$this->tryagain]]></code>
-      <code><![CDATA[$this->wsdl]]></code>
-      <code><![CDATA[$this->wsdl]]></code>
-      <code><![CDATA[$this->wsdlFile]]></code>
-      <code><![CDATA[$this->wsdlFile]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->opData]]></code>
-      <code><![CDATA[$this->operation]]></code>
-      <code><![CDATA[$this->wsdl]]></code>
-      <code><![CDATA[$this->wsdl]]></code>
-      <code><![CDATA[$this->wsdl]]></code>
-      <code><![CDATA[$this->wsdlFile]]></code>
-    </UndefinedThisPropertyFetch>
-    <UndefinedVariable>
-      <code>$attrs</code>
-      <code>$buffer</code>
-      <code>$buffer</code>
-      <code>$buffer</code>
-      <code>$buffer</code>
-      <code>$opData</code>
-      <code>$str</code>
-    </UndefinedVariable>
-    <UnsupportedReferenceUsage>
-      <code><![CDATA[$params[$this->message[$child_pos]['name']] = &$this->message[$child_pos]['result']]]></code>
-      <code><![CDATA[$params[$this->message[$child_pos]['name']][] = &$this->message[$child_pos]['result']]]></code>
-      <code><![CDATA[$params[$this->message[$kv[1]]['result']] = &$this->message[$kv[2]]['result']]]></code>
-      <code><![CDATA[$params[] = &$this->message[$child_pos]['result']]]></code>
-      <code><![CDATA[$params[] = &$this->message[$child_pos]['result']]]></code>
-    </UnsupportedReferenceUsage>
   </file>
   <file src="src/www/include/pre.php">
     <RiskyCast>
@@ -82568,23 +80056,6 @@
       <code>$systems</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="src/www/include/utils_soap.php">
-    <InvalidNullableReturnType>
-      <code>array</code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code>$groups</code>
-      <code>$ugroups</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>groups_to_soap</code>
-      <code>groups_to_soap</code>
-      <code>ugroups_to_soap</code>
-    </MissingReturnType>
-    <UndefinedFunction>
-      <code>group_to_soap($group)</code>
-    </UndefinedFunction>
-  </file>
   <file src="src/www/include/viewvc_utils.php">
     <DeprecatedFunction>
       <code>db_ei($group_id)</code>
@@ -82823,13 +80294,6 @@
       <code>news_submit</code>
       <code>news_update_permissions</code>
     </MissingReturnType>
-  </file>
-  <file src="src/www/project/admin/editgenericmember.php">
-    <PossiblyNullReference>
-      <code>getUserName</code>
-      <code>setEmail</code>
-      <code>setPassword</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/www/project/admin/history.php">
     <InvalidArgument>
@@ -83593,1350 +81057,6 @@
           AND service_id = " . (int) $request->get('id') . " 
           AND is_used    = 1")]]></code>
     </DeprecatedFunction>
-  </file>
-  <file src="src/www/soap/common/group.php">
-    <InvalidArgument>
-      <code>$group</code>
-      <code>$project</code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code>$e</code>
-      <code>$e</code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getMyProjects')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroup')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroupByName')]]></code>
-      <code>new SoapVar($soap_group, SOAP_ENC_OBJECT)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>array</code>
-      <code>array</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$sessionKey</code>
-      <code>$session_key</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>getGroupUgroups</code>
-      <code>getProjectGroupsAndUsers</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code>$uri</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedConstant>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-    </UndefinedConstant>
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-    <UndefinedMethod>
-      <code>addFunction</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$server->wsdl]]></code>
-    </UndefinedPropertyFetch>
-  </file>
-  <file src="src/www/soap/common/session.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession')]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>array</code>
-    </InvalidReturnType>
-    <MissingReturnType>
-      <code>logout</code>
-    </MissingReturnType>
-    <TypeDoesNotContainNull>
-      <code>isset($uri)</code>
-    </TypeDoesNotContainNull>
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-    <UndefinedMethod>
-      <code>addFunction</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$server->wsdl]]></code>
-    </UndefinedPropertyFetch>
-  </file>
-  <file src="src/www/soap/common/types.php">
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-  </file>
-  <file src="src/www/soap/common/users.php">
-    <MissingParamType>
-      <code>$sessionKey</code>
-      <code>$sessionKey</code>
-      <code>$user_id</code>
-      <code>$users</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>checkUsersExistence</code>
-      <code>getUserInfo</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code>$uri</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedConstant>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-    </UndefinedConstant>
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-    <UndefinedMethod>
-      <code>addFunction</code>
-      <code>register</code>
-      <code>register</code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/www/soap/frs/frs.php">
-    <InvalidArgument>
-      <code>$file</code>
-      <code>$package</code>
-      <code>$release</code>
-    </InvalidArgument>
-    <InvalidNullableReturnType>
-      <code>array</code>
-      <code>array</code>
-    </InvalidNullableReturnType>
-    <InvalidParamDefault>
-      <code>int</code>
-    </InvalidParamDefault>
-    <InvalidReturnStatement>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>base64_encode($contents)</code>
-      <code>base64_encode($contents)</code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, $e->getMessage(), 'addUploadedFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Impossible to delete file', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . ForgeConfig::get('ftp_incoming_dir'), 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileInfo')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'Unable to update: ' . $e->getMessage(), 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addUploadedFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to update file', 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FILE_FAULT, 'User not allowed to see the uploaded files', 'getUploadedFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, $dar->isError(), 'addPackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addUploadedFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deletePackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileInfo')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getReleases')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Package ' . $package->getPackageID() . ' could not be deleted', 'deletePackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Package name already exists in this project', 'addPackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileInfo')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getReleases')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'Release ' . $release->getReleaseID() . ' could not be deleted', 'deleteRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'User is not allowed to create a package', 'addPackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package ' . $package->getPackageID(), 'deletePackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package ' . $release->getReleaseID(), 'deleteRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, $dar->isError(), 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Could not retrieve parent package permission', 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addUploadedFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileInfo')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileInfo')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Release does not exist', 'updateRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Release name already exists in this package', 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'Update Failed', 'updateRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'User does not have permission to delete a file in this release.', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to create a release', 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to update a release', 'updateRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addPackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addUploadedFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deletePackage')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getPackages')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getReleases')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getUploadedFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateFileComment')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateRelease')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFileChunk')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'getFileInfo', 'Invalid Session', 'getFileInfo')]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>Array</code>
-      <code>Array</code>
-      <code>array</code>
-      <code>array</code>
-      <code>bool</code>
-      <code>bool</code>
-      <code>bool</code>
-      <code>int</code>
-      <code>the</code>
-      <code>the</code>
-    </InvalidReturnType>
-    <MismatchingDocblockParamType>
-      <code>Object{FRSFile}</code>
-    </MismatchingDocblockParamType>
-    <MissingParamType>
-      <code>$files_arr</code>
-      <code>$offset</code>
-      <code>$pkg_arr</code>
-      <code>$release_arr</code>
-      <code>$size</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>files_to_soap</code>
-      <code>packages_to_soap</code>
-      <code>releases_to_soap</code>
-    </MissingReturnType>
-    <NullableReturnStatement>
-      <code>null</code>
-      <code>null</code>
-    </NullableReturnStatement>
-    <TypeDoesNotContainNull>
-      <code>isset($uri)</code>
-    </TypeDoesNotContainNull>
-    <UndefinedConstant>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-      <code>INVALID_SESSION_FAULT</code>
-    </UndefinedConstant>
-    <UndefinedDocblockClass>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-    <UndefinedMethod>
-      <code>addFunction</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$server->wsdl]]></code>
-    </UndefinedPropertyFetch>
-  </file>
-  <file src="src/www/soap/tracker/tracker.php">
-    <DeprecatedFunction>
-      <code><![CDATA[db_ei($at->getID())]]></code>
-      <code><![CDATA[db_ei($at_arr[$i]->getID())]]></code>
-      <code>db_ei($group_artifact_id)</code>
-      <code>db_ei($group_artifact_id)</code>
-      <code>db_es(htmlspecialchars($summary))</code>
-      <code>db_numfields($result)</code>
-      <code>db_numrows($artifact_cc_list)</code>
-      <code>db_numrows($attachedfiles_arr)</code>
-      <code>db_numrows($attachedfiles_arr)</code>
-      <code>db_numrows($cannedresponses_res)</code>
-      <code>db_numrows($dependencies)</code>
-      <code>db_numrows($followups_res)</code>
-      <code>db_numrows($history)</code>
-      <code>db_numrows($inverse_dependencies)</code>
-      <code>db_numrows($res)</code>
-      <code>db_numrows($res)</code>
-      <code>db_numrows($result)</code>
-      <code><![CDATA[db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = " . db_ei($group_artifact_id))]]></code>
-      <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
-      <code><![CDATA[db_query('SELECT artifact_id FROM artifact WHERE group_artifact_id = ' . db_ei($group_artifact_id) .
-                      ' AND summary="' . db_es(htmlspecialchars($summary)) . '"')]]></code>
-      <code><![CDATA[db_result($artifact->getOriginalCommentDate($id), 0, 'date')]]></code>
-      <code><![CDATA[db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email')]]></code>
-      <code><![CDATA[db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by')]]></code>
-      <code><![CDATA[db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'added_by')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'artifact_cc_id')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'comment')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'date')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'email')]]></code>
-      <code><![CDATA[db_result($artifact_cc_list, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'adddate')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'adddate')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'bin_data')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'bin_data')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'description')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'description')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filename')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filename')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filesize')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filesize')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filetype')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'filetype')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'id')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'id')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($attachedfiles_arr, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($cannedresponses_res, $i, 'artifact_canned_id')]]></code>
-      <code><![CDATA[db_result($cannedresponses_res, $i, 'body')]]></code>
-      <code><![CDATA[db_result($cannedresponses_res, $i, 'title')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'artifact_depend_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'group_artifact_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'group_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'group_name')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'is_dependent_on_artifact_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'is_dependent_on_artifact_id')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'name')]]></code>
-      <code><![CDATA[db_result($dependencies, $i, 'summary')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'artifact_history_id')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'comment_type')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'comment_type_id')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'date')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'email')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'mod_by')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'new_value')]]></code>
-      <code><![CDATA[db_result($followups_res, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($history, $i, 'date')]]></code>
-      <code><![CDATA[db_result($history, $i, 'date')]]></code>
-      <code><![CDATA[db_result($history, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($history, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($history, $i, 'field_name')]]></code>
-      <code><![CDATA[db_result($history, $i, 'new_value')]]></code>
-      <code><![CDATA[db_result($history, $i, 'new_value')]]></code>
-      <code><![CDATA[db_result($history, $i, 'old_value')]]></code>
-      <code><![CDATA[db_result($history, $i, 'old_value')]]></code>
-      <code><![CDATA[db_result($history, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($history, $i, 'user_name')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'artifact_depend_id')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'artifact_id')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'group_artifact_id')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'group_id')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'group_name')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'name')]]></code>
-      <code><![CDATA[db_result($inverse_dependencies, $i, 'summary')]]></code>
-      <code><![CDATA[db_result($res, 0, 'group_id')]]></code>
-      <code>db_result($res, 0, 0)</code>
-      <code>db_result($result, $j, 0)</code>
-      <code>db_result($result, $j, 1)</code>
-      <code>db_result($result, $j, 4)</code>
-      <code>db_result($result, $j, 5)</code>
-      <code>db_result($result, $j, 6)</code>
-      <code>db_result($result, 0, 0)</code>
-      <code>db_result($result, 0, 0)</code>
-    </DeprecatedFunction>
-    <DeprecatedMethod>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at->data_array['description'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at->data_array['name'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->data_array['description'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($at_arr[$i]->data_array['name'])]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($field->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescription())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getLabel())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize($result_fieldset->getName())]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result, $j, 4) : '')]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment'))]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'))]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'))]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name'))]]></code>
-      <code><![CDATA[SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name'))]]></code>
-      <code>SimpleSanitizer::unsanitize(db_result($result, $j, 1))</code>
-      <code>getRequired</code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code>$a</code>
-      <code>$artifact</code>
-      <code>$artifact</code>
-      <code>$artifact</code>
-      <code>$artifact</code>
-      <code><![CDATA[$field->getDefaultValue()]]></code>
-      <code>$total_artifacts</code>
-    </InvalidArgument>
-    <InvalidArrayAccess>
-      <code><![CDATA[$artifact['id']]]></code>
-      <code><![CDATA[$artifact['severity_id']]]></code>
-    </InvalidArrayAccess>
-    <InvalidReturnStatement>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$e</code>
-      <code>$file_id</code>
-      <code>$id</code>
-      <code>$return</code>
-      <code><![CDATA[new SoapFault(ADD_DEPENDENCY_FAULT, 'Dependencies addition for artifact #' . $a->getID() . ' failed', 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(CREATE_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(CREATE_FOLLOWUP_FAULT, 'Comment could not be saved', 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(DELETE_ARTIFACT_FOLLOWUP_FAULT, $a->getErrorMessage(), 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(DELETE_DEPENDENCY_FAULT, 'Error deleting dependency' . $dependent_on_artifact_id, 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af->getErrorMessage(), 'getArtifacts')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af->getErrorMessage(), 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifacts')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'updateArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'updateArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_fieldset_fact->getErrorMessage(), 'getFieldSets')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldSetFactory', 'getFieldSets')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_REPORT_FAULT, $af->getErrorMessage(), 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_REPORT_FAULT, $ar->getErrorMessage(), 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_REPORT_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $at->getErrorMessage(), 'getArtifactType')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf->getErrorMessage(), 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf->getErrorMessage(), 'getTrackerList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactType', 'getArtifactType')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getTrackerList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactCannedResponses')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactReports')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifacts')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'updateArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCannedResponses')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactReports')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifacts')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'updateArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifacts')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'existArtifactSummary')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'getArtifactType')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'getArtifactType')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permissions denied.', 'getArtifactReports')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Tracker not found.', 'existArtifactSummary')]]></code>
-      <code><![CDATA[new SoapFault(GET_REPORT_FACTORY_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactReports')]]></code>
-      <code><![CDATA[new SoapFault(GET_SERVICE_FAULT, 'Tracker service is not used for this project.', 'getTrackerList')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:' . $extra_field_name->field_name, 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'deleteArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactCannedResponses')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactFollowups')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactReports')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactsFromReport')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'updateArtifactFollowUp')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactFollowup')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteArtifactDependency')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteArtifactFile')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'existArtifactSummary')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactAttachedFiles')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactById')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactCCList')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactDependencies')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactHistory')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactInverseDependencies')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactType')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactTypes')]]></code>
-      <code><![CDATA[new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getTrackerList')]]></code>
-      <code><![CDATA[new SoapFault(PERMISSION_DENIED_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'addArtifact')]]></code>
-      <code><![CDATA[new SoapFault(UPDATE_ARTIFACT_FOLLOWUP_FAULT, $a->getErrorMessage(), 'updateArtifactFollowUp')]]></code>
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>array</code>
-      <code>array</code>
-      <code>array</code>
-      <code>bool</code>
-      <code>int</code>
-      <code>int</code>
-      <code>int</code>
-      <code>int</code>
-      <code>int</code>
-      <code>int</code>
-      <code>int</code>
-      <code>the</code>
-      <code>the</code>
-      <code>void</code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code>$artifact</code>
-      <code>$artifact_cc_list</code>
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$artifact_type</code>
-      <code>$artifact_type</code>
-      <code>$artifact_type</code>
-      <code>$artifactreports</code>
-      <code>$artifactreportsdesc</code>
-      <code>$artifacts</code>
-      <code>$artifacts</code>
-      <code>$at_arr</code>
-      <code>$at_arr</code>
-      <code>$at_arr</code>
-      <code>$at_arr</code>
-      <code>$attachedfiles_arr</code>
-      <code>$cannedresponses_res</code>
-      <code>$close_date</code>
-      <code>$dependencies</code>
-      <code>$details</code>
-      <code>$extra_fields</code>
-      <code>$file_id</code>
-      <code>$followups_res</code>
-      <code>$group_artifact_id</code>
-      <code>$group_artifact_id</code>
-      <code>$group_artifact_id</code>
-      <code>$group_artifact_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$history</code>
-      <code>$inverse_dependencies</code>
-      <code>$object</code>
-      <code>$rule</code>
-      <code>$set_bin_data</code>
-      <code>$set_bin_data</code>
-      <code>$set_bin_data</code>
-      <code>$severity</code>
-      <code>$status_id</code>
-      <code>$summary</code>
-      <code>$total_artifacts_number</code>
-      <code>$total_artifacts_number</code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code>addArtifactCC</code>
-      <code>artifactCC_to_soap</code>
-      <code>artifact_query_result_to_soap</code>
-      <code>artifact_report_result_to_soap</code>
-      <code>artifactcannedresponses_to_soap</code>
-      <code>artifactfile_to_soap</code>
-      <code>artifactfiles_to_soap</code>
-      <code>artifactfollowups_to_soap</code>
-      <code>artifactreports_to_soap</code>
-      <code>artifactreportsdesc_to_soap</code>
-      <code>artifactrule_to_soap</code>
-      <code>artifactrules_to_soap</code>
-      <code>artifacts_report_to_soap</code>
-      <code>artifacts_to_soap</code>
-      <code>artifacttypes_to_soap</code>
-      <code>deleteArtifactCC</code>
-      <code>dependencies_to_soap</code>
-      <code>history_to_soap</code>
-      <code>inverse_dependencies_to_soap</code>
-      <code>objectToArray</code>
-      <code>setArtifactData</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable>
-      <code>$array</code>
-      <code>$array</code>
-    </PossiblyUndefinedVariable>
-    <TooManyArguments>
-      <code>updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response)</code>
-    </TooManyArguments>
-    <TypeDoesNotContainNull>
-      <code>isset($uri)</code>
-    </TypeDoesNotContainNull>
-    <TypeDoesNotContainType>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $a || ! is_object($a)</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $af || ! is_object($af)</code>
-      <code>! $ar</code>
-      <code>! $ar</code>
-      <code>! $ar || ! is_object($ar)</code>
-      <code>! $ar || ! is_object($ar)</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_field_fact || ! is_object($art_field_fact)</code>
-      <code>! $art_fieldset_fact</code>
-      <code>! $art_fieldset_fact</code>
-      <code>! $art_fieldset_fact || ! is_object($art_fieldset_fact)</code>
-      <code>! $art_fieldset_fact || ! is_object($art_fieldset_fact)</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $at || ! is_object($at)</code>
-      <code>! $atf</code>
-      <code>! $atf</code>
-      <code>! $atf</code>
-      <code>! $atf</code>
-      <code>! $atf || ! is_object($atf)</code>
-      <code>! $atf || ! is_object($atf)</code>
-      <code>! $atf || ! is_object($atf)</code>
-      <code>! $atf || ! is_object($atf)</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $ath || ! is_object($ath)</code>
-      <code>! $report_fact</code>
-      <code>! $report_fact</code>
-      <code>! $report_fact</code>
-      <code>! $report_fact</code>
-      <code>! $report_fact || ! is_object($report_fact)</code>
-      <code>! $report_fact || ! is_object($report_fact)</code>
-      <code>! $report_fact || ! is_object($report_fact)</code>
-      <code>! $report_fact || ! is_object($report_fact)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($a)</code>
-      <code>! is_object($af)</code>
-      <code>! is_object($af)</code>
-      <code>! is_object($af)</code>
-      <code>! is_object($af)</code>
-      <code>! is_object($ar)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_field_fact)</code>
-      <code>! is_object($art_fieldset_fact)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($at)</code>
-      <code>! is_object($atf)</code>
-      <code>! is_object($atf)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($ath)</code>
-      <code>! is_object($report_fact)</code>
-      <code>! is_object($report_fact)</code>
-    </TypeDoesNotContainType>
-    <UndefinedConstant>
-      <code>GET_REPORT_FACTORY_FAULT</code>
-      <code>PERMISSION_DENIED_FAULT</code>
-    </UndefinedConstant>
-    <UndefinedDocblockClass>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-    </UndefinedDocblockClass>
-    <UndefinedGlobalVariable>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-      <code>$server</code>
-    </UndefinedGlobalVariable>
-    <UndefinedMethod>
-      <code>addFunction</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-      <code>register</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$server->wsdl]]></code>
-    </UndefinedPropertyFetch>
-    <UndefinedVariable>
-      <code>$artifact_id_dependent</code>
-      <code>$artifact_id_dependent</code>
-      <code>$canned_response</code>
-      <code>$canned_response</code>
-    </UndefinedVariable>
   </file>
   <file src="src/www/softwaremap/trove_list.php">
     <DeprecatedFunction>

@@ -1054,9 +1054,6 @@ msgstr "Entrez le nom ou l'identificateur d'un project ici."
 msgid "Error"
 msgstr "Erreur"
 
-msgid "Error while appending file chunk."
-msgstr "Une erreur est survenue durant l'ajout du morceau de fichier."
-
 msgid "Error while creating initial version."
 msgstr "Erreur lors de la création de la version initiale."
 
@@ -1078,21 +1075,12 @@ msgstr ""
 "Erreur lors de la création de la news. Vérifiez que vous avez les bonnes "
 "permissions."
 
-msgid "Error while getting file checksum."
-msgstr "Erreur lors de la récupération de la somme de contrôle du fichier."
-
 msgid "Error while searching for old versions"
 msgstr "Erreur lors de la récupération des versions"
 
 msgid "Error while trying to delete the wiki page from wiki service."
 msgstr ""
 "Erreur lors de la suppression de la page wiki à partir du service wiki."
-
-msgid "Error: The given version of the item does not exist."
-msgstr "Erreur: La version passée en paramètre n'existe pas."
-
-msgid "Error: item ID is missing."
-msgstr "Erreur: pas d'élément à traiter (ID)."
 
 msgid "Every"
 msgstr "Chaque"
@@ -1650,9 +1638,6 @@ msgstr "Nom de la page :"
 msgid "Parameter is missing"
 msgstr "Le paramètre est manquant"
 
-msgid "Parameter parent_id is missing"
-msgstr "Le paramètre parent_id est manquant"
-
 msgid "Paste"
 msgstr "Coller"
 
@@ -2202,9 +2187,6 @@ msgstr "L'item sélectionné n'a pas pu être restauré."
 
 msgid "The selected version has not been restored."
 msgstr "La version sélectionnée n'a pas pu être restaurée."
-
-msgid "The specified item is not a file."
-msgstr "L'élément spécifié n'est pas un fichier."
 
 #, php-format
 msgid "The specified owner ID #%d does not match a valid user."
