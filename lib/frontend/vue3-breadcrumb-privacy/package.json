@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.0.0",
     "vue": "^3.2.47"
   },

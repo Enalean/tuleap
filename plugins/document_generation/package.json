@@ -26,6 +26,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/sprintf-js": "^1.1.2",
+    "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.0.2"
   },
   "scripts": {
