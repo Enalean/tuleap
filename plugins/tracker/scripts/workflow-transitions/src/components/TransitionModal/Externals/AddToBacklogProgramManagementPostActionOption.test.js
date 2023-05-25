@@ -21,12 +21,12 @@
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { shallowMount } from "@vue/test-utils";
 import AddToBacklogProgramManagementPostActionOption from "./AddToBacklogProgramManagementPostActionOption.vue";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 
 describe("AddToBacklogProgramManagementPostActionOption", () => {
     let store, wrapper;
-    beforeEach(() => {
+    beforeEach(async () => {
         const store_options = {
             state: {
                 transitionModal: {
@@ -42,13 +42,13 @@ describe("AddToBacklogProgramManagementPostActionOption", () => {
         wrapper = shallowMount(AddToBacklogProgramManagementPostActionOption, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 
     it("returns the option", () => {
         store.getters["transitionModal/post_actions"] = [];
-        expect(wrapper.vm.add_to_backlog_information).toEqual({
+        expect(wrapper.vm.add_to_backlog_information).toStrictEqual({
             option: "Add to the top backlog",
             title: "",
             valid: true,
@@ -59,7 +59,7 @@ describe("AddToBacklogProgramManagementPostActionOption", () => {
         store.getters["transitionModal/post_actions"] = [
             create("post_action", { type: "program_management_add_to_top_backlog" }),
         ];
-        expect(wrapper.vm.add_to_backlog_information).toEqual({
+        expect(wrapper.vm.add_to_backlog_information).toStrictEqual({
             option: "Add to the top backlog (already used)",
             title: "You can only have this post-action once.",
             valid: false,

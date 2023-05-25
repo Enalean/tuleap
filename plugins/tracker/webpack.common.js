@@ -94,7 +94,6 @@ const config_for_burning_parrot = {
         "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
-        "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
     },
     context,
     output,
@@ -131,7 +130,6 @@ let entry_points = {
     colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
     "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
     "tracker-creation": "./themes/BurningParrot/css/tracker-creation/tracker-creation.scss",
-    workflow: "./themes/BurningParrot/css/workflow.scss",
     "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
 };
 

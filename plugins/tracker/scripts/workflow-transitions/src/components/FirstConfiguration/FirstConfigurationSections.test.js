@@ -21,23 +21,25 @@
 import { shallowMount } from "@vue/test-utils";
 
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 import store_options from "../../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("FirstConfigurationSections", () => {
     let store;
-    let wrapper;
 
     beforeEach(() => {
         store = createStoreMock(store_options);
-        wrapper = shallowMount(FirstConfigurationSections, {
+    });
+
+    const getWrapper = async () => {
+        return shallowMount(FirstConfigurationSections, {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
-    });
+    };
 
     afterEach(() => store.reset());
 
@@ -48,7 +50,8 @@ describe("FirstConfigurationSections", () => {
             store.state.is_operation_running = true;
         });
 
-        it("the submit button will be disabled", () => {
+        it("the submit button will be disabled", async () => {
+            const wrapper = await getWrapper();
             const create_workflow_button = wrapper.get(create_workflow_selector);
             expect(create_workflow_button.attributes("disabled")).toBe("disabled");
         });

@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 import module_options from "../../store/transition-modal/module.js";
 import { create } from "../../support/factories.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -29,9 +29,8 @@ import * as list_picker from "@tuleap/list-picker";
 
 describe("FilledPreConditionsSection", () => {
     let store;
-    let wrapper;
 
-    function filledPreConditionsMockFactory(state_store) {
+    async function filledPreConditionsMockFactory(state_store) {
         let state = state_store;
         if (state_store === null) {
             state = module_options.state;
@@ -55,7 +54,7 @@ describe("FilledPreConditionsSection", () => {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             sync: false, // Without this, store.reset() causes errors
         });
     }
@@ -68,20 +67,19 @@ describe("FilledPreConditionsSection", () => {
 
     describe("writable_fields", () => {
         describe("when no current tracker", () => {
-            beforeEach(() => {
-                wrapper = filledPreConditionsMockFactory(null);
-            });
-            it("returns empty array", () => {
-                expect(wrapper.vm.writable_fields).toEqual([]);
+            it("returns empty array", async () => {
+                const wrapper = await filledPreConditionsMockFactory(null);
+                expect(wrapper.vm.writable_fields).toHaveLength(0);
             });
         });
 
         describe("with a current tracker", () => {
+            let wrapper;
             const valid_field = create("field", { type: "valid" });
             const invalid_field = create("field", { type: "burndown" });
 
-            beforeEach(() => {
-                wrapper = filledPreConditionsMockFactory(null);
+            beforeEach(async () => {
+                wrapper = await filledPreConditionsMockFactory(null);
                 store.state.current_tracker = {
                     fields: [invalid_field, valid_field],
                 };
@@ -102,7 +100,7 @@ describe("FilledPreConditionsSection", () => {
                     ];
                 });
                 it("returns fields sorted by natural order", () => {
-                    expect(wrapper.vm.writable_fields.map((field) => field.label)).toEqual([
+                    expect(wrapper.vm.writable_fields.map((field) => field.label)).toStrictEqual([
                         "First",
                         "second",
                         "Third",
@@ -114,26 +112,22 @@ describe("FilledPreConditionsSection", () => {
 
     describe("authorized_user_group_ids", () => {
         describe("when no current transition", () => {
-            beforeEach(() => {
-                wrapper = filledPreConditionsMockFactory(null);
-            });
-            it("returns empty array", () => {
-                expect(wrapper.vm.authorized_user_group_ids).toEqual([]);
+            it("returns empty array", async () => {
+                const wrapper = await filledPreConditionsMockFactory(null);
+                expect(wrapper.vm.authorized_user_group_ids).toHaveLength(0);
             });
         });
 
         describe("with a current transition", () => {
             const authorized_user_group_ids = ["1", "2"];
-            beforeEach(() => {
+            it("returns transition authorized group ids", async () => {
                 const state = {
                     current_transition: {
                         not_empty_field_ids: [],
                         authorized_user_group_ids,
                     },
                 };
-                wrapper = filledPreConditionsMockFactory(state);
-            });
-            it("returns transition authorized group ids", () => {
+                const wrapper = await filledPreConditionsMockFactory(state);
                 expect(wrapper.vm.authorized_user_group_ids).toStrictEqual(
                     authorized_user_group_ids
                 );
@@ -143,26 +137,22 @@ describe("FilledPreConditionsSection", () => {
 
     describe("not_empty_field_ids", () => {
         describe("when no current transition", () => {
-            beforeEach(() => {
-                wrapper = filledPreConditionsMockFactory(null);
-            });
-            it("returns empty array", () => {
-                expect(wrapper.vm.not_empty_field_ids).toEqual([]);
+            it("returns empty array", async () => {
+                const wrapper = await filledPreConditionsMockFactory(null);
+                expect(wrapper.vm.not_empty_field_ids).toHaveLength(0);
             });
         });
 
         describe("with a current transition", () => {
             const not_empty_field_ids = [1, 2];
-            beforeEach(() => {
+            it("returns transition empty field ids", async () => {
                 const state = {
                     current_transition: {
                         not_empty_field_ids,
                         authorized_user_group_ids: [],
                     },
                 };
-                wrapper = filledPreConditionsMockFactory(state);
-            });
-            it("returns transition empty field ids", () => {
+                const wrapper = await filledPreConditionsMockFactory(state);
                 expect(wrapper.vm.$data.not_empty_field_ids).toStrictEqual(not_empty_field_ids);
             });
         });
@@ -170,16 +160,14 @@ describe("FilledPreConditionsSection", () => {
 
     describe("transition_comment_not_empty", () => {
         describe("when no current transition", () => {
-            beforeEach(() => {
-                wrapper = filledPreConditionsMockFactory(null);
-            });
-            it("returns false", () => {
+            it("returns false", async () => {
+                const wrapper = await filledPreConditionsMockFactory(null);
                 expect(wrapper.vm.transition_comment_not_empty).toBeFalsy();
             });
         });
 
         describe("when current transition requires comment", () => {
-            beforeEach(() => {
+            it("returns true", async () => {
                 const state = {
                     current_transition: {
                         is_comment_required: true,
@@ -187,20 +175,19 @@ describe("FilledPreConditionsSection", () => {
                         not_empty_field_ids: [],
                     },
                 };
-                wrapper = filledPreConditionsMockFactory(state);
-            });
-            it("returns true", () => {
+                const wrapper = await filledPreConditionsMockFactory(state);
                 expect(wrapper.vm.transition_comment_not_empty).toBeTruthy();
             });
         });
     });
 
     describe(`when the modal is saving`, () => {
-        beforeEach(() => {
+        let wrapper;
+        beforeEach(async () => {
             const state = {
                 is_modal_save_running: true,
             };
-            wrapper = filledPreConditionsMockFactory(state);
+            wrapper = await filledPreConditionsMockFactory(state);
         });
 
         it(`will disable the "Authorized ugroups" selectbox`, () => {

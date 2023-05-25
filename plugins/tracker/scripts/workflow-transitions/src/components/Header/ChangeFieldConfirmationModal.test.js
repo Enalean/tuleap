@@ -18,21 +18,21 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 
 describe(`ChangeFieldConfirmationModal`, () => {
-    function createWrapper(props) {
+    async function createWrapper(props) {
         return shallowMount(ChangeFieldConfirmationModal, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: props,
         });
     }
 
     describe(`when an operation is running`, () => {
         let wrapper;
-        beforeEach(() => {
-            wrapper = createWrapper({
+        beforeEach(async () => {
+            wrapper = await createWrapper({
                 is_operation_running: true,
             });
         });

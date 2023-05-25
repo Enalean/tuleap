@@ -21,15 +21,15 @@
 import { shallowMount } from "@vue/test-utils";
 import DateInput from "./DateInput.vue";
 import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 
 describe("DateInput", () => {
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         wrapper = shallowMount(DateInput, {
             propsData: { value: DATE_FIELD_VALUE.CLEAR },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 
@@ -62,7 +62,7 @@ describe("DateInput", () => {
 
         it("emits input event with corresponding value", () => {
             expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toEqual([DATE_FIELD_VALUE.CURRENT]);
+            expect(wrapper.emitted().input[0]).toStrictEqual([DATE_FIELD_VALUE.CURRENT]);
         });
     });
 });

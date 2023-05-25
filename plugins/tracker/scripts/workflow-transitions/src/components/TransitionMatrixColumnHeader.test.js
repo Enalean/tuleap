@@ -21,21 +21,24 @@ import { shallowMount } from "@vue/test-utils";
 
 import TransitionMatrixColumnHeader from "./TransitionMatrixColumnHeader.vue";
 import ConfigureStateButton from "./ConfigureStateButton.vue";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TransitionMatrixColumnHeader", () => {
-    let store, wrapper;
+    let store;
 
     beforeEach(() => {
         store = createStoreMock(store_options);
         store.getters.current_workflow_transitions = [];
-        wrapper = shallowMount(TransitionMatrixColumnHeader, {
+    });
+
+    const getWrapper = async () => {
+        return shallowMount(TransitionMatrixColumnHeader, {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 column: {
                     id: 476,
@@ -43,7 +46,7 @@ describe("TransitionMatrixColumnHeader", () => {
                 },
             },
         });
-    });
+    };
 
     afterEach(() => store.reset());
 
@@ -70,7 +73,8 @@ describe("TransitionMatrixColumnHeader", () => {
                     other_transition,
                 ];
             });
-            it("shows the configure state button and passes that transition to it", () => {
+            it("shows the configure state button and passes that transition to it", async () => {
+                const wrapper = await getWrapper();
                 const button = wrapper.findComponent(ConfigureStateButton);
 
                 expect(button.exists()).toBeTruthy();
@@ -82,7 +86,8 @@ describe("TransitionMatrixColumnHeader", () => {
             beforeEach(() => {
                 store.getters.current_workflow_transitions = [transition_from_new];
             });
-            it("passes that transition to the button", () => {
+            it("passes that transition to the button", async () => {
+                const wrapper = await getWrapper();
                 const button = wrapper.findComponent(ConfigureStateButton);
 
                 expect(button.exists()).toBeTruthy();
@@ -90,7 +95,8 @@ describe("TransitionMatrixColumnHeader", () => {
             });
         });
 
-        it("and there is no transition to the given state, then it does not show the configure state button", () => {
+        it("and there is no transition to the given state, then it does not show the configure state button", async () => {
+            const wrapper = await getWrapper();
             expect(wrapper.findComponent(ConfigureStateButton).exists()).toBeFalsy();
         });
     });
@@ -99,7 +105,8 @@ describe("TransitionMatrixColumnHeader", () => {
         beforeEach(() => {
             store.getters.is_workflow_advanced = true;
         });
-        it("does not show the configure state button", () => {
+        it("does not show the configure state button", async () => {
+            const wrapper = await getWrapper();
             expect(wrapper.findComponent(ConfigureStateButton).exists()).toBeFalsy();
         });
     });

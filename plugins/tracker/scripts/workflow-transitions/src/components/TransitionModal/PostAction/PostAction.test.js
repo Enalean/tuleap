@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -40,7 +40,7 @@ describe("PostAction", () => {
     const fieldset = create("field", { field_id: fieldset_id, type: "fieldset" });
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const current_tracker = {
             fields: [date_field, int_field, float_field, status_field, fieldset],
         };
@@ -66,7 +66,7 @@ describe("PostAction", () => {
         wrapper = shallowMount(PostAction, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 

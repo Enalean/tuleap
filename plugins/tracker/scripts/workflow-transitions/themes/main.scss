@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+@use "./header";
+@use "./matrix";
+@use "./transition-modal";
+@use "@tuleap/list-picker";
 
-export default {
-    ...defineJestConfiguration(),
-    displayName: "tracker/workflow-transitions",
-};
+.tracker-workflow-loader {
+    height: 200px;
+    margin: 0 auto;
+    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
+}
+
+.tracker-workflow-property-disabled {
+    opacity: 0.5;
+}
+
+.tracker-workflow-rules-enforcement-warning {
+    margin: 0 0 var(--tlp-medium-spacing);
+}

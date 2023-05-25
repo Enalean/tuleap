@@ -18,18 +18,16 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TransitionModal from "./TransitionModal.vue";
 import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
 import storeOptions from "../../store/transition-modal/module.js";
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 
-jest.mock("tlp");
-
 describe(`TransitionModal`, () => {
-    let modal, createModal;
+    let modal;
     function mockStore() {
         const store = createStoreMock({
             state: {
@@ -41,8 +39,11 @@ describe(`TransitionModal`, () => {
         return store;
     }
 
-    const createWrapper = (store) =>
-        shallowMount(TransitionModal, { localVue, mocks: { $store: store } });
+    const createWrapper = async (store) =>
+        shallowMount(TransitionModal, {
+            localVue: await createLocalVueForTests(),
+            mocks: { $store: store },
+        });
 
     beforeEach(() => {
         modal = {
@@ -50,75 +51,76 @@ describe(`TransitionModal`, () => {
             show: jest.fn(),
             hide: jest.fn(),
         };
-        createModal = jest.spyOn(tlp, "createModal").mockReturnValue(modal);
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal);
     });
 
-    it(`when mounted(), it will create a TLP modal`, () => {
-        createWrapper(mockStore());
+    it(`when mounted(), it will create a TLP modal`, async () => {
+        const createModal = jest.spyOn(tlp_modal, "createModal");
+        await createWrapper(mockStore());
         expect(createModal).toHaveBeenCalled();
     });
 
     it(`when the modal is hidden (through ESC or a close button),
-        it will clear the modal shown flag`, () => {
+        it will clear the modal shown flag`, async () => {
         jest.spyOn(modal, "addEventListener").mockImplementation((event_name, callback) =>
             callback()
         );
         const store = mockStore();
-        createWrapper(store);
+        await createWrapper(store);
 
         expect(store.commit).toHaveBeenCalledWith("transitionModal/clearModalShown");
     });
 
-    it(`when the modal shown flag becomes true, it will show the modal`, () => {
+    it(`when the modal shown flag becomes true, it will show the modal`, async () => {
         const showModal = jest.spyOn(modal, "show");
         const store = mockStore();
         jest.spyOn(store, "watch").mockImplementation((watchFunction, callback) => callback(true));
-        createWrapper(store);
+        await createWrapper(store);
 
         expect(showModal).toHaveBeenCalled();
     });
 
-    it(`when the modal shown flag becomes false, it will hide the modal`, () => {
+    it(`when the modal shown flag becomes false, it will hide the modal`, async () => {
         const hideModal = jest.spyOn(modal, "hide");
         const store = mockStore();
         jest.spyOn(store, "watch").mockImplementation((watchFunction, callback) => callback(false));
-        createWrapper(store);
+        await createWrapper(store);
 
         expect(hideModal).toHaveBeenCalled();
     });
 
     it(`when the modal form is submitted,
-        it will dispatch an action to save the transition rules`, () => {
+        it will dispatch an action to save the transition rules`, async () => {
         const store = mockStore();
-        const wrapper = createWrapper(store);
+        const wrapper = await createWrapper(store);
 
         wrapper.trigger("submit");
         expect(store.dispatch).toHaveBeenCalledWith("transitionModal/saveTransitionRules");
     });
 
-    it(`when the modal is loading, it will show a skeleton for Pre-conditions`, () => {
+    it(`when the modal is loading, it will show a skeleton for Pre-conditions`, async () => {
         const store = mockStore();
         store.state.transitionModal.is_loading_modal = true;
-        const wrapper = createWrapper(store);
+        const wrapper = await createWrapper(store);
 
         expect(wrapper.findComponent(PreConditionsSkeleton).exists()).toBe(true);
     });
 
-    it(`when the modal is loaded and shown, it will show the Pre-conditions section`, () => {
+    it(`when the modal is loaded and shown, it will show the Pre-conditions section`, async () => {
         const store = mockStore();
         store.state.transitionModal.is_loading_modal = false;
         store.state.transitionModal.is_modal_shown = true;
-        const wrapper = createWrapper(store);
+        const wrapper = await createWrapper(store);
 
         expect(wrapper.findComponent(FilledPreConditionsSection).exists()).toBe(true);
     });
 
     describe(`when the modal is saving`, () => {
         let wrapper;
-        beforeEach(() => {
+        beforeEach(async () => {
             const store = mockStore();
             store.state.transitionModal.is_modal_save_running = true;
-            wrapper = createWrapper(store);
+            wrapper = await createWrapper(store);
         });
 
         it(`will disable the Cancel button`, () => {

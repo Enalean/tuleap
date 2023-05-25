@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
 import { createList } from "../../support/factories.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -33,7 +33,7 @@ describe("PostActionsSection", () => {
     let store;
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const store_options = {
             state: {
                 transitionModal: {
@@ -50,7 +50,7 @@ describe("PostActionsSection", () => {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 

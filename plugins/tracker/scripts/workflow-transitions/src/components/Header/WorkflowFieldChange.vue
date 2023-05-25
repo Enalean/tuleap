@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import { mapState, mapGetters } from "vuex";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 

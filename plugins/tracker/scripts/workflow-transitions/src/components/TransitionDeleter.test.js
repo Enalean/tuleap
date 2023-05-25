@@ -18,22 +18,20 @@
  */
 
 import { mount } from "@vue/test-utils";
-import * as tlp from "tlp";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
 
 import TransitionDeleter from "./TransitionDeleter.vue";
 import TransitionDeletePopover from "./TransitionDeletePopover.vue";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-jest.mock("tlp");
-
 describe("TransitionDeleter", () => {
-    let store, wrapper, destroyPopover, transition, deleteTransition, is_transition_updated;
+    let store, destroyPopover, transition, deleteTransition, is_transition_updated;
 
     beforeEach(() => {
         destroyPopover = jest.fn();
-        jest.spyOn(tlp, "createPopover").mockImplementation(() => ({
+        jest.spyOn(tlp_popovers, "createPopover").mockImplementation(() => ({
             destroy: destroyPopover,
         }));
 
@@ -46,20 +44,22 @@ describe("TransitionDeleter", () => {
         store = createStoreMock(store_options, { is_operation_running: false });
         store.getters.current_workflow_transitions = [];
         store.getters.is_workflow_advanced = true;
+    });
 
+    const getWrapper = async () => {
         //mount() is needed because we use a ref from a child functional component
-        wrapper = mount(TransitionDeleter, {
+        return mount(TransitionDeleter, {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 transition,
                 deleteTransition,
                 is_transition_updated,
             },
         });
-    });
+    };
 
     afterEach(() => store.reset());
 
@@ -67,18 +67,22 @@ describe("TransitionDeleter", () => {
     const delete_transition_selector = '[data-test-action="delete-transition"]';
 
     describe("when the workflow is in advanced mode", () => {
-        it("will ask for confirmation before deleting a transition", () => {
+        it("will ask for confirmation before deleting a transition", async () => {
+            const wrapper = await getWrapper();
             expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
         });
 
         it("will create a popover", async () => {
+            const createPopover = jest.spyOn(tlp_popovers, "createPopover");
+            const wrapper = await getWrapper();
             expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
             await wrapper.vm.$nextTick();
-            expect(tlp.createPopover).toHaveBeenCalled();
+            expect(createPopover).toHaveBeenCalled();
         });
 
         describe("on destroy", () => {
             it("will destroy its popover", async () => {
+                const wrapper = await getWrapper();
                 await wrapper.vm.$nextTick();
                 wrapper.destroy();
 
@@ -89,6 +93,7 @@ describe("TransitionDeleter", () => {
         describe("and another action is running", () => {
             it("will disable deleting the transition", async () => {
                 store.state.is_operation_running = true;
+                const wrapper = await getWrapper();
                 await wrapper.vm.$nextTick();
 
                 const confirm_button = wrapper.get(confirm_delete_transition_selector);
@@ -100,6 +105,7 @@ describe("TransitionDeleter", () => {
 
         describe("and the transition has just been updated", () => {
             it("shows an animation", async () => {
+                const wrapper = await getWrapper();
                 wrapper.setProps({ is_transition_updated: true });
                 await wrapper.vm.$nextTick();
 
@@ -124,18 +130,22 @@ describe("TransitionDeleter", () => {
                 ];
             });
 
-            it("will ask for confirmation before deleting a transition", () => {
+            it("will ask for confirmation before deleting a transition", async () => {
+                const wrapper = await getWrapper();
                 expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
             });
 
             it("will create a popover", async () => {
+                const createPopover = jest.spyOn(tlp_popovers, "createPopover");
+                const wrapper = await getWrapper();
                 expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
                 await wrapper.vm.$nextTick();
-                expect(tlp.createPopover).toHaveBeenCalled();
+                expect(createPopover).toHaveBeenCalled();
             });
 
             describe("on destroy", () => {
                 it("will destroy its popover", async () => {
+                    const wrapper = await getWrapper();
                     await wrapper.vm.$nextTick();
                     wrapper.destroy();
 
@@ -152,12 +162,14 @@ describe("TransitionDeleter", () => {
                 ];
             });
 
-            it("won't show a confirmation popover", () => {
+            it("won't show a confirmation popover", async () => {
+                const wrapper = await getWrapper();
                 expect(wrapper.find(delete_transition_selector).exists()).toBeTruthy();
             });
 
             describe("and when user clicks the delete button", () => {
-                it("deletes the transition", () => {
+                it("deletes the transition", async () => {
+                    const wrapper = await getWrapper();
                     const delete_button = wrapper.get(delete_transition_selector);
                     delete_button.trigger("click");
 
@@ -170,7 +182,8 @@ describe("TransitionDeleter", () => {
                     store.state.is_operation_running = true;
                 });
 
-                it("will disable deleting the transition", () => {
+                it("will disable deleting the transition", async () => {
+                    const wrapper = await getWrapper();
                     const delete_button = wrapper.get(delete_transition_selector);
                     expect(delete_button.classes()).toContain(
                         "tracker-workflow-transition-action-disabled"
@@ -178,7 +191,8 @@ describe("TransitionDeleter", () => {
                 });
 
                 describe("and when user clicks the delete button", () => {
-                    it("does nothing", () => {
+                    it("does nothing", async () => {
+                        const wrapper = await getWrapper();
                         const delete_button = wrapper.get(delete_transition_selector);
                         delete_button.trigger("click");
 

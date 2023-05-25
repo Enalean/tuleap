@@ -19,15 +19,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import AddToBacklogProgramManagementPostAction from "./AddToBacklogProgramManagementPostAction.vue";
 import PostAction from "../PostAction/PostAction.vue";
 
 describe("AddToBacklogProgramManagementPostAction", () => {
-    it("spawns the component", () => {
+    it("spawns the component", async () => {
         const wrapper = shallowMount(AddToBacklogProgramManagementPostAction, {
             propsData: { post_action: { type: "add_to_top_backlog_program_management" } },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
         expect(wrapper.findComponent(PostAction).exists()).toBe(true);
         expect(

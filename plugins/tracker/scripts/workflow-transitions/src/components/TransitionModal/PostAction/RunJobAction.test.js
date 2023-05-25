@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 
 import RunJobAction from "./RunJobAction.vue";
-import localVue from "../../../support/local-vue.js";
+import { createLocalVueForTests } from "../../../support/local-vue.js";
 import { create } from "../../../support/factories";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
@@ -30,7 +30,7 @@ describe("RunJobAction", () => {
     const post_action = create("post_action", "presented", { job_url: "http://my-url.test" });
     let wrapper;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         const store_options = {
             state: {
                 current_tracker: create("tracker", { project: { id: 1 } }),
@@ -46,7 +46,7 @@ describe("RunJobAction", () => {
         wrapper = shallowMount(RunJobAction, {
             mocks: { $store: store },
             propsData: { post_action },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
     });
 

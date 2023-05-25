@@ -22,28 +22,31 @@ import { shallowMount } from "@vue/test-utils";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 import TransitionDeleter from "./TransitionDeleter.vue";
 import { create } from "../support/factories.js";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TransitionMatrixContent", () => {
     let store, wrapper;
 
-    beforeEach(() => {
-        store = createStoreMock(store_options, { is_operation_running: false });
-        store.getters.current_workflow_transitions = [];
-        store.getters.is_workflow_advanced = true;
-
-        wrapper = shallowMount(TransitionMatrixContent, {
+    const getWrapper = async () => {
+        return shallowMount(TransitionMatrixContent, {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
             propsData: {
                 from: create("field_value"),
                 to: create("field_value"),
             },
         });
+    };
+
+    beforeEach(async () => {
+        store = createStoreMock(store_options, { is_operation_running: false });
+        store.getters.current_workflow_transitions = [];
+        store.getters.is_workflow_advanced = true;
+        wrapper = await getWrapper();
     });
 
     afterEach(() => {
@@ -161,7 +164,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("when the transition has just been updated", () => {
                 beforeEach(() => {
-                    localVue.set(transition, "updated", true);
+                    transition.updated = true;
                 });
 
                 it("shows an 'updated' animation", () => {

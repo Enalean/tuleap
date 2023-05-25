@@ -1,105 +1,33 @@
 lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/chart-builder':
+  '@tuleap/burningparrot-theme':
     specifier: workspace:*
-    version: link:../../lib/frontend/chart-builder
-  '@tuleap/copy-to-clipboard':
-    specifier: workspace:*
-    version: link:../../lib/frontend/copy-to-clipboard
-  '@tuleap/gettext':
-    specifier: workspace:*
-    version: link:../../lib/frontend/gettext
-  '@tuleap/html-escaper':
-    specifier: workspace:*
-    version: link:../../lib/frontend/html-escaper
+    version: link:../../../../src/themes/BurningParrot
   '@tuleap/list-picker':
     specifier: workspace:*
-    version: link:../../lib/frontend/list-picker
-  '@tuleap/mention':
-    specifier: workspace:*
-    version: link:../../lib/frontend/mention
-  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
-    specifier: workspace:*
-    version: link:scripts/lib/artifact-ckeditor-image-upload
-  '@tuleap/plugin-tracker-color-picker':
-    specifier: workspace:*
-    version: link:scripts/lib/colorpicker
+    version: link:../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants':
     specifier: workspace:*
-    version: link:scripts/lib/constants
-  '@tuleap/plugin-tracker-rich-text-editor':
-    specifier: workspace:*
-    version: link:scripts/lib/rich-text-editor
-  '@tuleap/plugin-tracker-tql-codemirror':
-    specifier: workspace:*
-    version: link:scripts/lib/TQL-CodeMirror
-  '@tuleap/project-background':
-    specifier: workspace:*
-    version: link:../../lib/frontend/project-background
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../src/themes/tlp
-  '@tuleap/tlp-badge':
-    specifier: workspace:*
-    version: link:../../lib/frontend/tlp-badge
+    version: link:../lib/constants
   '@tuleap/tlp-fetch':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date':
+    version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-relative-date
-  '@tuleap/tlp-swatch-colors':
+    version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers':
     specifier: workspace:*
-    version: link:../../lib/frontend/tlp-swatch-colors
-  '@tuleap/tooltip':
-    specifier: workspace:*
-    version: link:../../lib/frontend/tooltip
-  '@tuleap/user-and-ugroup-autocompleter':
-    specifier: workspace:*
-    version: link:../../lib/frontend/user-and-ugroup-autocompleter
-  '@tuleap/vue-permissions-per-group-badge':
-    specifier: workspace:*
-    version: link:../../lib/frontend/vue-permissions-per-group-badge
+    version: link:../../../../lib/frontend/tlp-popovers
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
-    version: link:../../lib/frontend/vue2-gettext-init
-  d3-array:
-    specifier: ^3.0.1
-    version: 3.0.1
-  d3-selection:
-    specifier: ^3.0.0
-    version: 3.0.0
-  d3-shape:
-    specifier: ^3.0.1
-    version: 3.0.1
-  dompurify:
-    specifier: ^3.0.0
-    version: 3.0.0
-  moment:
-    specifier: ^2.29.4
-    version: 2.29.4
-  mustache:
-    specifier: ^4.2.0
-    version: 4.2.0
-  node-gettext:
-    specifier: ^3.0.0
-    version: 3.0.0
-  slugify:
-    specifier: ^1.6.1
-    version: 1.6.1
-  sprintf-js:
-    specifier: ^1.1.2
-    version: 1.1.2
+    version: link:../../../../lib/frontend/vue2-gettext-init
   vue:
     specifier: ^2.7.8
     version: 2.7.8
-  vue-gettext:
-    specifier: ^2.1.12
-    version: 2.1.12
-  vue-router:
-    specifier: ^3.5.3
-    version: 3.5.3(vue@2.7.8)
+  vue-dompurify-html:
+    specifier: ^4.0.0
+    version: 4.0.0(vue@2.7.8)
   vuex:
     specifier: ^3.6.2
     version: 3.6.2(vue@2.7.8)
@@ -107,55 +35,16 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
-  '@tuleap/core-constants':
+    version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin':
     specifier: workspace:*
-    version: link:../../lib/frontend/constants
-  '@tuleap/cypress-configurator':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support':
-    specifier: workspace:*
-    version: link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/vue2-gettext-composition-helper':
-    specifier: workspace:*
-    version: link:../../lib/frontend/vue2-gettext-composition-helpers
+    version: link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest':
     specifier: workspace:*
-    version: link:../../lib/frontend/vuex-store-wrapper-jest
-  '@types/bootstrap':
-    specifier: ^4.5.1
-    version: 4.5.1
-  '@types/ckeditor':
-    specifier: ^4.9.10
-    version: 4.9.10
-  '@types/dompurify':
-    specifier: ^2.4.0
-    version: 2.4.0
-  '@types/jquery':
-    specifier: ^3.5.5
-    version: 3.5.5
-  '@types/mustache':
-    specifier: ^4.1.2
-    version: 4.1.2
-  '@types/sprintf-js':
-    specifier: ^1.1.2
-    version: 1.1.2
+    version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@vue/test-utils':
     specifier: ^1.3
     version: 1.3.5(vue@2.7.8)
-  jquery:
-    specifier: ^3.6.0
-    version: 3.6.0
-  vue-class-component:
-    specifier: ^7.2.6
-    version: 7.2.6(vue@2.7.8)
-  vue-property-decorator:
-    specifier: ^9.1.2
-    version: 9.1.2(vue-class-component@7.2.6)(vue@2.7.8)
-  vuex-class:
-    specifier: ^0.3.2
-    version: 0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2)
 
 packages:
 
@@ -176,45 +65,6 @@ packages:
     dependencies:
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
-
-  /@types/bootstrap@4.5.1:
-    resolution: {integrity: sha512-5iAWnZnqHucloYQFlozKUTPw0+fLfKo8d4flGCiE1B1w91z/91UIqMDht/31RQJIwx0+u5SL4CJCbs79Z15M+A==}
-    dependencies:
-      '@types/jquery': 3.5.5
-      popper.js: 1.16.1
-    dev: true
-
-  /@types/ckeditor@4.9.10:
-    resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
-    dev: true
-
-  /@types/dompurify@2.4.0:
-    resolution: {integrity: sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==}
-    dependencies:
-      '@types/trusted-types': 2.0.3
-    dev: true
-
-  /@types/jquery@3.5.5:
-    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
-    dependencies:
-      '@types/sizzle': 2.3.2
-    dev: true
-
-  /@types/mustache@4.1.2:
-    resolution: {integrity: sha512-c4OVMMcyodKQ9dpwBwh3ofK9P6U9ZktKU9S+p33UqwMNN1vlv2P0zJZUScTshnx7OEoIIRcCFNQ904sYxZz8kg==}
-    dev: true
-
-  /@types/sizzle@2.3.2:
-    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
-    dev: true
-
-  /@types/sprintf-js@1.1.2:
-    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
-    dev: true
-
-  /@types/trusted-types@2.0.3:
-    resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
-    dev: true
 
   /@vue/compiler-sfc@2.7.8:
     resolution: {integrity: sha512-2DK4YWKfgLnW9VDR9gnju1gcYRk3flKj8UNsms7fsRmFcg35slVTZEkqwBtX+wJBXaamFfn6NxSsZh3h12Ix/Q==}
@@ -272,30 +122,6 @@ packages:
   /csstype@3.1.0:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
 
-  /d3-array@3.0.1:
-    resolution: {integrity: sha512-l3Bh5o8RSoC3SBm5ix6ogaFW+J6rOUm42yOtZ2sQPCEvCqUMepeX7zgrlLLGIemxgOyo9s2CsWEidnLv5PwwRw==}
-    engines: {node: '>=12'}
-    dependencies:
-      internmap: 2.0.1
-    dev: false
-
-  /d3-path@3.0.1:
-    resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-selection@3.0.0:
-    resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-shape@3.0.1:
-    resolution: {integrity: sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-path: 3.0.1
-    dev: false
-
   /dom-event-types@1.1.0:
     resolution: {integrity: sha512-jNCX+uNJ3v38BKvPbpki6j5ItVlnSqVV6vDWGS6rExzCMjsc39frLjm1n91o6YaKK6AZl0wLloItW6C6mr61BQ==}
     dev: true
@@ -351,11 +177,6 @@ packages:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
     dev: true
 
-  /internmap@2.0.1:
-    resolution: {integrity: sha512-Ujwccrj9FkGqjbY3iVoxD1VV+KdZZeENx0rphrtzmRXbFvkFO88L80BL/zeSIguX/7T+y8k04xqtgWgS5vxwxw==}
-    engines: {node: '>=12'}
-    dev: false
-
   /is-buffer@1.1.6:
     resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
     dev: true
@@ -368,10 +189,6 @@ packages:
   /is-whitespace@0.3.0:
     resolution: {integrity: sha512-RydPhl4S6JwAyj0JJjshWJEFG6hNye3pZFBRZaTUfZFwGHxzppNaNOVgQuS/E/SlhrApuMXrpnK1EEIXfdo3Dg==}
     engines: {node: '>=0.10.0'}
-    dev: true
-
-  /jquery@3.6.0:
-    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true
 
   /js-beautify@1.14.7:
@@ -392,10 +209,6 @@ packages:
       is-buffer: 1.1.6
     dev: true
 
-  /lodash.get@4.4.2:
-    resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
-    dev: false
-
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
@@ -414,25 +227,10 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
-    dev: false
-
-  /mustache@4.2.0:
-    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
-    hasBin: true
-    dev: false
-
   /nanoid@3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-
-  /node-gettext@3.0.0:
-    resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}
-    dependencies:
-      lodash.get: 4.4.2
-    dev: false
 
   /nopt@6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
@@ -450,11 +248,6 @@ packages:
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
-
-  /popper.js@1.16.1:
-    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
-    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
-    dev: true
 
   /postcss@8.4.14:
     resolution: {integrity: sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==}
@@ -490,11 +283,6 @@ packages:
     resolution: {integrity: sha512-fCvEXfh6NWpm+YSuY2bpXb/VIihqWA6hLsgboC+0nl71Q7N7o2eaCW8mJa/NLvQhs6jpd3VZV4UiUQlV6+lc8g==}
     dev: true
 
-  /slugify@1.6.1:
-    resolution: {integrity: sha512-5ofqMTbetNhxlzjYYLBaZFQd6oiTuSkQlyfPEFIMwgUABlZQ0hbk5xIV9Ydd5jghWeRoO7GkiJliUvTpLOjNRA==}
-    engines: {node: '>=8.0.0'}
-    dev: false
-
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -503,43 +291,35 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
-  /sprintf-js@1.1.2:
-    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
-    dev: false
-
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
 
-  /vue-class-component@7.2.6(vue@2.7.8):
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
+  /vue-demi@0.13.11(vue@2.7.8):
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
     peerDependencies:
-      vue: ^2.0.0
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
     dependencies:
       vue: 2.7.8
-    dev: true
-
-  /vue-gettext@2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
     dev: false
 
-  /vue-property-decorator@9.1.2(vue-class-component@7.2.6)(vue@2.7.8):
-    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
+  /vue-dompurify-html@4.0.0(vue@2.7.8):
+    resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
     peerDependencies:
-      vue: '*'
-      vue-class-component: '*'
+      vue: ^2.7.0 || ^3.0.0
     dependencies:
+      dompurify: 3.0.0
       vue: 2.7.8
-      vue-class-component: 7.2.6(vue@2.7.8)
-    dev: true
-
-  /vue-router@3.5.3(vue@2.7.8):
-    resolution: {integrity: sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg==}
-    peerDependencies:
-      vue: ^2
-    dependencies:
-      vue: 2.7.8
+      vue-demi: 0.13.11(vue@2.7.8)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
     dev: false
 
   /vue@2.7.8:
@@ -548,24 +328,13 @@ packages:
       '@vue/compiler-sfc': 2.7.8
       csstype: 3.1.0
 
-  /vuex-class@0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2):
-    resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
-    peerDependencies:
-      vue: ^2.5.0
-      vue-class-component: ^6.0.0 || ^7.0.0
-      vuex: ^3.0.0
-    dependencies:
-      vue: 2.7.8
-      vue-class-component: 7.2.6(vue@2.7.8)
-      vuex: 3.6.2(vue@2.7.8)
-    dev: true
-
   /vuex@3.6.2(vue@2.7.8):
     resolution: {integrity: sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==}
     peerDependencies:
       vue: ^2.0.0
     dependencies:
       vue: 2.7.8
+    dev: false
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}

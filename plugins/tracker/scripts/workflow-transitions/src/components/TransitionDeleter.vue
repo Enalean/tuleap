@@ -53,7 +53,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { createPopover } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
 import TransitionDeletePopover from "./TransitionDeletePopover.vue";
 
 export default {

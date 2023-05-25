@@ -19,23 +19,23 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 import ConfigureStateButton from "./ConfigureStateButton.vue";
 
 describe(`ConfigureStateButton`, () => {
     let store;
-    function createWrapper(transition) {
+    async function createWrapper(transition) {
         store = createStoreMock({});
         return shallowMount(ConfigureStateButton, {
-            localVue,
+            localVue: await createLocalVueForTests(),
             mocks: { $store: store },
             propsData: { transition },
         });
     }
 
-    it(`When I click the button, it will dispatch an action to open the transitions configuration modal`, () => {
+    it(`When I click the button, it will dispatch an action to open the transitions configuration modal`, async () => {
         const transition = { id: 134 };
-        const wrapper = createWrapper(transition);
+        const wrapper = await createWrapper(transition);
         wrapper.trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
@@ -44,9 +44,9 @@ describe(`ConfigureStateButton`, () => {
         );
     });
 
-    it(`when the transition is updated, it will show an animation`, () => {
+    it(`when the transition is updated, it will show an animation`, async () => {
         const transition = { id: 144, updated: true };
-        const wrapper = createWrapper(transition);
+        const wrapper = await createWrapper(transition);
 
         expect(wrapper.classes()).toContain("tlp-button-success");
     });

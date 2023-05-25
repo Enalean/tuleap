@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "workflow/header";
-@use "workflow/matrix";
-@use "workflow/transition-modal";
-@use "@tuleap/list-picker";
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-.tracker-workflow-loader {
-    height: 200px;
-    margin: 0 auto;
-    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat
-        center center;
-}
-
-.tracker-workflow-property-disabled {
-    opacity: 0.5;
-}
-
-.tracker-workflow-rules-enforcement-warning {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
+export default webpack_configurator.extendDevConfiguration(common);

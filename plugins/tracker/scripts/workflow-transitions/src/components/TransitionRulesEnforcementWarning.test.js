@@ -20,33 +20,36 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 import { create } from "../support/factories.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TransitionRulesEnforcementWarning", () => {
     let store;
-    let wrapper;
 
     beforeEach(() => {
         store = createStoreMock(store_options, {
             current_tracker: create("tracker", { workflow: create("workflow") }),
         });
-        wrapper = shallowMount(TransitionRulesEnforcementWarning, {
+    });
+
+    const getWrapper = async () => {
+        return shallowMount(TransitionRulesEnforcementWarning, {
             mocks: {
                 $store: store,
             },
-            localVue,
+            localVue: await createLocalVueForTests(),
         });
-    });
+    };
 
     afterEach(() => store.reset());
 
     describe("when rules enforcement is active", () => {
         beforeEach(() => (store.getters.are_transition_rules_enforced = true));
 
-        it("shows only rules enforcement active message", () => {
+        it("shows only rules enforcement active message", async () => {
+            const wrapper = await getWrapper();
             expect(
                 wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
             ).toBeTruthy();
@@ -59,7 +62,8 @@ describe("TransitionRulesEnforcementWarning", () => {
     describe("when rules enforcement is inactive", () => {
         beforeEach(() => (store.getters.are_transition_rules_enforced = false));
 
-        it("shows only rule enforcement inactive message", () => {
+        it("shows only rule enforcement inactive message", async () => {
+            const wrapper = await getWrapper();
             expect(
                 wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
             ).toBeFalsy();
