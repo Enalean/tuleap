@@ -1621,8 +1621,8 @@ CREATE TABLE webauthn_credential_source (
     counter INT UNSIGNED NOT NULL,
     other_ui TEXT,
     name VARCHAR(255) NOT NULL DEFAULT '',
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_use DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at INT UNSIGNED NOT NULL,
+    last_use INT UNSIGNED NOT NULL,
     INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB;
 

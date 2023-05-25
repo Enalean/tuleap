@@ -72,8 +72,8 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
         $retrieved = $sources[0];
         $this->assertSourceEquals($source, $retrieved->getSource());
         self::assertNotNull($retrieved->getName());
-        self::assertNotEmpty($retrieved->getCreatedAt());
-        self::assertNotEmpty($retrieved->getLastUse());
+        self::assertNotNull($retrieved->getCreatedAt());
+        self::assertNotNull($retrieved->getLastUse());
     }
 
     public function testSaveEditNameThenFind(): void

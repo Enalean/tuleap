@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use Tuleap\TimezoneRetriever;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 
 final class AuthenticatorPresenter
@@ -32,9 +33,16 @@ final class AuthenticatorPresenter
 
     public function __construct(
         WebAuthnCredentialSource $source,
+        \PFUser $user,
     ) {
+        $timezone = new \DateTimeZone(TimezoneRetriever::getUserTimezone($user));
+
         $this->name       = $source->getName();
-        $this->created_at = $source->getCreatedAt()->format($GLOBALS['Language']->getText('system', 'datefmt'));
-        $this->last_use   = $source->getLastUse()->format($GLOBALS['Language']->getText('system', 'datefmt'));
+        $this->created_at = $source->getCreatedAt()
+            ->setTimezone($timezone)
+            ->format($GLOBALS['Language']->getText('system', 'datefmt'));
+        $this->last_use   = $source->getLastUse()
+            ->setTimezone($timezone)
+            ->format($GLOBALS['Language']->getText('system', 'datefmt'));
     }
 }

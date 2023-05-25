@@ -73,16 +73,24 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
                 FROM webauthn_credential_source
                 WHERE public_key_credential_id = ?';
 
+        $time = new \DateTimeImmutable();
         if ($this->getDB()->exists($sql, encode($publicKeyCredentialSource->getPublicKeyCredentialId()))) {
             $this->getDB()->update(
                 'webauthn_credential_source',
-                $this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
+                [
+                    ...$this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
+                    'last_use' => $time->getTimestamp(),
+                ],
                 ['public_key_credential_id' => encode($publicKeyCredentialSource->getPublicKeyCredentialId())]
             );
         } else {
             $this->getDB()->insert(
                 'webauthn_credential_source',
-                $this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource)
+                [
+                    ...$this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
+                    'created_at' => $time->getTimestamp(),
+                    'last_use' => $time->getTimestamp(),
+                ]
             );
         }
     }
@@ -93,11 +101,14 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
 
     public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
     {
+        $time = new \DateTimeImmutable();
         $this->getDB()->insert(
             'webauthn_credential_source',
             [
                 ...$this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
                 'name' => $name,
+                'created_at' => $time->getTimestamp(),
+                'last_use' => $time->getTimestamp(),
             ]
         );
     }
@@ -177,8 +188,8 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
      *     counter: int,
      *     other_ui: null|string,
      *     name: string,
-     *     created_at: string,
-     *     last_use: string
+     *     created_at: int,
+     *     last_use: int
      * } $data
      * @throws InvalidTrustPathException When trust_path in array is invalid
      */
@@ -198,8 +209,8 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
                 $data['other_ui'] !== null ? psl_json_decode($data['other_ui'], true) : null
             ),
             $data['name'],
-            new \DateTimeImmutable($data['created_at']),
-            new \DateTimeImmutable($data['last_use'])
+            new \DateTimeImmutable('@' . $data['created_at']),
+            new \DateTimeImmutable('@' . $data['last_use'])
         );
     }
 }
