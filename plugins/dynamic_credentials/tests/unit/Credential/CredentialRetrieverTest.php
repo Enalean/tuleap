@@ -18,41 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\Credential;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
-class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testAuthenticateCredential()
+    public function testAuthenticateCredential(): void
     {
         $expiration_date = new \DateTimeImmutable('+10 minutes');
-        $dao             = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn(
+        $dao             = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn(
             ['identifier' => 'identifier', 'password' => 'password', 'expiration' => $expiration_date->getTimestamp()]
         );
-        $password_handler = Mockery::mock(\PasswordHandler::class);
-        $password_handler->shouldReceive('verifyHashPassword')->andReturn(true);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract')->andReturn('identifier');
+        $password_handler = $this->createMock(\PasswordHandler::class);
+        $password_handler->method('verifyHashPassword')->willReturn(true);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract')->willReturn('identifier');
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
         $credential = $credential_retriever->authenticate('username', new ConcealedString('password'));
 
-        $this->assertEquals('identifier', $credential->getIdentifier());
+        self::assertEquals('identifier', $credential->getIdentifier());
     }
 
-    public function testAuthenticationRejectsWronglyFormattedUsername()
+    public function testAuthenticationRejectsWronglyFormattedUsername(): void
     {
-        $dao                  = Mockery::mock(CredentialDAO::class);
-        $password_handler     = Mockery::mock(\PasswordHandler::class);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract')->andThrow(CredentialInvalidUsernameException::class);
+        $dao                  = $this->createMock(CredentialDAO::class);
+        $password_handler     = $this->createMock(\PasswordHandler::class);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract')->willThrowException(new CredentialInvalidUsernameException());
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
@@ -61,13 +59,13 @@ class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
-    public function testAuthenticationRejectsUnknownCredential()
+    public function testAuthenticationRejectsUnknownCredential(): void
     {
-        $dao = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn([]);
-        $password_handler     = Mockery::mock(\PasswordHandler::class);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract')->andReturn('identifier');
+        $dao = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn([]);
+        $password_handler     = $this->createMock(\PasswordHandler::class);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract')->willReturn('identifier');
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
@@ -76,17 +74,17 @@ class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
-    public function testAuthenticationRejectsInvalidPassword()
+    public function testAuthenticationRejectsInvalidPassword(): void
     {
         $expiration_date = new \DateTimeImmutable('+10 minutes');
-        $dao             = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn(
+        $dao             = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn(
             ['identifier' => 'identifier', 'password' => 'password', 'expiration' => $expiration_date->getTimestamp()]
         );
-        $password_handler = Mockery::mock(\PasswordHandler::class);
-        $password_handler->shouldReceive('verifyHashPassword')->andReturn(false);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract')->andReturn('identifier');
+        $password_handler = $this->createMock(\PasswordHandler::class);
+        $password_handler->method('verifyHashPassword')->willReturn(false);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract')->willReturn('identifier');
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
@@ -95,17 +93,17 @@ class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
-    public function testAuthenticationRejectsExpiredAccount()
+    public function testAuthenticationRejectsExpiredAccount(): void
     {
         $expiration_date = new \DateTimeImmutable('-10 minutes');
-        $dao             = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn(
+        $dao             = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn(
             ['identifier' => 'identifier', 'password' => 'password', 'expiration' => $expiration_date->getTimestamp()]
         );
-        $password_handler = Mockery::mock(\PasswordHandler::class);
-        $password_handler->shouldReceive('verifyHashPassword')->andReturn(true);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract')->andReturn('identifier');
+        $password_handler = $this->createMock(\PasswordHandler::class);
+        $password_handler->method('verifyHashPassword')->willReturn(true);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract')->willReturn('identifier');
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
@@ -114,28 +112,28 @@ class CredentialRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
-    public function testCredentialCanBeRetrievedByIdentifier()
+    public function testCredentialCanBeRetrievedByIdentifier(): void
     {
-        $dao = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn(
+        $dao = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn(
             ['identifier' => 'identifier', 'password' => 'password', 'expiration' => 0]
         );
-        $password_handler     = Mockery::mock(\PasswordHandler::class);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
+        $password_handler     = $this->createMock(\PasswordHandler::class);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
         $credential = $credential_retriever->getByIdentifier('identifier');
 
-        $this->assertEquals('identifier', $credential->getIdentifier());
+        self::assertEquals('identifier', $credential->getIdentifier());
     }
 
-    public function testExceptionIsThrownWhenCredentialIdentifierDoesNotExist()
+    public function testExceptionIsThrownWhenCredentialIdentifierDoesNotExist(): void
     {
-        $dao = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn([]);
-        $password_handler     = Mockery::mock(\PasswordHandler::class);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
+        $dao = $this->createMock(CredentialDAO::class);
+        $dao->method('getUnrevokedCredentialByIdentifier')->willReturn([]);
+        $password_handler     = $this->createMock(\PasswordHandler::class);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 

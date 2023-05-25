@@ -26,9 +26,6 @@ use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Project;
 use ProjectManager;
 use RuntimeException;
@@ -36,48 +33,44 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private AddController $controller;
 
     /**
-     * @var AddController
-     */
-    private $controller;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     * @var PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var GitPermissionsManager&PHPUnit\Framework\MockObject\MockObject
      */
     private $git_permissions_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerAdder
+     * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
      */
     private $git_jenkins_administration_server_adder;
 
     /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var CSRFSynchronizerToken&PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
 
@@ -85,10 +78,10 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->project_manager                         = Mockery::mock(ProjectManager::class);
-        $this->git_permissions_manager                 = Mockery::mock(GitPermissionsManager::class);
-        $this->git_jenkins_administration_server_adder = Mockery::mock(JenkinsServerAdder::class);
-        $this->csrf_token                              = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->project_manager                         = $this->createMock(ProjectManager::class);
+        $this->git_permissions_manager                 = $this->createMock(GitPermissionsManager::class);
+        $this->git_jenkins_administration_server_adder = $this->createMock(JenkinsServerAdder::class);
+        $this->csrf_token                              = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new AddController(
             $this->project_manager,
@@ -97,19 +90,19 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->csrf_token
         );
 
-        $this->layout  = Mockery::mock(BaseLayout::class);
-        $this->request = Mockery::mock(HTTPRequest::class);
-        $this->project = Mockery::mock(Project::class);
+        $this->layout  = $this->createMock(BaseLayout::class);
+        $this->request = $this->createMock(HTTPRequest::class);
+        $this->project = $this->createMock(Project::class);
 
-        $this->project->shouldReceive('isError')->andReturnFalse();
-        $this->project->shouldReceive('getUnixName')->andReturn('test');
+        $this->project->method('isError')->willReturn(false);
+        $this->project->method('getUnixName')->willReturn('test');
 
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token->method('check');
     }
 
     public function testProcessThrowsNotFoundWhenProjectIdIsNotProvided(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturnFalse();
+        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn(false);
 
         $this->expectException(NotFoundException::class);
 
@@ -118,12 +111,12 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundWhenProjectIsInError(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
+        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
             ->with(101)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -132,17 +125,17 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundExceptionWhenProjectDoesNotUseGitService(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
+        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
             ->with(101)
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(NotFoundException::class);
 
@@ -151,28 +144,28 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsForbiddenWhenUserIsNotGitAdmin(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
+        $this->request->expects(self::once())->method('get')->with('project_id')->willReturn('101');
 
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
             ->with(101)
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -181,29 +174,31 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsRuntimeExceptionWhenJenkinsServerURLNotProvided(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
-        $this->request->shouldReceive('get')->with('url')->once()->andReturnFalse();
+        $this->request->method('get')->willReturnMap([
+            ['project_id', '101'],
+            ['url', false],
+        ]);
 
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
             ->with(101)
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->expectException(RuntimeException::class);
 
@@ -212,41 +207,43 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessAddsTheJenkinsServer(): void
     {
-        $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
-        $this->request->shouldReceive('get')->with('url')->once()->andReturn('https://example.com/jenkins');
-        $this->request->shouldReceive('get')->with('token')->once()->andReturn('my_secret_token');
+        $this->request->method('get')->willReturnMap([
+            ['project_id', '101'],
+            ['url', 'https://example.com/jenkins'],
+            ['token', 'my_secret_token'],
+        ]);
 
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
             ->with(101)
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->git_jenkins_administration_server_adder->shouldReceive('addServerInProject')
-            ->once()
+        $this->git_jenkins_administration_server_adder->expects(self::once())
+            ->method('addServerInProject')
             ->with(
                 $this->project,
                 'https://example.com/jenkins',
-                Mockery::type(ConcealedString::class),
+                self::isInstanceOf(ConcealedString::class),
             );
 
-        $this->layout->shouldReceive('redirect');
-        $this->layout->shouldReceive('addFeedback');
+        $this->layout->method('redirect');
+        $this->layout->method('addFeedback');
 
         $this->controller->process($this->request, $this->layout, []);
     }

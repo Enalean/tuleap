@@ -22,34 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class ArtifactViewTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var ArtifactView */
-    private $artifact_view;
-    /** @var int */
-    private $release_id = 78;
-    /** @var M\LegacyMockInterface|M\MockInterface|\Tuleap\Tracker\Artifact\Artifact */
-    private $artifact;
-    /** @var \Codendi_Request|M\LegacyMockInterface|M\MockInterface */
-    private $request;
-    /** @var M\LegacyMockInterface|M\MockInterface|\PFUser */
-    private $user;
-
-    protected function setUp(): void
-    {
-        $this->artifact      = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->request       = M::mock(\Codendi_Request::class);
-        $this->user          = M::mock(\PFUser::class);
-        $this->artifact_view = new ArtifactView($this->release_id, $this->artifact, $this->request, $this->user);
-    }
+    private int $release_id = 78;
 
     public function testGetURL(): void
     {
-        $this->assertSame('/frs/release/78/release-notes', $this->artifact_view->getURL());
+        $artifact      = ArtifactTestBuilder::anArtifact(101)->build();
+        $request       = $this->createMock(\Codendi_Request::class);
+        $user          = UserTestBuilder::aUser()->build();
+        $artifact_view = new ArtifactView($this->release_id, $artifact, $request, $user);
+
+        self::assertSame('/frs/release/78/release-notes', $artifact_view->getURL());
     }
 }

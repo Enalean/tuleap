@@ -18,39 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\Session;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
-class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testSessionIsStartedWhenAuthenticationIsSuccessful(): void
     {
-        $credential_retriever = Mockery::mock(CredentialRetriever::class);
-        $credential           = Mockery::mock(Credential::class);
-        $credential->shouldReceive('getIdentifier')->andReturn('identifier');
-        $credential_retriever->shouldReceive('authenticate')->once()->andReturn($credential);
-        $credential_retriever->shouldReceive('getByIdentifier')->once()->andReturn($credential);
+        $credential_retriever = $this->createMock(CredentialRetriever::class);
+        $credential           = $this->createMock(Credential::class);
+        $credential->method('getIdentifier')->willReturn('identifier');
+        $credential_retriever->expects(self::once())->method('authenticate')->willReturn($credential);
+        $credential_retriever->expects(self::once())->method('getByIdentifier')->willReturn($credential);
         $storage = new DynamicCredentialNonPersistentStorage();
 
         $dynamic_session = new DynamicCredentialSession($storage, $credential_retriever);
 
         $dynamic_session->initialize('username', new ConcealedString('password'));
 
-        $this->assertSame('identifier', $storage->getIdentifier());
-        $this->assertSame($credential, $dynamic_session->getAssociatedCredential());
+        self::assertSame('identifier', $storage->getIdentifier());
+        self::assertSame($credential, $dynamic_session->getAssociatedCredential());
     }
 
-    public function testCredentialIsNotRetrievedWhenSessionIsNotInitialized()
+    public function testCredentialIsNotRetrievedWhenSessionIsNotInitialized(): void
     {
-        $credential_retriever = Mockery::mock(CredentialRetriever::class);
+        $credential_retriever = $this->createMock(CredentialRetriever::class);
 
         $dynamic_session = new DynamicCredentialSession(new DynamicCredentialNonPersistentStorage(), $credential_retriever);
 
@@ -59,10 +57,10 @@ class DynamicCredentialSessionTest extends \Tuleap\Test\PHPUnit\TestCase
         $dynamic_session->getAssociatedCredential();
     }
 
-    public function testSessionIsNotInitializedWhenAuthenticationFail()
+    public function testSessionIsNotInitializedWhenAuthenticationFail(): void
     {
-        $credential_retriever = Mockery::mock(CredentialRetriever::class);
-        $credential_retriever->shouldReceive('authenticate')->once()->andThrow(CredentialAuthenticationException::class);
+        $credential_retriever = $this->createMock(CredentialRetriever::class);
+        $credential_retriever->expects(self::once())->method('authenticate')->willThrowException(new CredentialAuthenticationException());
 
         $dynamic_session = new DynamicCredentialSession(new DynamicCredentialNonPersistentStorage(), $credential_retriever);
 

@@ -22,46 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use Mockery;
 use Tuleap\GlobalLanguageMock;
 
 final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    private int $scale;
+    private array $time_filler;
+    private int $nb_steps;
+    private int $start_date;
     /**
-     * @var int
-     */
-    private $scale;
-
-    /**
-     * @var array
-     */
-    private $time_filler;
-
-    /**
-     * @var int
-     */
-    private $nb_steps;
-
-    /**
-     * @var int
-     */
-    private $start_date;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CumulativeFlowDAO
+     * @var \PHPUnit\Framework\MockObject\MockObject&CumulativeFlowDAO
      */
     private $dao;
-    /**
-     * @var \Mockery\Mock | GraphOnTrackersV5_CumulativeFlow_DataBuilder
-     */
-    private $column_builder;
+    private CumulativeFlowColumnBuilder $column_builder;
 
     protected function setUp(): void
     {
-        $this->dao            = \Mockery::mock(CumulativeFlowDAO::class);
+        $this->dao            = $this->createMock(CumulativeFlowDAO::class);
         $this->column_builder = new CumulativeFlowColumnBuilder($this->dao);
 
         $this->start_date  = 12345678;
@@ -72,7 +51,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItBuildEmptyColumnsWithColors(): void
     {
-        $this->dao->shouldReceive('getChartColors')->andReturn(
+        $this->dao->method('getChartColors')->willReturn(
             [
                 [
                     'id'             => 1,
@@ -89,7 +68,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $this->dao->shouldReceive('getColorOfNone')->andReturn(
+        $this->dao->method('getColorOfNone')->willReturn(
             [
                 'id'             => 1,
                 'label'          => 'A tlp color',
@@ -97,26 +76,28 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $expected[100] = [
-            'values' => [],
-            'color'  => 'placid-blue',
-            'label'  => null,
-            'id'     => 100,
-        ];
-        $expected[1]   = [
-            'values' => [],
-            'color'  => 'inca-silver',
-            'label'  => 'A tlp color',
-            'id'     => 1,
-        ];
-        $expected[2]   = [
-            'values' => [],
-            'color'  => '#FFFFFF',
-            'label'  => 'A legacy color',
-            'id'     => 2,
+        $expected = [
+            100 => [
+                'values' => [],
+                'color'  => 'placid-blue',
+                'label'  => null,
+                'id'     => 100,
+            ],
+            1 => [
+                'values' => [],
+                'color'  => 'inca-silver',
+                'label'  => 'A tlp color',
+                'id'     => 1,
+            ],
+            2 => [
+                'values' => [],
+                'color'  => '#FFFFFF',
+                'label'  => 'A legacy color',
+                'id'     => 2,
+            ],
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->column_builder->initEmptyColumns(
                 123,
@@ -130,7 +111,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItBuildEmptyColumnsWithLegacyColors(): void
     {
-        $this->dao->shouldReceive('getChartColors')->andReturn(
+        $this->dao->method('getChartColors')->willReturn(
             [
                 [
                     'id'             => 1,
@@ -140,7 +121,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $this->dao->shouldReceive('getColorOfNone')->andReturn(
+        $this->dao->method('getColorOfNone')->willReturn(
             [
                 'id'             => 1,
                 'label'          => 'A tlp color',
@@ -150,20 +131,22 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $expected[100] = [
-            'values' => [],
-            'color'  => '#FFFFFF',
-            'label'  => null,
-            'id'     => 100,
-        ];
-        $expected[1]   = [
-            'values' => [],
-            'color'  => 'inca-silver',
-            'label'  => 'A tlp color',
-            'id'     => 1,
+        $expected = [
+            100 => [
+                'values' => [],
+                'color'  => '#FFFFFF',
+                'label'  => null,
+                'id'     => 100,
+            ],
+            1 => [
+                'values' => [],
+                'color'  => 'inca-silver',
+                'label'  => 'A tlp color',
+                'id'     => 1,
+            ],
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->column_builder->initEmptyColumns(
                 123,
@@ -177,7 +160,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItBuildEmptyColumnsWithoutNoneColor(): void
     {
-        $this->dao->shouldReceive('getChartColors')->andReturn(
+        $this->dao->method('getChartColors')->willReturn(
             [
                 [
                     'id'             => 1,
@@ -187,22 +170,24 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             ]
         );
 
-        $this->dao->shouldReceive('getColorOfNone')->andReturn([]);
+        $this->dao->method('getColorOfNone')->willReturn([]);
 
-        $expected[100] = [
-            'values' => [],
-            'color'  => null,
-            'label'  => null,
-            'id'     => 100,
-        ];
-        $expected[1]   = [
-            'values' => [],
-            'color'  => 'inca-silver',
-            'label'  => 'A tlp color',
-            'id'     => 1,
+        $expected = [
+            100 => [
+                'values' => [],
+                'color'  => null,
+                'label'  => null,
+                'id'     => 100,
+            ],
+            1 => [
+                'values' => [],
+                'color'  => 'inca-silver',
+                'label'  => 'A tlp color',
+                'id'     => 1,
+            ],
         ];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $this->column_builder->initEmptyColumns(
                 123,

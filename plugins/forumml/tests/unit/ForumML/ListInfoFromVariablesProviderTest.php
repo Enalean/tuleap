@@ -22,49 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\ForumML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use Project;
+use Service;
 use System_Command;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\MailingList\ServiceMailingList;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ListInfoFromVariablesProviderTest extends TestCase
+final class ListInfoFromVariablesProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThreadsDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ThreadsDao
      */
     private $dao;
     /**
-     * @var \ForumMLPlugin|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \ForumMLPlugin&\PHPUnit\Framework\MockObject\MockObject
      */
     private $plugin;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|System_Command
+     * @var \PHPUnit\Framework\MockObject\MockObject&System_Command
      */
     private $command;
-    /**
-     * @var ListInfoFromVariablesProvider
-     */
-    private $provider;
+    private ListInfoFromVariablesProvider $provider;
 
     protected function setUp(): void
     {
-        $this->plugin          = Mockery::mock(\ForumMLPlugin::class);
-        $this->project_manager = Mockery::mock(\ProjectManager::class);
-        $this->dao             = Mockery::mock(ThreadsDao::class);
-        $this->command         = Mockery::mock(System_Command::class);
+        $this->plugin          = $this->createMock(\ForumMLPlugin::class);
+        $this->project_manager = $this->createMock(\ProjectManager::class);
+        $this->dao             = $this->createMock(ThreadsDao::class);
+        $this->command         = $this->createMock(System_Command::class);
 
         $this->provider = new ListInfoFromVariablesProvider(
             $this->plugin,
@@ -79,9 +76,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testNotFoundExceptionWhenListCannotBeFound(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->expectException(NotFoundException::class);
 
@@ -94,9 +91,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testForbiddenExceptionWhenProjectDoesNotUseMailingLists(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -104,16 +101,12 @@ class ListInfoFromVariablesProviderTest extends TestCase
                 ]
             );
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturnNull();
+        $project = $this->buildProjectMock(null);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->expectException(ForbiddenException::class);
 
@@ -126,9 +119,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testForbiddenExceptionWhenProjectIsNotAllowedToUseForumml(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -136,23 +129,19 @@ class ListInfoFromVariablesProviderTest extends TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -165,9 +154,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testForbiddenExceptionWhenAnonymousUserTriesToAccessToAPrivateList(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -175,25 +164,21 @@ class ListInfoFromVariablesProviderTest extends TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
+        $user = UserTestBuilder::anAnonymousUser()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -206,9 +191,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testForbiddenExceptionWhenLoggedInUserTriesToAccessToAPrivateListInAProjectSheIsNotMemberOf(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -216,29 +201,21 @@ class ListInfoFromVariablesProviderTest extends TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnFalse();
+        $user = $this->buildUserNotMemberOf();
 
         $this->expectException(ForbiddenException::class);
 
@@ -251,9 +228,9 @@ class ListInfoFromVariablesProviderTest extends TestCase
     public function testForbiddenExceptionWhenLoggedInUserTriesToAccessToAPrivateListSheIsNotMemberOf(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -261,40 +238,26 @@ class ListInfoFromVariablesProviderTest extends TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-                'getEmail'   => 'jdoe@example.com',
-            ]
-        );
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnTrue();
+        $user = $this->buildUserMemberOf();
 
         $this->command
-            ->shouldReceive('exec')
+            ->method('exec')
             ->with("/mailman/list_members 'foobar-devel'")
-            ->andReturn(['neo@example.com']);
+            ->willReturn(['neo@example.com']);
 
         $this->expectException(ForbiddenException::class);
 
@@ -312,44 +275,30 @@ class ListInfoFromVariablesProviderTest extends TestCase
             'is_public' => 0,
         ];
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn($list_row);
+            ->willReturn($list_row);
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-                'getEmail'   => 'jdoe@example.com',
-            ]
-        );
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnTrue();
+        $user = $this->buildUserMemberOf();
 
         $this->command
-            ->shouldReceive('exec')
+            ->method('exec')
             ->with("/mailman/list_members 'foobar-devel'")
-            ->andReturn(['neo@example.com', 'jdoe@example.com']);
+            ->willReturn(['neo@example.com', 'jdoe@example.com']);
 
         $list_info = $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
@@ -371,34 +320,25 @@ class ListInfoFromVariablesProviderTest extends TestCase
             'is_public' => 1,
         ];
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn($list_row);
+            ->willReturn($list_row);
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-            ]
-        );
+        $user = UserTestBuilder::aUser()->build();
 
         $list_info = $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
@@ -410,5 +350,49 @@ class ListInfoFromVariablesProviderTest extends TestCase
         self::assertEquals($project, $list_info->getProject());
         self::assertEquals($service, $list_info->getService());
         self::assertEquals($list_row, $list_info->getListRow());
+    }
+
+    private function buildUserMemberOf(): PFUser
+    {
+        $user = $this->createMock(PFUser::class);
+        $user
+            ->method('isAnonymous')
+            ->willReturn(false);
+        $user
+            ->method('getEmail')
+            ->willReturn('jdoe@example.com');
+        $user
+            ->method('isMember')
+            ->with(101)
+            ->willReturn(true);
+
+        return $user;
+    }
+
+    private function buildUserNotMemberOf(): PFUser
+    {
+        $user = $this->createMock(PFUser::class);
+        $user
+            ->method('isAnonymous')
+            ->willReturn(false);
+        $user
+            ->method('isMember')
+            ->with(101)
+            ->willReturn(false);
+
+        return $user;
+    }
+
+    private function buildProjectMock(?Service $service): Project
+    {
+        $project = $this->createMock(Project::class);
+        $project
+            ->method('getID')
+            ->willReturn(101);
+        $project
+            ->method('getService')
+            ->with('mail')
+            ->willReturn($service);
+        return $project;
     }
 }

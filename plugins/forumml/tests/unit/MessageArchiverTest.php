@@ -20,53 +20,50 @@
 
 namespace Tuleap\ForumML;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForumML\Incoming\IncomingAttachment;
 use Tuleap\ForumML\Incoming\IncomingMail;
 
-class MessageArchiverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MessageArchiverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testEmailBodyIsStored()
+    public function testEmailBodyIsStored(): void
     {
-        $archiver = \Mockery::mock(MessageArchiver::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $archiver->shouldReceive('insertMessage')->once()->andReturns(1);
-        $archiver->shouldReceive('insertAttachment')->never();
+        $archiver = $this->createPartialMock(MessageArchiver::class, ['insertMessage', 'insertAttachment']);
+        $archiver->expects(self::once())->method('insertMessage')->willReturn(1);
+        $archiver->expects(self::never())->method('insertAttachment');
 
-        $incoming_mail = \Mockery::mock(IncomingMail::class);
-        $incoming_mail->shouldReceive('getHeaders')->andReturns([]);
-        $incoming_mail->shouldReceive('getAttachments')->andReturns([]);
-        $storage = \Mockery::mock(\ForumML_FileStorage::class);
+        $incoming_mail = $this->createMock(IncomingMail::class);
+        $incoming_mail->method('getHeaders')->willReturn([]);
+        $incoming_mail->method('getAttachments')->willReturn([]);
+        $storage = $this->createMock(\ForumML_FileStorage::class);
 
         $archiver->storeEmail($incoming_mail, $storage);
     }
 
-    public function testAttachmentsAreSaved()
+    public function testAttachmentsAreSaved(): void
     {
-        $archiver = \Mockery::mock(MessageArchiver::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $archiver->shouldReceive('insertMessage')->once()->andReturns(1);
-        $archiver->shouldReceive('insertAttachment')->times(3);
+        $archiver = $this->createPartialMock(MessageArchiver::class, ['insertMessage', 'insertAttachment']);
+        $archiver->expects(self::once())->method('insertMessage')->willReturn(1);
+        $archiver->expects(self::exactly(3))->method('insertAttachment');
 
-        $incoming_mail = \Mockery::mock(IncomingMail::class);
-        $incoming_mail->shouldReceive('getHeaders')->andReturns([]);
+        $incoming_mail = $this->createMock(IncomingMail::class);
+        $incoming_mail->method('getHeaders')->willReturn([]);
         $attachment_1 = $this->getAttachmentMockExpectingToBeStored();
         $attachment_2 = $this->getAttachmentMockExpectingToBeStored();
         $attachment_3 = $this->getAttachmentMockExpectingToBeStored();
-        $incoming_mail->shouldReceive('getAttachments')->andReturns([$attachment_1, $attachment_2, $attachment_3]);
-        $storage = \Mockery::mock(\ForumML_FileStorage::class);
-        $storage->shouldReceive('store')->times(3);
+        $incoming_mail->method('getAttachments')->willReturn([$attachment_1, $attachment_2, $attachment_3]);
+        $storage = $this->createMock(\ForumML_FileStorage::class);
+        $storage->expects(self::exactly(3))->method('store');
 
         $archiver->storeEmail($incoming_mail, $storage);
     }
 
-    private function getAttachmentMockExpectingToBeStored()
+    private function getAttachmentMockExpectingToBeStored(): IncomingAttachment
     {
-        $attachment = \Mockery::mock(IncomingAttachment::class);
-        $attachment->shouldReceive('getFilename')->atLeast(1);
-        $attachment->shouldReceive('getContent')->atLeast(1);
-        $attachment->shouldReceive('getContentType')->atLeast(1);
-        $attachment->shouldReceive('getContentID')->atLeast(1);
+        $attachment = $this->createMock(IncomingAttachment::class);
+        $attachment->expects(self::atLeast(1))->method('getFilename');
+        $attachment->expects(self::atLeast(1))->method('getContent');
+        $attachment->expects(self::atLeast(1))->method('getContentType');
+        $attachment->expects(self::atLeast(1))->method('getContentID');
         return $attachment;
     }
 }

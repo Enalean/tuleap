@@ -25,7 +25,6 @@ namespace Tuleap\GraphOnTrackersV5\Async;
 use GraphOnTrackersV5_Chart;
 use GraphOnTrackersV5_ChartFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Report;
 use Tracker_Report_RendererFactory;
 use Tracker_ReportFactory;
@@ -37,32 +36,27 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ChartDataControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ReportFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_ReportFactory
      */
     private $report_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Report_RendererFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Report_RendererFactory
      */
     private $renderer_factory;
     /**
-     * @var GraphOnTrackersV5_ChartFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var GraphOnTrackersV5_ChartFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $chart_factory;
-    /**
-     * @var ChartDataController
-     */
-    private $chart_data_controller;
+    private ChartDataController $chart_data_controller;
 
     protected function setUp(): void
     {
-        $this->report_factory   = \Mockery::mock(Tracker_ReportFactory::class);
-        $this->renderer_factory = \Mockery::mock(Tracker_Report_RendererFactory::class);
-        $this->chart_factory    = \Mockery::mock(GraphOnTrackersV5_ChartFactory::class);
-        $user_manager           = \Mockery::mock(\UserManager::class);
-        $user_manager->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
+        $this->report_factory   = $this->createMock(Tracker_ReportFactory::class);
+        $this->renderer_factory = $this->createMock(Tracker_Report_RendererFactory::class);
+        $this->chart_factory    = $this->createMock(GraphOnTrackersV5_ChartFactory::class);
+        $user_manager           = $this->createMock(\UserManager::class);
+        $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
         $this->chart_data_controller = new ChartDataController(
             $this->report_factory,
             $this->renderer_factory,
@@ -80,11 +74,11 @@ final class ChartDataControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAttribute('renderer_id', '456')
             ->withAttribute('chart_id', '789');
 
-        $this->report_factory->shouldReceive('getReportById')->andReturn(\Mockery::mock(Tracker_Report::class));
-        $this->renderer_factory->shouldReceive('getReportRendererByReportAndId')->andReturn(\Mockery::mock(Tracker_Report::class));
-        $chart = \Mockery::mock(GraphOnTrackersV5_Chart::class);
-        $chart->shouldReceive('fetchAsArray')->andThrow(new ChartFieldNotFoundException('Foo'));
-        $this->chart_factory->shouldReceive('getChart')->andReturn($chart);
+        $this->report_factory->method('getReportById')->willReturn($this->createMock(Tracker_Report::class));
+        $this->renderer_factory->method('getReportRendererByReportAndId')->willReturn($this->createMock(Tracker_Report::class));
+        $chart = $this->createMock(GraphOnTrackersV5_Chart::class);
+        $chart->method('fetchAsArray')->willThrowException(new ChartFieldNotFoundException('Foo'));
+        $this->chart_factory->method('getChart')->willReturn($chart);
 
         $response = $this->chart_data_controller->handle($request);
 

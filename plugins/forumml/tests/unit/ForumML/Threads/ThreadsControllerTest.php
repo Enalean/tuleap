@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ForumML\Threads;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
+use Service;
 use System_Command;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
@@ -38,59 +37,56 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThreadsDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ThreadsDao
      */
     private $dao;
     /**
-     * @var \ForumMLPlugin|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \ForumMLPlugin&\PHPUnit\Framework\MockObject\MockObject
      */
     private $plugin;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TemplateRenderer
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TemplateRenderer
      */
     private $renderer;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
      */
     private $include_assets;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThreadsPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&ThreadsPresenterBuilder
      */
     private $presenter_builder;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|System_Command
+     * @var \PHPUnit\Framework\MockObject\MockObject&System_Command
      */
     private $command;
+    private ThreadsController $controller;
     /**
-     * @var ThreadsController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CurrentListBreadcrumbCollectionBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&CurrentListBreadcrumbCollectionBuilder
      */
     private $breadcrumb_builder;
 
     protected function setUp(): void
     {
-        $this->plugin             = Mockery::mock(\ForumMLPlugin::class);
-        $this->project_manager    = Mockery::mock(\ProjectManager::class);
-        $this->dao                = Mockery::mock(ThreadsDao::class);
-        $this->renderer           = Mockery::mock(\TemplateRenderer::class);
-        $this->include_assets     = Mockery::mock(IncludeAssets::class);
-        $this->presenter_builder  = Mockery::mock(ThreadsPresenterBuilder::class);
-        $this->command            = Mockery::mock(System_Command::class);
-        $this->breadcrumb_builder = Mockery::mock(CurrentListBreadcrumbCollectionBuilder::class);
+        $this->plugin             = $this->createMock(\ForumMLPlugin::class);
+        $this->project_manager    = $this->createMock(\ProjectManager::class);
+        $this->dao                = $this->createMock(ThreadsDao::class);
+        $this->renderer           = $this->createMock(\TemplateRenderer::class);
+        $this->include_assets     = $this->createMock(IncludeAssets::class);
+        $this->presenter_builder  = $this->createMock(ThreadsPresenterBuilder::class);
+        $this->command            = $this->createMock(System_Command::class);
+        $this->breadcrumb_builder = $this->createMock(CurrentListBreadcrumbCollectionBuilder::class);
 
         $this->controller = new ThreadsController(
             $this->renderer,
@@ -111,9 +107,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNotFoundExceptionWhenListCannotBeFound(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->expectException(NotFoundException::class);
 
@@ -127,9 +123,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForbiddenExceptionWhenProjectDoesNotUseMailingLists(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -137,16 +133,12 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturnNull();
+        $project = $this->buildProjectMock(null);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->expectException(ForbiddenException::class);
 
@@ -160,9 +152,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForbiddenExceptionWhenProjectIsNotAllowedToUseForumml(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -170,23 +162,19 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -200,9 +188,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForbiddenExceptionWhenAnonymousUserTriesToAccessToAPrivateList(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -210,25 +198,21 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
+        $user = UserTestBuilder::anAnonymousUser()->build();
 
         $this->expectException(ForbiddenException::class);
 
@@ -242,9 +226,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForbiddenExceptionWhenLoggedInUserTriesToAccessToAPrivateListInAProjectSheIsNotMemberOf(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -252,29 +236,21 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnFalse();
+        $user = $this->buildUserNotMemberOf();
 
         $this->expectException(ForbiddenException::class);
 
@@ -288,9 +264,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testForbiddenExceptionWhenLoggedInUserTriesToAccessToAPrivateListSheIsNotMemberOf(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -298,40 +274,26 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-                'getEmail'   => 'jdoe@example.com',
-            ]
-        );
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnTrue();
+        $user = $this->buildUserMemberOf();
 
         $this->command
-            ->shouldReceive('exec')
+            ->method('exec')
             ->with("/mailman/list_members 'foobar-devel'")
-            ->andReturn(['neo@example.com']);
+            ->willReturn(['neo@example.com']);
 
         $this->expectException(ForbiddenException::class);
 
@@ -345,9 +307,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThreadsAreDisplayedWhenLoggedInUserTriesToAccessToAPrivateListSheIsMemberOf(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -355,70 +317,56 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-                'getEmail'   => 'jdoe@example.com',
-            ]
-        );
-        $user
-            ->shouldReceive('isMember')
-            ->with(101)
-            ->andReturnTrue();
+        $user = $this->buildUserMemberOf();
 
         $this->command
-            ->shouldReceive('exec')
+            ->method('exec')
             ->with("/mailman/list_members 'foobar-devel'")
-            ->andReturn(['neo@example.com', 'jdoe@example.com']);
+            ->willReturn(['neo@example.com', 'jdoe@example.com']);
 
         $this->presenter_builder
-            ->shouldReceive('getThreadsPresenter')
-            ->andReturn(
-                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class))
+            ->method('getThreadsPresenter')
+            ->willReturn(
+                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', $this->createMock(PaginationPresenter::class))
             );
 
         $this->include_assets
-            ->shouldReceive('getPath')
-            ->andReturn('/whatever');
+            ->method('getPath')
+            ->willReturn('/whatever');
 
         $this->include_assets
-            ->shouldReceive('getFileUrl')
+            ->method('getFileUrl')
             ->with('new-thread.js')
-            ->andReturn('new-thread.js');
+            ->willReturn('new-thread.js');
 
         $service
-            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
-            ->once();
+            ->expects(self::once())
+            ->method('displayMailingListHeaderWithAdditionalBreadcrumbs');
         $service
-            ->shouldReceive('displayFooter')
-            ->once();
+            ->expects(self::once())
+            ->method('displayFooter');
 
         $this->renderer
-            ->shouldReceive('renderToPage')
-            ->once();
+            ->expects(self::once())
+            ->method('renderToPage');
 
         $this->breadcrumb_builder
-            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
-            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
+            ->method('getCurrentListBreadcrumbCollectionFromRow')
+            ->willReturn($this->createMock(BreadCrumbCollection::class));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),
@@ -430,9 +378,9 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThreadsAreDisplayedWhenLoggedInUserTriesToAccessToAPublicList(): void
     {
         $this->dao
-            ->shouldReceive('searchActiveList')
+            ->method('searchActiveList')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 [
                     'list_name' => 'foobar-devel',
                     'group_id'  => 101,
@@ -440,60 +388,51 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $service = Mockery::mock(ServiceMailingList::class);
+        $service = $this->createMock(ServiceMailingList::class);
 
-        $project = Mockery::mock(Project::class, ['getID' => 101]);
-        $project
-            ->shouldReceive('getService')
-            ->with('mail')
-            ->andReturn($service);
+        $project = $this->buildProjectMock($service);
 
         $this->project_manager
-            ->shouldReceive('getProject')
+            ->method('getProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
         $this->plugin
-            ->shouldReceive('isAllowed')
+            ->method('isAllowed')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(
-            \PFUser::class,
-            [
-                'isAnonymous' => false,
-            ]
-        );
+        $user = UserTestBuilder::aUser()->build();
 
         $this->presenter_builder
-            ->shouldReceive('getThreadsPresenter')
-            ->andReturn(
-                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class))
+            ->method('getThreadsPresenter')
+            ->willReturn(
+                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', $this->createMock(PaginationPresenter::class))
             );
 
         $this->include_assets
-            ->shouldReceive('getPath')
-            ->andReturn('/whatever');
+            ->method('getPath')
+            ->willReturn('/whatever');
 
         $this->include_assets
-            ->shouldReceive('getFileUrl')
+            ->method('getFileUrl')
             ->with('new-thread.js')
-            ->andReturn('new-thread.js');
+            ->willReturn('new-thread.js');
 
         $service
-            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
-            ->once();
+            ->expects(self::once())
+            ->method('displayMailingListHeaderWithAdditionalBreadcrumbs');
         $service
-            ->shouldReceive('displayFooter')
-            ->once();
+            ->expects(self::once())
+            ->method('displayFooter');
 
         $this->renderer
-            ->shouldReceive('renderToPage')
-            ->once();
+            ->expects(self::once())
+            ->method('renderToPage');
 
         $this->breadcrumb_builder
-            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
-            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
+            ->method('getCurrentListBreadcrumbCollectionFromRow')
+            ->willReturn($this->createMock(BreadCrumbCollection::class));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),
@@ -516,5 +455,47 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             '/plugins/forumml/list/123/threads?search=hello+world',
             ThreadsController::getSearchUrl(123, 'hello world'),
         );
+    }
+
+    private function buildProjectMock(?Service $service): Project
+    {
+        $project = $this->createMock(Project::class);
+        $project
+            ->method('getID')
+            ->willReturn(101);
+        $project
+            ->method('getService')
+            ->with('mail')
+            ->willReturn($service);
+        return $project;
+    }
+
+    private function buildUserMemberOf(): \PFUser
+    {
+        $user = $this->createMock(\PFUser::class);
+        $user
+            ->method('isAnonymous')
+            ->willReturn(false);
+        $user
+            ->method('getEmail')
+            ->willReturn('jdoe@example.com');
+        $user
+            ->method('isMember')
+            ->with(101)
+            ->willReturn(true);
+        return $user;
+    }
+
+    private function buildUserNotMemberOf(): \PFUser
+    {
+        $user = $this->createMock(\PFUser::class);
+        $user
+            ->method('isAnonymous')
+            ->willReturn(false);
+        $user
+            ->method('isMember')
+            ->with(101)
+            ->willReturn(false);
+        return $user;
     }
 }

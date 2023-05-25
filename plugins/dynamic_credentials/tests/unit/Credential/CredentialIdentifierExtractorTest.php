@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-
-class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testExtractionOfTheIdentifierFromProperlyFormattedUsername()
+    public function testExtractionOfTheIdentifierFromProperlyFormattedUsername(): void
     {
         $extractor = new CredentialIdentifierExtractor();
         $username  = 'forge__dynamic_credential-identifier';
@@ -36,7 +37,7 @@ class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider incorrectlyFormattedUsernameProvider
      */
-    public function testRejectionWhenUsernameIsIncorrectlyFormatted($username)
+    public function testRejectionWhenUsernameIsIncorrectlyFormatted(string $username): void
     {
         $extractor = new CredentialIdentifierExtractor();
 
@@ -45,7 +46,7 @@ class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $extractor->extract($username);
     }
 
-    public static function incorrectlyFormattedUsernameProvider()
+    public static function incorrectlyFormattedUsernameProvider(): array
     {
         return [['forge__dynamic_credential-'], ['wrong_prefix-identifier']];
     }

@@ -18,19 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-
-class CredentialTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CredentialTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testCredentialExpiration()
+    public function testCredentialExpiration(): void
     {
         $valid_credential   = new Credential('id1', new \DateTimeImmutable('+10 minutes'));
         $expired_credential = new Credential('id2', new \DateTimeImmutable('-10 minutes'));
 
-        $this->assertFalse($valid_credential->hasExpired());
-        $this->assertTrue($expired_credential->hasExpired());
+        self::assertFalse($valid_credential->hasExpired());
+        self::assertTrue($expired_credential->hasExpired());
     }
 }

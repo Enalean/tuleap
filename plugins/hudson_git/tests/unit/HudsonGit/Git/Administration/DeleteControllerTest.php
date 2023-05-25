@@ -26,56 +26,46 @@ use CSRFSynchronizerToken;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Project;
 use RuntimeException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private DeleteController $controller;
 
     /**
-     * @var DeleteController
-     */
-    private $controller;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $git_jenkins_administration_server_factory;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
-    /**
-     * @var JenkinsServer
-     */
-    private $jenkins_server;
+    private JenkinsServer $jenkins_server;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     * @var PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDeleter
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDeleter
      */
     private $git_jenkins_administration_server_deleter;
 
     /**
-     * @var CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var CSRFSynchronizerToken&PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
     /**
@@ -87,10 +77,10 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->git_permissions_manager                   = Mockery::mock(GitPermissionsManager::class);
-        $this->git_jenkins_administration_server_factory = Mockery::mock(JenkinsServerFactory::class);
-        $this->git_jenkins_administration_server_deleter = Mockery::mock(JenkinsServerDeleter::class);
-        $this->csrf_token                                = Mockery::mock(CSRFSynchronizerToken::class);
+        $this->git_permissions_manager                   = $this->createMock(GitPermissionsManager::class);
+        $this->git_jenkins_administration_server_factory = $this->createMock(JenkinsServerFactory::class);
+        $this->git_jenkins_administration_server_deleter = $this->createMock(JenkinsServerDeleter::class);
+        $this->csrf_token                                = $this->createMock(CSRFSynchronizerToken::class);
 
         $this->controller = new DeleteController(
             $this->git_permissions_manager,
@@ -99,9 +89,9 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->csrf_token
         );
 
-        $this->layout  = Mockery::mock(BaseLayout::class);
-        $this->request = Mockery::mock(HTTPRequest::class);
-        $this->project = Mockery::mock(Project::class);
+        $this->layout  = $this->createMock(BaseLayout::class);
+        $this->request = $this->createMock(HTTPRequest::class);
+        $this->project = $this->createMock(Project::class);
 
         $this->jenkins_server = new JenkinsServer(
             1,
@@ -110,15 +100,15 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project
         );
 
-        $this->project->shouldReceive('isError')->andReturnFalse();
-        $this->project->shouldReceive('getUnixName')->andReturn('test');
+        $this->project->method('isError')->willReturn(false);
+        $this->project->method('getUnixName')->willReturn('test');
 
-        $this->csrf_token->shouldReceive('check');
+        $this->csrf_token->method('check');
     }
 
     public function testItThrowsRuntimeIfJenkinsServerIDNotProvided(): void
     {
-        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnFalse();
+        $this->request->method('exist')->with('jenkins_server_id')->willReturn(false);
 
         $this->expectException(RuntimeException::class);
 
@@ -131,13 +121,13 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsNotFoundIfJenkinsServerDoesNotExists(): void
     {
-        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
+        $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
 
-        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
-            ->once()
+        $this->git_jenkins_administration_server_factory->expects(self::once())
+            ->method('getJenkinsServerById')
             ->with(1)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -150,18 +140,18 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsNotFoundExceptionWhenProjectDoesNotUseGitService(): void
     {
-        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
+        $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
 
-        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
-            ->once()
+        $this->git_jenkins_administration_server_factory->expects(self::once())
+            ->method('getJenkinsServerById')
             ->with(1)
-            ->andReturn($this->jenkins_server);
+            ->willReturn($this->jenkins_server);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(NotFoundException::class);
 
@@ -174,29 +164,29 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessThrowsForbiddenWhenUserIsNotGitAdmin(): void
     {
-        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
+        $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
 
-        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
-            ->once()
+        $this->git_jenkins_administration_server_factory->expects(self::once())
+            ->method('getJenkinsServerById')
             ->with(1)
-            ->andReturn($this->jenkins_server);
+            ->willReturn($this->jenkins_server);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -209,36 +199,36 @@ class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testProcessDeletesTheJenkinsServer(): void
     {
-        $this->request->shouldReceive('exist')->with('jenkins_server_id')->andReturnTrue();
-        $this->request->shouldReceive('get')->with('jenkins_server_id')->andReturn(1);
+        $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
 
-        $this->git_jenkins_administration_server_factory->shouldReceive('getJenkinsServerById')
-            ->once()
+        $this->git_jenkins_administration_server_factory->expects(self::once())
+            ->method('getJenkinsServerById')
             ->with(1)
-            ->andReturn($this->jenkins_server);
+            ->willReturn($this->jenkins_server);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = UserTestBuilder::aUser()->build();
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->git_jenkins_administration_server_deleter->shouldReceive('deleteServer')
-            ->with($this->jenkins_server)
-            ->once();
+        $this->git_jenkins_administration_server_deleter->expects(self::once())
+            ->method('deleteServer')
+            ->with($this->jenkins_server);
 
-        $this->layout->shouldReceive('redirect');
-        $this->layout->shouldReceive('addFeedback');
+        $this->layout->method('redirect');
+        $this->layout->method('addFeedback');
 
         $this->controller->process(
             $this->request,

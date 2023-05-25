@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GraphOnTrackersV5;
 
 use GraphOnTrackersV5_Chart_Bar;
@@ -26,114 +28,98 @@ use GraphOnTrackersV5_Chart_Gantt;
 use GraphOnTrackersV5_Chart_Pie;
 use GraphOnTrackersV5_ChartFactory;
 use GraphOnTrackersV5_Renderer;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tracker_Report;
 use UserManager;
 
-class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private GraphOnTrackersV5_Renderer&\PHPUnit\Framework\MockObject\MockObject $graph_renderer;
 
     /**
-     * @var GraphOnTrackersV5_Renderer
-     */
-    private $graph_renderer;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_FormElementFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_FormElementFactory
      */
     private $form_element_factory;
     /**
-     * @var Mockery\MockInterface|GraphOnTrackersV5_Chart_CumulativeFlow
+     * @var \PHPUnit\Framework\MockObject\MockObject&GraphOnTrackersV5_Chart_CumulativeFlow
      */
     private $chart;
 
-    /**
-     * @var array
-     */
-    private $form_mapping;
+    private array $form_mapping;
+    private SimpleXMLElement $xml_element;
 
     /**
-     * @var SimpleXMLElement
-     */
-    private $xml_element;
-
-    /**
-     * @var GraphOnTrackersV5_ChartFactory|Mockery\MockInterface
+     * @var GraphOnTrackersV5_ChartFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $chart_factory;
 
     public function setUp(): void
     {
-        $report                     = Mockery::mock(Tracker_Report::class);
-        $user_manager               = Mockery::mock(UserManager::class);
-        $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $report                     = $this->createMock(Tracker_Report::class);
+        $user_manager               = $this->createMock(UserManager::class);
+        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->form_mapping         = ['F3767' => '3767'];
 
-        $this->chart = Mockery::mock(GraphOnTrackersV5_Chart_CumulativeFlow::class);
-        $this->chart->shouldReceive('getFieldId')->andReturn(3767);
+        $this->chart = $this->createMock(GraphOnTrackersV5_Chart_CumulativeFlow::class);
+        $this->chart->method('getFieldId')->willReturn(3767);
 
-        $this->chart_factory = Mockery::mock(GraphOnTrackersV5_ChartFactory::class);
+        $this->chart_factory = $this->createMock(GraphOnTrackersV5_ChartFactory::class);
 
         $this->xml_element = new SimpleXMLElement('<renderer></renderer>');
 
+        $this->graph_renderer = $this->getMockBuilder(GraphOnTrackersV5_Renderer::class)
+            ->onlyMethods(['getChartFactory'])
+            ->setConstructorArgs([18, $report, '', '', 0, '', $user_manager, $this->form_element_factory])
+            ->getMock();
 
-        $this->graph_renderer = Mockery::mock(
-            GraphOnTrackersV5_Renderer::class,
-            [18, $report, '', '', 0, '', $user_manager, $this->form_element_factory]
-        )->makePartial()
-         ->shouldAllowMockingProtectedMethods();
-
-        $this->graph_renderer->shouldReceive('getChartFactory')->andReturn($this->chart_factory);
+        $this->graph_renderer->method('getChartFactory')->willReturn($this->chart_factory);
     }
 
     public function testExportIfFieldUsedOnCumulativeChart(): void
     {
-        $this->chart->shouldReceive('exportToXML')->atLeast()->once();
-        $this->chart_factory->shouldReceive('getCharts')->andReturn([$this->chart]);
-        $this->form_element_factory->shouldReceive('getUsedFormElementById')->andReturn(true);
+        $this->chart->expects(self::atLeast(1))->method('exportToXML');
+        $this->chart_factory->method('getCharts')->willReturn([$this->chart]);
+        $this->form_element_factory->method('getUsedFormElementById')->willReturn(true);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }
 
     public function testNoExportIfFieldNotUsedOnCumulativeChart(): void
     {
-        $this->chart->shouldNotReceive('exportToXML');
-        $this->chart_factory->shouldReceive('getCharts')->andReturn([$this->chart]);
-        $this->form_element_factory->shouldReceive('getUsedFormElementById')->andReturn(false);
+        $this->chart->expects(self::never())->method('exportToXML');
+        $this->chart_factory->method('getCharts')->willReturn([$this->chart]);
+        $this->form_element_factory->method('getUsedFormElementById')->willReturn(false);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }
 
     public function testExportIfFieldNotUsedOnGantt(): void
     {
-        $chart = Mockery::mock(GraphOnTrackersV5_Chart_Gantt::class);
-        $chart->shouldReceive('exportToXML');
-        $this->chart_factory->shouldReceive('getCharts')->andReturn([$chart]);
-        $this->form_element_factory->shouldNotReceive('getUsedFormElementById');
+        $chart = $this->createMock(GraphOnTrackersV5_Chart_Gantt::class);
+        $chart->method('exportToXML');
+        $this->chart_factory->method('getCharts')->willReturn([$chart]);
+        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }
 
     public function testExportIfFieldNotUsedOnPie(): void
     {
-        $chart = Mockery::mock(GraphOnTrackersV5_Chart_Pie::class);
-        $chart->shouldReceive('exportToXML');
-        $this->form_element_factory->shouldNotReceive('getUsedFormElementById');
-        $this->chart_factory->shouldReceive('getCharts')->andReturn([$chart]);
+        $chart = $this->createMock(GraphOnTrackersV5_Chart_Pie::class);
+        $chart->method('exportToXML');
+        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
+        $this->chart_factory->method('getCharts')->willReturn([$chart]);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }
 
     public function testExportIfFieldNotUsedOnBar(): void
     {
-        $chart = Mockery::mock(GraphOnTrackersV5_Chart_Bar::class);
-        $chart->shouldReceive('exportToXML');
-        $this->form_element_factory->shouldNotReceive('getUsedFormElementById');
-        $this->chart_factory->shouldReceive('getCharts')->andReturn([$chart]);
+        $chart = $this->createMock(GraphOnTrackersV5_Chart_Bar::class);
+        $chart->method('exportToXML');
+        $this->form_element_factory->expects(self::never())->method('getUsedFormElementById');
+        $this->chart_factory->method('getCharts')->willReturn([$chart]);
 
         $this->graph_renderer->exportToXml($this->xml_element, $this->form_mapping);
     }

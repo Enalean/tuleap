@@ -22,30 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private XMLImporter $importer;
 
     /**
-     * @var XMLImporter
-     */
-    private $importer;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerAdder
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerAdder
      */
     private $jenkins_server_adder;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     private Project $project;
@@ -54,8 +47,8 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->jenkins_server_adder = Mockery::mock(JenkinsServerAdder::class);
-        $this->logger               = Mockery::mock(LoggerInterface::class);
+        $this->jenkins_server_adder = $this->createMock(JenkinsServerAdder::class);
+        $this->logger               = $this->createMock(LoggerInterface::class);
 
         $this->importer = new XMLImporter(
             $this->jenkins_server_adder,
@@ -76,9 +69,9 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </git>
         ');
 
-        $this->jenkins_server_adder->shouldReceive('addServerInProject')->times(2);
+        $this->jenkins_server_adder->expects(self::exactly(2))->method('addServerInProject');
 
-        $this->logger->shouldReceive('info');
+        $this->logger->method('info');
 
         $this->importer->import(
             $this->project,
@@ -92,7 +85,7 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <git/>
         ');
 
-        $this->jenkins_server_adder->shouldReceive('addServerInProject')->never();
+        $this->jenkins_server_adder->expects(self::never())->method('addServerInProject');
 
         $this->importer->import(
             $this->project,

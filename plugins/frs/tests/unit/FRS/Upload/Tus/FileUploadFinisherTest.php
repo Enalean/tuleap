@@ -28,8 +28,8 @@ use FRSFileFactory;
 use FRSLogDao;
 use FRSRelease;
 use FRSReleaseFactory;
-use Logger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use org\bovigo\vfs\vfsStream;
 use Project;
 use Tuleap\ForgeConfigSandbox;
@@ -40,47 +40,34 @@ use Tuleap\Upload\FileAlreadyUploadedInformation;
 
 final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
+    private FileUploadFinisher $finisher;
+    private LoggerInterface $logger;
     /**
-     * @var FileUploadFinisher
-     */
-    private $finisher;
-    /**
-     * @var Logger|\Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var FRSLogDao|\Mockery\MockInterface
+     * @var FRSLogDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $log_dao;
     /**
-     * @var FRSFileDao|\Mockery\MockInterface
+     * @var FRSFileDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $file_dao;
     /**
-     * @var FRSReleaseFactory|\Mockery\MockInterface
+     * @var FRSReleaseFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $release_factory;
+    private UploadPathAllocator $path_allocator;
     /**
-     * @var \Mockery\MockInterface|UploadPathAllocator
-     */
-    private $path_allocator;
-    /**
-     * @var \Mockery\MockInterface|FileOngoingUploadDao
+     * @var FileOngoingUploadDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
     /**
-     * @var FRSFileFactory|\Mockery\MockInterface
+     * @var FRSFileFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $file_factory;
+    private string $tmp_dir;
     /**
-     * @var string
-     */
-    private $tmp_dir;
-    /**
-     * @var \Mockery\MockInterface|ToBeCreatedFRSFileBuilder
+     * @var ToBeCreatedFRSFileBuilder&\PHPUnit\Framework\MockObject\MockObject
      */
     private $frs_file_builder;
 
@@ -92,14 +79,14 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
 
-        $this->logger           = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->log_dao          = \Mockery::mock(FRSLogDao::class);
-        $this->file_dao         = \Mockery::mock(FRSFileDao::class);
-        $this->release_factory  = \Mockery::mock(FRSReleaseFactory::class);
+        $this->logger           = new NullLogger();
+        $this->log_dao          = $this->createMock(FRSLogDao::class);
+        $this->file_dao         = $this->createMock(FRSFileDao::class);
+        $this->release_factory  = $this->createMock(FRSReleaseFactory::class);
         $this->path_allocator   = new UploadPathAllocator();
-        $this->dao              = \Mockery::mock(FileOngoingUploadDao::class);
-        $this->file_factory     = \Mockery::mock(FRSFileFactory::class);
-        $this->frs_file_builder = \Mockery::mock(ToBeCreatedFRSFileBuilder::class);
+        $this->dao              = $this->createMock(FileOngoingUploadDao::class);
+        $this->file_factory     = $this->createMock(FRSFileFactory::class);
+        $this->frs_file_builder = $this->createMock(ToBeCreatedFRSFileBuilder::class);
 
         $this->finisher = new FileUploadFinisher(
             $this->logger,
@@ -126,24 +113,24 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_id         = 107;
         $release_id      = 1000;
 
-        $project = \Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($project_id);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($project_id);
 
-        $release = \Mockery::mock(FRSRelease::class);
-        $release->shouldReceive('getProject')->andReturn($project);
-        $release->shouldReceive('getReleaseID')->andReturn($release_id);
+        $release = $this->createMock(FRSRelease::class);
+        $release->method('getProject')->willReturn($project);
+        $release->method('getReleaseID')->willReturn($release_id);
 
-        $to_be_created_frs_file = \Mockery::mock(FRSFile::class);
+        $to_be_created_frs_file = $this->createMock(FRSFile::class);
 
         $to_be_created_frs_file_as_array = [
             'filename' => 'readme.md',
         ];
-        $to_be_created_frs_file->shouldReceive('toArray')->andReturn($to_be_created_frs_file_as_array);
+        $to_be_created_frs_file->method('toArray')->willReturn($to_be_created_frs_file_as_array);
 
         $this->dao
-            ->shouldReceive('searchFileOngoingUploadById')
+            ->method('searchFileOngoingUploadById')
             ->with($uploading_id)
-            ->andReturn(
+            ->willReturn(
                 [
                     'release_id' => $release_id,
                     'name'       => 'readme.md',
@@ -153,37 +140,37 @@ final class FileUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->release_factory
-            ->shouldReceive('getFRSReleaseFromDb')
+            ->method('getFRSReleaseFromDb')
             ->with($release_id)
-            ->andReturn($release);
+            ->willReturn($release);
 
         $this->frs_file_builder
-            ->shouldReceive('buildFRSFile')
+            ->expects(self::once())
+            ->method('buildFRSFile')
             ->with($release, 'readme.md', 123, $user_id)
-            ->once()
-            ->andReturn($to_be_created_frs_file);
+            ->willReturn($to_be_created_frs_file);
 
         $this->file_factory
-            ->shouldReceive('moveFileForgeFromSrcDir')
+            ->expects(self::once())
+            ->method('moveFileForgeFromSrcDir')
             ->with($project, $release, $to_be_created_frs_file, $upload_dir)
-            ->once()
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->file_dao
-            ->shouldReceive('createFromArray')
+            ->expects(self::once())
+            ->method('createFromArray')
             ->with($to_be_created_frs_file_as_array)
-            ->once()
-            ->andReturn($created_file_id);
+            ->willReturn($created_file_id);
 
         $this->log_dao
-            ->shouldReceive('addLog')
-            ->with($user_id, $project_id, $created_file_id, FRSFile::EVT_CREATE)
-            ->once();
+            ->expects(self::once())
+            ->method('addLog')
+            ->with($user_id, $project_id, $created_file_id, FRSFile::EVT_CREATE);
 
         $this->dao
-            ->shouldReceive('deleteByItemID')
-            ->with($uploading_id)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteByItemID')
+            ->with($uploading_id);
 
         $this->finisher->finishUpload(
             new FileAlreadyUploadedInformation($uploading_id, 'readme.md', 123)

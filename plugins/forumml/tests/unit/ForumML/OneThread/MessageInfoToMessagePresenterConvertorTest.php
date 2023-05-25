@@ -22,43 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\ForumML\OneThread;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Project;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\ForumML\ThreadsDao;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\User\UserEmailCollection;
 
-class MessageInfoToMessagePresenterConvertorTest extends TestCase
+final class MessageInfoToMessagePresenterConvertorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserHelper
      */
     private $user_helper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThreadsDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ThreadsDao
      */
     private $dao;
+    private MessageInfoToMessagePresenterConvertor $convertor;
     /**
-     * @var MessageInfoToMessagePresenterConvertor
-     */
-    private $convertor;
-    /**
-     * @var Mockery\Expectation|Mockery\ExpectationInterface|Mockery\HigherOrderMessage|Mockery\LegacyMockInterface|Mockery\MockInterface|null
+     * @var \PHPUnit\Framework\MockObject\MockObject&\PFUser
      */
     private $current_user;
 
     protected function setUp(): void
     {
-        $this->user_helper = Mockery::mock(\UserHelper::class);
-        $this->dao         = Mockery::mock(ThreadsDao::class);
+        $this->user_helper = $this->createMock(\UserHelper::class);
+        $this->dao         = $this->createMock(ThreadsDao::class);
 
         $this->convertor = new MessageInfoToMessagePresenterConvertor(
             $this->user_helper,
@@ -66,15 +61,9 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             $this->dao,
         );
 
-
-        $this->current_user = Mockery::mock(\PFUser::class)
-            ->shouldReceive(
-                [
-                    'getPreference' => 'relative_first-absolute_tooltip',
-                    'getLocale'     => 'en_US',
-                ]
-            )
-            ->getMock();
+        $this->current_user = $this->createMock(\PFUser::class);
+        $this->current_user->method('getPreference')->willReturn('relative_first-absolute_tooltip');
+        $this->current_user->method('getLocale')->willReturn('en_US');
 
         $GLOBALS['Language']
             ->method('getText')
@@ -97,7 +86,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
 
         $sender_collection = [];
 
-        $project = Mockery::mock(Project::class);
+        $project = $this->createMock(Project::class);
 
         $presenter = $this->convertor->convertToMessagePresenter(
             $message_info,
@@ -134,7 +123,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             ),
         ];
 
-        $project = Mockery::mock(Project::class);
+        $project = $this->createMock(Project::class);
 
         $presenter = $this->convertor->convertToMessagePresenter(
             $message_info,
@@ -171,7 +160,7 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             ),
         ];
 
-        $project = Mockery::mock(Project::class);
+        $project = $this->createMock(Project::class);
 
         $user = UserTestBuilder::aUser()
             ->withRealName('John Doe')
@@ -180,9 +169,9 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
             ->build();
 
         $this->user_helper
-            ->shouldReceive('getDisplayNameFromUser')
+            ->method('getDisplayNameFromUser')
             ->with($user)
-            ->andReturn('John Doe (jdoe)');
+            ->willReturn('John Doe (jdoe)');
 
         $presenter = $this->convertor->convertToMessagePresenter(
             $message_info,
@@ -214,10 +203,10 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
 
         $sender_collection = [];
 
-        $project = Mockery::mock(Project::class, ['getID' => 102]);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->dao
-            ->shouldReceive('storeCachedHtml')
+            ->method('storeCachedHtml')
             ->with(2, '&lt;p&gt;body&lt;/p&gt;');
 
         $presenter = $this->convertor->convertToMessagePresenter(
@@ -248,10 +237,10 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
 
         $sender_collection = [];
 
-        $project = Mockery::mock(Project::class, ['getID' => 102]);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->dao
-            ->shouldReceive('storeCachedHtml')
+            ->method('storeCachedHtml')
             ->with(2, '<p>body</p>');
 
         $presenter = $this->convertor->convertToMessagePresenter(
@@ -293,10 +282,10 @@ class MessageInfoToMessagePresenterConvertorTest extends TestCase
 
         $sender_collection = [];
 
-        $project = Mockery::mock(Project::class, ['getID' => 102]);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $this->dao
-            ->shouldReceive('storeCachedHtml')
+            ->method('storeCachedHtml')
             ->with(2, '<p>multipart body</p>');
 
         $presenter = $this->convertor->convertToMessagePresenter(

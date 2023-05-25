@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ForumML;
 
 use ForumML_FileStorage;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 
 include __DIR__ . '/bootstrap.php';
@@ -32,22 +30,9 @@ include __DIR__ . '/bootstrap.php';
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var string
-     */
-    private $name_pattern;
-
-    /**
-     * @var Mockery\Mock
-     */
-    private $file_storage;
+    private string $path;
+    private string $name_pattern;
+    private ForumML_FileStorage $file_storage;
 
     protected function setUp(): void
     {
@@ -56,16 +41,14 @@ final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->path         = vfsStream::setup()->url();
         $this->name_pattern = "`[^a-z0-9_-]`i";
 
-        $this->file_storage = Mockery::mock(ForumML_FileStorage::class, [$this->path])
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->file_storage = new ForumML_FileStorage($this->path);
     }
 
     public function testForumMLFileStorage(): void
     {
-        $this->assertNotNull($this->file_storage->root);
-        $this->assertIsString($this->file_storage->root);
-        $this->assertSame($this->path, $this->file_storage->root);
+        self::assertNotNull($this->file_storage->root);
+        self::assertIsString($this->file_storage->root);
+        self::assertSame($this->path, $this->file_storage->root);
     }
 
     // case 1: an attachment file whose name has more than 64 characters
@@ -78,21 +61,21 @@ final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
 
         // check returned path
         $path1 = $this->file_storage->_getPath($name1, $list1, $date1, $type1);
-        $this->assertNotNull($path1);
-        $this->assertIsString($path1);
+        self::assertNotNull($path1);
+        self::assertIsString($path1);
 
         // check filename length is restricted to 64 characters
         $path_array1 = explode("/", $path1);
-        $fname1      = $path_array1[count($path_array1) - 1];
-        $this->assertNotEquals($name1, $fname1);
-        $this->assertSame(63, strlen($fname1));
+        $fname1      = end($path_array1);
+        self::assertNotEquals($name1, $fname1);
+        self::assertSame(63, strlen($fname1));
         // check other path components
-        $flist1 = $path_array1[count($path_array1) - 3];
-        $this->assertEquals($flist1, $list1);
-        $fdate1 = $path_array1[count($path_array1) - 2];
-        $this->assertEquals($fdate1, $date1);
+        $flist1 = $path_array1[3];
+        self::assertEquals($flist1, $list1);
+        $fdate1 = $path_array1[4];
+        self::assertEquals($fdate1, $date1);
         // check regexp
-        $this->assertMatchesRegularExpression($this->name_pattern, $name1);
+        self::assertMatchesRegularExpression($this->name_pattern, $name1);
     }
 
     // case 2: an attachment file whose name has less than 64 characters
@@ -104,19 +87,19 @@ final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $type1 = "store";
 
         $path2 = $this->file_storage->_getPath($name2, $list1, $date1, $type1);
-        $this->assertNotNull($path2);
-        $this->assertIsString($path2);
+        self::assertNotNull($path2);
+        self::assertIsString($path2);
         $path_array2 = explode("/", $path2);
-        $fname2      = $path_array2[count($path_array2) - 1];
-        $this->assertEquals("filename_less_than_64_chars", $fname2);
-        $this->assertNotEquals(64, strlen($fname2));
+        $fname2      = end($path_array2);
+        self::assertEquals("filename_less_than_64_chars", $fname2);
+        self::assertNotEquals(64, strlen($fname2));
         // check path components
-        $flist2 = $path_array2[count($path_array2) - 3];
-        $this->assertEquals($flist2, $list1);
-        $fdate2 = $path_array2[count($path_array2) - 2];
-        $this->assertEquals($fdate2, $date1);
+        $flist2 = $path_array2[3];
+        self::assertEquals($flist2, $list1);
+        $fdate2 = $path_array2[4];
+        self::assertEquals($fdate2, $date1);
         // check regexp
-        $this->assertMatchesRegularExpression($this->name_pattern, $name2);
+        self::assertMatchesRegularExpression($this->name_pattern, $name2);
     }
 
     // case 3: attachment filename with only alphanumeric characters
@@ -128,9 +111,9 @@ final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $type1 = "store";
 
         $path3 = $this->file_storage->_getPath($name3, $list1, $date1, $type1);
-        $this->assertNotNull($path3);
-        $this->assertIsString($path3);
-        $this->assertDoesNotMatchRegularExpression($this->name_pattern, $name3);
+        self::assertNotNull($path3);
+        self::assertIsString($path3);
+        self::assertDoesNotMatchRegularExpression($this->name_pattern, $name3);
     }
 
     // case 4: attachment filename is an empty string
@@ -142,28 +125,31 @@ final class ForumML_FileStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $type1 = "store";
 
         $path4 = $this->file_storage->_getPath($name4, $list1, $date1, $type1);
-        $this->assertNotNull($path4);
-        $this->assertIsString($path4);
+        self::assertNotNull($path4);
+        self::assertIsString($path4);
         $path_array4 = explode("/", $path4);
         $fname4      = $path_array4[count($path_array4) - 1];
-        $this->assertMatchesRegularExpression('/^attachment.*/', $fname4);
+        self::assertMatchesRegularExpression('/^attachment.*/', $fname4);
     }
 
     // case 5: same attachment name submitted 2 times same day for same list
     public function testGetPathWithSameFileName(): void
     {
+        $file_storage       = $this->createPartialMock(ForumML_FileStorage::class, ['fileExists']);
+        $file_storage->root = $this->path;
+
         $list = "gpig-interest";
         $date = "2007_10_24";
         $type = "store";
         $name = 'Screenshot.jpg';
 
-        $this->file_storage->shouldReceive('fileExists')->andReturn(false, true, false);
+        $file_storage->method('fileExists')->willReturnOnConsecutiveCalls(false, true, false);
         // First file stored that day
-        $path1 = $this->file_storage->_getPath($name, $list, $date, $type);
+        $path1 = $file_storage->_getPath($name, $list, $date, $type);
 
         // Second file with same name
-        $path2 = $this->file_storage->_getPath($name, $list, $date, $type);
+        $path2 = $file_storage->_getPath($name, $list, $date, $type);
 
-        $this->assertNotEquals($path1, $path2);
+        self::assertNotEquals($path1, $path2);
     }
 }

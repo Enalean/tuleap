@@ -25,41 +25,33 @@
 namespace Tuleap\GraphOnTrackersV5;
 
 use GraphOnTrackersV5_CumulativeFlow_DataBuilder;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Report_Criteria;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $data_builder;
-
-    /**
-     * @var Mockery\MockInterface|\Tracker_Report
-     */
-    private $report;
+    private GraphOnTrackersV5_CumulativeFlow_DataBuilder $data_builder;
+    private \PHPUnit\Framework\MockObject\MockObject&\Tracker_Report $report;
 
     public function setUp(): void
     {
-        $this->report = Mockery::mock(\Tracker_Report::class);
+        $this->report = $this->createMock(\Tracker_Report::class);
 
-        $renderer = Mockery::mock(\GraphOnTrackersV5_Renderer::class);
-        $renderer->shouldReceive('getReport')->andReturn($this->report);
+        $renderer = $this->createMock(\GraphOnTrackersV5_Renderer::class);
+        $renderer->method('getReport')->willReturn($this->report);
 
-        $chart = Mockery::mock(\GraphOnTrackersV5_Chart::class);
-        $chart->shouldReceive('getRenderer')->andReturn($renderer);
-        $chart->shouldReceive('getFieldId')->andReturn(201);
+        $chart = $this->createMock(\GraphOnTrackersV5_Chart_CumulativeFlow::class);
+        $chart->method('getRenderer')->willReturn($renderer);
+        $chart->method('getFieldId')->willReturn(201);
 
         $this->data_builder = new GraphOnTrackersV5_CumulativeFlow_DataBuilder($chart, null);
     }
 
-    public function testGetColumns()
+    public function testGetColumns(): void
     {
-        $this->report->shouldReceive('getCriteria')->once()->andReturn([]);
+        $this->report->expects(self::once())->method('getCriteria')->willReturn([]);
 
         $all_columns       = [
             100 => [
@@ -110,23 +102,23 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->assertEquals($this->data_builder->getColumns($all_columns), $only_used_columns);
+        self::assertEquals($this->data_builder->getColumns($all_columns), $only_used_columns);
     }
 
-    public function testColumnsAreFilterWithReportCriteria()
+    public function testColumnsAreFilterWithReportCriteria(): void
     {
-        $criterion       = Mockery::mock(Tracker_Report_Criteria::class);
-        $criterion_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $criterion       = $this->createMock(Tracker_Report_Criteria::class);
+        $criterion_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
 
-        $criterion_field->shouldReceive('getId')->andReturn('201');
-        $criterion_field->shouldReceive('getCriteriaValue')->with($criterion)->andReturn([
+        $criterion_field->method('getId')->willReturn('201');
+        $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn([
             101,
             102,
         ]);
 
-        $criterion->shouldReceive('getField')->andReturn($criterion_field);
+        $criterion->method('getField')->willReturn($criterion_field);
 
-        $this->report->shouldReceive('getCriteria')->once()->andReturn([$criterion]);
+        $this->report->expects(self::once())->method('getCriteria')->willReturn([$criterion]);
 
         $all_columns = [
             100 => [
@@ -193,20 +185,20 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $returned_columns = $this->data_builder->getColumns($all_columns);
 
-        $this->assertCount(2, $returned_columns);
+        self::assertCount(2, $returned_columns);
     }
 
-    public function testColumnsAreNotFilterWithReportCriteriaDefinedOnAny()
+    public function testColumnsAreNotFilterWithReportCriteriaDefinedOnAny(): void
     {
-        $criterion       = Mockery::mock(Tracker_Report_Criteria::class);
-        $criterion_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $criterion       = $this->createMock(Tracker_Report_Criteria::class);
+        $criterion_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
 
-        $criterion_field->shouldReceive('getId')->andReturn('201');
-        $criterion_field->shouldReceive('getCriteriaValue')->with($criterion)->andReturn('');
+        $criterion_field->method('getId')->willReturn('201');
+        $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn('');
 
-        $criterion->shouldReceive('getField')->andReturn($criterion_field);
+        $criterion->method('getField')->willReturn($criterion_field);
 
-        $this->report->shouldReceive('getCriteria')->once()->andReturn([$criterion]);
+        $this->report->expects(self::once())->method('getCriteria')->willReturn([$criterion]);
 
         $all_columns = [
             101 => [
@@ -258,6 +250,6 @@ class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $returned_columns = $this->data_builder->getColumns($all_columns);
 
-        $this->assertCount(3, $returned_columns);
+        self::assertCount(3, $returned_columns);
     }
 }

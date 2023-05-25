@@ -20,8 +20,7 @@
 
 namespace Tuleap\ForumML\Incoming;
 
-
-class IncomingMailParsingTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IncomingMailParsingTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public const HTML_ONLY_BODY                   = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -50,8 +49,12 @@ My <b>test<br>
     /**
      * @dataProvider sampleMailProvider
      */
-    public function testMailParsing($fixture_path, $expected_body_type, $expected_body_content, array $expected_attachments)
-    {
+    public function testMailParsing(
+        string $fixture_path,
+        string $expected_body_type,
+        string $expected_body_content,
+        array $expected_attachments,
+    ): void {
         $incoming_mail = new IncomingMail(fopen($fixture_path, 'rb'));
 
         $body = $incoming_mail->getBody();
@@ -70,7 +73,7 @@ My <b>test<br>
         $this->assertSame($expected_attachments, $attachments);
     }
 
-    public static function sampleMailProvider()
+    public static function sampleMailProvider(): array
     {
         $fixture_path_base = __DIR__ . '/_fixtures/samples';
         return [

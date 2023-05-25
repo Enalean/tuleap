@@ -18,17 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\REST;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 use Tuleap\DynamicCredentials\Plugin\PluginInfo;
 
-class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public const PUBLIC_KEY  = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
     public const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
     public const USED_DOMAIN = 'example.com';
@@ -49,17 +47,17 @@ class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider signedParameterProvider
      */
-    public function testSignatureIsValid($signature, $parameter, $expected_result)
+    public function testSignatureIsValid(string $signature, string $parameter, bool $expected_result): void
     {
-        $plugin_info = Mockery::mock(PluginInfo::class);
-        $plugin_info->shouldReceive('getPropertyValueForName')->andReturn(self::PUBLIC_KEY);
+        $plugin_info = $this->createMock(PluginInfo::class);
+        $plugin_info->method('getPropertyValueForName')->willReturn(self::PUBLIC_KEY);
 
         $request_signature_verifier = new RequestSignatureVerifier($plugin_info);
 
-        $this->assertEquals($expected_result, $request_signature_verifier->isSignatureValid($signature, $parameter));
+        self::assertEquals($expected_result, $request_signature_verifier->isSignatureValid($signature, $parameter));
     }
 
-    public static function signedParameterProvider()
+    public static function signedParameterProvider(): array
     {
         return [
             [self::getSignature('param'), 'param', true],
@@ -70,19 +68,16 @@ class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    /**
-     * @return string
-     */
-    private static function getSignature($parameter)
+    private static function getSignature(string $parameter): string
     {
         $secret_key_decoded = base64_decode(self::SECRET_KEY);
         return base64_encode(sodium_crypto_sign_detached(self::USED_DOMAIN . $parameter, $secret_key_decoded));
     }
 
-    public function testRejectionWhenInvalidPublicKeyIsGiven()
+    public function testRejectionWhenInvalidPublicKeyIsGiven(): void
     {
-        $plugin_info = Mockery::mock(PluginInfo::class);
-        $plugin_info->shouldReceive('getPropertyValueForName')->andReturn('invalid_public_key');
+        $plugin_info = $this->createMock(PluginInfo::class);
+        $plugin_info->method('getPropertyValueForName')->willReturn('invalid_public_key');
 
         $this->expectException(InvalidKeyException::class);
 

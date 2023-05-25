@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tus\TusFileInformation;
 
-class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testCreateEmptyFile(): void
@@ -41,13 +39,14 @@ class EmptyFileToUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $upload_path_allocator = new UploadPathAllocator();
 
-        $finisher = \Mockery::mock(FileUploadFinisher::class);
-        $finisher
-            ->shouldReceive('finishUpload')
-            ->withArgs(function (TusFileInformation $file_information) {
-                return $file_information->getID() === 42;
-            })
-            ->once();
+        $finisher = $this->createMock(FileUploadFinisher::class);
+        $finisher->expects(self::once())
+            ->method('finishUpload')
+            ->with(self::callback(
+                static function (TusFileInformation $file_information) {
+                    return $file_information->getID() === 42;
+                }
+            ));
 
         (new EmptyFileToUploadFinisher($finisher, $upload_path_allocator))->createEmptyFile(
             $file_to_upload,

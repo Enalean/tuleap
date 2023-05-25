@@ -17,71 +17,69 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 
-class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps, PSR1.Classes.ClassDeclaration.MissingNamespace
+final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var GraphOnTrackersV5_Chart_Pie */
+    /** @var GraphOnTrackersV5_Chart_Pie&\PHPUnit\Framework\MockObject\MockObject */
     private $pie;
 
-    /** @var GraphOnTrackersV5_Chart_Bar */
+    /** @var GraphOnTrackersV5_Chart_Bar&\PHPUnit\Framework\MockObject\MockObject */
     private $bar;
 
-    /** @var GraphOnTrackersV5_Chart_Burndown */
+    /** @var GraphOnTrackersV5_Chart_Burndown&\PHPUnit\Framework\MockObject\MockObject */
     private $burndown;
 
-    /** @var GraphOnTrackersV5_Chart[] */
-    private $charts;
+    /** @var array<GraphOnTrackersV5_Chart&\PHPUnit\Framework\MockObject\MockObject> */
+    private array $charts;
 
-    /** @var Tracker_Report_Session */
+    /** @var Tracker_Report_Session&\PHPUnit\Framework\MockObject\MockObject */
     private $session;
 
-    /** @var GraphOnTrackersV5_InSessionChartSorter */
-    private $sorter;
+    private GraphOnTrackersV5_InSessionChartSorter $sorter;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->pie      = \Mockery::spy(\GraphOnTrackersV5_Chart_Pie::class);
-        $this->bar      = \Mockery::spy(\GraphOnTrackersV5_Chart_Bar::class);
-        $this->burndown = \Mockery::spy(\GraphOnTrackersV5_Chart_Burndown::class);
+        $this->pie      = $this->createMock(\GraphOnTrackersV5_Chart_Pie::class);
+        $this->bar      = $this->createMock(\GraphOnTrackersV5_Chart_Bar::class);
+        $this->burndown = $this->createMock(\GraphOnTrackersV5_Chart_Burndown::class);
         $this->charts   = [
             $this->pie,
             $this->bar,
             $this->burndown,
         ];
 
-        $this->pie->shouldReceive('getId')->andReturn('pie');
-        $this->pie->shouldReceive('getRank')->andReturn(0);
+        $this->pie->method('getId')->willReturn('pie');
+        $this->pie->method('getRank')->willReturn(0);
 
-        $this->bar->shouldReceive('getId')->andReturn('bar');
-        $this->bar->shouldReceive('getRank')->andReturn(1);
+        $this->bar->method('getId')->willReturn('bar');
+        $this->bar->method('getRank')->willReturn(1);
 
-        $this->burndown->shouldReceive('getId')->andReturn('burndown');
-        $this->burndown->shouldReceive('getRank')->andReturn(2);
+        $this->burndown->method('getId')->willReturn('burndown');
+        $this->burndown->method('getRank')->willReturn(2);
 
-        $this->session = \Mockery::spy(\Tracker_Report_Session::class);
+        $this->session = $this->createMock(\Tracker_Report_Session::class);
 
         $this->sorter = new GraphOnTrackersV5_InSessionChartSorter($this->session);
     }
 
-    private function expectOrder()
+    private function expectOrder(): void
     {
         $charts_in_order = func_get_args();
         $i               = 0;
         foreach ($charts_in_order as $chart) {
-            $this->$chart->shouldReceive('setRank')->with($i)->once();
-            $this->session->shouldReceive('set');
+            $this->$chart->expects(self::once())->method('setRank')->with($i);
+            $this->session->method('set');
             ++$i;
         }
     }
 
-    public function testItDoesNotSort()
+    public function testItDoesNotSort(): void
     {
         $this->expectOrder('pie', 'bar', 'burndown');
 
@@ -92,7 +90,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesToTheBeginning()
+    public function testItMovesToTheBeginning(): void
     {
         $this->expectOrder('bar', 'pie', 'burndown');
 
@@ -103,7 +101,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesToTheEnd()
+    public function testItMovesToTheEnd(): void
     {
         $this->expectOrder('pie', 'burndown', 'bar');
 
@@ -114,7 +112,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesAtASpecificPosition()
+    public function testItMovesAtASpecificPosition(): void
     {
         $this->expectOrder('bar', 'pie', 'burndown');
 
@@ -125,7 +123,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesAtASpecificPositionAtTheEnd()
+    public function testItMovesAtASpecificPositionAtTheEnd(): void
     {
         $this->expectOrder('bar', 'burndown', 'pie');
 
@@ -136,7 +134,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesAtTheSamePosition()
+    public function testItMovesAtTheSamePosition(): void
     {
         $this->expectOrder('pie', 'bar', 'burndown');
 
@@ -147,7 +145,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function testItMovesAtTheBeginningOutOfBounds()
+    public function testItMovesAtTheBeginningOutOfBounds(): void
     {
         $this->expectOrder('pie', 'bar', 'burndown');
 
