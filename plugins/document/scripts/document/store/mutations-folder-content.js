@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { getFolderSubtree } from "../helpers/retrieve-subtree-helper";
 import { isFolder } from "../helpers/type-check-helper";
 
@@ -249,7 +248,7 @@ function getFolderUnfoldedDescendants(state, folder_id) {
 }
 
 function removeCreatedPropertyOnItem(state, item) {
-    Vue.delete(item, "created");
+    delete item["created"];
 }
 
 function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]) {

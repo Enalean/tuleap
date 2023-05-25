@@ -35,14 +35,14 @@
                 <folder-header-action v-bind:item="current_folder" />
                 <new-item-modal />
                 <new-folder-modal />
-                <create-new-item-version-modal
+                <component
                     v-if="shown_new_version_modal !== null"
                     v-bind:is="shown_new_version_modal"
                     v-bind:item="updated_item"
                     v-bind:type="updated_empty_new_type"
                     data-test="document-new-version-modal"
                 />
-                <update-properties-modal
+                <component
                     v-if="shown_update_properties_modal !== null"
                     v-bind:is="shown_update_properties_modal"
                     v-bind:item="updated_properties"
