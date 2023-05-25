@@ -18,7 +18,6 @@
  */
 
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { setCatalog } from "../../../../gettext-catalog";
 
@@ -30,7 +29,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
     it(`Given a collection of allowed links types,
         then it should build a collection of presenters for each type and each direction`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            VerifyHasParentLinkStub.withNoParentLink(),
+            false,
             LinkTypesCollectionStub.withCustomPair()
         );
 
@@ -55,7 +54,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
     it(`will rename the labels of _is_child types
         A -> _is_child -> B actually means B is child of A and A is parent of B`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            VerifyHasParentLinkStub.withNoParentLink(),
+            false,
             LinkTypesCollectionStub.withParentPair()
         );
 
@@ -78,7 +77,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
     it(`should mark reverse _is_child type (Parent) as disabled when there is already a reverse _is_child link
         as an Artifact should only have one Parent`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            VerifyHasParentLinkStub.withParentLink(),
+            true,
             LinkTypesCollectionStub.withParentPair()
         );
         expect(presenter.is_parent_type_disabled).toBe(true);

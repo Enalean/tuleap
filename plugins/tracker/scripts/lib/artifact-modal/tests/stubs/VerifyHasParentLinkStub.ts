@@ -20,10 +20,6 @@
 import type { VerifyHasParentLink } from "../../src/domain/fields/link-field/VerifyHasParentLink";
 
 export const VerifyHasParentLinkStub = {
-    withParentLink: (): VerifyHasParentLink => ({
-        hasParentLink: () => true,
-    }),
-
     withNoParentLink: (): VerifyHasParentLink => ({
         hasParentLink: () => false,
     }),

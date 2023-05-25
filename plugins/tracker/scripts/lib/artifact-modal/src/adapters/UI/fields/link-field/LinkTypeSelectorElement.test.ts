@@ -20,6 +20,7 @@
 import { selectOrThrow } from "@tuleap/dom";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
+import type { HostElement } from "./LinkTypeSelectorElement";
 import { LinkTypeSelectorElement } from "./LinkTypeSelectorElement";
 import { setCatalog } from "../../../../gettext-catalog";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
@@ -27,9 +28,7 @@ import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossRef
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { FORWARD_DIRECTION, LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import type { HostElement } from "./LinkTypeSelectorElement";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -44,7 +43,7 @@ describe("LinkTypeSelectorElement", () => {
         dispatchEvent = jest.fn();
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                VerifyHasParentLinkStub.withNoParentLink(),
+                false,
                 LinkTypesCollectionStub.withParentPair()
             );
         cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #150"));
@@ -94,7 +93,7 @@ describe("LinkTypeSelectorElement", () => {
     it(`disables the reverse _is_child option if marked to be disabled`, () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                VerifyHasParentLinkStub.withParentLink(),
+                true,
                 LinkTypesCollectionStub.withParentPair()
             );
         const select = render();

@@ -21,7 +21,7 @@ import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { getRestoreLabel, getUnlinkLabel } from "../../../../gettext-catalog";
-import type { LinkField } from "./LinkField";
+import type { HostElement } from "./LinkField";
 import { getArtifactStatusBadgeClasses, getCrossRefClasses } from "./NewLinkTemplate";
 import "./LinkTypeSelectorElement";
 import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
@@ -49,16 +49,16 @@ const getCrossRefClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOf
 };
 
 export const getTypeTemplate = (
-    host: LinkField,
+    host: HostElement,
     artifact: LinkedArtifactPresenter
-): UpdateFunction<LinkField> => {
+): UpdateFunction<HostElement> => {
     if (!host.controller.canChangeType(artifact)) {
         return html`<span class="link-field-artifact-readonly-type" data-test="readonly-type"
             >${artifact.link_type.label}</span
         >`;
     }
-    const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
-        host.linked_artifacts_presenter = host.controller.changeLinkType(
+    const onTypeChanged = (host: HostElement, event: CustomEvent<TypeChangedEvent>): void => {
+        host.linked_artifacts = host.controller.changeLinkType(
             artifact,
             event.detail.new_link_type
         );
@@ -74,16 +74,16 @@ export const getTypeTemplate = (
 };
 
 export const getActionButton = (
-    host: LinkField,
+    host: HostElement,
     artifact: LinkedArtifactPresenter
-): UpdateFunction<LinkField> => {
+): UpdateFunction<HostElement> => {
     if (!host.controller.canMarkForRemoval(artifact)) {
         return html``;
     }
 
     if (!artifact.is_marked_for_removal) {
-        const markForRemoval = (host: LinkField): void => {
-            host.linked_artifacts_presenter = host.controller.markForRemoval(artifact.identifier);
+        const markForRemoval = (host: HostElement): void => {
+            host.linked_artifacts = host.controller.markForRemoval(artifact.identifier);
         };
         return html`<button
             class="tlp-button-small tlp-button-danger tlp-button-outline"
@@ -95,8 +95,8 @@ export const getActionButton = (
         </button>`;
     }
 
-    const cancelRemoval = (host: LinkField): void => {
-        host.linked_artifacts_presenter = host.controller.unmarkForRemoval(artifact.identifier);
+    const cancelRemoval = (host: HostElement): void => {
+        host.linked_artifacts = host.controller.unmarkForRemoval(artifact.identifier);
     };
     return html`<button
         class="tlp-button-small tlp-button-primary tlp-button-outline"
@@ -109,9 +109,9 @@ export const getActionButton = (
 };
 
 export const getLinkedArtifactTemplate = (
-    host: LinkField,
+    host: HostElement,
     artifact: LinkedArtifactPresenter
-): UpdateFunction<LinkField> =>
+): UpdateFunction<HostElement> =>
     html`<div class="${getArtifactRowClasses(artifact)}" data-test="artifact-row">
         <span class="link-field-row-type ${getRemoveClass(artifact)}"
             >${getTypeTemplate(host, artifact)}</span

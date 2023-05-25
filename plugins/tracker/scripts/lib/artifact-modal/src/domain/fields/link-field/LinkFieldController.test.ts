@@ -20,54 +20,49 @@
 import { Fault } from "@tuleap/fault";
 import { okAsync } from "neverthrow";
 import { Option } from "@tuleap/option";
-import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
-import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
-import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
-import { NoLinksInCreationModeFault } from "../../../../domain/fields/link-field/NoLinksInCreationModeFault";
-import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
-import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
-import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
-import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
-import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
-import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
-import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
-import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { RetrieveAllLinkedArtifactsStub } from "../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
+import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
+import { NoLinksInCreationModeFault } from "./NoLinksInCreationModeFault";
+import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
+import { AddLinkMarkedForRemovalStub } from "../../../../tests/stubs/AddLinkMarkedForRemovalStub";
+import { DeleteLinkMarkedForRemovalStub } from "../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
+import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
+import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
+import { LinkedArtifactIdentifierStub } from "../../../../tests/stubs/LinkedArtifactIdentifierStub";
+import { ArtifactCrossReferenceStub } from "../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { LinkableArtifactStub } from "../../../../tests/stubs/LinkableArtifactStub";
+import type { LinkableArtifact } from "./LinkableArtifact";
+import { AddNewLinkStub } from "../../../../tests/stubs/AddNewLinkStub";
+import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksStub";
+import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
-import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
-import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
-import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
-import { ParentLinkVerifier } from "../../../../domain/fields/link-field/ParentLinkVerifier";
-import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
-import {
-    FORWARD_DIRECTION,
-    REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field/LinkType";
-import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
-import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
-import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
-import { setCatalog } from "../../../../gettext-catalog";
-import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
-import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
-import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
-import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
-import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
-import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
-import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
-import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
-import { ParentTrackerIdentifierStub } from "../../../../../tests/stubs/ParentTrackerIdentifierStub";
-import type { RetrieveFeatureFlag } from "../../../../domain/RetrieveFeatureFlag";
-import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
+import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
+import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
+import type { RetrieveNewLinks } from "./RetrieveNewLinks";
+import { DeleteNewLinkStub } from "../../../../tests/stubs/DeleteNewLinkStub";
+import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
+import { ParentLinkVerifier } from "./ParentLinkVerifier";
+import type { LinkType } from "./LinkType";
+import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "./LinkType";
+import { RetrievePossibleParentsStub } from "../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import type { RetrievePossibleParents } from "./RetrievePossibleParents";
+import { VerifyIsAlreadyLinkedStub } from "../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
+import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
+import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
+import { LinkTypesCollectionStub } from "../../../../tests/stubs/LinkTypesCollectionStub";
+import { ChangeNewLinkTypeStub } from "../../../../tests/stubs/ChangeNewLinkTypeStub";
+import { ChangeLinkTypeStub } from "../../../../tests/stubs/ChangeLinkTypeStub";
+import { LabeledFieldStub } from "../../../../tests/stubs/LabeledFieldStub";
+import type { ParentTrackerIdentifier } from "./ParentTrackerIdentifier";
+import { ParentTrackerIdentifierStub } from "../../../../tests/stubs/ParentTrackerIdentifierStub";
+import type { RetrieveFeatureFlag } from "../../RetrieveFeatureFlag";
+import { RetrieveFeatureFlagStub } from "../../../../tests/stubs/RetrieveFeatureFlagStub";
+import type { LinkTypesCollection } from "./LinkTypesCollection";
+import type { LinkedArtifact } from "./LinkedArtifact";
+import type { NewLink } from "./NewLink";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -92,9 +87,6 @@ describe(`LinkFieldController`, () => {
         parent_tracker_identifier: Option<ParentTrackerIdentifier>;
 
     beforeEach(() => {
-        setCatalog({
-            getString: (msgid) => msgid,
-        });
         links_retriever = RetrieveAllLinkedArtifactsStub.withoutLink();
         links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withoutLink();
         deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
@@ -111,7 +103,7 @@ describe(`LinkFieldController`, () => {
         flag_retriever = RetrieveFeatureFlagStub.withEnabledFlag();
     });
 
-    const getController = (): LinkFieldControllerType => {
+    const getController = (): LinkFieldController => {
         const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
         const cross_reference = Option.fromValue(ArtifactCrossReferenceStub.withRef("story #18"));
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(70);
@@ -136,7 +128,7 @@ describe(`LinkFieldController`, () => {
             link_verifier,
             event_dispatcher,
             flag_retriever,
-            ArtifactLinkFieldInfoStub.withDefaults({ field_id: FIELD_ID }),
+            LabeledFieldStub.withDefaults({ field_id: FIELD_ID }),
             current_tracker_identifier,
             parent_tracker_identifier,
             cross_reference,
@@ -144,15 +136,15 @@ describe(`LinkFieldController`, () => {
         );
     };
 
-    describe(`displayField()`, () => {
-        it(`returns a presenter for the field and current artifact cross reference`, () => {
-            const field = getController().displayField();
+    describe(`getLabeledField()`, () => {
+        it(`returns the artifact link field's field ID and label`, () => {
+            const field = getController().getLabeledField();
             expect(field.field_id).toBe(FIELD_ID);
         });
     });
 
     describe("getCurrentLinkType()", () => {
-        it(`When the tracker has a parent, Then it will return a presenter for the reverse child type`, () => {
+        it(`When the tracker has a parent, Then it will return the reverse child type`, () => {
             parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifierStub.withId(217));
 
             const selected_link_type = getController().getCurrentLinkType(false);
@@ -162,7 +154,7 @@ describe(`LinkFieldController`, () => {
 
         it(`When the tracker has no parent,
             And the current artifact has no possible parents
-            Then it will return a presenter for the untyped link type`, () => {
+            Then it will return the untyped link type`, () => {
             parent_tracker_identifier = Option.nothing();
 
             const selected_link_type = getController().getCurrentLinkType(false);
@@ -172,7 +164,7 @@ describe(`LinkFieldController`, () => {
 
         it(`When the tracker has no parent,
             And the current artifact has possible parents
-            Then it will return a presenter for the reverse child type`, () => {
+            Then it will return the reverse child type`, () => {
             parent_tracker_identifier = Option.nothing();
 
             const selected_link_type = getController().getCurrentLinkType(true);
@@ -181,7 +173,7 @@ describe(`LinkFieldController`, () => {
             expect(selected_link_type.direction).toBe(REVERSE_DIRECTION);
         });
 
-        it(`When the artifact has already a parent, then it should return a presenter for the untyped link type`, () => {
+        it(`When the artifact has already a parent, then it should return the untyped link type`, () => {
             parent_artifact_identifier = Option.fromValue(ParentArtifactIdentifierStub.withId(123));
             parent_tracker_identifier = Option.fromValue(ParentTrackerIdentifierStub.withId(88));
 
@@ -192,32 +184,30 @@ describe(`LinkFieldController`, () => {
         });
     });
 
-    describe(`displayAllowedTypes()`, () => {
-        const display = (): CollectionOfAllowedLinksTypesPresenters =>
-            getController().displayAllowedTypes();
+    describe(`getAllowedLinkTypes()`, () => {
+        const getTypes = (): LinkTypesCollection => getController().getAllowedLinkTypes();
 
-        it(`returns a presenter for the allowed link types`, () => {
-            const types = display();
-            expect(types.types).toHaveLength(1);
-            expect(types.types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
-            expect(types.is_parent_type_disabled).toBe(false);
+        it(`returns the collection of allowed link types`, () => {
+            const types = getTypes().getAll();
+            expect(types).toHaveLength(1);
+            expect(types[0].forward_type.shortname).toBe(IS_CHILD_LINK_TYPE);
         });
     });
 
-    describe(`displayLinkedArtifacts()`, () => {
-        const displayLinkedArtifacts = (): PromiseLike<LinkedArtifactCollectionPresenter> =>
-            getController().displayLinkedArtifacts();
+    describe(`getLinkedArtifacts()`, () => {
+        const displayLinkedArtifacts = (): PromiseLike<ReadonlyArray<LinkedArtifact>> =>
+            getController().getLinkedArtifacts("Links are loading");
 
         it(`when the modal is in creation mode,
             it won't notify that there has been a fault
             and it will enable the modal submit again
-            and it will return an empty presenter`, async () => {
+            and it will return an empty array`, async () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
                 NoLinksInCreationModeFault()
             );
             const artifacts = await displayLinkedArtifacts();
 
-            expect(artifacts.has_loaded_content).toBe(true);
+            expect(artifacts).toHaveLength(0);
             const event_types = event_dispatcher.getDispatchedEventTypes();
             expect(event_types).toHaveLength(2);
             expect(event_types).not.toContain("WillNotifyFault");
@@ -227,12 +217,12 @@ describe(`LinkFieldController`, () => {
 
         it(`when the modal is in edition mode and it succeeds loading,
             and it will disable the modal submit while links are loading, so that existing links are not erased by mistake
-            it will return a presenter with the linked artifacts`, async () => {
+            it will return the linked artifacts`, async () => {
             const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
             const artifacts = await displayLinkedArtifacts();
 
-            expect(artifacts.has_loaded_content).toBe(true);
+            expect(artifacts).toHaveLength(1);
             const event_types = event_dispatcher.getDispatchedEventTypes();
             expect(event_types).toHaveLength(2);
             expect(event_types).toContain("WillDisableSubmit");
@@ -242,11 +232,11 @@ describe(`LinkFieldController`, () => {
         it(`when the modal is in edition mode and it fails loading,
             it will notify that there has been a fault
             and it will not enable again the modal submit, so that existing links are not erased by mistake
-            and it will return an empty presenter`, async () => {
+            and it will return an empty array`, async () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(Fault.fromMessage("Ooops"));
             const artifacts = await displayLinkedArtifacts();
 
-            expect(artifacts.has_loaded_content).toBe(true);
+            expect(artifacts).toHaveLength(0);
             const event_types = event_dispatcher.getDispatchedEventTypes();
             expect(event_types).toHaveLength(2);
             expect(event_types).toContain("WillNotifyFault");
@@ -276,8 +266,24 @@ describe(`LinkFieldController`, () => {
         });
     });
 
+    describe(`isMarkedForRemoval`, () => {
+        const isMarked = (): boolean => {
+            const linked_artifact = LinkedArtifactStub.withDefaults();
+            return getController().isMarkedForRemoval(linked_artifact);
+        };
+
+        it(`returns true when a given artifact is marked for removal`, () => {
+            deleted_link_verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
+            expect(isMarked()).toBe(true);
+        });
+
+        it(`returns false otherwise`, () => {
+            expect(isMarked()).toBe(false);
+        });
+    });
+
     describe(`markForRemoval`, () => {
-        const markForRemoval = (): LinkedArtifactCollectionPresenter => {
+        const markForRemoval = (): ReadonlyArray<LinkedArtifact> => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
             links_retriever_sync =
@@ -286,19 +292,17 @@ describe(`LinkFieldController`, () => {
             return getController().markForRemoval(identifier);
         };
 
-        it(`stores the given identifier as a link marked for removal and returns an updated presenter`, () => {
-            const presenter = markForRemoval();
+        it(`stores the given identifier as a link marked for removal
+            and returns the list of linked artifacts`, () => {
+            const artifacts = markForRemoval();
 
             expect(deleted_link_adder.getCallCount()).toBe(1);
-            const is_marked = presenter.linked_artifacts.some(
-                (linked_artifact) => linked_artifact.is_marked_for_removal
-            );
-            expect(is_marked).toBe(true);
+            expect(artifacts).toHaveLength(1);
         });
     });
 
     describe(`unmarkForRemoval`, () => {
-        const unmarkForRemoval = (): LinkedArtifactCollectionPresenter => {
+        const unmarkForRemoval = (): ReadonlyArray<LinkedArtifact> => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
             links_retriever_sync =
@@ -307,14 +311,11 @@ describe(`LinkFieldController`, () => {
         };
 
         it(`deletes the given identifier in the stored links marked for removal,
-            and returns an updated presenter`, () => {
-            const presenter = unmarkForRemoval();
+            and returns the list of linked artifacts`, () => {
+            const artifacts = unmarkForRemoval();
 
             expect(deleted_link_remover.getCallCount()).toBe(1);
-            const is_marked = presenter.linked_artifacts.some(
-                (linked_artifact) => linked_artifact.is_marked_for_removal
-            );
-            expect(is_marked).toBe(false);
+            expect(artifacts).toHaveLength(1);
         });
     });
 
@@ -340,17 +341,17 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`changeLinkType()`, () => {
-        const changeLinkType = (): LinkedArtifactCollectionPresenter => {
+        const changeLinkType = (): ReadonlyArray<LinkedArtifact> => {
             const link = LinkedArtifactStub.withIdAndType(113, LinkTypeStub.buildUntyped());
             const type = LinkTypeStub.buildForwardCustom();
             links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(link);
             return getController().changeLinkType(link, type);
         };
 
-        it(`changes the type of link for the existing link and returns an updated presenter`, () => {
-            const presenter = changeLinkType();
+        it(`changes the type of link for the existing link and returns the list of linked artifacts`, () => {
+            const artifacts = changeLinkType();
             expect(link_type_changer.getCallCount()).toBe(1);
-            expect(presenter.linked_artifacts).toHaveLength(1);
+            expect(artifacts).toHaveLength(1);
         });
     });
 
@@ -360,7 +361,7 @@ describe(`LinkFieldController`, () => {
             link_type = LinkTypeStub.buildChildLinkType();
         });
 
-        const addNewLink = (): NewLinkCollectionPresenter => {
+        const addNewLink = (): ReadonlyArray<NewLink> => {
             const linkable_artifact = LinkableArtifactStub.withDefaults({
                 id: ARTIFACT_ID,
             });
@@ -370,7 +371,7 @@ describe(`LinkFieldController`, () => {
             return getController().addNewLink(linkable_artifact, link_type);
         };
 
-        it(`adds a new link to the stored new links and returns an updated presenter`, () => {
+        it(`adds a new link to the stored new links and returns the list of new links`, () => {
             const links = addNewLink();
 
             expect(new_link_adder.getCallCount()).toBe(1);
@@ -381,13 +382,13 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`removeNewLink`, () => {
-        const removeNewLink = (): NewLinkCollectionPresenter => {
+        const removeNewLink = (): ReadonlyArray<NewLink> => {
             const new_link = NewLinkStub.withDefaults();
             new_links_retriever = RetrieveNewLinksStub.withoutLink();
             return getController().removeNewLink(new_link);
         };
 
-        it(`deletes a new link and returns an updated presenter`, () => {
+        it(`deletes a new link and returns the list of new links`, () => {
             const links = removeNewLink();
 
             expect(new_link_remover.getCallCount()).toBe(1);
@@ -396,14 +397,14 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`changeNewLinkType()`, () => {
-        const changeNewLinkType = (): NewLinkCollectionPresenter => {
+        const changeNewLinkType = (): ReadonlyArray<NewLink> => {
             const new_link = NewLinkStub.withIdAndType(96, LinkTypeStub.buildUntyped());
             const type = LinkTypeStub.buildForwardCustom();
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(new_link);
             return getController().changeNewLinkType(new_link, type);
         };
 
-        it(`changes the type of link for the new link and returns an updated presenter`, () => {
+        it(`changes the type of link for the new link and returns the list of new links`, () => {
             const links = changeNewLinkType();
             expect(new_link_type_changer.getCallCount()).toBe(1);
             expect(links).toHaveLength(1);

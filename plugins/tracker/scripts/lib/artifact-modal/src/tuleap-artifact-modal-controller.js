@@ -32,7 +32,7 @@ import { sprintf } from "sprintf-js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
-import { LinkFieldController } from "./adapters/UI/fields/link-field/LinkFieldController";
+import { LinkFieldController } from "./domain/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
