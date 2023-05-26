@@ -31,35 +31,16 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuil
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
+final class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
 {
-    /**
-     * @var FromWhereEmptyComparisonListFieldBuilder
-     */
-    private $empty_comparison_builder;
-    /**
-     * @var FromWhereComparisonListFieldBuilder
-     */
-    private $comparison_builder;
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
-        FromWhereComparisonListFieldBuilder $comparison_builder,
+        private readonly CollectionOfListValuesExtractor $values_extractor,
+        private readonly FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
+        private readonly FromWhereComparisonListFieldBuilder $comparison_builder,
     ) {
-        $this->values_extractor         = $values_extractor;
-        $this->comparison_builder       = $comparison_builder;
-        $this->empty_comparison_builder = $empty_comparison_builder;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $parameter_collection = new QueryListFieldPresenter($comparison, $field);
 
@@ -72,10 +53,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
         return $this->getFromWhereForNonEmptyCondition($parameter_collection, $value);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $parameter_collection, $value)
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $parameter_collection, $value): IProvideFromAndWhereSQLFragments
     {
         $condition = "$parameter_collection->changeset_value_list_alias.bindvalue_id = $parameter_collection->list_value_alias.user_id
             AND $parameter_collection->list_value_alias.user_name = " . $this->quoteSmart($value);
@@ -86,10 +64,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
         return $this->comparison_builder->getFromWhere($parameter_collection);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection)
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection): IProvideFromAndWhereSQLFragments
     {
         $condition = "($parameter_collection->changeset_value_alias.changeset_id IS NULL OR $parameter_collection->changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE) . ")";

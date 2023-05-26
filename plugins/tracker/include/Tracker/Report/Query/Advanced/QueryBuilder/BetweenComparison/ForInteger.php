@@ -24,23 +24,15 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForInteger implements FieldFromWhereBuilder
+final class ForInteger implements FieldFromWhereBuilder
 {
-    /**
-     * @var FromWhereComparisonFieldBuilder
-     */
-    private $from_where_builder;
-
-    public function __construct(FromWhereComparisonFieldBuilder $from_where_comparison_builder)
+    public function __construct(private readonly FromWhereComparisonFieldBuilder $from_where_builder)
     {
-        $this->from_where_builder = $from_where_comparison_builder;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();

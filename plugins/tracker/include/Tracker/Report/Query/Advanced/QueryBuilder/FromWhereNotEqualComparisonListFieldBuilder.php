@@ -22,12 +22,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class FromWhereNotEqualComparisonListFieldBuilder
+final class FromWhereNotEqualComparisonListFieldBuilder
 {
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(QueryListFieldPresenter $query_presenter)
+    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
             SELECT c.artifact_id AS artifact_id

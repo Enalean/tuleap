@@ -26,12 +26,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForFile implements FieldFromWhereBuilder
+final class ForFile implements FieldFromWhereBuilder
 {
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $suffix           = spl_object_hash($comparison);
         $comparison_value = $comparison->getValueWrapper();

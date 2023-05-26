@@ -27,25 +27,17 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUsersFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
+final class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereBuilder
 {
-    /** @var  FromWhereNotEqualComparisonListFieldBuilder */
-    private $from_where_builder;
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereNotEqualComparisonListFieldBuilder $from_where_builder,
+        private readonly CollectionOfListValuesExtractor $values_extractor,
+        private readonly FromWhereNotEqualComparisonListFieldBuilder $from_where_builder,
     ) {
-        $this->values_extractor   = $values_extractor;
-        $this->from_where_builder = $from_where_builder;
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -61,7 +53,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
         return $this->from_where_builder->getFromWhere($query_presenter);
     }
 
-    private function quoteSmartImplode($values)
+    private function quoteSmartImplode($values): string
     {
         return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
     }

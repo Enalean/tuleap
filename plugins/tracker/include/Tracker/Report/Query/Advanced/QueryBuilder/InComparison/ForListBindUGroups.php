@@ -29,35 +29,16 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
+final class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
 {
-    /**
-     * @var FromWhereComparisonListFieldBindUgroupsBuilder
-     */
-    private $from_where_builder;
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-    /**
-     * @var UgroupLabelConverter
-     */
-    private $label_converter;
-
     public function __construct(
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereComparisonListFieldBindUgroupsBuilder $from_where_builder,
-        UgroupLabelConverter $label_converter,
+        private readonly CollectionOfListValuesExtractor $values_extractor,
+        private readonly FromWhereComparisonListFieldBindUgroupsBuilder $from_where_builder,
+        private readonly UgroupLabelConverter $label_converter,
     ) {
-        $this->from_where_builder = $from_where_builder;
-        $this->values_extractor   = $values_extractor;
-        $this->label_converter    = $label_converter;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -80,7 +61,7 @@ class ForListBindUGroups implements ListBindUgroupsFromWhereBuilder
         return $this->from_where_builder->getFromWhere($query_presenter);
     }
 
-    private function quoteSmartImplode($values)
+    private function quoteSmartImplode($values): string
     {
         return CodendiDataAccess::instance()->quoteSmartImplode(',', $values);
     }
