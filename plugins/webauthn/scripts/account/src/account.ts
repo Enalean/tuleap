@@ -18,7 +18,7 @@
  */
 
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
-import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
+import { EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import type { GetText } from "@tuleap/gettext";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { selectOrThrow } from "@tuleap/dom";
@@ -92,6 +92,10 @@ function prepareRegistration(): void {
         error.classList.add(HIDDEN);
         add_button_icon.classList.remove(HIDDEN);
         registration(name);
+    });
+
+    name_modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+        name_modal_input.value = "";
     });
 }
 

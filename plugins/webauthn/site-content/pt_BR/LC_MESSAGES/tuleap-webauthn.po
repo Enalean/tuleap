@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add a passkey"
 msgstr ""
 
+msgid "Add passkey"
+msgstr ""
+
 msgid "Adding a new passkey"
 msgstr ""
 
@@ -43,9 +46,6 @@ msgid "My key"
 msgstr ""
 
 msgid "Name"
-msgstr ""
-
-msgid "Name of passkey"
 msgstr ""
 
 msgid "No registered passkeys"
