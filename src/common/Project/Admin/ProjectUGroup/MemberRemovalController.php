@@ -114,7 +114,8 @@ class MemberRemovalController implements DispatchableWithRequest
                     new UserPermissionsDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                     ProjectMemberAdderWithStatusCheckAndNotifications::build(),
-                    $event_manager
+                    $event_manager,
+                    new ProjectHistoryDao(),
                 ),
                 new StaticMemberRemover()
             ),
@@ -164,7 +165,7 @@ class MemberRemovalController implements DispatchableWithRequest
                 }
                 $this->project_member_remover->removeUserFromProject($ugroup->getProjectId(), $user->getId());
             } else {
-                $this->member_remover->removeMember($user, $ugroup);
+                $this->member_remover->removeMember($user, $request->getCurrentUser(), $ugroup);
             }
         } catch (CannotModifyBoundGroupException $exception) {
             $layout->addFeedback(Feedback::ERROR, _('Cannot remove users from bound groups'));

@@ -477,6 +477,9 @@ msgstr "Adicionar nova chave"
 msgid "Add parent project"
 msgstr "Adicionar projeto pai"
 
+msgid "Add project administrator"
+msgstr ""
+
 msgid "Add this list"
 msgstr "Adiciona esta lista"
 
@@ -3112,6 +3115,9 @@ msgstr "Remover do grupo de usuários"
 
 msgid "Remove group member"
 msgstr "Remover membro do grupo"
+
+msgid "Remove project administrator"
+msgstr ""
 
 msgid "Removed Lines"
 msgstr "Linhas Removidas"

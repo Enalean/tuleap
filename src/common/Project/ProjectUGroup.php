@@ -480,7 +480,8 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
             new UserPermissionsDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $this->getProjectMemberAdder(),
-            EventManager::instance()
+            EventManager::instance(),
+            new ProjectHistoryDao(),
         );
     }
 
@@ -493,16 +494,13 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * Remove given user from user group
      * This method can remove from any group, either dynamic or static.
      *
-     *
      * @throws UGroup_Invalid_Exception
-     *
-     * @return void
      */
-    public function removeUser(PFUser $user)
+    public function removeUser(PFUser $user, PFUser $project_administrator): void
     {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
-            $this->removeUserFromDynamicGroup($user);
+            $this->removeUserFromDynamicGroup($user, $project_administrator);
         } else {
             if ($this->exists($this->group_id, $this->id)) {
                 $this->removeUserFromStaticGroup($this->group_id, $this->id, $user->getId());
@@ -527,14 +525,14 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 
-    protected function removeUserFromDynamicGroup(PFUser $user): void
+    protected function removeUserFromDynamicGroup(PFUser $user, PFUser $project_administrator): void
     {
         $project = $this->getProject();
         if ($project === null) {
             return;
         }
 
-        $this->getDynamicUGroupMembersUpdater()->removeUser($project, $this, $user);
+        $this->getDynamicUGroupMembersUpdater()->removeUser($project, $this, $user, $project_administrator);
     }
 
     /**

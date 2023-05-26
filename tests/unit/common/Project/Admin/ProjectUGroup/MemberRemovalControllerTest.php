@@ -32,6 +32,7 @@ use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Project\UserRemover as ProjectMemberRemover;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -103,18 +104,18 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function checkUserIsProjectAdmin(\Project $project): void
+    private function checkUserIsProjectAdmin(\Project $project): \PFUser
     {
-        $project_admin = M::mock(\PFUser::class);
-        $this->http_request->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn($project_admin);
+        $project_admin = UserTestBuilder::aUser()->build();
+        $this->http_request->shouldReceive('getCurrentUser')->andReturn($project_admin);
         $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
             ->with($project_admin, $project)
             ->once();
+
+        return $project_admin;
     }
 
-    public function testItRemovesWithSuccess()
+    public function testItRemovesWithSuccess(): void
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_retriever->shouldReceive('getProjectFromId')
@@ -122,7 +123,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($project);
 
-        $this->checkUserIsProjectAdmin($project);
+        $project_admin = $this->checkUserIsProjectAdmin($project);
 
         $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
@@ -133,7 +134,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
 
-        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $ugroup);
+        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $project_admin, $ugroup);
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
@@ -148,7 +149,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($project);
 
-        $this->checkUserIsProjectAdmin($project);
+        $project_admin = $this->checkUserIsProjectAdmin($project);
 
         $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
@@ -159,7 +160,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
 
-        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $ugroup)->andThrow(new CannotModifyBoundGroupException());
+        $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $project_admin, $ugroup)->andThrow(new CannotModifyBoundGroupException());
 
         $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
 

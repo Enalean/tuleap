@@ -144,17 +144,15 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         return $this->instanciateGroupForProject($project, $row);
     }
 
-    /**
-     * @return DynamicUGroupMembersUpdater
-     */
-    private function getDynamicUGroupMembersUpdater()
+    private function getDynamicUGroupMembersUpdater(): DynamicUGroupMembersUpdater
     {
         if ($this->dynamic_ugroup_members_updater === null) {
             $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
                 new UserPermissionsDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 ProjectMemberAdderWithStatusCheckAndNotifications::build(),
-                $this->getEventManager()
+                $this->getEventManager(),
+                new ProjectHistoryDao(),
             );
         }
         return $this->dynamic_ugroup_members_updater;
@@ -541,7 +539,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         }
 
         foreach ($members_to_remove as $member_to_remove) {
-            $this->removeUserFromUserGroup($user_group, $member_to_remove);
+            $this->removeUserFromUserGroup($user_group, $member_to_remove, $project_admin);
         }
 
         $this->getDao()->commit();
@@ -592,17 +590,17 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
     /**
      * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException
      */
-    private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user)
+    private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user, PFUser $project_administrator): void
     {
         switch ($user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
                 $this->getUserRemover()->removeUserFromProject($user_group->getProjectId(), $user->getId());
                 break;
             case ProjectUGroup::PROJECT_ADMIN:
-                $this->getDynamicUGroupMembersUpdater()->removeUser($user_group->getProject(), $user_group, $user);
+                $this->getDynamicUGroupMembersUpdater()->removeUser($user_group->getProject(), $user_group, $user, $project_administrator);
                 break;
             default:
-                $user_group->removeUser($user);
+                $user_group->removeUser($user, $project_administrator);
         }
     }
 

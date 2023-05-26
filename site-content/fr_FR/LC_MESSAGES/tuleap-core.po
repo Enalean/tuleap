@@ -488,6 +488,9 @@ msgstr "Ajouter une nouvelle clef"
 msgid "Add parent project"
 msgstr "Ajouter projet parent"
 
+msgid "Add project administrator"
+msgstr "Ajout d'un administrateur du projet"
+
 msgid "Add this list"
 msgstr "Créer cette liste"
 
@@ -3156,6 +3159,9 @@ msgstr "Retirer du groupe"
 
 msgid "Remove group member"
 msgstr "Retirer un membre du groupe"
+
+msgid "Remove project administrator"
+msgstr "Suppression d'un administrateur du projet"
 
 msgid "Removed Lines"
 msgstr "Lignes supprimées"

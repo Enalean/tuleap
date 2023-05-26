@@ -35,6 +35,8 @@ use SystemEvent_PROJECT_IS_PRIVATE;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\UserRemover;
+use Tuleap\Test\Builders\UserTestBuilder;
+use UserManager;
 
 final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -45,6 +47,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
     {
         ProjectManager::clearInstance();
         EventManager::clearInstance();
+        UserManager::clearInstance();
     }
 
     public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestricted(): void
@@ -88,22 +91,27 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         $restricted_member->shouldReceive('isRestricted')->andReturn(true);
         $restricted_member_id = 456;
         $restricted_member->shouldReceive('getId')->andReturn($restricted_member_id);
-        $member = Mockery::mock(PFUser::class);
-        $member->shouldReceive('isRestricted')->andReturn(false);
+        $member = UserTestBuilder::anActiveUser()->build();
         $project->shouldReceive('getMembers')->andReturn([$restricted_member, $member]);
         $user_remover->shouldReceive('removeUserFromProject')->with($project_id, $restricted_member_id)->once();
 
-        $restricted_user_in_ugroup_only = Mockery::mock(PFUser::class);
-        $restricted_user_in_ugroup_only->shouldReceive('isRestricted')->andReturn(true);
-        $ugroup_with_restricted = Mockery::mock(ProjectUGroup::class);
+        $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
+        $ugroup_with_restricted         = Mockery::mock(ProjectUGroup::class);
         $ugroup_with_restricted->shouldReceive('getMembers')->andReturn([$restricted_user_in_ugroup_only, $member]);
-        $ugroup_with_restricted->shouldReceive('removeUser')->with($restricted_user_in_ugroup_only)->once();
+        $ugroup_with_restricted->shouldReceive('removeUser')->with(
+            $restricted_user_in_ugroup_only,
+            \Mockery::on(
+                function (PFUser $user) {
+                    return (int) $user->getId() === 0;
+                }
+            )
+        )->once();
         $ugroup_without_restricted = Mockery::mock(ProjectUGroup::class);
         $ugroup_without_restricted->shouldReceive('getMembers')->andReturn([$member]);
         $ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturn(
             [$ugroup_with_restricted, $ugroup_without_restricted]
         );
 
-        $this->assertTrue($system_event->process());
+        self::assertTrue($system_event->process());
     }
 }

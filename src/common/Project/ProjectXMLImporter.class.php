@@ -534,7 +534,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $this->event_manager->processEvent(
                 new ProjectImportCleanupUserCreatorFromAdministrators($user_creator, $ugroup)
             );
-            $ugroup->removeUser($user_creator);
+            $ugroup->removeUser($user_creator, $user_creator);
         }
     }
 
