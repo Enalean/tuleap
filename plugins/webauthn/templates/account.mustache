@@ -20,11 +20,14 @@
 
                     <div class="tlp-pane-section webauthn-hidden" id="webauthn-section">
                         {{# need_more_authenticators }}
-                            <div class="tlp-alert-warning">
+                            <div class="tlp-alert-info">
                                 {{# dgettext }}
                                     tuleap-webauthn | It's recommended to register at least 2 keys {{/ dgettext }}
                             </div>
                         {{/ need_more_authenticators }}
+
+                        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-alert"
+                             data-test="webauthn-alert"></div>
 
                         <div class="tlp-table-actions">
                             <button type="button" class="tlp-button-primary tlp-table-actions-element"
@@ -41,9 +44,6 @@
                                 </button>
                             {{/ has_authenticator }}
                         </div>
-
-                        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-alert"
-                             data-test="webauthn-alert"></div>
 
                         <table class="tlp-table">
                             <thead>

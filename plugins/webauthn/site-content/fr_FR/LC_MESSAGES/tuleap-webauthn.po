@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add a passkey"
 msgstr "Ajouter une clé d'authentification"
 
+msgid "Add passkey"
+msgstr "Ajouter la clé d'authentification"
+
 msgid "Adding a new passkey"
 msgstr "Ajouter une clé d'authentification"
 
@@ -44,9 +47,6 @@ msgstr "Ma clé"
 
 msgid "Name"
 msgstr "Nom"
-
-msgid "Name of passkey"
-msgstr "Nom de la clé d'authentification"
 
 msgid "No registered passkeys"
 msgstr "Aucune clé d'authentification enregistrée"

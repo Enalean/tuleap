@@ -10,15 +10,15 @@
         </button>
     </div>
     <div class="tlp-modal-body">
+        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-add-error"></div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="webauthn-name-input">
-                {{# dgettext }} tuleap-webauthn | Name of passkey {{/ dgettext }}
+                {{# dgettext }} tuleap-webauthn | Name {{/ dgettext }}
                 <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
             <input type="text" class="tlp-input" id="webauthn-name-input" name="name" data-test="name-modal-input"
                    placeholder="{{# dgettext }} tuleap-webauthn | My key {{/ dgettext }}" required />
         </div>
-        <div class="tlp-alert-danger webauthn-hidden" id="webauthn-add-error"></div>
     </div>
     <div class="tlp-modal-footer">
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
@@ -27,7 +27,7 @@
         <button class="tlp-button tlp-button-primary" type="submit" data-test="name-modal-button">
             <i class="fa-solid fa-circle-notch fa-spin tlp-button-icon webauthn-hidden" aria-hidden="true"
                id="webauthn-modal-add"></i>
-            {{# dgettext }} tuleap-webauthn | Add a passkey {{/ dgettext }}
+            {{# dgettext }} tuleap-webauthn | Add passkey {{/ dgettext }}
         </button>
     </div>
 </form>
