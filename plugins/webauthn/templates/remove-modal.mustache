@@ -1,0 +1,24 @@
+<form class="tlp-modal" id="webauthn-remove-modal"
+      role="dialog" aria-labelledby="remove-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="remove-modal-title">
+            {{# dgettext }} tuleap-webauthn | Deleting a passkey {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal"
+                aria-label="{{# dgettext }} tuleap-webauthn | Close {{/ dgettext }}">
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-body">
+        {{# dgettext }} tuleap-webauthn | Are you sure you want to remove your passkey? {{/ dgettext }}
+        <input type="hidden" class="tlp-input webauthn-hidden" id="webauthn-key-id-input" />
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }} tuleap-webauthn | Cancel {{/ dgettext }}
+        </button>
+        <button class="tlp-button tlp-button-danger" type="submit" data-test="remove-modal-button">
+            {{# dgettext }} tuleap-webauthn | Confirm {{/ dgettext }}
+        </button>
+    </div>
+</form>

@@ -24,9 +24,11 @@ namespace Tuleap\WebAuthn\Controllers;
 
 use Tuleap\TimezoneRetriever;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
+use function Psl\Encoding\Base64\encode;
 
 final class AuthenticatorPresenter
 {
+    public readonly string $id;
     public readonly string $name;
     public readonly string $created_at;
     public readonly string $last_use;
@@ -37,6 +39,7 @@ final class AuthenticatorPresenter
     ) {
         $timezone = new \DateTimeZone(TimezoneRetriever::getUserTimezone($user));
 
+        $this->id         = encode($source->getSource()->getPublicKeyCredentialId());
         $this->name       = $source->getName();
         $this->created_at = $source->getCreatedAt()
             ->setTimezone($timezone)

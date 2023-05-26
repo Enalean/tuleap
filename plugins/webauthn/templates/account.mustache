@@ -7,6 +7,7 @@
         {{> user-account-tabs }}
 
         {{> name-modal }}
+        {{> remove-modal }}
 
         <div class="user-preferences-section">
             <section class="tlp-pane">
@@ -51,6 +52,7 @@
                                 <th>{{# dgettext }} tuleap-webauthn | Name {{/ dgettext }}</th>
                                 <th>{{# dgettext }} tuleap-webauthn | Created at {{/ dgettext }}</th>
                                 <th>{{# dgettext }} tuleap-webauthn | Last use {{/ dgettext }}</th>
+                                <th></th>
                             </tr>
                             </thead>
                             {{# authenticators }}
@@ -59,13 +61,23 @@
                                     <td>{{ name }}</td>
                                     <td>{{ created_at }}</td>
                                     <td>{{ last_use }}</td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button type="button"
+                                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                                id="{{ id }}" data-item-id="webauthn-remove"
+                                                data-target-modal-id="webauthn-remove-modal"
+                                                data-test="remove-button">
+                                            <i class="tlp-button-icon fa-solid fa-trash-can" aria-hidden="true"></i>
+                                            {{# dgettext }} tuleap-webauthn | Remove {{/ dgettext }}
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             {{/ authenticators }}
                             {{^ authenticators }}
                                 <tbody>
                                 <tr>
-                                    <td colspan="3" class="tlp-table-cell-empty">
+                                    <td colspan="4" class="tlp-table-cell-empty" data-test="no-passkey">
                                         {{# dgettext }} tuleap-webauthn | No registered passkeys {{/ dgettext }}
                                     </td>
                                 </tr>

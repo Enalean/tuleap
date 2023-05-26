@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", (): void => {
 
             prepareRegistration();
             prepareAuthentication(gettext_provider);
+            prepareRemove();
         } else {
             const disabled_section = document.querySelector("#webauthn-disabled-section");
             if (disabled_section instanceof HTMLElement) {
@@ -131,5 +132,32 @@ function prepareAuthentication(gettext_provider: GetText): void {
                 message.classList.remove(HIDDEN);
             }
         );
+    });
+}
+
+function prepareRemove(): void {
+    const form_remove_modal = selectOrThrow(document, "#webauthn-remove-modal");
+    const key_id_input = selectOrThrow(document, "#webauthn-key-id-input", HTMLInputElement);
+
+    document.querySelectorAll("[data-item-id=webauthn-remove]").forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        openTargetModalIdOnClick(document, button.id);
+
+        button.addEventListener("click", () => {
+            key_id_input.value = button.id;
+        });
+    });
+
+    form_remove_modal.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const key_id = key_id_input.value;
+
+        // The fetch call for delete will be added in future commit
+        // eslint-disable-next-line no-console
+        console.log(`Remove key ${key_id}`);
     });
 }
