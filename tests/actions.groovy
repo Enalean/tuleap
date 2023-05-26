@@ -54,13 +54,6 @@ def runDBTests(String db, String php) {
     """
 }
 
-def runSOAPTests(String db, String php) {
-    sh """
-    mkdir -p \$WORKSPACE/results/soap/php${php}-${db}
-    TESTS_RESULT=\$WORKSPACE/results/soap/php${php}-${db} sources/tests/soap/bin/run-compose.sh "${php}" "${db}"
-    """
-}
-
 def runEndToEndTests(String flavor, String db) {
     dir ('sources') {
         sh "tests/e2e/${flavor}/wrap.sh '${db}' '$WORKSPACE/results/e2e/${flavor}/'"

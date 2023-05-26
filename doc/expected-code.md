@@ -104,7 +104,7 @@ A good commit:
 
 -   Doesn't break existing behaviour (unless it's intended to, well
     documented and with an escape path for current users).
--   Has tests (automated: unit, REST, SOAP or functional, described in
+-   Has tests (automated: unit, REST or functional, described in
     commit message)
 -   Has security guards (filter inputs, escape outputs, csrf tokens)
 -   Has I18N code

@@ -94,10 +94,7 @@ class Docman_Actions extends Actions
 
     //@todo need to check owner rights on parent
 
-    /**
-     * protected for testing purpose (SOAP)
-     */
-    protected function _checkOwnerChange(string $new_owner_name, PFUser $change_requestor)
+    private function _checkOwnerChange(string $new_owner_name, PFUser $change_requestor)
     {
         $new_owner_id = (new OwnerRetriever($this->_getUserManagerInstance()))->getOwnerIdFromLoginName($new_owner_name);
         if ($new_owner_id === null) {

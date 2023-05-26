@@ -901,9 +901,6 @@ msgstr ""
 msgid "Error"
 msgstr "Erro"
 
-msgid "Error while appending file chunk."
-msgstr ""
-
 msgid "Error while creating initial version."
 msgstr ""
 
@@ -919,19 +916,10 @@ msgstr ""
 msgid "Error while creating news. Check that you have right permissions."
 msgstr ""
 
-msgid "Error while getting file checksum."
-msgstr ""
-
 msgid "Error while searching for old versions"
 msgstr ""
 
 msgid "Error while trying to delete the wiki page from wiki service."
-msgstr ""
-
-msgid "Error: The given version of the item does not exist."
-msgstr ""
-
-msgid "Error: item ID is missing."
 msgstr ""
 
 msgid "Every"
@@ -1440,9 +1428,6 @@ msgstr ""
 msgid "Parameter is missing"
 msgstr ""
 
-msgid "Parameter parent_id is missing"
-msgstr ""
-
 msgid "Paste"
 msgstr ""
 
@@ -1941,9 +1926,6 @@ msgid "The selected item has not been restored."
 msgstr ""
 
 msgid "The selected version has not been restored."
-msgstr ""
-
-msgid "The specified item is not a file."
 msgstr ""
 
 #, php-format

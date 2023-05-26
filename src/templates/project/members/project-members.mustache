@@ -224,14 +224,6 @@
                                 </td>
                                 {{/ status_presenter }}
                                 <td class="tlp-table-cell-actions">
-                                    {{# is_generic }}
-                                        <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                                            href="/project/admin/editgenericmember.php?group_id={{ project_id }}"
-                                        >
-                                            <i class="fas fa-pencil-alt tlp-button-icon"></i>
-                                            {{# gettext }}Edit settings{{/ gettext }}
-                                        </a>
-                                    {{/ is_generic }}
                                     <button type="submit"
                                             data-target-modal-id="project-admin-members-remove"
                                             data-user-id="{{ user_id }}"

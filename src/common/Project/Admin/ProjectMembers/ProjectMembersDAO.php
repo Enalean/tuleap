@@ -44,17 +44,11 @@ class ProjectMembersDAO extends DataAccessObject
                     user_group.wiki_flags,
                     user_group.forum_flags,
                     user_group.news_flags,
-                    IF(generic_user.group_id, 1, 0) AS is_generic,
                     GROUP_CONCAT(DISTINCT ugroup_user.ugroup_id) AS ugroups_ids
                 FROM user_group
                     INNER JOIN user
                         ON (
                             user.user_id = user_group.user_id
-                        )
-                    LEFT JOIN generic_user
-                        ON (
-                            generic_user.user_id = user.user_id
-                            AND generic_user.group_id = $escaped_project_id
                         )
                     LEFT JOIN (
                             ugroup_user

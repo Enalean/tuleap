@@ -224,12 +224,11 @@ final class SiteDeployFPM
 
     private function createMissingDirectories(): void
     {
-        if (! is_dir($this->temp_base_directory . '/tuleap_cache/php/session') || ! is_dir($this->temp_base_directory . '/tuleap_cache/php/wsdlcache')) {
+        if (! is_dir($this->temp_base_directory . '/tuleap_cache/php/session')) {
             $this->logger->info("Create temporary directories");
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php/session');
-            $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php/wsdlcache');
         }
     }
 

@@ -47,7 +47,6 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\ServerHostname;
-use Tuleap\SOAP\DisableSOAPEndpoints;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\Massmail;
 use Tuleap\User\UserSuspensionManager;
@@ -86,7 +85,6 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         BaseLayout::class,
         Massmail::class,
         InvitationPurger::class,
-        DisableSOAPEndpoints::class,
         \ThemeVariant::class,
         OutboundHTTPRequestSettings::class,
         OutboundHTTPRequestProxy::class,

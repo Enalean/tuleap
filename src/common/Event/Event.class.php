@@ -316,17 +316,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SVN_APACHE_AUTH = 'svn_apache_auth';
 
     /**
-     * Extends doc to soap types.
-     *
-     * Parameters:
-     *     'doc2soap_types' => The already defined map of doc -> soap types
-     *
-     * Expected results
-     *     'doc2soap_types' => The extended map of doc -> soap types
-     */
-    public const WSDL_DOC2SOAP_TYPES = 'wsdl_doc2soap_types';
-
-    /**
      * Check that the update of members of an ugroup is allowed or not.
      *
      * Parameters:

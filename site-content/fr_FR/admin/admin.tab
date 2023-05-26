@@ -456,17 +456,6 @@ admin_show_pending_documents	wiki_restore_attachment	Pièce jointe Wiki restaur�
 admin_show_pending_documents	wiki_restore_error	Pièce jointe Wiki non restaurée
 admin_show_pending_documents	wiki_bad_id	Mauvais identifiant de pièce jointe
 
-admin_generic_user	title	Modifier les utilisateurs génériques
-admin_generic_user	help	Les "utilisateurs génériques" de projet sont des utilisateurs dédiés aux processus automatiques de chaque projet comme l'intégration continue. A l'heure actuelle, les utilisateurs génériques s'activent uniquement par un appel à l'API SOAP, projet par projet (nécessite les droits d'administrateur projet).
-admin_generic_user	help_update	Cette page présente les valeurs par défaut qui s'appliquent à tous les projets. Le suffixe du nom peut être adapté au travers de la variable '$1' dans local.inc
-admin_generic_user	invalid_suffix	Suffixe invalide, merci de changer la valeur de la variable $1 dans local.inc au plus vite!
-admin_generic_user	unix_name_template	%nom_de_projet%
-admin_generic_user	name_template	%Nom de projet%
-admin_generic_user	back	« Retour
-admin_generic_user	set_by_project	Configurable au niveau de chaque projet (chaque administrateur peut définir sa propre valeur dans les pages d'administration du projet)
-admin_generic_user	email	Email
-admin_generic_user	password	Mot de passe
-
 admin_permission_delegation	page_title	Délégation de permission
 admin_permission_delegation	page_description	Ici vous pouvez assigner des permissions à des groupes portants sur l'ensemble de la plateforme.
 admin_permission_delegation	group_action_add	Ajouter un groupe

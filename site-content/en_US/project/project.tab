@@ -701,13 +701,5 @@ project_ugroup_binding	clone_error	Unable to clone ugroup $1
 project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
 project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
 
-
-project_admin	generic_member_settings	Generic User Settings
-project_admin	generic_member_updated	Generic user settings updated
-project_admin	generic_member_not_updated	Error while updating generic user settings
-project_admin	generic_member_not_changed	Generic user settings not changed
-project_admin	generic_member_leave_blank	Leave empty to keep the current password
-project_admin	edit_generic_user_settings	edit settings
-
 project_import	invalid_user	Invalid username $1 User must be project admin and active
 project_import	invalid_xml	Invalid XML

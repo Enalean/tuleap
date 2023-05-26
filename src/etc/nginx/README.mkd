@@ -20,7 +20,6 @@ Edit `/etc/httpd/conf/httpd.conf` and change the values for:
 
 In `/etc/opt/remi/php81/php-fpm.d/www.conf`
 * Remove php_value[session.save_path]
-* Remove php_value[soap.wsdl_cache_dir]
 * Append the content of src/etc/fpm.conf.dist (cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/remi/php81/php-fpm.d/www.conf)
 
 start fpm:

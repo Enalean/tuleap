@@ -1,9 +1,0 @@
-{
-  "name": "tuleap/test-soap",
-  "autoload": {
-    "psr-4": {
-      "Tuleap\\Test\\PHPUnit\\": ["../lib/PHPUnit/"]
-    },
-    "classmap": ["lib/"]
-  }
-}

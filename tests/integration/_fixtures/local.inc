@@ -254,11 +254,6 @@ $sys_lists_suffix = '';
 // If disabled (0), only the project name is displayed
 $sys_display_project_privacy_in_service_bar = 1;
 
-// Set a custom suffix for Generic Users
-// This suffix should respect user login name constraints (number of chars, allowed
-// chars, etc)
-$sys_generic_user_suffix = '';
-
 // Hard limit to number of emailed people when the news admin choose to send a news
 // by email.
 // Only used in news service for now

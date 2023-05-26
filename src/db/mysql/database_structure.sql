@@ -1373,15 +1373,6 @@ CREATE TABLE IF NOT EXISTS project_parent (
 );
 
 #
-# Table structure for Generic Users
-#
-
-CREATE TABLE IF NOT EXISTS generic_user (
-    group_id INT(11) PRIMARY KEY,
-    user_id INT(11) NOT NULL
-);
-
-#
 # Table structure for rest authentication tokens
 #
 

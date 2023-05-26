@@ -20,7 +20,6 @@
       "www/include/user.php",
       "www/project/admin/permissions.php",
       "www/svn/svn_utils.php",
-      "www/include/nusoap.php",
       "embedded_vendor/jpgraph/jpgraph_utils_func.php"
     ]
   },
@@ -161,7 +160,6 @@
         "/common/Reference/ReferenceOpenGraph.php",
         "/common/Reference/ReferenceGetTooltipChainOpenGraph.php",
         "/common/RSS",
-        "/common/soap",
         "/common/tracker",
         "/common/wiki",
         "/common/Markdown/",

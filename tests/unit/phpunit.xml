@@ -36,7 +36,6 @@
             <directory suffix=".php">../../src/common/chart/</directory>
             <file>../../src/common/admin/Homepage/Controller.php</file>
             <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
-            <file>../../plugins/docman/include/soap.php</file>
             <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php</file> <!-- To investigate -->
             <file>../../plugins/ldap/include/LDAP_SearchPeople.class.php</file>
             <file>../../plugins/mediawiki/include/MediawikiInstantiater.class.php</file>

@@ -49,7 +49,7 @@ AutoReqProv: no
 
 # Php and web related stuff
 Requires: php81-php-common
-Requires: php81-php, php81-php-mysql, php81-php-xml, php81-php-mbstring, php81-php-gd, php81-php-soap
+Requires: php81-php, php81-php-mysql, php81-php-xml, php81-php-mbstring, php81-php-gd
 Requires: php81-php-intl, php81-php-process, php81-php-opcache, php81-php-fpm, php81-php-pecl-redis5, php81-php-sodium
 Requires: php81-php-pecl-zip
 Requires: php81-php-ffi
@@ -1123,7 +1123,6 @@ fi
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
-%{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package

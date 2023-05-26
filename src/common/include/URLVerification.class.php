@@ -124,25 +124,10 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      * Should we treat current request as an exception
      *
      * @param array $server
-     *
-     * @return bool
      */
-    public function isException($server)
+    public function isException($server): bool
     {
-        return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
-    }
-
-    /**
-     * Tests if the server name is valid or not
-     *
-     * @param Array $server
-     * @param String $host
-     *
-     * @return bool
-     */
-    public function isValidServerName($server, $host)
-    {
-        return ($server['HTTP_HOST'] == $host);
+        return preg_match('`^(?:/plugins/[^/]+)?/api/`', $server['SCRIPT_NAME']) === 1;
     }
 
     /**

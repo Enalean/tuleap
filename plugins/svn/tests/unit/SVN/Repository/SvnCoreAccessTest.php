@@ -107,16 +107,4 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/svn/trunk/README?root=mozilla&view=log'));
         $event->redirect();
     }
-
-    public function testItForbidsSOAPAccess(): void
-    {
-        $event = new \Tuleap\SVNCore\SvnCoreAccess(
-            $this->project,
-            \SVN_SOAPServer::FAKE_URL,
-            null
-        );
-        $this->plugin_svn_access->process($event);
-
-        self::assertTrue($event->hasRedirectUri());
-    }
 }

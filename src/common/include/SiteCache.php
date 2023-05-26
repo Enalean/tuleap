@@ -35,7 +35,6 @@ class SiteCache
         $this->invalidateRestler();
         $this->invalidateFrontRouter();
         $this->invalidateLanguage();
-        $this->invalidateWSDL();
         $this->invalidatePlugin();
         $this->invalidateCustomizedLogoCache();
         $this->invalidateValinorCache();
@@ -65,14 +64,6 @@ class SiteCache
     {
         $this->logger->info('Invalidate language cache');
         $GLOBALS['Language']->invalidateCache();
-    }
-
-    private function invalidateWSDL()
-    {
-        $this->logger->info('Invalidate WSDL');
-        foreach (glob(ForgeConfig::get('codendi_cache_dir') . '/php/wsdlcache/wsdl*') as $file) {
-            unlink($file);
-        }
     }
 
     private function invalidatePlugin()

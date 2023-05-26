@@ -16,9 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Add generic_user table
- */
 class b201307021504_remove_server extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()

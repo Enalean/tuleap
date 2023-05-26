@@ -926,9 +926,6 @@ msgstr "Changer de format"
 msgid "Change avatar"
 msgstr "Changer l'avatar"
 
-msgid "Change email address"
-msgstr "Changer l'adresse e-mail"
-
 msgid ""
 "Check this option if you want to force the usage of this preference for all "
 "users."
@@ -1381,9 +1378,6 @@ msgstr "Editer la licence"
 
 msgid "Edit reference pattern"
 msgstr "Éditer le modèle de référence"
-
-msgid "Edit settings"
-msgstr "Éditer les paramètres"
 
 msgid "Edit widget"
 msgstr "Éditer le widget"
@@ -3234,9 +3228,6 @@ msgstr "Révoquer les clés d'accès sélectionnées"
 msgid "Running events"
 msgstr "Evénements en cours d'exécution"
 
-msgid "SOAP API"
-msgstr "API SOAP"
-
 msgid "SSH key"
 msgstr "Clef SSH"
 
@@ -3639,9 +3630,6 @@ msgstr "Cet utilisateur n'existe pas"
 
 msgid "The %s team."
 msgstr "L'équipe %s."
-
-msgid "The SOAP API is no more accessible, please use the REST API instead"
-msgstr "L'API SOAP n'est plus accessible, veuillez utiliser l'API REST"
 
 #, php-format
 msgid "The XML template \"%s\" provided is not valid"
