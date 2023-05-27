@@ -32,41 +32,17 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWhereBuilder
+final class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWhereBuilder
 {
-    /**
-     * @var FromWhereEmptyComparisonListFieldBuilder
-     */
-    private $empty_comparison_builder;
-    /**
-     * @var FromWhereComparisonListFieldBindUgroupsBuilder
-     */
-    private $comparison_builder;
-    /**
-     * @var UgroupLabelConverter
-     */
-    private $label_converter;
-    /**
-     * @var CollectionOfListValuesExtractor
-     */
-    private $values_extractor;
-
     public function __construct(
-        CollectionOfListValuesExtractor $values_extractor,
-        FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
-        FromWhereComparisonListFieldBindUgroupsBuilder $comparison_builder,
-        UgroupLabelConverter $label_converter,
+        private readonly CollectionOfListValuesExtractor $values_extractor,
+        private readonly FromWhereEmptyComparisonListFieldBuilder $empty_comparison_builder,
+        private readonly FromWhereComparisonListFieldBindUgroupsBuilder $comparison_builder,
+        private readonly UgroupLabelConverter $label_converter,
     ) {
-        $this->empty_comparison_builder = $empty_comparison_builder;
-        $this->comparison_builder       = $comparison_builder;
-        $this->label_converter          = $label_converter;
-        $this->values_extractor         = $values_extractor;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -80,7 +56,7 @@ class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWh
         return $this->getFromWhereForNonEmptyCondition($query_presenter, $value);
     }
 
-    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value): IProvideFromAndWhereSQLFragments
     {
         if ($this->label_converter->isASupportedDynamicUgroup($value)) {
             $value = $this->label_converter->convertLabelToTranslationKey($value);
@@ -93,10 +69,7 @@ class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWh
         return $this->comparison_builder->getFromWhere($query_presenter);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection)
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection): IProvideFromAndWhereSQLFragments
     {
         $condition = "($parameter_collection->changeset_value_alias.changeset_id IS NULL OR $parameter_collection->changeset_value_list_alias.bindvalue_id =" .
             $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE) . ")";

@@ -22,14 +22,11 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class FromWhereComparisonFieldReadOnlyBuilder
+final class FromWhereComparisonFieldReadOnlyBuilder
 {
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
     public function getFromWhere(
         $condition,
-    ) {
+    ): IProvideFromAndWhereSQLFragments {
         $from  = "";
         $where = "$condition";
 

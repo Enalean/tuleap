@@ -142,8 +142,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      */
     private $collector;
 
-    /** @var IProvideFromAndWhereSQLFragments */
-    private $additional_from_where;
+    private ?IProvideFromAndWhereSQLFragments $additional_from_where;
 
     private string $expert_query_from_db;
 

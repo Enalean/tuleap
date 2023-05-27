@@ -26,8 +26,5 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 interface MetadataComparisonFromWhereBuilder
 {
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison);
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments;
 }

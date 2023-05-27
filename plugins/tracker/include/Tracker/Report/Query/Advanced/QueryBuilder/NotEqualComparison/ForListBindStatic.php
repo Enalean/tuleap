@@ -30,26 +30,15 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBui
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWhereBuilder
+final class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWhereBuilder
 {
-    /**
-     * @var FromWhereEmptyNotEqualComparisonFieldBuilder
-     */
-    private $empty_comparison_builder;
-    /**
-     * @var FromWhereNotEqualComparisonListFieldBuilder
-     */
-    private $comparison_builder;
-
     public function __construct(
-        FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
-        FromWhereNotEqualComparisonListFieldBuilder $comparison_builder,
+        private readonly FromWhereEmptyNotEqualComparisonFieldBuilder $empty_comparison_builder,
+        private readonly FromWhereNotEqualComparisonListFieldBuilder $comparison_builder,
     ) {
-        $this->empty_comparison_builder = $empty_comparison_builder;
-        $this->comparison_builder       = $comparison_builder;
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
@@ -62,10 +51,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
         return $this->getFromWhereForNonEmptyCondition($query_presenter, $value);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value)
+    private function getFromWhereForNonEmptyCondition(QueryListFieldPresenter $query_presenter, $value): IProvideFromAndWhereSQLFragments
     {
         $condition = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.id
             AND $query_presenter->list_value_alias.label = " . $this->quoteSmart($value);
@@ -75,10 +61,7 @@ class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWher
         return $this->comparison_builder->getFromWhere($query_presenter);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter)
+    private function getFromWhereForEmptyCondition(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
     {
         $matches_value = " != " . $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
         $condition     = "$query_presenter->changeset_value_list_alias.bindvalue_id $matches_value";

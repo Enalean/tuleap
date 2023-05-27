@@ -22,12 +22,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class FromWhereEmptyComparisonListFieldBuilder
+final class FromWhereEmptyComparisonListFieldBuilder
 {
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(QueryListFieldPresenter $query_presenter)
+    public function getFromWhere(QueryListFieldPresenter $query_presenter): IProvideFromAndWhereSQLFragments
     {
         $from = " LEFT JOIN (
             tracker_changeset_value AS $query_presenter->changeset_value_alias

@@ -56,10 +56,7 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
         $this->condition_builder  = $condition_builder;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $value     = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
         $condition = $this->condition_builder->getCondition($value);

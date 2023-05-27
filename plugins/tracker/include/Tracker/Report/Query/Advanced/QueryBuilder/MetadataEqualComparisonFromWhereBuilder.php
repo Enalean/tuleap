@@ -46,7 +46,7 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
         $this->comment_from_where_builder = $comment_from_where_builder;
     }
 
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
@@ -95,22 +95,14 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    /**
-     * @param            $value
-     *
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function searchComment(Comparison $comparison, $value)
+    private function searchComment(Comparison $comparison, $value): IProvideFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 
         return $this->comment_from_where_builder->getFromWhereWithComment($value, $suffix);
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    private function searchArtifactsWithoutComment(Comparison $comparison)
+    private function searchArtifactsWithoutComment(Comparison $comparison): IProvideFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 

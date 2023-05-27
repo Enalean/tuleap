@@ -21,8 +21,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 interface FieldFromWhereBuilder
 {
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field);
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments;
 }

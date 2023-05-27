@@ -37,7 +37,7 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
 class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
-    public function getFromWhere(Metadata $metadata, Comparison $comparison)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
 
@@ -106,12 +106,7 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
         return '\'"' . $value . '"\'';
     }
 
-    /**
-     * @param            $value
-     *
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    protected function searchComment(Comparison $comparison, $value)
+    protected function searchComment(Comparison $comparison, $value): IProvideFromAndWhereSQLFragments
     {
         $value = $this->quoteSmart($value);
         $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
@@ -134,7 +129,7 @@ class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFr
         return new FromWhere($from, $where);
     }
 
-    private function searchArtifactsWithComments(Comparison $comparison)
+    private function searchArtifactsWithComments(Comparison $comparison): IProvideFromAndWhereSQLFragments
     {
         $suffix = spl_object_hash($comparison);
 

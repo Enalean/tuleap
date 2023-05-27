@@ -56,10 +56,7 @@ class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapp
         $this->condition_builder  = $condition_builder;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $suffix   = spl_object_hash($comparison);
         $value    = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));

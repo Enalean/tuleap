@@ -52,10 +52,7 @@ class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
         $this->condition_builder  = $condition_builder;
     }
 
-    /**
-     * @return IProvideFromAndWhereSQLFragments
-     */
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
     {
         $values    = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $condition = $this->condition_builder->getCondition($values);
