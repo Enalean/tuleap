@@ -19,21 +19,10 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class AndOperand implements Visitable
+class AndOperand implements Visitable, Logical
 {
-    /**
-     * @var Term
-     */
-    private $operand;
-    /**
-     * @var AndOperand
-     */
-    private $tail;
-
-    public function __construct(Term $operand, ?AndOperand $tail = null)
+    public function __construct(private readonly Term $operand, private readonly ?AndOperand $tail = null)
     {
-        $this->operand = $operand;
-        $this->tail    = $tail;
     }
 
     public function accept(Visitor $visitor, VisitorParameters $parameters)
@@ -41,12 +30,12 @@ class AndOperand implements Visitable
         return $visitor->visitAndOperand($this, $parameters);
     }
 
-    public function getOperand()
+    public function getOperand(): Term
     {
         return $this->operand;
     }
 
-    public function getTail()
+    public function getTail(): OrOperand | AndOperand | null
     {
         return $this->tail;
     }
