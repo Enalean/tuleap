@@ -107,15 +107,15 @@ class labelPlugin extends Plugin
     public function projectDashboardIsDisplayed(ProjectDashboardIsDisplayed $project_dashboard_is_displayed): void
     {
         $project_dashboard_is_displayed->getLayout()->addJavascriptAsset(
-            new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'scripts/configure-widget/index.js')
+            new \Tuleap\Layout\JavascriptViteAsset($this->getAssets(), 'src/index.js')
         );
     }
 
     private function getAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/label'
+            __DIR__ . '/../scripts/configure-widget/frontend-assets',
+            '/assets/label/configure-widget'
         );
     }
 }

@@ -249,8 +249,8 @@ class ProjectLabeledItems extends Widget
     public function getJavascriptAssets(): array
     {
         return [
-            new JavascriptViteAsset($this->getAssets(), 'scripts/project-labeled-items/src/index.js'),
-            new JavascriptViteAsset($this->getAssets(), 'scripts/configure-widget/index.js'),
+            new JavascriptViteAsset($this->getWidgetAssets(), 'src/index.js'),
+            new JavascriptViteAsset($this->getAssets(), 'src/index.js'),
         ];
     }
 
@@ -262,8 +262,16 @@ class ProjectLabeledItems extends Widget
     private function getAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/label'
+            __DIR__ . '/../../../scripts/configure-widget/frontend-assets',
+            '/assets/label/configure-widget'
+        );
+    }
+
+    private function getWidgetAssets(): IncludeViteAssets
+    {
+        return new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/project-labeled-items/frontend-assets',
+            '/assets/label/project-labeled-items'
         );
     }
 

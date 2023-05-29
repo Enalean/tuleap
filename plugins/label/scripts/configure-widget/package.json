@@ -1,0 +1,19 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-label-configure-widget",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/tlp-swatch-colors": "workspace:*",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  }
+}

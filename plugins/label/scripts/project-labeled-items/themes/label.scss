@@ -17,12 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "labels-box";
-
-.dashboard-widget-content-projectlabeleditems {
-    margin: 0;
-}
-
 .labeled-items-list {
     display: flex;
     flex-direction: column;
@@ -66,10 +60,6 @@
 .labeled-item-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
     fill: var(--tlp-main-color-transparent-80);
-}
-
-.labeled-items-empty {
-    margin: 0 var(--tlp-medium-spacing) 60px;
 }
 
 .labeled-item-configuration-label {
