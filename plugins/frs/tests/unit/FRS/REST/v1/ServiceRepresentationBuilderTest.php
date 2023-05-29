@@ -24,74 +24,83 @@ declare(strict_types=1);
 namespace Tuleap\FRS\REST\v1;
 
 use Luracast\Restler\RestException;
-use Mockery as M;
 use Project;
 use ProjectUGroup;
+use Service;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private ServiceRepresentationBuilder $builder;
+    private Project $project;
+    private \PFUser $frs_admin_user;
     /**
-     * @var ServiceRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var M\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $frs_admin_user;
-    /**
-     * @var M\MockInterface|FRSPermissionManager
+     * @var FRSPermissionManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $frs_permissions_manager;
     /**
-     * @var M\MockInterface|FRSPermissionFactory
+     * @var FRSPermissionFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $frs_permissions_factory;
+    private int $project_id;
     /**
-     * @var int
-     */
-    private $project_id;
-    /**
-     * @var M\MockInterface|\UGroupManager
+     * @var \UGroupManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $ugroup_manager;
 
     protected function setUp(): void
     {
-        $this->project_id = 120;
-        $this->project    = M::mock(Project::class, ['getID' => (string) $this->project_id]);
-        $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
-        $this->frs_admin_user          = M::mock(\PFUser::class);
-        $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->frs_admin_user)->andReturnTrue();
-        $this->frs_permissions_factory = M::mock(FRSPermissionFactory::class);
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([])->byDefault();
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([])->byDefault();
-        $this->ugroup_manager = M::mock(\UGroupManager::class);
+        $this->project_id              = 120;
+        $this->project                 = ProjectTestBuilder::aProject()->withId($this->project_id)->withUsedService(Service::FILE)->build();
+        $this->frs_admin_user          = UserTestBuilder::aUser()->build();
+        $this->frs_permissions_manager = $this->createMock(FRSPermissionManager::class);
+        $this->frs_permissions_factory = $this->createMock(FRSPermissionFactory::class);
+
+        $this->ugroup_manager = $this->createMock(\UGroupManager::class);
         $this->builder        = new ServiceRepresentationBuilder($this->frs_permissions_manager, $this->frs_permissions_factory, $this->ugroup_manager);
+    }
+
+    private function mockDefaultIsAdmin(): void
+    {
+        $this->frs_permissions_manager->method('isAdmin')->with($this->project, $this->frs_admin_user)->willReturn(true);
+    }
+
+    private function mockDefaultFRSPermissions(): void
+    {
+        $this->mockDefaultIsAdmin();
+
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [$this->project, FRSPermission::FRS_READER, []],
+            [$this->project, FRSPermission::FRS_ADMIN, []],
+        ]);
     }
 
     public function testItReturnsEmptyPermissionsForGroupsForNonFRSAdmins(): void
     {
-        $a_random_user = M::mock(\PFUser::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->project, $a_random_user)->andReturnFalse();
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [$this->project, FRSPermission::FRS_READER, []],
+            [$this->project, FRSPermission::FRS_ADMIN, []],
+        ]);
+
+        $a_random_user = UserTestBuilder::aUser()->build();
+        $this->frs_permissions_manager->method('isAdmin')->with($this->project, $a_random_user)->willReturn(false);
 
         $representation = $this->builder->getServiceRepresentation($a_random_user, $this->project);
-        $this->assertNull($representation->permissions_for_groups);
+        self::assertNull($representation->permissions_for_groups);
     }
 
     public function testItReturnsThatNoGroupsHaveTheCanReadPermissions(): void
     {
+        $this->mockDefaultFRSPermissions();
+
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
-        $this->assertEmpty($representation->permissions_for_groups->can_read);
+
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertEmpty($representation->permissions_for_groups->can_read);
     }
 
     public function testItReturnsGroupsWithCanReadPermissions(): void
@@ -101,7 +110,6 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup    = new ProjectUGroup([
@@ -109,17 +117,33 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission(ProjectUGroup::PROJECT_MEMBERS),
-            new FRSPermission($static_ugroup_id),
+        $this->ugroup_manager->method('getUGroup')->willReturnMap([
+            [$this->project, ProjectUGroup::PROJECT_MEMBERS, $project_members],
+            [$this->project, $static_ugroup_id, $static_ugroup],
+            [],
         ]);
 
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [
+                $this->project,
+                FRSPermission::FRS_READER,
+                [
+                    new FRSPermission(ProjectUGroup::PROJECT_MEMBERS),
+                    new FRSPermission($static_ugroup_id),
+                ],
+            ],
+            [$this->project, FRSPermission::FRS_ADMIN, []],
+        ]);
+
+        $this->mockDefaultIsAdmin();
+
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
-        $this->assertCount(2, $representation->permissions_for_groups->can_read);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
-        $this->assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
+
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertCount(2, $representation->permissions_for_groups->can_read);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        self::assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
     }
 
     public function testItReturnsGroupsWithCanAdminPermissions(): void
@@ -130,15 +154,20 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
+        $this->ugroup_manager->method('getUGroup')->with($this->project, $static_ugroup_id)->willReturn($static_ugroup);
 
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([
-            new FRSPermission($static_ugroup_id),
+        $this->mockDefaultIsAdmin();
+
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [$this->project, FRSPermission::FRS_READER, []],
+            [$this->project, FRSPermission::FRS_ADMIN, [new FRSPermission($static_ugroup_id)]],
         ]);
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
-        $this->assertCount(1, $representation->permissions_for_groups->can_admin);
-        $this->assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
+
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertCount(1, $representation->permissions_for_groups->can_admin);
+        self::assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
     }
 
     public function testItReturnsGroupsWithBothdPermissions(): void
@@ -148,7 +177,6 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup    = new ProjectUGroup([
@@ -156,30 +184,36 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission(ProjectUGroup::PROJECT_MEMBERS),
+        $this->ugroup_manager->method('getUGroup')->willReturnMap([
+            [$this->project, ProjectUGroup::PROJECT_MEMBERS, $project_members],
+            [$this->project, $static_ugroup_id, $static_ugroup],
+            [],
         ]);
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([
-            new FRSPermission($static_ugroup_id),
+
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [$this->project, FRSPermission::FRS_READER, [new FRSPermission(ProjectUGroup::PROJECT_MEMBERS)]],
+            [$this->project, FRSPermission::FRS_ADMIN, [new FRSPermission($static_ugroup_id)]],
         ]);
+
+        $this->mockDefaultIsAdmin();
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
-        $this->assertCount(1, $representation->permissions_for_groups->can_read);
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
 
-        $this->assertCount(1, $representation->permissions_for_groups->can_admin);
-        $this->assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertCount(1, $representation->permissions_for_groups->can_read);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        self::assertCount(1, $representation->permissions_for_groups->can_admin);
+        self::assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
     }
 
     public function testItThrowAnExceptionIfProjectDoesntUsesFiles(): void
     {
-        $this->project->shouldReceive('usesFile')->andReturnFalse();
+        $project = ProjectTestBuilder::aProject()->withId($this->project_id)->withoutServices()->build();
 
         $this->expectException(RestException::class);
 
-        $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
+        $this->builder->getServiceRepresentation($this->frs_admin_user, $project);
     }
 
     public function testItReturnsAnEmptyListWhenNobodyIsSelected(): void
@@ -189,13 +223,18 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::NONE],
             'group_id' => (string) $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::NONE)->andReturn($nobody);
+        $this->ugroup_manager->method('getUGroup')->with($this->project, ProjectUGroup::NONE)->willReturn($nobody);
 
-        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
-            new FRSPermission((string) ProjectUGroup::NONE),
+        $this->frs_permissions_factory->method('getFrsUGroupsByPermission')->willReturnMap([
+            [$this->project, FRSPermission::FRS_READER, [new FRSPermission((string) ProjectUGroup::NONE)]],
+            [$this->project, FRSPermission::FRS_ADMIN, []],
         ]);
 
+        $this->mockDefaultIsAdmin();
+
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
-        $this->assertCount(0, $representation->permissions_for_groups->can_read);
+
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertCount(0, $representation->permissions_for_groups->can_read);
     }
 }

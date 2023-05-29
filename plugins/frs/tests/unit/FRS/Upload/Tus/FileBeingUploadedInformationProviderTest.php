@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload\Tus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
@@ -32,16 +31,14 @@ use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 
 final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testFileInformationCanBeProvided(): void
     {
         $path_allocator = new UploadPathAllocator();
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
-        $current_user   = \Mockery::mock(\PFUser::class);
+        $dao            = $this->createMock(FileOngoingUploadDao::class);
+        $current_user   = UserTestBuilder::aUser()->withId(102)->build();
         $data_store     = new FileBeingUploadedInformationProvider($path_allocator, $dao, new CurrentRequestUserProviderStub($current_user));
 
-        $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns(
+        $dao->method('searchFileOngoingUploadByIDUserIDAndExpirationDate')->willReturn(
             [
                 'file_size' => 123456,
                 'name'      => 'readme.md',
@@ -50,27 +47,27 @@ final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUni
 
         $item_id        = 12;
         $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id);
-        $current_user->shouldReceive('getID')->andReturn('102');
 
         $file_information = $data_store->getFileInformation($server_request);
 
-        $this->assertSame($item_id, $file_information->getID());
-        $this->assertSame(123456, $file_information->getLength());
-        $this->assertSame(0, $file_information->getOffset());
+        self::assertNotNull($file_information);
+        self::assertSame($item_id, $file_information->getID());
+        self::assertSame(123456, $file_information->getLength());
+        self::assertSame(0, $file_information->getOffset());
     }
 
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing(): void
     {
         $data_store = new FileBeingUploadedInformationProvider(
             new UploadPathAllocator(),
-            \Mockery::mock(FileOngoingUploadDao::class),
+            $this->createMock(FileOngoingUploadDao::class),
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults())
         );
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->andReturns(null);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->willReturn(null);
 
-        $this->assertNull($data_store->getFileInformation($request));
+        self::assertNull($data_store->getFileInformation($request));
     }
 
     public function testFileInformationCannotBeFoundIfNoCurrentUserIsFoundOnTheRequest(): void
@@ -86,15 +83,14 @@ final class FileBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUni
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
-        $dao          = \Mockery::mock(FileOngoingUploadDao::class);
-        $current_user = \Mockery::mock(\PFUser::class);
+        $dao          = $this->createMock(FileOngoingUploadDao::class);
+        $current_user = UserTestBuilder::aUser()->withId(102)->build();
         $data_store   = new FileBeingUploadedInformationProvider(new UploadPathAllocator(), $dao, new CurrentRequestUserProviderStub($current_user));
 
-        $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns([]);
+        $dao->method('searchFileOngoingUploadByIDUserIDAndExpirationDate')->willReturn([]);
 
-        $current_user->shouldReceive('getId')->andReturn('102');
         $server_request = (new NullServerRequest())->withAttribute('id', '12');
 
-        $this->assertNull($data_store->getFileInformation($server_request));
+        self::assertNull($data_store->getFileInformation($server_request));
     }
 }

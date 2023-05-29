@@ -26,8 +26,6 @@ use GitPermissionsManager;
 use GitPlugin;
 use GitRepository;
 use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -42,63 +40,59 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var AdministrationController
-     */
-    private $controller;
+    private AdministrationController $controller;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
 
     /**
-     * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var GitPermissionsManager&PHPUnit\Framework\MockObject\MockObject
      */
     private $git_permissions_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     * @var PHPUnit\Framework\MockObject\MockObject&BaseLayout
      */
     private $layout;
 
     /**
-     * @var HTTPRequest|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var HTTPRequest&PHPUnit\Framework\MockObject\MockObject
      */
     private $request;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     * @var PHPUnit\Framework\MockObject\MockObject&Project
      */
     private $project;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRenderer
+     * @var PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
      */
     private $renderer;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderRenderer
+     * @var PHPUnit\Framework\MockObject\MockObject&HeaderRenderer
      */
     private $header_renderer;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     * @var PHPUnit\Framework\MockObject\MockObject&IncludeAssets
      */
     private $include_assets;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LogFactory
+     * @var PHPUnit\Framework\MockObject\MockObject&LogFactory
      */
     private $log_factory;
 
@@ -106,13 +100,13 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->project_manager         = Mockery::mock(ProjectManager::class);
-        $this->git_permissions_manager = Mockery::mock(GitPermissionsManager::class);
-        $this->header_renderer         = Mockery::mock(HeaderRenderer::class);
-        $this->renderer                = Mockery::mock(TemplateRenderer::class);
-        $this->jenkins_server_factory  = Mockery::mock(JenkinsServerFactory::class);
-        $this->include_assets          = Mockery::mock(IncludeAssets::class);
-        $this->log_factory             = Mockery::mock(LogFactory::class);
+        $this->project_manager         = $this->createMock(ProjectManager::class);
+        $this->git_permissions_manager = $this->createMock(GitPermissionsManager::class);
+        $this->header_renderer         = $this->createMock(HeaderRenderer::class);
+        $this->renderer                = $this->createMock(TemplateRenderer::class);
+        $this->jenkins_server_factory  = $this->createMock(JenkinsServerFactory::class);
+        $this->include_assets          = $this->createMock(IncludeAssets::class);
+        $this->log_factory             = $this->createMock(LogFactory::class);
 
         $this->controller = new AdministrationController(
             $this->project_manager,
@@ -123,20 +117,20 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->renderer,
             $this->include_assets,
             new class implements EventDispatcherInterface {
-                public function dispatch(object $event)
+                public function dispatch(object $event): object
                 {
                     return $event;
                 }
             }
         );
 
-        $this->layout  = Mockery::mock(BaseLayout::class);
-        $this->request = Mockery::mock(HTTPRequest::class);
-        $this->project = Mockery::mock(Project::class);
+        $this->layout  = $this->createMock(BaseLayout::class);
+        $this->request = $this->createMock(HTTPRequest::class);
+        $this->project = $this->createMock(Project::class);
 
-        $this->project->shouldReceive('isError')->andReturnFalse();
-        $this->project->shouldReceive('getID')->andReturn(101);
-        $this->project->shouldReceive('getUnixName')->andReturn('project01');
+        $this->project->method('isError')->willReturn(false);
+        $this->project->method('getID')->willReturn(101);
+        $this->project->method('getUnixName')->willReturn('project01');
 
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
@@ -152,10 +146,10 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
+        $this->project_manager->expects(self::once())
+            ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
 
@@ -166,15 +160,15 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
+        $this->project_manager->expects(self::once())
+            ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(NotFoundException::class);
 
@@ -185,26 +179,26 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
+        $this->project_manager->expects(self::once())
+            ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = $this->createMock(PFUser::class);
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
@@ -215,45 +209,45 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $variables = ['project_name' => 'test'];
 
-        $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')
+        $this->project_manager->expects(self::once())
+            ->method('getProjectByCaseInsensitiveUnixName')
             ->with('test')
-            ->once()
-            ->andReturn($this->project);
+            ->willReturn($this->project);
 
-        $this->project->shouldReceive('usesService')
+        $this->project->expects(self::once())
+            ->method('usesService')
             ->with(GitPlugin::SERVICE_SHORTNAME)
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $user = Mockery::mock(PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $user = $this->createMock(PFUser::class);
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with(
                 $user,
                 $this->project
             )
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $jenkins_server = new JenkinsServer(1, 'url', 'encrypted_token', $this->project);
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
-            ->once()
+        $this->jenkins_server_factory->expects(self::once())
+            ->method('getJenkinsServerOfProject')
             ->with($this->project)
-            ->andReturn([$jenkins_server]);
+            ->willReturn([$jenkins_server]);
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getName')->andReturn('repo01');
+        $repository = $this->createMock(GitRepository::class);
+        $repository->method('getName')->willReturn('repo01');
         $log = new Log($repository, 1582622782, 'job_url', null);
-        $this->log_factory->shouldReceive('getLastJobLogsByProjectServer')
+        $this->log_factory->method('getLastJobLogsByProjectServer')
             ->with($jenkins_server)
-            ->andReturn([$log]);
+            ->willReturn([$log]);
 
-        $this->header_renderer->shouldReceive('renderServiceAdministrationHeader')->once();
-        $this->renderer->shouldReceive('renderToPage')->once();
-        $this->layout->shouldReceive('footer')->once();
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once();
-        $this->include_assets->shouldReceive('getFileURL')->once();
+        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+        $this->renderer->expects(self::once())->method('renderToPage');
+        $this->layout->expects(self::once())->method('footer');
+        $this->layout->expects(self::once())->method('includeFooterJavascriptFile');
+        $this->include_assets->expects(self::once())->method('getFileURL');
 
         $this->controller->process($this->request, $this->layout, $variables);
     }

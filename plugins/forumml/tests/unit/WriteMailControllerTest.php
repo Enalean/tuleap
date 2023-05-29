@@ -33,7 +33,7 @@ final class WriteMailControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $controller = new WriteMailController();
         $this->expectExceptionObject(new LayoutInspectorRedirection('/plugins/forumml/list/123/threads'));
         $controller->process(
-            HTTPRequestBuilder::get()->withParam('list', 123)->build(),
+            HTTPRequestBuilder::get()->withParam('list', '123')->build(),
             LayoutBuilder::build(),
             []
         );

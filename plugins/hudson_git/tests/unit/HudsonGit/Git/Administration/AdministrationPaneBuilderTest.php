@@ -22,48 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getUnixName')->andReturn('test');
+        $this->project = ProjectTestBuilder::aProject()->withUnixName('test')->build();
     }
 
-    public function testItBuildsAPane()
+    public function testItBuildsAPane(): void
     {
         $pane = AdministrationPaneBuilder::buildPane($this->project);
 
-        $this->assertEquals('Jenkins', $pane->getPaneName());
-        $this->assertStringContainsString(
+        self::assertEquals('Jenkins', $pane->getPaneName());
+        self::assertStringContainsString(
             "/test/administration/jenkins",
             $pane->getUrl()
         );
-        $this->assertFalse($pane->isActive());
+        self::assertFalse($pane->isActive());
     }
 
-    public function testItBuildsAnActivePane()
+    public function testItBuildsAnActivePane(): void
     {
         $pane = AdministrationPaneBuilder::buildActivePane($this->project);
 
-        $this->assertEquals('Jenkins', $pane->getPaneName());
-        $this->assertStringContainsString(
+        self::assertEquals('Jenkins', $pane->getPaneName());
+        self::assertStringContainsString(
             "/test/administration/jenkins",
             $pane->getUrl()
         );
-        $this->assertTrue($pane->isActive());
+        self::assertTrue($pane->isActive());
     }
 }

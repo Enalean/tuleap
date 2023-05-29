@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -32,28 +30,21 @@ use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private XMLExporter $exporter;
 
     /**
-     * @var XMLExporter
-     */
-    private $exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Project $project;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     private EncryptionKey $encryption_key;
@@ -62,8 +53,8 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->jenkins_server_factory = Mockery::mock(JenkinsServerFactory::class);
-        $this->logger                 = Mockery::mock(LoggerInterface::class);
+        $this->jenkins_server_factory = $this->createMock(JenkinsServerFactory::class);
+        $this->logger                 = $this->createMock(LoggerInterface::class);
         $this->encryption_key         = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $this->exporter = new XMLExporter(
@@ -72,14 +63,14 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->encryption_key,
         );
 
-        $this->project = Mockery::mock(Project::class);
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItExportsProjectJenkinsServer(): void
     {
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
-            ->once()
-            ->andReturn([
+        $this->jenkins_server_factory->expects(self::once())
+            ->method('getJenkinsServerOfProject')
+            ->willReturn([
                 new JenkinsServer(1, ('https://url'), null, $this->project),
                 new JenkinsServer(2, ('https://url2'), SymmetricCrypto::encrypt(new ConcealedString('my_token'), $this->encryption_key), $this->project),
             ]);
@@ -88,29 +79,29 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             <git/>
         ');
 
-        $this->logger->shouldReceive('info');
+        $this->logger->method('info');
 
         $this->exporter->export(
             $this->project,
             $xml_git
         );
 
-        $this->assertTrue(isset($xml_git->{"jenkins-servers-admin"}));
-        $this->assertCount(2, $xml_git->{"jenkins-servers-admin"}->children());
+        self::assertTrue(isset($xml_git->{"jenkins-servers-admin"}));
+        self::assertCount(2, $xml_git->{"jenkins-servers-admin"}->children());
 
         $server_01 = $xml_git->{"jenkins-servers-admin"}->{"jenkins-server"}[0];
-        $this->assertEquals('https://url', (string) $server_01['url']);
+        self::assertEquals('https://url', (string) $server_01['url']);
 
         $server_02 = $xml_git->{"jenkins-servers-admin"}->{"jenkins-server"}[1];
-        $this->assertEquals('https://url2', (string) $server_02['url']);
+        self::assertEquals('https://url2', (string) $server_02['url']);
         self::assertEquals('my_token', (string) $server_02['jenkins_token']);
     }
 
     public function testItDoesNotExportProjectJenkinsServerIfNoServerDefined(): void
     {
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
-            ->once()
-            ->andReturn([]);
+        $this->jenkins_server_factory->expects(self::once())
+            ->method('getJenkinsServerOfProject')
+            ->willReturn([]);
 
         $xml_git = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <git/>
@@ -121,6 +112,6 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml_git
         );
 
-        $this->assertFalse(isset($xml_git->{"jenkins-servers-admin"}));
+        self::assertFalse(isset($xml_git->{"jenkins-servers-admin"}));
     }
 }

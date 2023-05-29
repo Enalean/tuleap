@@ -1,26 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2007
  *
- * This file is a part of codendi.
+ * This file is a part of Tuleap.
  *
- * codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Id$
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -30,14 +28,12 @@
 class ForumML_FileStorage
 {
     // Root directory to host mails attachments
-    public $root;
+    public string $root;
 
     /**
      * ForumML_FileStorage Constructor
-     *
-     * @param root: The ForumML attachments directory
      */
-    public function __construct($root)
+    public function __construct(string $root)
     {
         $this->root = $root;
     }

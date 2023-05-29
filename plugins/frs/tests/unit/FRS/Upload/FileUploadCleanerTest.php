@@ -22,19 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testDanglingFilesBeingUploadedAreCleaned(): void
     {
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
+        $dao            = $this->createMock(FileOngoingUploadDao::class);
         $path_allocator = new UploadPathAllocator();
 
         $tmp_dir = vfsStream::setup();
@@ -45,20 +43,21 @@ class FileUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $existing_item_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_file_information);
         mkdir(dirname($existing_item_being_uploaded_path), 0777, true);
         touch($existing_item_being_uploaded_path);
-        $dao->shouldReceive('searchFileOngoingUploadIds')->andReturns([$existing_item_id]);
+        $dao->method('searchFileOngoingUploadIds')->willReturn([$existing_item_id]);
         $non_existing_file_information = new FileBeingUploadedInformation(999999, 'Filename', 10, 0);
         $non_existing_item_path        = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
         mkdir(dirname($non_existing_item_path), 0777, true);
         touch($non_existing_item_path);
 
-        $dao->shouldReceive('deleteUnusableFiles')->once();
+        $dao->expects(self::once())->method('deleteUnusableFiles');
 
         $cleaner = new FileUploadCleaner($path_allocator, $dao);
 
         $current_time = new \DateTimeImmutable();
         $cleaner->deleteDanglingFilesToUpload($current_time);
-        $this->assertFileExists($existing_item_being_uploaded_path);
-        $this->assertFileDoesNotExist($non_existing_item_path);
-        $this->assertFileDoesNotExist(dirname($non_existing_item_path));
+
+        self::assertFileExists($existing_item_being_uploaded_path);
+        self::assertFileDoesNotExist($non_existing_item_path);
+        self::assertFileDoesNotExist(dirname($non_existing_item_path));
     }
 }

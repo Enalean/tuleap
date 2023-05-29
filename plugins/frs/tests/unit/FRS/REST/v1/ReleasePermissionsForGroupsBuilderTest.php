@@ -24,80 +24,66 @@ declare(strict_types=1);
 namespace Tuleap\FRS\REST\v1;
 
 use FRSRelease;
-use Mockery as M;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReleasePermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private int $project_id;
+    private \Project $a_project;
+    private \PFUser $an_frs_admin;
     /**
-     * @var int
-     */
-    private $project_id;
-    /**
-     * @var M\MockInterface|\Project
-     */
-    private $a_project;
-    /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $an_frs_admin;
-    /**
-     * @var \IPermissionsManagerNG|M\MockInterface
+     * @var \IPermissionsManagerNG&\PHPUnit\Framework\MockObject\MockObject
      */
     private $permissions_manager;
     /**
-     * @var M\MockInterface|\UGroupManager
+     * @var \UGroupManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $ugroup_manager;
     /**
-     * @var M\MockInterface|FRSPermissionManager
+     * @var FRSPermissionManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $frs_permissions_manager;
-    /**
-     * @var ReleasePermissionsForGroupsBuilder
-     */
-    private $builder;
-    /**
-     * @var FRSRelease
-     */
-    private $a_release;
-    /**
-     * @var string
-     */
-    private $a_release_id;
+    private ReleasePermissionsForGroupsBuilder $builder;
+    private FRSRelease $a_release;
+    private string $a_release_id;
 
     public function setUp(): void
     {
         $this->project_id   = 350;
-        $this->a_project    = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
+        $this->a_project    = ProjectTestBuilder::aProject()->withId($this->project_id)->withPublicName('foo')->build();
         $this->a_release_id = '34';
         $this->a_release    = new FRSRelease(['release_id' => $this->a_release_id]);
         $this->a_release->setProject($this->a_project);
-        $this->an_frs_admin        = M::mock(\PFUser::class);
-        $this->permissions_manager = M::mock(\IPermissionsManagerNG::class);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturn([])->byDefault();
-        $this->ugroup_manager          = M::mock(\UGroupManager::class);
-        $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $this->an_frs_admin)->andReturnTrue();
+
+        $this->an_frs_admin            = UserTestBuilder::aUser()->build();
+        $this->permissions_manager     = $this->createMock(\IPermissionsManagerNG::class);
+        $this->ugroup_manager          = $this->createMock(\UGroupManager::class);
+        $this->frs_permissions_manager = $this->createMock(FRSPermissionManager::class);
 
         $this->builder = new ReleasePermissionsForGroupsBuilder($this->frs_permissions_manager, $this->permissions_manager, $this->ugroup_manager);
     }
 
     public function testItReturnsNullForNonFRSAdmins(): void
     {
-        $a_random_user = M::mock(\PFUser::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $a_random_user)->andReturnFalse();
+        $a_random_user = UserTestBuilder::aUser()->build();
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $a_random_user)->willReturn(false);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
 
-        $this->assertNull($this->builder->getRepresentation($a_random_user, $this->a_release));
+        self::assertNull($this->builder->getRepresentation($a_random_user, $this->a_release));
     }
 
     public function testItReturnsAnEmptyRepresentation(): void
     {
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $this->an_frs_admin)->willReturn(true);
+
         $representation = $this->builder->getRepresentation($this->an_frs_admin, $this->a_release);
-        $this->assertEmpty($representation->can_read);
+
+        self::assertNotNull($representation);
+        self::assertEmpty($representation->can_read);
     }
 
     public function testItReturnsTheListOfUGroupsThatCanReadTheRelease(): void
@@ -107,7 +93,6 @@ final class ReleasePermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup    = new ProjectUGroup([
@@ -115,16 +100,23 @@ final class ReleasePermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\
             'name' => 'Developers',
             'group_id' => $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, $static_ugroup_id)->andReturn($static_ugroup);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
+        $this->ugroup_manager->method('getUGroup')->willReturnMap([
+            [$this->a_project, $static_ugroup_id, $static_ugroup],
+            [$this->a_project, ProjectUGroup::PROJECT_MEMBERS, $project_members],
+        ]);
+
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
             ->with($this->a_project, $this->a_release_id, FRSRelease::PERM_READ)
-            ->andReturn([ProjectUGroup::PROJECT_MEMBERS, $static_ugroup_id]);
+            ->willReturn([ProjectUGroup::PROJECT_MEMBERS, $static_ugroup_id]);
+
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $this->an_frs_admin)->willReturn(true);
 
         $representation = $this->builder->getRepresentation($this->an_frs_admin, $this->a_release);
-        $this->assertCount(2, $representation->can_read);
 
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_read[0]->short_name);
-        $this->assertEquals('Developers', $representation->can_read[1]->short_name);
+        self::assertNotNull($representation);
+        self::assertCount(2, $representation->can_read);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_read[0]->short_name);
+        self::assertEquals('Developers', $representation->can_read[1]->short_name);
     }
 }

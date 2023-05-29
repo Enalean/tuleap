@@ -24,73 +24,77 @@ declare(strict_types=1);
 namespace Tuleap\FRS\REST\v1;
 
 use FRSPackage;
-use Mockery as M;
 use ProjectUGroup;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private PackageRepresentationBuilder $builder;
+    private \Project $a_project;
+    private \PFUser $an_frs_admin;
+    private FRSPackage $a_package;
+    private int $package_id;
+    private int $project_id;
     /**
-     * @var PackageRepresentationBuilder
-     */
-    private $builder;
-    private $project_id;
-    private $a_project;
-    /**
-     * @var M\MockInterface|\PFUser
-     */
-    private $an_frs_admin;
-    private $a_package;
-    private $package_id;
-    /**
-     * @var \IPermissionsManagerNG|M\MockInterface
+     * @var \IPermissionsManagerNG&\PHPUnit\Framework\MockObject\MockObject
      */
     private $permissions_manager;
     /**
-     * @var M\MockInterface|\UGroupManager
+     * @var \UGroupManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $ugroup_manager;
     /**
-     * @var M\MockInterface|FRSPermissionManager
+     * @var FRSPermissionManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $frs_permissions_manager;
 
     protected function setUp(): void
     {
-        $this->package_id          = 12;
-        $this->project_id          = 350;
-        $this->a_project           = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
-        $this->an_frs_admin        = M::mock(\PFUser::class);
-        $this->a_package           = new FRSPackage(['package_id' => $this->package_id]);
-        $this->permissions_manager = M::mock(\IPermissionsManagerNG::class);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturn([])->byDefault();
-        $this->ugroup_manager          = M::mock(\UGroupManager::class);
-        $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $this->an_frs_admin)->andReturnTrue();
+        $this->package_id              = 12;
+        $this->project_id              = 350;
+        $this->a_project               = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
+        $this->an_frs_admin            = UserTestBuilder::aUser()->withId(101)->build();
+        $this->a_package               = new FRSPackage(['package_id' => $this->package_id]);
+        $this->permissions_manager     = $this->createMock(\IPermissionsManagerNG::class);
+        $this->ugroup_manager          = $this->createMock(\UGroupManager::class);
+        $this->frs_permissions_manager = $this->createMock(FRSPermissionManager::class);
+
         $this->builder = new PackageRepresentationBuilder($this->permissions_manager, $this->ugroup_manager, $this->frs_permissions_manager);
     }
 
     public function testItReturnsThePackageId(): void
     {
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $this->an_frs_admin)->willReturn(true);
+
         $representation = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
-        $this->assertEquals($this->package_id, $representation->id);
+        self::assertEquals($this->package_id, $representation->id);
     }
 
     public function testItReturnsTheProject(): void
     {
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $this->an_frs_admin)->willReturn(true);
+
         $representation = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
-        $this->assertEquals($this->project_id, $representation->project->id);
+        self::assertEquals($this->project_id, $representation->project->id);
     }
 
     public function testRandomUserCannotReadPermissionsForGroups(): void
     {
-        $a_random_user = M::mock(\PFUser::class);
-        $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $a_random_user)->andReturnFalse();
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')->willReturn([]);
+
+        $a_random_user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->frs_permissions_manager->method('isAdmin')->willReturnMap([
+            [$this->a_project, $a_random_user, false],
+            [$this->a_project, $this->an_frs_admin, true],
+        ]);
+
         $representation = $this->builder->getPackageForUser($a_random_user, $this->a_package, $this->a_project);
-        $this->assertNull($representation->permissions_for_groups);
+
+        self::assertNull($representation->permissions_for_groups);
     }
 
     public function testItReturnsThePermissionsForGroups(): void
@@ -100,7 +104,6 @@ final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup    = new ProjectUGroup([
@@ -108,16 +111,23 @@ final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             'name' => 'Developers',
             'group_id' => $this->project_id,
         ]);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, $static_ugroup_id)->andReturn($static_ugroup);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
+        $this->ugroup_manager->method('getUGroup')->willReturnMap([
+            [$this->a_project, $static_ugroup_id, $static_ugroup],
+            [$this->a_project, ProjectUGroup::PROJECT_MEMBERS, $project_members],
+        ]);
+
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProject')
             ->with($this->a_project, $this->package_id, FRSPackage::PERM_READ)
-            ->andReturn([ProjectUGroup::PROJECT_MEMBERS, $static_ugroup_id]);
+            ->willReturn([ProjectUGroup::PROJECT_MEMBERS, $static_ugroup_id]);
+
+        $this->frs_permissions_manager->method('isAdmin')->with($this->a_project, $this->an_frs_admin)->willReturn(true);
 
         $representation = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
-        $this->assertCount(2, $representation->permissions_for_groups->can_read);
 
-        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
-        $this->assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
+        self::assertNotNull($representation->permissions_for_groups);
+        self::assertCount(2, $representation->permissions_for_groups->can_read);
+        self::assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        self::assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
     }
 }

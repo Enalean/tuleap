@@ -22,33 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private JenkinsServerDeleter $deleter;
 
     /**
-     * @var JenkinsServerDeleter
-     */
-    private $deleter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDao
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
      */
     private $jenkins_server_dao;
 
-    /**
-     * @var JenkinsServer
-     */
-    private $jenkins_server;
+    private JenkinsServer $jenkins_server;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectJobDao
+     * @var PHPUnit\Framework\MockObject\MockObject&ProjectJobDao
      */
     private $project_job_dao;
 
@@ -56,8 +46,8 @@ class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->jenkins_server_dao = Mockery::mock(JenkinsServerDao::class);
-        $this->project_job_dao    = Mockery::mock(ProjectJobDao::class);
+        $this->jenkins_server_dao = $this->createMock(JenkinsServerDao::class);
+        $this->project_job_dao    = $this->createMock(ProjectJobDao::class);
 
         $this->deleter = new JenkinsServerDeleter(
             $this->jenkins_server_dao,
@@ -69,14 +59,14 @@ class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             'url',
             null,
-            Mockery::mock(Project::class)
+            ProjectTestBuilder::aProject()->build(),
         );
     }
 
     public function testItDeletesAJenkinsServer(): void
     {
-        $this->project_job_dao->shouldReceive('deleteLogsOfServer')->with(1)->once();
-        $this->jenkins_server_dao->shouldReceive('deleteJenkinsServer')->with(1)->once();
+        $this->project_job_dao->expects(self::once())->method('deleteLogsOfServer')->with(1);
+        $this->jenkins_server_dao->expects(self::once())->method('deleteJenkinsServer')->with(1);
 
         $this->deleter->deleteServer($this->jenkins_server);
     }

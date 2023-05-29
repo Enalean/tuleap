@@ -18,86 +18,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\User;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\GlobalLanguageMock;
 
-class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $language = \Mockery::mock(\BaseLanguage::class);
-        $language->shouldReceive('getLanguageFromAcceptLanguage');
-        $GLOBALS['Language'] = $language;
+        $GLOBALS['Language']->method('getLanguageFromAcceptLanguage');
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        parent::tearDown();
-    }
-
-    public function testUserIsConsideredAsActiveWhenLoggedIn()
+    public function testUserIsConsideredAsActiveWhenLoggedIn(): void
     {
         $is_logged_in = true;
         $user         = new DynamicUser('Realname', [], $is_logged_in);
 
-        $this->assertTrue($user->isActive());
+        self::assertTrue($user->isActive());
     }
 
-    public function testUserIsNotActiveWhenIsNotLoggedIn()
+    public function testUserIsNotActiveWhenIsNotLoggedIn(): void
     {
         $is_logged_in = false;
         $user         = new DynamicUser('Realname', [], $is_logged_in);
 
-        $this->assertFalse($user->isActive());
+        self::assertFalse($user->isActive());
     }
 
-    public function testUserIsSuperUser()
+    public function testUserIsSuperUser(): void
     {
         $is_logged_in = true;
         $user         = new DynamicUser('Realname', [], $is_logged_in);
 
-        $this->assertTrue($user->isSuperUser());
+        self::assertTrue($user->isSuperUser());
     }
 
-    public function testRealnameUsedIsTheGivenOne()
+    public function testRealnameUsedIsTheGivenOne(): void
     {
         $is_logged_in = true;
         $user         = new DynamicUser('Alpaca', [], $is_logged_in);
 
-        $this->assertEquals('Alpaca', $user->getRealName());
+        self::assertEquals('Alpaca', $user->getRealName());
     }
 
-    public function testSetValuesToUserDoesNothing()
+    public function testSetValuesToUserDoesNothing(): void
     {
         $is_logged_in = false;
         $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $expected_password = $user->getPassword();
         $user->setPassword(new ConcealedString('password'));
-        $this->assertEquals($expected_password, $user->getPassword());
+        self::assertEquals($expected_password, $user->getPassword());
 
         $expected_username = $user->getUserName();
         $user->setUserName('username');
-        $this->assertEquals($expected_username, $user->getUserName());
+        self::assertEquals($expected_username, $user->getUserName());
 
         $expected_status = $user->getStatus();
         $user->setStatus(\PFUser::STATUS_ACTIVE);
-        $this->assertEquals($expected_status, $user->getStatus());
+        self::assertEquals($expected_status, $user->getStatus());
 
         $expected_unix_status = $user->getUnixStatus();
         $user->setUnixStatus('A');
-        $this->assertEquals($expected_unix_status, $user->getUnixStatus());
+        self::assertEquals($expected_unix_status, $user->getUnixStatus());
 
         $expected_expiry_date = $user->getExpiryDate();
         $user->setExpiryDate(time());
-        $this->assertEquals($expected_expiry_date, $user->getExpiryDate());
+        self::assertEquals($expected_expiry_date, $user->getExpiryDate());
     }
 }

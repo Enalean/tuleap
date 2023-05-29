@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload\Tus;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
@@ -31,14 +30,13 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 
 class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void
     {
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
         $path_allocator = new UploadPathAllocator();
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
+        $dao            = $this->createMock(FileOngoingUploadDao::class);
 
         $canceler = new FileUploadCanceler($path_allocator, $dao);
 
@@ -48,17 +46,17 @@ class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(dirname($item_path), 0777, true);
         touch($path_allocator->getPathForItemBeingUploaded($file_information));
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects(self::once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
     {
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
         $path_allocator = new UploadPathAllocator();
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
+        $dao            = $this->createMock(FileOngoingUploadDao::class);
 
         $canceler = new FileUploadCanceler($path_allocator, $dao);
 
@@ -66,9 +64,9 @@ class FileUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
         $item_path        = $path_allocator->getPathForItemBeingUploaded($file_information);
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects(self::once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 }

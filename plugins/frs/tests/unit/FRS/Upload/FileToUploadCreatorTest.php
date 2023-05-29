@@ -25,55 +25,48 @@ use DateTimeImmutable;
 use FRSFileFactory;
 use FRSRelease;
 use LogicException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use PFUser;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     private const RELEASE_ID = 11;
     private const PROJECT_ID = 104;
 
     /**
-     * @var MockInterface|FileOngoingUploadDao
+     * @var FileOngoingUploadDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
+    private FileToUploadCreator $creator;
     /**
-     * @var FileToUploadCreator
-     */
-    private $creator;
-    /**
-     * @var FRSFileFactory|MockInterface
+     * @var FRSFileFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $file_factory;
     /**
-     * @var FRSRelease|MockInterface
+     * @var FRSRelease&\PHPUnit\Framework\MockObject\MockObject
      */
     private $release;
-    /**
-     * @var MockInterface|PFUser
-     */
-    private $user;
+    private PFUser $user;
 
     /**
      * @before
      */
     public function instantiateCreator(): void
     {
-        $this->dao          = Mockery::mock(FileOngoingUploadDao::class);
-        $this->file_factory = Mockery::mock(FRSFileFactory::class);
+        $this->dao          = $this->createMock(FileOngoingUploadDao::class);
+        $this->file_factory = $this->createMock(FRSFileFactory::class);
         $this->creator      = new FileToUploadCreator(
             $this->file_factory,
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             1000
         );
+
+        $this->user = UserTestBuilder::aUser()->withId(102)->build();
     }
 
     /**
@@ -81,35 +74,26 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function instantiateRelease(): void
     {
-        $this->release = Mockery::mock(FRSRelease::class);
-        $this->release->shouldReceive('getReleaseId')->andReturn(self::RELEASE_ID);
-        $this->release->shouldReceive('getGroupId')->andReturn(self::PROJECT_ID);
+        $this->release = $this->createMock(FRSRelease::class);
+        $this->release->method('getReleaseId')->willReturn(self::RELEASE_ID);
+        $this->release->method('getGroupId')->willReturn(self::PROJECT_ID);
     }
 
-    /**
-     * @before
-     */
-    public function instantiateUser(): void
-    {
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(102);
-    }
-
-    public function testCreation()
+    public function testCreation(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn([]);
-        $this->dao->shouldReceive('saveFileOngoingUpload')->once()->andReturn(12);
+        $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn([]);
+        $this->dao->expects(self::once())->method('saveFileOngoingUpload')->willReturn(12);
 
         $document_to_upload = $this->creator->create(
             $this->release,
@@ -119,23 +103,23 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             123
         );
 
-        $this->assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
+        self::assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
     }
 
-    public function testANewItemIsNotCreatedIfAFileWithSameNameExists()
+    public function testANewItemIsNotCreatedIfAFileWithSameNameExists(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(true);
+            ->willReturn(true);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('saveFileOngoingUpload')->never();
+        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
 
         $this->expectException(UploadFileNameAlreadyExistsException::class);
 
@@ -148,20 +132,20 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testANewItemIsNotCreatedIfAFileWithSameNameExistsIsMarkedAsRestored()
+    public function testANewItemIsNotCreatedIfAFileWithSameNameExistsIsMarkedAsRestored(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->dao->shouldReceive('saveFileOngoingUpload')->never();
+        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
 
         $this->expectException(UploadFileMarkedToBeRestoredException::class);
 
@@ -174,20 +158,20 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
+    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
+        $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn(
             [
                 ['id' => 12, 'user_id' => 102, 'file_size' => 123],
             ]
@@ -201,30 +185,30 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             123
         );
 
-        $this->assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
+        self::assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
     }
 
-    public function testANewItemIsNotCreatedIfManyUploadsAreOngoingWithTheSameFileWhichShouldNeverHappen()
+    public function testANewItemIsNotCreatedIfManyUploadsAreOngoingWithTheSameFileWhichShouldNeverHappen(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
+        $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn(
             [
                 ['id' => 12, 'user_id' => 102, 'file_size' => 123],
                 ['id' => 13, 'user_id' => 102, 'file_size' => 123],
             ]
         );
 
-        $this->dao->shouldReceive('saveFileOngoingUpload')->never();
+        $this->dao->expects(self::never())->method('saveFileOngoingUpload');
 
         $this->expectException(LogicException::class);
 
@@ -237,20 +221,20 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
+    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
+        $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn(
             [
                 ['user_id' => 103],
             ]
@@ -267,20 +251,20 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
+    public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->andReturn(
+        $this->dao->method('searchFileOngoingUploadByReleaseIDNameAndExpirationDate')->willReturn(
             [
                 ['user_id' => 102, 'file_size' => 123456],
             ]
@@ -297,18 +281,18 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
+    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit(): void
     {
         $current_time = new DateTimeImmutable();
 
         $this->file_factory
-            ->shouldReceive('isFileBaseNameExists')
+            ->method('isFileBaseNameExists')
             ->with('filename.txt', self::RELEASE_ID, self::PROJECT_ID)
-            ->andReturn(false);
+            ->willReturn(false);
         $this->file_factory
-            ->shouldReceive('isSameFileMarkedToBeRestored')
+            ->method('isSameFileMarkedToBeRestored')
             ->with('filename.txt', self::RELEASE_ID)
-            ->andReturn(false);
+            ->willReturn(false);
 
         $this->expectException(UploadMaxSizeExceededException::class);
 

@@ -22,37 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Valid_HTTPURI;
 
 final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private JenkinsServerAdder $adder;
 
     /**
-     * @var JenkinsServerAdder
-     */
-    private $adder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerDao
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
      */
     private $git_jenkins_administration_server_dao;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->git_jenkins_administration_server_dao = Mockery::mock(JenkinsServerDao::class);
+        $this->git_jenkins_administration_server_dao = $this->createMock(JenkinsServerDao::class);
 
         $this->adder = new JenkinsServerAdder(
             $this->git_jenkins_administration_server_dao,
@@ -60,13 +51,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)))
         );
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn('101');
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItThrowsAnExceptionIfProvidedURLIsNotAnURL(): void
     {
-        $this->git_jenkins_administration_server_dao->shouldNotReceive('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects(self::never())->method('addJenkinsServer');
 
         $this->expectException(JenkinsServerURLNotValidException::class);
 
@@ -79,12 +69,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfServerAlreadyDefined(): void
     {
-        $this->git_jenkins_administration_server_dao->shouldReceive('isJenkinsServerAlreadyDefinedInProject')
-            ->once()
+        $this->git_jenkins_administration_server_dao->expects(self::once())
+            ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->git_jenkins_administration_server_dao->shouldNotReceive('addJenkinsServer');
+        $this->git_jenkins_administration_server_dao->expects(self::never())->method('addJenkinsServer');
 
         $this->expectException(JenkinsServerAlreadyDefinedException::class);
 
@@ -97,12 +87,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsAJenkinsServerInProjectWithoutAToken(): void
     {
-        $this->git_jenkins_administration_server_dao->shouldReceive('isJenkinsServerAlreadyDefinedInProject')
-            ->once()
+        $this->git_jenkins_administration_server_dao->expects(self::once())
+            ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->git_jenkins_administration_server_dao->shouldReceive('addJenkinsServer')->once();
+        $this->git_jenkins_administration_server_dao->expects(self::once())->method('addJenkinsServer');
 
         $this->adder->addServerInProject(
             $this->project,
@@ -113,12 +103,12 @@ final class JenkinsServerAdderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddsAJenkinsServerInProjectWithAToken(): void
     {
-        $this->git_jenkins_administration_server_dao->shouldReceive('isJenkinsServerAlreadyDefinedInProject')
-            ->once()
+        $this->git_jenkins_administration_server_dao->expects(self::once())
+            ->method('isJenkinsServerAlreadyDefinedInProject')
             ->with(101, 'https://url')
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->git_jenkins_administration_server_dao->shouldReceive('addJenkinsServer')->once();
+        $this->git_jenkins_administration_server_dao->expects(self::once())->method('addJenkinsServer');
 
         $this->adder->addServerInProject(
             $this->project,

@@ -24,8 +24,6 @@ namespace Tuleap\HudsonGit\Hook;
 
 use DateTimeImmutable;
 use GitRepository;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
@@ -33,60 +31,53 @@ use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\PollingResponse;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private HookTriggerController $controller;
 
     /**
-     * @var HookTriggerController
-     */
-    private $controller;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HookDao
+     * @var PHPUnit\Framework\MockObject\MockObject&HookDao
      */
     private $dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsClient
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsClient
      */
     private $jenkins_client;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LogCreator
+     * @var PHPUnit\Framework\MockObject\MockObject&LogCreator
      */
     private $log_creator;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JenkinsServerFactory
+     * @var PHPUnit\Framework\MockObject\MockObject&JenkinsServerFactory
      */
     private $jenkins_server_factory;
 
     /**
-     * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var GitRepository&PHPUnit\Framework\MockObject\MockObject
      */
     private $repository;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao                    = Mockery::mock(HookDao::class);
-        $this->jenkins_client         = Mockery::mock(JenkinsClient::class);
-        $this->logger                 = Mockery::mock(LoggerInterface::class);
-        $this->log_creator            = Mockery::mock(LogCreator::class);
-        $this->jenkins_server_factory = Mockery::mock(JenkinsServerFactory::class);
+        $this->dao                    = $this->createMock(HookDao::class);
+        $this->jenkins_client         = $this->createMock(JenkinsClient::class);
+        $this->logger                 = $this->createMock(LoggerInterface::class);
+        $this->log_creator            = $this->createMock(LogCreator::class);
+        $this->jenkins_server_factory = $this->createMock(JenkinsServerFactory::class);
 
         $this->controller = new HookTriggerController(
             $this->dao,
@@ -96,13 +87,13 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->jenkins_server_factory
         );
 
-        $this->repository = Mockery::mock(GitRepository::class);
+        $this->repository = $this->createMock(GitRepository::class);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->repository->shouldReceive('getProject')->andReturn($this->project);
-        $this->repository->shouldReceive('getId')->andReturn(1);
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->repository->method('getProject')->willReturn($this->project);
+        $this->repository->method('getId')->willReturn(1);
 
-        $this->repository->shouldReceive('getAccessURL')->andReturn([
+        $this->repository->method('getAccessURL')->willReturn([
             'http' => 'https://example.com/repo01',
             'ssh'  => 'example.com/repo01',
         ]);
@@ -110,34 +101,34 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => true],
         );
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->with('https://example.com/jenkins', Mockery::any(), 'token', 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
-            ->times(2)
-            ->andReturn($polling_response);
+        $polling_response->method('getBody')->willReturn('Response body');
+        $this->jenkins_client->expects(self::exactly(2))
+            ->method('pushGitNotifications')
+            ->with('https://example.com/jenkins', self::anything(), 'token', 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
+            ->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
 
-        $this->log_creator->shouldReceive('createForRepository')->once();
-        $this->log_creator->shouldReceive('createForProject')->never();
+        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects(self::never())->method('createForProject');
 
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->method('debug');
+        $this->logger->expects(self::never())->method('error');
 
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([]);
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -150,34 +141,33 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => false],
         );
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->with('https://example.com/jenkins', Mockery::any(), 'token', null)
-            ->times(2)
-            ->andReturn($polling_response);
+        $polling_response->method('getBody')->willReturn('Response body');
+        $this->jenkins_client->expects(self::exactly(2))
+            ->method('pushGitNotifications')
+            ->with('https://example.com/jenkins', self::anything(), 'token', null)
+            ->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
+        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects(self::never())->method('createForProject');
 
-        $this->log_creator->shouldReceive('createForRepository')->once();
-        $this->log_creator->shouldReceive('createForProject')->never();
+        $this->logger->method('debug');
+        $this->logger->expects(self::never())->method('error');
 
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('error')->never();
-
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([]);
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -190,39 +180,43 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => true],
         );
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
+        $polling_response->method('getBody')->willReturn('Response body');
 
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->once()
-            ->with(Mockery::any(), "https://example.com/repo01", null, Mockery::any())
-            ->andThrow(UnableToLaunchBuildException::class);
-
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->once()
-            ->with(Mockery::any(), "example.com/repo01", null, Mockery::any())
-            ->andReturn($polling_response);
+        $this->jenkins_client
+            ->method('pushGitNotifications')
+            ->willReturnCallback(
+                function (string $server_url, string $repository_url) use ($polling_response): PollingResponse {
+                    if ($repository_url === "https://example.com/repo01") {
+                        throw new UnableToLaunchBuildException();
+                    } elseif ($repository_url === "example.com/repo01") {
+                        return $polling_response;
+                    } else {
+                        self::fail("Not expected");
+                    }
+                }
+            );
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->shouldReceive('createForRepository')->times(1);
-        $this->log_creator->shouldReceive('createForProject')->never();
+        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects(self::never())->method('createForProject');
 
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->method('debug');
+        $this->logger->expects(self::once())->method('error');
 
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([]);
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([]);
 
         $date_time = new DateTimeImmutable();
 
@@ -235,31 +229,31 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersProjectHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
-        $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
+        $polling_response->method('getBody')->willReturn('Response body');
+        $this->jenkins_client->expects(self::exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->shouldReceive('createForRepository')->never();
-        $this->log_creator->shouldReceive('createForProject')->once();
+        $this->log_creator->expects(self::never())->method('createForRepository');
+        $this->log_creator->expects(self::once())->method('createForProject');
 
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->method('debug');
+        $this->logger->expects(self::never())->method('error');
 
         $date_time = new DateTimeImmutable();
 
@@ -272,40 +266,44 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInProjectHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
+        $polling_response->method('getBody')->willReturn('Response body');
 
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->once()
-            ->with(Mockery::any(), "https://example.com/repo01", null, Mockery::any())
-            ->andThrow(UnableToLaunchBuildException::class);
-
-        $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->once()
-            ->with(Mockery::any(), "example.com/repo01", null, Mockery::any())
-            ->andReturn($polling_response);
+        $this->jenkins_client
+            ->method('pushGitNotifications')
+            ->willReturnCallback(
+                function (string $server_url, string $repository_url, ?string $encrypted_token, ?string $commit_reference) use ($polling_response): PollingResponse {
+                    if ($repository_url === "https://example.com/repo01") {
+                        throw new UnableToLaunchBuildException();
+                    } elseif ($repository_url === "example.com/repo01") {
+                        return $polling_response;
+                    } else {
+                        self::fail("Not expected");
+                    }
+                }
+            );
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->shouldReceive('createForRepository')->never();
-        $this->log_creator->shouldReceive('createForProject')->times(1);
+        $this->log_creator->expects(self::never())->method('createForRepository');
+        $this->log_creator->expects(self::once())->method('createForProject');
 
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('error')->once();
+        $this->logger->method('debug');
+        $this->logger->expects(self::once())->method('error');
 
         $date_time = new DateTimeImmutable();
 
@@ -318,32 +316,32 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTriggerTheProjectHookIfItHasAlreadyBeenTriggeredByRepository(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
+        $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => false],
         );
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
-        $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
+        $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
 
-        $polling_response = Mockery::mock(PollingResponse::class);
-        $polling_response->shouldReceive('getJobPaths')->andReturn([
+        $polling_response = $this->createMock(PollingResponse::class);
+        $polling_response->method('getJobPaths')->willReturn([
             'https://example.com/jenkins/job01',
         ]);
-        $polling_response->shouldReceive('getBody')->andReturn('Response body');
-        $this->jenkins_client->shouldReceive('pushGitNotifications')->times(2)->andReturn($polling_response);
+        $polling_response->method('getBody')->willReturn('Response body');
+        $this->jenkins_client->expects(self::exactly(2))->method('pushGitNotifications')->willReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
             200,
             ''
         );
-        $this->jenkins_client->shouldReceive('pushJenkinsTuleapPluginNotification')->once()->andReturn($hook_response);
+        $this->jenkins_client->expects(self::once())->method('pushJenkinsTuleapPluginNotification')->willReturn($hook_response);
 
-        $this->log_creator->shouldReceive('createForRepository')->times(1);
-        $this->log_creator->shouldReceive('createForProject')->never();
+        $this->log_creator->expects(self::once())->method('createForRepository');
+        $this->log_creator->expects(self::never())->method('createForProject');
 
-        $this->logger->shouldReceive('debug');
+        $this->logger->method('debug');
 
         $date_time = new DateTimeImmutable();
 

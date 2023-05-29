@@ -44,15 +44,10 @@
             <directory name="plugins/crosstracker/tests/unit/"/>
             <directory name="plugins/docman/tests/unit/"/>
             <directory name="plugins/document/tests/unit/"/>
-            <directory name="plugins/dynamic_credentials/tests/unit/"/>
-            <directory name="plugins/forumml/tests/unit/"/>
-            <directory name="plugins/frs/tests/unit/"/>
             <directory name="plugins/git/tests/unit/"/>
             <directory name="plugins/gitlfs/tests/unit/"/>
-            <directory name="plugins/graphontrackersv5/tests/unit/"/>
             <directory name="plugins/hudson/tests/unit/"/>
             <directory name="plugins/hudson_git/tests/unit/"/>
-            <directory name="plugins/hudson_svn/tests/unit/"/>
             <directory name="plugins/ldap/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
             <directory name="plugins/openidconnectclient/tests/unit/"/>

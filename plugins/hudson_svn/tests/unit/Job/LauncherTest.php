@@ -18,58 +18,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\HudsonSvn\Job;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use Psr\Log\NullLogger;
 use Tuleap\SVN\Commit\CommitInfo;
 use Tuleap\SVN\Repository\SvnRepository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $logger;
-    private $project;
-    private $repository;
-    private $commit_info;
+    private Project $project;
+    private SvnRepository $repository;
+    private CommitInfo $commit_info;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->logger      = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->project     = \Mockery::spy(\Project::class);
+        $this->project     = ProjectTestBuilder::aProject()->withId(101)->withUsedService('hudson')->build();
         $this->repository  = SvnRepository::buildActiveRepository(1, "repository_name", $this->project);
         $this->commit_info = new CommitInfo();
         $this->commit_info->setChangedDirectories(["/", "a", "a/trunk", "a/trunk/b", "a/trunk/c"]);
-
-        $this->project->shouldReceive('getID')->andReturn(101);
-        $this->project->shouldReceive('usesService')->with('hudson')->andReturn(true);
     }
 
-    public function tearDown(): void
+    /**
+     * @param Job[] $jobs
+     */
+    private function launchAndTest(array $jobs, SvnRepository $repository, CommitInfo $commit_info, int $call_count): void
     {
-        unset($this->logger);
-        unset($this->project);
-        unset($this->repository);
-        parent::tearDown();
-    }
+        $factory      = $this->createMock(\Tuleap\HudsonSvn\Job\Factory::class);
+        $ci_client    = $this->createMock(\Jenkins_Client::class);
+        $build_params = new \Tuleap\HudsonSvn\BuildParams();
 
-    private function launchAndTest($jobs, $repository, $commit_info, $call_count)
-    {
-        $factory      = \Mockery::spy(\Tuleap\HudsonSvn\Job\Factory::class);
-        $ci_client    = \Mockery::spy(\Jenkins_Client::class);
-        $build_params = new \Tuleap\HudsonSvn\BuildParams($repository, $commit_info);
+        $factory->method('getJobsByRepository')->willReturn($jobs);
+        $ci_client->expects(self::exactly($call_count))->method('launchJobBuild');
+        $ci_client->method('setToken');
 
-        $factory->shouldReceive('getJobsByRepository')->andReturn($jobs);
-        $ci_client->shouldReceive('launchJobBuild')->times($call_count);
-
-        $launcher = new Launcher($factory, $this->logger, $ci_client, $build_params);
+        $launcher = new Launcher($factory, new NullLogger(), $ci_client, $build_params);
 
         $launcher->launch($repository, $commit_info);
     }
 
-    public function testItTestJenkinsJobAreTriggeredOnCommit()
+    public function testItTestJenkinsJobAreTriggeredOnCommit(): void
     {
         $jobs = [new Job('1', '1', '/', 'https://ci.exemple.com/job/Job_Example/', '')];
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 1);
@@ -105,7 +98,7 @@ class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->launchAndTest($jobs, $this->repository, $this->commit_info, 0);
     }
 
-    public function testItTestJenkinsJobAreNotLaunchedTwiceOnSameCommit()
+    public function testItTestJenkinsJobAreNotLaunchedTwiceOnSameCommit(): void
     {
         $jobs = [
             new Job('1', '1', '/', 'https://ci.exemple.com/job/Job_Example/', ''),

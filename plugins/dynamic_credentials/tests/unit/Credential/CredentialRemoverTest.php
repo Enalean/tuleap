@@ -18,26 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DynamicCredentials\Credential;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class CredentialRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CredentialRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testCredentialsAreMarkedAsRevoked()
+    public function testCredentialsAreMarkedAsRevoked(): void
     {
-        $dao = Mockery::mock(CredentialDAO::class);
-        $dao->shouldReceive('revokeByIdentifier')->andReturn(1, 0);
-        $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
-        $identifier_extractor->shouldReceive('extract');
+        $dao = $this->createMock(CredentialDAO::class);
+        $dao->method('revokeByIdentifier')->willReturnOnConsecutiveCalls(1, 0);
+        $identifier_extractor = $this->createMock(CredentialIdentifierExtractor::class);
+        $identifier_extractor->method('extract');
 
         $credential_remover = new CredentialRemover($dao, $identifier_extractor);
-        $this->assertTrue($credential_remover->revokeByUsername('username'));
-        $this->assertFalse($credential_remover->revokeByUsername('username'));
+        self::assertTrue($credential_remover->revokeByUsername('username'));
+        self::assertFalse($credential_remover->revokeByUsername('username'));
     }
 }

@@ -22,24 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Git\Administration;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class URLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class URLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItBuildsAnURL()
+    public function testItBuildsAnURL(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixName')->once()->andReturn('testprj');
+        $project = ProjectTestBuilder::aProject()->withUnixName('testprj')->build();
 
         $url = URLBuilder::buildUrl($project);
 
-        $this->assertEquals(
+        self::assertEquals(
             '/plugins/git/testprj/administration/jenkins',
-            $url
+            $url,
         );
     }
 }
