@@ -22,6 +22,8 @@
  *
  */
 
+use Tuleap\Project\UserPermissionsDao;
+
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
@@ -71,7 +73,8 @@ if ($ldapPlugin instanceof LdapPlugin) {
                 new \Tuleap\Project\UserRemoverDao(),
                 UserManager::instance(),
                 new ProjectHistoryDao(),
-                new UGroupManager()
+                new UGroupManager(),
+                new UserPermissionsDao(),
             );
 
             $ldapCleanUpManager = new LDAP_CleanUpManager($user_remover, $retentionPeriod);

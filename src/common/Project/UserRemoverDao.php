@@ -24,7 +24,7 @@ use DataAccessObject;
 
 class UserRemoverDao extends DataAccessObject
 {
-    public function removeUserFromProject($project_id, $user_id)
+    public function removeNonAdminUserFromProject($project_id, $user_id): bool
     {
         $project_id = $this->da->escapeInt($project_id);
         $user_id    = $this->da->escapeInt($user_id);

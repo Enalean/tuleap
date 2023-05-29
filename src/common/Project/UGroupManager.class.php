@@ -604,10 +604,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         }
     }
 
-    /**
-     * @return UserRemover
-     */
-    private function getUserRemover()
+    private function getUserRemover(): UserRemover
     {
         return new UserRemover(
             ProjectManager::instance(),
@@ -616,7 +613,8 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
             new UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),
-            new UGroupManager()
+            new UGroupManager(),
+            new UserPermissionsDao(),
         );
     }
 }

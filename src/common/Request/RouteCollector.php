@@ -178,6 +178,7 @@ use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -583,7 +584,8 @@ class RouteCollector
                 new \Tuleap\Project\UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
-                new UGroupManager()
+                new UGroupManager(),
+                new UserPermissionsDao(),
             ),
             new ProjectAdministratorsIncludingDelegationDAO(),
             new SapiEmitter()

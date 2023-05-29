@@ -25,8 +25,6 @@ namespace Tuleap\SystemEvent;
 use EventManager;
 use ForgeAccess;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -40,8 +38,25 @@ use UserManager;
 
 final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
+
+    private int $project_id = 102;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        ForgeConfig::set(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE, false);
+
+        $event_manager = new class extends EventManager {
+            public function processEvent($event, $params = [])
+            {
+                return;
+            }
+        };
+        EventManager::setInstance($event_manager);
+    }
 
     protected function tearDown(): void
     {
@@ -52,12 +67,116 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestricted(): void
     {
-        $project_id   = 102;
-        $system_event = new SystemEvent_PROJECT_IS_PRIVATE(
+        $system_event = $this->buildSystemEvent();
+
+        $user_remover   = $this->createMock(UserRemover::class);
+        $ugroup_manager = $this->createMock(\UGroupManager::class);
+        $system_event->injectDependencies(
+            $user_remover,
+            $ugroup_manager,
+        );
+
+        $project_manager = $this->createMock(ProjectManager::class);
+        ProjectManager::setInstance($project_manager);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($this->project_id);
+        $project_manager->method('getProject')->willReturn($project);
+
+        $project->method('usesCVS')->willReturn(false);
+        $project->method('usesSVN')->willReturn(false);
+
+        $project->method('getAccess')->willReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+
+        $restricted_member_id = 456;
+        $restricted_admin     = UserTestBuilder::aRestrictedUser()->build();
+        $restricted_member    = UserTestBuilder::aRestrictedUser()->withId($restricted_member_id)->build();
+        $member               = UserTestBuilder::anActiveUser()->build();
+
+        $project->method('getAdmins')->willReturn([$restricted_admin, $member]);
+        $user_remover->expects(self::once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
+        $project->method('getMembers')->willReturn([$restricted_member, $member]);
+        $user_remover->expects(self::once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
+
+        $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
+        $ugroup_with_restricted         = $this->createMock(ProjectUGroup::class);
+        $ugroup_with_restricted->method('getMembers')->willReturn([$restricted_user_in_ugroup_only, $member]);
+        $ugroup_with_restricted->expects(self::once())->method('removeUser')->with(
+            $restricted_user_in_ugroup_only,
+            self::callback(
+                function (PFUser $user) {
+                    return (int) $user->getId() === 0;
+                }
+            )
+        );
+        $ugroup_without_restricted = $this->createMock(ProjectUGroup::class);
+        $ugroup_without_restricted->method('getMembers')->willReturn([$member]);
+        $ugroup_manager->method('getStaticUGroups')->with($project)->willReturn(
+            [$ugroup_with_restricted, $ugroup_without_restricted]
+        );
+
+        self::assertTrue($system_event->process());
+    }
+
+    public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestrictedIfAllAdministratorsAreRestricted(): void
+    {
+        $system_event = $this->buildSystemEvent();
+
+        $user_remover   = $this->createMock(UserRemover::class);
+        $ugroup_manager = $this->createMock(\UGroupManager::class);
+        $system_event->injectDependencies(
+            $user_remover,
+            $ugroup_manager,
+        );
+
+        $project_manager = $this->createMock(ProjectManager::class);
+        ProjectManager::setInstance($project_manager);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($this->project_id);
+        $project_manager->method('getProject')->willReturn($project);
+
+        $project->method('usesCVS')->willReturn(false);
+        $project->method('usesSVN')->willReturn(false);
+
+        $project->method('getAccess')->willReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+
+        $restricted_member_id = 456;
+        $restricted_admin     = UserTestBuilder::aRestrictedUser()->build();
+        $restricted_member    = UserTestBuilder::aRestrictedUser()->withId($restricted_member_id)->build();
+        $member               = UserTestBuilder::anActiveUser()->build();
+
+        $project->method('getAdmins')->willReturn([$restricted_admin]);
+        $project->method('getMembers')->willReturn([$restricted_member, $member]);
+
+        $user_remover->expects(self::once())->method('forceRemoveAdminRestrictedUserFromProject')->with($project, $restricted_admin);
+        $user_remover->expects(self::once())->method('removeUserFromProject')->with($this->project_id, $restricted_member_id);
+
+        $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
+        $ugroup_with_restricted         = $this->createMock(ProjectUGroup::class);
+        $ugroup_with_restricted->method('getMembers')->willReturn([$restricted_user_in_ugroup_only, $member]);
+        $ugroup_with_restricted->expects(self::once())->method('removeUser')->with(
+            $restricted_user_in_ugroup_only,
+            self::callback(
+                function (PFUser $user) {
+                    return (int) $user->getId() === 0;
+                }
+            )
+        );
+        $ugroup_without_restricted = $this->createMock(ProjectUGroup::class);
+        $ugroup_without_restricted->method('getMembers')->willReturn([$member]);
+        $ugroup_manager->method('getStaticUGroups')->with($project)->willReturn(
+            [$ugroup_with_restricted, $ugroup_without_restricted]
+        );
+
+        self::assertTrue($system_event->process());
+    }
+
+    private function buildSystemEvent(): SystemEvent_PROJECT_IS_PRIVATE
+    {
+        return new SystemEvent_PROJECT_IS_PRIVATE(
             1,
             SystemEvent_PROJECT_IS_PRIVATE::TYPE_PROJECT_IS_PRIVATE,
             SystemEvent_PROJECT_IS_PRIVATE::APP_OWNER_QUEUE,
-            $project_id . '::1',
+            $this->project_id . '::1',
             SystemEvent_PROJECT_IS_PRIVATE::PRIORITY_MEDIUM,
             SystemEvent_PROJECT_IS_PRIVATE::STATUS_NEW,
             '',
@@ -65,53 +184,5 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
             '',
             ''
         );
-
-        $user_remover   = Mockery::mock(UserRemover::class);
-        $ugroup_manager = Mockery::mock(\UGroupManager::class);
-        $system_event->injectDependencies(
-            $user_remover,
-            $ugroup_manager
-        );
-
-        $project_manager = Mockery::mock(ProjectManager::class);
-        ProjectManager::setInstance($project_manager);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($project_id);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
-
-        $project->shouldReceive('usesCVS')->andReturn(false);
-        $project->shouldReceive('usesSVN')->andReturn(false);
-        ForgeConfig::set(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE, false);
-        EventManager::setInstance(Mockery::spy(EventManager::class));
-
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
-
-        $restricted_member = Mockery::mock(PFUser::class);
-        $restricted_member->shouldReceive('isRestricted')->andReturn(true);
-        $restricted_member_id = 456;
-        $restricted_member->shouldReceive('getId')->andReturn($restricted_member_id);
-        $member = UserTestBuilder::anActiveUser()->build();
-        $project->shouldReceive('getMembers')->andReturn([$restricted_member, $member]);
-        $user_remover->shouldReceive('removeUserFromProject')->with($project_id, $restricted_member_id)->once();
-
-        $restricted_user_in_ugroup_only = UserTestBuilder::aRestrictedUser()->build();
-        $ugroup_with_restricted         = Mockery::mock(ProjectUGroup::class);
-        $ugroup_with_restricted->shouldReceive('getMembers')->andReturn([$restricted_user_in_ugroup_only, $member]);
-        $ugroup_with_restricted->shouldReceive('removeUser')->with(
-            $restricted_user_in_ugroup_only,
-            \Mockery::on(
-                function (PFUser $user) {
-                    return (int) $user->getId() === 0;
-                }
-            )
-        )->once();
-        $ugroup_without_restricted = Mockery::mock(ProjectUGroup::class);
-        $ugroup_without_restricted->shouldReceive('getMembers')->andReturn([$member]);
-        $ugroup_manager->shouldReceive('getStaticUGroups')->with($project)->andReturn(
-            [$ugroup_with_restricted, $ugroup_without_restricted]
-        );
-
-        self::assertTrue($system_event->process());
     }
 }

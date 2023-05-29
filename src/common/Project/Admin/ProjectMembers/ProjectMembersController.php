@@ -169,7 +169,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 new UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
-                $ugroup_manager
+                $ugroup_manager,
+                new UserPermissionsDao(),
             ),
             $event_manager,
             $ugroup_manager,

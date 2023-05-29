@@ -126,7 +126,8 @@ class MemberRemovalController implements DispatchableWithRequest
                 new UserRemoverDao(),
                 $user_manager,
                 new ProjectHistoryDao(),
-                $ugroup_manager
+                $ugroup_manager,
+                new UserPermissionsDao(),
             ),
             UGroupRouter::getCSRFTokenSynchronizer()
         );

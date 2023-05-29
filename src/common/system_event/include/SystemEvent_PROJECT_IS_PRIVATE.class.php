@@ -26,18 +26,11 @@ use Tuleap\Project\UserRemover;
 
 /**
 * System Event classes
-*
 */
 class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 {
-    /**
-     * @var UserRemover
-     */
-    private $user_remover;
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
+    private UserRemover $user_remover;
+    private UGroupManager $ugroup_manager;
 
     public function injectDependencies(
         UserRemover $user_remover,
@@ -115,9 +108,23 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function cleanRestrictedUsersIfNecessary(Project $project): void
     {
-        if (! ForgeConfig::areRestrictedUsersAllowed() || $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+        if (
+            ! ForgeConfig::areRestrictedUsersAllowed() ||
+            $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED
+        ) {
             return;
         }
+
+        $project_admins = $project->getAdmins();
+        foreach ($project_admins as $project_admin) {
+            if ($project_admin->isRestricted()) {
+                $this->user_remover->forceRemoveAdminRestrictedUserFromProject(
+                    $project,
+                    $project_admin,
+                );
+            }
+        }
+
         $project_members = $project->getMembers();
         foreach ($project_members as $project_member) {
             if ($project_member->isRestricted()) {

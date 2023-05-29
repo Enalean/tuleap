@@ -22,45 +22,44 @@ namespace Tuleap\Project;
 
 require_once __DIR__ . '/../../../../src/www/include/exit.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
     private UserRemover $remover;
-    /**
-     * @var \EventManager|\Mockery\MockInterface
-     */
-    private $event_manager;
-    private $project_manager;
-    private $tv3_tracker_factory;
-    private $dao;
-    private $user_manager;
-    private $project_history_dao;
-    private $ugroup_manager;
+    private MockObject&\EventManager $event_manager;
+    private MockObject&\ProjectManager $project_manager;
+    private MockObject&\ArtifactTypeFactory $tv3_tracker_factory;
+    private MockObject&UserRemoverDao $dao;
+    private MockObject&\UserManager $user_manager;
+    private MockObject&\ProjectHistoryDao $project_history_dao;
+    private MockObject&\UGroupManager $ugroup_manager;
     private \Project $project;
     private PFUser $user;
-    private $tracker_v3;
+    private MockObject&\ArtifactType $tracker_v3;
+    private MockObject&UserPermissionsDao $user_permissions_dao;
 
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project_manager     = \Mockery::spy(\ProjectManager::class);
-        $this->event_manager       = \Mockery::spy(\EventManager::class);
-        $this->tv3_tracker_factory = \Mockery::spy(\ArtifactTypeFactory::class);
-        $this->dao                 = \Mockery::spy(\Tuleap\Project\UserRemoverDao::class);
-        $this->user_manager        = \Mockery::spy(\UserManager::class);
-        $this->project_history_dao = \Mockery::spy(\ProjectHistoryDao::class);
-        $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
+        $this->project_manager      = $this->createMock(\ProjectManager::class);
+        $this->event_manager        = $this->createMock(\EventManager::class);
+        $this->tv3_tracker_factory  = $this->createMock(\ArtifactTypeFactory::class);
+        $this->dao                  = $this->createMock(UserRemoverDao::class);
+        $this->user_manager         = $this->createMock(\UserManager::class);
+        $this->project_history_dao  = $this->createMock(\ProjectHistoryDao::class);
+        $this->ugroup_manager       = $this->createMock(\UGroupManager::class);
+        $this->user_permissions_dao = $this->createMock(UserPermissionsDao::class);
 
         $this->remover = new UserRemover(
             $this->project_manager,
@@ -69,7 +68,8 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->user_manager,
             $this->project_history_dao,
-            $this->ugroup_manager
+            $this->ugroup_manager,
+            $this->user_permissions_dao,
         );
 
         $this->project    = ProjectTestBuilder::aProject()->withId(101)->withUnixName("")->withAccess(\Project::ACCESS_PRIVATE)->build();
@@ -77,7 +77,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
             'language_id' => 'en',
             'user_id' => 102,
         ]);
-        $this->tracker_v3 = \Mockery::spy(\ArtifactType::class);
+        $this->tracker_v3 = $this->createMock(\ArtifactType::class);
     }
 
     public function testItRemovesUserFromProjectMembersAndUgroups(): void
@@ -85,18 +85,58 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id = 101;
         $user_id    = 102;
 
-        $this->dao->shouldReceive('removeUserFromProject')->once()->andReturns(true);
-        $this->dao->shouldReceive('removeUserFromProjectUgroups')->once()->andReturns(true);
-        $this->tracker_v3->shouldReceive('deleteUser')->once()->with(102)->andReturns(true);
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($this->project);
-        $this->user_manager->shouldReceive('getUserById')->with(102)->andReturns($this->user);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->with($this->project)->andReturns([]);
-        $this->tv3_tracker_factory->shouldReceive('getArtifactTypesFromId')->with(101)->andReturns([$this->tracker_v3]);
+        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject')->willReturn(true);
+        $this->dao->expects(self::once())->method('removeUserFromProjectUgroups')->willReturn(true);
+        $this->tracker_v3->expects(self::once())->method('deleteUser')->with(102)->willReturn(true);
+        $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
+        $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
+        $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
+        $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
 
-        $this->project_history_dao->shouldReceive('groupAddHistory')->once();
-        $this->event_manager->shouldReceive('processEvent')->twice();
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
+    }
+
+    public function testItForcesRemovalOfRestrictedUserFromProjectAdminAndUgroups(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::aRestrictedUser()->withId(102)->build();
+
+        $this->user_manager->method('getUserAnonymous')->willReturn(UserTestBuilder::anAnonymousUser()->build());
+
+        $this->user_permissions_dao->expects(self::once())->method('removeUserFromProjectAdmin');
+        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject')->willReturn(true);
+        $this->dao->expects(self::once())->method('removeUserFromProjectUgroups')->willReturn(true);
+        $this->tracker_v3->expects(self::once())->method('deleteUser')->with(102)->willReturn(true);
+        $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
+        $this->user_manager->method('getUserById')->with(102)->willReturn($this->user);
+        $this->ugroup_manager->method('getStaticUGroups')->with($this->project)->willReturn([]);
+        $this->tv3_tracker_factory->method('getArtifactTypesFromId')->with(101)->willReturn([$this->tracker_v3]);
+
+        $this->project_history_dao->expects(self::once())->method('groupAddHistory');
+        $this->project_history_dao->expects(self::once())->method('addHistory');
+        $this->event_manager->expects(self::exactly(2))->method('processEvent');
+        $this->event_manager->expects(self::once())->method('dispatch');
+
+        $this->remover->forceRemoveAdminRestrictedUserFromProject($project, $user);
+    }
+
+    public function testItDoesNotForceRemovalOfUserFromProjectAdminAndUgroupsIfNotRestricted(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+        $user    = UserTestBuilder::anActiveUser()->withId(102)->build();
+
+        $this->user_permissions_dao->expects(self::never())->method('removeUserFromProjectAdmin');
+        $this->dao->expects(self::never())->method('removeNonAdminUserFromProject');
+        $this->dao->expects(self::never())->method('removeUserFromProjectUgroups');
+        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
+        $this->tracker_v3->expects(self::never())->method('deleteUser');
+        $this->event_manager->expects(self::never())->method('processEvent');
+        $this->event_manager->expects(self::never())->method('dispatch');
+
+        $this->remover->forceRemoveAdminRestrictedUserFromProject($project, $user);
     }
 
     public function testItDoesNothingIfTheUserIsNotRemovedFromProjectMembers(): void
@@ -104,13 +144,13 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id = 101;
         $user_id    = 102;
 
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($this->project);
+        $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
 
-        $this->dao->shouldReceive('removeUserFromProject')->once();
-        $this->dao->shouldReceive('removeUserFromProjectUgroups')->never();
-        $this->project_history_dao->shouldReceive('groupAddHistory')->never();
-        $this->tracker_v3->shouldReceive('deleteUser')->never();
-        $this->event_manager->shouldReceive('processEvent')->never();
+        $this->dao->expects(self::once())->method('removeNonAdminUserFromProject');
+        $this->dao->expects(self::never())->method('removeUserFromProjectUgroups');
+        $this->project_history_dao->expects(self::never())->method('groupAddHistory');
+        $this->tracker_v3->expects(self::never())->method('deleteUser');
+        $this->event_manager->expects(self::never())->method('processEvent');
 
         $this->remover->removeUserFromProject($project_id, $user_id);
     }

@@ -42,4 +42,15 @@ class ProjectOwnerDAO extends DataAccessObject
             $project_id
         );
     }
+
+    public function delete(int $project_id, int $user_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_project_ownership_project_owner',
+            [
+                'project_id' => $project_id,
+                'user_id'    => $user_id,
+            ],
+        );
+    }
 }

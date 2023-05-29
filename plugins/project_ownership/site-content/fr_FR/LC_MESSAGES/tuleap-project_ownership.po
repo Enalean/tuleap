@@ -15,6 +15,13 @@ msgstr ""
 msgid "Adds project owner role"
 msgstr "Ajoute le rôle du responsable du projet"
 
+msgid ""
+"Cannot switch the project visibility because it will remove the project "
+"owner which is restricted."
+msgstr ""
+"La visiblité de projet ne peut pas être modifiée car cela va supprimer le "
+"responsable du projet qui est restreint."
+
 msgid "Current project owner:"
 msgstr "Responsable actuel du projet :"
 

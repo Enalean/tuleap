@@ -900,6 +900,14 @@ msgstr "Impossible d'enlever l'utilisateur du groupe"
 msgid "Cannot remove users from bound groups"
 msgstr "Impossible d'enlever des utilisateurs d'un group lié"
 
+msgid ""
+"Cannot switch the project visibility because it will remove every restricted "
+"users from the project, and after that no administrator will be left."
+msgstr ""
+"La visibilité ne peut être changée car elle va supprimer tous les "
+"utilisateurs restreints du projet, et par conséquent aucun administrateur de "
+"projet ne sera présent."
+
 msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
 
@@ -2787,7 +2795,7 @@ msgid "Private archives"
 msgstr "Archives privées"
 
 msgid "Private incl. restricted"
-msgstr "Privé incl. les utilisateurs restreints"
+msgstr "Privé, incluant les utilisateurs restreints"
 
 msgid "Private including restricted"
 msgstr "Privé incluant les utilisateurs restreints"
