@@ -192,12 +192,11 @@ export const TuleapAPIClient = (
             readonly ChangesetWithCommentRepresentation[],
             ChangesetWithCommentRepresentation
         >(uri`/api/v1/artifacts/${artifact_id.id}/changesets`, {
-            params: {
-                limit: 50,
-                fields: "comments",
-                order: is_order_inverted ? "desc" : "asc",
-            },
-        }).map((comments) => comments.map(FollowUpCommentProxy.fromRepresentation));
+            params: { limit: 50, fields: "comments", order: "asc" },
+        }).map((comments) => {
+            const sorted_comments = is_order_inverted ? Array.from(comments).reverse() : comments;
+            return sorted_comments.map(FollowUpCommentProxy.fromRepresentation);
+        });
     },
 
     getCreateArtifactFeatureFlag(): ResultAsync<boolean, Fault> {

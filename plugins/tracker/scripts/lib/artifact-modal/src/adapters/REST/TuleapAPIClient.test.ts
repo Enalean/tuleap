@@ -49,8 +49,9 @@ import type { Project } from "../../domain/Project";
 import type { Tracker } from "../../domain/Tracker";
 import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStub";
 import type {
-    TrackerResponseWithColor,
     ArtifactCreationPayload,
+    ChangesetWithCommentRepresentation,
+    TrackerResponseWithColor,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
@@ -363,10 +364,18 @@ describe(`TuleapAPIClient`, () => {
     describe(`getComments()`, () => {
         const FIRST_COMMENT_BODY = "<p>An HTML comment</p>",
             SECOND_COMMENT_BODY = "Plain text comment";
-        let is_order_inverted: boolean;
+        let is_order_inverted: boolean,
+            first_comment: ChangesetWithCommentRepresentation,
+            second_comment: ChangesetWithCommentRepresentation;
 
         beforeEach(() => {
-            is_order_inverted = true;
+            is_order_inverted = false;
+            first_comment = ChangesetWithCommentRepresentationBuilder.aComment(100)
+                .withPostProcessedBody(FIRST_COMMENT_BODY, "html")
+                .build();
+            second_comment = ChangesetWithCommentRepresentationBuilder.aComment(101)
+                .withPostProcessedBody(SECOND_COMMENT_BODY, "text")
+                .build();
         });
 
         const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
@@ -378,13 +387,6 @@ describe(`TuleapAPIClient`, () => {
         };
 
         it(`will return an array of comments`, async () => {
-            const first_comment = ChangesetWithCommentRepresentationBuilder.aComment(100)
-                .withPostProcessedBody(FIRST_COMMENT_BODY, "html")
-                .build();
-            const second_comment = ChangesetWithCommentRepresentationBuilder.aComment(101)
-                .withPostProcessedBody(SECOND_COMMENT_BODY, "text")
-                .build();
-
             const getAllSpy = jest
                 .spyOn(fetch_result, "getAllJSON")
                 .mockReturnValue(okAsync([first_comment, second_comment]));
@@ -401,22 +403,27 @@ describe(`TuleapAPIClient`, () => {
 
             expect(getAllSpy).toHaveBeenCalledWith(
                 uri`/api/v1/artifacts/${ARTIFACT_ID}/changesets`,
-                {
-                    params: {
-                        limit: 50,
-                        fields: "comments",
-                        order: "desc",
-                    },
-                }
+                { params: { limit: 50, fields: "comments", order: "asc" } }
             );
         });
 
-        it(`will pass "asc" order when the order of comments is inverted`, async () => {
-            is_order_inverted = false;
+        it(`when the order of comments is inverted, it will still pass "asc"
+            and reverse in-memory the order of comments`, async () => {
+            is_order_inverted = true;
 
-            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync([]));
+            const getAllSpy = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([first_comment, second_comment]));
 
-            await getComments();
+            const result = await getComments();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_comment, second_returned_comment] = result.value;
+            expect(first_returned_comment.body).toBe(SECOND_COMMENT_BODY);
+            expect(second_returned_comment.body).toBe(FIRST_COMMENT_BODY);
 
             expect(getAllSpy).toHaveBeenCalledWith(expect.anything(), {
                 params: expect.objectContaining({ order: "asc" }),
