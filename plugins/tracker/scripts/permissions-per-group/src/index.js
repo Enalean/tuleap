@@ -1,9 +1,5 @@
-/**
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,26 +18,18 @@
  */
 
 import Vue from "vue";
-import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 import BaseTrackerPermissionsComponent from "./BaseTrackerPermissions.vue";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-permissions-per-group");
-
     if (!vue_mount_point) {
         return;
     }
 
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import(`../po/${getPOFileFromLocale(locale)}`)
+    );
 
     const RootComponent = Vue.extend(BaseTrackerPermissionsComponent);
     new RootComponent({

@@ -1,0 +1,332 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "(New artifact)"
+msgstr ""
+
+msgid "Actions automatically performed"
+msgstr ""
+
+msgid "Add action"
+msgstr ""
+
+msgid "Add another action"
+msgstr ""
+
+msgid "Add to the top backlog"
+msgstr ""
+
+msgid "Add to the top backlog (already used)"
+msgstr ""
+
+msgid "Advanced configuration is incompatible with this post-action"
+msgstr ""
+
+msgid "An error occurred"
+msgstr ""
+
+msgid ""
+"Are you sure you want to change the field used to define the transitions?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to delete this transition? Its configuration will be "
+"lost and\n"
+"            cannot be recovered."
+msgstr ""
+
+msgid ""
+"Are you sure you want to delete this transition? Since it is the last "
+"transition for\n"
+"            this state, deleting it will also delete the state's "
+"configuration. It cannot be\n"
+"            recovered."
+msgstr ""
+
+msgid ""
+"By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
+"will be\n"
+"            fixed."
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change or remove"
+msgstr ""
+
+msgid "Change or remove field"
+msgstr ""
+
+msgid "Change the value of a field"
+msgstr ""
+
+msgid "Change the value of a field (incompatible)"
+msgstr ""
+
+msgid "Choose a field"
+msgstr ""
+
+msgid "Choose a fieldset"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Comment must not be empty"
+msgstr ""
+
+msgid "Conditions of the transition"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Configure all transitions to %{to_state_label}"
+msgstr ""
+
+msgid "Configure it"
+msgstr ""
+
+msgid "Configure state"
+msgstr ""
+
+msgid "Configure transition from %{from_state_label} to %{to_state_label}"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Confirm deleting the transition"
+msgstr ""
+
+msgid "Current time"
+msgstr ""
+
+msgid "Dates"
+msgstr ""
+
+msgid "Delete this action"
+msgstr ""
+
+msgid "Delete transition"
+msgstr ""
+
+msgid "Enable transition rules"
+msgstr ""
+
+msgid "Field"
+msgstr ""
+
+msgid "Field(s) that must not be empty"
+msgstr ""
+
+msgid "Fields that will be frozen"
+msgstr ""
+
+msgid "Fieldsets that will be hidden by default"
+msgstr ""
+
+msgid "Floats"
+msgstr ""
+
+msgid "Freeze fields"
+msgstr ""
+
+msgid "Freeze fields (already used)"
+msgstr ""
+
+msgid "Freeze fields (incompatible)"
+msgstr ""
+
+msgid "Fully deactivate the workflow"
+msgstr ""
+
+msgid "Groups that may process the transition"
+msgstr ""
+
+msgid "Hide fieldsets"
+msgstr ""
+
+msgid "Hide fieldsets (already used)"
+msgstr ""
+
+msgid "Hide fieldsets (incompatible)"
+msgstr ""
+
+msgid ""
+"If you have any post actions of type \"Frozen Fields\" or \"Hidden Fieldsets"
+"\", they\n"
+"                will be deleted."
+msgstr ""
+
+msgid ""
+"In order to configure transitions rules on this tracker, your first need to "
+"choose a\n"
+"            list field. Once chosen, you will be able to configure "
+"transition using the\n"
+"            configuration matrix."
+msgstr ""
+
+msgid "Integers"
+msgstr ""
+
+msgid "Job url"
+msgstr ""
+
+msgid "Launch a CI job"
+msgstr ""
+
+msgid "Loading transition"
+msgstr ""
+
+msgid "New value"
+msgstr ""
+
+msgid "No action is currently defined. Start by adding one."
+msgstr ""
+
+msgid "Other actions"
+msgstr ""
+
+msgid "Please choose"
+msgstr ""
+
+msgid "Please confirm your action."
+msgstr ""
+
+msgid "Save and start configuration"
+msgstr ""
+
+msgid "Save configuration"
+msgstr ""
+
+msgid ""
+"Selected fieldsets won't be displayed by default but users can make them "
+"visible if\n"
+"            they want to. It's not an Access Control option."
+msgstr ""
+
+msgid "Switch to advanced configuration"
+msgstr ""
+
+msgid "Switch to simple configuration"
+msgstr ""
+
+msgid ""
+"The artifact is added to Scrum top backlog (Agile Dashboard). If it's "
+"already\n"
+"            present, nothing is done."
+msgstr ""
+
+msgid ""
+"The artifact is added to the top backlog. If it's already present, nothing "
+"is done."
+msgstr ""
+
+msgid "The field on which the transitions are based has no selectable value"
+msgstr ""
+
+msgid ""
+"There is no selectbox bound to static values in your tracker! Please\n"
+"            <a href=\"%{ url }\">add one</a> before configuring the workflow."
+msgstr ""
+
+msgid "This action will delete all transition rules! It is irreversible."
+msgstr ""
+
+msgid ""
+"This workflow has an incoherent behaviour: pre conditions and post actions "
+"defined\n"
+"            in transitions are processed even if the workflow is not "
+"activated."
+msgstr ""
+
+msgid "Tracker cannot be loaded"
+msgstr ""
+
+msgid "Transition rules are currently applied."
+msgstr ""
+
+msgid "Transition rules don't apply yet."
+msgstr ""
+
+msgid "Transitions based field"
+msgstr ""
+
+msgid "Transitions rules configuration"
+msgstr ""
+
+msgid "Transitions rules were deleted. Workflow is reset."
+msgstr ""
+
+msgid "Tuleap will automatically pass the following parameters to the job:"
+msgstr ""
+
+msgid "Unique actions"
+msgstr ""
+
+msgid "Use advanced configuration"
+msgstr ""
+
+msgid ""
+"Use advanced configuration if you want to configure each transition "
+"independently."
+msgstr ""
+
+msgid "Wait a minute..."
+msgstr ""
+
+msgid "You can only have this post-action once."
+msgstr ""
+
+msgid ""
+"You're about to switch to advanced configuration mode. Each transition will "
+"be\n"
+"                configurable independently. They will copy their state "
+"configuration during the\n"
+"                switch."
+msgstr ""
+
+msgid ""
+"You're about to switch to simple configuration mode. The first configuration "
+"in\n"
+"                the destination state column will be applied to the whole "
+"state. Please check\n"
+"                that each state configuration is correct."
+msgstr ""
+
+msgid "Your tracker doesn't seem to have available fieldsets"
+msgstr ""
+
+msgid "Your tracker doesn't seem to have available writable fields"
+msgstr ""
+
+msgid "Your tracker doesn't seem to have integer, float or date fields."
+msgstr ""
+
+msgid ""
+"artifactId: identifier of the artifact where the transition happens (integer)"
+msgstr ""
+
+msgid ""
+"projectId: identifier of the current project (ie. %{ project_id }) (integer)"
+msgstr ""
+
+msgid ""
+"trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)"
+msgstr ""
+
+msgid ""
+"triggerFieldValue: value of current transition target (ie. "
+"%{ transition_id })\n"
+"                (string)"
+msgstr ""
+
+msgid "userId: identifier of Tuleap user who made the transition (integer)"
+msgstr ""

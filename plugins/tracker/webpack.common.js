@@ -92,7 +92,6 @@ const config_for_burning_parrot = {
         "global-admin-trackers": "./scripts/global-admin/trackers.ts",
         "tracker-email-copy-paste-bp": "./scripts/artifact/tracker-email-copy-paste-bp.ts",
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
-        "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
     },
     context,
     output,
@@ -101,25 +100,12 @@ const config_for_burning_parrot = {
         tlp: "tlp",
     },
     resolve: {
-        extensions: [".js", ".ts", ".vue"],
+        extensions: [".js", ".ts"],
     },
     module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-            webpack_configurator.rule_scss_loader,
-        ],
+        rules: [...webpack_configurator.configureTypescriptRules()],
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
-        ...webpack_configurator.getCSSExtractionPlugins(),
-    ],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
+    plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
 };
 
 let entry_points = {
