@@ -1097,6 +1097,9 @@ msgstr ""
 "Não é possível criar novos tokens SVN, devem ser utilizadas as chaves "
 "pessoais de acesso."
 
+msgid "Credential id is not well formed"
+msgstr ""
+
 msgid "Current and new passwords are identical"
 msgstr "As senhas atuais e novas são idênticas"
 
