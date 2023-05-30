@@ -40,8 +40,8 @@
             "po": "src/scripts/main/src/project/admin/services/po"
         },
         "project-admin-banner": {
-            "src": "src/scripts/main/src/project/admin/banner/src",
-            "po": "src/scripts/main/src/project/admin/banner/po"
+            "src": "src/scripts/project-admin-banner/src",
+            "po": "src/scripts/project-admin-banner/po"
         },
         "project-registration": {
             "src": "src/scripts/project-registration/src",

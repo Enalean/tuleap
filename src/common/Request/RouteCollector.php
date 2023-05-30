@@ -112,8 +112,10 @@ use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
@@ -154,6 +156,7 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
+use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Admin\Routing\RejectNonProjectMembersAdministratorMiddleware;
 use Tuleap\Project\Banner\BannerAdministrationController;
@@ -820,7 +823,16 @@ class RouteCollector
 
     public static function getGetProjectBannerAdministration(): DispatchableWithRequest
     {
-        return BannerAdministrationController::buildSelf();
+        return new BannerAdministrationController(
+            AdministrationLayoutHelper::buildSelf(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/project/admin/banner/'),
+            new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'ckeditor.js'),
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../scripts/project-admin-banner/frontend-assets', '/assets/core/project-admin-banner'),
+                'project-admin-banner.js'
+            ),
+            new \Tuleap\Project\Banner\BannerRetriever(new \Tuleap\Project\Banner\BannerDao())
+        );
     }
 
     public static function getGetPlatformBannerAdministration(): DispatchableWithRequest
