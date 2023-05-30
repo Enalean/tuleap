@@ -25,21 +25,19 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class SearchableVisitor implements Visitor
+/**
+ * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameter, IProvideFromAndWhereSQLFragments>
+ */
+class FromWhereSearchableVisitor implements SearchableVisitor
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private readonly Tracker_FormElementFactory $form_element_factory)
     {
-        $this->form_element_factory = $form_element_factory;
     }
 
-    public function visitField(Field $field, SearchableVisitorParameter $parameters)
+    public function visitField(Field $field, $parameters)
     {
         $formelement = $this->getFormElementFromComparison($parameters->getComparison(), $parameters->getTracker());
 
@@ -48,17 +46,19 @@ class SearchableVisitor implements Visitor
             ->getFromWhere($parameters->getComparison(), $formelement);
     }
 
-    private function getFormElementFromComparison(Comparison $comparison, Tracker $tracker)
+    private function getFormElementFromComparison(Comparison $comparison, Tracker $tracker): \Tracker_FormElement_Field
     {
-        $formelement = $this->form_element_factory->getUsedFieldByName(
-            $tracker->getId(),
-            $comparison->getSearchable()->getName()
-        );
+        $name        = $comparison->getSearchable()->getName();
+        $formelement = $this->form_element_factory->getUsedFieldByName($tracker->getId(), $name);
+
+        if (! $formelement) {
+            throw new \Exception(sprintf("Field %s cannot be found", $name));
+        }
 
         return $formelement;
     }
 
-    public function visitMetaData(Metadata $metadata, SearchableVisitorParameter $parameters)
+    public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $parameters->getMetadataComparisonFromWhereBuilder()->getFromWhere($metadata, $parameters->getComparison());
     }

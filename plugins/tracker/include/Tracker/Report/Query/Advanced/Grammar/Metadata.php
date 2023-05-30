@@ -29,20 +29,17 @@ class Metadata implements Searchable
      */
     private $name;
 
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = self::PREFIX . $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    public function acceptSearchableVisitor(SearchableVisitor $visitor, VisitorParameters $parameters)
     {
         return $visitor->visitMetadata($this, $parameters);
     }

@@ -25,39 +25,27 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\FromWhereBui
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class SearchableVisitorParameters implements VisitorParameters
+class FromWhereSearchableVisitorParameters implements VisitorParameters
 {
-    /** @var Comparison */
-    private $comparison;
-    /** @var FromWhereBuilder */
-    private $from_where_builder;
-    /** @var Tracker[] */
-    private $trackers;
-
     public function __construct(
-        Comparison $comparison,
-        FromWhereBuilder $from_where_builder,
-        array $trackers,
+        private readonly Comparison $comparison,
+        private readonly FromWhereBuilder $from_where_builder,
+        private readonly array $trackers,
     ) {
-        $this->comparison         = $comparison;
-        $this->from_where_builder = $from_where_builder;
-        $this->trackers           = $trackers;
     }
 
-    /** @return FromWhereBuilder */
-    public function getFromWhereBuilder()
+    public function getFromWhereBuilder(): FromWhereBuilder
     {
         return $this->from_where_builder;
     }
 
-    /** @return Comparison */
-    public function getComparison()
+    public function getComparison(): Comparison
     {
         return $this->comparison;
     }
 
     /** @return Tracker[] */
-    public function getTrackers()
+    public function getTrackers(): array
     {
         return $this->trackers;
     }

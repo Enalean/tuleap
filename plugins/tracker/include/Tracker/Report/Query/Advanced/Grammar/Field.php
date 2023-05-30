@@ -22,25 +22,16 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class Field implements Searchable
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    public function __construct($name)
+    public function __construct(private readonly string $name)
     {
-        $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    public function acceptSearchableVisitor(SearchableVisitor $visitor, VisitorParameters $parameters)
     {
         return $visitor->visitField($this, $parameters);
     }

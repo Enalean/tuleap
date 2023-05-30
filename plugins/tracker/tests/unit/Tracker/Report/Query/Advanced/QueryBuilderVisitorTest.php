@@ -152,7 +152,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             new QueryBuilder\BetweenFieldComparisonVisitor(),
             new QueryBuilder\InFieldComparisonVisitor(),
             new QueryBuilder\NotInFieldComparisonVisitor(),
-            new QueryBuilder\SearchableVisitor($formelement_factory),
+            new QueryBuilder\FromWhereSearchableVisitor($formelement_factory),
             new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(new CommentWithoutPrivateCheckFromWhereBuilder()),
             new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),

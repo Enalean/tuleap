@@ -60,7 +60,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Des
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\EqualComparisonFromWhereBuilder as StatusEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\NotEqualComparisonFromWhereBuilder as StatusNotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Between\BetweenComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Equal\EqualComparisonChecker;
@@ -201,7 +201,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_value_extractor    = new ListValueExtractor();
         $query_builder_visitor   = new QueryBuilderVisitor(
-            new SearchableVisitor(),
+            new FromWhereSearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
