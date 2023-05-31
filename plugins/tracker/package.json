@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@types/bootstrap": "^4.5.1",
