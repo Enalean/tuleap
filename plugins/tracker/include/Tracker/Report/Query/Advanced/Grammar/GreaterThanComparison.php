@@ -41,6 +41,11 @@ class GreaterThanComparison implements Term, Visitable, Comparison
         return $visitor->visitGreaterThanComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitGreaterThanComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

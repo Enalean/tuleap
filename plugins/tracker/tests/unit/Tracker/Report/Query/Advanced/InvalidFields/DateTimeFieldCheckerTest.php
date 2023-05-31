@@ -49,7 +49,7 @@ final class DateTimeFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->shouldReceive('getName')->andReturn('date field');
         $this->field->shouldReceive('isTimeDisplayed')->andReturn(true);
         $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
-        $this->comparison->shouldReceive('accept')->andReturn('');
+        $this->comparison->shouldReceive('acceptComparisonVisitor')->andReturn('');
     }
 
     public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void

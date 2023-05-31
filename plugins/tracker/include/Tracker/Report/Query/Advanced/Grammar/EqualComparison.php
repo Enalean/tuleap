@@ -41,6 +41,11 @@ class EqualComparison implements Term, Visitable, Comparison
         return $visitor->visitEqualComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitEqualComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */
