@@ -78,6 +78,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../lib/frontend/build-system-configurator
+  '@tuleap/core-constants':
+    specifier: workspace:*
+    version: link:../../lib/frontend/constants
   '@tuleap/cypress-configurator':
     specifier: workspace:*
     version: link:../../lib/test-utils/cypress-configurator
