@@ -44,8 +44,8 @@ export const getNewCommentClasses = (is_comment_order_inverted: boolean): MapOfC
 });
 
 const getNewCommentTemplate = (
-    host: ModalCommentsSection
-): UpdateFunction<ModalCommentsSection> => {
+    host: InternalModalCommentsSection
+): UpdateFunction<InternalModalCommentsSection> => {
     if (!host.presenter.preferences.is_allowed_to_add_comment) {
         return html``;
     }
@@ -65,8 +65,8 @@ export const getSectionClasses = (is_comment_order_inverted: boolean): MapOfClas
 });
 
 export const getSectionTemplate = (
-    host: ModalCommentsSection
-): UpdateFunction<ModalCommentsSection> => {
+    host: InternalModalCommentsSection
+): UpdateFunction<InternalModalCommentsSection> => {
     if (host.presenter.is_loading) {
         return html`<div>
             <i
@@ -97,13 +97,16 @@ export const getSectionTemplate = (
 };
 
 export type ModalCommentsSection = {
-    presenter: CommentsPresenter;
     readonly controller: CommentsControllerType;
     readonly formattedTextController: FormattedTextControllerType;
 };
-export type HostElement = ModalCommentsSection & HTMLElement;
+type InternalModalCommentsSection = ModalCommentsSection & {
+    presenter: CommentsPresenter;
+    content(): HTMLElement;
+};
+export type HostElement = InternalModalCommentsSection & HTMLElement;
 
-export const ModalCommentsSection = define<ModalCommentsSection>({
+export const ModalCommentsSection = define<InternalModalCommentsSection>({
     tag: "tuleap-artifact-modal-comments-section",
     presenter: undefined,
     controller: {
@@ -115,9 +118,8 @@ export const ModalCommentsSection = define<ModalCommentsSection>({
                     comments,
                     preferences
                 );
-                setTimeout(() => {
-                    loadTooltips();
-                }, 0);
+                host.content();
+                loadTooltips(host);
             });
             return controller;
         },
