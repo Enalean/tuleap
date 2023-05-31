@@ -43,8 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     Vue.use(VueDOMPurifyHTML);
 
-    Vue.config.language = document.body.dataset.userLocale ?? "en_US";
-
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
     const store = new Vuex.Store(store_options);

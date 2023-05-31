@@ -8,7 +8,6 @@
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/copy-to-clipboard": "workspace:*",
     "@tuleap/gettext": "workspace:*",
-    "@tuleap/html-escaper": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/mention": "workspace:*",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
@@ -23,16 +22,13 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/user-and-ugroup-autocompleter": "workspace:*",
-    "@tuleap/vue-permissions-per-group-badge": "workspace:*",
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "dompurify": "^3.0.0",
     "moment": "^2.29.4",
     "node-gettext": "^3.0.0",
-    "sprintf-js": "^1.1.2",
-    "vue": "^2.7.8",
-    "vue-gettext": "^2.1.12"
+    "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

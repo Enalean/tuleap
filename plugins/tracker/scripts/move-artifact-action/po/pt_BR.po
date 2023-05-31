@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"1 field does not fully match with the targeted tracker. One value of the "
+"field has not\n"
+"        been found in targeted tracker, if you confirm your action, this "
+"value will be lost\n"
+"        forever:"
+msgid_plural ""
+"%{ partially_migrated_fields_count } fields do not fully match with the "
+"targeted tracker. One value of the fields has not been found in targeted "
+"tracker, if you confirm your action, this value will be lost forever:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"1 field does not match with the targeted tracker. If you confirm your "
+"action, its value\n"
+"        will be lost forever:"
+msgid_plural ""
+"%{ not_migrated_fields_count } fields do not match with the targeted "
+"tracker. If you confirm your action, their values will be lost forever:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "1 field will be fully migrated:"
+msgid_plural "%{ fully_migrated_fields_count } fields will be fully migrated:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "An artifact cannot be moved in the same tracker"
+msgstr ""
+
+msgid "Choose project..."
+msgstr ""
+
+msgid "Choose tracker..."
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Destination project"
+msgstr ""
+
+msgid "Destination tracker"
+msgstr ""
+
+msgid "Move"
+msgstr ""
+
+msgid "Move artifact"
+msgstr ""
+
+msgid "Show more"
+msgstr ""

@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{ user_group } has no permission for trackers"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Project has no tracker"
+msgstr ""
+
+msgid "See all tracker permissions"
+msgstr ""
+
+msgid "Tracker name"
+msgstr ""
