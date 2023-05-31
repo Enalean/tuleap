@@ -19,20 +19,20 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import App from "./src/components/App.vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./src/store/index";
+import App from "./components/App.vue";
+import { getPOFileFromLocale, initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
+import { createStore } from "./store";
 import type {
     CSRFToken,
-    ExistingTrackersList,
-    ProjectWithTrackers,
-    ProjectTemplate,
-    State,
     DataForColorPicker,
+    ExistingTrackersList,
+    ProjectTemplate,
+    ProjectWithTrackers,
+    State,
     Tracker,
-} from "./src/store/type";
-import { NONE_YET } from "./src/store/type";
-import { createRouter } from "./src/router";
+} from "./store/type";
+import { NONE_YET } from "./store/type";
+import { createRouter } from "./router";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-creation-app");
@@ -40,11 +40,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
         (locale: string) =>
             import(
-                /* webpackChunkName: "tracker-creation-po" */ "./po/" + getPOFileFromLocale(locale)
+                /* webpackChunkName: "tracker-creation-po" */ "../po/" + getPOFileFromLocale(locale)
             )
     );
 

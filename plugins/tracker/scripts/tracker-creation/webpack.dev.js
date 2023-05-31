@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "includes/creation-step-layout";
-@use "includes/creation-options-cards";
-@use "includes/creation-color-selector";
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+
+export default webpack_configurator.extendDevConfiguration(common);

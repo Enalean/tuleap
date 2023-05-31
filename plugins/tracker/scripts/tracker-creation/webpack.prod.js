@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-const jest_base_config = defineJestConfiguration();
-export default {
-    ...jest_base_config,
-    displayName: "tracker/tracker-creation",
-    moduleNameMapper: {
-        ...jest_base_config.moduleNameMapper,
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
-    },
-};
+export default webpack_configurator.extendProdConfiguration(common);
