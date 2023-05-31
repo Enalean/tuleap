@@ -283,7 +283,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         InvalidComparisonCollectorParameters $parameters,
     ) {
-        $comparison->getSearchable()->accept(
+        $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,

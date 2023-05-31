@@ -25,12 +25,15 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
 
-class InvalidSearchableCollectorVisitor implements Visitor
+/**
+ * @template-implements SearchableVisitor<InvalidSearchableCollectorParameters, void>
+ */
+class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
     public const SUPPORTED_NAME = '@comments';
 
@@ -54,10 +57,8 @@ class InvalidSearchableCollectorVisitor implements Visitor
         $this->user                 = $user;
     }
 
-    public function visitField(
-        Field $searchable_field,
-        InvalidSearchableCollectorParameters $parameters,
-    ) {
+    public function visitField(Field $searchable_field, $parameters)
+    {
         $field = $this->form_element_factory->getUsedFormElementFieldByNameForUser(
             $this->tracker->getId(),
             $searchable_field->getName(),
@@ -81,10 +82,8 @@ class InvalidSearchableCollectorVisitor implements Visitor
         }
     }
 
-    public function visitMetadata(
-        Metadata $metadata,
-        InvalidSearchableCollectorParameters $parameters,
-    ) {
+    public function visitMetadata(Metadata $metadata, $parameters)
+    {
         if ($metadata->getName() !== self::SUPPORTED_NAME) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
                 $metadata->getName()

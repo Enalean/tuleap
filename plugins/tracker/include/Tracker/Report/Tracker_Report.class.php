@@ -2172,7 +2172,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             new QueryBuilder\BetweenFieldComparisonVisitor(),
             new QueryBuilder\InFieldComparisonVisitor(),
             new QueryBuilder\NotInFieldComparisonVisitor(),
-            new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
+            new QueryBuilder\FromWhereSearchableVisitor($this->getFormElementFactory()),
             new QueryBuilder\MetadataEqualComparisonFromWhereBuilder($this->getCommentFromWhereBuilder()),
             new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),

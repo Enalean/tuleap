@@ -224,7 +224,7 @@ class InvalidComparisonCollectorVisitor implements Visitor
         ComparisonChecker $comparison_checker,
         InvalidComparisonCollectorParameters $parameters,
     ) {
-        $comparison->getSearchable()->accept(
+        $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
                 $parameters,

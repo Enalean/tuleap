@@ -20,17 +20,22 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
+use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 
-class SearchableVisitor implements Visitor
+/**
+ * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
+ */
+class FromWhereSearchableVisitor implements SearchableVisitor
 {
-    public function visitField(Field $field, SearchableVisitorParameters $parameters)
+    public function visitField(Field $field, $parameters)
     {
+        throw new \Exception($field->getName() . " is not supported in CrossTracker search");
     }
 
-    public function visitMetaData(Metadata $metadata, SearchableVisitorParameters $parameters)
+    public function visitMetaData(Metadata $metadata, $parameters)
     {
         return $parameters->getFromWhereBuilder()->getFromWhere(
             $metadata,

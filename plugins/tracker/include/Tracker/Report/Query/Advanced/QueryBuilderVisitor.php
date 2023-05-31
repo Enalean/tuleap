@@ -53,8 +53,8 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotEqualComparison
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotInComparisonFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
 use Tuleap\Tracker\Report\Query\AndFromWhere;
 use Tuleap\Tracker\Report\Query\OrFromWhere;
 
@@ -97,10 +97,6 @@ class QueryBuilderVisitor implements Visitor
      * @var NotInFieldComparisonVisitor
      */
     private $not_in_comparison_visitor;
-    /**
-     * @var SearchableVisitor
-     */
-    private $searchable_visitor;
     /**
      * @var MetadataEqualComparisonFromWhereBuilder
      */
@@ -148,7 +144,7 @@ class QueryBuilderVisitor implements Visitor
         BetweenFieldComparisonVisitor $between_comparison_visitor,
         InFieldComparisonVisitor $in_comparison_visitor,
         NotInFieldComparisonVisitor $not_in_comparison_visitor,
-        SearchableVisitor $searchable_visitor,
+        private readonly FromWhereSearchableVisitor $searchable_visitor,
         MetadataEqualComparisonFromWhereBuilder $metadata_equal_comparison_from_where_builder,
         MetadataNotEqualComparisonFromWhereBuilder $metadata_not_equal_comparison_from_where_builder,
         MetadataLesserThanComparisonFromWhereBuilder $metadata_lesser_than_comparison_from_where_builder,
@@ -168,7 +164,6 @@ class QueryBuilderVisitor implements Visitor
         $this->between_comparison_visitor                                   = $between_comparison_visitor;
         $this->in_comparison_visitor                                        = $in_comparison_visitor;
         $this->not_in_comparison_visitor                                    = $not_in_comparison_visitor;
-        $this->searchable_visitor                                           = $searchable_visitor;
         $this->metadata_equal_comparison_from_where_builder                 = $metadata_equal_comparison_from_where_builder;
         $this->metadata_not_equal_comparison_from_where_builder             = $metadata_not_equal_comparison_from_where_builder;
         $this->metadata_lesser_than_comparison_from_where_builder           = $metadata_lesser_than_comparison_from_where_builder;
@@ -187,9 +182,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->equal_comparison_visitor,
                 $parameters->getTracker(),
@@ -200,9 +195,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->not_equal_comparison_visitor,
                 $parameters->getTracker(),
@@ -213,9 +208,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_comparison_visitor,
                 $parameters->getTracker(),
@@ -226,9 +221,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_comparison_visitor,
                 $parameters->getTracker(),
@@ -239,9 +234,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_or_equal_comparison_visitor,
                 $parameters->getTracker(),
@@ -252,9 +247,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_or_equal_comparison_visitor,
                 $parameters->getTracker(),
@@ -265,9 +260,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitBetweenComparison(BetweenComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->between_comparison_visitor,
                 $parameters->getTracker(),
@@ -278,9 +273,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitInComparison(InComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->in_comparison_visitor,
                 $parameters->getTracker(),
@@ -291,9 +286,9 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitNotInComparison(NotInComparison $comparison, QueryBuilderParameters $parameters)
     {
-        return $comparison->getSearchable()->accept(
+        return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
-            new SearchableVisitorParameter(
+            new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->not_in_comparison_visitor,
                 $parameters->getTracker(),

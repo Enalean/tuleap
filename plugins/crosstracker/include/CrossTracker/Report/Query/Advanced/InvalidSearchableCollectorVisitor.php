@@ -23,23 +23,22 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 
-class InvalidSearchableCollectorVisitor implements Visitor
+/**
+ * @template-implements SearchableVisitor<InvalidSearchableCollectorParameters, void>
+ */
+class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
-    public function visitField(
-        Field $searchable_field,
-        InvalidSearchableCollectorParameters $parameters,
-    ) {
+    public function visitField(Field $searchable_field, $parameters)
+    {
         $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
             $searchable_field->getName()
         );
     }
 
-    public function visitMetadata(
-        Metadata $metadata,
-        InvalidSearchableCollectorParameters $parameters,
-    ) {
+    public function visitMetadata(Metadata $metadata, $parameters)
+    {
         $invalid_searchables_collection = $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection();
         if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
             $invalid_searchables_collection->addNonexistentSearchable(

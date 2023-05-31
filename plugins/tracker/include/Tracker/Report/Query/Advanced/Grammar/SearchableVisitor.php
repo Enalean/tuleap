@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +13,29 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Searchable
+/**
+ * @template Parameters of VisitorParameters
+ * @template ReturnType
+ */
+interface SearchableVisitor
 {
-    public function getName(): string;
-
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SearchableVisitor<Parameters, ReturnType> $visitor
      * @param Parameters $parameters
+     *
      * @return ReturnType
      */
-    public function acceptSearchableVisitor(SearchableVisitor $visitor, VisitorParameters $parameters);
+    public function visitField(Field $field, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitMetaData(Metadata $metadata, $parameters);
 }
