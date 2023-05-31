@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Authorization\User\Operation;
 
-
-class UserOperationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserOperationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testCreationOfAUnknownOperationIsRejected()
+    public function testCreationOfAUnknownOperationIsRejected(): void
     {
         $factory = new UserOperationFactory();
 

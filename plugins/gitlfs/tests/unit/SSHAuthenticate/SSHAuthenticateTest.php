@@ -32,21 +32,21 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SSHAuthenticate $auth;
-    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\Stub $git_repository_factory;
-    private \ProjectManager&\PHPUnit\Framework\MockObject\Stub $project_manager;
-    private \UserManager&\PHPUnit\Framework\MockObject\Stub $user_manager;
+    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject $git_repository_factory;
+    private \ProjectManager&\PHPUnit\Framework\MockObject\MockObject $project_manager;
+    private \UserManager&\PHPUnit\Framework\MockObject\MockObject $user_manager;
     private \gitlfsPlugin&\PHPUnit\Framework\MockObject\MockObject $plugin;
     private \PHPUnit\Framework\MockObject\MockObject&SSHAuthenticateResponseBuilder $ssh_response;
-    private \Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory&\PHPUnit\Framework\MockObject\Stub $user_operation_factory;
+    private \Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory&\PHPUnit\Framework\MockObject\MockObject $user_operation_factory;
 
     protected function setUp(): void
     {
-        $this->project_manager        = $this->createStub(\ProjectManager::class);
-        $this->user_manager           = $this->createStub(\UserManager::class);
-        $this->git_repository_factory = $this->createStub(\GitRepositoryFactory::class);
+        $this->project_manager        = $this->createMock(\ProjectManager::class);
+        $this->user_manager           = $this->createMock(\UserManager::class);
+        $this->git_repository_factory = $this->createMock(\GitRepositoryFactory::class);
         $this->plugin                 = $this->createMock(\gitlfsPlugin::class);
         $this->ssh_response           = $this->createMock(SSHAuthenticateResponseBuilder::class);
-        $this->user_operation_factory = $this->createStub(\Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory::class);
+        $this->user_operation_factory = $this->createMock(\Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory::class);
 
         $this->auth = new SSHAuthenticate(
             $this->project_manager,
@@ -77,7 +77,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test1stArgWithInvalidProjectNameMustFail(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn(null);
 
         $this->expectException(InvalidCommandException::class);
@@ -88,7 +88,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test1stArgWithNonActiveProjectMustFail(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withStatusSuspended()->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->with('foo')->willReturn($project);
@@ -101,7 +101,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function test1stArgWithInvalidRepositoryMustFail(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withId(122)->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
@@ -118,7 +118,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserNotFoundMustHaveAFailure(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withId(122)->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
@@ -139,7 +139,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserNotActiveMustHaveAFailure(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withId(122)->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
@@ -161,7 +161,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserWithoutReadAccessToRepoMustHaveAFailure(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withId(122)->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
@@ -169,7 +169,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()->build();
         $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = $this->createStub(\GitRepository::class);
+        $repository = $this->createMock(\GitRepository::class);
         $repository->method('userCanRead')->with($user)->willReturn(false);
         $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
@@ -199,7 +199,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNoAccessWhenPluginIsNotGrantedForProject(): void
     {
         $this->user_operation_factory->method('getUserOperationFromName')
-            ->willReturn($this->createStub(UserOperation::class));
+            ->willReturn($this->createMock(UserOperation::class));
 
         $project = ProjectTestBuilder::aProject()->withId(122)->build();
         $this->project_manager->method('getProjectByCaseInsensitiveUnixName')->willReturn($project);
@@ -207,7 +207,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()->build();
         $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = $this->createStub(\GitRepository::class);
+        $repository = $this->createMock(\GitRepository::class);
         $repository->method('userCanRead')->with($user)->willReturn(true);
         $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
@@ -223,7 +223,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItReturnsBatchResponseActionContentWhenEverythingIsOk(string $repository_path): void
     {
-        $user_operation = $this->createStub(UserOperation::class);
+        $user_operation = $this->createMock(UserOperation::class);
         $this->user_operation_factory->method('getUserOperationFromName')
             ->willReturn($user_operation);
 
@@ -233,7 +233,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::anActiveUser()->build();
         $this->user_manager->method('getUserByUserName')->with('mary')->willReturn($user);
 
-        $repository = $this->createStub(\GitRepository::class);
+        $repository = $this->createMock(\GitRepository::class);
         $repository->method('userCanRead')->with($user)->willReturn(true);
         $this->git_repository_factory->method('getRepositoryByPath')->with(122, 'foo/faa.git')->willReturn($repository);
 
@@ -244,10 +244,10 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             $user,
             $user_operation,
             self::anything(),
-        )->willReturn($this->createStub(BatchResponseActionContent::class));
+        )->willReturn($this->createMock(BatchResponseActionContent::class));
 
         $response = $this->auth->main('mary', ['/usr/share/gitolite3/commands/git-lfs-authenticate', $repository_path, 'download']);
-        $this->assertInstanceOf(BatchResponseActionContent::class, $response);
+        self::assertInstanceOf(BatchResponseActionContent::class, $response);
     }
 
     /**

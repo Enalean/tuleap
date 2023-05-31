@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
 final class BlockToMaxSizeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testFilterBlocksOnceMaximumExpectedSizeIsReached()
+    public function testFilterBlocksOnceMaximumExpectedSizeIsReached(): void
     {
         $input_source = fopen('php://memory', 'rb+');
 
@@ -36,19 +38,19 @@ final class BlockToMaxSizeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         fwrite($input_source, $input_data);
         rewind($input_source);
 
-        $this->assertSame($input_data, stream_get_contents($input_source));
-        $this->assertSame($maximum_size, $block_filter->getReadDataSize());
-        $this->assertFalse($block_filter->hasMaximumSizeBeenExceeded());
+        self::assertSame($input_data, stream_get_contents($input_source));
+        self::assertSame($maximum_size, $block_filter->getReadDataSize());
+        self::assertFalse($block_filter->hasMaximumSizeBeenExceeded());
 
         rewind($input_source);
-        $this->assertSame('', stream_get_contents($input_source));
-        $this->assertSame($maximum_size, $block_filter->getReadDataSize());
-        $this->assertTrue($block_filter->hasMaximumSizeBeenExceeded());
+        self::assertSame('', stream_get_contents($input_source));
+        self::assertSame($maximum_size, $block_filter->getReadDataSize());
+        self::assertTrue($block_filter->hasMaximumSizeBeenExceeded());
 
         fclose($input_source);
     }
 
-    public function testNegativeSizeIsRejected()
+    public function testNegativeSizeIsRejected(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         new BlockToMaxSizeOnReadFilter(-123);

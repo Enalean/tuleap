@@ -18,22 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 
 final class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testResponseIsBuiltWhenAllParametersAreAvailable()
+    public function testResponseIsBuiltWhenAllParametersAreAvailable(): void
     {
         $request = HTTPRequestBuilder::get()->withParams(['code' => 'code', 'state' => 'state'])->build();
 
         $response = AuthorizationResponse::buildFromHTTPRequest($request);
-        $this->assertSame('code', $response->getCode());
-        $this->assertSame('state', $response->getState());
+        self::assertSame('code', $response->getCode());
+        self::assertSame('state', $response->getState());
     }
 
-    public function testResponseConstructionIsRejectedWhenCodeIsMissing()
+    public function testResponseConstructionIsRejectedWhenCodeIsMissing(): void
     {
         $request = HTTPRequestBuilder::get()->build();
 
@@ -43,7 +45,7 @@ final class AuthorizationResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         AuthorizationResponse::buildFromHTTPRequest($request);
     }
 
-    public function testResponseConstructionIsRejectedWhenStateIsMissing()
+    public function testResponseConstructionIsRejectedWhenStateIsMissing(): void
     {
         $request = HTTPRequestBuilder::get()->withParams(['code' => 'code'])->build();
 

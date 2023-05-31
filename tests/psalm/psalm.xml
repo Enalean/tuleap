@@ -45,12 +45,10 @@
             <directory name="plugins/docman/tests/unit/"/>
             <directory name="plugins/document/tests/unit/"/>
             <directory name="plugins/git/tests/unit/"/>
-            <directory name="plugins/gitlfs/tests/unit/"/>
             <directory name="plugins/hudson/tests/unit/"/>
             <directory name="plugins/hudson_git/tests/unit/"/>
             <directory name="plugins/ldap/tests/unit/"/>
             <directory name="plugins/mediawiki/tests/unit/"/>
-            <directory name="plugins/openidconnectclient/tests/unit/"/>
             <directory name="plugins/pluginsadministration/tests/unit/"/>
             <directory name="plugins/projectmilestones/tests/unit/"/>
             <directory name="plugins/prometheus_metrics/tests/unit/"/>
@@ -60,7 +58,7 @@
             <directory name="plugins/taskboard/tests/unit/"/>
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
-            <directory name="plugins/velocity/tests/unit/"/>
+            <file name="plugins/openidconnectclient/tests/unit/Authentication/IDTokenVerifierTest.php"/>
         </ignoreFiles>
     </projectFiles>
 

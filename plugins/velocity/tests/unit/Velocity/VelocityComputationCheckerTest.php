@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity;
 
 use Tracker_Artifact_Changeset;
@@ -68,11 +70,11 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->method('getLastChangeset')->willReturn($last_changeset);
     }
 
-    public function testComputationIsNeverLaunchedWhenStatusSemanticIsNotDefined()
+    public function testComputationIsNeverLaunchedWhenStatusSemanticIsNotDefined(): void
     {
         $this->semantic_status->method('getFieldId')->willReturn(0);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -82,12 +84,12 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testComputationIsNeverLaunchedWhenStatusCanHaveMultipleValues()
+    public function testComputationIsNeverLaunchedWhenStatusCanHaveMultipleValues(): void
     {
         $this->semantic_velocity_field->method('isMultiple')->willReturn(true);
         $this->semantic_status->method('getFieldId')->willReturn(0);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -97,7 +99,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testComputationIsNeverLaunchedWhenDoneSemanticIsNotDefined()
+    public function testComputationIsNeverLaunchedWhenDoneSemanticIsNotDefined(): void
     {
         $this->semantic_velocity_field->method('isMultiple')->willReturn(false);
         $this->semantic_status->method('getField')->willReturn($this->semantic_velocity_field);
@@ -105,7 +107,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_done->method('isSemanticDefined')->willReturn(false);
         $this->semantic_velocity->method('getFieldId')->willReturn($this->semantic_status_field_id);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -115,7 +117,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testComputationIsNeverLaunchedWhenVelocitySemanticIsNotDefined()
+    public function testComputationIsNeverLaunchedWhenVelocitySemanticIsNotDefined(): void
     {
         $this->semantic_velocity_field->method('isMultiple')->willReturn(false);
         $this->semantic_status->method('getField')->willReturn($this->semantic_velocity_field);
@@ -123,7 +125,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_done->method('isSemanticDefined')->willReturn(true);
         $this->semantic_velocity->method('getFieldId')->willReturn(false);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -133,7 +135,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function setValidSemantics()
+    private function setValidSemantics(): void
     {
         $this->semantic_velocity_field->method('isMultiple')->willReturn(false);
         $this->semantic_status->method('getField')->willReturn($this->semantic_velocity_field);
@@ -142,17 +144,19 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_velocity->method('getFieldId')->willReturn($this->semantic_status_field_id);
     }
 
-    public function testVelocityShouldNotBeComputedIfArtifactDoesNotChangeItsStatus()
+    public function testVelocityShouldNotBeComputedIfArtifactDoesNotChangeItsStatus(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1000]);
-        $new_changeset[$this->semantic_status_field_id] = [1000];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1000],
+        ];
         $this->semantic_status->method('getOpenValues')->willReturn([1001]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([1002]);
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -162,18 +166,20 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVelocityShouldNotBeComputedIfNewArtifactStatusIsOpen()
+    public function testVelocityShouldNotBeComputedIfNewArtifactStatusIsOpen(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1000]);
-        $new_changeset[$this->semantic_status_field_id] = [1001];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1001],
+        ];
         $this->semantic_status->method('getOpenValues')->willReturn([1001]);
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
         $this->semantic_status->method('getOpenValues')->willReturn([1000, 1001]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([2000]);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -183,17 +189,19 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVelocityShouldNotBeComputedOldStatusIsClosedAndNewStatusIsClosed()
+    public function testVelocityShouldNotBeComputedOldStatusIsClosedAndNewStatusIsClosed(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1001]);
-        $new_changeset[$this->semantic_status_field_id] = [1002];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1002],
+        ];
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
         $this->semantic_status->method('getOpenValues')->willReturn([1000]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([1001, 1002]);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -203,17 +211,19 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVelocityShouldBeComputedIfArtifactMoveFromOpenToClose()
+    public function testVelocityShouldBeComputedIfArtifactMoveFromOpenToClose(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1001]);
-        $new_changeset[$this->semantic_status_field_id] = [1002];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1002],
+        ];
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
         $this->semantic_status->method('getOpenValues')->willReturn([1001]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([1002]);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -223,17 +233,19 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVelocityShouldBeComputedIfOldValuesHasAtLeastOneOpenValue()
+    public function testVelocityShouldBeComputedIfOldValuesHasAtLeastOneOpenValue(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1000, 1001]);
-        $new_changeset[$this->semantic_status_field_id] = [1002];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1002],
+        ];
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
         $this->semantic_status->method('getOpenValues')->willReturn([1001]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([1000, 1002]);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,
@@ -243,17 +255,19 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testVelocityShouldBeComputedIfNewValuesHasAtLeastOneClosedValue()
+    public function testVelocityShouldBeComputedIfNewValuesHasAtLeastOneClosedValue(): void
     {
         $this->setValidSemantics();
 
         $this->last_changeset_value->method('getValue')->willReturn([1001]);
-        $new_changeset[$this->semantic_status_field_id] = [1000, 1002];
+        $new_changeset = [
+            $this->semantic_status_field_id => [1000, 1002],
+        ];
         $this->before_event->method('getFieldsData')->willReturn($new_changeset);
         $this->semantic_status->method('getOpenValues')->willReturn([1000, 1001]);
         $this->semantic_done->method('getDoneValuesIds')->willReturn([1002]);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->computation_checker->shouldComputeCapacity(
                 $this->semantic_status,
                 $this->semantic_done,

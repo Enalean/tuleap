@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
@@ -61,7 +63,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
-        $this->assertEquals($generic_provider, $res);
+        self::assertEquals($generic_provider, $res);
     }
 
     public function testItCreatesNewGenericProviderWithAnEmptyUserInfoEndpoint(): void
@@ -100,7 +102,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
-        $this->assertEquals($generic_provider, $res);
+        self::assertEquals($generic_provider, $res);
     }
 
     public function testItCreatesNewGenericProviderWithAnEmptyJWKSEndpoint(): void
@@ -139,7 +141,7 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
-        $this->assertEquals($generic_provider, $res);
+        self::assertEquals($generic_provider, $res);
     }
 
     public function testItUpdatesProvider(): void
@@ -192,17 +194,20 @@ final class GenericProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'fiesta_red'
         );
 
+        $jwks_endpoint = $provider->getJWKSEndpoint();
+        self::assertNotNull($jwks_endpoint);
+
         $generic_provider_manager->createGenericProvider(
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
-            $provider->getJWKSEndpoint(),
+            $jwks_endpoint,
             $provider->getUserInfoEndpoint(),
             $provider->getClientId(),
             $provider->getClientSecret(),
             $provider->getIcon(),
             $provider->getColor()
         );
-        $generic_provider_manager->update($provider);
+        $generic_provider_manager->updateGenericProvider($provider);
     }
 }

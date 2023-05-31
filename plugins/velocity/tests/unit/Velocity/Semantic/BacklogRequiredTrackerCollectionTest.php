@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity\Semantic;
 
 use Tracker;
@@ -71,7 +73,7 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $this->other_tracker_without_initial_effort_semantic->method('getId')->willReturn(4);
     }
 
-    public function testItBuildsACollectionWithTrackersMissingDoneSemantic()
+    public function testItBuildsACollectionWithTrackersMissingDoneSemantic(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
@@ -89,13 +91,13 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
-        $this->assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
-        $this->assertEquals($collection->getNbMisconfiguredTrackers(), 1);
-        $this->assertFalse($collection->areAllBacklogTrackersMisconfigured());
+        self::assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
+        self::assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
+        self::assertEquals($collection->getNbMisconfiguredTrackers(), 1);
+        self::assertFalse($collection->areAllBacklogTrackersMisconfigured());
     }
 
-    public function testItBuildsACollectionWithTrackersMissingInitialEffortSemantic()
+    public function testItBuildsACollectionWithTrackersMissingInitialEffortSemantic(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
@@ -113,13 +115,13 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without initial effort semantic');
-        $this->assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
-        $this->assertEquals($collection->getNbMisconfiguredTrackers(), 1);
-        $this->assertFalse($collection->areAllBacklogTrackersMisconfigured());
+        self::assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without initial effort semantic');
+        self::assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
+        self::assertEquals($collection->getNbMisconfiguredTrackers(), 1);
+        self::assertFalse($collection->areAllBacklogTrackersMisconfigured());
     }
 
-    public function testItBuildsACollectionWithMixedMissingSemantics()
+    public function testItBuildsACollectionWithMixedMissingSemantics(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
@@ -138,14 +140,14 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
-        $this->assertEquals($collection->getMisconfiguredBacklogTrackers()[1]->name, 'tracker without initial effort semantic');
-        $this->assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
-        $this->assertEquals($collection->getNbMisconfiguredTrackers(), 2);
-        $this->assertFalse($collection->areAllBacklogTrackersMisconfigured());
+        self::assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
+        self::assertEquals($collection->getMisconfiguredBacklogTrackers()[1]->name, 'tracker without initial effort semantic');
+        self::assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
+        self::assertEquals($collection->getNbMisconfiguredTrackers(), 2);
+        self::assertFalse($collection->areAllBacklogTrackersMisconfigured());
     }
 
-    public function testItBuildsACollectionWithTrackersMissingBothSemantics()
+    public function testItBuildsACollectionWithTrackersMissingBothSemantics(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
@@ -164,13 +166,13 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
-        $this->assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
-        $this->assertEquals($collection->getNbMisconfiguredTrackers(), 2);
-        $this->assertTrue($collection->areAllBacklogTrackersMisconfigured());
+        self::assertEquals($collection->getMisconfiguredBacklogTrackers()[0]->name, 'tracker without done semantic');
+        self::assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
+        self::assertEquals($collection->getNbMisconfiguredTrackers(), 2);
+        self::assertTrue($collection->areAllBacklogTrackersMisconfigured());
     }
 
-    public function testItBuildsACollectionWithWellConfiguredTrackers()
+    public function testItBuildsACollectionWithWellConfiguredTrackers(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
@@ -189,12 +191,12 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
-        $this->assertEquals($collection->getNbMisconfiguredTrackers(), 0);
-        $this->assertFalse($collection->areAllBacklogTrackersMisconfigured());
+        self::assertEquals(count($collection->getBacklogRequiredTrackers()), 2);
+        self::assertEquals($collection->getNbMisconfiguredTrackers(), 0);
+        self::assertFalse($collection->areAllBacklogTrackersMisconfigured());
     }
 
-    public function testItReturnsDoneLabelWhenAllTrackersMissIt()
+    public function testItReturnsDoneLabelWhenAllTrackersMissIt(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(true);
@@ -221,10 +223,10 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
             $this->createMock(SemanticDoneValueChecker::class),
             []
         );
-        $this->assertEquals([$semantic_done->getLabel()], $collection->getSemanticMisconfiguredForAllTrackers());
+        self::assertEquals([$semantic_done->getLabel()], $collection->getSemanticMisconfiguredForAllTrackers());
     }
 
-    public function testItReturnsInitialEffortLabelWhenAllTrackersMissIt()
+    public function testItReturnsInitialEffortLabelWhenAllTrackersMissIt(): void
     {
         $required_tracker = $this->createMock(BacklogRequiredTracker::class);
         $required_tracker->method('isDoneSemanticMissing')->willReturn(false);
@@ -243,6 +245,6 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $this->assertEquals(['Initial Effort'], $collection->getSemanticMisconfiguredForAllTrackers());
+        self::assertEquals(['Initial Effort'], $collection->getSemanticMisconfiguredForAllTrackers());
     }
 }

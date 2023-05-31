@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity;
 
 use PFUser;
@@ -64,7 +66,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $this->user      = $this->createMock(PFUser::class);
     }
 
-    public function testItReturnsACollectionOfVelocityRepresentation()
+    public function testItReturnsACollectionOfVelocityRepresentation(): void
     {
         $tracker = $this->createMock(Tracker::class);
 
@@ -119,11 +121,11 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->assertCount(1, $collection->getVelocityRepresentations());
-        $this->assertCount(0, $collection->getInvalidArtifacts());
+        self::assertCount(1, $collection->getVelocityRepresentations());
+        self::assertCount(0, $collection->getInvalidArtifacts());
     }
 
-    public function testItDoesNotAddInCollectionIfNoSemanticDoneDefined()
+    public function testItDoesNotAddInCollectionIfNoSemanticDoneDefined(): void
     {
         $tracker = $this->createMock(Tracker::class);
 
@@ -172,11 +174,11 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->assertCount(0, $collection->getVelocityRepresentations());
-        $this->assertCount(0, $collection->getInvalidArtifacts());
+        self::assertCount(0, $collection->getVelocityRepresentations());
+        self::assertCount(0, $collection->getInvalidArtifacts());
     }
 
-    public function testItDoesNotAddInCollectionIfNoSemanticVelocityDefined()
+    public function testItDoesNotAddInCollectionIfNoSemanticVelocityDefined(): void
     {
         $tracker = $this->createMock(Tracker::class);
 
@@ -219,11 +221,11 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->assertCount(0, $collection->getVelocityRepresentations());
-        $this->assertCount(0, $collection->getInvalidArtifacts());
+        self::assertCount(0, $collection->getVelocityRepresentations());
+        self::assertCount(0, $collection->getInvalidArtifacts());
     }
 
-    public function testItAddsInCollectionAsInvalidIfNoStartDateDefined()
+    public function testItAddsInCollectionAsInvalidIfNoStartDateDefined(): void
     {
         $tracker = $this->createMock(Tracker::class);
 
@@ -280,11 +282,11 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->assertCount(0, $collection->getVelocityRepresentations());
-        $this->assertCount(1, $collection->getInvalidArtifacts());
+        self::assertCount(0, $collection->getVelocityRepresentations());
+        self::assertCount(1, $collection->getInvalidArtifacts());
     }
 
-    public function testItAddsTrackerNameToInvalidTrackersNamesWhenNoTimeframeSemanticIsDefined()
+    public function testItAddsTrackerNameToInvalidTrackersNamesWhenNoTimeframeSemanticIsDefined(): void
     {
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getName')->willReturn('Sprints');
@@ -338,13 +340,13 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
-        $this->assertCount(0, $collection->getVelocityRepresentations());
-        $this->assertCount(0, $collection->getInvalidArtifacts());
-        $this->assertCount(1, $collection->getInvalidTrackersNames());
-        $this->assertEquals('Sprints', $collection->getInvalidTrackersNames()[0]);
+        self::assertCount(0, $collection->getVelocityRepresentations());
+        self::assertCount(0, $collection->getInvalidArtifacts());
+        self::assertCount(1, $collection->getInvalidTrackersNames());
+        self::assertEquals('Sprints', $collection->getInvalidTrackersNames()[0]);
     }
 
-    public function testItDoesNotAddLinkedArtifactsWhichAreNotASubmilestone()
+    public function testItDoesNotAddLinkedArtifactsWhichAreNotASubmilestone(): void
     {
         $tracker = $this->createMock(Tracker::class);
 
@@ -400,7 +402,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
         $this->milestone->expects(self::never())->method('getLinkedArtifacts');
-        $this->assertCount(1, $collection->getVelocityRepresentations());
-        $this->assertCount(0, $collection->getInvalidArtifacts());
+        self::assertCount(1, $collection->getVelocityRepresentations());
+        self::assertCount(0, $collection->getInvalidArtifacts());
     }
 }

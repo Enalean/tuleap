@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Tuleap\ForgeConfigSandbox;
@@ -32,7 +34,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->username_generator = $this->createMock(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class, ['getUsername' => 'foo']);
+        $this->username_generator = $this->createMock(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
         $this->username_generator->method('getUsername')->willReturn('jdoe');
     }
 

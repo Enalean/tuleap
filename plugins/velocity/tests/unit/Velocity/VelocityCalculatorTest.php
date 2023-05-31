@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity;
 
 use AgileDashBoard_Semantic_InitialEffort;
@@ -70,7 +72,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->method('getId')->willReturn(200);
     }
 
-    public function testItCalculatesVelocityBasedOnInitialEffort()
+    public function testItCalculatesVelocityBasedOnInitialEffort(): void
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
@@ -95,7 +97,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(15, $calculated_effort);
     }
 
-    public function testItCalculatesVelocityBasedOnInitialEffortBindedToAListField()
+    public function testItCalculatesVelocityBasedOnInitialEffortBoundToAListField(): void
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
@@ -120,7 +122,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(15, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfNoLinkedArtifacts()
+    public function testItReturnsZeroIfNoLinkedArtifacts(): void
     {
         $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
             ->with(200)
@@ -131,7 +133,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsHAveNoInitialEffortSemantic()
+    public function testItReturnsZeroIfLinkedArtifactsHAveNoInitialEffortSemantic(): void
     {
         $this->mockLinkedArtifact();
 
@@ -144,7 +146,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsHAveNoSemanticInitialEffortField()
+    public function testItReturnsZeroIfLinkedArtifactsHAveNoSemanticInitialEffortField(): void
     {
         $this->mockLinkedArtifact();
 
@@ -155,7 +157,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsHAveNoDoneSemantic()
+    public function testItReturnsZeroIfLinkedArtifactsHAveNoDoneSemantic(): void
     {
         $linked_artifact      = $this->mockLinkedArtifact();
         $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
@@ -171,7 +173,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsHaveNoLastChangeset()
+    public function testItReturnsZeroIfLinkedArtifactsHaveNoLastChangeset(): void
     {
         $linked_artifact = $this->mockLinkedArtifact();
         $linked_artifact->method('getLastChangeset')->willReturn(null);
@@ -186,7 +188,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsLastChangesetHaveNoValueForInitialEffortField()
+    public function testItReturnsZeroIfLinkedArtifactsLastChangesetHaveNoValueForInitialEffortField(): void
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
@@ -207,7 +209,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $calculated_effort);
     }
 
-    public function testItReturnsZeroIfLinkedArtifactsValueForInitialEffortFieldIsNotANumeric()
+    public function testItReturnsZeroIfLinkedArtifactsValueForInitialEffortFieldIsNotANumeric(): void
     {
         $linked_artifact = $this->mockLinkedArtifact();
 
@@ -234,8 +236,8 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffort(
         Artifact $linked_artifact,
-        Tracker_FormElement_Field $initial_effort_field,
-    ) {
+        MockObject&Tracker_FormElement_Field $initial_effort_field,
+    ): void {
         $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)
             ->willReturn(15);
@@ -250,8 +252,8 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffortWithListValueNotInteger(
         Artifact $linked_artifact,
-        Tracker_FormElement_Field $initial_effort_field,
-    ) {
+        MockObject&Tracker_FormElement_Field $initial_effort_field,
+    ): void {
         $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)
             ->willReturn(null);
@@ -264,7 +266,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($semantic_initial_effort);
     }
 
-    private function mockSemanticInitialEffortWithoutField()
+    private function mockSemanticInitialEffortWithoutField(): void
     {
         $semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
         $semantic_initial_effort->method('getField')->willReturn(null);
@@ -274,7 +276,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($semantic_initial_effort);
     }
 
-    private function mockSemanticDone()
+    private function mockSemanticDone(): MockObject&Tracker_FormElement_Field_Selectbox
     {
         $status_field    = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
         $semantic_status = $this->createMock(Tracker_Semantic_Status::class);
@@ -294,10 +296,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         return $status_field;
     }
 
-    /**
-     * @return Artifact&MockObject
-     */
-    private function mockLinkedArtifact()
+    private function mockLinkedArtifact(): Artifact&MockObject
     {
         $this->velocity_dao->expects(self::once())->method('searchPlanningLinkedArtifact')
             ->with(200)

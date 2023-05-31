@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity\Semantic;
 
 use Tracker;
 
-class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersHasMissingRequiredSemantics()
+    public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersHasMissingRequiredSemantics(): void
     {
         $children_trackers = [$this->createMock(Tracker::class)];
 
@@ -36,7 +38,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertFalse(
+        self::assertFalse(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection
@@ -44,7 +46,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersAreCorrectlySet()
+    public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenTrackersHaveMissingVelocitySemanticAndBacklogTrackersAreCorrectlySet(): void
     {
         $children_trackers = [$this->createMock(Tracker::class)];
 
@@ -56,7 +58,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertTrue(
+        self::assertTrue(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection
@@ -64,7 +66,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreCorrectlySetAndBacklogTrackersAreCorrectlySet()
+    public function testSemanticAreCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreCorrectlySetAndBacklogTrackersAreCorrectlySet(): void
     {
         $children_trackers = [$this->createMock(Tracker::class)];
 
@@ -76,7 +78,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertTrue(
+        self::assertTrue(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection
@@ -84,7 +86,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreNotCorrectlySetAndBacklogTrackersAreCorrectlySet()
+    public function testSemanticAreNotCorrectlySetWhenTrackerIsATopBacklogAndChildrenVelocitySemanticAreNotCorrectlySetAndBacklogTrackersAreCorrectlySet(): void
     {
         $children_trackers = [$this->createMock(Tracker::class)];
 
@@ -96,7 +98,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertFalse(
+        self::assertFalse(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection
@@ -104,7 +106,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSemanticAreNotCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreNotCorrectlySet()
+    public function testSemanticAreNotCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreNotCorrectlySet(): void
     {
         $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
         $children_trackers_collection->method('getChildrenTrackers')->willReturn([]);
@@ -114,7 +116,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(true);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertFalse(
+        self::assertFalse(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection
@@ -122,7 +124,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSemanticAreCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreCorrectlySet()
+    public function testSemanticAreCorrectlySetWhenTrackerIsNotATopBacklogAndBacklogTrackersAreCorrectlySet(): void
     {
         $children_trackers_collection = $this->createMock(ChildrenRequiredTrackerCollection::class);
         $children_trackers_collection->method('getChildrenTrackers')->willReturn([]);
@@ -132,7 +134,7 @@ class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $backlog_trackers_collection->method('areAllBacklogTrackersMisconfigured')->willReturn(false);
 
         $checker = new VelocitySemanticChecker();
-        $this->assertTrue(
+        self::assertTrue(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
                 $children_trackers_collection

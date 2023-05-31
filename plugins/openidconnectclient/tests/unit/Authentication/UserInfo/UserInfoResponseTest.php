@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
 use Psr\Http\Message\ResponseInterface;
 
 final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testContentTypeNotAnnouncedAsJSONIsRejected()
+    public function testContentTypeNotAnnouncedAsJSONIsRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getHeaderLine')->willReturn('application/jwt');
@@ -34,7 +36,7 @@ final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         UserInfoResponse::buildFromHTTPResponse($http_response);
     }
 
-    public function testNotValidJSONISRejected()
+    public function testNotValidJSONISRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getHeaderLine')->willReturn('application/json');
@@ -45,7 +47,7 @@ final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         UserInfoResponse::buildFromHTTPResponse($http_response);
     }
 
-    public function testUserInfoResponseIsParsed()
+    public function testUserInfoResponseIsParsed(): void
     {
         $claims = [
             'sub'                => '248289761001',
@@ -61,13 +63,13 @@ final class UserInfoResponseTest extends \Tuleap\Test\PHPUnit\TestCase
             $http_response->method('getBody')->willReturn(json_encode($claims));
 
             $user_info_response = UserInfoResponse::buildFromHTTPResponse($http_response);
-            $this->assertSame($claims, $user_info_response->getClaims());
+            self::assertSame($claims, $user_info_response->getClaims());
         }
     }
 
-    public function testAnEmptyUserInfoResponseCanBeProvided()
+    public function testAnEmptyUserInfoResponseCanBeProvided(): void
     {
         $user_info_response = UserInfoResponse::buildEmptyUserInfoResponse();
-        $this->assertEmpty($user_info_response->getClaims());
+        self::assertEmpty($user_info_response->getClaims());
     }
 }

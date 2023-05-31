@@ -32,9 +32,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private UserTokenCreator|\PHPUnit\Framework\MockObject\MockObject $token_creator;
+    private \PHPUnit\Framework\MockObject\MockObject&UserTokenCreator $token_creator;
     private \PFUser $user;
-    private \GitRepository&\PHPUnit\Framework\MockObject\Stub $repository;
+    private \PHPUnit\Framework\MockObject\MockObject&\GitRepository $repository;
     private SSHAuthenticateResponseBuilder $response_builder;
     private \DateTimeImmutable $current_time;
 
@@ -48,7 +48,7 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->user = UserTestBuilder::aUser()->build();
 
-        $this->repository = $this->createStub(\GitRepository::class);
+        $this->repository = $this->createMock(\GitRepository::class);
         $this->repository->method('getFullHTTPUrlWithDotGit')->willReturn('https://lfs-server/foo/bar');
 
         $this->current_time = new \DateTimeImmutable('@10');
@@ -56,7 +56,7 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testReturnsAResponseConformToSpec(): void
     {
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $verification_string->method('getString')->willReturn(new ConcealedString('bar'));
         $this->token_creator->method('createUserAuthorizationToken')->willReturn(
             new SplitToken(100, $verification_string)
@@ -65,11 +65,11 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $response = $this->response_builder->getResponse(
             $this->repository,
             $this->user,
-            $this->createStub(UserOperation::class),
+            $this->createMock(UserOperation::class),
             $this->current_time
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'href'       => 'https://lfs-server/foo/bar/info/lfs',
                 'expires_in' => 600,
@@ -83,13 +83,13 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItCreatesTheToken(): void
     {
-        $user_operation = $this->createStub(UserOperation::class);
+        $user_operation = $this->createMock(UserOperation::class);
         $this->token_creator->expects(self::atLeastOnce())->method('createUserAuthorizationToken')->with(
             $this->repository,
             (new \DateTimeImmutable())->setTimestamp($this->current_time->getTimestamp() + SSHAuthenticateResponseBuilder::EXPIRES_IN_SECONDS),
             $this->user,
             $user_operation
-        )->willReturn($this->createStub(SplitToken::class));
+        )->willReturn($this->createMock(SplitToken::class));
 
         $this->response_builder->getResponse(
             $this->repository,

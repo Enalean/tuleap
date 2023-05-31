@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -28,8 +28,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerat
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\XML\XMLTracker;
-use function PHPUnit\Framework\assertCount;
-use function PHPUnit\Framework\assertEquals;
 
 final class AddVelocityToScrumTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,14 +47,22 @@ final class AddVelocityToScrumTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml = $tracker->export(new \SimpleXMLElement('<trackers />'));
 
         $column_content = $xml->xpath('/trackers/tracker/formElements/formElement[@ID="F100"]/formElements/formElement[@ID="F200"]/formElements');
-        assertCount(1, $column_content);
-        assertCount(1, $column_content[0]->formElement);
-        assertEquals('velocity', $column_content[0]->formElement[0]->name);
-        assertEquals('float', $column_content[0]->formElement[0]['type']);
-        $field_id = $column_content[0]->formElement[0]['ID'];
+        self::assertNotNull($column_content);
+        self::assertCount(1, $column_content);
+        $first_column_content = $column_content[0];
+        self::assertNotNull($first_column_content);
+        self::assertCount(1, $first_column_content->formElement);
+        $form_element = $first_column_content->formElement[0];
+        self::assertNotNull($form_element);
+        self::assertEquals('velocity', $form_element->name);
+        self::assertEquals('float', $form_element['type']);
+        $field_id = $form_element['ID'];
 
-        $semantic = $xml->xpath('/trackers/tracker/semantics/semantic[@type="velocity"]')[0];
-        assertEquals($field_id, $semantic->field['REF']);
+        $semantics = $xml->xpath('/trackers/tracker/semantics/semantic[@type="velocity"]');
+        self::assertNotNull($semantics);
+        self::assertCount(1, $semantics);
+        $semantic = $semantics[0];
+        self::assertEquals($field_id, $semantic->field['REF']);
     }
 
     public function testItCannotAddWhenColumnIsNotPresent(): void

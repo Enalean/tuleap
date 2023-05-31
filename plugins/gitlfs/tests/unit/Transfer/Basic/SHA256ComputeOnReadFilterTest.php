@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
-class SHA256ComputeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SHA256ComputeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testSHA256IsComputed()
+    public function testSHA256IsComputed(): void
     {
         $test_string = 'The quick brown fox jumps over the lazy dog';
 
@@ -38,15 +40,15 @@ class SHA256ComputeOnReadFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination_resource = fopen('php://memory', 'rb+');
         stream_copy_to_stream($source_resource, $destination_resource);
         rewind($destination_resource);
-        $this->assertSame($test_string, stream_get_contents($destination_resource));
-        $this->assertSame('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592', $sha256_filter->getHashValue());
+        self::assertSame($test_string, stream_get_contents($destination_resource));
+        self::assertSame('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592', $sha256_filter->getHashValue());
         fclose($destination_resource);
 
         fwrite($source_resource, '.');
         fseek($source_resource, -1, SEEK_CUR);
         fread($source_resource, 1);
-        $this->assertSame('ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c', $sha256_filter->getHashValue());
+        self::assertSame('ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c', $sha256_filter->getHashValue());
         fclose($source_resource);
-        $this->assertSame('ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c', $sha256_filter->getHashValue());
+        self::assertSame('ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c', $sha256_filter->getHashValue());
     }
 }

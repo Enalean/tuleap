@@ -58,16 +58,18 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_mapping_manager = $this->createMock(UserMappingManager::class);
 
-        $controller = $this->createPartialMock(Controller::class, ['redirectAfterLogin']);
-        $controller->__construct(
-            $user_manager,
-            $provider_manager,
-            $user_mapping_manager,
-            $unlinked_account_manager,
-            $this->createMock(ConnectorPresenterBuilder::class),
-            EventDispatcherStub::withIdentityCallback(),
-            $session_storage,
-        );
+        $controller = $this->getMockBuilder(Controller::class)
+            ->setConstructorArgs([
+                $user_manager,
+                $provider_manager,
+                $user_mapping_manager,
+                $unlinked_account_manager,
+                $this->createMock(ConnectorPresenterBuilder::class),
+                EventDispatcherStub::withIdentityCallback(),
+                &$session_storage,
+            ])
+            ->onlyMethods(['redirectAfterLogin'])
+            ->getMock();
 
         $user_manager
             ->expects(self::once())
@@ -114,16 +116,18 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user_mapping_manager = $this->createMock(UserMappingManager::class);
 
-        $controller = $this->createPartialMock(Controller::class, ['showIndex']);
-        $controller->__construct(
-            $user_manager,
-            $provider_manager,
-            $user_mapping_manager,
-            $unlinked_account_manager,
-            $this->createMock(ConnectorPresenterBuilder::class),
-            EventDispatcherStub::withIdentityCallback(),
-            $session_storage,
-        );
+        $controller = $this->getMockBuilder(Controller::class)
+            ->setConstructorArgs([
+                $user_manager,
+                $provider_manager,
+                $user_mapping_manager,
+                $unlinked_account_manager,
+                $this->createMock(ConnectorPresenterBuilder::class),
+                EventDispatcherStub::withIdentityCallback(),
+                &$session_storage,
+            ])
+            ->onlyMethods(['showIndex'])
+            ->getMock();
 
         $user_manager
             ->expects(self::once())
