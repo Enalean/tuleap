@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\WebAuthn\Controllers;
 
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Tuleap\TimezoneRetriever;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
-use function Psl\Encoding\Base64\encode;
 
 final class AuthenticatorPresenter
 {
@@ -39,7 +39,7 @@ final class AuthenticatorPresenter
     ) {
         $timezone = new \DateTimeZone(TimezoneRetriever::getUserTimezone($user));
 
-        $this->id         = encode($source->getSource()->getPublicKeyCredentialId());
+        $this->id         = Base64UrlSafe::encode($source->getSource()->getPublicKeyCredentialId());
         $this->name       = $source->getName();
         $this->created_at = $source->getCreatedAt()
             ->setTimezone($timezone)
