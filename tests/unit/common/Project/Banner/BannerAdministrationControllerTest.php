@@ -22,68 +22,51 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Banner;
 
-use HTTPRequest;
-use Mockery;
-use PFUser;
-use Project;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\LayoutHelperPassthrough;
+use Tuleap\Test\Stubs\TemplateRendererStub;
 
 final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /** @var BannerAdministrationController */
-    private $controller;
-    /** @var LayoutHelperPassthrough */
-    private $helper;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TemplateRenderer */
-    private $renderer;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets */
-    private $include_assets;
-    /** @var Mockery\LegacyMockInterface|Mockery\MockInterface|BannerRetriever */
-    private $banner_retriever;
+    private const PROJECT_ID = 102;
+    private TemplateRendererStub $renderer;
+    private BannerRetriever & \PHPUnit\Framework\MockObject\Stub $banner_retriever;
 
     protected function setUp(): void
     {
-        $this->helper           = new LayoutHelperPassthrough();
-        $this->renderer         = Mockery::mock(\TemplateRenderer::class);
-        $this->include_assets   = Mockery::mock(IncludeAssets::class);
-        $this->banner_retriever = Mockery::mock(BannerRetriever::class);
-        $this->controller       = new BannerAdministrationController(
-            $this->helper,
+        $this->renderer         = new TemplateRendererStub();
+        $this->banner_retriever = $this->createStub(BannerRetriever::class);
+    }
+
+    private function process(): void
+    {
+        $layout_helper = new LayoutHelperPassthrough();
+        $project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $current_user  = UserTestBuilder::buildWithDefaults();
+        $layout_helper->setCallbackParams($project, $current_user);
+
+        $request    = HTTPRequestBuilder::get()->build();
+        $layout     = new TestLayout(new LayoutInspector());
+        $controller = new BannerAdministrationController(
+            $layout_helper,
             $this->renderer,
-            $this->include_assets,
+            JavascriptAssetGenericBuilder::build(),
+            JavascriptAssetGenericBuilder::build(),
             $this->banner_retriever
         );
+        $controller->process($request, $layout, ['project_id' => (string) self::PROJECT_ID]);
     }
 
     public function testProcessRenders(): void
     {
-        $project      = Mockery::mock(Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $current_user = Mockery::mock(PFUser::class);
-        $this->helper->setCallbackParams($project, $current_user);
+        $this->banner_retriever->method('getBannerForProject')->willReturn(new Banner('prorelease asymbolia'));
 
-        $request = Mockery::mock(HTTPRequest::class);
-        $layout  = Mockery::mock(BaseLayout::class);
-
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('ckeditor.js');
-        $this->include_assets->shouldReceive('getFileURL')
-            ->once()
-            ->with('project/project-admin-banner.js');
-        $layout->shouldReceive('includeFooterJavascriptFile')->twice();
-        $this->banner_retriever->shouldReceive('getBannerForProject')
-            ->with($project)
-            ->once();
-        $this->renderer->shouldReceive('renderToPage')
-            ->once()
-            ->with('administration', Mockery::type('array'));
-
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->process();
+        self::assertTrue($this->renderer->has_rendered_something);
     }
 }

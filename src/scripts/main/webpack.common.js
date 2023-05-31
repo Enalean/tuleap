@@ -247,7 +247,6 @@ const webpack_config_for_vue = {
     entry: {
         "frs-permissions": "./src/frs/permissions-per-group/index.ts",
         "news-permissions": "./src/news/permissions-per-group/index.js",
-        "project/project-admin-banner": "./src/project/admin/banner/index-banner-project-admin.ts",
         "site-admin/platform-banner": "./src/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
         "site-admin-services": "./src/project/admin/services/src/index-site-admin.js",

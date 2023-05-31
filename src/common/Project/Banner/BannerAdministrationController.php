@@ -23,62 +23,30 @@ declare(strict_types=1);
 namespace Tuleap\Project\Banner;
 
 use HTTPRequest;
-use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
-use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
 final class BannerAdministrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var LayoutHelper
-     */
-    private $layout_helper;
-    /**
-     * @var \TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var IncludeAssets
-     */
-    private $banner_assets;
-    /**
-     * @var BannerRetriever
-     */
-    private $banner_retriever;
-
     public function __construct(
-        LayoutHelper $layout_helper,
-        \TemplateRenderer $renderer,
-        IncludeAssets $banner_assets,
-        BannerRetriever $banner_retriever,
+        private readonly LayoutHelper $layout_helper,
+        private readonly \TemplateRenderer $renderer,
+        private readonly JavascriptAssetGeneric $ckeditor_assets,
+        private readonly JavascriptAssetGeneric $banner_assets,
+        private readonly BannerRetriever $banner_retriever,
     ) {
-        $this->layout_helper    = $layout_helper;
-        $this->renderer         = $renderer;
-        $this->banner_assets    = $banner_assets;
-        $this->banner_retriever = $banner_retriever;
     }
 
-    public static function buildSelf(): self
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        return new self(
-            AdministrationLayoutHelper::buildSelf(),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/admin/banner/'),
-            new \Tuleap\Layout\IncludeCoreAssets(),
-            new BannerRetriever(new BannerDao())
-        );
-    }
+        $layout->addJavascriptAsset($this->ckeditor_assets);
+        $layout->addJavascriptAsset($this->banner_assets);
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
-    {
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project/project-admin-banner.js'));
-
-        $callback = function (\Project $project, \PFUser $current_user) use ($layout): void {
+        $callback = function (\Project $project) use ($layout): void {
             $banner = $this->banner_retriever->getBannerForProject($project);
             $this->renderer->renderToPage(
                 'administration',
