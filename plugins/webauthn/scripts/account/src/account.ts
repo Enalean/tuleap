@@ -25,6 +25,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import "../themes/style.scss";
 import { register } from "./register";
 import { authenticate } from "./authenticate";
+import { deleteKey } from "./delete";
 
 const HIDDEN = "webauthn-hidden";
 
@@ -138,13 +139,26 @@ function prepareAuthentication(gettext_provider: GetText): void {
 function prepareRemove(): void {
     const form_remove_modal = selectOrThrow(document, "#webauthn-remove-modal");
     const key_id_input = selectOrThrow(document, "#webauthn-key-id-input", HTMLInputElement);
+    const error = selectOrThrow(form_remove_modal, "#webauthn-remove-error");
+    const remove_button = selectOrThrow(
+        form_remove_modal,
+        "#webauthn-modal-remove-button",
+        HTMLButtonElement
+    );
+    const remove_button_icon = selectOrThrow(form_remove_modal, "#webauthn-modal-remove");
 
     document.querySelectorAll("[data-item-id=webauthn-remove]").forEach((button) => {
         if (!(button instanceof HTMLButtonElement)) {
             return;
         }
 
-        openTargetModalIdOnClick(document, button.id);
+        const modal = openTargetModalIdOnClick(document, button.id);
+        if (modal === null) {
+            return;
+        }
+        modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+            error.classList.add(HIDDEN);
+        });
 
         button.addEventListener("click", () => {
             key_id_input.value = button.id;
@@ -156,8 +170,17 @@ function prepareRemove(): void {
 
         const key_id = key_id_input.value;
 
-        // The fetch call for delete will be added in future commit
-        // eslint-disable-next-line no-console
-        console.log(`Remove key ${key_id}`);
+        remove_button_icon.classList.remove(HIDDEN);
+        remove_button.disabled = true;
+
+        deleteKey(key_id).match(
+            () => location.reload(),
+            (fault) => {
+                remove_button_icon.classList.add(HIDDEN);
+                remove_button.disabled = false;
+                error.innerText = fault.toString();
+                error.classList.remove(HIDDEN);
+            }
+        );
     });
 }

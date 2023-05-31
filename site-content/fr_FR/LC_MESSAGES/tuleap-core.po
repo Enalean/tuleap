@@ -1110,6 +1110,9 @@ msgstr ""
 "La création de nouveaux jetons SVN n'est plus possible, les clés d'accès "
 "personnelles doivent être utilisées à la place."
 
+msgid "Credential id is not well formed"
+msgstr "L'identifiant de la clé n'est pas bien formé"
+
 msgid "Current and new passwords are identical"
 msgstr "L'ancien et le nouveau mot de passe sont identiques"
 

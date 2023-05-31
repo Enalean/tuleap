@@ -239,6 +239,7 @@ use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\WebAuthn\Challenge\WebAuthnChallengeDao;
+use Tuleap\WebAuthn\Controllers\DeleteSourceController;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationChallengeController;
 use Tuleap\WebAuthn\Controllers\PostAuthenticationController;
 use Tuleap\WebAuthn\Controllers\PostRegistrationChallengeController;
@@ -1382,6 +1383,20 @@ class RouteCollector
         );
     }
 
+    public static function deleteWebAuthnSource(): DispatchablePSR15Compatible
+    {
+        $response_factory      = HTTPFactoryBuilder::responseFactory();
+        $json_response_builder = new JSONResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory());
+
+        return new DeleteSourceController(
+            \UserManager::instance(),
+            new WebAuthnCredentialSourceDao(),
+            new RestlerErrorResponseBuilder($json_response_builder),
+            $response_factory,
+            new SapiEmitter()
+        );
+    }
+
     public static function getFeatureFlag(): FeatureFlagController
     {
         return new FeatureFlagController(
@@ -1576,6 +1591,8 @@ class RouteCollector
 
             $r->post('/authentication-challenge', [self::class, 'postWebAuthnAuthenticationChallenge']);
             $r->post('/authentication', [self::class, 'postWebAuthnAuthentication']);
+
+            $r->delete('/key/{key_id}', [self::class, 'deleteWebAuthnSource']);
         });
 
         SVNProjectAccessRouteDefinition::defineRoute($r, '/svnroot');
