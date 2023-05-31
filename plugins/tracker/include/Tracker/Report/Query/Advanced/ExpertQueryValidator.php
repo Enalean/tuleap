@@ -22,17 +22,10 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 class ExpertQueryValidator
 {
-    /** @var ParserCacheProxy */
-    private $parser;
-    /** @var SizeValidatorVisitor */
-    private $size_validator;
-
     public function __construct(
-        ParserCacheProxy $parser,
-        SizeValidatorVisitor $size_validator,
+        private readonly ParserCacheProxy $parser,
+        private readonly SizeValidatorVisitor $size_validator,
     ) {
-        $this->parser         = $parser;
-        $this->size_validator = $size_validator;
     }
 
     /**

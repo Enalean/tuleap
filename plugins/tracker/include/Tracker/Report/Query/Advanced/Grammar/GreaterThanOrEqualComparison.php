@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
+class GreaterThanOrEqualComparison implements Term, Comparison
 {
     /**
      * @var Searchable
@@ -34,11 +34,6 @@ class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
     {
         $this->searchable    = $searchable;
         $this->value_wrapper = $value_wrapper;
-    }
-
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
-    {
-        return $visitor->visitGreaterThanOrEqualComparison($this, $parameters);
     }
 
     public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)

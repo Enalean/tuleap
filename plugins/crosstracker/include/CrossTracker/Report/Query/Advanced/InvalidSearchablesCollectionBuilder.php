@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
@@ -51,11 +51,7 @@ class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCol
         $this->user                         = $user;
     }
 
-    /**
-     * @param $parsed_expert_query
-     * @return InvalidSearchablesCollection
-     */
-    public function buildCollectionOfInvalidSearchables(Visitable $parsed_expert_query)
+    public function buildCollectionOfInvalidSearchables(Logical $parsed_expert_query): InvalidSearchablesCollection
     {
         $invalid_searchables_collection = new InvalidSearchablesCollection();
         $this->invalid_comparison_collector->collectErrors(

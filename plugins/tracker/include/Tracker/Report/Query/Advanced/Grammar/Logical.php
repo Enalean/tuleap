@@ -23,4 +23,13 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 interface Logical
 {
     public function getTail(): OrOperand | AndOperand | null;
+
+    /**
+     * @template ReturnType
+     * @template Parameters of VisitorParameters
+     * @param LogicalVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters);
 }

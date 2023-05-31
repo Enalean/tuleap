@@ -19,18 +19,18 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class AndExpression implements Visitable, Logical
+class AndExpression implements Logical
 {
-    public function __construct(private readonly Term $expression, private readonly ?AndOperand $tail = null)
+    public function __construct(private readonly Comparison $expression, private readonly ?AndOperand $tail = null)
     {
     }
 
-    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters)
     {
         return $visitor->visitAndExpression($this, $parameters);
     }
 
-    public function getExpression(): Term
+    public function getExpression(): Comparison
     {
         return $this->expression;
     }

@@ -19,6 +19,37 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Visitor
+/**
+ * @template Parameters of VisitorParameters
+ * @template ReturnType
+ */
+interface LogicalVisitor
 {
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitAndExpression(AndExpression $and_expression, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitAndOperand(AndOperand $and_operand, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitOrExpression(OrExpression $or_expression, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitOrOperand(OrOperand $or_operand, $parameters);
 }

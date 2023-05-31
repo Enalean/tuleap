@@ -19,6 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Term extends Visitable
+interface Term
 {
 }

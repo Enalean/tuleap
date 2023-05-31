@@ -175,7 +175,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $and_expression = new AndExpression($comparison);
@@ -190,10 +190,10 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_expression = new FromWhere("le_from", "le_where");
         $from_where_tail       = new FromWhere("le_from_tail", "le_where_tail");
         $comparison            = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_expression);
         $tail = \Mockery::mock(AndOperand::class);
-        $tail->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_tail);
 
         $and_expression = new AndExpression($comparison, $tail);
@@ -208,7 +208,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $and_operand = new AndOperand($comparison);
@@ -223,10 +223,10 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
         $comparison         = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
         $tail = \Mockery::mock(AndOperand::class);
-        $tail->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_tail);
 
         $and_operand = new AndOperand($comparison, $tail);
@@ -241,7 +241,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $expression = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $and_operand = new OrOperand($expression);
@@ -256,10 +256,10 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
         $expression         = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
         $tail = Mockery::mock(OrOperand::class);
-        $tail->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_tail);
 
         $or_operand = new OrOperand($expression, $tail);
@@ -274,7 +274,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $expression = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $or_expression = new OrExpression($expression);
@@ -289,10 +289,10 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
         $expression         = \Mockery::mock(AndExpression::class);
-        $expression->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $expression->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
         $tail = Mockery::mock(OrOperand::class);
-        $tail->shouldReceive('accept')->with($this->query_builder, $this->parameters)
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_tail);
 
         $or_expression = new OrExpression($expression, $tail);

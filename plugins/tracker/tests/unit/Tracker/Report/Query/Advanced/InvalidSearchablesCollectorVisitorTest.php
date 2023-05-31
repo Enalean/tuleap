@@ -309,7 +309,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns(null);
 
-        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -319,7 +319,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
 
     public function testItCollectsNonExistentFieldsIfFieldIsAMetadataButUnknown(): void
     {
-        $expr = new EqualComparison(new Metadata('summary'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new EqualComparison(new Metadata('summary'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -332,7 +332,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->open_list_field);
 
-        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -347,7 +347,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->open_list_field);
 
-        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper(20));
+        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper(20)));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -362,7 +362,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->open_list_field);
 
-        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
+        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -377,7 +377,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->open_list_field);
 
-        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('planned'));
+        $expr = new AndExpression(new EqualComparison(new Field('field'), new SimpleValueWrapper('planned')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -392,7 +392,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -407,7 +407,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -422,7 +422,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -437,7 +437,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
+        $expr = new AndExpression(new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value')));
 
         $this->collector->collectErrors($expr, $this->invalid_searchables_collection);
 
@@ -452,11 +452,13 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new BetweenComparison(
-            new Field('field'),
-            new BetweenValueWrapper(
-                new SimpleValueWrapper('value1'),
-                new SimpleValueWrapper('value2')
+        $expr = new AndExpression(
+            new BetweenComparison(
+                new Field('field'),
+                new BetweenValueWrapper(
+                    new SimpleValueWrapper('value1'),
+                    new SimpleValueWrapper('value2')
+                )
             )
         );
 
@@ -476,13 +478,15 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new InComparison(
-            new Field('field'),
-            new InValueWrapper(
-                [
-                    new SimpleValueWrapper('value1'),
-                    new SimpleValueWrapper('value2'),
-                ]
+        $expr = new AndExpression(
+            new InComparison(
+                new Field('field'),
+                new InValueWrapper(
+                    [
+                        new SimpleValueWrapper('value1'),
+                        new SimpleValueWrapper('value2'),
+                    ]
+                )
             )
         );
 
@@ -499,13 +503,15 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($this->string_field);
 
-        $expr = new NotInComparison(
-            new Field('field'),
-            new InValueWrapper(
-                [
-                    new SimpleValueWrapper('value3'),
-                    new SimpleValueWrapper('value4'),
-                ]
+        $expr = new AndExpression(
+            new NotInComparison(
+                new Field('field'),
+                new InValueWrapper(
+                    [
+                        new SimpleValueWrapper('value3'),
+                        new SimpleValueWrapper('value4'),
+                    ]
+                )
             )
         );
 
@@ -523,8 +529,8 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndExpression($expression, $this->parameters);
     }
@@ -535,8 +541,8 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
         $expression    = new OrExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitOrExpression($expression, $this->parameters);
     }
@@ -547,8 +553,8 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand::class);
         $expression = new OrOperand($operand, $tail);
 
-        $operand->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitOrOperand($expression, $this->parameters);
     }
@@ -559,8 +565,8 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
-        $tail->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndOperand($expression, $this->parameters);
     }
@@ -571,7 +577,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndExpression($expression, $this->parameters);
     }
@@ -582,7 +588,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = null;
         $expression    = new OrExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitOrExpression($expression, $this->parameters);
     }
@@ -593,7 +599,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = null;
         $expression = new OrOperand($operand, $tail);
 
-        $operand->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitOrOperand($expression, $this->parameters);
     }
@@ -604,7 +610,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('accept')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndOperand($expression, $this->parameters);
     }

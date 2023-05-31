@@ -22,20 +22,25 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LogicalVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 
-class SizeValidatorVisitor implements Visitor
+/**
+ * @template-implements LogicalVisitor<SizeValidatorParameters, void>
+ * @template-implements ComparisonVisitor<SizeValidatorParameters, void>
+ */
+class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
 {
     private $limit;
 
@@ -44,99 +49,97 @@ class SizeValidatorVisitor implements Visitor
         $this->limit = $limit;
     }
 
-    public function checkSizeOfTree(Visitable $parsed_query)
+    public function checkSizeOfTree(Logical $parsed_query): void
     {
-        $parsed_query->accept($this, new SizeValidatorParameters(0));
+        $parsed_query->acceptLogicalVisitor($this, new SizeValidatorParameters(0));
     }
 
-    public function visitEqualComparison(EqualComparison $comparison, SizeValidatorParameters $parameters)
-    {
-        $this->visitComparison($comparison, $parameters);
-    }
-
-    public function visitNotEqualComparison(NotEqualComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitLesserThanComparison(LesserThanComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitGreaterThanComparison(GreaterThanComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitBetweenComparison(BetweenComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitInComparison(InComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitNotInComparison(NotInComparison $comparison, SizeValidatorParameters $parameters)
+    public function visitInComparison(InComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitAndExpression(AndExpression $and_expression, SizeValidatorParameters $parameters)
+    public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
-        $this->visitExpression($and_expression, $parameters);
+        $this->visitComparison($comparison, $parameters);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, SizeValidatorParameters $parameters)
+    public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
-        $this->visitExpression($or_expression, $parameters);
+        $this->incrementSize($parameters);
+
+        $and_expression->getExpression()->acceptComparisonVisitor($this, $parameters);
+
+        $this->visitTail($and_expression->getTail(), $parameters);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, SizeValidatorParameters $parameters)
+    public function visitOrExpression(OrExpression $or_expression, $parameters)
     {
-        $this->visitOperand($or_operand, $parameters);
+        $this->incrementSize($parameters);
+
+        $or_expression->getExpression()->acceptLogicalVisitor($this, $parameters);
+
+        $this->visitTail($or_expression->getTail(), $parameters);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, SizeValidatorParameters $parameters)
+    public function visitOrOperand(OrOperand $or_operand, $parameters)
     {
-        $this->visitOperand($and_operand, $parameters);
+        $this->incrementSize($parameters);
+
+        $or_operand->getOperand()->acceptLogicalVisitor($this, $parameters);
+
+        $this->visitTail($or_operand->getTail(), $parameters);
     }
 
-    private function visitTail($tail, SizeValidatorParameters $parameters)
+    public function visitAndOperand(AndOperand $and_operand, $parameters)
+    {
+        $this->incrementSize($parameters);
+
+        $and_operand->getOperand()->acceptComparisonVisitor($this, $parameters);
+
+        $this->visitTail($and_operand->getTail(), $parameters);
+    }
+
+    private function visitTail(OrOperand | AndOperand | null $tail, SizeValidatorParameters $parameters)
     {
         if ($tail) {
-            $tail->accept($this, $parameters);
+            $tail->acceptLogicalVisitor($this, $parameters);
         }
-    }
-
-    private function visitOperand($operand, SizeValidatorParameters $parameters)
-    {
-        $this->incrementSize($parameters);
-
-        $operand->getOperand()->accept($this, $parameters);
-
-        $this->visitTail($operand->getTail(), $parameters);
-    }
-
-    private function visitExpression($expression, SizeValidatorParameters $parameters)
-    {
-        $this->incrementSize($parameters);
-
-        $expression->getExpression()->accept($this, $parameters);
-
-        $this->visitTail($expression->getTail(), $parameters);
     }
 
     private function visitComparison($comparison, SizeValidatorParameters $parameters)

@@ -46,7 +46,7 @@ final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
-        $expression->accept($this->validator, new SizeValidatorParameters(0));
+        $expression->acceptLogicalVisitor($this->validator, new SizeValidatorParameters(0));
 
         $this->addToAssertionCount(1);
     }
@@ -58,6 +58,6 @@ final class SizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $expression    = new OrExpression($subexpression, null);
 
         $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException::class);
-        $expression->accept($this->validator, new SizeValidatorParameters(0));
+        $expression->acceptLogicalVisitor($this->validator, new SizeValidatorParameters(0));
     }
 }
