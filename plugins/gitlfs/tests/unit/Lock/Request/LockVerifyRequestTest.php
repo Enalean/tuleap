@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Lock\Request;
 
-
-class LockVerifyRequestTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LockVerifyRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testParsingRequest()
+    public function testParsingRequest(): void
     {
         $json           = <<<JSON
 {
@@ -34,18 +35,20 @@ class LockVerifyRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 JSON;
         $verify_request = LockVerifyRequest::buildFromJSONString($json);
 
-        $this->assertSame('refs/heads/master', $verify_request->getReference()->getName());
-        $this->assertTrue($verify_request->isWrite());
-        $this->assertFalse($verify_request->isRead());
+        $reference = $verify_request->getReference();
+        self::assertNotNull($reference);
+        self::assertSame('refs/heads/master', $reference->getName());
+        self::assertTrue($verify_request->isWrite());
+        self::assertFalse($verify_request->isRead());
     }
 
-    public function testRequestCanBeParsedWhenNoRefIsGiven()
+    public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
         $json_without_ref           = <<<JSON
 {}
 JSON;
         $verify_request_without_ref = LockVerifyRequest::buildFromJSONString($json_without_ref);
 
-        $this->assertNull($verify_request_without_ref->getReference());
+        self::assertNull($verify_request_without_ref->getReference());
     }
 }

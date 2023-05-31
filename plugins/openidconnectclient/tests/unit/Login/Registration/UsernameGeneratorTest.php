@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use Cocur\Slugify\Slugify;
@@ -54,7 +56,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->assertEquals($username, $generated_username);
+        self::assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromGivenAndFamilyNames(): void
@@ -76,7 +78,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'family_name' => 'Family Name',
             ]
         );
-        $this->assertEquals($username, $generated_username);
+        self::assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromFamilyName(): void
@@ -97,7 +99,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'family_name' => 'Family Name',
             ]
         );
-        $this->assertEquals($username, $generated_username);
+        self::assertEquals($username, $generated_username);
     }
 
     public function testItGeneratesUsernameFromGivenName(): void
@@ -117,7 +119,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'given_name' => 'Given Name',
             ]
         );
-        $this->assertEquals($username, $generated_username);
+        self::assertEquals($username, $generated_username);
     }
 
     public function testItNeedsAtLeastGivenOrFamilyNamesToGenerateUsername(): void
@@ -128,9 +130,7 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $username_generator = new UsernameGenerator($this->userNameNormalizer);
 
         $this->userNameNormalizer->expects(self::never())->method("normalize");
-        $this->expectException(
-            'Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToGenerateUsernameException'
-        );
+        $this->expectException(NotEnoughDataToGenerateUsernameException::class);
         $username_generator->getUsername([]);
     }
 
@@ -178,6 +178,6 @@ final class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'family_name'        => 'Family Name',
             ]
         );
-        $this->assertEquals($username, $generated_username);
+        self::assertEquals($username, $generated_username);
     }
 }

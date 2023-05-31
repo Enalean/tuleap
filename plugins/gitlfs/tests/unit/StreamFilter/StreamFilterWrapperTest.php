@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\StreamFilter;
 
-
-class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testIncorrectFilterIsRejected(): void
     {
@@ -36,6 +37,9 @@ class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testTheCorrectAmountOfWrittenDataIsCounted(): void
     {
         $filter = new class implements FilterInterface {
+            /**
+             * @param string $data_chunk
+             */
             public function process($data_chunk): string
             {
                 return $data_chunk;
@@ -57,7 +61,7 @@ class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $content           = 'Test data';
         $written_data_size = fwrite($destination_resource, $content);
 
-        $this->assertSame(strlen($content), $written_data_size);
+        self::assertSame(strlen($content), $written_data_size);
 
         fclose($destination_resource);
     }

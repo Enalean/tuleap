@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Lock\Request;
 
-
-class LockDeleteRequestTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LockDeleteRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testParsingRequest()
+    public function testParsingRequest(): void
     {
         $json           = <<<JSON
 {
@@ -35,13 +36,15 @@ class LockDeleteRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 JSON;
         $delete_request = LockDeleteRequest::buildFromJSONString($json);
 
-        $this->assertSame('refs/heads/master', $delete_request->getReference()->getName());
-        $this->assertTrue($delete_request->getForce());
-        $this->assertTrue($delete_request->isWrite());
-        $this->assertFalse($delete_request->isRead());
+        $reference = $delete_request->getReference();
+        self::assertNotNull($reference);
+        self::assertSame('refs/heads/master', $reference->getName());
+        self::assertTrue($delete_request->getForce());
+        self::assertTrue($delete_request->isWrite());
+        self::assertFalse($delete_request->isRead());
     }
 
-    public function testRequestCanBeParsedWhenNoRefIsGiven()
+    public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
         $json_without_ref         = <<<JSON
 {
@@ -50,7 +53,7 @@ JSON;
 JSON;
         $lock_request_without_ref = LockDeleteRequest::buildFromJSONString($json_without_ref);
 
-        $this->assertFalse($lock_request_without_ref->getForce());
-        $this->assertNull($lock_request_without_ref->getReference());
+        self::assertFalse($lock_request_without_ref->getForce());
+        self::assertNull($lock_request_without_ref->getReference());
     }
 }

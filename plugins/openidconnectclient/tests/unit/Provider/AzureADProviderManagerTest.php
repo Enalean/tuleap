@@ -86,6 +86,6 @@ final class AzureADProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $generic_provider_dao->expects(self::once())->method('save');
-        $generic_provider_manager->updateAzureADProvider($provider, $tenant_setup);
+        $generic_provider_manager->updateAzureADProvider($provider);
     }
 }

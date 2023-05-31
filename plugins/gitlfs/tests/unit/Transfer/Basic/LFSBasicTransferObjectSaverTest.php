@@ -34,16 +34,16 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private FilesystemOperator&\PHPUnit\Framework\MockObject\MockObject $filesystem;
     private DBConnection&\PHPUnit\Framework\MockObject\MockObject $db_connection;
-    private LFSObjectRetriever&\PHPUnit\Framework\MockObject\Stub $lfs_object_retriever;
-    private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\Stub $path_allocator;
+    private LFSObjectRetriever&\PHPUnit\Framework\MockObject\MockObject $lfs_object_retriever;
+    private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\MockObject $path_allocator;
     private Prometheus $prometheus;
 
     protected function setUp(): void
     {
         $this->filesystem           = $this->createMock(FilesystemOperator::class);
         $this->db_connection        = $this->createMock(DBConnection::class);
-        $this->lfs_object_retriever = $this->createStub(LFSObjectRetriever::class);
-        $this->path_allocator       = $this->createStub(LFSObjectPathAllocator::class);
+        $this->lfs_object_retriever = $this->createMock(LFSObjectRetriever::class);
+        $this->path_allocator       = $this->createMock(LFSObjectPathAllocator::class);
         $this->prometheus           = Prometheus::getInMemory();
     }
 
@@ -74,7 +74,10 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
 
         $this->filesystem->method('writeStream')->willReturnCallback(
-            function ($save_path, $input_stream) use ($temporary_save_path): void {
+            /**
+             * @param resource $input_stream
+             */
+            function (string $save_path, $input_stream) use ($temporary_save_path): void {
                 self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
@@ -166,7 +169,10 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->expectException(LFSBasicTransferObjectIntegrityException::class);
 
         $this->filesystem->method('writeStream')->willReturnCallback(
-            function ($save_path, $input_stream) use ($temporary_save_path): void {
+            /**
+             * @param resource $input_stream
+             */
+            function (string $save_path, $input_stream) use ($temporary_save_path): void {
                 self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
@@ -182,11 +188,13 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
 
     /**
      * @dataProvider objectSizeProvider
+     *
+     * @param class-string<\Throwable> $excepted_exception
      */
     public function testSaveIsRejectedWhenSizeOfSavedFileDoesNotMatchTheExpectation(
-        $input_size,
-        $object_size,
-        $excepted_exception,
+        int $input_size,
+        int $object_size,
+        string $excepted_exception,
     ): void {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
@@ -214,7 +222,10 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         );
 
         $this->filesystem->method('writeStream')->willReturnCallback(
-            function ($save_path, $input_stream) use ($temporary_save_path): void {
+            /**
+             * @param resource $input_stream
+             */
+            function (string $save_path, $input_stream) use ($temporary_save_path): void {
                 self::assertEquals($temporary_save_path, $save_path);
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
@@ -229,7 +240,7 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
         $object_saver->saveObject($this->createStub(\GitRepository::class), $lfs_object, $input_resource);
     }
 
-    public static function objectSizeProvider()
+    public static function objectSizeProvider(): array
     {
         return [
             [1024, 2048, LFSBasicTransferObjectSizeException::class],

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\Authorization\Action;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -28,16 +30,16 @@ use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 
 final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private \PHPUnit\Framework\MockObject\Stub&ActionAuthorizationDAO $dao;
-    private SplitTokenVerificationStringHasher&\PHPUnit\Framework\MockObject\Stub $hasher;
-    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\Stub $repository_factory;
+    private \PHPUnit\Framework\MockObject\MockObject&ActionAuthorizationDAO $dao;
+    private SplitTokenVerificationStringHasher&\PHPUnit\Framework\MockObject\MockObject $hasher;
+    private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject $repository_factory;
     private \DateTimeImmutable $current_time;
 
     protected function setUp(): void
     {
-        $this->dao                = $this->createStub(ActionAuthorizationDAO::class);
-        $this->hasher             = $this->createStub(SplitTokenVerificationStringHasher::class);
-        $this->repository_factory = $this->createStub(\GitRepositoryFactory::class);
+        $this->dao                = $this->createMock(ActionAuthorizationDAO::class);
+        $this->hasher             = $this->createMock(SplitTokenVerificationStringHasher::class);
+        $this->repository_factory = $this->createMock(\GitRepositoryFactory::class);
         $this->current_time       = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
     }
 
@@ -45,9 +47,9 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
@@ -64,14 +66,14 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
             'object_size'     => $size,
         ]);
         $this->hasher->method('verifyHash')->with($verification_string, 'valid')->willReturn(true);
-        $expected_repository = $this->createStub(\GitRepository::class);
+        $expected_repository = $this->createMock(\GitRepository::class);
         $this->repository_factory->method('getRepositoryById')->with(3)->willReturn($expected_repository);
 
         $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid_value, $action_type);
 
-        $this->assertSame($oid_value, $authorized_action->getLFSObject()->getOID()->getValue());
-        $this->assertSame($size, $authorized_action->getLFSObject()->getSize());
-        $this->assertSame($expected_repository, $authorized_action->getRepository());
+        self::assertSame($oid_value, $authorized_action->getLFSObject()->getOID()->getValue());
+        self::assertSame($size, $authorized_action->getLFSObject()->getSize());
+        self::assertSame($expected_repository, $authorized_action->getRepository());
     }
 
     public function testVerificationFailsWhenANotExpiredAuthorizationCanNotBeFound(): void
@@ -80,7 +82,7 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->dao->method('searchAuthorizationByIDAndExpiration')->willReturn(null);
 
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
 
         $this->expectException(ActionAuthorizationNotFoundException::class);
@@ -92,9 +94,9 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
@@ -121,9 +123,9 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
         $current_time        = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
@@ -147,11 +149,11 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $authorization_token->method('getVerificationString')->willReturn($verification_string);
-        $action_type = $this->createStub(ActionAuthorizationType::class);
+        $action_type = $this->createMock(ActionAuthorizationType::class);
         $action_type->method('getName')->willReturn('not_requested_action_type');
 
         $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
@@ -176,9 +178,9 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $authorization_token = $this->createStub(SplitToken::class);
+        $authorization_token = $this->createMock(SplitToken::class);
         $authorization_token->method('getID')->willReturn(1);
-        $verification_string = $this->createStub(SplitTokenVerificationString::class);
+        $verification_string = $this->createMock(SplitTokenVerificationString::class);
         $authorization_token->method('getVerificationString')->willReturn($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 

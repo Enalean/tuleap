@@ -18,24 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\StreamFilter;
 
 final class ReplaceDataFilter implements FilterInterface
 {
-    /**
-     * @var string
-     */
-    private $replacement_data;
-    /**
-     * @var bool
-     */
-    private $has_already_written_expected_data = false;
+    private string $replacement_data;
+    private bool $has_already_written_expected_data = false;
 
-    public function __construct($replacement_data)
+    public function __construct(string $replacement_data)
     {
         $this->replacement_data = $replacement_data;
     }
 
+    /**
+     * @param string $data_chunk
+     */
     public function process($data_chunk): string
     {
         if ($this->has_already_written_expected_data) {

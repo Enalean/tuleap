@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\Cryptography\ConcealedString;
@@ -33,9 +35,10 @@ final class StateStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $state_storage->saveState($state);
         $session_state = $state_storage->loadState();
 
-        $this->assertSame($state->getSecretKey(), $session_state->getSecretKey());
-        $this->assertSame($state->getNonce(), $session_state->getNonce());
-        $this->assertSame($state->getReturnTo(), $session_state->getReturnTo());
+        self::assertNotNull($session_state);
+        self::assertSame($state->getSecretKey(), $session_state->getSecretKey());
+        self::assertSame($state->getNonce(), $session_state->getNonce());
+        self::assertSame($state->getReturnTo(), $session_state->getReturnTo());
     }
 
     public function testStateStorageCanBeCleared(): void
@@ -46,8 +49,8 @@ final class StateStorageTest extends \Tuleap\Test\PHPUnit\TestCase
         $state = new State(123, 'return_to', 'secret_key', 'nonce', new ConcealedString('pkce_code_verifier'));
         $state_storage->saveState($state);
 
-        $this->assertNotNull($state_storage->loadState());
+        self::assertNotNull($state_storage->loadState());
         $state_storage->clear();
-        $this->assertNull($state_storage->loadState());
+        self::assertNull($state_storage->loadState());
     }
 }

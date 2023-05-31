@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
 use Psr\Http\Message\RequestFactoryInterface;
@@ -26,7 +28,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testAnEmptyRequestIsCreatedWhenNoUserEndpointIsAvailable()
+    public function testAnEmptyRequestIsCreatedWhenNoUserEndpointIsAvailable(): void
     {
         $request_factory           = $this->createMock(RequestFactoryInterface::class);
         $user_info_request_creator = new UserInfoRequestCreator($request_factory);
@@ -38,6 +40,6 @@ final class UserInfoRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $provider,
             $this->createMock(TokenResponse::class)
         );
-        $this->assertInstanceOf(EmptyUserInfoRequest::class, $user_info_request);
+        self::assertInstanceOf(EmptyUserInfoRequest::class, $user_info_request);
     }
 }

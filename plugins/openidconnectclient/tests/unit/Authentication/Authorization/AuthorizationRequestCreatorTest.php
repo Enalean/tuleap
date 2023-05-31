@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OpenIDConnectClient\Authentication\State;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
@@ -34,7 +35,7 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
     private const PKCE_CODE_VERIFIER  = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
     private const PKCE_CODE_CHALLENGE = 'ZtNPunH49FD35FWYhT5Tv8I7vRKQJ8uxMaL0_9eHjNA';
 
-    private $state_manager;
+    private MockObject&StateManager $state_manager;
 
     protected function setUp(): void
     {
@@ -61,15 +62,15 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         $authorization_request = $authorization_request_creator->createAuthorizationRequest($provider, 'return_to');
 
         $authorization_request_url = $authorization_request->getURL();
-        $this->assertStringStartsWith($authorization_endpoint, $authorization_request_url);
-        $this->assertStringContainsString('client_id=1234', $authorization_request_url);
-        $this->assertStringContainsString('redirect_uri=', $authorization_request_url);
-        $this->assertStringContainsString('response_type=code', $authorization_request_url);
-        $this->assertStringContainsString('scope=openid+profile+email', $authorization_request_url);
-        $this->assertStringContainsString('state=' . self::SIGNED_STATE, $authorization_request_url);
-        $this->assertStringContainsString('nonce=' . self::NONCE_FOR_TEST, $authorization_request_url);
-        $this->assertStringContainsString('code_challenge_method=S256', $authorization_request_url);
-        $this->assertStringContainsString('code_challenge=' . self::PKCE_CODE_CHALLENGE, $authorization_request_url);
+        self::assertStringStartsWith($authorization_endpoint, $authorization_request_url);
+        self::assertStringContainsString('client_id=1234', $authorization_request_url);
+        self::assertStringContainsString('redirect_uri=', $authorization_request_url);
+        self::assertStringContainsString('response_type=code', $authorization_request_url);
+        self::assertStringContainsString('scope=openid+profile+email', $authorization_request_url);
+        self::assertStringContainsString('state=' . self::SIGNED_STATE, $authorization_request_url);
+        self::assertStringContainsString('nonce=' . self::NONCE_FOR_TEST, $authorization_request_url);
+        self::assertStringContainsString('code_challenge_method=S256', $authorization_request_url);
+        self::assertStringContainsString('code_challenge=' . self::PKCE_CODE_CHALLENGE, $authorization_request_url);
     }
 
     public function testValidAuthorizationRequestWithMultipleProvidersIsGenerated(): void
@@ -92,9 +93,9 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         $provider_2->method('isUniqueAuthenticationEndpoint')->willReturn(false);
 
         $authorization_request_1 = $authorization_request_creator->createAuthorizationRequest($provider_1, 'return_to');
-        $this->assertStringStartsWith($authorization_endpoint_1, $authorization_request_1->getURL());
+        self::assertStringStartsWith($authorization_endpoint_1, $authorization_request_1->getURL());
 
         $authorization_request_2 = $authorization_request_creator->createAuthorizationRequest($provider_2, 'return_to');
-        $this->assertStringStartsWith($authorization_endpoint_2, $authorization_request_2->getURL());
+        self::assertStringStartsWith($authorization_endpoint_2, $authorization_request_2->getURL());
     }
 }

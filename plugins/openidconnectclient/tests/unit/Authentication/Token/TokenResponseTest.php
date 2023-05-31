@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
 use Psr\Http\Message\ResponseInterface;
 
 final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testNotValidJSONISRejected()
+    public function testNotValidJSONISRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getBody')->willReturn('{NotJSONValid');
@@ -34,7 +36,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         TokenResponse::buildFromHTTPResponse($http_response);
     }
 
-    public function testJSONWithMissingEntryIsRejected()
+    public function testJSONWithMissingEntryIsRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getBody')->willReturn(json_encode(['id_token' => 'token']));
@@ -45,7 +47,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         TokenResponse::buildFromHTTPResponse($http_response);
     }
 
-    public function testInvalidTokenTypeIsRejected()
+    public function testInvalidTokenTypeIsRejected(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getBody')->willReturn(
@@ -63,7 +65,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         TokenResponse::buildFromHTTPResponse($http_response);
     }
 
-    public function testResponseTokenIsParsed()
+    public function testResponseTokenIsParsed(): void
     {
         $http_response = $this->createMock(ResponseInterface::class);
         $http_response->method('getBody')->willReturn(
@@ -77,7 +79,7 @@ final class TokenResponseTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $token_response = TokenResponse::buildFromHTTPResponse($http_response);
-        $this->assertSame($token_response->getAccessToken(), 'access');
-        $this->assertSame($token_response->getIDToken(), 'token');
+        self::assertSame($token_response->getAccessToken(), 'access');
+        self::assertSame($token_response->getIDToken(), 'token');
     }
 }

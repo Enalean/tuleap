@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Velocity;
 
 use PFUser;
@@ -70,7 +72,7 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
         $velocity_field->method('getId')->willReturn(1);
     }
 
-    public function testItLaunchComputationVelocity()
+    public function testItLaunchComputationVelocity(): void
     {
         $already_computed_velocity = [];
 
@@ -100,17 +102,25 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->semantic_velocity
         );
 
-        $expected_computed_velocity[$artifact_id][$changeset_id] = 20;
+        $expected_computed_velocity = [
+            $artifact_id => [
+                $changeset_id => 20,
+            ],
+        ];
 
-        $this->assertEquals($expected_computed_velocity, $already_computed_velocity);
+        self::assertEquals($expected_computed_velocity, $already_computed_velocity);
     }
 
-    public function testItRetrieveAlreadyComputedVelocity()
+    public function testItRetrieveAlreadyComputedVelocity(): void
     {
         $artifact_id  = 101;
         $changeset_id = 1001;
 
-        $already_computed_velocity[$artifact_id][$changeset_id] = 30;
+        $already_computed_velocity = [
+            $artifact_id => [
+                $changeset_id => 30,
+            ],
+        ];
 
         $before_event = $this->createMock(BeforeEvent::class);
         $before_event->method('getArtifact')->willReturn($this->artifact);
@@ -132,8 +142,12 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->semantic_velocity
         );
 
-        $expected_computed_velocity[$artifact_id][$changeset_id] = 30;
+        $expected_computed_velocity = [
+            $artifact_id => [
+                $changeset_id => 30,
+            ],
+        ];
 
-        $this->assertEquals($expected_computed_velocity, $already_computed_velocity);
+        self::assertEquals($expected_computed_velocity, $already_computed_velocity);
     }
 }

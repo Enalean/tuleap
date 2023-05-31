@@ -18,30 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS\StreamFilter;
 
-
-class FilterHandleTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FilterHandleTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testFilterHandleCanBeCreatedFromAStreamFilter()
+    public function testFilterHandleCanBeCreatedFromAStreamFilter(): void
     {
         $stream        = fopen('php://memory', 'rb');
         $stream_filter = stream_filter_prepend($stream, 'string.rot13');
 
         $filter_handle = new FilterHandle($stream_filter);
 
-        $this->assertSame($stream_filter, $filter_handle->getFilterResource());
+        self::assertSame($stream_filter, $filter_handle->getFilterResource());
         fclose($stream);
     }
 
-    public function testFilterHandleCreationRejectsInvalidResource()
+    public function testFilterHandleCreationRejectsInvalidResource(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $stream_filter = false;
         new FilterHandle($stream_filter);
     }
 
-    public function testFilterHandleCreationIsRejectedWhenGivenResourceIsNotAStream()
+    public function testFilterHandleCreationIsRejectedWhenGivenResourceIsNotAStream(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $stream = fopen('php://memory', 'rb');

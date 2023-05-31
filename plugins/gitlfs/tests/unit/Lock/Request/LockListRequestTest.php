@@ -38,9 +38,11 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $list_request = LockListRequest::buildFromHTTPRequest($request);
 
-        $this->assertSame('test/toto.bin', $list_request->getPath());
-        $this->assertSame(2, $list_request->getId());
-        $this->assertSame('refs/heads/master', $list_request->getReference()->getName());
+        self::assertSame('test/toto.bin', $list_request->getPath());
+        self::assertSame(2, $list_request->getId());
+        $reference = $list_request->getReference();
+        self::assertNotNull($reference);
+        self::assertSame('refs/heads/master', $reference->getName());
     }
 
     public function testRequestCanBeParsedWhenNoRefIsGiven(): void
@@ -57,9 +59,9 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $list_request = LockListRequest::buildFromHTTPRequest($request_without_ref);
 
-        $this->assertSame('test/toto.bin', $list_request->getPath());
-        $this->assertSame(2, $list_request->getId());
-        $this->assertNull($list_request->getReference());
+        self::assertSame('test/toto.bin', $list_request->getPath());
+        self::assertSame(2, $list_request->getId());
+        self::assertNull($list_request->getReference());
     }
 
     /**
@@ -82,7 +84,7 @@ final class LockListRequestTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $list_request = LockListRequest::buildFromHTTPRequest($request);
 
-        $this->assertTrue($list_request->isRead());
-        $this->assertTrue($list_request->isWrite());
+        self::assertTrue($list_request->isRead());
+        self::assertTrue($list_request->isWrite());
     }
 }

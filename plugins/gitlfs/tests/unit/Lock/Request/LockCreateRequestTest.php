@@ -36,10 +36,12 @@ final class LockCreateRequestTest extends \Tuleap\Test\PHPUnit\TestCase
 JSON;
         $lock_request = LockCreateRequest::buildFromJSONString($json);
 
-        $this->assertSame('test/testFile.png', $lock_request->getPath());
-        $this->assertSame('refs/heads/master', $lock_request->getReference()->getName());
-        $this->assertTrue($lock_request->isWrite());
-        $this->assertFalse($lock_request->isRead());
+        self::assertSame('test/testFile.png', $lock_request->getPath());
+        $reference = $lock_request->getReference();
+        self::assertNotNull($reference);
+        self::assertSame('refs/heads/master', $reference->getName());
+        self::assertTrue($lock_request->isWrite());
+        self::assertFalse($lock_request->isRead());
     }
 
     public function testRequestCanBeParsedWhenNoRefIsGiven(): void
@@ -51,7 +53,7 @@ JSON;
 JSON;
         $lock_request     = LockCreateRequest::buildFromJSONString($json_without_ref);
 
-        $this->assertSame('test/testFile.png', $lock_request->getPath());
-        $this->assertNull($lock_request->getReference());
+        self::assertSame('test/testFile.png', $lock_request->getPath());
+        self::assertNull($lock_request->getReference());
     }
 }
