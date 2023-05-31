@@ -19,7 +19,7 @@
 
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { SearchResultEntry, UserHistoryEntry } from "@tuleap/core-rest-api-types";
-import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import { ARTIFACT_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { Option } from "@tuleap/option";
 
 export const LinkableArtifactRESTFilter = {

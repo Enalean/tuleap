@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/core-constants.js",
-  "main": "dist/core-constants.umd.cjs",
-  "types": "src/main.ts",
+  "module": "./dist/core-constants.js",
+  "main": "./dist/core-constants.umd.cjs",
+  "types": "./src/main.ts",
   "exports": {
     ".": {
       "import": "./dist/core-constants.js",

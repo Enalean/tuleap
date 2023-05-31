@@ -5,13 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/core-rest-api-types.js",
-  "main": "dist/core-rest-api-types.umd.cjs",
-  "types": "dist/main.d.ts",
+  "types": "./src/main.ts",
   "exports": {
     ".": {
-      "import": "./dist/core-rest-api-types.js",
-      "require": "./dist/core-rest-api-types.umd.cjs"
+      "types": "./src/main.ts"
     }
   },
   "dependencies": {
@@ -21,8 +18,6 @@
     "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
+    "typecheck": "tsc --noEmit"
   }
 }

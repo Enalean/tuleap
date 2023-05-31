@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
-
 export * from "./artifacts";
 export * from "./artifacts_write";
 export * from "./changesets";
