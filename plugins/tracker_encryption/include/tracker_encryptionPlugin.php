@@ -22,6 +22,8 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
+use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -62,7 +64,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function trackerFormelementGetClassnames($params): void
     {
         $request = HTTPRequest::instance();
-        $params['fields']['Encrypted'] = Tracker_FormElement_Field_Encrypted::class;
+        $params['fields'][Tracker_FormElement_Field_Encrypted::TYPE] = Tracker_FormElement_Field_Encrypted::class;
         if ($request->get('func') === 'admin-formElements') {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-tracker_encryption', 'Please add a public key in the tracker administration in order to use encrypted field.'));
         }
@@ -200,6 +202,26 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets',
             '/assets/tracker_encryption/'
+        );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event): void
+    {
+        $tracker_encrypted_fields = Tracker_FormElementFactory::instance()->getFormElementsByType(
+            $event->getTracker(),
+            [Tracker_FormElement_Field_Encrypted::TYPE],
+            true
+        );
+        if (empty($tracker_encrypted_fields)) {
+            return;
+        }
+
+        $event->setCanNotBeMoveDueToExternalPlugin(
+            dgettext(
+                'tuleap-tracker_encryption',
+                'This artifact cannot be moved because the tracker uses encrypted fields.'
+            )
         );
     }
 }

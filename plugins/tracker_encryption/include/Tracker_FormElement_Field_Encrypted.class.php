@@ -27,6 +27,8 @@ use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field implements TrackerFormElementExternalField // @codingStandardsIgnoreLine
 {
+    public const TYPE = 'Encrypted';
+
     /**
      * @return string html
      */

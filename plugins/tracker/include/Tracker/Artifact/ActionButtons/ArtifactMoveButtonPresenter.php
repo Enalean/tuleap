@@ -20,29 +20,25 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
+/**
+ * @psalm-immutable
+ */
 class ArtifactMoveButtonPresenter
 {
     /**
      * @var string
      */
-    public $label;
-    /**
-     * @var string
-     */
     public $errors_content;
-    /**
-     * @var array
-     */
-    private $errors;
 
-    public function __construct($label, array $errors)
+    /**
+     * @param String[] $errors
+     */
+    public function __construct(public string $label, private readonly array $errors)
     {
-        $this->label          = $label;
         $this->errors_content = implode(" ", $errors);
-        $this->errors         = $errors;
     }
 
-    public function hasError()
+    public function hasError(): bool
     {
         return count($this->errors) > 0;
     }

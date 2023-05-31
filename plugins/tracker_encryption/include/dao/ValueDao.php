@@ -20,6 +20,7 @@
 
 namespace Tuleap\TrackerEncryption\Dao;
 
+use Tracker_FormElement_Field_Encrypted;
 use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
 class ValueDao extends FieldValueDao
@@ -57,14 +58,15 @@ class ValueDao extends FieldValueDao
 
     public function resetEncryptedFieldValues($tracker_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql        = "UPDATE tracker_changeset_value_encrypted
+        $tracker_id           = $this->da->escapeInt($tracker_id);
+        $encrypted_field_type = Tracker_FormElement_Field_Encrypted::TYPE;
+        $sql                  = "UPDATE tracker_changeset_value_encrypted
                  SET value = ''
                  WHERE changeset_value_id IN (
                       SELECT tracker_changeset_value.id
                           FROM tuleap.tracker_changeset_value JOIN tracker_field
                           ON (tracker_changeset_value.field_id=tracker_field.id)
-                          WHERE formElement_type = 'Encrypted' AND tracker_id =$tracker_id
+                          WHERE formElement_type = $encrypted_field_type AND tracker_id =$tracker_id
                   )";
 
         return $this->update($sql);

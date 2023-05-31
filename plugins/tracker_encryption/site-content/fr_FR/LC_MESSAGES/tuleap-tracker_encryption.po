@@ -35,6 +35,12 @@ msgstr ""
 msgid "Public key is not a valid one."
 msgstr "La clé publique n'est pas valide."
 
+msgid ""
+"This artifact cannot be moved because the tracker uses encrypted fields."
+msgstr ""
+"Cet artéfact ne peut pas être déplacé car l'outil de suivi utilise les "
+"champs chiffrés."
+
 msgid "Tracker Encryption"
 msgstr "Chiffrement du suivi"
 
