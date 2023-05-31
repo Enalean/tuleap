@@ -41,6 +41,11 @@ class NotEqualComparison implements Term, Visitable, Comparison
         return $visitor->visitNotEqualComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitNotEqualComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

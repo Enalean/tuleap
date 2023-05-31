@@ -38,6 +38,11 @@ class InComparison implements Term, Visitable, Comparison
         return $visitor->visitInComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitInComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

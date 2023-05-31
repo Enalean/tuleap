@@ -23,59 +23,74 @@ use RuntimeException;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class FloatToEmptyStringComparisonException extends InvalidFieldException implements Visitor
+/**
+ * @template-implements ComparisonVisitor<NoVisitorParameters, string>
+ */
+class FloatToEmptyStringComparisonException extends InvalidFieldException implements ComparisonVisitor
 {
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            $comparison->accept($this, new NoVisitorParameters()),
+            $comparison->acceptComparisonVisitor($this, new NoVisitorParameters()),
             $field->getName()
         );
         parent::__construct($message);
     }
 
-    public function visitEqualComparison(EqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('Float should be comparable = to an empty string');
     }
 
-    public function visitNotEqualComparison(NotEqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('Float should be comparable != to an empty string');
     }
 
-    public function visitLesserThanComparison(LesserThanComparison $comparison, NoVisitorParameters $parameters)
+    public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with < operator.");
     }
 
-    public function visitGreaterThanComparison(GreaterThanComparison $comparison, NoVisitorParameters $parameters)
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with > operator.");
     }
 
-    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with <= operator.");
     }
 
-    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with >= operator.");
     }
 
-    public function visitBetweenComparison(BetweenComparison $comparison, NoVisitorParameters $parameters)
+    public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The float field '%s' cannot be compared to the empty string with BETWEEN() operator.");
+    }
+
+    public function visitInComparison(InComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The float field '%s' is not supposed to be used with IN operator.");
+    }
+
+    public function visitNotInComparison(NotInComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The float field '%s' is not supposed to be used with NOT IN operator.");
     }
 }

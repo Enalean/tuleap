@@ -30,4 +30,13 @@ interface Comparison extends Visitable
      * @return Searchable
      */
     public function getSearchable();
+
+    /**
+     * @template ReturnType
+     * @template Parameters of VisitorParameters
+     * @param ComparisonVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters);
 }

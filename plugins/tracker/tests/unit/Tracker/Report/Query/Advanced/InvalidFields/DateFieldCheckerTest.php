@@ -66,7 +66,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $value_wrapper            = new SimpleValueWrapper('');
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
-        $this->comparison->shouldReceive('accept')->andReturns('');
+        $this->comparison->shouldReceive('acceptComparisonVisitor')->andReturns('');
         $this->expectException(
             \Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringComparisonException::class
         );

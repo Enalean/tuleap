@@ -41,6 +41,11 @@ class LesserThanComparison implements Term, Visitable, Comparison
         return $visitor->visitLesserThanComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitLesserThanComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

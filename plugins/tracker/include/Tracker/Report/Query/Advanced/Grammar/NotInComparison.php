@@ -38,6 +38,11 @@ class NotInComparison implements Term, Visitable, Comparison
         return $visitor->visitNotInComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitNotInComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

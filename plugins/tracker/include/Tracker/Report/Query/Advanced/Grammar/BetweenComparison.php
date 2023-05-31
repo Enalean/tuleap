@@ -41,6 +41,11 @@ class BetweenComparison implements Term, Visitable, Comparison
         return $visitor->visitBetweenComparison($this, $parameters);
     }
 
+    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitBetweenComparison($this, $parameters);
+    }
+
     /**
      * @return Searchable
      */

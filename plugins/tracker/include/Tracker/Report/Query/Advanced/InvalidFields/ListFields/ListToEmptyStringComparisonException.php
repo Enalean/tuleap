@@ -21,42 +21,75 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
 use RuntimeException;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class ListToEmptyStringComparisonException extends InvalidFieldException implements Visitor
+/**
+ * @template-implements ComparisonVisitor<NoVisitorParameters, string>
+ */
+class ListToEmptyStringComparisonException extends InvalidFieldException implements ComparisonVisitor
 {
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $message = sprintf(
-            $comparison->accept($this, new NoVisitorParameters()),
+            $comparison->acceptComparisonVisitor($this, new NoVisitorParameters()),
             $field->getName()
         );
         parent::__construct($message);
     }
 
-    public function visitEqualComparison(EqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('List values should be comparable = to an empty string');
     }
 
-    public function visitNotEqualComparison(NotEqualComparison $comparison, NoVisitorParameters $parameters)
+    public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         throw new RuntimeException('List values should be comparable != to an empty string');
     }
 
-    public function visitInComparison(InComparison $comparison, NoVisitorParameters $parameters)
+    public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The list field '%s' is not supposed to be used with < operator.");
+    }
+
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The list field '%s' is not supposed to be used with > operator.");
+    }
+
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The list field '%s' is not supposed to be used with <= operator.");
+    }
+
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The list field '%s' is not supposed to be used with >= operator.");
+    }
+
+    public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
+    {
+        throw new RuntimeException("The list field '%s' is not supposed to be used with BETWEEN() operator.");
+    }
+
+    public function visitInComparison(InComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with IN() operator.");
     }
 
-    public function visitNotInComparison(NotInComparison $comparison, NoVisitorParameters $parameters)
+    public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with NOT IN() operator.");
     }
