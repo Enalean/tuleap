@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 
 class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
 {
@@ -34,11 +34,7 @@ class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCol
         $this->invalid_comparison_collector = $invalid_comparison_collector;
     }
 
-    /**
-     * @param $parsed_expert_query
-     * @return InvalidSearchablesCollection
-     */
-    public function buildCollectionOfInvalidSearchables(Visitable $parsed_expert_query)
+    public function buildCollectionOfInvalidSearchables(Logical $parsed_expert_query): InvalidSearchablesCollection
     {
         $invalid_searchables_collection = new InvalidSearchablesCollection();
         $this->invalid_comparison_collector->collectErrors($parsed_expert_query, $invalid_searchables_collection);

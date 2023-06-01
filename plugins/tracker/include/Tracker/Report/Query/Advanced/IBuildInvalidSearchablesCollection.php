@@ -20,12 +20,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 
 interface IBuildInvalidSearchablesCollection
 {
-    /**
-     * @return InvalidSearchablesCollection
-     */
-    public function buildCollectionOfInvalidSearchables(Visitable $parsed_expert_query);
+    public function buildCollectionOfInvalidSearchables(Logical $parsed_expert_query): InvalidSearchablesCollection;
 }

@@ -23,18 +23,19 @@ use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\LogicalVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
@@ -56,9 +57,14 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisito
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
 use Tuleap\Tracker\Report\Query\AndFromWhere;
+use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\OrFromWhere;
 
-class QueryBuilderVisitor implements Visitor
+/**
+ * @template-implements LogicalVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
+ * @template-implements ComparisonVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
+ */
+class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
 {
     /**
      * @var NotEqualFieldComparisonVisitor
@@ -175,12 +181,12 @@ class QueryBuilderVisitor implements Visitor
         $this->metadata_not_in_comparison_from_where_builder                = $metadata_not_in_comparison_from_where_builder;
     }
 
-    public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
+    public function buildFromWhere(Logical $parsed_query, Tracker $tracker)
     {
-        return $parsed_query->accept($this, new QueryBuilderParameters($tracker));
+        return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderParameters($tracker));
     }
 
-    public function visitEqualComparison(EqualComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -193,7 +199,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitNotEqualComparison(NotEqualComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -206,7 +212,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitLesserThanComparison(LesserThanComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -219,7 +225,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitGreaterThanComparison(GreaterThanComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -232,7 +238,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -245,7 +251,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -258,7 +264,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitBetweenComparison(BetweenComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -271,7 +277,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitInComparison(InComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitInComparison(InComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -284,7 +290,7 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitNotInComparison(NotInComparison $comparison, QueryBuilderParameters $parameters)
+    public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         return $comparison->getSearchable()->acceptSearchableVisitor(
             $this->searchable_visitor,
@@ -297,60 +303,60 @@ class QueryBuilderVisitor implements Visitor
         );
     }
 
-    public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)
+    public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
-        $from_where_expression = $and_expression->getExpression()->accept($this, $parameters);
+        $from_where_expression = $and_expression->getExpression()->acceptComparisonVisitor($this, $parameters);
 
         $tail = $and_expression->getTail();
 
         return $this->buildAndClause($parameters, $tail, $from_where_expression);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, QueryBuilderParameters $parameters)
+    public function visitOrExpression(OrExpression $or_expression, $parameters)
     {
-        $from_where_expression = $or_expression->getExpression()->accept($this, $parameters);
+        $from_where_expression = $or_expression->getExpression()->acceptLogicalVisitor($this, $parameters);
 
         $tail = $or_expression->getTail();
 
         return $this->buildOrClause($parameters, $tail, $from_where_expression);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, QueryBuilderParameters $parameters)
+    public function visitOrOperand(OrOperand $or_operand, $parameters)
     {
-        $from_where_expression = $or_operand->getOperand()->accept($this, $parameters);
+        $from_where_expression = $or_operand->getOperand()->acceptLogicalVisitor($this, $parameters);
 
         $tail = $or_operand->getTail();
 
         return $this->buildOrClause($parameters, $tail, $from_where_expression);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, QueryBuilderParameters $parameters)
+    public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
-        $from_where_expression = $and_operand->getOperand()->accept($this, $parameters);
+        $from_where_expression = $and_operand->getOperand()->acceptComparisonVisitor($this, $parameters);
 
         $tail = $and_operand->getTail();
 
         return $this->buildAndClause($parameters, $tail, $from_where_expression);
     }
 
-    private function buildAndClause(QueryBuilderParameters $parameters, $tail, $from_where_expression)
+    private function buildAndClause(QueryBuilderParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;
         }
 
-        $from_where_tail = $tail->accept($this, $parameters);
+        $from_where_tail = $tail->acceptLogicalVisitor($this, $parameters);
 
         return new AndFromWhere($from_where_expression, $from_where_tail);
     }
 
-    private function buildOrClause(QueryBuilderParameters $parameters, $tail, $from_where_expression)
+    private function buildOrClause(QueryBuilderParameters $parameters, OrOperand | AndOperand | null $tail, $from_where_expression)
     {
         if (! $tail) {
             return $from_where_expression;
         }
 
-        $from_where_tail = $tail->accept($this, $parameters);
+        $from_where_tail = $tail->acceptLogicalVisitor($this, $parameters);
 
         return new OrFromWhere($from_where_expression, $from_where_tail);
     }

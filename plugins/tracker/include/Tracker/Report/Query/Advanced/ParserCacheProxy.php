@@ -20,31 +20,22 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 
 class ParserCacheProxy
 {
     /**
-     * @var Visitable[]
+     * @var Logical[]
      */
     private $cache;
-    /**
-     * @var Parser
-     */
-    private $parser;
 
-    public function __construct(Parser $parser)
+    public function __construct(private readonly Parser $parser)
     {
-        $this->parser = $parser;
-        $this->cache  = [];
+        $this->cache = [];
     }
 
-    /**
-     * @param string $query
-     * @return Visitable
-     */
-    public function parse($query)
+    public function parse(string $query): Logical
     {
         if (! isset($this->cache[$query])) {
             $this->cache[$query] = $this->parser->parse($query);

@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Comparison extends Visitable
+interface Comparison
 {
     /**
      * @return ValueWrapper
