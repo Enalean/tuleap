@@ -19,9 +19,6 @@
 
 export type { User, ProjectLabel, ProjectLabelsCollection } from "@tuleap/core-rest-api-types";
 
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
-
 export * from "./pull-request";
 export * from "./timeline";
 export * from "./post-comments";

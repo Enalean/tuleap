@@ -18,6 +18,7 @@
  */
 
 export type { ColorName } from "@tuleap/core-constants";
+export { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/core-constants";
 
 export type ArtifactIdFieldIdentifier = "aid";
 export type ArtifactIdInTrackerFieldIdentifier = "atid";

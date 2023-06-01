@@ -1,12 +1,14 @@
 lockfileVersion: '6.0'
 
 dependencies:
-  '@tuleap/core-constants':
-    specifier: workspace:*
-    version: link:../../../../../lib/frontend/constants
   '@tuleap/core-rest-api-types':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/rest-api-types
   '@tuleap/plugin-pullrequest-constants':
     specifier: workspace:*
     version: link:../constants
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/frontend/build-system-configurator

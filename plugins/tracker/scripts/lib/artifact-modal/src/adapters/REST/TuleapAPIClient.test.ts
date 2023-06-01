@@ -23,7 +23,7 @@ import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import type { GetAllOptions } from "@tuleap/fetch-result";
-import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import { ARTIFACT_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";

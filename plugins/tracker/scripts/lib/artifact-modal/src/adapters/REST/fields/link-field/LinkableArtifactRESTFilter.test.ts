@@ -18,7 +18,7 @@
  */
 
 import { LinkableArtifactRESTFilter } from "./LinkableArtifactRESTFilter";
-import { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/core-rest-api-types";
+import { ARTIFACT_TYPE, KANBAN_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { SearchResultEntry } from "@tuleap/core-rest-api-types/src/main";
 import { Option } from "@tuleap/option";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";

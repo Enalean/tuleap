@@ -62,3 +62,7 @@ export type ColorName =
 export type UserInterfaceColorName = "info" | "success" | "warning" | "danger";
 export type EmphasisColorName = "primary" | "secondary";
 export type ColorVariant = ColorName | UserInterfaceColorName | EmphasisColorName;
+
+export type UserHistoryEntryType = "artifact" | "kanban";
+export const ARTIFACT_TYPE = "artifact";
+export const KANBAN_TYPE = "kanban";

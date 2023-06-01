@@ -5,21 +5,20 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "main": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "types": "./src/main.ts",
   "exports": {
     ".": {
-      "import": "./dist/main.js",
-      "require": "./dist/main.js"
+      "types": "./src/main.ts"
     }
   },
   "dependencies": {
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*"
   },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
-    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json"
+    "typecheck": "tsc --noEmit"
   }
 }

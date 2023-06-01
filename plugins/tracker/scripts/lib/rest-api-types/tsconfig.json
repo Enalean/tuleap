@@ -1,7 +1,4 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
-    "compilerOptions": {
-        "lib": ["ES2019"],
-    },
     "include": ["src/**/*"]
 }
