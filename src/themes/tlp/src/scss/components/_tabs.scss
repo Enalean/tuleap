@@ -212,6 +212,30 @@ $inactive-tab-right-margin: calc(
     }
 }
 
+.tlp-tabs-vertical-section {
+    width: 100%;
+    margin: 0;
+    padding-bottom: var(--tlp-medium-spacing);
+    border-right: $inactive-tab-right-border-width solid
+        var(--tlp-neutral-dark-color-transparent-50);
+    border-radius: 0;
+
+    > .tlp-tab {
+        border-color: transparent;
+    }
+}
+
+.tlp-tabs-vertical-section-title {
+    width: 100%;
+    margin: 0;
+    padding: 0 $inactive-tab-right-margin 0 var(--tlp-medium-spacing);
+    color: var(--tlp-dimmed-color-lighter-30);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-align: end;
+    text-transform: uppercase;
+}
+
 .tlp-tab-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: 0.75rem;

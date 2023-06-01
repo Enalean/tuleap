@@ -24,12 +24,14 @@ namespace Tuleap\OAuth2Server\User\Account;
 
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\AccountTabSecuritySection;
 
 final class AppsTabAdder
 {
     public function addTabs(AccountTabPresenterCollection $collection): void
     {
         $collection->add(
+            AccountTabSecuritySection::NAME,
             new AccountTabPresenter(
                 dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
                 AccountAppsController::URL,

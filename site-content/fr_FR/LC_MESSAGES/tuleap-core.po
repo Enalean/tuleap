@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.3.1\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -3600,6 +3600,10 @@ msgstr "Modèle de référence système détruit"
 
 msgid "Tab"
 msgstr "Tabulation"
+
+#, php-format
+msgid "Tab section \"%s\" is not defined"
+msgstr "La section d'onglet \"%s\" n'existe pas"
 
 #, php-format
 msgid "Template #%d is not valid"

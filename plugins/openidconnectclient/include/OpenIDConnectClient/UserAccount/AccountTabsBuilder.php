@@ -25,12 +25,13 @@ namespace Tuleap\OpenIDConnectClient\UserAccount;
 
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\AccountTabSecuritySection;
 
 final class AccountTabsBuilder
 {
     public function addTabs(AccountTabPresenterCollection $collection): void
     {
-        $collection->add(new AccountTabPresenter(
+        $collection->add(AccountTabSecuritySection::NAME, new AccountTabPresenter(
             dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'),
             OIDCProvidersController::URL,
             $collection->getCurrentHref()

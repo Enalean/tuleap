@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User\Account;
+namespace Tuleap\User\Account;
 
-use Tuleap\User\Account\AccountTabPresenter;
-use Tuleap\User\Account\AccountTabPresenterCollection;
-
-final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UnexistingTabSectionException extends \Exception
 {
-    public function testAddTabs(): void
+    public function __construct(string $section_name)
     {
-        $collection = $this->createMock(AccountTabPresenterCollection::class);
-        $collection->expects(self::once())->method('add')
-            ->with(self::isType('string'), self::isInstanceOf(AccountTabPresenter::class));
-        $collection->method('getCurrentHref');
-
-        (new AppsTabAdder())->addTabs($collection);
+        parent::__construct(sprintf(_('Tab section "%s" is not defined')));
     }
 }

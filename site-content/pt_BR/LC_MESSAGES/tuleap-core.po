@@ -3557,6 +3557,10 @@ msgid "Tab"
 msgstr "Aba"
 
 #, php-format
+msgid "Tab section \"%s\" is not defined"
+msgstr ""
+
+#, php-format
 msgid "Template #%d is not valid"
 msgstr "O modelo #%d não é válido"
 

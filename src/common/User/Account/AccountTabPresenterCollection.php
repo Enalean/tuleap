@@ -30,8 +30,10 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
 {
     public const NAME = 'accountTabPresenterCollection';
 
-    private $all_tabs;
-    private $i = 0;
+    /**
+     * @var array<string, AccountTabSection>
+     */
+    private $sections;
     /**
      * @var string
      */
@@ -43,13 +45,17 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
 
     public function __construct(PFUser $user, string $current_href)
     {
-        $this->all_tabs     = [
-            new AccountTabPresenter(_('Account'), DisplayAccountInformationController::URL, $current_href),
-            new AccountTabPresenter(_('Security'), DisplaySecurityController::URL, $current_href),
-            new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, $current_href),
-            new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, $current_href),
-            new AccountTabPresenter(_('Appearance & language'), DisplayAppearanceController::URL, $current_href),
-            new AccountTabPresenter(_('Edition & CSV'), DisplayEditionController::URL, $current_href),
+        $this->sections     = [
+            AccountTabGeneralSection::NAME => new AccountTabGeneralSection([
+                new AccountTabPresenter(_('Account'), DisplayAccountInformationController::URL, $current_href),
+                new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, $current_href),
+                new AccountTabPresenter(_('Appearance & language'), DisplayAppearanceController::URL, $current_href),
+                new AccountTabPresenter(_('Edition & CSV'), DisplayEditionController::URL, $current_href),
+            ]),
+            AccountTabSecuritySection::NAME => new AccountTabSecuritySection([
+                new AccountTabPresenter(_('Password'), DisplaySecurityController::URL, $current_href),
+                new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, $current_href),
+            ]),
         ];
         $this->current_href = $current_href;
         $this->user         = $user;
@@ -57,32 +63,36 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
 
     public function current(): mixed
     {
-        return $this->all_tabs[$this->i];
+        return current($this->sections);
     }
 
     public function next(): void
     {
-        $this->i++;
+        next($this->sections);
     }
 
-    public function key(): int
+    public function key(): string
     {
-        return $this->i;
+        return key($this->sections);
     }
 
     public function valid(): bool
     {
-        return isset($this->all_tabs[$this->i]);
+        return key($this->sections) !== null;
     }
 
     public function rewind(): void
     {
-        $this->i = 0;
+        reset($this->sections);
     }
 
-    public function add(AccountTabPresenter $tab): void
+    public function add(string $section_name, AccountTabPresenter $tab): void
     {
-        $this->all_tabs[] = $tab;
+        if (array_key_exists($section_name, $this->sections)) {
+            $this->sections[$section_name]->addTab($tab);
+        } else {
+            throw new UnexistingTabSectionException($section_name);
+        }
     }
 
     public function getCurrentHref(): string
