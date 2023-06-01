@@ -59,7 +59,7 @@ class ArtifactMoveButtonPresenterBuilder
             $errors[] = $limit_error;
         }
 
-        $event = new MoveArtifactActionAllowedByPluginRetriever($artifact);
+        $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
         $this->event_manager->processEvent($event);
         $semantic_error = $this->collectErrorRelatedToSemantics($artifact->getTracker(), $event);
         if ($semantic_error) {

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\ArtifactLinks;
 
 use Tuleap\ProgramManagement\Tests\Stub\DeletedArtifactLinksEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DeletedArtifactLinksCheckerTest extends TestCase
@@ -33,12 +34,7 @@ final class DeletedArtifactLinksCheckerTest extends TestCase
     public function testItDoesNothingIfThereIsNoLinkInDeletedLinks(): void
     {
         $checker = new DeletedArtifactLinksChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return false;
-                }
-            }
+            SearchLinkedArtifactsStub::withoutMirroredMilestones()
         );
 
         $deleted_links = [];
@@ -54,12 +50,7 @@ final class DeletedArtifactLinksCheckerTest extends TestCase
     public function testItDoesNothingIfNoSystemLinkDeleted(): void
     {
         $checker = new DeletedArtifactLinksChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return false;
-                }
-            }
+            SearchLinkedArtifactsStub::withoutMirroredMilestones()
         );
 
         $deleted_links = [self::LINKED_ARTIFACT_ID];
@@ -75,12 +66,7 @@ final class DeletedArtifactLinksCheckerTest extends TestCase
     public function testItSetAsErrorIfDeletedLinksContainsSystemLink(): void
     {
         $checker = new DeletedArtifactLinksChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return true;
-                }
-            }
+            SearchLinkedArtifactsStub::withMirroredMilestones()
         );
 
         $deleted_links = [self::LINKED_ARTIFACT_ID];

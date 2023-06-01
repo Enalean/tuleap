@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\ArtifactLinks;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Stub\ProvidedArtifactLinksTypesEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ArtifactLinksNewTypesCheckerTest extends TestCase
@@ -34,12 +35,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
     public function testItDoesNothingIfThereIsNoLinkInProvidedLinks(): void
     {
         $checker = new ArtifactLinksNewTypesChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return false;
-                }
-            }
+            SearchLinkedArtifactsStub::withoutMirroredMilestones()
         );
 
         $provided_links = [];
@@ -55,12 +51,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
     public function testItDoesNothingIfThereIsOnlySystemLinksInProvidedLinks(): void
     {
         $checker = new ArtifactLinksNewTypesChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return false;
-                }
-            }
+            SearchLinkedArtifactsStub::withoutMirroredMilestones()
         );
 
         $provided_links = [
@@ -78,12 +69,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
     public function testItDoesNothingIfThereIsNoSystemLinksUpdatedInProvidedLinks(): void
     {
         $checker = new ArtifactLinksNewTypesChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return false;
-                }
-            }
+            SearchLinkedArtifactsStub::withoutMirroredMilestones()
         );
 
         $provided_links = [
@@ -101,12 +87,7 @@ final class ArtifactLinksNewTypesCheckerTest extends TestCase
     public function testItSetAsErrorIfProvidedLinksContainsUpdatedSystemLink(): void
     {
         $checker = new ArtifactLinksNewTypesChecker(
-            new class implements SearchLinkedArtifacts {
-                public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
-                {
-                    return true;
-                }
-            }
+            SearchLinkedArtifactsStub::withMirroredMilestones()
         );
 
         $provided_links = [

@@ -22,72 +22,55 @@ namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 {
     public const NAME = 'moveArtifactActionAllowedByPluginRetriever';
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
-     */
-    private $artifact;
-    /**
-     * @var string
-     */
-    private $error;
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-    /**
-     * @var bool
-     */
-    private $has_external_semantic_defined = false;
 
-    /**
-     * @var bool
-     */
-    private $can_be_moved = true;
+    private Tracker $tracker;
+    private string $error;
+    private bool $has_external_semantic_defined = false;
+    private bool $can_be_moved                  = true;
 
-    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact)
+    public function __construct(private readonly Artifact $artifact, private readonly \PFUser $user)
     {
-        $this->tracker  = $artifact->getTracker();
-        $this->artifact = $artifact;
+        $this->tracker = $artifact->getTracker();
     }
 
-    /**
-     * @return Tracker
-     */
-    public function getTracker()
+    public function getTracker(): Tracker
     {
         return $this->tracker;
     }
 
-    public function setCanNotBeMoveDueToExternalPlugin($error)
+    public function setCanNotBeMoveDueToExternalPlugin(string $error): void
     {
         $this->can_be_moved = false;
         $this->error        = $error;
     }
 
-    public function hasExternalSemanticDefined()
+    public function hasExternalSemanticDefined(): bool
     {
         return $this->has_external_semantic_defined === true;
     }
 
-    public function doesAnExternalPluginForbiddenTheMove()
+    public function doesAnExternalPluginForbiddenTheMove(): bool
     {
         return $this->can_be_moved === false;
     }
 
-    public function getErrorMessage()
+    public function getErrorMessage(): string
     {
         return $this->error;
     }
 
-    /**
-     * @return \Tuleap\Tracker\Artifact\Artifact
-     */
-    public function getArtifact()
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
+    }
+
+    public function getUser(): \PFUser
+    {
+        return $this->user;
     }
 }
