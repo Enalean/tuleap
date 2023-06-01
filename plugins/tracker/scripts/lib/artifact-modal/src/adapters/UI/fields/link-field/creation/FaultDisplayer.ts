@@ -19,17 +19,26 @@
 
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
-import { getProjectsRetrievalErrorMessage } from "../../../../../gettext-catalog";
+import {
+    getProjectsRetrievalErrorMessage,
+    getProjectTrackersRetrievalErrorMessage,
+} from "../../../../../gettext-catalog";
 
 export type FaultDisplayer = { formatForDisplay(fault: Fault): string };
 
 const isProjectsRetrievalFault = (fault: Fault): boolean =>
     "isProjectsRetrieval" in fault && fault.isProjectsRetrieval() === true;
 
+const isProjectTrackerRetrievalFault = (fault: Fault): boolean =>
+    "isProjectTrackersRetrieval" in fault && fault.isProjectTrackersRetrieval() === true;
+
 export const FaultDisplayer = (): FaultDisplayer => ({
     formatForDisplay(fault): string {
         if (isProjectsRetrievalFault(fault)) {
             return sprintf(getProjectsRetrievalErrorMessage(), fault);
+        }
+        if (isProjectTrackerRetrievalFault(fault)) {
+            return sprintf(getProjectTrackersRetrievalErrorMessage(), fault);
         }
         return String(fault);
     },

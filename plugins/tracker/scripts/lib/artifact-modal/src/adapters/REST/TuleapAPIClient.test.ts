@@ -46,6 +46,9 @@ import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { Project } from "../../domain/Project";
+import type { Tracker } from "../../domain/Tracker";
+import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStub";
+import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
@@ -491,6 +494,52 @@ describe(`TuleapAPIClient`, () => {
             expect(call_uri).toStrictEqual(uri`/api/v1/artifacts`);
             expect(body.tracker.id).toBe(TRACKER_ID);
             expect(body.values.map((changeset) => changeset.field_id)).toContain(FIELD_ID);
+        });
+    });
+
+    describe(`getProjectTrackers()`, () => {
+        const PROJECT_ID = 113,
+            FIRST_TRACKER_ID = 200,
+            SECOND_TRACKER_ID = 161,
+            FIRST_TRACKER_LABEL = "🐷 Guinea Pig",
+            SECOND_TRACKER_LABEL = "Hidden Street",
+            FIRST_TRACKER_COLOR = "red-wine",
+            SECOND_TRACKER_COLOR = "deep-blue";
+
+        const getTrackers = (): ResultAsync<readonly Tracker[], Fault> => {
+            const client = TuleapAPIClient(current_artifact_option);
+            return client.getTrackersByProject(ProjectIdentifierStub.withId(PROJECT_ID));
+        };
+
+        it(`will return an array of Trackers`, async () => {
+            const first_tracker = {
+                id: FIRST_TRACKER_ID,
+                label: FIRST_TRACKER_LABEL,
+                color_name: FIRST_TRACKER_COLOR,
+            } as TrackerResponseWithColor;
+            const second_tracker = {
+                id: SECOND_TRACKER_ID,
+                label: SECOND_TRACKER_LABEL,
+                color_name: SECOND_TRACKER_COLOR,
+            } as TrackerResponseWithColor;
+            const getAllJSON = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([first_tracker, second_tracker]));
+
+            const result = await getTrackers();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_project, second_returned_project] = result.value;
+            expect(first_returned_project.label).toBe(FIRST_TRACKER_LABEL);
+            expect(first_returned_project.color_name).toBe(FIRST_TRACKER_COLOR);
+            expect(second_returned_project.label).toBe(SECOND_TRACKER_LABEL);
+            expect(second_returned_project.color_name).toBe(SECOND_TRACKER_COLOR);
+            expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects/113/trackers`, {
+                params: { limit: 50, representation: "minimal" },
+            });
         });
     });
 });

@@ -26,6 +26,7 @@ import type {
     ChangesetWithCommentRepresentation,
     JustCreatedArtifactResponse,
     PostFileResponse,
+    TrackerResponseWithColor,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
     FeatureFlagResponse,
@@ -66,6 +67,9 @@ import { ProjectProxy } from "./ProjectProxy";
 import type { CreateArtifact } from "../../domain/submit/CreateArtifact";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import { ArtifactCreationFault } from "../../domain/submit/ArtifactCreationFault";
+import type { Tracker } from "../../domain/Tracker";
+import { MINIMAL_REPRESENTATION, TrackerProxy } from "./TrackerProxy";
+import type { RetrieveProjectTrackers } from "../../domain/fields/link-field/creation/RetrieveProjectTrackers";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -82,7 +86,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveComments &
     RetrieveFeatureFlag &
     RetrieveProjects &
-    CreateArtifact;
+    CreateArtifact &
+    RetrieveProjectTrackers;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -217,5 +222,14 @@ export const TuleapAPIClient = (
         return postJSON<JustCreatedArtifactResponse>(uri`/api/v1/artifacts`, payload).mapErr(
             ArtifactCreationFault
         );
+    },
+
+    getTrackersByProject(project_id): ResultAsync<readonly Tracker[], Fault> {
+        return getAllJSON<readonly TrackerResponseWithColor[], TrackerResponseWithColor>(
+            uri`/api/projects/${project_id.id}/trackers`,
+            {
+                params: { limit: 50, representation: MINIMAL_REPRESENTATION },
+            }
+        ).map((trackers) => trackers.map(TrackerProxy.fromAPIProject));
     },
 });

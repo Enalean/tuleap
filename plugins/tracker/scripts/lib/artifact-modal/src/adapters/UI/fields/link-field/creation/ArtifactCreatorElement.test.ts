@@ -33,6 +33,8 @@ import type { Project } from "../../../../../domain/Project";
 import { Option } from "@tuleap/option";
 import { LinkTypeStub } from "../../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAllowedLinksTypesPresenters";
+import { RetrieveProjectTrackersStub } from "../../../../../../tests/stubs/RetrieveProjectTrackersStub";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 
 describe(`ArtifactCreatorElement`, () => {
     let doc: Document;
@@ -47,7 +49,9 @@ describe(`ArtifactCreatorElement`, () => {
             const project: Project = { id: 144, label: "Next Omega" };
             controller = ArtifactCreatorController(
                 DispatchEventsStub.buildNoOp(),
-                RetrieveProjectsStub.withProjects(project)
+                RetrieveProjectsStub.withProjects(project),
+                RetrieveProjectTrackersStub.withoutTracker(),
+                en_US_LOCALE
             );
             dispatchEvent = jest.fn();
         });
@@ -63,6 +67,7 @@ describe(`ArtifactCreatorElement`, () => {
                 error_message: Option.nothing(),
                 show_error_details: false,
                 projects: [],
+                trackers: [],
                 content: () => element,
                 dispatchEvent,
             }) as HostElement;
@@ -118,6 +123,7 @@ describe(`ArtifactCreatorElement`, () => {
                 error_message,
                 show_error_details,
                 projects: [],
+                trackers: [],
                 content: () => target,
             }) as HostElement;
             const updateFunction = ArtifactCreatorElement.content(host);

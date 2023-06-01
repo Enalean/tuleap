@@ -75,6 +75,9 @@ msgstr ""
 msgid "Error while retrieving the list of projects: %s"
 msgstr ""
 
+msgid "Error while retrieving the list of trackers: %s"
+msgstr ""
+
 msgid "Error while retrieving the possible parents: %s"
 msgstr ""
 
@@ -201,6 +204,9 @@ msgstr ""
 msgid "Search results"
 msgstr ""
 
+msgid "Select the tracker"
+msgstr ""
+
 msgid "Size: %s"
 msgstr ""
 
@@ -226,6 +232,9 @@ msgid "This artifact is already linked"
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "Trackers"
 msgstr ""
 
 msgid "Type..."
