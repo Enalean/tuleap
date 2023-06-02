@@ -1,7 +1,12 @@
 <nav class="tlp-tabs tlp-tabs-vertical user-preferences-nav">
     {{# tabs }}
-        <a href="{{ href }}" class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}">
-            {{ label }}
-        </a>
+        <section class="tlp-tabs tlp-tabs-vertical tlp-tabs-vertical-section">
+            <h1 class="tlp-tabs-vertical-section-title">{{ title }}</h1>
+            {{# tabs }}
+                <a href="{{ href }}" class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}">
+                    {{ label }}
+                </a>
+            {{/ tabs }}
+        </section>
     {{/ tabs }}
 </nav>

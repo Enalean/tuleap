@@ -27,9 +27,9 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
 use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
+use Tuleap\OAuth2ServerCore\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
@@ -102,7 +102,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $typevalue_scope = $this->buildTypeValueScopeDefinition();
         $this->authorized_scope_factory->method('getAuthorizedScopes')
             ->willReturnCallback(
-                fn (\PFUser $received_user, OAuth2App $app): array => match (true) {
+                fn(\PFUser $received_user, OAuth2App $app): array => match (true) {
                     $received_user === $user && $app === $jenkins_app => [$foobar_scope],
                     $received_user === $user && $app === $custom_app => [$foobar_scope, $typevalue_scope],
                     $received_user === $user && $app === $site_level_app => [$foobar_scope],

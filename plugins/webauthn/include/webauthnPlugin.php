@@ -77,12 +77,15 @@ final class WebAuthnPlugin extends Plugin
     }
 
     #[Tuleap\Plugin\ListeningToEventClass]
-    public function accountTabPresenterCollection(Tuleap\User\Account\AccountTabPresenterCollection $collection): void
+    public function accountTabPresenterCollection(\Tuleap\User\Account\AccountTabPresenterCollection $collection): void
     {
-        $collection->add(new Tuleap\User\Account\AccountTabPresenter(
-            dgettext('tuleap-webauthn', 'Passkeys'),
-            $this->getPluginPath() . '/account',
-            $collection->getCurrentHref()
-        ));
+        $collection->add(
+            \Tuleap\User\Account\AccountTabSecuritySection::NAME,
+            new \Tuleap\User\Account\AccountTabPresenter(
+                dgettext('tuleap-webauthn', 'Passkeys'),
+                $this->getPluginPath() . '/account',
+                $collection->getCurrentHref()
+            )
+        );
     }
 }

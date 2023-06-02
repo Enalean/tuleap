@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\User\Account;
+namespace Tuleap\User\Account;
 
-use Tuleap\User\Account\AccountTabPresenter;
-use Tuleap\User\Account\AccountTabPresenterCollection;
-
-final class AppsTabAdderTest extends \Tuleap\Test\PHPUnit\TestCase
+abstract class AccountTabSection
 {
-    public function testAddTabs(): void
-    {
-        $collection = $this->createMock(AccountTabPresenterCollection::class);
-        $collection->expects(self::once())->method('add')
-            ->with(self::isType('string'), self::isInstanceOf(AccountTabPresenter::class));
-        $collection->method('getCurrentHref');
+    /**
+     * @param AccountTabPresenter[] $tabs
+     */
+    public function __construct(
+        public readonly string $title,
+        public array $tabs,
+    ) {
+    }
 
-        (new AppsTabAdder())->addTabs($collection);
+    public function addTab(AccountTabPresenter $tab): void
+    {
+        $this->tabs[] = $tab;
     }
 }

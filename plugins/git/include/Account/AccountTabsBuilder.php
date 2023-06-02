@@ -25,6 +25,7 @@ namespace Tuleap\Git\Account;
 
 use Git_RemoteServer_GerritServerFactory;
 use PFUser;
+use Tuleap\User\Account\AccountTabGeneralSection;
 use Tuleap\User\Account\AccountTabPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
@@ -44,6 +45,7 @@ final class AccountTabsBuilder
     {
         if ($this->hasRemoteAvailable() || $this->hasServerForUser($collection->getUser())) {
             $collection->add(
+                AccountTabGeneralSection::NAME,
                 new AccountTabPresenter(
                     dgettext('tuleap-git', 'Gerrit'),
                     AccountGerritController::URL,
