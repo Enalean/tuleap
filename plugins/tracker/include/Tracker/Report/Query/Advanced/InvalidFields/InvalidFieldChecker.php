@@ -24,5 +24,5 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
 interface InvalidFieldChecker
 {
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field);
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void;
 }

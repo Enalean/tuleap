@@ -63,6 +63,10 @@ class BetweenComparisonFromWhereBuilder implements FromWhereBuilder
     {
         $value = $this->extractor->getValue($comparison);
 
+        if (! is_array($value)) {
+            throw new \Exception("Invalid value for between comparison");
+        }
+
         $min_value = $value['min_value'];
         $max_value = $value['max_value'];
 

@@ -25,20 +25,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 
 class DateFormatValidator
 {
-    /**
-     * @var EmptyStringChecker
-     */
-    private $empty_string_checker;
-
-    /**
-     * @var string
-     */
-    private $default_format;
-
-    public function __construct(EmptyStringChecker $empty_string_checker, $default_format)
+    public function __construct(private readonly EmptyStringChecker $empty_string_checker, private readonly string $default_format)
     {
-        $this->empty_string_checker = $empty_string_checker;
-        $this->default_format       = $default_format;
     }
 
     /**

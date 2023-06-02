@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class EqualComparison implements Term, Comparison
+class InIsNotSupportedException extends \Exception
 {
-    public function __construct(private readonly Searchable $searchable, private readonly ValueWrapper $value_wrapper)
-    {
-    }
-
-    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
-    {
-        return $visitor->visitEqualComparison($this, $parameters);
-    }
-
-    public function getSearchable(): Searchable
-    {
-        return $this->searchable;
-    }
-
-    public function getValueWrapper(): ValueWrapper
-    {
-        return $this->value_wrapper;
-    }
 }

@@ -45,7 +45,7 @@ class DateFieldChecker implements InvalidFieldChecker
     /**
      * @throws InvalidFieldException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {
         $date_values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 

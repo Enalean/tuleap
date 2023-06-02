@@ -23,21 +23,7 @@ use Tracker_FormElement_Field;
 
 class FieldValueWrapperParameters implements ValueWrapperParameters
 {
-    /**
-     * @var Tracker_FormElement_Field
-     */
-    private $field;
-
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(public readonly Tracker_FormElement_Field $field)
     {
-        $this->field = $field;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field
-     */
-    public function getField()
-    {
-        return $this->field;
     }
 }

@@ -30,54 +30,61 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
+/**
+ * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string | int | float | array{min_value: string | int | float, max_value: string | int | float}>
+ */
 class DateValueExtractor implements ValueWrapperVisitor
 {
+    /**
+     * @return string | int | float | array{min_value: string | int | float, max_value: string | int | float}
+     */
     public function getValue(Comparison $comparison)
     {
         return $comparison->getValueWrapper()->accept($this, new NoValueWrapperParameters());
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
         return $value_wrapper->getValue()->format(DateFormat::DATETIME);
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
+        $min = $value_wrapper->getMinValue()->accept($this, $parameters);
+        if (is_array($min)) {
+            throw new \Exception("Unsupported between value");
+        }
+
+        $max = $value_wrapper->getMaxValue()->accept($this, $parameters);
+        if (is_array($max)) {
+            throw new \Exception("Unsupported between value");
+        }
+
         return [
-            'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
-            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters),
+            'min_value' => $min,
+            'max_value' => $max,
         ];
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
         throw new RuntimeException('Should not end there');
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         throw new RuntimeException('Should not end there');
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new RuntimeException('Should not end there');
     }
 }

@@ -19,17 +19,51 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
+/**
+ * @template Parameters of ValueWrapperParameters
+ * @template ReturnType
+ */
 interface ValueWrapperVisitor
 {
-    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters);
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters);
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters);
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters);
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters);
 
-    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, ValueWrapperParameters $parameters);
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters);
 }

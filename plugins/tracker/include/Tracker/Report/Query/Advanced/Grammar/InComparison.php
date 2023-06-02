@@ -21,16 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class InComparison implements Term, Comparison
 {
-    /** @var Searchable */
-    private $searchable;
-
-    /** @var InValueWrapper */
-    private $value_wrapper;
-
-    public function __construct(Searchable $searchable, InValueWrapper $value_wrapper)
+    public function __construct(private readonly Searchable $searchable, private readonly InValueWrapper $value_wrapper)
     {
-        $this->searchable    = $searchable;
-        $this->value_wrapper = $value_wrapper;
     }
 
     public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
@@ -38,18 +30,12 @@ class InComparison implements Term, Comparison
         return $visitor->visitInComparison($this, $parameters);
     }
 
-    /**
-     * @return Searchable
-     */
-    public function getSearchable()
+    public function getSearchable(): Searchable
     {
         return $this->searchable;
     }
 
-    /**
-     * @return InValueWrapper
-     */
-    public function getValueWrapper()
+    public function getValueWrapper(): ValueWrapper
     {
         return $this->value_wrapper;
     }

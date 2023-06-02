@@ -50,10 +50,10 @@ class ArtifactSubmitterChecker implements InvalidFieldChecker
                 continue;
             }
 
-            $user = $this->user_manager->getUserByLoginName($value);
+            $user = $this->user_manager->getUserByLoginName((string) $value);
 
             if (! $user) {
-                throw new SubmittedByUserDoesntExistException($field, $value);
+                throw new SubmittedByUserDoesntExistException($field, (string) $value);
             }
         }
     }

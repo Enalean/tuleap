@@ -29,39 +29,28 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
-    /** @var ListValueExtractor */
-    private $extractor;
-
-    /** @var \UserManager */
-    private $user_manager;
-
-    public function __construct(ListValueExtractor $extractor, \UserManager $user_manager)
-    {
-        $this->extractor    = $extractor;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        private readonly ListValueExtractor $extractor,
+        private readonly \UserManager $user_manager,
+    ) {
     }
 
     /**
      * @param Tracker[] $trackers
-     * @return IProvideParametrizedFromAndWhereSQLFragments
      */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers): IProvideParametrizedFromAndWhereSQLFragments
     {
         $values = $this->extractor->extractCollectionOfValues($comparison);
         $value  = $values[0];
 
         if ($value !== '') {
-            return $this->getFromWhereForNonEmptyCondition($value);
+            return $this->getFromWhereForNonEmptyCondition((string) $value);
         }
 
         return $this->getFromWhereForEmptyCondition();
     }
 
-    /**
-     *
-     * @return ParametrizedFromWhere
-     */
-    private function getFromWhereForEmptyCondition()
+    private function getFromWhereForEmptyCondition(): ParametrizedFromWhere
     {
         $from            = 'INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
             ON (
@@ -91,11 +80,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         );
     }
 
-    /**
-     * @param string $value
-     * @return ParametrizedFromWhere
-     */
-    private function getFromWhereForNonEmptyCondition($value)
+    private function getFromWhereForNonEmptyCondition(string $value): ParametrizedFromWhere
     {
         $from            = 'INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
             ON (

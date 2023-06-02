@@ -29,28 +29,28 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 
+/**
+ * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string | int | float | array<string | int | float>>
+ */
 class ListValueExtractor implements ValueWrapperVisitor
 {
     /**
-     * @return array
+     * @return array<string | int | float>
      */
-    public function extractCollectionOfValues(Comparison $comparison)
+    public function extractCollectionOfValues(Comparison $comparison): array
     {
         return (array) $comparison->getValueWrapper()->accept($this, new NoValueWrapperParameters());
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
         $values = [];
         foreach ($collection_of_value_wrappers->getValueWrappers() as $value_wrapper) {
             $values[] = $value_wrapper->accept($this, $parameters);
@@ -59,29 +59,23 @@ class ListValueExtractor implements ValueWrapperVisitor
         return $values;
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
-        throw new RuntimeException('Should not end there');
-    }
-
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
-        throw new RuntimeException('Should not end there');
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
     {
         throw new RuntimeException('Should not end there');
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
-        return $value_wrapper->getValue();
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
+        throw new RuntimeException('Should not end there');
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
+        throw new RuntimeException('Should not end there');
+    }
+
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
+        return (string) $value_wrapper->getValue();
     }
 }

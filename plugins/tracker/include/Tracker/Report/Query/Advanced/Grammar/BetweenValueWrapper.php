@@ -21,38 +21,21 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class BetweenValueWrapper implements ValueWrapper
 {
-    /**
-     * @var ValueWrapper
-     */
-    private $min_value_wrapper;
-    /**
-     * @var ValueWrapper
-     */
-    private $max_value_wrapper;
-
-    public function __construct(ValueWrapper $min_value_wrapper, ValueWrapper $max_value_wrapper)
+    public function __construct(private readonly ValueWrapper $min_value_wrapper, private readonly ValueWrapper $max_value_wrapper)
     {
-        $this->min_value_wrapper = $min_value_wrapper;
-        $this->max_value_wrapper = $max_value_wrapper;
     }
 
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitBetweenValueWrapper($this, $parameters);
     }
 
-    /**
-     * @return ValueWrapper
-     */
-    public function getMinValue()
+    public function getMinValue(): ValueWrapper
     {
         return $this->min_value_wrapper;
     }
 
-    /**
-     * @return ValueWrapper
-     */
-    public function getMaxValue()
+    public function getMaxValue(): ValueWrapper
     {
         return $this->max_value_wrapper;
     }

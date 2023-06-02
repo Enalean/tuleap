@@ -48,7 +48,7 @@ class FloatFieldChecker implements InvalidFieldChecker
         $this->values_extractor     = $values_extractor;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {
         try {
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
@@ -61,7 +61,7 @@ class FloatFieldChecker implements InvalidFieldChecker
         }
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
                 throw new FloatToEmptyStringComparisonException($comparison, $field);
             }
 

@@ -48,7 +48,7 @@ class IntegerFieldChecker implements InvalidFieldChecker
         $this->values_extractor     = $values_extractor;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {
         try {
             $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
@@ -61,11 +61,11 @@ class IntegerFieldChecker implements InvalidFieldChecker
         }
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
                 throw new IntegerToEmptyStringComparisonException($comparison, $field);
             }
 
-            if (preg_match("/^\\d+\\.\\d+$/", $value) === 1) {
+            if (preg_match("/^\\d+\\.\\d+$/", (string) $value) === 1) {
                 throw new IntegerToFloatComparisonException($field, $value);
             }
 

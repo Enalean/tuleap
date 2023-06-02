@@ -30,27 +30,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
-    /**
-     * @var ListValueExtractor
-     */
-    private $extractor;
-
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-
-    public function __construct(ListValueExtractor $extractor, \UserManager $user_manager)
+    public function __construct(private readonly ListValueExtractor $extractor, private readonly \UserManager $user_manager)
     {
-        $this->extractor    = $extractor;
-        $this->user_manager = $user_manager;
     }
 
     /**
      * @param Tracker[] $trackers
-     * @return IProvideParametrizedFromAndWhereSQLFragments
      */
-    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
+    public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers): IProvideParametrizedFromAndWhereSQLFragments
     {
         $values = $this->extractor->extractCollectionOfValues($comparison);
         $value  = $values[0];
@@ -77,19 +64,14 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
                 $from,
                 $from_parameters,
                 $trackers,
-                $value
+                (string) $value
             );
         }
 
         return $this->getFromWhereForEmptyCondition($from, $from_parameters);
     }
 
-    /**
-     * @param string $from
-     * @param array $from_parameters
-     * @return ParametrizedFromWhere
-     */
-    private function getFromWhereForEmptyCondition($from, array $from_parameters)
+    private function getFromWhereForEmptyCondition(string $from, array $from_parameters): ParametrizedFromWhere
     {
         $where = 'changeset_value_assigned_to_not_equal.changeset_id IS NOT NULL
             AND changeset_value_list_assigned_to_not_equal.bindvalue_id != ?';
@@ -105,18 +87,14 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
     }
 
     /**
-     * @param string $from
-     * @param array $from_parameters
      * @param Tracker[] $trackers
-     * @param string $value
-     * @return ParametrizedFromWhere
      */
     private function getFromWhereForNonEmptyCondition(
-        $from,
+        string $from,
         array $from_parameters,
         array $trackers,
-        $value,
-    ) {
+        string $value,
+    ): ParametrizedFromWhere {
         $tracker_ids           = array_map(
             function (Tracker $tracker) {
                 return $tracker->getId();

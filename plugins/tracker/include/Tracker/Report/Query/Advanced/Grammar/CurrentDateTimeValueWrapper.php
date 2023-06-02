@@ -24,40 +24,31 @@ use DateTime;
 
 class CurrentDateTimeValueWrapper implements ValueWrapper
 {
-    private static $MINUS_SIGN = '-';
+    private const MINUS_SIGN = '-';
 
-    /**
-     * @var DateTime
-     */
-    private $value;
+    private DateTime $value;
 
-    public function __construct($sign, $period)
+    public function __construct(?string $sign, ?string $period)
     {
         $this->value = $this->computeCurrentDateTime($sign, $period);
     }
 
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitCurrentDateTimeValueWrapper($this, $parameters);
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getValue()
+    public function getValue(): DateTime
     {
         return $this->value;
     }
 
-    /**
-     * @return DateTime
-     */
-    private function computeCurrentDateTime($sign, $period)
+    private function computeCurrentDateTime(?string $sign, ?string $period): DateTime
     {
         $value = new DateTime();
 
         if ($period) {
-            if ($sign === self::$MINUS_SIGN) {
+            if ($sign === self::MINUS_SIGN) {
                 $value->sub(new DateInterval($period));
             } else {
                 $value->add(new DateInterval($period));
