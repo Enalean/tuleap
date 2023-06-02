@@ -25,7 +25,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
+final class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {

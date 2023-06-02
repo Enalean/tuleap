@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class DateFieldChecker implements InvalidFieldChecker
+final class DateFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var CollectionOfDateValuesExtractor

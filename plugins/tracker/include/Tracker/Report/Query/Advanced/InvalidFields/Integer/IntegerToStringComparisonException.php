@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class IntegerToStringComparisonException extends InvalidFieldException
+final class IntegerToStringComparisonException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field, $value)
     {

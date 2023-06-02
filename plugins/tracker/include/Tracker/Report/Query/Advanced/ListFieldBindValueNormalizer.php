@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-class ListFieldBindValueNormalizer
+final class ListFieldBindValueNormalizer
 {
     public function normalize($value)
     {

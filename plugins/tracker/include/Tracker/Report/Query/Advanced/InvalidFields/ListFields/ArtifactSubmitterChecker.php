@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use UserManager;
 
-class ArtifactSubmitterChecker implements InvalidFieldChecker
+final class ArtifactSubmitterChecker implements InvalidFieldChecker
 {
     public function __construct(
         private CollectionOfListValuesExtractor $values_extractor,

@@ -53,7 +53,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use UserManager;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class EqualFieldComparisonVisitor implements
+final class EqualFieldComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     FieldComparisonVisitor
 {

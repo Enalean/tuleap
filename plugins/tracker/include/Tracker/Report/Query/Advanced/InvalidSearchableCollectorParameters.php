@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 
-class InvalidSearchableCollectorParameters implements VisitorParameters
+final class InvalidSearchableCollectorParameters implements VisitorParameters
 {
     /**
      * @var IProvideTheInvalidFieldCheckerForAComparison

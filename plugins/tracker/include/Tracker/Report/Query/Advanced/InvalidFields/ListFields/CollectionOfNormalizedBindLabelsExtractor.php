@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
+final class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
 {
     /**
      * @var ListFieldBindValueNormalizer

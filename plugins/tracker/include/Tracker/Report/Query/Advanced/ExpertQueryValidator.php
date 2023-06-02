@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-class ExpertQueryValidator
+final class ExpertQueryValidator
 {
     public function __construct(
         private readonly ParserCacheProxy $parser,

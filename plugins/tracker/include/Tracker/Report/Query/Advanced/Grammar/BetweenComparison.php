@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class BetweenComparison implements Term, Comparison
+final class BetweenComparison implements Term, Comparison
 {
     public function __construct(private readonly Searchable $searchable, private readonly BetweenValueWrapper $value_wrapper)
     {

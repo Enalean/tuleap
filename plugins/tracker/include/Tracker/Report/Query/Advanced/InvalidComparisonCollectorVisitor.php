@@ -41,7 +41,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
  * @template-implements ComparisonVisitor<InvalidComparisonCollectorParameters, void>
  */
-class InvalidComparisonCollectorVisitor implements LogicalVisitor, ComparisonVisitor
+final class InvalidComparisonCollectorVisitor implements LogicalVisitor, ComparisonVisitor
 {
     /**
      * @var InvalidFields\EqualComparisonVisitor

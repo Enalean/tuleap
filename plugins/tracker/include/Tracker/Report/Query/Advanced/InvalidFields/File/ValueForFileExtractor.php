@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 /**
  * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string|int|float>
  */
-class ValueForFileExtractor implements ValueWrapperVisitor
+final class ValueForFileExtractor implements ValueWrapperVisitor
 {
     public function extractValue(ValueWrapper $value_wrapper): string|int|float
     {

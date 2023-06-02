@@ -40,7 +40,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
  * @template-implements LogicalVisitor<SizeValidatorParameters, void>
  * @template-implements ComparisonVisitor<SizeValidatorParameters, void>
  */
-class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
+final class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
 {
     private $limit;
 

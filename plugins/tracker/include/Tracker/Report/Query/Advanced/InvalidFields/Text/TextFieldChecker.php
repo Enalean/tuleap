@@ -37,7 +37,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, void>
  */
-class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
+final class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
 {
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {

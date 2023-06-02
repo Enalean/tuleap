@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class GreaterThanComparisonChecker implements ICheckMetadataForAComparison
+final class GreaterThanComparisonChecker implements ICheckMetadataForAComparison
 {
     public const OPERATOR = '>';
 

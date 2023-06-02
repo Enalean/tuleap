@@ -64,7 +64,7 @@ use Tuleap\Tracker\Report\Query\OrFromWhere;
  * @template-implements LogicalVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
  * @template-implements ComparisonVisitor<QueryBuilderParameters, IProvideFromAndWhereSQLFragments>
  */
-class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
+final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
 {
     /**
      * @var NotEqualFieldComparisonVisitor

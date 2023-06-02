@@ -56,7 +56,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
  * @template-implements LogicalVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  * @template-implements ComparisonVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
-class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
+final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
 {
     /** @var EqualComparisonFromWhereBuilder */
     private $equal_comparison_from_where_builder;

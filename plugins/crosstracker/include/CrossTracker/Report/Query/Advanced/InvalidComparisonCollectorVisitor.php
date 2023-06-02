@@ -57,7 +57,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
  * @template-implements ComparisonVisitor<InvalidComparisonCollectorParameters, void>
  */
-class InvalidComparisonCollectorVisitor implements LogicalVisitor, ComparisonVisitor
+final class InvalidComparisonCollectorVisitor implements LogicalVisitor, ComparisonVisitor
 {
     /** @var InvalidSearchableCollectorVisitor */
     private $invalid_searchable_collector_visitor;

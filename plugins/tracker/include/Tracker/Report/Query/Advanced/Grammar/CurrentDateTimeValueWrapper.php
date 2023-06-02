@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 use DateInterval;
 use DateTime;
 
-class CurrentDateTimeValueWrapper implements ValueWrapper
+final class CurrentDateTimeValueWrapper implements ValueWrapper
 {
     private const MINUS_SIGN = '-';
 

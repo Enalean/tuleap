@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment;
 
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataException;
 
-class CommentToNowComparisonException extends InvalidMetadataException
+final class CommentToNowComparisonException extends InvalidMetadataException
 {
     public function __construct()
     {

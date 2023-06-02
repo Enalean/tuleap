@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class QueryBuilderVisitorParameters implements VisitorParameters
+final class QueryBuilderVisitorParameters implements VisitorParameters
 {
     /**
      * @var Tracker[]

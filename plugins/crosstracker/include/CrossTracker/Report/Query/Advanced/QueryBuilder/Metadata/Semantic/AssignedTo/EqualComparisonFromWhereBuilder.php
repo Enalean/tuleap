@@ -27,7 +27,7 @@ use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class EqualComparisonFromWhereBuilder implements FromWhereBuilder
+final class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function __construct(
         private readonly ListValueExtractor $extractor,

@@ -31,7 +31,7 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 /**
  * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameter, IProvideFromAndWhereSQLFragments>
  */
-class FromWhereSearchableVisitor implements SearchableVisitor
+final class FromWhereSearchableVisitor implements SearchableVisitor
 {
     public function __construct(private readonly Tracker_FormElementFactory $form_element_factory)
     {

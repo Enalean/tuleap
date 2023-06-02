@@ -52,7 +52,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\CollectionOfDateValu
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 
-class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+final class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
     private static $OPERATOR = '<=';
 

@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class StatusOpenValueWrapper implements ValueWrapper
+final class StatusOpenValueWrapper implements ValueWrapper
 {
     public function accept(ValueWrapperVisitor $visitor, $parameters)
     {

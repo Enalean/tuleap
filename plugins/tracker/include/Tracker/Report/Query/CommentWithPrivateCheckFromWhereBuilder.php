@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Report\Query;
 use CodendiDataAccess;
 use Tracker;
 
-class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
+final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {
     /**
      * @var \PFUser

@@ -28,7 +28,7 @@ use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
+final class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function __construct(private readonly ListValueExtractor $extractor, private readonly \UserManager $user_manager)
     {

@@ -35,7 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 /**
  * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string | int | float | array{min_value: string | int | float, max_value: string | int | float}>
  */
-class DateValueExtractor implements ValueWrapperVisitor
+final class DateValueExtractor implements ValueWrapperVisitor
 {
     /**
      * @return string | int | float | array{min_value: string | int | float, max_value: string | int | float}

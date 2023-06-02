@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-class ParametrizedFrom
+final class ParametrizedFrom
 {
     /**
      * @var string

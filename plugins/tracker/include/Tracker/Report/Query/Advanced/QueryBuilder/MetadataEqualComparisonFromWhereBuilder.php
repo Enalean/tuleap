@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, string>
  */
-class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
+final class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
     public function __construct(private readonly CommentFromWhereBuilder $comment_from_where_builder)
     {

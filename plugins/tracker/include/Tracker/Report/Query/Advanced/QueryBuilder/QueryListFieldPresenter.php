@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
-class QueryListFieldPresenter
+final class QueryListFieldPresenter
 {
     public $field_id;
     public $tracker_id;

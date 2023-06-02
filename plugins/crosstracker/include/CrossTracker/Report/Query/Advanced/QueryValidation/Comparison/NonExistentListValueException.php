@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
-class NonExistentListValueException extends \Exception
+final class NonExistentListValueException extends \Exception
 {
     /** @var string */
     private $submitted_value;

@@ -25,7 +25,7 @@ use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragment
 use Tuleap\CrossTracker\Report\Query\ParametrizedFrom;
 use Tuleap\DB\DataAccessObject;
 
-class CrossTrackerExpertQueryReportDao extends DataAccessObject
+final class CrossTrackerExpertQueryReportDao extends DataAccessObject
 {
     public function searchArtifactsMatchingQuery(
         IProvideParametrizedFromAndWhereSQLFragments $from_where,

@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class EmptyStringComparisonException extends InvalidQueryException
+final class EmptyStringComparisonException extends InvalidQueryException
 {
     public function __construct(Metadata $metadata, $operator)
     {

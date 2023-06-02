@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class ListFieldChecker implements InvalidFieldChecker
+final class ListFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var EmptyStringChecker

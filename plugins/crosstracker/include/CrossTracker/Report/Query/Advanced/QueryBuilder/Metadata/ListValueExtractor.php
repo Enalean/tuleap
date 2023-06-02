@@ -34,7 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 /**
  * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string | int | float | array<string | int | float>>
  */
-class ListValueExtractor implements ValueWrapperVisitor
+final class ListValueExtractor implements ValueWrapperVisitor
 {
     /**
      * @return array<string | int | float>

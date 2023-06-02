@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedExcep
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
-class IntegerFieldChecker implements InvalidFieldChecker
+final class IntegerFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var EmptyStringChecker

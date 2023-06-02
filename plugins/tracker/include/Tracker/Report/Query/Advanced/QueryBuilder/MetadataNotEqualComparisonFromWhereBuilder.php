@@ -37,7 +37,7 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, string>
  */
-class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
+final class MetadataNotEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
     {

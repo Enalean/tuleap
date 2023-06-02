@@ -19,6 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class StatusOpenIsNotSupportedException extends \Exception
+final class StatusOpenIsNotSupportedException extends \Exception
 {
 }

@@ -20,6 +20,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class NoValueWrapperParameters implements ValueWrapperParameters
+final class NoValueWrapperParameters implements ValueWrapperParameters
 {
 }

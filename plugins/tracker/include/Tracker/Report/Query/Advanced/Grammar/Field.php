@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class Field implements Searchable
+final class Field implements Searchable
 {
     public function __construct(private readonly string $name)
     {

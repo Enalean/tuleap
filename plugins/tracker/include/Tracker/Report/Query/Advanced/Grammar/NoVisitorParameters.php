@@ -19,6 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class NoVisitorParameters implements VisitorParameters
+final class NoVisitorParameters implements VisitorParameters
 {
 }

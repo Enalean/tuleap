@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedExcep
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
-class FileFieldChecker implements InvalidFieldChecker
+final class FileFieldChecker implements InvalidFieldChecker
 {
     /**
      * @var ValueForFileExtractor

@@ -23,7 +23,7 @@ use DateTime;
 use DateHelper;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 
-class DateTimeValueRounder
+final class DateTimeValueRounder
 {
     public function getFlooredTimestampFromDateTime($value)
     {

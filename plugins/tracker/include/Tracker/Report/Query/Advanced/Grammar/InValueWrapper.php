@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class InValueWrapper implements ValueWrapper
+final class InValueWrapper implements ValueWrapper
 {
     /** @var array */
     private $value_wrappers;

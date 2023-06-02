@@ -25,7 +25,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Compari
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\OperatorToNowComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 
-class EqualComparisonChecker extends ComparisonChecker
+final class EqualComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = '=';
 

@@ -22,6 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 
-class LimitSizeIsExceededException extends Exception
+final class LimitSizeIsExceededException extends Exception
 {
 }

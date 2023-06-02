@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
-class DateToStringException extends \Exception
+final class DateToStringException extends \Exception
 {
     private $submitted_value;
 

@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
-class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
+final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
 {
     /**
      * @var InvalidComparisonCollectorVisitor

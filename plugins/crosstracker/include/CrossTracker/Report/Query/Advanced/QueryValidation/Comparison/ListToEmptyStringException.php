@@ -20,6 +20,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 
-class ListToEmptyStringException extends \Exception
+final class ListToEmptyStringException extends \Exception
 {
 }

@@ -24,7 +24,7 @@ use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class FromWhereSearchableVisitorParameter implements VisitorParameters
+final class FromWhereSearchableVisitorParameter implements VisitorParameters
 {
     public function __construct(
         private readonly Comparison $comparison,

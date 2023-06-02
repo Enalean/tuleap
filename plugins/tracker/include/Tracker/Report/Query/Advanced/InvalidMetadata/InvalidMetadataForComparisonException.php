@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class InvalidMetadataForComparisonException extends \Exception
+final class InvalidMetadataForComparisonException extends \Exception
 {
     public function __construct(Metadata $metadata, $operator)
     {

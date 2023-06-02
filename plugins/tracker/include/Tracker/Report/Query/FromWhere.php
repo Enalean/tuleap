@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query;
 
-class FromWhere implements IProvideFromAndWhereSQLFragments
+final class FromWhere implements IProvideFromAndWhereSQLFragments
 {
     /** @var string */
     private $from;

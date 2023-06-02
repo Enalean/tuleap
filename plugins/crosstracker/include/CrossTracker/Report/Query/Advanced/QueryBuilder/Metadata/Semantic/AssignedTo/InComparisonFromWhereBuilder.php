@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use UserManager;
 
-class InComparisonFromWhereBuilder implements FromWhereBuilder
+final class InComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
      * @var ListValueExtractor
