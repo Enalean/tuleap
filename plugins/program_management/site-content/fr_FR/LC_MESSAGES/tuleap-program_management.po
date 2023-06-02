@@ -531,6 +531,19 @@ msgstr ""
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
 
+msgid "This artifact cannot be moved because it is a program increment."
+msgstr ""
+"Cet artéfact ne peut pas être déplacé car c'est un incrément de programme."
+
+msgid "This artifact cannot be moved because it is a program iteration."
+msgstr ""
+"Cet artéfact ne peut pas être déplacé car c'est une itération de programme."
+
+msgid "This artifact cannot be moved because it is part of a program plan."
+msgstr ""
+"Cet artéfact ne peut pas être déplacé car il fait partie de la planification "
+"d'un programme."
+
 msgid "This team is being synchronized"
 msgstr "Cette équipe est en cours de synchronisation"
 

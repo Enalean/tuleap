@@ -33,6 +33,7 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
+use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\ProvidedArtifactLinksTypesProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
@@ -153,6 +154,7 @@ use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\ArtifactLinks\ArtifactLinksNewTypesChecker;
+use Tuleap\ProgramManagement\Domain\ArtifactLinks\ArtifactMoveConditionChecker;
 use Tuleap\ProgramManagement\Domain\ArtifactLinks\DeletedArtifactLinksChecker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
@@ -217,6 +219,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
@@ -1690,5 +1693,21 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         if ($event->getTypePresenter()->shortname === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
             $event->setLinkCannotBeModified();
         }
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event): void
+    {
+        (new ArtifactMoveConditionChecker(
+            new LinkedArtifactDAO(),
+            new ProgramIncrementsDAO(),
+            new IterationsDAO(),
+            MoveArtifactActionEventProxy::fromEvent($event)
+        ))->checkArtifactCanBeMoved(
+            ArtifactIdentifierProxy::fromArtifact(
+                $event->getArtifact(),
+            ),
+            array_map(static fn ($link) => $link->getId(), $event->getArtifact()->getLinkedArtifacts($event->getUser()))
+        );
     }
 }
