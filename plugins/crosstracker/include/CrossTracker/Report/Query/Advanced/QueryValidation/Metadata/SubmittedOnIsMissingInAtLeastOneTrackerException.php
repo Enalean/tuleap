@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 
-class SubmittedOnIsMissingInAtLeastOneTrackerException extends InvalidQueryException
+final class SubmittedOnIsMissingInAtLeastOneTrackerException extends InvalidQueryException
 {
     public function __construct($count)
     {

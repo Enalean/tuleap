@@ -20,6 +20,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
-class EqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
+final class EqualComparisonFromWhereBuilder extends ComparisonFromWhereBuilder
 {
 }

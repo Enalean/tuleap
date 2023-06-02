@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use UserManager;
 
-class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
+final class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /** @var ListValueExtractor */
     private $extractor;

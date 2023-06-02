@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class FloatToMySelfComparisonException extends InvalidFieldException
+final class FloatToMySelfComparisonException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field)
     {

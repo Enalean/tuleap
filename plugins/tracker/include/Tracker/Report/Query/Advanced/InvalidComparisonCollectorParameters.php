@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class InvalidComparisonCollectorParameters implements VisitorParameters
+final class InvalidComparisonCollectorParameters implements VisitorParameters
 {
     /**
      * @var InvalidSearchablesCollection

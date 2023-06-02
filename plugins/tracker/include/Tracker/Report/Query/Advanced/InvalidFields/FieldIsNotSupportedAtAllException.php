@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 use Tracker_FormElement_Field;
 
-class FieldIsNotSupportedAtAllException extends InvalidFieldException
+final class FieldIsNotSupportedAtAllException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field)
     {

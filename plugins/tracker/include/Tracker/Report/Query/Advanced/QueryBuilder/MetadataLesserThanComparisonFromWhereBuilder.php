@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class MetadataLesserThanComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
+final class MetadataLesserThanComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
     {

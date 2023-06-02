@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 
-class CurrentUserValueWrapper implements ValueWrapper
+final class CurrentUserValueWrapper implements ValueWrapper
 {
     private ?string $value;
 

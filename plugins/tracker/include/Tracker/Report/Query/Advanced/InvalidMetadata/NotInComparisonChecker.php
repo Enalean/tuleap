@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotInComparisonChecker implements ICheckMetadataForAComparison
+final class NotInComparisonChecker implements ICheckMetadataForAComparison
 {
     public const OPERATOR = 'not in()';
 

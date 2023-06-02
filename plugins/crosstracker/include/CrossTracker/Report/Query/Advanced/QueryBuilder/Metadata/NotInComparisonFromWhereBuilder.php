@@ -26,7 +26,7 @@ use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragment
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class NotInComparisonFromWhereBuilder implements FromWhereBuilder
+final class NotInComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /** @var AlwaysThereField\Users\FromWhereBuilder */
     private $submitted_by_builder;

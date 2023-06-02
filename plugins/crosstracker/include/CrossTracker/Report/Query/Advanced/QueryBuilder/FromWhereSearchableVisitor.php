@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 /**
  * @template-implements SearchableVisitor<FromWhereSearchableVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
-class FromWhereSearchableVisitor implements SearchableVisitor
+final class FromWhereSearchableVisitor implements SearchableVisitor
 {
     public function visitField(Field $field, $parameters)
     {

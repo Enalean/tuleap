@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class GreaterThanOrEqualComparison implements Term, Comparison
+final class GreaterThanOrEqualComparison implements Term, Comparison
 {
     public function __construct(private readonly Searchable $searchable, private readonly ValueWrapper $value_wrapper)
     {

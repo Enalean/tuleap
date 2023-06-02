@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 
-class ParserCacheProxy
+final class ParserCacheProxy
 {
     /**
      * @var Logical[]

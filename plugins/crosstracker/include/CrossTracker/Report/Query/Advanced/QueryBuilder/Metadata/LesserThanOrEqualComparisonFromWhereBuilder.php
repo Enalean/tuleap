@@ -25,7 +25,7 @@ use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragment
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class LesserThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
+final class LesserThanOrEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
      * @var AlwaysThereField\Date\LesserThanOrEqualComparisonFromWhereBuilder

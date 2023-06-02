@@ -29,7 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
-class ListFieldBindVisitor implements BindVisitor
+final class ListFieldBindVisitor implements BindVisitor
 {
     /**
      * @var ListBindStaticFromWhereBuilder

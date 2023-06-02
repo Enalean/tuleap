@@ -33,7 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array<string | int | float>>
  */
-class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisitor
+final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisitor
 {
     /** @return array<string | int | float> */
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array

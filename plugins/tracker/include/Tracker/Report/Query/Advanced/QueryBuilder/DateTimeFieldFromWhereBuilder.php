@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array{min_value: string | int | float, max_value: string | int | float}>
  */
-class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapperVisitor
+final class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapperVisitor
 {
     public function __construct(
         private readonly FromWhereComparisonFieldBuilder $from_where_builder,

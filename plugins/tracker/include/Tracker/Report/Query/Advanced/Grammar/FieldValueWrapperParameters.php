@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 use Tracker_FormElement_Field;
 
-class FieldValueWrapperParameters implements ValueWrapperParameters
+final class FieldValueWrapperParameters implements ValueWrapperParameters
 {
     public function __construct(public readonly Tracker_FormElement_Field $field)
     {

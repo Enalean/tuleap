@@ -20,6 +20,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
-class DateToEmptyStringException extends \Exception
+final class DateToEmptyStringException extends \Exception
 {
 }

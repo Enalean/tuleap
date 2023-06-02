@@ -36,7 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedE
 /**
  * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array<string | int | float>>
  */
-class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
+final class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 {
     public function __construct(private readonly string $date_format)
     {

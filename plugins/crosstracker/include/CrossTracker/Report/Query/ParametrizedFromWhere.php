@@ -19,7 +19,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
+final class ParametrizedFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
     /** @var ParametrizedFrom */
     private $parametrized_from;

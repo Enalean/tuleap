@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
+final class LesserThanComparisonFromWhereBuilder implements FromWhereBuilder
 {
     /**
      * @var DateTimeValueRounder

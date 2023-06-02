@@ -23,7 +23,7 @@ use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeReadOnlyConditionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 
-class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
+final class ForSubmittedOn implements DateTimeReadOnlyConditionBuilder
 {
     /**
      * @var DateTimeValueRounder

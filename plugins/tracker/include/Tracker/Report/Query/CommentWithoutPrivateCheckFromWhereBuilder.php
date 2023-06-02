@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Report\Query;
 
 use CodendiDataAccess;
 
-class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
+final class CommentWithoutPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {
     public function getFromWhereWithComment(string $value, string $suffix): FromWhere
     {

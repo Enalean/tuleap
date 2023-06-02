@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class SubmittedByUserDoesntExistException extends InvalidFieldException
+final class SubmittedByUserDoesntExistException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field, string $value)
     {

@@ -19,6 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class InIsNotSupportedException extends \Exception
+final class InIsNotSupportedException extends \Exception
 {
 }

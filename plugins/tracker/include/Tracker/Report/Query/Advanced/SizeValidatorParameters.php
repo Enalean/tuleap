@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class SizeValidatorParameters implements VisitorParameters
+final class SizeValidatorParameters implements VisitorParameters
 {
     /**
      * @var int

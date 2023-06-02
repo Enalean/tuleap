@@ -63,7 +63,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
 
-class EqualComparisonVisitor implements
+final class EqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     IProvideTheInvalidFieldCheckerForAComparison
 {

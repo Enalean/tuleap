@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 
-class StatusToSimpleValueComparisonException extends InvalidQueryException
+final class StatusToSimpleValueComparisonException extends InvalidQueryException
 {
     public function __construct($value)
     {

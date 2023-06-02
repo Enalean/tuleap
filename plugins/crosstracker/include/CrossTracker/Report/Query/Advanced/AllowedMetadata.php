@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-class AllowedMetadata
+final class AllowedMetadata
 {
     public const TITLE            = '@title';
     public const DESCRIPTION      = '@description';

@@ -19,6 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class MySelfIsNotSupportedForAnonymousException extends \Exception
+final class MySelfIsNotSupportedForAnonymousException extends \Exception
 {
 }

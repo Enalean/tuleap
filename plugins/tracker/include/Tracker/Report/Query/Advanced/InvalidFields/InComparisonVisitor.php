@@ -52,7 +52,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNo
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class InComparisonVisitor implements
+final class InComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     IProvideTheInvalidFieldCheckerForAComparison
 {

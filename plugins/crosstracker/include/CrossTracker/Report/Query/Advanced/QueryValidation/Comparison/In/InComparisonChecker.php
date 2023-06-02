@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\I
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 
-class InComparisonChecker extends ComparisonChecker
+final class InComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = 'IN()';
 

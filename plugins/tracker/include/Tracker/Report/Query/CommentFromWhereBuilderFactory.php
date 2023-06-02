@@ -26,7 +26,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 
-class CommentFromWhereBuilderFactory
+final class CommentFromWhereBuilderFactory
 {
     /**
      * @var PermissionChecker

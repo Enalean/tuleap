@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class OperatorToNowComparisonException extends InvalidQueryException
+final class OperatorToNowComparisonException extends InvalidQueryException
 {
     /**
      * @param string $operator

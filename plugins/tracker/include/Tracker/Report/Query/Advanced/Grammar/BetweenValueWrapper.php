@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class BetweenValueWrapper implements ValueWrapper
+final class BetweenValueWrapper implements ValueWrapper
 {
     public function __construct(private readonly ValueWrapper $min_value_wrapper, private readonly ValueWrapper $max_value_wrapper)
     {

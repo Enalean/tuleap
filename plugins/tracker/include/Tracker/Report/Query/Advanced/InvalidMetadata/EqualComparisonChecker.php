@@ -37,7 +37,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToStatus
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, void>
  */
-class EqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapperVisitor
+final class EqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapperVisitor
 {
     public const OPERATOR = '=';
 

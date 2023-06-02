@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SearchableVisitor;
 /**
  * @template-implements SearchableVisitor<InvalidSearchableCollectorParameters, void>
  */
-class InvalidSearchableCollectorVisitor implements SearchableVisitor
+final class InvalidSearchableCollectorVisitor implements SearchableVisitor
 {
     public function visitField(Field $searchable_field, $parameters)
     {

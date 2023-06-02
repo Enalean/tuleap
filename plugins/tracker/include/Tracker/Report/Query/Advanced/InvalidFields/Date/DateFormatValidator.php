@@ -23,7 +23,7 @@ use DateTime;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 
-class DateFormatValidator
+final class DateFormatValidator
 {
     public function __construct(private readonly EmptyStringChecker $empty_string_checker, private readonly string $default_format)
     {

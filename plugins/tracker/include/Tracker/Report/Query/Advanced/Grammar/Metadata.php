@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class Metadata implements Searchable
+final class Metadata implements Searchable
 {
     public const PREFIX = '@';
 

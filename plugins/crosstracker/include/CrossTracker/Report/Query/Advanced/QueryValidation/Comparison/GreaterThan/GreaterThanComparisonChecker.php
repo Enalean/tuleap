@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\G
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\GreaterOrLesserThanComparisonChecker;
 
-class GreaterThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
+final class GreaterThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
     private const OPERATOR = '>';
 

@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
 use UserManager;
 
-class ListValueValidator
+final class ListValueValidator
 {
     /** @var EmptyStringChecker */
     private $empty_string_checker;

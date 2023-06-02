@@ -25,7 +25,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ICheckMet
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class InvalidSearchableCollectorParameters implements VisitorParameters
+final class InvalidSearchableCollectorParameters implements VisitorParameters
 {
     /** @var InvalidComparisonCollectorParameters */
     private $invalid_searchables_collector_parameters;

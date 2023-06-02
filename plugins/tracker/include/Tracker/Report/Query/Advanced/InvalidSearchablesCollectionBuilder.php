@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 
-class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
+final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
 {
     /**
      * @var InvalidComparisonCollectorVisitor

@@ -61,7 +61,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class NotEqualComparisonVisitor implements
+final class NotEqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     IProvideTheInvalidFieldCheckerForAComparison
 {

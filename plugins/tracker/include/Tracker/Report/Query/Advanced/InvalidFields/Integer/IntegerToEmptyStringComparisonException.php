@@ -38,7 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 /**
  * @template-implements ComparisonVisitor<NoVisitorParameters, string>
  */
-class IntegerToEmptyStringComparisonException extends InvalidFieldException implements ComparisonVisitor
+final class IntegerToEmptyStringComparisonException extends InvalidFieldException implements ComparisonVisitor
 {
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {

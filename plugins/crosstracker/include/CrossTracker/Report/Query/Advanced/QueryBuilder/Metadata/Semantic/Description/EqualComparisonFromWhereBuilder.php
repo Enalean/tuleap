@@ -25,7 +25,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class EqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
+final class EqualComparisonFromWhereBuilder extends DescriptionFromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {

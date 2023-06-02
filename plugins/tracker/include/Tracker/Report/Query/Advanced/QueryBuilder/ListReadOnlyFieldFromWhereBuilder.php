@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
-class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
+final class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
 {
     /**
      * @var FromWhereComparisonFieldReadOnlyBuilder

@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\N
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 
-class NotInComparisonChecker extends ComparisonChecker
+final class NotInComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = 'NOT IN()';
 

@@ -52,7 +52,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
 
-class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
+final class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, IProvideTheInvalidFieldCheckerForAComparison
 {
     private static $OPERATOR = 'between()';
 

@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-class SimpleValueWrapper implements ValueWrapper
+final class SimpleValueWrapper implements ValueWrapper
 {
     public function __construct(private readonly string|int|float $value)
     {

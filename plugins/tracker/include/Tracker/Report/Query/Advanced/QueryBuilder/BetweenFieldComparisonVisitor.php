@@ -47,7 +47,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
-class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
+final class BetweenFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)

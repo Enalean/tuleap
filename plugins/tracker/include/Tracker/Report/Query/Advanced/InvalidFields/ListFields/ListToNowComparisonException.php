@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class ListToNowComparisonException extends InvalidFieldException
+final class ListToNowComparisonException extends InvalidFieldException
 {
     public function __construct(Tracker_FormElement_Field $field)
     {

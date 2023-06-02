@@ -31,7 +31,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-class MetadataUsageChecker
+final class MetadataUsageChecker
 {
     /**
      * @var \Tracker_FormElementFactory

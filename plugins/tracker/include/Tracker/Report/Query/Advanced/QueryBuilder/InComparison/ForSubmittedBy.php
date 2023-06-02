@@ -23,7 +23,7 @@ use CodendiDataAccess;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListReadOnlyConditionBuilder;
 use UserManager;
 
-class ForSubmittedBy implements ListReadOnlyConditionBuilder
+final class ForSubmittedBy implements ListReadOnlyConditionBuilder
 {
     /**
      * @var UserManager

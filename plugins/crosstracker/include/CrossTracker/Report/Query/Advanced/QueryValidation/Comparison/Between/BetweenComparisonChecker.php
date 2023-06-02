@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 
-class BetweenComparisonChecker extends ComparisonChecker
+final class BetweenComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = 'BETWEEN()';
 
