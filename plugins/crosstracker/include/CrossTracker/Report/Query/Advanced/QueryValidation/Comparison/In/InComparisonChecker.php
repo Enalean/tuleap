@@ -22,16 +22,13 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\I
 
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\ComparisonChecker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class InComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = 'IN()';
 
-    public function visitInValueWrapper(
-        InValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $value_wrapper, $parameters)
+    {
         $values = $value_wrapper->getValueWrappers();
         foreach ($values as $value) {
             $this->list_value_validator->checkValueIsValid($value->getValue());

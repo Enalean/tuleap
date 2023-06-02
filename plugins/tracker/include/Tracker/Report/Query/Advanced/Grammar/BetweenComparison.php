@@ -21,19 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class BetweenComparison implements Term, Comparison
 {
-    /**
-     * @var string
-     */
-    private $searchable;
-    /**
-     * @var BetweenValueWrapper
-     */
-    private $value_wrapper;
-
-    public function __construct(Searchable $searchable, BetweenValueWrapper $value_wrapper)
+    public function __construct(private readonly Searchable $searchable, private readonly BetweenValueWrapper $value_wrapper)
     {
-        $this->searchable    = $searchable;
-        $this->value_wrapper = $value_wrapper;
     }
 
     public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
@@ -41,18 +30,12 @@ class BetweenComparison implements Term, Comparison
         return $visitor->visitBetweenComparison($this, $parameters);
     }
 
-    /**
-     * @return Searchable
-     */
-    public function getSearchable()
+    public function getSearchable(): Searchable
     {
         return $this->searchable;
     }
 
-    /**
-     * @return BetweenValueWrapper
-     */
-    public function getValueWrapper()
+    public function getValueWrapper(): BetweenValueWrapper
     {
         return $this->value_wrapper;
     }

@@ -29,54 +29,47 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NowIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
+/**
+ * @template-implements ValueWrapperVisitor<NoValueWrapperParameters, string|int|float>
+ */
 class ValueForFileExtractor implements ValueWrapperVisitor
 {
-    /** @return string|int|float */
-    public function extractValue(ValueWrapper $value_wrapper)
+    public function extractValue(ValueWrapper $value_wrapper): string|int|float
     {
         return $value_wrapper->accept($this, new NoValueWrapperParameters());
     }
 
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
         throw new NowIsNotSupportedException();
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         throw new RuntimeException('Should not end there');
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
         throw new RuntimeException('Should not end there');
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         throw new MySelfIsNotSupportedException();
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new StatusOpenIsNotSupportedException();
     }
 }

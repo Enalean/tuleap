@@ -29,7 +29,7 @@ class InValueWrapper implements ValueWrapper
         $this->value_wrappers = $value_wrappers;
     }
 
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitInValueWrapper($this, $parameters);
     }

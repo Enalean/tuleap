@@ -29,24 +29,21 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 
+/**
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array<string | int | float>>
+ */
 class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
 {
-    /**
-     * @var string
-     */
-    private $date_format;
-
-    public function __construct($date_format)
+    public function __construct(private readonly string $date_format)
     {
-        $this->date_format = $date_format;
     }
 
-    /** @return array */
-    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
+    /** @return array<string | int | float> */
+    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array
     {
         try {
             return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
@@ -57,42 +54,49 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
         }
     }
 
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         $current_date_time = $value_wrapper->getValue();
 
         return $current_date_time->format($this->date_format);
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        $values   = [];
-        $values[] = $value_wrapper->getMinValue()->accept($this, $parameters);
-        $values[] = $value_wrapper->getMaxValue()->accept($this, $parameters);
+        $values = [];
+
+        $min = $value_wrapper->getMinValue()->accept($this, $parameters);
+        if (is_array($min)) {
+            throw new \Exception("Unsupported between value");
+        }
+        $values[] = $min;
+
+        $max = $value_wrapper->getMaxValue()->accept($this, $parameters);
+        if (is_array($max)) {
+            throw new \Exception("Unsupported between value");
+        }
+        $values[] = $max;
 
         return $values;
     }
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
+        throw new InIsNotSupportedException();
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         throw new MySelfIsNotSupportedException();
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new StatusOpenIsNotSupportedException();
     }
 }

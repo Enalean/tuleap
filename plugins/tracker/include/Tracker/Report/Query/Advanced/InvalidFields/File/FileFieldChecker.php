@@ -39,7 +39,7 @@ class FileFieldChecker implements InvalidFieldChecker
         $this->values_extractor = $values_extractor;
     }
 
-    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field): void
     {
         try {
             $this->values_extractor->extractValue($comparison->getValueWrapper());

@@ -26,18 +26,17 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Operato
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class BetweenComparisonChecker extends ComparisonChecker
 {
     private const OPERATOR = 'BETWEEN()';
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $this->date_validator->checkValueIsValid($value_wrapper->getValue());
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         $metadata = $parameters->getMetadata();
         if (! in_array($metadata->getName(), AllowedMetadata::DATES)) {
@@ -48,10 +47,8 @@ class BetweenComparisonChecker extends ComparisonChecker
         $value_wrapper->getMaxValue()->accept($this, $parameters);
     }
 
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
         // AllowedMetadata::SUBMITTED_ON can be used with BETWEEN operator
     }
 

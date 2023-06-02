@@ -29,12 +29,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToMySelfComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToNowComparisonException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToStatusOpenComparisonException;
 
+/**
+ * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, void>
+ */
 class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapperVisitor
 {
     public const OPERATOR = '!=';
@@ -44,39 +46,30 @@ class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWr
         $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters($metadata));
     }
 
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
+    {
         throw new CommentToNowComparisonException();
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
+    }
+
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         throw new CommentToMySelfComparisonException();
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new CommentToStatusOpenComparisonException();
     }
 }

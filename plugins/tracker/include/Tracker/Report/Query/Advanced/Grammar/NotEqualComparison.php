@@ -21,19 +21,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class NotEqualComparison implements Term, Comparison
 {
-    /**
-     * @var Searchable
-     */
-    private $searchable;
-    /**
-     * @var ValueWrapper
-     */
-    private $value_wrapper;
-
-    public function __construct(Searchable $searchable, ValueWrapper $value_wrapper)
+    public function __construct(private readonly Searchable $searchable, private readonly ValueWrapper $value_wrapper)
     {
-        $this->searchable    = $searchable;
-        $this->value_wrapper = $value_wrapper;
     }
 
     public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
@@ -41,18 +30,12 @@ class NotEqualComparison implements Term, Comparison
         return $visitor->visitNotEqualComparison($this, $parameters);
     }
 
-    /**
-     * @return Searchable
-     */
-    public function getSearchable()
+    public function getSearchable(): Searchable
     {
         return $this->searchable;
     }
 
-    /**
-     * @return ValueWrapper
-     */
-    public function getValueWrapper()
+    public function getValueWrapper(): ValueWrapper
     {
         return $this->value_wrapper;
     }

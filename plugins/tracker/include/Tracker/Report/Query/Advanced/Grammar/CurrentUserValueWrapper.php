@@ -19,16 +19,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use PFUser;
 
 class CurrentUserValueWrapper implements ValueWrapper
 {
-    /**
-     * @var PFUser
-     */
-    private $value;
+    private ?string $value;
 
-    public function __construct($user_manager)
+    public function __construct(\UserManager $user_manager)
     {
         $this->value = null;
 
@@ -38,15 +34,12 @@ class CurrentUserValueWrapper implements ValueWrapper
         }
     }
 
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitCurrentUserValueWrapper($this, $parameters);
     }
 
-    /**
-     * @return PFUser
-     */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }

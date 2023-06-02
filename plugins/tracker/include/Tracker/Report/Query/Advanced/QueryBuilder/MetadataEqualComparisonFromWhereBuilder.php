@@ -30,20 +30,16 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
+/**
+ * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, string>
+ */
 class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder, ValueWrapperVisitor
 {
-    /**
-     * @var CommentFromWhereBuilder
-     */
-    private $comment_from_where_builder;
-
-    public function __construct(CommentFromWhereBuilder $comment_from_where_builder)
+    public function __construct(private readonly CommentFromWhereBuilder $comment_from_where_builder)
     {
-        $this->comment_from_where_builder = $comment_from_where_builder;
     }
 
     public function getFromWhere(Metadata $metadata, Comparison $comparison): IProvideFromAndWhereSQLFragments
@@ -57,41 +53,33 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
         return $this->searchComment($comparison, $value);
     }
 
-    public function visitCurrentDateTimeValueWrapper(
-        CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
-        throw new \RuntimeException("Metadata is not supported here.");
-    }
-
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
-    {
-        return $value_wrapper->getValue();
-    }
-
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
+    {
+        return (string) $value_wrapper->getValue();
+    }
+
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
+    {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
+        throw new \RuntimeException("Metadata is not supported here.");
+    }
+
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new \RuntimeException("Metadata is not supported here.");
     }
 

@@ -21,15 +21,9 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface Comparison
 {
-    /**
-     * @return ValueWrapper
-     */
-    public function getValueWrapper();
+    public function getValueWrapper(): ValueWrapper;
 
-    /**
-     * @return Searchable
-     */
-    public function getSearchable();
+    public function getSearchable(): Searchable;
 
     /**
      * @template ReturnType

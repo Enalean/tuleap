@@ -21,25 +21,16 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class SimpleValueWrapper implements ValueWrapper
 {
-    /**
-     * @var string
-     */
-    private $value;
-
-    public function __construct($value)
+    public function __construct(private readonly string|int|float $value)
     {
-        $this->value = $value;
     }
 
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitSimpleValueWrapper($this, $parameters);
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): string|int|float
     {
         return $this->value;
     }

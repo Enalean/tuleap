@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class StatusOpenValueWrapper implements ValueWrapper
 {
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters)
+    public function accept(ValueWrapperVisitor $visitor, $parameters)
     {
         return $visitor->visitStatusOpenValueWrapper($this, $parameters);
     }

@@ -31,29 +31,20 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\MySelfIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\StatusOpenIsNotSupportedException;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 
+/**
+ * @template-implements ValueWrapperVisitor<FieldValueWrapperParameters, string | int | float | array{min_value: string | int | float, max_value: string | int | float}>
+ */
 class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapperVisitor
 {
-    /**
-     * @var FromWhereComparisonFieldReadOnlyBuilder
-     */
-    private $from_where_builder;
-
-    /**
-     * @var DateTimeReadOnlyConditionBuilder
-     */
-    private $condition_builder;
-
     public function __construct(
-        FromWhereComparisonFieldReadOnlyBuilder $from_where_comparison_builder,
-        DateTimeReadOnlyConditionBuilder $condition_builder,
+        private readonly FromWhereComparisonFieldReadOnlyBuilder $from_where_builder,
+        private readonly DateTimeReadOnlyConditionBuilder $condition_builder,
     ) {
-        $this->from_where_builder = $from_where_comparison_builder;
-        $this->condition_builder  = $condition_builder;
     }
 
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideFromAndWhereSQLFragments
@@ -64,51 +55,54 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
         return $this->from_where_builder->getFromWhere($condition);
     }
 
-    /**
-     * @return string
-     */
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         return $value_wrapper->getValue();
     }
 
-    /**
-     * @return string
-     */
-    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
-        $field = $parameters->getField();
-        if ($field->isTimeDisplayed() === true) {
+        if (! ($parameters->field instanceof \Tracker_FormElement_Field_Date)) {
+            throw new \Exception("Field is not a date");
+        }
+
+        if ($parameters->field->isTimeDisplayed() === true) {
             return $value_wrapper->getValue()->format(DateFormat::DATETIME);
         }
+
         return $value_wrapper->getValue()->format(DateFormat::DATE);
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
-        $values = [
-            'min_value' => $value_wrapper->getMinValue()->accept($this, $parameters),
-            'max_value' => $value_wrapper->getMaxValue()->accept($this, $parameters),
+        $min = $value_wrapper->getMinValue()->accept($this, $parameters);
+        if (is_array($min)) {
+            throw new \Exception("Unsupported between value");
+        }
+
+        $max = $value_wrapper->getMaxValue()->accept($this, $parameters);
+        if (is_array($max)) {
+            throw new \Exception("Unsupported between value");
+        }
+
+        return [
+            'min_value' => $min,
+            'max_value' => $max,
         ];
-
-        return $values;
     }
 
-    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, ValueWrapperParameters $parameters)
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
     {
+        throw new InIsNotSupportedException();
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         throw new MySelfIsNotSupportedException();
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         throw new StatusOpenIsNotSupportedException();
     }
 }

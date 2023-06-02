@@ -65,25 +65,23 @@ class ListFieldChecker implements InvalidFieldChecker
         $this->label_converter       = $label_converter;
     }
 
-    public function checkFieldIsValidForComparison(
-        Comparison $comparison,
-        Tracker_FormElement_Field $field,
-    ) {
+    public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field,): void
+    {
         $values            = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $normalized_labels = $this->bind_labels_extractor->extractCollectionOfNormalizedLabels($field);
 
         foreach ($values as $value) {
-            if ($this->empty_string_checker->isEmptyStringAProblem($value)) {
+            if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
                 throw new ListToEmptyStringComparisonException($comparison, $field);
             }
 
             if ($this->label_converter->isASupportedDynamicUgroup($value)) {
                 $value = $this->label_converter->convertLabelToTranslationKey($value);
             }
-            $normalized_value = $this->value_normalizer->normalize($value);
+            $normalized_value = $this->value_normalizer->normalize((string) $value);
 
             if ($value !== '' && ! in_array($normalized_value, $normalized_labels)) {
-                throw new ListValueDoNotExistComparisonException($field, $value);
+                throw new ListValueDoNotExistComparisonException($field, (string) $value);
             }
         }
     }

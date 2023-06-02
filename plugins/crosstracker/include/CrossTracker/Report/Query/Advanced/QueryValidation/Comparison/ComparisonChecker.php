@@ -31,29 +31,20 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
 
+/**
+ * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, void>
+ */
 abstract class ComparisonChecker implements ValueWrapperVisitor
 {
-    /**
-     * @var DateFormatValidator
-     */
-    protected $date_validator;
-    /**
-     * @var ListValueValidator
-     */
-    protected $list_value_validator;
-
     public function __construct(
-        DateFormatValidator $date_validator,
-        ListValueValidator $list_value_validator,
+        protected readonly DateFormatValidator $date_validator,
+        protected readonly ListValueValidator $list_value_validator,
     ) {
-        $this->date_validator       = $date_validator;
-        $this->list_value_validator = $list_value_validator;
     }
 
     abstract public function getOperator(): string;
@@ -78,12 +69,12 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
+        $parameters,
     ) {
         throw new ToNowComparisonException($parameters->getMetadata());
     }
 
-    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, $parameters)
     {
         $metadata = $parameters->getMetadata();
         if ($metadata->getName() === AllowedMetadata::STATUS) {
@@ -99,32 +90,26 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
         }
     }
 
-    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
+    public function visitBetweenValueWrapper(BetweenValueWrapper $value_wrapper, $parameters)
     {
         // Do nothing, EqualComparison should not receive a BetweenValueWrapper
     }
 
-    public function visitInValueWrapper(
-        InValueWrapper $collection_of_value_wrappers,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitInValueWrapper(InValueWrapper $collection_of_value_wrappers, $parameters)
+    {
         // Do nothing, EqualComparison should not receive a InValueWrapper
     }
 
-    public function visitCurrentUserValueWrapper(
-        CurrentUserValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitCurrentUserValueWrapper(CurrentUserValueWrapper $value_wrapper, $parameters)
+    {
         $metadata = $parameters->getMetadata();
         if (! in_array($metadata->getName(), AllowedMetadata::USERS)) {
             throw new ToMyselfComparisonException($metadata);
         }
     }
 
-    public function visitStatusOpenValueWrapper(
-        StatusOpenValueWrapper $value_wrapper,
-        ValueWrapperParameters $parameters,
-    ) {
+    public function visitStatusOpenValueWrapper(StatusOpenValueWrapper $value_wrapper, $parameters)
+    {
         if ($parameters->getMetadata()->getName() !== AllowedMetadata::STATUS) {
             throw new ToStatusOpenComparisonException($parameters->getMetadata());
         }

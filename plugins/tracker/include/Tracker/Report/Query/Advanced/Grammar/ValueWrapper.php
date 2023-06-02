@@ -21,5 +21,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface ValueWrapper
 {
-    public function accept(ValueWrapperVisitor $visitor, ValueWrapperParameters $parameters);
+    /**
+     * @template ReturnType
+     * @template Parameters of ValueWrapperParameters
+     * @param ValueWrapperVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function accept(ValueWrapperVisitor $visitor, $parameters);
 }
