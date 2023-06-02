@@ -29,7 +29,7 @@ class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
     public const NAME = 'moveArtifactActionAllowedByPluginRetriever';
 
     private Tracker $tracker;
-    private string $error;
+    private string $error                       = "";
     private bool $has_external_semantic_defined = false;
     private bool $can_be_moved                  = true;
 

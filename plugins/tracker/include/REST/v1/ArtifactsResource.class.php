@@ -68,6 +68,7 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -130,7 +131,6 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -1207,11 +1207,11 @@ class ArtifactsResource extends AuthenticatedResource
                 throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
             }
 
-            $event = new ArtifactPartialUpdate($artifact);
+            $event = new MoveArtifactActionAllowedByPluginRetriever($artifact, $user);
             $this->event_manager->processEvent($event);
 
-            if (! $event->isArtifactUpdatable()) {
-                throw new RestException(400, $event->getNotUpdatableMessage());
+            if ($event->doesAnExternalPluginForbiddenTheMove()) {
+                throw new RestException(400, $event->getErrorMessage());
             }
 
             $move_action = $this->getMoveAction($user);
