@@ -55,6 +55,7 @@ use Tracker_Semantic_StatusFactory;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanStructureRealTimeMercure;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -442,7 +443,7 @@ class KanbanResource extends AuthenticatedResource
                 );
 
                 $this->node_js_client->sendMessage($message);
-                if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+                if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                     $this->structure_realtime_kanban->sendStructureUpdate($kanban);
                 }
             }
@@ -1219,7 +1220,7 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->structure_realtime_kanban->sendStructureUpdate($kanban);
             }
         }
@@ -1325,7 +1326,7 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->structure_realtime_kanban->sendStructureUpdate($kanban);
             }
         }
@@ -1390,7 +1391,7 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->structure_realtime_kanban->sendStructureUpdate($kanban);
             }
         }

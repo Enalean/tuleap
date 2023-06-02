@@ -30,6 +30,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\JWT\generators\MercureJWTGenerator;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -50,7 +51,7 @@ class MercureJWTController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (! \ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             return $this->response_factory->createResponse(404);
         }
         $id = (int) $request->getAttribute("kanban_id");

@@ -1265,7 +1265,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
         );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
                 $artifact,
                 RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED
@@ -1288,7 +1288,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
         );
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
                     $artifact,
                     RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_UPDATED
@@ -1314,7 +1314,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
             );
         }
-        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             foreach ($artifacts as $artifact) {
                 $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
                     $artifact,

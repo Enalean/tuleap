@@ -33,6 +33,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\JWT\generators\MercureJWTGeneratorImpl;
 use Tuleap\JWT\generators\NullMercureJWTGenerator;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
@@ -72,7 +73,7 @@ final class MercureJWTControllerTest extends TestCase
             $mercure_jwt_generator,
             $this->emitter,
         );
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
     }
 
     public function testNoError(): void

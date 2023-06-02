@@ -29,8 +29,8 @@ use Tuleap\JWT\generators\MercureJWTGenerator;
 
 class MercureClient implements Client
 {
-    #[FeatureFlagConfigKey("Feature flag to enable mercure based real time ")]
-    public const FEATURE_FLAG_KEY = 'enable_mercure_dev';
+    #[FeatureFlagConfigKey("Feature flag to enable mercure based real time in kanban ")]
+    public const FEATURE_FLAG_KANBAN_KEY = 'enable_mercure_dev_kanban';
 
     private const MERCURE_LOCAL_URL = "http://localhost:3000/.well-known/mercure";
 

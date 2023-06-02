@@ -30,7 +30,7 @@ class ClientBuilderTest extends TestCase
 
     public function testnoError()
     {
-        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KEY, true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
         $structure = [
             'env' => [
                 'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 160),
@@ -44,7 +44,7 @@ class ClientBuilderTest extends TestCase
 
     public function testNoFeatureFlag()
     {
-        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KEY, false);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, false);
         $root           = vfsStream::setup('root2');
         $mercure_client = ClientBuilder::build($root->url() . '/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);

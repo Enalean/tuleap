@@ -25,13 +25,14 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\RealTimeMercure\MercureClient;
 
 class MercureJWTGeneratorBuilder
 {
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
     public static function build(string $path): MercureJWTGenerator
     {
-        if (! \ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             return new NullMercureJWTGenerator();
         }
         $mercure_file_content =  @file_get_contents($path);
