@@ -36,11 +36,11 @@ const TQL_mode_definition = {
             token: "number",
         },
         {
-            regex: /(?:and|or)\b/i,
+            regex: /(?:and|or|with)\b/i,
             token: "keyword",
         },
         {
-            regex: /(?:now|between|in|not|myself|open)\b/i,
+            regex: /(?:now|between|in|not|myself|open|parent)\b/i,
             token: "variable-2",
         },
         {
@@ -92,5 +92,6 @@ export const TQL_autocomplete_keywords = [
     "IN(",
     "NOT",
     "MYSELF()",
+    "WITH PARENT",
     "@comments",
 ];

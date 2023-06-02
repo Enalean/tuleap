@@ -21,4 +21,14 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface Term
 {
+    /**
+     * @template ReturnType
+     * @template Parameters of VisitorParameters
+     *
+     * @param TermVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function acceptTermVisitor(TermVisitor $visitor, $parameters);
 }

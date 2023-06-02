@@ -25,7 +25,7 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
@@ -49,7 +49,7 @@ class CrossTrackerArtifactReportFactory
     private $parser;
     /** @var CrossTrackerExpertQueryReportDao */
     private $expert_query_dao;
-    /** @var InvalidComparisonCollectorVisitor */
+    /** @var InvalidTermCollectorVisitor */
     private $collector;
 
     public function __construct(
@@ -59,7 +59,7 @@ class CrossTrackerArtifactReportFactory
         QueryBuilderVisitor $query_builder,
         ParserCacheProxy $parser,
         CrossTrackerExpertQueryReportDao $expert_query_dao,
-        InvalidComparisonCollectorVisitor $collector,
+        InvalidTermCollectorVisitor $collector,
     ) {
         $this->artifact_report_dao    = $artifact_report_dao;
         $this->artifact_factory       = $artifact_factory;

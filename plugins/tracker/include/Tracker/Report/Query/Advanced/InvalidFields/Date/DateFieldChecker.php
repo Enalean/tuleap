@@ -53,7 +53,7 @@ final class DateFieldChecker implements InvalidFieldChecker
             try {
                 $this->validator->checkValueIsValid($value);
             } catch (DateToEmptyStringException $exception) {
-                throw new DateToEmptyStringComparisonException($comparison, $field);
+                throw new DateToEmptyStringTermException($comparison, $field);
             } catch (DateToStringException $exception) {
                 throw new DateToStringComparisonException($field, $value);
             }

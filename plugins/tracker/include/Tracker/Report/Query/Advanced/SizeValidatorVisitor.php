@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
@@ -35,12 +35,13 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
 /**
  * @template-implements LogicalVisitor<SizeValidatorParameters, void>
- * @template-implements ComparisonVisitor<SizeValidatorParameters, void>
+ * @template-implements TermVisitor<SizeValidatorParameters, void>
  */
-final class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
+final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
 {
     private $limit;
 
@@ -103,7 +104,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
     {
         $this->incrementSize($parameters);
 
-        $and_expression->getExpression()->acceptComparisonVisitor($this, $parameters);
+        $and_expression->getExpression()->acceptTermVisitor($this, $parameters);
 
         $this->visitTail($and_expression->getTail(), $parameters);
     }
@@ -130,7 +131,7 @@ final class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
     {
         $this->incrementSize($parameters);
 
-        $and_operand->getOperand()->acceptComparisonVisitor($this, $parameters);
+        $and_operand->getOperand()->acceptTermVisitor($this, $parameters);
 
         $this->visitTail($and_operand->getTail(), $parameters);
     }
@@ -167,5 +168,10 @@ final class SizeValidatorVisitor implements LogicalVisitor, ComparisonVisitor
     {
         $parameters->incrementSize();
         $this->checkSize($parameters->getSize());
+    }
+
+    public function visitWithParent(WithParent $condition, $parameters)
+    {
+        $this->incrementSize($parameters);
     }
 }

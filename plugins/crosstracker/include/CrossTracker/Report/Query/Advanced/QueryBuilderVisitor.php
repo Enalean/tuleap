@@ -38,7 +38,7 @@ use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -51,12 +51,13 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
 /**
  * @template-implements LogicalVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
- * @template-implements ComparisonVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
+ * @template-implements TermVisitor<QueryBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
-final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
+final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 {
     /** @var EqualComparisonFromWhereBuilder */
     private $equal_comparison_from_where_builder;
@@ -238,7 +239,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
 
     public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
-        $from_where_expression = $and_expression->getExpression()->acceptComparisonVisitor($this, $parameters);
+        $from_where_expression = $and_expression->getExpression()->acceptTermVisitor($this, $parameters);
 
         $tail = $and_expression->getTail();
 
@@ -265,7 +266,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
 
     public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
-        $from_where_expression = $and_operand->getOperand()->acceptComparisonVisitor($this, $parameters);
+        $from_where_expression = $and_operand->getOperand()->acceptTermVisitor($this, $parameters);
 
         $tail = $and_operand->getTail();
 
@@ -292,5 +293,10 @@ final class QueryBuilderVisitor implements LogicalVisitor, ComparisonVisitor
         $from_where_tail = $tail->acceptLogicalVisitor($this, $parameters);
 
         return new ParametrizedOrFromWhere($from_where_expression, $from_where_tail);
+    }
+
+    public function visitWithParent(WithParent $condition, $parameters)
+    {
+        throw new \Exception("WITH PARENT cannot be used in Cross Tracker search");
     }
 }

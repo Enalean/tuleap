@@ -19,13 +19,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class NotInComparison implements Term, Comparison
+final class NotInComparison implements Comparison
 {
     public function __construct(private readonly Searchable $searchable, private readonly InValueWrapper $value_wrapper)
     {
     }
 
-    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitNotInComparison($this, $parameters);
     }

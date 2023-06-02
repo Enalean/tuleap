@@ -29,7 +29,7 @@ use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
 use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
@@ -181,7 +181,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
         $form_element_factory = Tracker_FormElementFactory::instance();
 
-        $invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
+        $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new MetadataChecker(
                 new MetadataUsageChecker(

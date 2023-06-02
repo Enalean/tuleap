@@ -69,7 +69,7 @@ class ExpertModePresenter
         $this->title                  = dgettext('tuleap-tracker', 'Search');
         $this->btn_report_normal_mode = dgettext('tuleap-tracker', 'Normal mode');
         $this->btn_search             = $GLOBALS['Language']->getText('global', 'btn_search');
-        $this->query_tooltip          = dgettext('tuleap-tracker', 'You can use: AND, OR, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN(), parenthesis. Autocomplete is activated with Ctrl + Space.');
+        $this->query_tooltip          = dgettext('tuleap-tracker', 'You can use: AND, OR, WITH PARENT, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN(), parenthesis. Autocomplete is activated with Ctrl + Space.');
     }
 
     private function initAllowedFields(array $allowed_fields)

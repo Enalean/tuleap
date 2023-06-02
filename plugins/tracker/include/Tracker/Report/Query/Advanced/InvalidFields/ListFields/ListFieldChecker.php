@@ -72,7 +72,7 @@ final class ListFieldChecker implements InvalidFieldChecker
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
-                throw new ListToEmptyStringComparisonException($comparison, $field);
+                throw new ListToEmptyStringTermException($comparison, $field);
             }
 
             if ($this->label_converter->isASupportedDynamicUgroup($value)) {

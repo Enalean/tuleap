@@ -41,7 +41,7 @@ use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
@@ -138,7 +138,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      */
     private $parser;
     /**
-     * @var InvalidComparisonCollectorVisitor
+     * @var InvalidTermCollectorVisitor
      */
     private $collector;
 
@@ -2119,7 +2119,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     private function getCollector()
     {
         if (! isset($this->collector)) {
-            $this->collector = new InvalidComparisonCollectorVisitor(
+            $this->collector = new InvalidTermCollectorVisitor(
                 new InvalidFields\EqualComparisonVisitor(),
                 new InvalidFields\NotEqualComparisonVisitor(),
                 new InvalidFields\LesserThanComparisonVisitor(),

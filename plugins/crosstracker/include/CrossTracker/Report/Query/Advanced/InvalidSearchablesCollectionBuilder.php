@@ -29,7 +29,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
 {
     /**
-     * @var InvalidComparisonCollectorVisitor
+     * @var InvalidTermCollectorVisitor
      */
     private $invalid_comparison_collector;
     /**
@@ -42,7 +42,7 @@ final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchab
     private $user;
 
     public function __construct(
-        InvalidComparisonCollectorVisitor $invalid_comparison_collector,
+        InvalidTermCollectorVisitor $invalid_comparison_collector,
         array $trackers,
         PFUser $user,
     ) {

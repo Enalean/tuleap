@@ -23,7 +23,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -36,12 +36,13 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
 /**
  * @template-implements LogicalVisitor<InvalidComparisonCollectorParameters, void>
- * @template-implements ComparisonVisitor<InvalidComparisonCollectorParameters, void>
+ * @template-implements TermVisitor<InvalidComparisonCollectorParameters, void>
  */
-final class InvalidComparisonCollectorVisitor implements LogicalVisitor, ComparisonVisitor
+final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
 {
     /**
      * @var InvalidFields\EqualComparisonVisitor
@@ -161,7 +162,7 @@ final class InvalidComparisonCollectorVisitor implements LogicalVisitor, Compari
     public function collectErrors(
         Logical $parsed_query,
         InvalidSearchablesCollection $invalid_searchables_collection,
-    ) {
+    ): void {
         $parsed_query->acceptLogicalVisitor($this, new InvalidComparisonCollectorParameters($invalid_searchables_collection));
     }
 
@@ -257,7 +258,7 @@ final class InvalidComparisonCollectorVisitor implements LogicalVisitor, Compari
 
     public function visitAndExpression(AndExpression $and_expression, $parameters)
     {
-        $and_expression->getExpression()->acceptComparisonVisitor($this, $parameters);
+        $and_expression->getExpression()->acceptTermVisitor($this, $parameters);
         $this->visitTail($and_expression->getTail(), $parameters);
     }
 
@@ -275,12 +276,14 @@ final class InvalidComparisonCollectorVisitor implements LogicalVisitor, Compari
 
     public function visitAndOperand(AndOperand $and_operand, $parameters)
     {
-        $and_operand->getOperand()->acceptComparisonVisitor($this, $parameters);
+        $and_operand->getOperand()->acceptTermVisitor($this, $parameters);
         $this->visitTail($and_operand->getTail(), $parameters);
     }
 
-    private function visitTail(OrOperand | AndOperand | null $tail, InvalidComparisonCollectorParameters $parameters)
-    {
+    private function visitTail(
+        OrOperand | AndOperand | null $tail,
+        InvalidComparisonCollectorParameters $parameters,
+    ): void {
         if ($tail) {
             $tail->acceptLogicalVisitor($this, $parameters);
         }
@@ -291,7 +294,7 @@ final class InvalidComparisonCollectorVisitor implements LogicalVisitor, Compari
         InvalidFields\IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         InvalidComparisonCollectorParameters $parameters,
-    ) {
+    ): void {
         $comparison->getSearchable()->acceptSearchableVisitor(
             $this->invalid_searchable_collector_visitor,
             new InvalidSearchableCollectorParameters(
@@ -301,5 +304,10 @@ final class InvalidComparisonCollectorVisitor implements LogicalVisitor, Compari
                 $comparison
             )
         );
+    }
+
+    public function visitWithParent(WithParent $condition, $parameters)
+    {
+        // Always valid
     }
 }

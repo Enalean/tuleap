@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,30 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+declare(strict_types=1);
 
-class EqualComparison implements Comparison
+namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+final class WithParent implements Term
 {
-    public function __construct(private readonly Searchable $searchable, private readonly ValueWrapper $value_wrapper)
+    public function __construct()
     {
     }
 
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
-        return $visitor->visitEqualComparison($this, $parameters);
-    }
-
-    public function getSearchable(): Searchable
-    {
-        return $this->searchable;
-    }
-
-    public function getValueWrapper(): ValueWrapper
-    {
-        return $this->value_wrapper;
+        return $visitor->visitWithParent($this, $parameters);
     }
 }

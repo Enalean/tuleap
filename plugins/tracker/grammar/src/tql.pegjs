@@ -32,6 +32,7 @@ summary = 'ありがとう' or
          or subby = 'Titi'
          or subby = myself()
     )
+    AND WITHOUT PARENT
 */
 
 or_expression
@@ -55,6 +56,10 @@ and
     }
 
 term
+    = Comparison
+        / LinkCondition
+
+Comparison
     = EqualComparison
         / NotEqualComparison
         / LesserThanOrEqualComparison
@@ -65,6 +70,13 @@ term
         / InComparison
         / NotInComparison
         / ParenthesisTerm
+
+LinkCondition
+    = WithParent
+
+WithParent = "with parent"i {
+        return new WithParent();
+    }
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 

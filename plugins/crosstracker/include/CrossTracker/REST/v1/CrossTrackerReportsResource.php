@@ -39,7 +39,7 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -138,7 +138,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private $cross_tracker_permission_gate;
     /** @var ExpertQueryValidator */
     private $validator;
-    /** @var InvalidComparisonCollectorVisitor */
+    /** @var InvalidTermCollectorVisitor */
     private $invalid_comparisons_collector;
     /** @var CrossTrackerArtifactRepresentationFactory */
     private $representation_factory;
@@ -170,7 +170,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $this->user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $this->user_manager);
 
-        $this->invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
+        $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new MetadataChecker(
                 new MetadataUsageChecker(

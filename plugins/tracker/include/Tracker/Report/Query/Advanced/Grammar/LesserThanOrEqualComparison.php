@@ -19,13 +19,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class LesserThanOrEqualComparison implements Term, Comparison
+final class LesserThanOrEqualComparison implements Comparison
 {
     public function __construct(private readonly Searchable $searchable, private readonly ValueWrapper $value_wrapper)
     {
     }
 
-    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters)
+    public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
         return $visitor->visitLesserThanOrEqualComparison($this, $parameters);
     }
