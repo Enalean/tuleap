@@ -25,6 +25,10 @@ msgstr ""
 msgid "Public key is not a valid one."
 msgstr ""
 
+msgid ""
+"This artifact cannot be moved because the tracker uses encrypted fields."
+msgstr ""
+
 msgid "Tracker Encryption"
 msgstr ""
 
