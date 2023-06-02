@@ -8,6 +8,7 @@ export default MercureService;
 MercureService.$inject = [
     "$timeout",
     "$q",
+    "$rootScope",
     "KanbanColumnService",
     "ColumnCollectionService",
     "DroppedService",
@@ -20,6 +21,7 @@ MercureService.$inject = [
 function MercureService(
     $timeout,
     $q,
+    $rootScope,
     KanbanColumnService,
     ColumnCollectionService,
     DroppedService,
@@ -149,6 +151,7 @@ function MercureService(
             destination_column,
             event.data.ordered_destination_column_items_ids
         );
+        $rootScope.$applyAsync();
     }
     function callLoadColumn() {
         loadColumnsFunction();
