@@ -38,6 +38,11 @@ reason = "Only used when targetting macOS."
 
 ### TO BE FIXED
 
+[[IgnoredVulns]]
+id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
+reason = "unplugin-vue2-script-setup must update its dependency. Reported upstream, waiting for a new release."
+ignoreUntil = 2023-07-05
+
 # plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
 ## jsdom
 [[IgnoredVulns]]
