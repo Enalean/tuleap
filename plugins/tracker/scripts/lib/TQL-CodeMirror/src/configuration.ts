@@ -36,7 +36,7 @@ const TQL_mode_definition = {
             token: "number",
         },
         {
-            regex: /(?:and|or|with)\b/i,
+            regex: /(?:and|or|with|without)\b/i,
             token: "keyword",
         },
         {
@@ -93,5 +93,6 @@ export const TQL_autocomplete_keywords = [
     "NOT",
     "MYSELF()",
     "WITH PARENT",
+    "WITHOUT PARENT",
     "@comments",
 ];

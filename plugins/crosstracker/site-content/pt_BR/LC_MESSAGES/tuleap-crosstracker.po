@@ -172,6 +172,9 @@ msgstr ""
 msgid "WITH PARENT cannot be used in Cross Tracker search"
 msgstr ""
 
+msgid "WITHOUT PARENT cannot be used in Cross Tracker search"
+msgstr ""
+
 msgid "You cannot access all projects of the search"
 msgstr ""
 

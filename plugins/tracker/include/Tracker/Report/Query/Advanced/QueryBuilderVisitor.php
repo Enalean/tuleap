@@ -36,6 +36,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
@@ -368,7 +369,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         $suffix = spl_object_hash($condition);
         $from   = "";
         $where  = "(
-                    SELECT count(*) AS nb
+                    SELECT 1
                     FROM
                         tracker_changeset_value_artifactlink AS TCVAL_$suffix
                         INNER JOIN tracker_changeset_value AS TCV_$suffix
@@ -377,7 +378,28 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                             ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
                     WHERE TCVAL_$suffix.artifact_id = artifact.id
                         AND TCVAL_$suffix.nature = '_is_child'
-                ) <> 0";
+                    LIMIT 1
+                ) = 1";
+
+        return new FromWhere($from, $where);
+    }
+
+    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        $suffix = spl_object_hash($condition);
+        $from   = "";
+        $where  = "(
+                    SELECT 1
+                    FROM
+                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                        INNER JOIN tracker_changeset_value AS TCV_$suffix
+                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                        INNER JOIN tracker_artifact AS TCA_$suffix
+                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
+                    WHERE TCVAL_$suffix.artifact_id = artifact.id
+                        AND TCVAL_$suffix.nature = '_is_child'
+                    LIMIT 1
+                ) IS NULL";
 
         return new FromWhere($from, $where);
     }

@@ -51,6 +51,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 
 /**
@@ -298,5 +299,10 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
     public function visitWithParent(WithParent $condition, $parameters)
     {
         throw new \Exception("WITH PARENT cannot be used in Cross Tracker search");
+    }
+
+    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        throw new \Exception("WITHOUT PARENT cannot be used in Cross Tracker search");
     }
 }

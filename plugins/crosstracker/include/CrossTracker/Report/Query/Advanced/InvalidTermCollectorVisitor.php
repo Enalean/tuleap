@@ -51,6 +51,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
@@ -282,6 +283,18 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
                 dgettext(
                     'tuleap-crosstracker',
                     'WITH PARENT cannot be used in Cross Tracker search',
+                )
+            );
+    }
+
+    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        $parameters
+            ->getInvalidSearchablesCollection()
+            ->addInvalidSearchableError(
+                dgettext(
+                    'tuleap-crosstracker',
+                    'WITHOUT PARENT cannot be used in Cross Tracker search',
                 )
             );
     }

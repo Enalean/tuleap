@@ -21,10 +21,10 @@
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-final class WithParent implements Term
+final class WithoutParent implements Term
 {
     public function acceptTermVisitor(TermVisitor $visitor, $parameters)
     {
-        return $visitor->visitWithParent($this, $parameters);
+        return $visitor->visitWithoutParent($this, $parameters);
     }
 }
