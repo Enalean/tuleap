@@ -62,7 +62,7 @@ final class FloatFieldChecker implements InvalidFieldChecker
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
-                throw new FloatToEmptyStringComparisonException($comparison, $field);
+                throw new FloatToEmptyStringTermException($comparison, $field);
             }
 
             if (! is_numeric($value) && $value !== "") {

@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class OrExpression implements Term, Logical
+final class OrExpression implements Logical
 {
     public function __construct(private readonly AndExpression $expression, private readonly ?OrOperand $tail = null)
     {

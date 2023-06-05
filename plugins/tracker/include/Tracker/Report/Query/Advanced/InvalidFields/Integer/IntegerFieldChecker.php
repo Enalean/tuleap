@@ -62,7 +62,7 @@ final class IntegerFieldChecker implements InvalidFieldChecker
 
         foreach ($values as $value) {
             if ($this->empty_string_checker->isEmptyStringAProblem((string) $value)) {
-                throw new IntegerToEmptyStringComparisonException($comparison, $field);
+                throw new IntegerToEmptyStringTermException($comparison, $field);
             }
 
             if (preg_match("/^\\d+\\.\\d+$/", (string) $value) === 1) {

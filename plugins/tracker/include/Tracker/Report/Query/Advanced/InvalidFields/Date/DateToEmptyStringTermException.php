@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
 use RuntimeException;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -33,17 +33,19 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 /**
- * @template-implements ComparisonVisitor<NoVisitorParameters, string>
+ * @template-implements TermVisitor<NoVisitorParameters, string>
  */
-final class IntegerToEmptyStringComparisonException extends InvalidFieldException implements ComparisonVisitor
+final class DateToEmptyStringTermException extends InvalidFieldException implements TermVisitor
 {
     public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
     {
+        $format  = $comparison->acceptTermVisitor($this, new NoVisitorParameters());
         $message = sprintf(
-            $comparison->acceptComparisonVisitor($this, new NoVisitorParameters()),
+            $format,
             $field->getName()
         );
         parent::__construct($message);
@@ -51,46 +53,51 @@ final class IntegerToEmptyStringComparisonException extends InvalidFieldExceptio
 
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
     {
-        throw new RuntimeException('Integer should be comparable = to an empty string');
+        throw new RuntimeException('Date should be comparable = to an empty string');
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, $parameters)
     {
-        throw new RuntimeException('Integer should be comparable != to an empty string');
+        throw new RuntimeException('Date should be comparable != to an empty string');
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with < operator.");
+        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with < operator.");
     }
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with > operator.");
+        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with > operator.");
     }
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with <= operator.");
+        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with <= operator.");
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with >= operator.");
+        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with >= operator.");
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, $parameters)
     {
-        return dgettext("tuleap-tracker", "The integer field '%s' cannot be compared to the empty string with BETWEEN() operator.");
+        return dgettext("tuleap-tracker", "The date field '%s' cannot be compared to the empty string with BETWEEN() operator.");
     }
 
     public function visitInComparison(InComparison $comparison, $parameters)
     {
-        throw new RuntimeException("The integer field '%s' is not supposed to be used with IN operator.");
+        throw new RuntimeException("The date field '%s' is not supposed to be used with IN operator.");
     }
 
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
-        throw new RuntimeException("The integer field '%s' is not supposed to be used with NOT IN operator.");
+        throw new RuntimeException("The date field '%s' is not supposed to be used with NOT IN operator.");
+    }
+
+    public function visitWithParent(WithParent $condition, $parameters)
+    {
+        throw new RuntimeException("The date field '%s' is not supposed to be used with WITH PARENT operator.");
     }
 }

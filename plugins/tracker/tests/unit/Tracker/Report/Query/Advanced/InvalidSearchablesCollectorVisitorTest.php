@@ -86,7 +86,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
-    /** @var InvalidComparisonCollectorVisitor */
+    /** @var InvalidTermCollectorVisitor */
     private $collector;
     /**
      * @var PFUser
@@ -170,7 +170,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
             $this->invalid_searchables_collection
         );
 
-        $this->collector = new InvalidComparisonCollectorVisitor(
+        $this->collector = new InvalidTermCollectorVisitor(
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
@@ -529,7 +529,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
         $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndExpression($expression, $this->parameters);
@@ -565,7 +565,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand::class);
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
         $tail->shouldReceive('acceptLogicalVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndOperand($expression, $this->parameters);
@@ -577,7 +577,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail          = null;
         $expression    = new AndExpression($subexpression, $tail);
 
-        $subexpression->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $subexpression->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndExpression($expression, $this->parameters);
     }
@@ -610,7 +610,7 @@ final class InvalidSearchablesCollectorVisitorTest extends \Tuleap\Test\PHPUnit\
         $tail       = null;
         $expression = new AndOperand($operand, $tail);
 
-        $operand->shouldReceive('acceptComparisonVisitor')->with($this->collector, $this->parameters)->once();
+        $operand->shouldReceive('acceptTermVisitor')->with($this->collector, $this->parameters)->once();
 
         $this->collector->visitAndOperand($expression, $this->parameters);
     }

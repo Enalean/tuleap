@@ -25,11 +25,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 final class InvalidSearchablesCollectionBuilder implements IBuildInvalidSearchablesCollection
 {
     /**
-     * @var InvalidComparisonCollectorVisitor
+     * @var InvalidTermCollectorVisitor
      */
     private $invalid_comparison_collector;
 
-    public function __construct(InvalidComparisonCollectorVisitor $invalid_comparison_collector)
+    public function __construct(InvalidTermCollectorVisitor $invalid_comparison_collector)
     {
         $this->invalid_comparison_collector = $invalid_comparison_collector;
     }

@@ -19,18 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Comparison
+interface Comparison extends Term
 {
     public function getValueWrapper(): ValueWrapper;
 
     public function getSearchable(): Searchable;
-
-    /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param ComparisonVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
-     */
-    public function acceptComparisonVisitor(ComparisonVisitor $visitor, VisitorParameters $parameters);
 }

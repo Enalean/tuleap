@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class AndExpression implements Logical
 {
-    public function __construct(private readonly Comparison $expression, private readonly ?AndOperand $tail = null)
+    public function __construct(private readonly Term $expression, private readonly ?AndOperand $tail = null)
     {
     }
 
@@ -30,7 +30,7 @@ class AndExpression implements Logical
         return $visitor->visitAndExpression($this, $parameters);
     }
 
-    public function getExpression(): Comparison
+    public function getExpression(): Term
     {
         return $this->expression;
     }

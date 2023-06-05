@@ -49,7 +49,7 @@ final class DateTimeFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field->shouldReceive('getName')->andReturn('date field');
         $this->field->shouldReceive('isTimeDisplayed')->andReturn(true);
         $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
-        $this->comparison->shouldReceive('acceptComparisonVisitor')->andReturn('');
+        $this->comparison->shouldReceive('acceptTermVisitor')->andReturn('');
     }
 
     public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void
@@ -69,7 +69,7 @@ final class DateTimeFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $value_wrapper            = new SimpleValueWrapper('');
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
         $this->expectException(
-            \Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringComparisonException::class
+            \Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringTermException::class
         );
 
         $this->date_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);

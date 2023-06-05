@@ -175,7 +175,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $and_expression = new AndExpression($comparison);
@@ -190,7 +190,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_expression = new FromWhere("le_from", "le_where");
         $from_where_tail       = new FromWhere("le_from_tail", "le_where_tail");
         $comparison            = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_expression);
         $tail = \Mockery::mock(AndOperand::class);
         $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)
@@ -208,7 +208,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $from_where = new FromWhere("le_from", "le_where");
         $comparison = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where);
 
         $and_operand = new AndOperand($comparison);
@@ -223,7 +223,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $from_where_operand = new FromWhere("le_from", "le_where");
         $from_where_tail    = new FromWhere("le_from_tail", "le_where_tail");
         $comparison         = \Mockery::mock(EqualComparison::class);
-        $comparison->shouldReceive('acceptComparisonVisitor')->with($this->query_builder, $this->parameters)
+        $comparison->shouldReceive('acceptTermVisitor')->with($this->query_builder, $this->parameters)
             ->andReturn($from_where_operand);
         $tail = \Mockery::mock(AndOperand::class);
         $tail->shouldReceive('acceptLogicalVisitor')->with($this->query_builder, $this->parameters)

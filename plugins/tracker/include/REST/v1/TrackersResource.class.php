@@ -265,7 +265,7 @@ class TrackersResource extends AuthenticatedResource
      * <br><br>
      * Notes on the expert query parameter
      * <ol>
-     *  <li>You can use: AND, OR, BETWEEN(), NOW(), IN(), NOT IN(), MYSELF() parenthesis.
+     *  <li>You can use: AND, OR, WITH PARENT, BETWEEN(), NOW(), IN(), NOT IN(), MYSELF() parenthesis.
      *  <li>The basic form of a property is [field_shortname] = [string]
      *      <br>Example: sprint_name='s1' AND description='desc1'
      *  </li>
@@ -280,7 +280,7 @@ class TrackersResource extends AuthenticatedResource
      * @param int    $limit          Number of elements displayed per page {@from path}{@min 1}{@max 1000}
      * @param int    $offset         Position of the first element to display {@from path}{@min 0}
      * @param string $query          JSON object of search criteria properties {@from path}
-     * @param string $expert_query   Query with AND, OR, BETWEEN(), NOW(), IN(), NOT IN(), MYSELF(), parenthesis
+     * @param string $expert_query   Query with AND, OR, WITH PARENT, BETWEEN(), NOW(), IN(), NOT IN(), MYSELF(), parenthesis
      *                               and Text, Integer, Float, Date, List fields
      *                               <b>Does not work with query parameter</b> {@from path}
      * @param string $order          By default the artifacts are returned by Artifact ID ASC. Set this parameter to either ASC or DESC

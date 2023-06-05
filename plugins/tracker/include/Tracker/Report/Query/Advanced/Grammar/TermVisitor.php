@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
  * @template Parameters of VisitorParameters
  * @template ReturnType
  */
-interface ComparisonVisitor
+interface TermVisitor
 {
     /**
      * @param Parameters $parameters
@@ -87,4 +87,11 @@ interface ComparisonVisitor
      * @return ReturnType
      */
     public function visitNotInComparison(NotInComparison $comparison, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitWithParent(WithParent $condition, $parameters);
 }
