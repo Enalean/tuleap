@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\WebAuthn\Controllers;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,14 +31,14 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Source\DeleteCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
-use function Psl\Encoding\Base64\decode;
 
 final class DeleteSourceController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
-        private readonly PublicKeyCredentialSourceRepository $source_dao,
+        private readonly PublicKeyCredentialSourceRepository&DeleteCredentialSource $source_dao,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
         private readonly ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
@@ -54,7 +55,7 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
         }
 
         try {
-            $key_id = decode($request->getAttribute('key_id'));
+            $key_id = Base64UrlSafe::decode($request->getAttribute('key_id'));
         } catch (\Throwable) {
             return $this->error_response_builder->build(400, _('Credential id is not well formed'));
         }
@@ -67,8 +68,8 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
             return $this->response_factory->createResponse(200);
         }
 
-        // Delete source
+        $this->source_dao->deleteCredentialSource($key_id);
 
-        return $this->error_response_builder->build(501);
+        return $this->response_factory->createResponse(200);
     }
 }

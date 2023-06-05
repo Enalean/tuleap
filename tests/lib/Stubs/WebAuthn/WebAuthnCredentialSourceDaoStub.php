@@ -24,6 +24,7 @@ namespace Tuleap\Test\Stubs\WebAuthn;
 
 use Symfony\Component\Uid\Uuid;
 use Tuleap\WebAuthn\Source\ChangeCredentialSourceName;
+use Tuleap\WebAuthn\Source\DeleteCredentialSource;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
 use Tuleap\WebAuthn\Source\SaveCredentialSourceWithName;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
@@ -32,7 +33,7 @@ use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
-final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId
+final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource
 {
     /**
      * @var array<string, string>
@@ -138,5 +139,17 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
             ),
             $this->findAllForUserEntity(new PublicKeyCredentialUserEntity('', '', ''))
         );
+    }
+
+    public function deleteCredentialSource(string $public_key_credential_id): void
+    {
+        if ($this->source !== null && $this->source->getPublicKeyCredentialId() === $public_key_credential_id) {
+            $this->source = null;
+        } else {
+            $this->sources_id = array_filter(
+                $this->sources_id,
+                static fn($source_id) => $source_id !== $public_key_credential_id
+            );
+        }
     }
 }

@@ -99,6 +99,17 @@ final class WebAuthnCredentialSourceDaoTest extends TestCase
         self::assertSame('MyAwesomeKey', $sources[0]->getName());
     }
 
+    public function testDelete(): void
+    {
+        $source = $this->generateSource(self::USER_ID);
+        $this->dao->saveCredentialSource($source);
+
+        $this->dao->deleteCredentialSource($source->getPublicKeyCredentialId());
+
+        $retrieved = $this->dao->findOneByCredentialId($source->getPublicKeyCredentialId());
+        self::assertNull($retrieved);
+    }
+
     private function assertSourceEquals(PublicKeyCredentialSource $expected, PublicKeyCredentialSource $actual): void
     {
         self::assertSame($expected->getPublicKeyCredentialId(), $actual->getPublicKeyCredentialId());

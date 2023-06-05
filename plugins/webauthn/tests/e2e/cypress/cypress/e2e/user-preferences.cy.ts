@@ -34,12 +34,15 @@ describe("User preferences | WebAuthn", () => {
             cy.get("[data-test=name-modal-button]").click();
 
             cy.get("[data-test=check-button]").should("be.visible");
+            cy.get("[data-test=no-passkey]").should("not.exist");
 
             cy.get("[data-test=check-button]").click();
             cy.get("[data-test=webauthn-alert]").contains("Success!");
 
             cy.get("[data-test=remove-button]").click();
             cy.get("[data-test=remove-modal-button]").click();
+
+            cy.get("[data-test=no-passkey]").should("be.visible");
         });
     });
 });

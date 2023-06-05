@@ -34,6 +34,7 @@ use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
+use Tuleap\WebAuthn\Source\DeleteCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use function Psl\Encoding\Base64\encode;
 
@@ -82,7 +83,7 @@ final class DeleteSourceControllerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
-    public function testItReturns501(): void
+    public function testItReturns200(): void
     {
         $user_id      = 105;
         $user_manager = ProvideCurrentUserStub::buildWithUser(UserTestBuilder::buildWithId($user_id));
@@ -94,12 +95,12 @@ final class DeleteSourceControllerTest extends TestCase
             encode($source->getPublicKeyCredentialId())
         );
 
-        self::assertSame(501, $response->getStatusCode());
+        self::assertSame(200, $response->getStatusCode());
     }
 
     private function handle(
         ProvideCurrentUser $provide_current_user,
-        PublicKeyCredentialSourceRepository $source_dao,
+        PublicKeyCredentialSourceRepository&DeleteCredentialSource $source_dao,
         ?string $source_id = null,
     ): ResponseInterface {
         $response_factory      = HTTPFactoryBuilder::responseFactory();
