@@ -57,6 +57,7 @@ and
 
 term
     = Comparison
+        / ParenthesisTerm
         / LinkCondition
 
 Comparison
@@ -69,7 +70,6 @@ Comparison
         / BetweenComparison
         / InComparison
         / NotInComparison
-        / ParenthesisTerm
 
 LinkCondition
     = WithParent
@@ -83,7 +83,9 @@ WithoutParent = "without parent"i {
         return new WithoutParent();
     }
 
-ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
+ParenthesisTerm = "(" _ e:or_expression _ ")" {
+        return new Parenthesis($e);
+    }
 
 EqualComparison
     = searchable:Searchable _ "=" _ value_wrapper:SimpleExpr {

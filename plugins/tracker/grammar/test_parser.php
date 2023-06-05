@@ -25,13 +25,13 @@ include __DIR__ . "/../include/manual_autoload.php";
 $input = <<<EOS
 
 field1_name = "f1"
-and field1_description = "desc1"
+or (field1_description = "desc1"
 or field1_float != 2.5
-or field2_float > 5.4
+or field2_float > 5.4)
 or field2_int <= 2
-and field3_int between (1, 10)
+and (field3_int between (1, 10)
 AND field4_list in ("open", "closed", "blocked")
-AND field5_list not in ("blocked", "archive",)
+AND field5_list not in ("blocked", "archive",))
 AND @comment = ""
 AND WITH PARENT
 EOS;
