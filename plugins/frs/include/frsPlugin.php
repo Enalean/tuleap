@@ -45,7 +45,6 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
-use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
@@ -293,17 +292,6 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($milestone->getArtifact());
         if ($release_id) {
             $collector->addPane(new Tuleap\FRS\AgileDashboardPaneInfo($release_id));
-        }
-    }
-
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function artifactPartialUpdate(ArtifactPartialUpdate $event): void
-    {
-        $artifact   = $event->getArtifact();
-        $release_id = $this->getLinkRetriever()->getLinkedReleaseId($artifact);
-
-        if ($release_id !== null) {
-            $event->setNotUpdatable('Artifact linked to a FRS release cannot be moved');
         }
     }
 
