@@ -20,8 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
+//phpcs:ignoreFile
 class Tracker_EncryptionKeySettings_Presenter
 {
     public $action_url;
@@ -69,7 +71,13 @@ class Tracker_EncryptionKeySettings_Presenter
      */
     public function get_tracker_key()
     {
-        $tracker_key = new Tracker_Key(new TrackerPublicKeyDao(), new ValueDao(), $this->tracker_id);
+        $tracker_key = new Tracker_Key(
+            new TrackerPublicKeyDao(),
+            new ValueDao(
+                new Tracker_Artifact_Changeset_ValueDao()
+            ),
+            $this->tracker_id
+        );
 
         return $tracker_key->getKey();
     }

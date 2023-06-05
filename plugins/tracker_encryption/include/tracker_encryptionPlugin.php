@@ -23,7 +23,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
-use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -80,7 +80,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     {
         $logger      = BackendLogger::getDefaultLogger();
         $dao_pub_key = new TrackerPublicKeyDao();
-        $value_dao   = new ValueDao();
+        $value_dao   = new ValueDao(new Tracker_Artifact_Changeset_ValueDao());
         $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $params['tracker_id'], $params['key']);
         if ($params['key'] == "" || $tracker_key->isValidPublicKey($params['key'])) {
             $tracker_key->associateKeyToTracker();
@@ -108,7 +108,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function trackerEventDeleteTracker($params): void
     {
         $dao_pub_key = new TrackerPublicKeyDao();
-        $value_dao   = new ValueDao();
+        $value_dao   = new ValueDao(new Tracker_Artifact_Changeset_ValueDao());
         $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $params['tracker_id'], $params['key']);
         $tracker_key->deleteTrackerKey($params['tracker_id']);
     }
