@@ -17,11 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, post } from "@tuleap/tlp-fetch";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { get, put } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type { ArtifactResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    ArtifactResponseNoInstance,
+    JustCreatedArtifactResponse,
+    NewChangesetValue,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
 const headers = {
     "content-type": "application/json",
@@ -64,47 +68,13 @@ export function getArtifactWithCompleteTrackerStructure(
     }, errorHandler);
 }
 
-interface JustCreatedArtifact {
-    readonly id: number;
-}
-interface BaseFieldValue {
-    readonly field_id: number;
-}
-interface ValueOfFieldWithSingleSelection extends BaseFieldValue {
-    readonly value: unknown;
-}
-interface ListFieldValue {
-    readonly bind_value_ids: number[];
-}
-type FieldValue = ValueOfFieldWithSingleSelection | ListFieldValue;
-type FieldValuesMap = ReadonlyArray<FieldValue>;
-
-export function createArtifact(
-    tracker_id: number,
-    field_values: FieldValuesMap
-): Promise<JustCreatedArtifact> {
-    const body = JSON.stringify({
-        tracker: {
-            id: tracker_id,
-        },
-        values: field_values,
-    });
-
-    return post("/api/v1/artifacts", {
-        headers,
-        body,
-    }).then(async (response) => {
-        resetError();
-        const { id } = await response.json();
-        return { id };
-    }, errorHandler);
-}
+type FieldValuesMap = ReadonlyArray<NewChangesetValue>;
 
 interface FollowupComment {
     readonly body: string;
     readonly format: TextFieldFormat;
 }
-type JustEditedArtifact = JustCreatedArtifact;
+type JustEditedArtifact = JustCreatedArtifactResponse;
 
 export function editArtifact(
     artifact_id: number,

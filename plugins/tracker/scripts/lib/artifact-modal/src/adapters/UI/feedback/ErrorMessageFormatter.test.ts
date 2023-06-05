@@ -27,6 +27,8 @@ import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field
 import { UserHistoryRetrievalFault } from "../../../domain/fields/link-field/UserHistoryRetrievalFault";
 import { SearchArtifactsFault } from "../../../domain/fields/link-field/SearchArtifactsFault";
 import { CommentsRetrievalFault } from "../../../domain/comments/CommentsRetrievalFault";
+import { ArtifactCreationFault } from "../../../domain/submit/ArtifactCreationFault";
+import { FileUploadFault } from "../../../domain/fields/file-field/FileUploadFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -44,21 +46,20 @@ describe(`ErrorMessageFormatter`, () => {
         expect(format(fault)).toBe(String(fault));
     });
 
-    it.each([
-        ["LinkRetrievalFault", LinkRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
-        ["ParentRetrievalFault", ParentRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
-        [
-            "MatchingArtifactRetrievalFault",
-            MatchingArtifactRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
-        ],
-        [
-            "PossibleParentsRetrievalFault",
-            PossibleParentsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
-        ],
-        ["UserHistoryRetrievalFault", UserHistoryRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
-        ["SearchArtifactsFault", SearchArtifactsFault(Fault.fromMessage(FAULT_MESSAGE))],
-        ["CommentsRetrievalFault", CommentsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
-    ])(`translates a message for %s`, (fault_name, fault) => {
+    function* generateFaults(): Generator<[string, Fault]> {
+        const previous = Fault.fromMessage(FAULT_MESSAGE);
+        yield ["LinkRetrievalFault", LinkRetrievalFault(previous)];
+        yield ["ParentRetrievalFault", ParentRetrievalFault(previous)];
+        yield ["MatchingArtifactRetrievalFault", MatchingArtifactRetrievalFault(previous)];
+        yield ["PossibleParentsRetrievalFault", PossibleParentsRetrievalFault(previous)];
+        yield ["UserHistoryRetrievalFault", UserHistoryRetrievalFault(previous)];
+        yield ["SearchArtifactsFault", SearchArtifactsFault(previous)];
+        yield ["CommentsRetrievalFault", CommentsRetrievalFault(previous)];
+        yield ["ArtifactCreationFault", ArtifactCreationFault(previous)];
+        yield ["FileUploadFault", FileUploadFault(previous, "sempiternity_ringgiver.txt")];
+    }
+
+    it.each([...generateFaults()])(`translates a message for %s`, (fault_name, fault) => {
         const message = format(fault);
         expect(message).toContain(FAULT_MESSAGE);
         expect(message).not.toBe(FAULT_MESSAGE);

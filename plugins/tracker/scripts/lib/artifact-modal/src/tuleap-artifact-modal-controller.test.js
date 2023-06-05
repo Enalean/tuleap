@@ -31,12 +31,12 @@ import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
+import { setCatalog } from "./gettext-catalog";
 
 const PROJECT_ID = 133;
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
-        $q,
         $controller,
         controller_params,
         ArtifactModalController,
@@ -44,23 +44,22 @@ describe("TuleapArtifactModalController", () => {
         TuleapArtifactModalLoading,
         mockCallback,
         isInCreationMode,
-        createArtifact,
         editArtifact,
         editArtifactWithConcurrencyChecking,
         getAllFileFields,
         validateValues;
 
     beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid });
+
         angular.mock.module(artifact_modal_module, function () {});
 
         angular.mock.inject(function (
             _$controller_,
             $rootScope,
-            _$q_,
             _$timeout_,
             _TuleapArtifactModalLoading_
         ) {
-            $q = _$q_;
             TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
 
             tlp_modal = {
@@ -115,7 +114,6 @@ describe("TuleapArtifactModalController", () => {
         spy_create_artifact_feature_flag.mockReturnValue(okAsync("1"));
 
         isInCreationMode = jest.spyOn(modal_create_mode_state, "isInCreationMode");
-        createArtifact = jest.spyOn(rest_service, "createArtifact");
         editArtifact = jest.spyOn(rest_service, "editArtifact");
         editArtifactWithConcurrencyChecking = jest.spyOn(
             rest_service,
@@ -185,17 +183,11 @@ describe("TuleapArtifactModalController", () => {
             TuleapArtifactModalLoading.loading = false;
         });
 
-        function mockSuccessfulUpload() {
-            jest.spyOn(ArtifactModalController, "uploadAllFileFields").mockReturnValue(
-                $q.when(undefined)
-            );
-        }
-
-        it(`when submit is disabled, it does nothing`, () => {
+        it(`when submit is disabled, it does nothing`, async () => {
+            const createArtifact = jest.spyOn(fetch_result, "postJSON");
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.submit_disabling_reason = Option.fromValue("Disabled");
-            ArtifactModalController.submit();
-            $scope.$apply();
+            await ArtifactModalController.submit();
 
             expect(createArtifact).not.toHaveBeenCalled();
             expect(editArtifact).not.toHaveBeenCalled();
@@ -203,12 +195,14 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it(`and no artifact_id,
-            when I submit the modal to Tuleap,
+            when I submit the modal,
             then the field values will be validated,
-            the artifact will be created ,
+            the artifact will be created,
             the modal will be closed
-            and the callback will be called`, () => {
-            createArtifact.mockReturnValue($q.resolve({ id: 3042 }));
+            and the callback will be called`, async () => {
+            const createArtifact = jest
+                .spyOn(fetch_result, "postJSON")
+                .mockReturnValue(okAsync({ id: 3042 }));
             isInCreationMode.mockReturnValue(true);
             controller_params.modal_model.tracker_id = 39;
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -219,11 +213,10 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.values = values;
             const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.new_followup_comment = followup_comment;
-            mockSuccessfulUpload();
 
-            ArtifactModalController.submit();
-            expect(TuleapArtifactModalLoading.loading).toBeTruthy();
-            $scope.$apply();
+            const promise = ArtifactModalController.submit();
+            expect(TuleapArtifactModalLoading.loading).toBe(true);
+            await promise;
 
             expect(validateValues).toHaveBeenCalledWith(
                 values,
@@ -231,20 +224,22 @@ describe("TuleapArtifactModalController", () => {
                 followup_comment,
                 expect.any(Object)
             );
-            expect(createArtifact).toHaveBeenCalledWith(39, values);
+            expect(createArtifact).toHaveBeenCalled();
             expect(editArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalled();
+            $scope.$apply();
+            expect(TuleapArtifactModalLoading.loading).toBe(false);
         });
 
         it(`and an artifact_id to edit,
-            when I submit the modal to Tuleap,
+            when I submit the modal,
             then the field values will be validated,
             the artifact will be edited,
             the modal will be closed
-            and the callback will be called`, () => {
-            editArtifactWithConcurrencyChecking.mockReturnValue($q.when({ id: 8155 }));
+            and the callback will be called`, async () => {
+            const createArtifact = jest.spyOn(fetch_result, "postJSON");
+            editArtifactWithConcurrencyChecking.mockResolvedValue({ id: 8155 });
             isInCreationMode.mockReturnValue(false);
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.last_changeset_id = 78;
@@ -259,11 +254,10 @@ describe("TuleapArtifactModalController", () => {
             const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.values = values;
             ArtifactModalController.new_followup_comment = followup_comment;
-            mockSuccessfulUpload();
 
-            ArtifactModalController.submit();
-            expect(TuleapArtifactModalLoading.loading).toBeTruthy();
-            $scope.$apply();
+            const promise = ArtifactModalController.submit();
+            expect(TuleapArtifactModalLoading.loading).toBe(true);
+            await promise;
 
             expect(validateValues).toHaveBeenCalledWith(
                 values,
@@ -280,29 +274,31 @@ describe("TuleapArtifactModalController", () => {
             );
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalledWith(8155);
+            $scope.$apply();
+            expect(TuleapArtifactModalLoading.loading).toBe(false);
         });
 
-        it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
+        it(`when I submit the modal and the server responds with an error,
+            then the modal will not be closed and the callback won't be called`, async () => {
             isInCreationMode.mockReturnValue(false);
-            editArtifact.mockReturnValue($q.reject());
+            editArtifact.mockRejectedValue();
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.values = [];
             ArtifactModalController.confirm_action_to_edit = true;
-            mockSuccessfulUpload();
 
-            ArtifactModalController.submit();
-            $scope.$apply();
+            await ArtifactModalController.submit();
 
             expect(tlp_modal.hide).not.toHaveBeenCalled();
             expect(mockCallback).not.toHaveBeenCalled();
-            expect(TuleapArtifactModalLoading.loading).toBeFalsy();
+            $scope.$apply();
+            expect(TuleapArtifactModalLoading.loading).toBe(false);
         });
 
-        it("and given user force to edit artifact in concurrency mode, then the modal will be closed, and the artifact will be edited", () => {
-            const edit_request = $q.defer();
-            editArtifact.mockReturnValue(edit_request.promise);
+        it(`and given user forced to edit the artifact despite the concurrent edit warning,
+            then the modal will be closed, and the artifact will be edited`, async () => {
+            const createArtifact = jest.spyOn(fetch_result, "postJSON");
+            editArtifact.mockResolvedValue({ id: 8155 });
             isInCreationMode.mockReturnValue(false);
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.last_changeset_id = 78;
@@ -317,12 +313,10 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.values = values;
             ArtifactModalController.new_followup_comment = followup_comment;
             ArtifactModalController.confirm_action_to_edit = true;
-            mockSuccessfulUpload();
 
-            ArtifactModalController.submit();
-            expect(TuleapArtifactModalLoading.loading).toBeTruthy();
-            edit_request.resolve({ id: 8155 });
-            $scope.$apply();
+            const promise = ArtifactModalController.submit();
+            expect(TuleapArtifactModalLoading.loading).toBe(true);
+            await promise;
 
             expect(validateValues).toHaveBeenCalledWith(
                 values,
@@ -333,8 +327,9 @@ describe("TuleapArtifactModalController", () => {
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
-            expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalledWith(8155);
+            $scope.$apply();
+            expect(TuleapArtifactModalLoading.loading).toBe(false);
         });
     });
 

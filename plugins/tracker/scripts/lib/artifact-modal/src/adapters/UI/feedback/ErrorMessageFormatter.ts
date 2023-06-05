@@ -20,7 +20,9 @@
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
 import {
+    getArtifactCreationErrorMessage,
     getCommentsRetrievalErrorMessage,
+    getFileUploadErrorMessage,
     getLinkFieldFetchErrorMessage,
     getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
@@ -47,6 +49,10 @@ const isSearchArtifacts = (fault: Fault): boolean =>
     "isSearchArtifacts" in fault && fault.isSearchArtifacts() === true;
 const isCommentsRetrieval = (fault: Fault): boolean =>
     "isCommentsRetrieval" in fault && fault.isCommentsRetrieval() === true;
+const isArtifactCreationFault = (fault: Fault): boolean =>
+    "isArtifactCreationFault" in fault && fault.isArtifactCreationFault() === true;
+const isFileUploadFault = (fault: Fault): boolean =>
+    "isFileUpload" in fault && fault.isFileUpload() === true;
 
 export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
     format: (fault): string => {
@@ -70,6 +76,15 @@ export const ErrorMessageFormatter = (): ErrorMessageFormatter => ({
         }
         if (isCommentsRetrieval(fault)) {
             return sprintf(getCommentsRetrievalErrorMessage(), fault);
+        }
+        if (isArtifactCreationFault(fault)) {
+            return sprintf(getArtifactCreationErrorMessage(), fault);
+        }
+        if (isFileUploadFault(fault)) {
+            return sprintf(getFileUploadErrorMessage(), {
+                file_name: fault.getFileName(),
+                error: fault,
+            });
         }
         return String(fault);
     },

@@ -22,13 +22,8 @@ import { Option } from "@tuleap/option";
 import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
-import {
-    createArtifact,
-    editArtifact,
-    editArtifactWithConcurrencyChecking,
-} from "./rest/rest-service";
+import { editArtifact, editArtifactWithConcurrencyChecking } from "./rest/rest-service";
 import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-detector";
-import { sprintf } from "sprintf-js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./domain/parent/ParentFeedbackController";
@@ -56,7 +51,7 @@ import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/Possib
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
-import { getFileUploadErrorMessage } from "./gettext-catalog";
+import { getSubmitDisabledReason } from "./gettext-catalog";
 import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesCollector";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
@@ -68,8 +63,9 @@ import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/
 import { FormattedTextController } from "./domain/common/FormattedTextController";
 import { ParentTrackerIdentifierProxy } from "./adapters/REST/fields/link-field/ParentTrackerIdentifierProxy";
 import { ArtifactCreatorController } from "./domain/fields/link-field/creation/ArtifactCreatorController";
-
-const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
+import { WillNotifyFault } from "./domain/WillNotifyFault";
+import { WillDisableSubmit } from "./domain/submit/WillDisableSubmit";
+import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
 
 export default ArtifactModalController;
 
@@ -256,7 +252,6 @@ function ArtifactModalController(
         showHiddenFieldsets,
         confirm_action_to_edit,
         getButtonText,
-        uploadAllFileFields,
     });
 
     function getButtonText() {
@@ -317,34 +312,25 @@ function ArtifactModalController(
         }
     }
 
-    function uploadAllFileFields() {
-        return $q(function (resolve, reject) {
-            file_uploader.uploadAllFileFields(getAllFileFields(Object.values(self.values))).match(
-                () => resolve(undefined),
-                (fault) => {
-                    let error_message = String(fault);
-                    if (isFileUploadFault(fault)) {
-                        error_message = sprintf(getFileUploadErrorMessage(), {
-                            file_name: fault.getFileName(),
-                            error: String(fault),
-                        });
-                    }
-                    setError(error_message);
-                    reject(Error(error_message));
-                }
-            );
-        });
-    }
-
     function submit() {
         if (self.isSubmitDisabled() || TuleapArtifactModalLoading.loading) {
-            return $q.resolve();
+            return Promise.resolve(undefined);
         }
+        event_dispatcher.dispatch(WillDisableSubmit(getSubmitDisabledReason()));
         TuleapArtifactModalLoading.loading = true;
+        let is_error_already_handled = false;
 
-        return self
-            .uploadAllFileFields()
-            .then(function () {
+        return file_uploader
+            .uploadAllFileFields(getAllFileFields(Object.values(self.values)))
+            .match(
+                () => Promise.resolve(undefined),
+                (fault) => {
+                    event_dispatcher.dispatch(WillNotifyFault(fault));
+                    is_error_already_handled = true;
+                    return Promise.reject();
+                }
+            )
+            .then(() => {
                 const validated_values = validateArtifactFieldsValues(
                     self.values,
                     isInCreationMode(),
@@ -352,42 +338,49 @@ function ArtifactModalController(
                     self.link_field_value_formatter
                 );
 
-                let promise;
                 if (isInCreationMode()) {
-                    promise = createArtifact(modal_model.tracker_id, validated_values);
-                } else {
-                    if (self.confirm_action_to_edit) {
-                        promise = editArtifact(
-                            modal_model.artifact_id,
-                            validated_values,
-                            self.new_followup_comment
+                    return api_client
+                        .createArtifact(current_tracker_identifier, validated_values)
+                        .match(
+                            (new_artifact) => Promise.resolve(new_artifact),
+                            (fault) => {
+                                event_dispatcher.dispatch(WillNotifyFault(fault));
+                                is_error_already_handled = true;
+                                return Promise.reject();
+                            }
                         );
-                    } else {
-                        promise = editArtifactWithConcurrencyChecking(
-                            modal_model.artifact_id,
-                            validated_values,
-                            self.new_followup_comment,
-                            modal_model.etag,
-                            modal_model.last_modified
-                        );
-                    }
                 }
-
-                return $q.when(promise);
+                if (self.confirm_action_to_edit) {
+                    return editArtifact(
+                        modal_model.artifact_id,
+                        validated_values,
+                        self.new_followup_comment
+                    );
+                }
+                return editArtifactWithConcurrencyChecking(
+                    modal_model.artifact_id,
+                    validated_values,
+                    self.new_followup_comment,
+                    modal_model.etag,
+                    modal_model.last_modified
+                );
             })
             .then(function (new_artifact) {
                 modal_instance.tlp_modal.hide();
-
                 return displayItemCallback(new_artifact.id);
             })
             .catch(async (e) => {
-                if (hasError()) {
+                if (is_error_already_handled || hasError()) {
                     return;
                 }
                 await errorHandler(e);
             })
             .finally(function () {
-                TuleapArtifactModalLoading.loading = false;
+                // Wrap into $q so that AngularJS notices something happened
+                $q.when().then(() => {
+                    TuleapArtifactModalLoading.loading = false;
+                    event_dispatcher.dispatch(WillEnableSubmit());
+                });
             });
     }
 

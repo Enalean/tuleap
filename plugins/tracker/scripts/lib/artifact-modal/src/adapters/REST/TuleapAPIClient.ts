@@ -22,7 +22,9 @@ import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { Option } from "@tuleap/option";
 import type {
+    ArtifactCreationPayload,
     ChangesetWithCommentRepresentation,
+    JustCreatedArtifactResponse,
     PostFileResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
@@ -61,6 +63,9 @@ import type { RetrieveFeatureFlag } from "../../domain/RetrieveFeatureFlag";
 import type { RetrieveProjects } from "../../domain/fields/link-field/creation/RetrieveProjects";
 import type { Project } from "../../domain/Project";
 import { ProjectProxy } from "./ProjectProxy";
+import type { CreateArtifact } from "../../domain/submit/CreateArtifact";
+import type { ArtifactCreated } from "../../domain/ArtifactCreated";
+import { ArtifactCreationFault } from "../../domain/submit/ArtifactCreationFault";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -76,7 +81,8 @@ type TuleapAPIClientType = RetrieveParent &
     SearchArtifacts &
     RetrieveComments &
     RetrieveFeatureFlag &
-    RetrieveProjects;
+    RetrieveProjects &
+    CreateArtifact;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -201,5 +207,15 @@ export const TuleapAPIClient = (
         return getAllJSON<readonly ProjectResponse[], ProjectResponse>(uri`/api/projects`, {
             params: { limit: 50 },
         }).map((projects) => projects.map(ProjectProxy.fromAPIProject));
+    },
+
+    createArtifact(tracker_identifier, changeset_values): ResultAsync<ArtifactCreated, Fault> {
+        const payload: ArtifactCreationPayload = {
+            tracker: { id: tracker_identifier.id },
+            values: changeset_values,
+        };
+        return postJSON<JustCreatedArtifactResponse>(uri`/api/v1/artifacts`, payload).mapErr(
+            ArtifactCreationFault
+        );
     },
 });

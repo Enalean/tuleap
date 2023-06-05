@@ -99,40 +99,6 @@ describe("rest-service", () => {
         });
     });
 
-    describe("createArtifact() -", () => {
-        it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved with the new artifact's id", async () => {
-            const return_json = {
-                id: 286,
-                tracker: {
-                    id: 3,
-                    label: "Enkidu slanderfully",
-                },
-            };
-            const field_values = [
-                { field_id: 38, value: "fingerroot" },
-                { field_id: 140, bind_value_ids: [253] },
-            ];
-            const tlpPostSpy = jest.spyOn(tlp_fetch, "post");
-            mockFetchSuccess(tlpPostSpy, { return_json });
-
-            const { id } = await RestService.createArtifact(3, field_values);
-
-            expect(id).toBe(286);
-
-            expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifacts", {
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    tracker: {
-                        id: 3,
-                    },
-                    values: field_values,
-                }),
-            });
-        });
-    });
-
     describe("getUserPreference() -", () => {
         it("Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {

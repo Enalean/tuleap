@@ -21,9 +21,9 @@ interface BaseNewChangesetValue {
     readonly field_id: number;
 }
 
-interface UnknownNewChangesetValue extends BaseNewChangesetValue {
-    readonly value: never;
-}
+type ValueOfFieldWithSingleSelection = BaseNewChangesetValue & {
+    readonly value: unknown;
+};
 
 export type ArtifactLinkNewChangesetLink = {
     readonly id: number;
@@ -40,6 +40,15 @@ export type ListNewChangesetValue = BaseNewChangesetValue & {
 };
 
 export type NewChangesetValue =
-    | UnknownNewChangesetValue
+    | ValueOfFieldWithSingleSelection
     | ArtifactLinkNewChangesetValue
     | ListNewChangesetValue;
+
+export type ArtifactCreationPayload = {
+    tracker: { id: number };
+    values: NewChangesetValue[];
+};
+
+export type JustCreatedArtifactResponse = {
+    readonly id: number;
+};

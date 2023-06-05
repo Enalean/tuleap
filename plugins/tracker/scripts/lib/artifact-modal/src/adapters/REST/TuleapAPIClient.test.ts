@@ -20,10 +20,10 @@
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
+import type { GetAllOptions } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
-import type { GetAllOptions } from "@tuleap/fetch-result";
-import { ARTIFACT_TYPE } from "@tuleap/plugin-tracker-constants";
+import { ARTIFACT_TYPE, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { Option } from "@tuleap/option";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
@@ -36,6 +36,7 @@ import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableAr
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
+import { FORWARD_DIRECTION } from "../../domain/fields/link-field/LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
@@ -45,17 +46,17 @@ import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { Project } from "../../domain/Project";
+import type { ArtifactCreated } from "../../domain/ArtifactCreated";
+import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
+import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
+import type { ArtifactCreationPayload } from "@tuleap/plugin-tracker-rest-api-types";
 
-const FORWARD_DIRECTION = "forward";
-const IS_CHILD_SHORTNAME = "_is_child";
 const ARTIFACT_ID = 90;
 const ARTIFACT_2_ID = 10;
 const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
-const COLOR = "deep-blue";
-const TRACKER_ID = 36;
 const PROJECT = { id: 179, label: "Guinea Pig", icon: "🐹" };
 
 describe(`TuleapAPIClient`, () => {
@@ -86,6 +87,8 @@ describe(`TuleapAPIClient`, () => {
     });
 
     describe(`getMatchingArtifact()`, () => {
+        const COLOR = "deep-blue";
+
         const getMatching = (): ResultAsync<LinkableArtifact, Fault> => {
             const client = TuleapAPIClient(current_artifact_option);
             return client.getMatchingArtifact(LinkableNumberStub.withId(ARTIFACT_ID));
@@ -192,22 +195,24 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_artifact.link_type).toBe(link_type);
             expect(second_returned_artifact.identifier.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(second_returned_artifact.link_type).toBe(link_type);
-            expect(getAllSpy.mock.calls[0]).toEqual([
-                uri`/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`,
-                {
-                    params: {
-                        limit: 50,
-                        offset: 0,
-                        direction: FORWARD_DIRECTION,
-                        nature: IS_CHILD_SHORTNAME,
-                    },
-                    getCollectionCallback: expect.any(Function),
+            const call_uri = getAllSpy.mock.calls[0][0];
+            const options = getAllSpy.mock.calls[0][1];
+            expect(call_uri).toStrictEqual(uri`/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`);
+            expect(options).toStrictEqual({
+                params: {
+                    limit: 50,
+                    offset: 0,
+                    direction: FORWARD_DIRECTION,
+                    nature: IS_CHILD_LINK_TYPE,
                 },
-            ]);
+                getCollectionCallback: expect.any(Function),
+            });
         });
     });
 
     describe(`getPossibleParents()`, () => {
+        const TRACKER_ID = 36;
+
         const getPossibleParents = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
             const client = TuleapAPIClient(current_artifact_option);
             return client.getPossibleParents(CurrentTrackerIdentifierStub.withId(TRACKER_ID));
@@ -450,6 +455,42 @@ describe(`TuleapAPIClient`, () => {
             expect(second_returned_project.id).toBe(SECOND_PROJECT_ID);
             expect(second_returned_project.label).toBe(SECOND_PROJECT_LABEL);
             expect(getAllJSON).toHaveBeenCalledWith(uri`/api/projects`, { params: { limit: 50 } });
+        });
+    });
+
+    describe(`createArtifact()`, () => {
+        const TRACKER_ID = 22,
+            FIELD_ID = 318;
+
+        const createArtifact = (): ResultAsync<ArtifactCreated, Fault> => {
+            const changeset_values: ChangesetValues = [
+                { field_id: FIELD_ID, value: "genetic doctrinarianism" },
+            ];
+
+            const client = TuleapAPIClient(current_artifact_option);
+            return client.createArtifact(
+                TrackerIdentifierStub.withId(TRACKER_ID),
+                changeset_values
+            );
+        };
+
+        it(`will create a new artifact`, async () => {
+            const new_artifact_id = 263;
+            const postJSON = jest
+                .spyOn(fetch_result, "postJSON")
+                .mockReturnValue(okAsync({ id: new_artifact_id }));
+
+            const result = await createArtifact();
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+
+            expect(result.value.id).toBe(new_artifact_id);
+            const call_uri = postJSON.mock.calls[0][0];
+            const body = postJSON.mock.calls[0][1] as ArtifactCreationPayload;
+            expect(call_uri).toStrictEqual(uri`/api/v1/artifacts`);
+            expect(body.tracker.id).toBe(TRACKER_ID);
+            expect(body.values.map((changeset) => changeset.field_id)).toContain(FIELD_ID);
         });
     });
 });

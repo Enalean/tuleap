@@ -24,6 +24,9 @@ msgstr ""
 msgid "An image in a text field or in a new comment is being uploaded"
 msgstr ""
 
+msgid "Artifact is saving"
+msgstr ""
+
 msgid "Auto-compute"
 msgstr ""
 
@@ -56,6 +59,9 @@ msgstr ""
 
 msgid "Empty"
 msgstr "Vazio"
+
+msgid "Error while creating the new artifact: %s"
+msgstr ""
 
 msgid "Error while retrieving recently viewed artifacts: %s"
 msgstr ""
