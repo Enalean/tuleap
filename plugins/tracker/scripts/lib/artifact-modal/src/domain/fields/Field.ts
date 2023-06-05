@@ -19,8 +19,12 @@
 
 import type { FieldTypeIdentifier, Permission } from "@tuleap/plugin-tracker-constants";
 
-export interface Field {
+export type LabeledField = {
     readonly field_id: number;
+    readonly label: string;
+};
+
+export interface Field extends LabeledField {
     readonly type: FieldTypeIdentifier;
     readonly disabled: boolean;
     readonly permissions: ReadonlyArray<Permission>;

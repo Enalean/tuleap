@@ -18,7 +18,6 @@
  */
 
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
-import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { LinkTypesCollection } from "../../../../domain/fields/link-field/LinkTypesCollection";
 import { getChildTypeLabel, getParentTypeLabel } from "../../../../gettext-catalog";
 
@@ -34,10 +33,10 @@ export interface AllowedLinkTypesPresenterContainer {
 
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
-        parent_verifier: VerifyHasParentLink,
+        has_parent_link: boolean,
         allowed_types: LinkTypesCollection
     ): CollectionOfAllowedLinksTypesPresenters => ({
-        is_parent_type_disabled: parent_verifier.hasParentLink(),
+        is_parent_type_disabled: has_parent_link,
         types: allowed_types.getAll().map((pair) => {
             if (LinkType.isReverseChild(pair.reverse_type)) {
                 return {

@@ -30,17 +30,16 @@ import {
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
     getLinkSelectorSearchPlaceholderText,
+    getSubmitDisabledForLinksReason,
 } from "../../../../gettext-catalog";
-import type { LinkFieldControllerType } from "./LinkFieldController";
-import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
+import type { LinkFieldController } from "../../../../domain/fields/link-field/LinkFieldController";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
-import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import type { LabeledField } from "../../../../domain/fields/Field";
 import {
     getLinkableArtifact,
     getLinkableArtifactTemplate,
 } from "./dropdown/LinkableArtifactTemplate";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
-import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
@@ -49,16 +48,18 @@ import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactL
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import "./creation/ArtifactCreatorElement";
 import type { ArtifactCreatorController } from "../../../../domain/fields/link-field/creation/ArtifactCreatorController";
+import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 
 export interface LinkField {
-    readonly controller: LinkFieldControllerType;
+    readonly controller: LinkFieldController;
     readonly autocompleter: ArtifactLinkSelectorAutoCompleterType;
     readonly creatorController: ArtifactCreatorController;
     current_artifact_reference: Option<ArtifactCrossReference>;
-    field_presenter: LinkFieldPresenter;
-    linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
+    field_presenter: LabeledField;
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
-    new_links_presenter: NewLinkCollectionPresenter;
+    new_links_presenter: ReadonlyArray<NewLink>;
     current_link_type: LinkType;
     matching_artifact_section: GroupCollection;
     recently_viewed_section: GroupCollection;
@@ -69,14 +70,17 @@ type InternalLinkField = LinkField & {
     content(): HTMLElement;
     link_selector: Option<Lazybox>;
     is_artifact_creator_shown: boolean;
+    is_loading_links: boolean;
+    linked_artifacts: ReadonlyArray<LinkedArtifact>;
+    linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter>;
 };
 export type HostElement = InternalLinkField & HTMLElement;
 
-export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
+export const getEmptyStateIfNeeded = (host: InternalLinkField): UpdateFunction<LinkField> => {
     if (
-        host.linked_artifacts_presenter.linked_artifacts.length > 0 ||
+        host.linked_artifact_presenters.length > 0 ||
         host.new_links_presenter.length > 0 ||
-        !host.linked_artifacts_presenter.has_loaded_content
+        host.is_loading_links
     ) {
         return html``;
     }
@@ -86,10 +90,8 @@ export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField
     </div>`;
 };
 
-export const getSkeletonIfNeeded = (
-    presenter: LinkedArtifactCollectionPresenter
-): UpdateFunction<LinkField> => {
-    if (!presenter.is_loading) {
+export const getSkeletonIfNeeded = (host: InternalLinkField): UpdateFunction<LinkField> => {
+    if (!host.is_loading_links) {
         return html``;
     }
     return html`<div
@@ -110,25 +112,39 @@ export const getSkeletonIfNeeded = (
 
 export const setNewLinks = (
     host: LinkField,
-    presenter: NewLinkCollectionPresenter | undefined
-): NewLinkCollectionPresenter => {
-    if (!presenter) {
-        return NewLinkCollectionPresenter.buildEmpty();
+    new_value: ReadonlyArray<NewLink> | undefined
+): ReadonlyArray<NewLink> => {
+    if (!new_value) {
+        return [];
     }
-    host.allowed_link_types = host.controller.displayAllowedTypes();
-    return presenter;
+    host.allowed_link_types =
+        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            host.controller.hasParentLink(),
+            host.controller.getAllowedLinkTypes()
+        );
+    return new_value;
 };
 
 export const setLinkedArtifacts = (
-    host: LinkField,
-    presenter: LinkedArtifactCollectionPresenter | undefined
-): LinkedArtifactCollectionPresenter => {
-    if (!presenter) {
-        return LinkedArtifactCollectionPresenter.buildLoadingState();
+    host: InternalLinkField,
+    new_value: ReadonlyArray<LinkedArtifact> | undefined
+): ReadonlyArray<LinkedArtifact> => {
+    if (!new_value) {
+        return [];
     }
 
-    host.allowed_link_types = host.controller.displayAllowedTypes();
-    return presenter;
+    host.linked_artifact_presenters = new_value.map((artifact) =>
+        LinkedArtifactPresenter.fromLinkedArtifact(
+            artifact,
+            host.controller.isMarkedForRemoval(artifact)
+        )
+    );
+    host.allowed_link_types =
+        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            host.controller.hasParentLink(),
+            host.controller.getAllowedLinkTypes()
+        );
+    return new_value;
 };
 
 export const setAllowedTypes = (
@@ -267,19 +283,28 @@ export const LinkField = define<InternalLinkField>({
         set: (host, new_value) => new_value ?? Option.nothing(),
     },
     controller: {
-        set(host, controller: LinkFieldControllerType) {
+        set(host, controller: LinkFieldController) {
             host.current_artifact_reference = controller.getCurrentArtifactReference();
-            host.field_presenter = controller.displayField();
-            host.allowed_link_types = controller.displayAllowedTypes();
-            controller.displayLinkedArtifacts().then((artifacts) => {
-                host.linked_artifacts_presenter = artifacts;
+            host.field_presenter = controller.getLabeledField();
+            host.allowed_link_types =
+                CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                    controller.hasParentLink(),
+                    controller.getAllowedLinkTypes()
+                );
+            controller.getLinkedArtifacts(getSubmitDisabledForLinksReason()).then((artifacts) => {
+                host.linked_artifacts = artifacts;
+                host.is_loading_links = false;
             });
             controller.getFeatureFlag().then((is_feature_flag_enabled) => {
                 createLazyBox(host, is_feature_flag_enabled);
             });
             controller.getPossibleParents().then((parents) => {
                 host.current_link_type = controller.getCurrentLinkType(parents.length > 0);
-                host.allowed_link_types = controller.displayAllowedTypes();
+                host.allowed_link_types =
+                    CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                        controller.hasParentLink(),
+                        controller.getAllowedLinkTypes()
+                    );
             });
             return controller;
         },
@@ -289,7 +314,9 @@ export const LinkField = define<InternalLinkField>({
     current_artifact_reference: { set: (host, new_value) => new_value ?? Option.nothing() },
     field_presenter: undefined,
     allowed_link_types: { set: setAllowedTypes },
-    linked_artifacts_presenter: { set: setLinkedArtifacts },
+    linked_artifacts: { set: setLinkedArtifacts },
+    linked_artifact_presenters: { set: (host, new_value) => new_value ?? [] },
+    is_loading_links: true,
     new_links_presenter: { set: setNewLinks },
     current_link_type: current_link_type_descriptor,
     matching_artifact_section: dropdown_section_descriptor,
@@ -301,11 +328,9 @@ export const LinkField = define<InternalLinkField>({
         <label class="tlp-label">${host.field_presenter.label}</label>
         ${getLinkFieldCanOnlyHaveOneParentNote(host.current_artifact_reference)}
         <div class="link-field-rows-wrapper">
-            ${host.linked_artifacts_presenter.linked_artifacts.map((link) =>
-                getLinkedArtifactTemplate(host, link)
-            )}
+            ${host.linked_artifact_presenters.map((link) => getLinkedArtifactTemplate(host, link))}
             ${host.new_links_presenter.map((link) => getNewLinkTemplate(host, link))}
-            ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}${getEmptyStateIfNeeded(host)}
+            ${getSkeletonIfNeeded(host)}${getEmptyStateIfNeeded(host)}
         </div>
         <div class="link-field-add-link-section" data-test="link-field-add-link-section">
             ${getFooterTemplate(host)}

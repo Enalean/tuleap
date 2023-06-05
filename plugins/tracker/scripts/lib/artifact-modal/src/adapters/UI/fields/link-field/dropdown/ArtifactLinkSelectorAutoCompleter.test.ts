@@ -38,7 +38,7 @@ import { UserIdentifierStub } from "../../../../../../tests/stubs/UserIdentifier
 import { SearchArtifactsStub } from "../../../../../../tests/stubs/SearchArtifactsStub";
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
-import type { LinkFieldControllerType } from "../LinkFieldController";
+import type { LinkFieldController } from "../../../../../domain/fields/link-field/LinkFieldController";
 
 const FIRST_ARTIFACT_ID = 1621;
 const SECOND_ARTIFACT_ID = 15;
@@ -102,8 +102,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             possible_parents_section: initial_dropdown_content,
             search_results_section: initial_dropdown_content,
             controller: {
-                getPossibleParents: () => get_parents_promise,
-            } as unknown as LinkFieldControllerType,
+                getPossibleParents: (): PromiseLike<ReadonlyArray<LinkableArtifact>> =>
+                    get_parents_promise,
+            } as LinkFieldController,
         } as LinkField;
     });
 

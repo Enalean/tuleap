@@ -33,10 +33,7 @@ import {
     setLinkedArtifacts,
     setNewLinks,
 } from "./LinkField";
-import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
@@ -45,8 +42,7 @@ import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LazyboxStub } from "../../../../../tests/stubs/LazyboxStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import type { LinkFieldControllerType } from "./LinkFieldController";
+import type { LinkFieldController } from "../../../../domain/fields/link-field/LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { MatchingArtifactsGroup } from "./dropdown/MatchingArtifactsGroup";
 import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGroup";
@@ -55,7 +51,7 @@ import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import type { TypeChangedEvent } from "./LinkTypeSelectorElement";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
-import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
+import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -63,30 +59,30 @@ describe("LinkField", () => {
     });
 
     describe("Display", () => {
-        let target: ShadowRoot, current_artifact_reference: Option<ArtifactCrossReference>;
-
-        function getHost(): HostElement {
-            return {
-                field_presenter: LinkFieldPresenter.fromField(
-                    ArtifactLinkFieldInfoStub.withDefaults()
-                ),
-                current_artifact_reference,
-            } as HostElement;
-        }
+        let target: ShadowRoot,
+            current_artifact_reference: Option<ArtifactCrossReference>,
+            is_loading_links: boolean;
 
         beforeEach(() => {
             current_artifact_reference = Option.nothing();
+            is_loading_links = false;
             target = document.implementation
                 .createHTMLDocument()
                 .createElement("div") as unknown as ShadowRoot;
         });
 
-        it("should render a skeleton row when the links are being loaded", () => {
-            const render = getSkeletonIfNeeded(
-                LinkedArtifactCollectionPresenter.buildLoadingState()
-            );
+        const getHost = (): HostElement =>
+            ({
+                field_presenter: LabeledFieldStub.withDefaults(),
+                current_artifact_reference,
+                is_loading_links,
+            } as HostElement);
 
-            render(getHost(), target);
+        it("should render a skeleton row when the links are being loaded", () => {
+            is_loading_links = true;
+            const host = getHost();
+            const render = getSkeletonIfNeeded(host);
+            render(host, target);
             expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBeNull();
         });
 
@@ -99,11 +95,13 @@ describe("LinkField", () => {
             });
 
             const renderField = (): void => {
+                const presenters: ReadonlyArray<LinkedArtifactPresenter> = linked_artifacts.map(
+                    (artifact) => LinkedArtifactPresenter.fromLinkedArtifact(artifact, false)
+                );
                 const host = {
-                    linked_artifacts_presenter:
-                        LinkedArtifactCollectionPresenter.fromArtifacts(linked_artifacts),
-                    new_links_presenter: NewLinkCollectionPresenter.fromLinks(new_links),
-                } as LinkField;
+                    linked_artifact_presenters: presenters,
+                    new_links_presenter: new_links,
+                } as HostElement;
                 const render = getEmptyStateIfNeeded(host);
 
                 render(getHost(), target);
@@ -169,7 +167,7 @@ describe("LinkField", () => {
             const getHost = (): HostElement => {
                 const initial_dropdown_content: GroupCollection = [];
                 return {
-                    controller: {} as LinkFieldControllerType,
+                    controller: {} as LinkFieldController,
                     link_selector: Option.fromValue(link_selector),
                     current_link_type: LinkTypeStub.buildUntyped(),
                     matching_artifact_section: initial_dropdown_content,
@@ -261,7 +259,7 @@ describe("LinkField", () => {
                 host.current_link_type = LinkTypeStub.buildChildLinkType();
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                        VerifyHasParentLinkStub.withParentLink(),
+                        true,
                         LinkTypesCollectionStub.withParentPair()
                     )
                 );
@@ -271,44 +269,54 @@ describe("LinkField", () => {
         });
 
         describe("link setters", () => {
-            const getHost = (): LinkField =>
-                ({
+            let has_parent_link: boolean;
+            beforeEach(() => {
+                has_parent_link = false;
+            });
+
+            const getHost = (): HostElement => {
+                const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
+                return {
                     controller: {
-                        displayAllowedTypes: () =>
-                            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                                VerifyHasParentLinkStub.withNoParentLink(),
-                                LinkTypesCollectionStub.withParentPair()
-                            ),
+                        getAllowedLinkTypes: () => LinkTypesCollectionStub.withParentPair(),
+                        hasParentLink: () => has_parent_link,
+                        isMarkedForRemoval: (link) => (link ? false : false),
                     },
-                } as LinkField);
+                    linked_artifact_presenters,
+                } as HostElement;
+            };
 
             describe("setLinkedArtifacts", () => {
-                it("should default to a loading state when there are no linked artifacts yet", () => {
+                it("should default to an empty array", () => {
                     const linked_artifacts = setLinkedArtifacts(getHost(), undefined);
-
-                    expect(linked_artifacts.is_loading).toBe(true);
-                    expect(linked_artifacts.has_loaded_content).toBe(false);
-                    expect(linked_artifacts.linked_artifacts).toHaveLength(0);
+                    expect(linked_artifacts).toHaveLength(0);
                 });
 
-                it("should display allowed types when linked artifacts have been retrieved", () => {
+                it(`should set the presenters property when linked artifacts have been retrieved`, () => {
                     const host = getHost();
-                    setLinkedArtifacts(host, LinkedArtifactCollectionPresenter.fromArtifacts([]));
+                    setLinkedArtifacts(host, [LinkedArtifactStub.withDefaults()]);
+                    expect(host.linked_artifact_presenters).toHaveLength(1);
+                });
 
-                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
+                it("should refresh allowed types when linked artifacts have been retrieved", () => {
+                    has_parent_link = true;
+                    const host = getHost();
+                    setLinkedArtifacts(host, []);
+
+                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(true);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
                 });
             });
 
             describe("setNewLinks", () => {
-                it("defaults to an empty NewLinkCollectionPresenter", () => {
+                it("defaults to an empty array", () => {
                     const new_links = setNewLinks(getHost(), undefined);
                     expect(new_links).toHaveLength(0);
                 });
 
-                it(`should display allowed types when new links have been edited`, () => {
+                it(`should refresh allowed types when new links have been edited`, () => {
                     const host = getHost();
-                    setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
+                    setNewLinks(host, []);
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);

@@ -21,6 +21,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
+import { setLinkedArtifacts } from "./LinkField";
 import {
     getActionButton,
     getLinkedArtifactTemplate,
@@ -29,9 +30,7 @@ import {
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { setCatalog } from "../../../../gettext-catalog";
-import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import type { LinkFieldControllerType } from "./LinkFieldController";
-import { LinkFieldController } from "./LinkFieldController";
+import { LinkFieldController } from "../../../../domain/fields/link-field/LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
@@ -52,9 +51,10 @@ import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStu
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
-import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
+import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -71,9 +71,9 @@ describe(`LinkedArtifactTemplate`, () => {
                 ArtifactCrossReferenceStub.withRef("art #136")
             ),
             controller: {
-                canMarkForRemoval: () => true,
-                canChangeType: () => true,
-            } as unknown as LinkFieldControllerType,
+                canMarkForRemoval: (link) => (link ? true : true),
+                canChangeType: (link) => (link ? true : true),
+            } as LinkFieldController,
         } as HostElement;
 
         const updateFunction = getLinkedArtifactTemplate(host, linked_artifact_presenter);
@@ -192,18 +192,31 @@ describe(`LinkedArtifactTemplate`, () => {
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 RetrieveFeatureFlagStub.withEnabledFlag(),
-                ArtifactLinkFieldInfoStub.withDefaults(),
+                LabeledFieldStub.withDefaults(),
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair()
             );
 
-            return {
+            const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
+            const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
+            const host = {
                 current_artifact_reference,
-                linked_artifacts_presenter: LinkedArtifactCollectionPresenter.buildLoadingState(),
+                linked_artifacts,
+                linked_artifact_presenters,
+                allowed_link_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
                 controller,
-            } as unknown as HostElement;
+            } as HostElement;
+            return new Proxy(host, {
+                set: (target, property, new_value): boolean => {
+                    if (property === "linked_artifacts") {
+                        setLinkedArtifacts(target, new_value);
+                    }
+                    Reflect.set(target, property, new_value);
+                    return true;
+                },
+            });
         };
 
         describe(`getActionButton`, () => {
@@ -242,7 +255,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 button.click();
 
                 expect(
-                    host.linked_artifacts_presenter.linked_artifacts.some(
+                    host.linked_artifact_presenters.some(
                         (artifact) => artifact.is_marked_for_removal
                     )
                 ).toBe(true);
@@ -262,7 +275,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 button.click();
 
                 expect(
-                    host.linked_artifacts_presenter.linked_artifacts.some(
+                    host.linked_artifact_presenters.some(
                         (artifact) => artifact.is_marked_for_removal
                     )
                 ).toBe(false);

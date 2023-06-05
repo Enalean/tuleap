@@ -26,8 +26,7 @@ import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
-import { LinkFieldController } from "./LinkFieldController";
-import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { LinkFieldController } from "../../../../domain/fields/link-field/LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
@@ -44,7 +43,7 @@ import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStu
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
 import { ChangeLinkTypeStub } from "../../../../../tests/stubs/ChangeLinkTypeStub";
-import { ArtifactLinkFieldInfoStub } from "../../../../../tests/stubs/ArtifactLinkFieldInfoStub";
+import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { RetrieveFeatureFlagStub } from "../../../../../tests/stubs/RetrieveFeatureFlagStub";
 
@@ -161,16 +160,17 @@ describe(`NewLinkTemplate`, () => {
                 VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 RetrieveFeatureFlagStub.withEnabledFlag(),
-                ArtifactLinkFieldInfoStub.withDefaults(),
+                LabeledFieldStub.withDefaults(),
                 current_tracker_identifier,
                 Option.nothing<ParentTrackerIdentifier>(),
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair()
             );
 
+            const new_links_presenter: ReadonlyArray<NewLink> = [new_link];
             return {
                 current_artifact_reference,
-                new_links_presenter: NewLinkCollectionPresenter.fromLinks([new_link]),
+                new_links_presenter,
                 controller,
             } as HostElement;
         };

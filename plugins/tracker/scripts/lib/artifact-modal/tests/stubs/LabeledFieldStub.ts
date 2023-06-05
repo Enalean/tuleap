@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
+import type { LabeledField } from "../../src/domain/fields/Field";
 
-export type NewLinkCollectionPresenter = readonly NewLink[];
-
-export const NewLinkCollectionPresenter = {
-    buildEmpty: (): NewLinkCollectionPresenter => [],
-    fromLinks: (links: readonly NewLink[]): NewLinkCollectionPresenter => links,
+export const LabeledFieldStub = {
+    withDefaults: (data?: Partial<LabeledField>): LabeledField => ({
+        field_id: 780,
+        label: "Artifact links",
+        ...data,
+    }),
 };
