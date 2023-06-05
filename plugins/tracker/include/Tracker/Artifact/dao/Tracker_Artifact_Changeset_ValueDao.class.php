@@ -81,7 +81,7 @@ class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
     /**
      * @psalm-return list<int>
      */
-    public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed)
+    public function createFromLastChangesetByTrackerId(int $tracker_id, int $field_id): array
     {
         $this->getDB()->run(
             'INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed)

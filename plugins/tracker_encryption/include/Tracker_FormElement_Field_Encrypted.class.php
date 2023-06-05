@@ -23,6 +23,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\TrackerEncryption\ChangesetValue;
+use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field implements TrackerFormElementExternalField // @codingStandardsIgnoreLine
@@ -108,7 +109,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     private function getMaxSizeAllowed()
     {
         $dao_pub_key = new TrackerPublicKeyDao();
-        $value_dao   = new ValueDao();
+        $value_dao   = $this->getValueDao();
         $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $this->getTrackerId());
         $key         = $tracker_key->getKey();
 
@@ -124,7 +125,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     ) {
         if ($value != "") {
             $dao_pub_key = new TrackerPublicKeyDao();
-            $value_dao   = new ValueDao();
+            $value_dao   = $this->getValueDao();
             $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $artifact->tracker_id);
             try {
                 $encryption_manager = new Encryption_Manager($tracker_key);
@@ -305,7 +306,9 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     protected function getValueDao()
     {
-        return new ValueDao();
+        return new ValueDao(
+            new Tracker_Artifact_Changeset_ValueDao()
+        );
     }
 
     /**
@@ -323,16 +326,15 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      * @param int $value_id
      * @param bool $has_changed
      *
-     * @return Tracker_Artifact_ChangesetValue | null
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed)
+    public function getChangesetValue($changeset, $value_id, $has_changed): ?Tracker_Artifact_ChangesetValue
     {
-        $changeset_value = null;
-        if ($row = $this->getValueDao()->searchById($value_id)->getRow()) {
-            $changeset_value = new ChangesetValue($value_id, $changeset, $this, $has_changed, $row['value']);
+        $row = $this->getValueDao()->searchById($value_id);
+        if ($row === null) {
+            return null;
         }
 
-        return $changeset_value;
+        return new ChangesetValue($value_id, $changeset, $this, $has_changed, $row['value']);
     }
 
     public function fetchChangesetValue(

@@ -54,7 +54,7 @@ abstract class FieldValueDao extends DataAccessObject
     public function createNoneChangesetValue($tracker_id, $field_id)
     {
         $changesetValueDao   = new Tracker_Artifact_Changeset_ValueDao();
-        $changeset_value_ids = $changesetValueDao->createFromLastChangesetByTrackerId($tracker_id, $field_id, 1);
+        $changeset_value_ids = $changesetValueDao->createFromLastChangesetByTrackerId($tracker_id, $field_id);
         if (empty($changeset_value_ids)) {
             return false;
         }

@@ -20,8 +20,10 @@
  */
 
 use phpseclib3\Exception\NoKeyLoadedException;
+use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
+//phpcs:ignoreFile
 class Tracker_Key
 {
     private $key;
@@ -47,12 +49,7 @@ class Tracker_Key
 
     public function getKey()
     {
-        $result = '';
-        $array  = ($this->dao_pub_key->retrieveKey($this->id_tracker));
-        foreach ($array as $key => $value) {
-            $result = $value['key_content'];
-        }
-        return $result;
+        return $this->dao_pub_key->retrieveKey($this->id_tracker);
     }
 
     public function associateKeyToTracker()
