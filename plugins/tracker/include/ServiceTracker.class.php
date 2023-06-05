@@ -23,7 +23,7 @@ class ServiceTracker extends Service
 
     public function getIconName(): string
     {
-        return 'fas fa-list-ol';
+        return 'fas fa-tlp-tracker';
     }
 
     /**

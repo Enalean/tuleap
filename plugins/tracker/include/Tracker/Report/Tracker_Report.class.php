@@ -648,7 +648,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             dgettext('tuleap-tracker', 'Criteria'),
             $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used, self::TYPE_CRITERIA)
         );
-        $add_criteria_presenter->setIcon('fa fa-eye-slash');
+        $add_criteria_presenter->setIcon('fa-solid fa-eye-slash');
 
         return $this->getTemplateRenderer()->renderToString('button_dropdowns', $add_criteria_presenter);
     }

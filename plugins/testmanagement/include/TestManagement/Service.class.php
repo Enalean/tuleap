@@ -48,6 +48,6 @@ class Service extends CoreService
 
     public function getIconName(): string
     {
-        return 'fas fa-check';
+        return 'fas fa-check-double';
     }
 }
