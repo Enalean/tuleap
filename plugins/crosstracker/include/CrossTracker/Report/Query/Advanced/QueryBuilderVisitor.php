@@ -34,6 +34,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVi
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameters;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedAndFromWhere;
+use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -304,11 +305,41 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithParent(WithParent $condition, $parameters)
     {
-        throw new \Exception("WITH PARENT cannot be used in Cross Tracker search");
+        $suffix = spl_object_hash($condition);
+        $from   = "";
+        $where  = "(
+                    SELECT 1
+                    FROM
+                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                        INNER JOIN tracker_changeset_value AS TCV_$suffix
+                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                        INNER JOIN tracker_artifact AS TCA_$suffix
+                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
+                    WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+                        AND TCVAL_$suffix.nature = '_is_child'
+                    LIMIT 1
+                ) = 1";
+
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
-        throw new \Exception("WITHOUT PARENT cannot be used in Cross Tracker search");
+        $suffix = spl_object_hash($condition);
+        $from   = "";
+        $where  = "(
+                    SELECT 1
+                    FROM
+                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                        INNER JOIN tracker_changeset_value AS TCV_$suffix
+                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                        INNER JOIN tracker_artifact AS TCA_$suffix
+                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
+                    WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+                        AND TCVAL_$suffix.nature = '_is_child'
+                    LIMIT 1
+                ) IS NULL";
+
+        return new ParametrizedFromWhere($from, $where, [], []);
     }
 }
