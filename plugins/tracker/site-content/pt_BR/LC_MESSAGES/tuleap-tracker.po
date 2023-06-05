@@ -3939,9 +3939,9 @@ msgid ""
 "updated the artifact."
 msgstr ""
 
+#, php-format
 msgid ""
-"You can use: AND, OR, WITH PARENT, BETWEEN(), NOW(), MYSELF(), IN(), NOT "
-"IN(), parenthesis. Autocomplete is activated with Ctrl + Space."
+"You can use: %s, parenthesis. Autocomplete is activated with Ctrl + Space."
 msgstr ""
 
 msgid ""

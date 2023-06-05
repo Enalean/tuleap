@@ -33,6 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
@@ -99,5 +100,10 @@ final class DateToEmptyStringTermException extends InvalidFieldException impleme
     public function visitWithParent(WithParent $condition, $parameters)
     {
         throw new RuntimeException("The date field '%s' is not supposed to be used with WITH PARENT operator.");
+    }
+
+    public function visitWithoutParent(WithoutParent $condition, $parameters)
+    {
+        throw new RuntimeException("The date field '%s' is not supposed to be used with WITHOUT PARENT operator.");
     }
 }

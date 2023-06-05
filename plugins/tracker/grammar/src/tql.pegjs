@@ -73,9 +73,14 @@ Comparison
 
 LinkCondition
     = WithParent
+        / WithoutParent
 
 WithParent = "with parent"i {
         return new WithParent();
+    }
+
+WithoutParent = "without parent"i {
+        return new WithoutParent();
     }
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }

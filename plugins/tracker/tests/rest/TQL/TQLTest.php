@@ -70,6 +70,7 @@ class TQLTest extends RestBase
             'attachment = "awesome"'                                       => ['bug3'],
             'attachment != "document"'                                     => ['bug1', 'bug2', 'bug3'],
             'WITH PARENT'                                                  => ['bug1'],
+            'WITHOUT PARENT'                                               => ['bug2', 'bug3'],
         ];
         foreach ($tests as $query => $expectation) {
             $message = "Query $query should returns " . implode(', ', $expectation);
