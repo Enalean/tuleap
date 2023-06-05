@@ -31,5 +31,5 @@ interface Logical
      * @param Parameters $parameters
      * @return ReturnType
      */
-    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters);
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters);
 }

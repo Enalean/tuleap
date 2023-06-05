@@ -25,7 +25,7 @@ class OrOperand implements Logical
     {
     }
 
-    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters)
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters)
     {
         return $visitor->visitOrOperand($this, $parameters);
     }

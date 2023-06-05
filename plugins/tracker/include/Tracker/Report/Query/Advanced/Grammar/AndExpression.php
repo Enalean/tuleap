@@ -25,7 +25,7 @@ class AndExpression implements Logical
     {
     }
 
-    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters)
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters)
     {
         return $visitor->visitAndExpression($this, $parameters);
     }

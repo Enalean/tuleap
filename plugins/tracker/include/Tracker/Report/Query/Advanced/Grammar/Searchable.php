@@ -31,5 +31,5 @@ interface Searchable
      * @param Parameters $parameters
      * @return ReturnType
      */
-    public function acceptSearchableVisitor(SearchableVisitor $visitor, VisitorParameters $parameters);
+    public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters);
 }

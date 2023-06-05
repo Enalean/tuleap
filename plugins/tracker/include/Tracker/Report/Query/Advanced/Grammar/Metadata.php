@@ -39,7 +39,7 @@ final class Metadata implements Searchable
         return $this->name;
     }
 
-    public function acceptSearchableVisitor(SearchableVisitor $visitor, VisitorParameters $parameters)
+    public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters)
     {
         return $visitor->visitMetadata($this, $parameters);
     }
