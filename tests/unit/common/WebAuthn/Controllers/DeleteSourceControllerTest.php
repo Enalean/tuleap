@@ -30,16 +30,24 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnCredentialSourceDaoStub;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Source\DeleteCredentialSource;
-use Webauthn\PublicKeyCredentialSourceRepository;
+use Tuleap\WebAuthn\Source\GetCredentialSourceById;
 use function Psl\Encoding\Base64\encode;
 
 final class DeleteSourceControllerTest extends TestCase
 {
+    public FeedbackSerializerStub $serializer;
+
+    protected function setUp(): void
+    {
+        $this->serializer = FeedbackSerializerStub::buildSelf();
+    }
+
     public function testItReturns401WhenNoAuth(): void
     {
         $response = $this->handle(
@@ -96,11 +104,12 @@ final class DeleteSourceControllerTest extends TestCase
         );
 
         self::assertSame(200, $response->getStatusCode());
+        self::assertCount(1, $this->serializer->getCapturedFeedbacks());
     }
 
     private function handle(
         ProvideCurrentUser $provide_current_user,
-        PublicKeyCredentialSourceRepository&DeleteCredentialSource $source_dao,
+        GetCredentialSourceById&DeleteCredentialSource $source_dao,
         ?string $source_id = null,
     ): ResponseInterface {
         $response_factory      = HTTPFactoryBuilder::responseFactory();
@@ -111,6 +120,7 @@ final class DeleteSourceControllerTest extends TestCase
             $source_dao,
             new RestlerErrorResponseBuilder($json_response_builder),
             $response_factory,
+            $this->serializer,
             new NoopSapiEmitter()
         );
 
