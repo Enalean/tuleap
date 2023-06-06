@@ -44,6 +44,6 @@
   "scripts": {
     "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""
+    "test": "jest --config=./scripts/artifact/jest.config.js && jest --config=./scripts/semantics/progress/jest.config.js"
   }
 }
