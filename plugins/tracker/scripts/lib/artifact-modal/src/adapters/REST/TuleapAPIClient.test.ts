@@ -48,11 +48,13 @@ import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIden
 import type { Project } from "../../domain/Project";
 import type { Tracker } from "../../domain/Tracker";
 import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStub";
-import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    TrackerResponseWithColor,
+    ArtifactCreationPayload,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCreated } from "../../domain/ArtifactCreated";
 import type { ChangesetValues } from "../../domain/submit/ChangesetValues";
 import { TrackerIdentifierStub } from "../../../tests/stubs/TrackerIdentifierStub";
-import type { ArtifactCreationPayload } from "@tuleap/plugin-tracker-rest-api-types";
 
 const ARTIFACT_ID = 90;
 const ARTIFACT_2_ID = 10;

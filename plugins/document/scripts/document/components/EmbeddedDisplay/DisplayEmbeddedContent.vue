@@ -91,6 +91,7 @@
 
 <script setup lang="ts">
 import emitter from "../../helpers/emitter";
+// eslint-disable-next-line import/no-duplicates
 import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { useNamespacedState } from "vuex-composition-helpers";
@@ -186,6 +187,7 @@ function hideDeleteItemModal(): void {
 </script>
 
 <script lang="ts">
+// eslint-disable-next-line import/no-duplicates
 import { defineAsyncComponent, defineComponent } from "vue";
 import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";

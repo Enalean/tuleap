@@ -1,7 +1,6 @@
-import { post } from "@tuleap/tlp-fetch";
+import { post, get } from "@tuleap/tlp-fetch";
 import { RealtimeMercure, RetriableError, FatalError } from "./realtime-mercure";
 import { buildEventDispatcher } from "./buildEventDispatcher";
-import { get } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "../feedback-state";
 export default MercureService;
 

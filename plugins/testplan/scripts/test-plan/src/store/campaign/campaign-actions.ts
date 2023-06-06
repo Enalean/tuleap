@@ -18,12 +18,11 @@
  */
 
 import type { CampaignState, CreateCampaignPayload } from "./type";
-import type { ActionContext } from "vuex";
+import type { ActionContext, ActionTree } from "vuex";
 import type { RootState } from "../type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { recursiveGet, post, get } from "@tuleap/tlp-fetch";
 import type { Campaign } from "../../type";
-import type { ActionTree } from "vuex";
 
 export interface CampaignActions extends ActionTree<CampaignState, RootState> {
     loadCampaigns: typeof loadCampaigns;

@@ -19,8 +19,7 @@
  */
 
 import { replaceFolderContentByItem } from "./item-mutations";
-import type { FakeItem, Item } from "../type";
-import type { LockInfo, State, User } from "../type";
+import type { FakeItem, Item, LockInfo, State, User } from "../type";
 
 describe("Item mutations", () => {
     function isFolderContentArrayOfItem(

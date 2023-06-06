@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Lazybox } from "@tuleap/lazybox";
-import type { GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
+import type { Lazybox, GroupOfItems, LazyboxItem } from "@tuleap/lazybox";
 
 export type LazyboxStub = Lazybox & {
     getLastDropdownContent(): GroupOfItems | null;

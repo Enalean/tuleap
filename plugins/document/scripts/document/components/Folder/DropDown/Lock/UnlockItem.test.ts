@@ -20,8 +20,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import UnlockItem from "./UnlockItem.vue";
-import type { ItemFile } from "../../../../type";
-import type { LockInfo } from "../../../../type";
+import type { ItemFile, LockInfo } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("UnlockItem", () => {

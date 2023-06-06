@@ -23,8 +23,7 @@ import type {
     TrackerReportResponse,
     TrackerUsedArtifactLinkResponse,
 } from "@tuleap/plugin-tracker-rest-api-types";
-import type { LinkedArtifactsResponse } from "./type";
-import type { ArtifactForCrossReportDocGen } from "./type";
+import type { LinkedArtifactsResponse, ArtifactForCrossReportDocGen } from "./type";
 
 export function getReportArtifacts(
     report_id: number,

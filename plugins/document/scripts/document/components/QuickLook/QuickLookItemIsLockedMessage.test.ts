@@ -21,8 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
 import { TYPE_FILE } from "../../constants";
-import type { Item, RootState } from "../../type";
-import type { User } from "../../type";
+import type { Item, RootState, User } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookItemIsLockedMessage", () => {

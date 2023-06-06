@@ -20,7 +20,7 @@
 import type { Pinia } from "pinia";
 import { defineStore } from "pinia";
 import type { ClipboardState } from "./types";
-import type { Folder, RootState } from "../type";
+import type { Folder, RootState, Item } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
@@ -46,7 +46,6 @@ import {
     moveLink,
     moveWiki,
 } from "../api/move-rest-querier";
-import type { Item } from "../type";
 import { useLocalStorage } from "@vueuse/core";
 import type { Store } from "vuex";
 

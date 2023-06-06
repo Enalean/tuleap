@@ -19,9 +19,7 @@
  */
 
 import mitt from "mitt";
-import type { Empty, Item, ListValue } from "../type";
-import type { ItemType } from "../type";
-import type { NewItemAlternative } from "../type";
+import type { Empty, Item, ListValue, ItemType, NewItemAlternative } from "../type";
 
 export interface DeleteItemEvent {
     item: Item;

@@ -21,13 +21,11 @@ import type {
     ArtifactFieldValueStatus,
     FormattedArtifact,
     TestExecutionResponse,
-} from "@tuleap/plugin-docgen-docx";
-import type {
     ArtifactFieldValueStepDefinitionEnhanced,
     TestExecutionAttachment,
     TestExecutionLinkedBug,
+    ArtifactLinkType,
 } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx";
 
 export interface Campaign {
     readonly id: number;

@@ -21,8 +21,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FakeCaret from "./FakeCaret.vue";
-import type { Empty, Folder, Item, ItemFile, Link, Wiki } from "../../../type";
-import type { RootState } from "../../../type";
+import type { Empty, Folder, Item, ItemFile, Link, Wiki, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("FakeCaret", () => {

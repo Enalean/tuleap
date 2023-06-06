@@ -21,9 +21,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../../constants";
-import type { Embedded, Item, ItemFile, Link } from "../../type";
+import type { Embedded, Item, ItemFile, Link, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { RootState } from "../../type";
 
 describe("QuickLookDocumentPreview", () => {
     function createWrapper(

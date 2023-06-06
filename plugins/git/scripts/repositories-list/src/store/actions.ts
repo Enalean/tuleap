@@ -27,8 +27,7 @@ import { getProjectId, getUserId } from "../repository-list-presenter";
 import { PROJECT_KEY, REPOSITORIES_SORTED_BY_PATH, ANONYMOUS_USER_ID } from "../constants";
 import { getErrorCode } from "../support/error-handler";
 import type { ActionContext } from "vuex";
-import type { State } from "../type";
-import type { Repository } from "../type";
+import type { State, Repository } from "../type";
 
 export type RepositoryCallback = (repositories: Repository[]) => void;
 

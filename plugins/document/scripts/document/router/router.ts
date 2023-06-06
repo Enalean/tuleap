@@ -28,8 +28,7 @@ import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
 import type { Store } from "vuex";
-import type { RootState } from "../type";
-import type { GettextProvider } from "../type";
+import type { RootState, GettextProvider } from "../type";
 
 export const routes: RouteRecordRaw[] = [
     {

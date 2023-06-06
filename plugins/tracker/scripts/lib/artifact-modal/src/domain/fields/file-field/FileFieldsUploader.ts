@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
+import { ResultAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { FileFieldValueModel } from "./FileFieldValueModel";
 import type { NewFileToAttach } from "./NewFileToAttach";

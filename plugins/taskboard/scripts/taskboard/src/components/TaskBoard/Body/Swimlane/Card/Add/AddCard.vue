@@ -43,11 +43,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Mutation } from "vuex-class";
+import { Mutation, namespace } from "vuex-class";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../../type";
-import { namespace } from "vuex-class";
 import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 

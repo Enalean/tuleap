@@ -61,6 +61,7 @@ import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Ref } from "vue";
+// eslint-disable-next-line import/no-duplicates
 import { computed, onMounted, ref } from "vue";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
@@ -90,6 +91,7 @@ const is_in_root_folder = computed((): boolean => {
 </script>
 
 <script lang="ts">
+// eslint-disable-next-line import/no-duplicates
 import { defineComponent } from "vue";
 import CriterionText from "./Criteria/CriterionText.vue";
 import CriterionOwner from "./Criteria/CriterionOwner.vue";

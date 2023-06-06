@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { errAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import type { SaveNewReplyToComment } from "../../src/comment/PullRequestCommentReplySaver";

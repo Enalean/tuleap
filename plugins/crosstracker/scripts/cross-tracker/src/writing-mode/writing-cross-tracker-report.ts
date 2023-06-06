@@ -18,8 +18,7 @@
  */
 
 import ExtendableError from "extendable-error";
-import type { Project, Tracker } from "../type";
-import type { TrackerAndProject } from "../type";
+import type { Project, Tracker, TrackerAndProject } from "../type";
 import type ReadingCrossTrackerReport from "../reading-mode/reading-cross-tracker-report";
 
 export default class WritingCrossTrackerReport {

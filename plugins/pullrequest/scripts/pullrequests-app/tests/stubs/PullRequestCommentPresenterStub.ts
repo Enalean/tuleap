@@ -28,8 +28,8 @@ import type {
     PullRequestCommentPresenter,
     PullRequestInlineCommentPresenter,
     PullRequestGlobalCommentPresenter,
+    PullRequestCommentFile,
 } from "@tuleap/plugin-pullrequest-comments";
-import type { PullRequestCommentFile } from "@tuleap/plugin-pullrequest-comments";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,

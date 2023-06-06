@@ -53,7 +53,7 @@ import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";
 import HiddenFieldsetsAction from "./PostAction/HiddenFieldsetsAction.vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import AddToBacklogAgileDashboardPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
-import AddToBackLogProgramManagementPostAction from "./Externals/AddToBacklogProgramManagementPostAction.vue";
+import AddToBacklogProgramManagementPostAction from "./Externals/AddToBacklogProgramManagementPostAction.vue";
 
 export default {
     name: "PostActionsSection",
@@ -92,7 +92,7 @@ export default {
             } else if (
                 post_action.type === EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG_PROGRAM_MANAGEMENT
             ) {
-                return AddToBackLogProgramManagementPostAction;
+                return AddToBacklogProgramManagementPostAction;
             }
 
             return null;

@@ -31,11 +31,10 @@ import {
 import { max } from "d3-array";
 import { select } from "d3-selection";
 import { curveMonotoneX } from "d3-shape";
-import { getLastGenericBurnupData } from "../chart-data-service";
+import { getLastGenericBurnupData, getDisplayableDataForBurnup } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
 import { getCoordinatesScaleLines } from "../chart-scale-helper";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
-import { getDisplayableDataForBurnup } from "../chart-data-service";
 
 const DEFAULT_TOTAL_EFFORT = 5;
 

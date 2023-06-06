@@ -26,7 +26,11 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import { NewCommentSaver } from "@tuleap/plugin-pullrequest-comments";
+import {
+    NewCommentSaver,
+    NewCommentFormController,
+    PullRequestCommentTextareaFocusHelper,
+} from "@tuleap/plugin-pullrequest-comments";
 import { TYPE_GLOBAL_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -40,8 +44,6 @@ import {
     PULL_REQUEST_ID_KEY,
 } from "../../constants";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
-import { NewCommentFormController } from "@tuleap/plugin-pullrequest-comments";
-import { PullRequestCommentTextareaFocusHelper } from "@tuleap/plugin-pullrequest-comments";
 
 const { $gettext } = useGettext();
 

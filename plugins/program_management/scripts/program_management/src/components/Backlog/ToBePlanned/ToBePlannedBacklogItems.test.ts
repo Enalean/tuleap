@@ -21,7 +21,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import type { Feature } from "../../../type";
+import type { Feature, TrackerMinimalRepresentation } from "../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
@@ -29,7 +29,6 @@ import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import type { TrackerMinimalRepresentation } from "../../../type";
 
 describe("ToBePlannedBacklogItems", () => {
     let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;

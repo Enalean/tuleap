@@ -19,8 +19,10 @@
 
 import type { SwimlaneState } from "./type";
 import type { Card, ColumnDefinition, Swimlane } from "../../type";
-import { isStatusAcceptedByColumn } from "../../helpers/list-value-to-column-mapper";
-import { getColumnOfCard } from "../../helpers/list-value-to-column-mapper";
+import {
+    isStatusAcceptedByColumn,
+    getColumnOfCard,
+} from "../../helpers/list-value-to-column-mapper";
 import type { RootState } from "../type";
 import { findSwimlane } from "./swimlane-helpers";
 

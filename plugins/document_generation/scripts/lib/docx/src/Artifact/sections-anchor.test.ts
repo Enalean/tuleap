@@ -18,9 +18,8 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { FormattedArtifact } from "../type";
+import type { FormattedArtifact, ArtifactFieldValueStepDefinitionContent } from "../type";
 import { getAnchorToArtifactContent } from "./sections-anchor";
-import type { ArtifactFieldValueStepDefinitionContent } from "../type";
 
 describe("sections-anchor", () => {
     it("builds an anchor to the content of an artifact", () => {

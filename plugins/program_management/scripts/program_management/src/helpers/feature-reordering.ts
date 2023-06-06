@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { Feature } from "../type";
+import type { Feature, State } from "../type";
 import type { ActionContext } from "vuex";
-import type { State } from "../type";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { reorderElementInTopBacklog } from "./ProgramIncrement/add-to-top-backlog";
 import { handleModalError } from "./error-handler";

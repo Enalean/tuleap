@@ -44,8 +44,7 @@ import { sanitize } from "dompurify";
 import $ from "jquery";
 import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
 import { select2 } from "tlp";
-import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
-import type { DataForColorPicker } from "../../../../store/type";
+import type { TrackerToBeCreatedMandatoryData, DataForColorPicker } from "../../../../store/type";
 
 @Component
 export default class FieldTrackerColor extends Vue {

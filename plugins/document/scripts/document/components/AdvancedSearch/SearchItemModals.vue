@@ -74,6 +74,7 @@ import type {
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
+// eslint-disable-next-line import/no-duplicates
 import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import type { Item } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
@@ -241,6 +242,7 @@ onUnmounted(() => {
 </script>
 
 <script lang="ts">
+// eslint-disable-next-line import/no-duplicates
 import { defineComponent } from "vue";
 
 export default defineComponent({

@@ -19,8 +19,8 @@
 
 import type { Editor } from "codemirror";
 import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder";
-import { doesHandleHaveWidgets } from "../side-by-side-line-widgets-helper";
 import {
+    doesHandleHaveWidgets,
     isCommentWidget,
     isCodeCommentPlaceholderWidget,
 } from "../side-by-side-line-widgets-helper";

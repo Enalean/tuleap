@@ -22,9 +22,8 @@ import { flagItemAsCreated } from "./flag-item-as-created";
 import { TYPE_FILE } from "../../constants";
 import { uploadFile } from "./upload-file";
 import type { ActionContext } from "vuex";
-import type { FakeItem, Folder, Property, RootState } from "../../type";
+import type { FakeItem, Folder, Property, RootState, CreatedItem } from "../../type";
 import emitter from "../../helpers/emitter";
-import type { CreatedItem } from "../../type";
 
 export async function createNewFile(
     context: ActionContext<RootState, RootState>,

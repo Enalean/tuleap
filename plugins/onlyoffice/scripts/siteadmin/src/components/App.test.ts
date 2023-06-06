@@ -32,10 +32,9 @@ import App from "./App.vue";
 import ListOfServers from "./Servers/ListOfServers.vue";
 import RestrictServer from "./Servers/Restrict/RestrictServer.vue";
 import { NAVIGATION } from "../injection-keys";
-import type { Config, Server } from "../type";
+import type { Config, Server, Navigation } from "../type";
 import { defineComponent, inject } from "vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
-import type { Navigation } from "../type";
 
 vi.mock("@tuleap/vue-strict-inject");
 

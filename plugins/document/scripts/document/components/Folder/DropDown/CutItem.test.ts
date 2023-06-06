@@ -30,14 +30,13 @@ const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<Root
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CutItem from "./CutItem.vue";
-import type { Item } from "../../../type";
+import type { Item, RootState } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { nextTick, ref } from "vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import type { RootState } from "../../../type";
 
 describe("CutItem", () => {
     let pinia: TestingPinia;

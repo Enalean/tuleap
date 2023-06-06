@@ -33,13 +33,13 @@ import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentC
 import {
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
+    PullRequestCommentRepliesStore,
 } from "@tuleap/plugin-pullrequest-comments";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 import type {
     ControlPullRequestComment,
     StorePullRequestCommentReplies,
 } from "@tuleap/plugin-pullrequest-comments";
-import { PullRequestCommentRepliesStore } from "@tuleap/plugin-pullrequest-comments";
 import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import {
     INLINE_COMMENT_POSITION_LEFT,

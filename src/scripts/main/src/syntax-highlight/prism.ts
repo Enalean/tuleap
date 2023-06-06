@@ -152,7 +152,6 @@ import "prismjs/components/prism-vim";
 import "prismjs/components/prism-xojo";
 import "prismjs/components/prism-yaml";
 import "prismjs/components/prism-hcl";
-import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-cmake";
 
 import { markPotentiallyDangerousBidirectionalUnicodeText } from "./bidirectional-unicode-text";

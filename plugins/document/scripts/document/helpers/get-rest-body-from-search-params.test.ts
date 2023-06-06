@@ -19,8 +19,7 @@
 
 import { getRestBodyFromSearchParams } from "./get-rest-body-from-search-params";
 import { buildAdvancedSearchParams } from "./build-advanced-search-params";
-import type { AdvancedSearchParams } from "../type";
-import type { SearchBodyRest } from "../type";
+import type { AdvancedSearchParams, SearchBodyRest } from "../type";
 
 describe("get-rest-body-from-search-params", () => {
     it("should return nothing for empty params", () => {

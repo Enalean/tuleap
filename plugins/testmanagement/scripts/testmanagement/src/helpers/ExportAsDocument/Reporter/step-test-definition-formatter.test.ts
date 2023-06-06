@@ -21,13 +21,13 @@ import type {
     ArtifactFromReport,
     ArtifactResponse,
     TestExecutionResponse,
+    ArtifactReportResponseStepDefinitionFieldValue,
+    ArtifactReportResponseUserRepresentation,
 } from "@tuleap/plugin-docgen-docx";
 import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
 } from "./step-test-definition-formatter";
-import type { ArtifactReportResponseStepDefinitionFieldValue } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactReportResponseUserRepresentation } from "@tuleap/plugin-docgen-docx";
 
 describe("step-test-definition-formatter", () => {
     it("should build a function that enhance the step definition field with steps results", () => {

@@ -22,8 +22,8 @@ import { buildMilestoneTestPlan } from "./testplan-builder";
 import type {
     GenericGlobalExportProperties,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
+    ExportDocument,
 } from "../../../../type";
-import type { ExportDocument } from "../../../../type";
 import type { FormattedArtifact } from "@tuleap/plugin-docgen-docx/src";
 import type { GettextProvider } from "@tuleap/gettext";
 import { createGettextProviderPassthrough } from "../../../create-gettext-provider-passthrough-for-tests";

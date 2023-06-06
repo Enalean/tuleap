@@ -27,13 +27,14 @@ import type {
     SearchResult,
     SearchResultColumnDefinition,
     State,
+    Folder,
+    RootState,
 } from "../../../type";
 import SearchResultPagination from "./SearchResultPagination.vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
-import type { Folder, RootState } from "../../../type";
 
 describe("SearchResultTable", () => {
     let mock_push: jest.Mock;

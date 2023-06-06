@@ -27,11 +27,10 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FILE } from "../constants";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
-import type { CreatedItem, FakeItem, Folder, Item, ItemFile, RootState } from "../type";
+import type { CreatedItem, FakeItem, Folder, Item, ItemFile, RootState, State } from "../type";
 import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 import emitter from "../helpers/emitter";
-import type { State } from "../type";
 import * as flag_item_as_created from "./actions-helpers/flag-item-as-created";
 
 jest.mock("../helpers/emitter");

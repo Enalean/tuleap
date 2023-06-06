@@ -19,9 +19,11 @@
 
 import path from "path";
 import type { UserConfigExport } from "vitest/config";
-import { configDefaults as config_defaults_vitest } from "vitest/config";
+import {
+    configDefaults as config_defaults_vitest,
+    defineConfig as viteDefineConfig,
+} from "vitest/config";
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
-import { defineConfig as viteDefineConfig } from "vitest/config";
 import type { CoverageOptions } from "vitest";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";

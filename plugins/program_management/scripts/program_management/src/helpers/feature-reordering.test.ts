@@ -24,9 +24,8 @@ import {
     reorderFeatureInProgramBacklog,
     reorderFeatureInSameProgramIncrement,
 } from "./feature-reordering";
-import type { Feature } from "../type";
+import type { Feature, State } from "../type";
 import type { ActionContext } from "vuex";
-import type { State } from "../type";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";

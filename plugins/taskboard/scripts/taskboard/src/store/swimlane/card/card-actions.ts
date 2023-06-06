@@ -18,7 +18,12 @@
  */
 import type { ActionContext } from "vuex";
 import type { RootState } from "../../type";
-import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
+import type {
+    NewCardPayload,
+    NewRemainingEffortPayload,
+    UpdateCardPayload,
+    UserForPeoplePicker,
+} from "./type";
 import { get, patch, post, put } from "@tuleap/tlp-fetch";
 import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
@@ -29,7 +34,6 @@ import {
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
 import type { Card, Swimlane, Tracker, User } from "../../../type";
 import pRetry from "p-retry";
-import type { UserForPeoplePicker } from "./type";
 
 const headers = {
     "Content-Type": "application/json",

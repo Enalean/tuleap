@@ -117,6 +117,7 @@ module.exports = {
             { functions: false, typedefs: false, classes: false },
         ],
         // import
+        "import/no-duplicates": "error",
         "import/no-extraneous-dependencies": "error",
         "no-unsanitized/property": [
             "error",

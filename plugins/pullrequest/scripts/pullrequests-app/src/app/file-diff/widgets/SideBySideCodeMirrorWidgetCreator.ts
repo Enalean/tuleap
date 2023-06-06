@@ -17,14 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PlaceholderCreationParams } from "../types-codemirror-overriden";
-import type { ControlPullRequestComment } from "@tuleap/plugin-pullrequest-comments";
-import type { StorePullRequestCommentReplies } from "@tuleap/plugin-pullrequest-comments";
-import type { MapCommentWidgets } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import type {
+    PlaceholderCreationParams,
     InlineCommentWidgetCreationParams,
     NewInlineCommentFormWidgetCreationParams,
 } from "../types-codemirror-overriden";
+import type {
+    ControlPullRequestComment,
+    StorePullRequestCommentReplies,
+} from "@tuleap/plugin-pullrequest-comments";
+import type { MapCommentWidgets } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import { getWidgetPlacementOptions } from "./file-line-widget-placement-helper";
 import {
     isANewInlineCommentWidget,

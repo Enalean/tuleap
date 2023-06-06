@@ -18,7 +18,16 @@
  */
 
 import type { ActionContext } from "vuex";
-import type { ApprovalTable, Embedded, Empty, ItemFile, Link, RootState, Wiki } from "../type";
+import type {
+    ApprovalTable,
+    Embedded,
+    Empty,
+    ItemFile,
+    Link,
+    RootState,
+    Wiki,
+    CreatedItemFileProperties,
+} from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import {
@@ -32,7 +41,6 @@ import {
 } from "../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../constants";
 import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
-import type { CreatedItemFileProperties } from "../type";
 import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
 import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
