@@ -143,3 +143,6 @@ export const getArtifactFeedbackShowMoreLabel = (): string =>
     gettextCatalog.getString("View details");
 export const getProjectsRetrievalErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the list of projects: %s");
+export const getArtifactCreationErrorMessage = (): string =>
+    gettextCatalog.getString("Error while creating the new artifact: %s");
+export const getSubmitDisabledReason = (): string => gettextCatalog.getString("Artifact is saving");
