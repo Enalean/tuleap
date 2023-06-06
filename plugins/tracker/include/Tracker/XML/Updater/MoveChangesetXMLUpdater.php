@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
+use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
@@ -472,7 +473,7 @@ class MoveChangesetXMLUpdater
         PFUser $current_user,
         SimpleXMLElement $last_changeset,
         Tracker $source_tracker,
-        $moved_time,
+        int $moved_time,
     ) {
         $comments_tag = $last_changeset->addChild('comments');
         $comment_tag  = $comments_tag->addChild('comment');
@@ -495,5 +496,101 @@ class MoveChangesetXMLUpdater
             ),
             ['format' => 'text']
         );
+    }
+
+    public function updateFromDuckTypingCollection(
+        PFUser $current_user,
+        SimpleXMLElement $artifact_xml,
+        PFUser $submitted_by,
+        int $submitted_on,
+        int $moved_time,
+        DuckTypedMoveFieldCollection $field_collection,
+        Tracker $source_tracker,
+    ): void {
+        $this->parseChangesetNodesFromDuckTypingCollection(
+            $artifact_xml,
+            $submitted_by,
+            $submitted_on,
+            $field_collection
+        );
+
+        if (count($artifact_xml->changeset) > 0) {
+            $this->addLastMovedChangesetComment(
+                $current_user,
+                $artifact_xml,
+                $source_tracker,
+                $moved_time
+            );
+        }
+    }
+
+    private function parseChangesetNodesFromDuckTypingCollection(
+        SimpleXMLElement $artifact_xml,
+        PFUser $submitted_by,
+        int $submitted_on,
+        DuckTypedMoveFieldCollection $feedback_field_collector,
+    ): void {
+        $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
+        if ($artifact_xml->changeset === null) {
+            return;
+        }
+        for ($index = $last_index; $index >= 0; $index--) {
+            $this->parseFieldChangeNodesInReverseOrderForDuckTypingCollection(
+                $artifact_xml->changeset[$index],
+                $feedback_field_collector
+            );
+
+            if ($this->isChangesetNodeDeletable($artifact_xml, $index)) {
+                $this->deleteChangesetNode($artifact_xml, $index);
+            }
+
+            if ($index === 0) {
+                $this->addSubmittedInformation($artifact_xml->changeset[$index], $submitted_by, $submitted_on);
+            }
+        }
+    }
+
+    /**
+     * Parse the SimpleXMLElement field_change nodes to prepare the move action.
+     *
+     * The parse is done in reverse order to be able to delete a SimpleXMLElement without any issues.
+     */
+    private function parseFieldChangeNodesInReverseOrderForDuckTypingCollection(
+        SimpleXMLElement $changeset_xml,
+        DuckTypedMoveFieldCollection $feedback_field_collector,
+    ): void {
+        $this->deleteEmptyCommentsNode($changeset_xml);
+
+        $last_index = $changeset_xml->field_change === null ? -1 : count($changeset_xml->field_change) - 1;
+        for ($index = $last_index; $index >= 0; $index--) {
+            if (! $changeset_xml->field_change || ! $changeset_xml->field_change[$index]) {
+                continue;
+            }
+            $field_change = $changeset_xml->field_change[$index];
+            if (empty((string) $field_change)) {
+                continue;
+            }
+
+            foreach ($feedback_field_collector->not_migrateable_field_list as $not_migrateable) {
+                if ($not_migrateable->getName() === (string) $field_change['field_name']) {
+                    $this->deleteFieldChangeNode($changeset_xml, $index);
+                }
+            }
+
+            foreach ($feedback_field_collector->migrateable_field_list as $migrateable) {
+                $target_field = null;
+                if ($migrateable->getName() === (string) $field_change['field_name']) {
+                    foreach ($feedback_field_collector->mapping_fields as $mapping_field) {
+                        if ($mapping_field->source === $migrateable) {
+                            $target_field = $mapping_field->destination;
+                        }
+                    }
+
+                    if ($target_field) {
+                        $this->useTargetTrackerFieldName($changeset_xml, $target_field, $index);
+                    }
+                }
+            }
+        }
     }
 }

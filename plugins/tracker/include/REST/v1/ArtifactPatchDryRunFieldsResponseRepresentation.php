@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 
 /**
@@ -44,26 +44,47 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
      */
     public $fields_partially_migrated = [];
 
-    public function __construct(FeedbackFieldCollector $feedback_field_collector)
+    private function __construct(array $fields_not_migrated, array $fields_migrated, array $fields_partially_migrated)
     {
-        foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
-            $this->fields_not_migrated[] = $this->getFieldRepresentation($field);
-        }
-
-        foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
-            $this->fields_migrated[] = $this->getFieldRepresentation($field);
-        }
-
-        foreach ($feedback_field_collector->getFieldsPartiallyMigrated() as $field) {
-            $this->fields_partially_migrated[] = $this->getFieldRepresentation($field);
-        }
+        $this->fields_not_migrated       = $fields_not_migrated;
+        $this->fields_migrated           = $fields_migrated;
+        $this->fields_partially_migrated = $fields_partially_migrated;
     }
 
-    /**
-     * @return MinimalFieldRepresentation
-     */
-    private function getFieldRepresentation(Tracker_FormElement_Field $field)
+    public static function fromFeedbackCollector(FeedbackFieldCollectorInterface $feedback_field_collector): self
     {
-        return new MinimalFieldRepresentation($field);
+        $fields_not_migrated = [];
+        foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
+            $fields_not_migrated[] = new MinimalFieldRepresentation($field);
+        }
+
+        $fields_migrated = [];
+        foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
+            $fields_migrated[] = new MinimalFieldRepresentation($field);
+        }
+
+        $fields_partially_migrated = [];
+        foreach ($feedback_field_collector->getFieldsPartiallyMigrated() as $field) {
+            $fields_partially_migrated[] = new MinimalFieldRepresentation($field);
+        }
+
+        return new self($fields_not_migrated, $fields_migrated, $fields_partially_migrated);
+    }
+
+    public static function fromDuckTypedFieldCollector(DuckTypedMoveFieldCollection $feedback_field_collector): self
+    {
+        $fields_not_migrated = [];
+        foreach ($feedback_field_collector->not_migrateable_field_list as $field) {
+            $fields_not_migrated[] = new MinimalFieldRepresentation($field);
+        }
+
+        $fields_migrated = [];
+        foreach ($feedback_field_collector->migrateable_field_list as $field) {
+            $fields_migrated[] = new MinimalFieldRepresentation($field);
+        }
+
+        $fields_partially_migrated = [];
+
+        return new self($fields_not_migrated, $fields_migrated, $fields_partially_migrated);
     }
 }

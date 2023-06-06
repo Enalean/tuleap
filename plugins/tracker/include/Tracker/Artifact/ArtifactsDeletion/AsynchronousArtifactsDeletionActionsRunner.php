@@ -78,7 +78,7 @@ class AsynchronousArtifactsDeletionActionsRunner
                 $pending_artifact['id'],
                 $pending_artifact['tracker_id'],
                 $pending_artifact['submitted_by'],
-                $pending_artifact['submitted_on'],
+                (int) $pending_artifact['submitted_on'],
                 $pending_artifact['use_artifact_permissions']
             );
 

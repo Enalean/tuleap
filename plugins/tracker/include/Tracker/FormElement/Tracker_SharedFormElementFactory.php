@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SharedFormElementFactory
+class Tracker_SharedFormElementFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_FormElementFactory
@@ -96,15 +96,17 @@ class Tracker_SharedFormElementFactory
 
     private function populateFormElementDataForASharedField($originField)
     {
+        /**
+         * @psalm-suppress UndefinedMethod
+         */
         return [
-            'type'              => $this->factory->getType($originField),
-            'label'             => $originField->getLabel(),
-            'description'       => $originField->getDescription(),
-            'label'             => $originField->getLabel(),
-            'use_it'            => $originField->isUsed(),
-            'scope'             => $originField->getScope(),
-            'required'          => $originField->isRequired(),
-            'notifications'     => $originField->hasNotifications(),
+            'type' => $this->factory->getType($originField),
+            'label' => $originField->getLabel(),
+            'description' => $originField->getDescription(),
+            'use_it' => $originField->isUsed(),
+            'scope' => $originField->getScope(),
+            'required' => $originField->isRequired(),
+            'notifications' => $originField->hasNotifications(),
             'original_field_id' => $originField->getId(),
         ];
     }

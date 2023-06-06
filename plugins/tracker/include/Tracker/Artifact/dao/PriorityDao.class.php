@@ -119,11 +119,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    /**
-    * Get Global rank of the artifact
-    * @return int global rank of the artifact, null otherwise
-    */
-    public function getGlobalRank($artifact_id)
+    public function getGlobalRank($artifact_id): ?int
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
@@ -132,11 +128,11 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
 
         $result = $this->retrieve($sql);
         if (! $result) {
-            return;
+            return null;
         }
 
         $row = $result->getRow();
-        return $row['rank'];
+        return (int) $row['rank'];
     }
 
     public function getGlobalRanks(array $list_of_artifact_ids)

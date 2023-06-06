@@ -40,7 +40,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
      */
     private $fields_partially_migrated = [];
 
-    public function initAllTrackerFieldAsNotMigrated(Tracker $tracker)
+    public function initAllTrackerFieldAsNotMigrated(Tracker $tracker): void
     {
         foreach ($tracker->getFormElementFields() as $field) {
             if (! $field->isUpdateable()) {
@@ -51,7 +51,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
         }
     }
 
-    public function addFieldInNotMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInNotMigrated(Tracker_FormElement_Field $field): void
     {
         $field_id = $field->getId();
 
@@ -60,7 +60,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
         $this->fields_not_migrated[$field_id] = $field;
     }
 
-    public function addFieldInFullyMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInFullyMigrated(Tracker_FormElement_Field $field): void
     {
         $field_id = $field->getId();
 
@@ -69,7 +69,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
         $this->fields_fully_migrated[$field_id] = $field;
     }
 
-    public function addFieldInPartiallyMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInPartiallyMigrated(Tracker_FormElement_Field $field): void
     {
         $field_id = $field->getId();
 
@@ -96,7 +96,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
     /**
      * @return Tracker_FormElement_Field[]
      */
-    public function getFieldsFullyMigrated()
+    public function getFieldsFullyMigrated(): array
     {
         return $this->fields_fully_migrated;
     }
@@ -104,7 +104,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
     /**
      * @return Tracker_FormElement_Field[]
      */
-    public function getFieldsNotMigrated()
+    public function getFieldsNotMigrated(): array
     {
         return $this->fields_not_migrated;
     }
@@ -112,7 +112,7 @@ final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
     /**
      * @return Tracker_FormElement_Field[]
      */
-    public function getFieldsPartiallyMigrated()
+    public function getFieldsPartiallyMigrated(): array
     {
         return $this->fields_partially_migrated;
     }

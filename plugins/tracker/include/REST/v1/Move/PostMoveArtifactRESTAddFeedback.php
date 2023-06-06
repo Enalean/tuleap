@@ -18,31 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\REST\v1;
+namespace Tuleap\Tracker\REST\v1\Move;
 
 use Feedback;
 use FeedbackDao;
 use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class PostMoveArticfactRESTAction
+final class PostMoveArtifactRESTAddFeedback implements AddPostMoveArtifactFeedback
 {
-    /**
-     * @var FeedbackDao
-     */
-    private $dao;
-
-    public function __construct(FeedbackDao $dao)
+    public function __construct(private readonly FeedbackDao $dao)
     {
-        $this->dao = $dao;
     }
 
-    public function addFeedback(
-        Tracker $source_tracker,
-        Tracker $target_tracker,
-        Artifact $artifact,
-        \PFUser $user,
-    ) {
+    public function addFeedback(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user): void
+    {
         $tracker_source_name      = $source_tracker->getItemName();
         $tracker_destination_name = $target_tracker->getItemName();
 
