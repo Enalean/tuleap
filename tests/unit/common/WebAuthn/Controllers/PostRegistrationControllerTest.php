@@ -31,6 +31,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\FeedbackSerializerStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\WebAuthn\PasskeyStub;
 use Tuleap\Test\Stubs\WebAuthn\WebAuthnChallengeDaoStub;
@@ -51,10 +52,12 @@ use function Psl\Json\encode as psl_json_encode;
 final class PostRegistrationControllerTest extends TestCase
 {
     private WebAuthnCredentialSourceDaoStub $source_dao;
+    private FeedbackSerializerStub $serializer;
 
     protected function setUp(): void
     {
         $this->source_dao = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();
+        $this->serializer = FeedbackSerializerStub::buildSelf();
     }
 
     public function testItReturns401WhenNoAuth(): void
@@ -123,6 +126,7 @@ final class PostRegistrationControllerTest extends TestCase
         self::assertCount(1, $this->source_dao->sources_name);
         $key = array_keys($this->source_dao->sources_name)[0];
         self::assertSame($passkey_name, $this->source_dao->sources_name[$key]);
+        self::assertCount(1, $this->serializer->getCapturedFeedbacks());
     }
 
     // Above, tests functions
@@ -171,6 +175,7 @@ final class PostRegistrationControllerTest extends TestCase
             ),
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
+            $this->serializer,
             new NoopSapiEmitter()
         );
     }

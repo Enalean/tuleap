@@ -1942,6 +1942,14 @@ msgstr "Chave"
 msgid "Key %1$s already existing for user"
 msgstr "Chave %1$s já existente para o usuário"
 
+#, php-format
+msgid "Key '%s' successfully added"
+msgstr ""
+
+#, php-format
+msgid "Key '%s' successfully deleted"
+msgstr ""
+
 msgid "Keyboard shortcuts"
 msgstr "Atalhos do teclado"
 

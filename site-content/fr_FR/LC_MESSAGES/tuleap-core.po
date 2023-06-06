@@ -1970,6 +1970,14 @@ msgstr "Clef"
 msgid "Key %1$s already existing for user"
 msgstr "La clé %1$s est déja présente pour l'utilisateur"
 
+#, php-format
+msgid "Key '%s' successfully added"
+msgstr "La clé '%s' a été ajoutée avec succès"
+
+#, php-format
+msgid "Key '%s' successfully deleted"
+msgstr "La clé '%s' a été supprimée avec succès"
+
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 

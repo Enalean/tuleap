@@ -29,18 +29,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
+use Tuleap\Layout\Feedback\ISerializeFeedback;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Source\DeleteCredentialSource;
-use Webauthn\PublicKeyCredentialSourceRepository;
+use Tuleap\WebAuthn\Source\GetCredentialSourceById;
+use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 
 final class DeleteSourceController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private readonly ProvideCurrentUser $user_manager,
-        private readonly PublicKeyCredentialSourceRepository&DeleteCredentialSource $source_dao,
+        private readonly GetCredentialSourceById&DeleteCredentialSource $source_dao,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
         private readonly ResponseFactoryInterface $response_factory,
+        private readonly ISerializeFeedback $serialize_feedback,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -60,16 +64,23 @@ final class DeleteSourceController extends DispatchablePSR15Compatible
             return $this->error_response_builder->build(400, _('Credential id is not well formed'));
         }
 
-        $source = $this->source_dao->findOneByCredentialId($key_id);
-        if ($source === null) {
-            return $this->response_factory->createResponse(200);
-        }
-        if ($source->getUserHandle() !== (string) $current_user->getId()) {
-            return $this->response_factory->createResponse(200);
-        }
+        return $this->source_dao->getCredentialSourceById($key_id)
+            ->mapOr(
+                function (WebAuthnCredentialSource $source) use ($current_user, $key_id) {
+                    if ($source->getSource()->getUserHandle() !== (string) $current_user->getId()) {
+                        return $this->response_factory->createResponse(200);
+                    }
 
-        $this->source_dao->deleteCredentialSource($key_id);
+                    $this->source_dao->deleteCredentialSource($key_id);
 
-        return $this->response_factory->createResponse(200);
+                    $this->serialize_feedback->serialize(
+                        $current_user,
+                        new NewFeedback(\Feedback::SUCCESS, sprintf(_("Key '%s' successfully deleted"), $source->getName()))
+                    );
+
+                    return $this->response_factory->createResponse(200);
+                },
+                $this->response_factory->createResponse(200)
+            );
     }
 }

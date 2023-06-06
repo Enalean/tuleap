@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs\WebAuthn;
 
 use Symfony\Component\Uid\Uuid;
+use Tuleap\Option\Option;
 use Tuleap\WebAuthn\Source\ChangeCredentialSourceName;
 use Tuleap\WebAuthn\Source\DeleteCredentialSource;
 use Tuleap\WebAuthn\Source\GetAllCredentialSourceByUserId;
+use Tuleap\WebAuthn\Source\GetCredentialSourceById;
 use Tuleap\WebAuthn\Source\SaveCredentialSourceWithName;
 use Tuleap\WebAuthn\Source\WebAuthnCredentialSource;
 use Webauthn\PublicKeyCredentialSource;
@@ -33,7 +35,7 @@ use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\TrustPathLoader;
 
-final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource
+final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource, GetCredentialSourceById
 {
     /**
      * @var array<string, string>
@@ -151,5 +153,22 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
                 static fn($source_id) => $source_id !== $public_key_credential_id
             );
         }
+    }
+
+    public function getCredentialSourceById(string $public_key_credential_id): Option
+    {
+        $source = $this->findOneByCredentialId($public_key_credential_id);
+
+        if ($source === null) {
+            return Option::nothing(WebAuthnCredentialSource::class);
+        }
+
+        $time = new \DateTimeImmutable();
+        return Option::fromValue(new WebAuthnCredentialSource(
+            $source,
+            'name',
+            $time,
+            $time
+        ));
     }
 }

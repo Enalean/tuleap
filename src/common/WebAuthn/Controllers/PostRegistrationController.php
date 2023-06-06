@@ -29,6 +29,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RestlerErrorResponseBuilder;
+use Tuleap\Layout\Feedback\ISerializeFeedback;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\WebAuthn\Challenge\RetrieveWebAuthnChallenge;
@@ -54,6 +56,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
         private readonly AuthenticatorAttestationResponseValidator $attestation_response_validator,
         private readonly ResponseFactoryInterface $response_factory,
         private readonly RestlerErrorResponseBuilder $error_response_builder,
+        private readonly ISerializeFeedback $serialize_feedback,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -127,6 +130,11 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
                     }
 
                     $this->source_dao->saveCredentialSourceWithName($credential_source, $name);
+
+                    $this->serialize_feedback->serialize(
+                        $current_user,
+                        new NewFeedback(\Feedback::SUCCESS, sprintf(_("Key '%s' successfully added"), $name))
+                    );
 
                     return $this->response_factory->createResponse(200);
                 },

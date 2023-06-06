@@ -1341,6 +1341,7 @@ class RouteCollector
             ),
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),
+            new FeedbackSerializer(new \FeedbackDao()),
             new SapiEmitter()
         );
     }
@@ -1405,6 +1406,7 @@ class RouteCollector
             new WebAuthnCredentialSourceDao(),
             new RestlerErrorResponseBuilder($json_response_builder),
             $response_factory,
+            new FeedbackSerializer(new \FeedbackDao()),
             new SapiEmitter()
         );
     }

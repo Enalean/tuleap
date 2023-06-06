@@ -24,6 +24,7 @@ namespace Tuleap\WebAuthn\Source;
 
 use Symfony\Component\Uid\Uuid;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 use Webauthn\Exception\InvalidTrustPathException;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
@@ -34,21 +35,15 @@ use function Psl\Encoding\Base64\encode;
 use function Psl\Json\decode as psl_json_decode;
 use function Psl\Json\encode as psl_json_encode;
 
-final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource
+final class WebAuthnCredentialSourceDao extends DataAccessObject implements PublicKeyCredentialSourceRepository, ChangeCredentialSourceName, SaveCredentialSourceWithName, GetAllCredentialSourceByUserId, DeleteCredentialSource, GetCredentialSourceById
 {
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
-        $sql = 'SELECT *
-                FROM webauthn_credential_source
-                WHERE public_key_credential_id = ?';
-
-        $row = $this->getDB()->row($sql, encode($publicKeyCredentialId));
-
-        if ($row) {
-            return $this->mapToPublicKeyCredentialSource($row)->getSource();
-        }
-
-        return null;
+        return $this->getCredentialSourceById($publicKeyCredentialId)
+            ->mapOr(
+                static fn(WebAuthnCredentialSource $source) => $source->getSource(),
+                null
+            );
     }
 
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
@@ -147,6 +142,21 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
             'webauthn_credential_source',
             ['public_key_credential_id' => encode($public_key_credential_id)]
         );
+    }
+
+    public function getCredentialSourceById(string $public_key_credential_id): Option
+    {
+        $sql = 'SELECT *
+                FROM webauthn_credential_source
+                WHERE public_key_credential_id = ?';
+
+        $row = $this->getDB()->row($sql, encode($public_key_credential_id));
+
+        if ($row) {
+            return Option::fromValue($this->mapToPublicKeyCredentialSource($row));
+        }
+
+        return Option::nothing(WebAuthnCredentialSource::class);
     }
 
     // Above, functions for Tuleap usage
