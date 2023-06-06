@@ -23,6 +23,7 @@ use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -304,6 +305,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
                 $this->metadata_not_in_comparison_from_where_builder
             )
         );
+    }
+
+    public function visitParenthesis(Parenthesis $parenthesis, $parameters)
+    {
+        return $this->visitOrExpression($parenthesis->or_expression, $parameters);
     }
 
     public function visitAndExpression(AndExpression $and_expression, $parameters)

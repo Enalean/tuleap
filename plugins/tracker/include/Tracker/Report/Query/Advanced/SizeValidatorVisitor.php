@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -99,6 +100,11 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         $this->visitComparison($comparison, $parameters);
+    }
+
+    public function visitParenthesis(Parenthesis $parenthesis, $parameters)
+    {
+        $this->visitOrExpression($parenthesis->or_expression, $parameters);
     }
 
     public function visitAndExpression(AndExpression $and_expression, $parameters)

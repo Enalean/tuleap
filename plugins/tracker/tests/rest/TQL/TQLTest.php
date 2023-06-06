@@ -60,6 +60,8 @@ class TQLTest extends RestBase
             'submitted_by NOT IN (MYSELF())'                               => [],
             'status IN ("todo", "doing") OR ugroups = "Membres du projet"' => ['bug1', 'bug2'],
             'status = ""'                                                  => ['bug2', 'bug3'],
+            'status = "" OR (status = "" OR status = "")'                  => ['bug2', 'bug3'],
+            'status = "" AND (status = "" OR status = "")'                 => ['bug2', 'bug3'],
             'ugroups = "Contractors"'                                      => ['bug1'],
             '@comments != ""'                                              => ['bug1', 'bug2'],
             '@comments = "comment"'                                        => ['bug1'],

@@ -23,6 +23,7 @@ use RuntimeException;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
@@ -94,6 +95,11 @@ final class ListToEmptyStringTermException extends InvalidFieldException impleme
     public function visitNotInComparison(NotInComparison $comparison, $parameters)
     {
         return dgettext("tuleap-tracker", "The list field '%s' cannot be compared to the empty string with NOT IN() operator.");
+    }
+
+    public function visitParenthesis(Parenthesis $parenthesis, $parameters)
+    {
+        throw new RuntimeException("We should not end up here.");
     }
 
     public function visitWithParent(WithParent $condition, $parameters)

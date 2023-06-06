@@ -93,6 +93,13 @@ interface TermVisitor
      *
      * @return ReturnType
      */
+    public function visitParenthesis(Parenthesis $parenthesis, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
     public function visitWithParent(WithParent $condition, $parameters);
 
     /**
