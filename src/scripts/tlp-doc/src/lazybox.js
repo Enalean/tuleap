@@ -91,24 +91,20 @@ export function initSingleLazybox() {
         is_multiple: false,
         placeholder: "Please select an item to link",
         search_input_placeholder: "Type a number",
-        new_item_button_label: "→ Create a new item…",
-        new_item_callback: () => {
-            const group_with_new_item = {
-                ...items_group,
-                items: [
-                    ...items_group.items,
-                    {
-                        value: {
-                            id: 108,
-                            color: "firemist-silver",
-                            xref: "story #108",
-                            title: "New item",
-                        },
-                        is_disabled: false,
+        new_item_label_callback: (item_name) =>
+            item_name !== "" ? `→ Create a new item "${item_name}"…` : "→ Create a new item…",
+        new_item_clicked_callback: (item_name) => {
+            lazybox.replaceSelection([
+                {
+                    value: {
+                        id: 108,
+                        color: "firemist-silver",
+                        xref: "story #198",
+                        title: item_name !== "" ? item_name : "New item",
                     },
-                ],
-            };
-            lazybox.replaceDropdownContent([group_with_new_item]);
+                    is_disabled: false,
+                },
+            ]);
         },
         templating_callback: (html, item) =>
             html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">

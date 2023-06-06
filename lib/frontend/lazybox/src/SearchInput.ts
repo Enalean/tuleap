@@ -18,13 +18,11 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import type { LazyboxSearchInputCallback } from "./Options";
 import { isBackspaceKey, isEnterKey } from "./helpers/keys-helper";
 
 export type SearchInput = {
     disabled: boolean;
     placeholder: string;
-    search_callback: LazyboxSearchInputCallback;
     clear(): void;
     getQuery(): string;
 };
@@ -40,7 +38,7 @@ export const onInput = (host: HostElement, event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) {
         return;
     }
-    dispatch(host, "search-input");
+    dispatch(host, "search-entered");
     const query = event.target.value;
 
     // setTimeout + clearTimeout is a trick to "debounce":
@@ -49,11 +47,11 @@ export const onInput = (host: HostElement, event: Event): void => {
 
     if (query === "") {
         // The query has been cleared, no need to wait
-        host.search_callback(query);
+        dispatch(host, "search-input");
     }
 
     host.timeout_id = window.setTimeout(() => {
-        host.search_callback(query);
+        dispatch(host, "search-input");
     }, TRIGGER_CALLBACK_DELAY_IN_MS);
 };
 
@@ -87,9 +85,9 @@ export const onKeyDown = (host: unknown, event: KeyboardEvent): void => {
     event.stopPropagation();
 };
 
-export const buildClear = (host: InternalSearchInput) => (): void => {
+export const buildClear = (host: HostElement) => (): void => {
     host.query = "";
-    host.search_callback(host.query);
+    dispatch(host, "search-input");
 };
 
 export const connect = (host: HostElement): void => {
@@ -105,10 +103,7 @@ export const SearchInput = define<InternalSearchInput>({
     placeholder: "",
     query: "",
     clear: { get: buildClear, connect },
-    getQuery: {
-        get: (host: InternalSearchInput) => (): string => host.query,
-    },
-    search_callback: undefined,
+    getQuery: { get: (host: InternalSearchInput) => (): string => host.query },
     timeout_id: undefined,
     content: (host) => html`<input
         type="search"

@@ -22,8 +22,10 @@ import { define, html } from "hybrids";
 import { Option } from "@tuleap/option";
 import type { GroupCollection, Lazybox, LazyboxOptions } from "@tuleap/lazybox";
 import { createLazybox } from "@tuleap/lazybox";
+import { sprintf } from "sprintf-js";
 import {
     getCreateNewArtifactButtonInLinkLabel,
+    getCreateNewArtifactButtonInLinkWithNameLabel,
     getLinkFieldCanHaveOnlyOneParent,
     getLinkFieldNoteStartText,
     getLinkFieldNoteText,
@@ -244,10 +246,13 @@ const getFooterTemplate = (host: InternalLinkField): UpdateFunction<LinkField> =
 const createLazyBox = (host: HostElement, is_feature_flag_enabled: boolean): void => {
     const options_with_feature_flag = is_feature_flag_enabled
         ? {
-              new_item_callback: (): void => {
+              new_item_clicked_callback: (): void => {
                   host.is_artifact_creator_shown = true;
               },
-              new_item_button_label: getCreateNewArtifactButtonInLinkLabel(),
+              new_item_label_callback: (title: string) =>
+                  title !== ""
+                      ? sprintf(getCreateNewArtifactButtonInLinkWithNameLabel(), { title })
+                      : getCreateNewArtifactButtonInLinkLabel(),
           }
         : {};
 

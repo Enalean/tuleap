@@ -18,7 +18,8 @@
  */
 
 import type {
-    LazyboxNewItemCallback,
+    LazyboxNewItemClickedCallback,
+    LazyboxNewItemLabelCallback,
     LazyboxOptions,
     LazyboxSelectionBadgeCallback,
     LazyboxTemplatingCallback,
@@ -35,8 +36,8 @@ export class OptionsBuilder {
     #search_input_placeholder = "";
     #templating_callback: LazyboxTemplatingCallback = TemplatingCallbackStub.build();
     #selection_badge_callback: LazyboxSelectionBadgeCallback | undefined = undefined;
-    #new_item_callback: LazyboxNewItemCallback | undefined = undefined;
-    #new_item_button_label = "";
+    #new_item_clicked_callback: LazyboxNewItemClickedCallback | undefined = undefined;
+    #new_item_label_callback: LazyboxNewItemLabelCallback = () => "";
 
     private constructor(is_multiple: boolean) {
         this.#is_multiple = is_multiple;
@@ -66,9 +67,12 @@ export class OptionsBuilder {
         return this;
     }
 
-    withNewItemButton(callback: LazyboxNewItemCallback, label: string): this {
-        this.#new_item_callback = callback;
-        this.#new_item_button_label = label;
+    withNewItemButton(
+        clicked_callback: LazyboxNewItemClickedCallback,
+        label_callback: LazyboxNewItemLabelCallback
+    ): this {
+        this.#new_item_clicked_callback = clicked_callback;
+        this.#new_item_label_callback = label_callback;
         return this;
     }
 
@@ -85,11 +89,11 @@ export class OptionsBuilder {
             search_input_callback: noop,
             selection_callback: noop,
         };
-        if (this.#new_item_callback) {
+        if (this.#new_item_clicked_callback) {
             options = {
                 ...options,
-                new_item_callback: this.#new_item_callback,
-                new_item_button_label: this.#new_item_button_label,
+                new_item_clicked_callback: this.#new_item_clicked_callback,
+                new_item_label_callback: this.#new_item_label_callback,
             };
         }
         if (this.#selection_badge_callback) {

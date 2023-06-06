@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-06-05 18:40+0200\n"
+"PO-Revision-Date: 2023-06-07 17:35+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -295,6 +295,9 @@ msgstr "est Lié à"
 
 msgid "is Parent of"
 msgstr "est Parent de"
+
+msgid "→ Create new artifact \"%(title)s\"…"
+msgstr "→ Créer un nouvel artéfact \"%(title)s\"…"
 
 msgid "→ Create new artifact…"
 msgstr "→ Créer un nouvel artéfact…"

@@ -35,6 +35,7 @@ import type { ScrollingManager } from "./events/ScrollingManager";
 import * as floating_ui from "@floating-ui/dom";
 import { OptionsBuilder } from "../tests/builders/OptionsBuilder";
 import type { LazyboxOptions } from "./Options";
+import type { SearchInput } from "./SearchInput";
 
 vi.mock("@floating-ui/dom", () => {
     return {
@@ -159,13 +160,26 @@ describe(`LazyboxElement`, () => {
             expect(search_input.getAttribute("tabindex")).toBe("0");
         });
 
-        it(`when it receives "search-input" event, it will open the dropdown`, () => {
+        it(`when it receives "search-entered" event, it will open the dropdown`, () => {
             const host = getHost();
             const search_input = getSearchInput(host);
 
-            search_input.dispatchEvent(new CustomEvent("search-input"));
+            search_input.dispatchEvent(new CustomEvent("search-entered"));
 
             expect(host.dropdown_element.open).toBe(true);
+        });
+
+        it(`when it receives "search-input" event,
+            it will call the search_input_callback with the search input's text`, () => {
+            const search_input_callback = vi.spyOn(options, "search_input_callback");
+            const host = getHost();
+            const search_input = getSearchInput(host);
+            const query = "stepfatherly";
+            search_input.getQuery = (): string => query;
+
+            search_input.dispatchEvent(new CustomEvent("search-input"));
+
+            expect(search_input_callback).toHaveBeenCalledWith(query);
         });
 
         it(`assigns the placeholder from options when multiple selection is allowed`, () => {
@@ -249,13 +263,29 @@ describe(`LazyboxElement`, () => {
     });
 
     describe(`Dropdown Element`, () => {
-        const getHost = (): HostElement =>
-            Object.assign(doc.createElement("span"), {
-                options: OptionsBuilder.withSingle().withNewItemButton(noop, "New item").build(),
+        let options: LazyboxOptions;
+
+        beforeEach(() => {
+            options = OptionsBuilder.withSingle()
+                .withNewItemButton(noop, () => "New item")
+                .build();
+        });
+
+        const getHost = (): HostElement => {
+            const search_input = {
+                clear: noop,
+                getQuery: () => "",
+            } as SearchInput;
+            const search_input_element = Object.assign(doc.createElement("span"), search_input);
+
+            const host = {
+                options,
                 selection_element: doc.createElement("span"),
-                search_input_element: Object.assign(doc.createElement("span"), { clear: noop }),
+                search_input_element,
                 cleanupAutoUpdate: noop,
-            }) as HostElement;
+            } as HostElement;
+            return Object.assign(doc.createElement("span"), host);
+        };
 
         it(`while the dropdown is open, scrolling is locked,
             the selection element has an additional CSS class,
@@ -294,6 +324,39 @@ describe(`LazyboxElement`, () => {
             expect(cleanup).toHaveBeenCalledOnce();
             expect(clearSearch).toHaveBeenCalledOnce();
             expect(focusSelection).toHaveBeenCalledOnce();
+        });
+
+        it(`when it receives "click-create-item" event,
+            it will call the new_item_clicked_callback with the search input's text
+            and it will clear the search input`, () => {
+            const query = "chromazurine";
+            const host = getHost();
+            const callback = vi.spyOn(options, "new_item_clicked_callback");
+            const clearSearch = vi.spyOn(host.search_input_element, "clear");
+            vi.spyOn(host.search_input_element, "getQuery").mockReturnValue(query);
+            const dropdown = getDropdownElement(host);
+
+            const event = new CustomEvent("click-create-item");
+            dropdown.dispatchEvent(event);
+
+            expect(callback).toHaveBeenCalledWith(query);
+            expect(clearSearch).toHaveBeenCalled();
+        });
+
+        it(`when the search input dispatches a "search-input" event,
+            it will call the new_item_label_callback with the search input's text
+            to allow having a "reactive" label on the Create new item button`, () => {
+            const query = "electrokinetics";
+            const callback = vi.fn();
+            options = OptionsBuilder.withSingle().withNewItemButton(noop, callback).build();
+            const host = getHost();
+            vi.spyOn(host.search_input_element, "getQuery").mockReturnValue(query);
+            getDropdownElement(host);
+
+            const event = new CustomEvent("search-input");
+            host.search_input_element.dispatchEvent(event);
+
+            expect(callback).toHaveBeenCalledWith(query);
         });
 
         it(`when I click on the dropdown, it stops propagation

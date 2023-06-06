@@ -276,5 +276,8 @@ msgstr ""
 msgid "is Parent of"
 msgstr ""
 
+msgid "→ Create new artifact \"%(title)s\"…"
+msgstr ""
+
 msgid "→ Create new artifact…"
 msgstr ""

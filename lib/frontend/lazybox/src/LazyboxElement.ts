@@ -131,14 +131,16 @@ export const getSearchInput = (host: HostElement): SearchInput & HTMLElement => 
     element.placeholder = host.options.is_multiple
         ? host.options.placeholder
         : host.options.search_input_placeholder;
-    element.search_callback = host.options.search_input_callback;
     const classname = host.options.is_multiple
         ? "lazybox-multiple-search-section"
         : "lazybox-single-search-section";
     element.classList.add(classname);
     element.setAttribute("tabindex", "0");
-    element.addEventListener("search-input", () => {
+    element.addEventListener("search-entered", () => {
         host.dropdown_element.open = true;
+    });
+    element.addEventListener("search-input", () => {
+        host.options.search_input_callback(element.getQuery());
     });
     return element;
 };
@@ -207,9 +209,21 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
     element.classList.add("lazybox-dropdown");
     element.multiple_selection = host.options.is_multiple;
     element.templating_callback = host.options.templating_callback;
-    if (host.options.new_item_callback) {
-        element.new_item_callback = host.options.new_item_callback;
-        element.new_item_button_label = host.options.new_item_button_label;
+    if (host.options.new_item_clicked_callback !== undefined) {
+        element.has_new_item = true;
+        element.new_item_button_label = host.options.new_item_label_callback("");
+        host.search_input_element.addEventListener("search-input", () => {
+            if (host.options.new_item_clicked_callback === undefined) {
+                return;
+            }
+            element.new_item_button_label = host.options.new_item_label_callback(
+                host.search_input_element.getQuery()
+            );
+        });
+        element.addEventListener("click-create-item", () => {
+            host.options.new_item_clicked_callback?.(host.search_input_element.getQuery());
+            host.search_input_element.clear();
+        });
     }
     element.selection = host.selection_element;
     element.search_input = host.search_input_element;
