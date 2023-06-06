@@ -25,7 +25,7 @@ class AndOperand implements Logical
     {
     }
 
-    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters)
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters)
     {
         return $visitor->visitAndOperand($this, $parameters);
     }

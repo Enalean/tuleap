@@ -25,7 +25,7 @@ final class OrExpression implements Logical
     {
     }
 
-    public function acceptLogicalVisitor(LogicalVisitor $visitor, VisitorParameters $parameters)
+    public function acceptLogicalVisitor(LogicalVisitor $visitor, $parameters)
     {
         return $visitor->visitOrExpression($this, $parameters);
     }
