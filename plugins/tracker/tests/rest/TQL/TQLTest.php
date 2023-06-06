@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\TQL;
 
+use Psr\Http\Message\ResponseInterface;
 use RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -88,7 +89,28 @@ class TQLTest extends RestBase
         }
     }
 
-    public function testInvalidQuery()
+    public function testLinkConditions(): void
+    {
+        $response = $this->performExpertQuery('summary = "bug2"');
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $artifact = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
+
+        $response = $this->performExpertQuery('WITH PARENT ARTIFACT = ' . $artifact['id']);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $artifacts);
+        self::assertEquals('bug1', $artifacts[0]['title']);
+
+        $response = $this->performExpertQuery('WITHOUT PARENT ARTIFACT = ' . $artifact['id']);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(2, $artifacts);
+        self::assertEquals('bug2', $artifacts[0]['title']);
+        self::assertEquals('bug3', $artifacts[1]['title']);
+    }
+
+    public function testInvalidQuery(): void
     {
         $response = $this->performExpertQuery('summary="bug1');
         $this->assertEquals(400, $response->getStatusCode());
@@ -99,7 +121,7 @@ class TQLTest extends RestBase
         );
     }
 
-    public function testUnknownValueForListFields()
+    public function testUnknownValueForListFields(): void
     {
         $response = $this->performExpertQuery('status = "pouet"');
         $this->assertEquals(400, $response->getStatusCode());
@@ -110,7 +132,7 @@ class TQLTest extends RestBase
         );
     }
 
-    public function testInvalidDateTime()
+    public function testInvalidDateTime(): void
     {
         $response = $this->performExpertQuery('due_date = "2017-01-10 12:12"');
         $this->assertEquals(400, $response->getStatusCode());
@@ -121,7 +143,7 @@ class TQLTest extends RestBase
         );
     }
 
-    public function testUnknownField()
+    public function testUnknownField(): void
     {
         $response = $this->performExpertQuery('test = "bug1"');
         $this->assertEquals(400, $response->getStatusCode());
@@ -132,16 +154,16 @@ class TQLTest extends RestBase
         );
     }
 
-    private function getTrackerId()
+    private function getTrackerId(): int
     {
         $project_id = $this->getProjectId(self::PROJECT_NAME);
 
         $response = json_decode($this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/trackers"))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        return $response[0]['id'];
+        return (int) $response[0]['id'];
     }
 
-    private function performExpertQuery($query)
+    private function performExpertQuery($query): ResponseInterface
     {
         $query = urlencode($query);
         $url   = "trackers/$this->tracker_id/artifacts?expert_query=$query";

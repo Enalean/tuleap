@@ -2013,7 +2013,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $expression = $this->parser->parse($expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
-                $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker());
+                $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker(), $this->getCurrentUser());
 
                 $additional_from  = $from_where->getFromAsArray();
                 $additional_where = [$from_where->getWhere()];
@@ -2181,7 +2181,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
+            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder(),
+            new QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
         );
     }
 }

@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\BetweenComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\EqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\GreaterThanComparisonFromWhereBuilder;
@@ -34,7 +35,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVi
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameters;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedAndFromWhere;
-use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\CrossTracker\Report\Query\ParametrizedOrFromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
@@ -103,6 +103,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         BetweenComparisonFromWhereBuilder $between_comparison_from_where_builder,
         InComparisonFromWhereBuilder $in_comparison_from_where_builder,
         NotInComparisonFromWhereBuilder $not_in_comparison_from_where_builder,
+        private readonly ArtifactLinkFromWhereBuilder $artifact_link_from_where_builder,
     ) {
         $this->searchable_visitor                                  = $searchable_visitor;
         $this->equal_comparison_from_where_builder                 = $equal_comparison_from_where_builder;
@@ -119,9 +120,9 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
     /**
      * @param Tracker[] $trackers
      */
-    public function buildFromWhere(Logical $parsed_query, array $trackers): IProvideParametrizedFromAndWhereSQLFragments
+    public function buildFromWhere(Logical $parsed_query, array $trackers, \PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderVisitorParameters($trackers));
+        return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderVisitorParameters($trackers, $user));
     }
 
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
@@ -131,7 +132,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->equal_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -143,7 +144,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->not_equal_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -157,7 +158,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->lesser_than_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -171,7 +172,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->greater_than_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -185,7 +186,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->lesser_than_or_equal_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -199,7 +200,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->greater_than_or_equal_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -211,7 +212,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->between_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -223,7 +224,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->in_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -235,7 +236,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameters(
                 $comparison,
                 $this->not_in_comparison_from_where_builder,
-                $parameters->getTrackers()
+                $parameters->trackers
             )
         );
     }
@@ -305,41 +306,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithParent(WithParent $condition, $parameters)
     {
-        $suffix = spl_object_hash($condition);
-        $from   = "";
-        $where  = "(
-                    SELECT 1
-                    FROM
-                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
-                        INNER JOIN tracker_changeset_value AS TCV_$suffix
-                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                        INNER JOIN tracker_artifact AS TCA_$suffix
-                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                    WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
-                        AND TCVAL_$suffix.nature = '_is_child'
-                    LIMIT 1
-                ) = 1";
-
-        return new ParametrizedFromWhere($from, $where, [], []);
+        return $this->artifact_link_from_where_builder->getFromWhereForWithParent($condition, $parameters->user);
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
-        $suffix = spl_object_hash($condition);
-        $from   = "";
-        $where  = "(
-                    SELECT 1
-                    FROM
-                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
-                        INNER JOIN tracker_changeset_value AS TCV_$suffix
-                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                        INNER JOIN tracker_artifact AS TCA_$suffix
-                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                    WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
-                        AND TCVAL_$suffix.nature = '_is_child'
-                    LIMIT 1
-                ) IS NULL";
-
-        return new ParametrizedFromWhere($from, $where, [], []);
+        return $this->artifact_link_from_where_builder->getFromWhereForWithoutParent($condition, $parameters->user);
     }
 }

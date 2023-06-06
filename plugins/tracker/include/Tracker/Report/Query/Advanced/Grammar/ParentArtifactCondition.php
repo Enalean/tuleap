@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,23 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced;
+declare(strict_types=1);
 
-use Tracker;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final class QueryBuilderParameters implements VisitorParameters
+final class ParentArtifactCondition
 {
-    public function __construct(public readonly Tracker $tracker, public readonly \PFUser $user)
+    public function __construct(public readonly int $artifact_id)
     {
-    }
-
-    public function getTracker(): Tracker
-    {
-        return $this->tracker;
     }
 }

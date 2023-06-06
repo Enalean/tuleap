@@ -39,6 +39,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
@@ -60,7 +61,6 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisito
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
 use Tuleap\Tracker\Report\Query\AndFromWhere;
-use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\IProvideFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\OrFromWhere;
 
@@ -164,6 +164,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         MetadataBetweenComparisonFromWhereBuilder $metadata_between_comparison_from_where_builder,
         MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
         MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder,
+        private readonly ArtifactLinkFromWhereBuilder $artifact_link_from_where_builder,
     ) {
         $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;
@@ -185,9 +186,9 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
         $this->metadata_not_in_comparison_from_where_builder                = $metadata_not_in_comparison_from_where_builder;
     }
 
-    public function buildFromWhere(Logical $parsed_query, Tracker $tracker)
+    public function buildFromWhere(Logical $parsed_query, Tracker $tracker, \PFUser $user)
     {
-        return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderParameters($tracker));
+        return $parsed_query->acceptLogicalVisitor($this, new QueryBuilderParameters($tracker, $user));
     }
 
     public function visitEqualComparison(EqualComparison $comparison, $parameters)
@@ -197,7 +198,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->equal_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_equal_comparison_from_where_builder
             )
         );
@@ -210,7 +211,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->not_equal_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_not_equal_comparison_from_where_builder
             )
         );
@@ -223,7 +224,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_lesser_than_comparison_from_where_builder
             )
         );
@@ -236,7 +237,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_greater_than_comparison_from_where_builder
             )
         );
@@ -249,7 +250,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_or_equal_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_lesser_than_or_equal_comparison_from_where_builder
             )
         );
@@ -262,7 +263,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_or_equal_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_greater_than_or_equal_comparison_from_where_builder
             )
         );
@@ -275,7 +276,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->between_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_between_comparison_from_where_builder
             )
         );
@@ -288,7 +289,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->in_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_in_comparison_from_where_builder
             )
         );
@@ -301,7 +302,7 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
             new FromWhereSearchableVisitorParameter(
                 $comparison,
                 $this->not_in_comparison_visitor,
-                $parameters->getTracker(),
+                $parameters->tracker,
                 $this->metadata_not_in_comparison_from_where_builder
             )
         );
@@ -372,41 +373,11 @@ final class QueryBuilderVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithParent(WithParent $condition, $parameters)
     {
-        $suffix = spl_object_hash($condition);
-        $from   = "";
-        $where  = "(
-                    SELECT 1
-                    FROM
-                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
-                        INNER JOIN tracker_changeset_value AS TCV_$suffix
-                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                        INNER JOIN tracker_artifact AS TCA_$suffix
-                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                    WHERE TCVAL_$suffix.artifact_id = artifact.id
-                        AND TCVAL_$suffix.nature = '_is_child'
-                    LIMIT 1
-                ) = 1";
-
-        return new FromWhere($from, $where);
+        return $this->artifact_link_from_where_builder->getFromWhereForWithParent($condition, $parameters->user);
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
-        $suffix = spl_object_hash($condition);
-        $from   = "";
-        $where  = "(
-                    SELECT 1
-                    FROM
-                        tracker_changeset_value_artifactlink AS TCVAL_$suffix
-                        INNER JOIN tracker_changeset_value AS TCV_$suffix
-                            ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
-                        INNER JOIN tracker_artifact AS TCA_$suffix
-                            ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                    WHERE TCVAL_$suffix.artifact_id = artifact.id
-                        AND TCVAL_$suffix.nature = '_is_child'
-                    LIMIT 1
-                ) IS NULL";
-
-        return new FromWhere($from, $where);
+        return $this->artifact_link_from_where_builder->getFromWhereForWithoutParent($condition, $parameters->user);
     }
 }

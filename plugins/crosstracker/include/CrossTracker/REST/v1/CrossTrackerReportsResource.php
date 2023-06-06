@@ -25,6 +25,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Tracker;
+use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
@@ -42,6 +43,7 @@ use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
@@ -200,6 +202,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $date_value_extractor    = new Date\DateValueExtractor();
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_value_extractor    = new ListValueExtractor();
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new EqualComparisonFromWhereBuilder(
@@ -351,12 +354,13 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                     $list_value_extractor,
                     $this->user_manager
                 )
-            )
+            ),
+            new ArtifactLinkFromWhereBuilder($artifact_factory),
         );
 
         $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
-            \Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             $this->validator,
             $query_builder_visitor,
             $parser,
