@@ -225,12 +225,6 @@ msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
 msgid "The maximum value for 'limit' is %d"
 msgstr "La valeur maximum pour 'limit' est %d"
 
-msgid "WITH PARENT cannot be used in Cross Tracker search"
-msgstr "WITH PARENT ne peut pas être utilisé avec la recherche multi trackers"
-
-msgid "WITHOUT PARENT cannot be used in Cross Tracker search"
-msgstr ""
-
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
 

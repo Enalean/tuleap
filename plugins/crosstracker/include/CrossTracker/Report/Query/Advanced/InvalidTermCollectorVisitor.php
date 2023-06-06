@@ -283,25 +283,11 @@ final class InvalidTermCollectorVisitor implements LogicalVisitor, TermVisitor
 
     public function visitWithParent(WithParent $condition, $parameters)
     {
-        $parameters
-            ->getInvalidSearchablesCollection()
-            ->addInvalidSearchableError(
-                dgettext(
-                    'tuleap-crosstracker',
-                    'WITH PARENT cannot be used in Cross Tracker search',
-                )
-            );
+        // always valid
     }
 
     public function visitWithoutParent(WithoutParent $condition, $parameters)
     {
-        $parameters
-            ->getInvalidSearchablesCollection()
-            ->addInvalidSearchableError(
-                dgettext(
-                    'tuleap-crosstracker',
-                    'WITHOUT PARENT cannot be used in Cross Tracker search',
-                )
-            );
+        // always valid
     }
 }
