@@ -489,19 +489,19 @@ class BackendSVN extends Backend
         return $this->project_default_blocks_cache[$project->getID()];
     }
 
-    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name)
+    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name): string
     {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
         $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
-        return $svn_access_file->parseGroupLines($project, $contents);
+        return $svn_access_file->parseGroupLines($project, $contents)->contents;
     }
 
-    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir)
+    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir): string
     {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
         $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
 
-        return $svn_access_file->parseGroupLinesByRepositories($svn_dir, $contents);
+        return $svn_access_file->parseGroupLinesByRepositories($svn_dir, $contents)->contents;
     }
 
     private function updateSVNAccessFile($system_path, $custom_perms, Project $project)

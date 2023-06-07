@@ -24,6 +24,8 @@ use SVN_AccessFile_Writer;
 use Tuleap\SVNCore\SVNAccessFile;
 use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
+use Tuleap\SVNCore\SVNAccessFileContentAndFaults;
 
 class AccessFileHistoryCreator
 {
@@ -64,17 +66,16 @@ class AccessFileHistoryCreator
     }
 
     /**
-     * @return AccessFileHistory
      * @throws CannotCreateAccessFileHistoryException
      */
-    public function create(Repository $repository, $content, $timestamp, SVN_AccessFile_Writer $access_file_writer)
+    public function create(Repository $repository, $content, $timestamp, SVN_AccessFile_Writer $access_file_writer): CollectionOfSVNAccessFileFaults
     {
-        $file_history = $this->storeInDB($repository, $content, $timestamp);
+        [$file_history, $faults] = $this->storeInDB($repository, $content, $timestamp);
         $this->logHistory($repository, $content);
 
         $this->saveAccessFile($repository, $file_history, $access_file_writer);
 
-        return $file_history;
+        return $faults;
     }
 
     public function useAVersion(Repository $repository, $version_id)
@@ -112,12 +113,10 @@ class AccessFileHistoryCreator
         }
     }
 
-    private function cleanContent(Repository $repository, $content)
+    private function cleanContent(Repository $repository, string $content): SVNAccessFileContentAndFaults
     {
         $access_file = new SVNAccessFile();
-        return trim(
-            $access_file->parseGroupLinesByRepositories($repository->getSystemPath(), $content, true)
-        );
+        return $access_file->parseGroupLinesByRepositories($repository->getSystemPath(), trim($content));
     }
 
     /**
@@ -144,20 +143,25 @@ class AccessFileHistoryCreator
     }
 
     /**
-     * @return AccessFileHistory
      * @throws CannotCreateAccessFileHistoryException
+     *
+     * @psalm-return array{AccessFileHistory, CollectionOfSVNAccessFileFaults}
      */
-    public function storeInDB(Repository $repository, $content, $timestamp)
+    public function storeInDB(Repository $repository, string $content, int $timestamp): array
     {
-        $content = $this->cleanContent($repository, $content);
-        return $this->storeInDBWithoutCleaningContent($repository, $content, $timestamp);
+        $svn_access_file = $this->cleanContent($repository, $content);
+        $file_history    = $this->storeInDBWithoutCleaningContent(
+            $repository,
+            $svn_access_file->contents,
+            $timestamp,
+        );
+        return [$file_history, $svn_access_file->faults];
     }
 
     /**
-     * @return AccessFileHistory
      * @throws CannotCreateAccessFileHistoryException
      */
-    public function storeInDBWithoutCleaningContent(Repository $repository, $content, $timestamp)
+    public function storeInDBWithoutCleaningContent(Repository $repository, string $content, int $timestamp): AccessFileHistory
     {
         $last_version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
         $new_version_number  = $last_version_number + 1;

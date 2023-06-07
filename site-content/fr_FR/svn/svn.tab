@@ -3,9 +3,6 @@
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 
-svn_admin_access_control	no_ugroup	Le groupe "$1" est vide ou n'existe pas
-svn_admin_access_control	invalid_line	La ligne "$1" est invalide
-
 svn_admin_immutable_tags	title	Tags non modifiables
 svn_admin_immutable_tags	configuration	Configuration des tags non modifiables
 svn_admin_immutable_tags	configuration_description	Spécifiez les répertoires dans lesquels se trouveront les tags non modifiables. Vous pouvez définir une liste de répertoires où les modifications seront tout de même autorisées.

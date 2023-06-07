@@ -129,12 +129,15 @@ class AccessControlController
             if ($request->exist('submit_other_version')) {
                 $this->access_file_creator->useAVersionWithHistory($repository, $request->get('version_selected'));
             } else {
-                $this->access_file_creator->create(
+                $faults = $this->access_file_creator->create(
                     $repository,
                     $request->get('form_accessfile'),
                     $_SERVER['REQUEST_TIME'],
-                    new SVN_AccessFile_Writer($repository->getSystemPath())
+                    new SVN_AccessFile_Writer($repository->getSystemPath()),
                 );
+                foreach ($faults as $fault) {
+                    $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
+                }
             }
             $GLOBALS['Response']->redirect($this->getUrl($repository));
         } catch (CannotCreateAccessFileHistoryException $exception) {

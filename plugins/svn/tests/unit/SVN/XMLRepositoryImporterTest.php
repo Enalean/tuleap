@@ -33,11 +33,9 @@ use PFUser;
 use Project;
 use Psr\Log\LogLevel;
 use SimpleXMLElement;
-use SVN_AccessFile_Writer;
 use SystemEvent;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -47,6 +45,7 @@ use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\SVN\Repository\RepositoryCreator;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RuleName;
+use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use UserManager;
 
 class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -350,16 +349,7 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->backend_svn->shouldReceive('setUserAndGroup')->once();
 
-        $created_access_file = \Mockery::mock(AccessFileHistory::class);
-        $created_access_file->shouldReceive('getVersionNumber')->once();
-        $created_access_file->shouldReceive('getContent')->twice();
-        $this->accessfile_history_creator->shouldReceive('create')->once()->andReturn($created_access_file);
-
-        $writer = \Mockery::mock(SVN_AccessFile_Writer::class);
-        $writer->shouldReceive('filename')->once();
-        $writer->shouldReceive('write_with_defaults')->once()->andReturnTrue();
-
-        $this->repository_importer->shouldReceive('getAccessFileWriter')->andReturn($writer);
+        $this->accessfile_history_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->xml_user_checker->shouldReceive('currentUserIsHTTPUser')->andReturnFalse();
 
@@ -373,6 +363,6 @@ class XMLRepositoryImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->committer
         );
 
-        self::assertCount(3, $this->logger->recordsByLevel[LogLevel::INFO]);
+        self::assertCount(2, $this->logger->recordsByLevel[LogLevel::INFO]);
     }
 }

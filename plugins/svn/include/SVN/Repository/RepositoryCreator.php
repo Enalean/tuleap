@@ -316,7 +316,7 @@ class RepositoryCreator
                 $this->access_file_history_creator->storeInDB(
                     $repository,
                     $history->getContent(),
-                    $history->getVersionDate()
+                    $history->getVersionDate(),
                 );
             }
             $this->project_history_formatter->addAccessFileContentHistory($history->getContent());

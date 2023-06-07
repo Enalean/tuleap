@@ -33,6 +33,7 @@ use Tuleap\SVN\Repository\HookConfig;
 use Tuleap\SVN\Repository\HookConfigUpdator;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\Settings;
+use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 
 class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -137,7 +138,7 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
         $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once();
+        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -178,7 +179,7 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
         $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once();
+        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
@@ -259,7 +260,7 @@ class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hook_config_updater->shouldReceive('updateHookConfig')->once();
         $this->immutable_tag_creator->shouldReceive('save')->once();
-        $this->access_file_creator->shouldReceive('create')->once();
+        $this->access_file_creator->shouldReceive('create')->once()->andReturn(new CollectionOfSVNAccessFileFaults());
 
         $this->updater->update($this->repository, $settings);
     }
