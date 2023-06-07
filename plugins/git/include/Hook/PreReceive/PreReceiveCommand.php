@@ -28,14 +28,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\NeverThrow\Fault;
 
 #[ConfigKeyCategory('Git')]
 final class PreReceiveCommand extends Command
 {
-    #[FeatureFlagConfigKey("Feature flag to enable the git:pre-receive command")]
-    public const FEATURE_FLAG_KEY = 'enable_pre_receive_command';
+    #[FeatureFlagConfigKey("Feature flag to ignore specific git repositories by the git:pre-receive command")]
+    #[ConfigKeyString("")]
+    public const FEATURE_FLAG_KEY = 'pre_receive_ignored_repos_ids';
 
     public const NAME = 'git:pre-receive';
 

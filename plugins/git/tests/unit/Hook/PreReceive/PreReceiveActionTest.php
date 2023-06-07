@@ -46,8 +46,6 @@ final class PreReceiveActionTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        ForgeConfig::setFeatureFlag(PreReceiveCommand::FEATURE_FLAG_KEY, '1');
     }
 
     public function testRepoDoesNotExist(): void
