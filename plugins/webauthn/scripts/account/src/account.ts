@@ -66,11 +66,16 @@ function prepareRegistration(): void {
         "#webauthn-name-input",
         HTMLInputElement
     );
+    const csrf_modal_input = selectOrThrow(
+        form_name_modal,
+        "input[name=challenge]",
+        HTMLInputElement
+    );
     const error = selectOrThrow(document, "#webauthn-add-error");
     const add_button_icon = selectOrThrow(document, "#webauthn-modal-add");
 
-    function registration(name: string): void {
-        register(name).match(
+    function registration(name: string, csrf_token: string): void {
+        register(name, csrf_token).match(
             () => {
                 location.reload();
             },
@@ -90,10 +95,11 @@ function prepareRegistration(): void {
         event.preventDefault();
 
         const name = name_modal_input.value.trim();
+        const csrf_token = csrf_modal_input.value;
 
         error.classList.add(HIDDEN);
         add_button_icon.classList.remove(HIDDEN);
-        registration(name);
+        registration(name, csrf_token);
     });
 
     name_modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {

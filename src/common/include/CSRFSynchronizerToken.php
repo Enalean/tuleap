@@ -107,7 +107,7 @@ class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInte
      *
      * @return bool true if token valid, false otherwise
      */
-    public function isValid($token)
+    public function isValid($token): bool
     {
         if (! is_string($token)) {
             return false;

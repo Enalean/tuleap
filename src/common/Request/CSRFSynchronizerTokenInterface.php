@@ -31,6 +31,16 @@ interface CSRFSynchronizerTokenInterface
     public function getTokenName(): string;
 
     /**
+     * Check that a challenge token is valid.
+     * @see Constructor
+     *
+     * @param string $token The token to check against what is stored in the user session
+     *
+     * @return bool true if token valid, false otherwise
+     */
+    public function isValid($token): bool;
+
+    /**
      * Redirect to somewhere else if the token in request is not valid
      *
      * @param Codendi_Request $request     The request object, if null then use HTTPRequest

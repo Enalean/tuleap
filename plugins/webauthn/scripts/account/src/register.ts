@@ -27,7 +27,7 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { RegistrationFault } from "./CustomFault";
 import type { Fault } from "@tuleap/fault";
 
-export function register(name: string): ResultAsync<null, Fault> {
+export function register(name: string, csrf_token: string): ResultAsync<null, Fault> {
     return postJSON<PublicKeyCredentialCreationOptionsJSON>(
         uri`/webauthn/registration-challenge`,
         {}
@@ -44,6 +44,7 @@ export function register(name: string): ResultAsync<null, Fault> {
                 {
                     name: name,
                     response: attestation_response,
+                    csrf_token: csrf_token,
                 }
             );
         })
