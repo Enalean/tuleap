@@ -24,78 +24,117 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use LDAP_UserSync;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Psr\Log\NullLogger;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @covers \LDAP_UserSync
+ */
+final class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testNoUpdateWhenNoDifference(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getRealName')->andReturns('toto');
-        $user->shouldReceive('getEmail')->andReturns('toto');
-        $user->shouldReceive('setRealName')->never();
-        $user->shouldReceive('setEmail')->never();
+        $user = UserTestBuilder::aUser()->withEmail('toto@example.com')->withRealName('toto')->build();
+        $lr   = new \LDAPResult(
+            [
+                'cn' => ['toto'],
+                'mail' => ['toto@example.com'],
+            ],
+            [
+                'cn' => 'cn',
+                'mail' => 'mail',
+            ],
+        );
 
-        $lr = \Mockery::mock(\LDAPResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $lr->shouldReceive('getCommonName')->andReturns('toto');
-        $lr->shouldReceive('getEmail')->andReturns('toto');
+        $sync = new LDAP_UserSync(new NullLogger());
 
-        $sync = new LDAP_UserSync();
-        $sync->sync($user, $lr);
+        self::assertFalse($sync->sync($user, $lr));
+    }
+
+    public function testNoUpdateWhenNoDifferenceWithLongName(): void
+    {
+        $user = UserTestBuilder::aUser()->withEmail('toto@example.com')->withRealName('totooooooooooooooooooooooooooooooooooooo')->build();
+        $lr   = new \LDAPResult(
+            [
+                'cn' => ['totooooooooooooooooooooooooooooooooooooo'],
+                'mail' => ['toto@example.com'],
+            ],
+            [
+                'cn' => 'cn',
+                'mail' => 'mail',
+            ],
+        );
+
+        $sync = new LDAP_UserSync(new NullLogger());
+
+        self::assertFalse($sync->sync($user, $lr));
     }
 
     public function testUserUpdateEmailIfLdapDoesntMatch(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getRealName')->andReturns('toto');
-        $user->shouldReceive('getEmail')->andReturns('toto');
-        $user->shouldReceive('setRealName')->never();
-        $user->shouldReceive('setEmail')->with('foobar')->once();
+        $user = UserTestBuilder::aUser()->withEmail('toto@example.com')->withRealName('toto')->build();
+        $lr   = new \LDAPResult(
+            [
+                'cn' => ['toto'],
+                'mail' => ['foobar@example.com'],
+            ],
+            [
+                'cn' => 'cn',
+                'mail' => 'mail',
+            ],
+        );
 
-        $lr = \Mockery::mock(\LDAPResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $lr->shouldReceive('getCommonName')->andReturns('toto');
-        $lr->shouldReceive('getEmail')->andReturns('foobar');
+        $sync = new LDAP_UserSync(new NullLogger());
 
-        $sync = new LDAP_UserSync();
-        $sync->sync($user, $lr);
+        self::assertTrue($sync->sync($user, $lr));
+        self::assertSame('foobar@example.com', $user->getEmail());
+        self::assertSame('toto', $user->getRealName());
     }
 
     public function testUserUpdateRealnameIfLdapDoesntMatch(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getRealName')->andReturns('toto');
-        $user->shouldReceive('getEmail')->andReturns('toto');
-        $user->shouldReceive('setRealName')->with('foobar')->once();
-        $user->shouldReceive('setEmail')->never();
+        $user = UserTestBuilder::aUser()->withEmail('toto@example.com')->withRealName('toto')->build();
+        $lr   = new \LDAPResult(
+            [
+                'cn' => ['foobar'],
+                'mail' => ['toto@example.com'],
+            ],
+            [
+                'cn' => 'cn',
+                'mail' => 'mail',
+            ],
+        );
 
-        $lr = \Mockery::mock(\LDAPResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $lr->shouldReceive('getCommonName')->andReturns('foobar');
-        $lr->shouldReceive('getEmail')->andReturns('toto');
+        $sync = new LDAP_UserSync(new NullLogger());
 
-        $sync = new LDAP_UserSync();
-        $sync->sync($user, $lr);
+        self::assertTrue($sync->sync($user, $lr));
+        self::assertSame('foobar', $user->getRealName());
+        self::assertSame('toto@example.com', $user->getEmail());
     }
 
     public function testChangeUserStatusWithDedicatedCode(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $user->shouldReceive('getRealName')->andReturns('toto');
-        $user->shouldReceive('getEmail')->andReturns('toto');
-        $user->shouldReceive('getStatus')->andReturns(PFUser::STATUS_ACTIVE);
-        $user->shouldReceive('setRealName')->never();
-        $user->shouldReceive('setEmail')->never();
-        $user->shouldReceive('setStatus')->with(PFUser::STATUS_RESTRICTED)->once();
-
-        $lr = \Mockery::mock(\LDAPResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $lr->shouldReceive('getCommonName')->andReturns('toto');
-        $lr->shouldReceive('getEmail')->andReturns('toto');
-        $lr->shouldReceive('get')->with('employeetype')->andReturns('contractor');
+        $user = UserTestBuilder::aUser()->withEmail('toto@example.com')->withRealName('toto')->withStatus(PFUser::STATUS_ACTIVE)->build();
+        $lr   = new \LDAPResult(
+            [
+                'cn' => ['toto'],
+                'mail' => ['toto@example.com'],
+                'employeetype' => ['contractor'],
+            ],
+            [
+                'cn' => 'cn',
+                'mail' => 'mail',
+                'employeetype' => 'employeetype',
+            ],
+        );
 
         include_once __DIR__ . '/../../site-content/en_US/synchronize_user.txt';
         $sync = new \LDAPPluginCustomUserSync();
-        $sync->sync($user, $lr);
+
+        self::assertTrue($sync->sync($user, $lr));
+        self::assertSame(PFUser::STATUS_RESTRICTED, $user->getStatus());
+        self::assertSame('toto', $user->getRealName());
+        self::assertSame('toto@example.com', $user->getEmail());
     }
 }
