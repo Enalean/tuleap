@@ -34,7 +34,7 @@ import type { FollowupEditor } from "./FollowupEditor";
 import { CommentsController } from "../../../domain/comments/CommentsController";
 import { RetrieveCommentsStub } from "../../../../tests/stubs/RetrieveCommentsStub";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { ProjectIdentifierStub } from "../../../../tests/stubs/ProjectIdentifierStub";
+import { CurrentProjectIdentifierStub } from "../../../../tests/stubs/CurrentProjectIdentifierStub";
 import type { CommentUserPreferences } from "../../../domain/comments/CommentUserPreferences";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 
@@ -101,7 +101,7 @@ describe(`ModalCommentsSection`, () => {
                     RetrieveCommentsStub.withoutComments(),
                     DispatchEventsStub.buildNoOp(),
                     CurrentArtifactIdentifierStub.withId(91),
-                    ProjectIdentifierStub.withId(PROJECT_ID),
+                    CurrentProjectIdentifierStub.withId(PROJECT_ID),
                     preferences
                 ),
             } as HostElement;

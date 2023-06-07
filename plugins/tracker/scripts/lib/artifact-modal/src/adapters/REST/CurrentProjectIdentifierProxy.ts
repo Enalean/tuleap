@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "./Identifier";
+import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
+import type { CurrentProjectIdentifier } from "../../domain/CurrentProjectIdentifier";
 
-export type ProjectIdentifier = Identifier<"ProjectIdentifier">;
+export const CurrentProjectIdentifierProxy = {
+    fromTrackerModel: (tracker: TrackerWithChangesetValues): CurrentProjectIdentifier => ({
+        id: tracker.project.id,
+        _type: "CurrentProjectIdentifier",
+    }),
+};

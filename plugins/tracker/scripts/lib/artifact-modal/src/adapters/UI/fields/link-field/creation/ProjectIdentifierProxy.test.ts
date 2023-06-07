@@ -17,13 +17,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ProjectIdentifierTrackerCreationProxy } from "./ProjectIdentifierTrackerCreationProxy";
+import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import type { Option } from "@tuleap/option";
 
 const VALUE = "110";
 
-describe("ProjectIdentifierTrackerCreationProxy", () => {
+describe("ProjectIdentifierProxy", () => {
     let project_identifier: Option<ProjectIdentifier>;
     const triggerEvent = (): void => {
         const doc = document.implementation.createHTMLDocument();
@@ -35,7 +35,7 @@ describe("ProjectIdentifierTrackerCreationProxy", () => {
         select.append(selected_option);
 
         select.addEventListener("change", (event): void => {
-            project_identifier = ProjectIdentifierTrackerCreationProxy.fromChangeEvent(event);
+            project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
         });
         select.dispatchEvent(new Event("change"));
     };
@@ -50,7 +50,7 @@ describe("ProjectIdentifierTrackerCreationProxy", () => {
         const doc = document.implementation.createHTMLDocument();
         const input = doc.createElement("input");
         input.addEventListener("change", (event): void => {
-            project_identifier = ProjectIdentifierTrackerCreationProxy.fromChangeEvent(event);
+            project_identifier = ProjectIdentifierProxy.fromChangeEvent(event);
         });
         input.dispatchEvent(new Event("change"));
         expect(project_identifier.isNothing()).toBe(true);

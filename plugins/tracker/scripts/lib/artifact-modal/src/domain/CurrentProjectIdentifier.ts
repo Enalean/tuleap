@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
-import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
+import type { Identifier } from "./Identifier";
 
-const PROJECT_ID = 161;
-
-describe(`ProjectIdentifierProxy`, () => {
-    it(`builds from the current tracker's REST representation`, () => {
-        const tracker = {
-            project: { id: PROJECT_ID, label: "", icon: "" },
-        } as TrackerWithChangesetValues;
-        const identifier = ProjectIdentifierProxy.fromTrackerModel(tracker);
-        expect(identifier.id).toBe(PROJECT_ID);
-    });
-});
+// I identify the project of the artifact currently under creation/edition
+export type CurrentProjectIdentifier = Identifier<"CurrentProjectIdentifier">;

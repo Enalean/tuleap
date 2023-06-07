@@ -18,7 +18,7 @@
  */
 import type { ProjectIdentifier } from "../../../../../domain/ProjectIdentifier";
 import { Option } from "@tuleap/option";
-export const ProjectIdentifierTrackerCreationProxy = {
+export const ProjectIdentifierProxy = {
     fromChangeEvent: (event: Event): Option<ProjectIdentifier> => {
         if (!(event.target instanceof HTMLSelectElement)) {
             return Option.nothing();

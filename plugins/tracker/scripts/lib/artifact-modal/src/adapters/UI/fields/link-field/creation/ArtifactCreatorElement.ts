@@ -40,7 +40,7 @@ import "../LinkTypeSelectorElement";
 import { FaultDisplayer } from "./FaultDisplayer";
 import type { Tracker } from "../../../../../domain/Tracker";
 import { selectOrThrow } from "@tuleap/dom";
-import { ProjectIdentifierTrackerCreationProxy } from "./ProjectIdentifierTrackerCreationProxy";
+import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
 import { createListPicker } from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
 
@@ -111,7 +111,7 @@ const getTrackersOptions = (
 
 const getTrackers = (host: InternalArtifactCreator, event: Event): void => {
     host.is_loading = true;
-    const project_id = ProjectIdentifierTrackerCreationProxy.fromChangeEvent(event);
+    const project_id = ProjectIdentifierProxy.fromChangeEvent(event);
 
     project_id.apply((id) =>
         host.controller.getTrackers(id).then((trackers) => {
