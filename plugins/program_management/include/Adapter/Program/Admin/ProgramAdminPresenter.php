@@ -66,6 +66,10 @@ final class ProgramAdminPresenter
     public bool $has_iteration_increment_error;
     public bool $has_plannable_error;
     public string $program_shortname;
+    public ?string $program_increment_label;
+    public ?string $program_increment_sub_label;
+    public ?string $iteration_label;
+    public ?string $iteration_sub_label;
     public ?TrackerErrorPresenter $program_increment_error_presenter;
     public ?TrackerErrorPresenter $iteration_error_presenter;
     public ?TrackerErrorPresenter $plannable_error_presenter;
@@ -76,6 +80,10 @@ final class ProgramAdminPresenter
     {
         $this->program_id                        = $program_admin->program->id;
         $this->program_shortname                 = $program_admin->program_shortname;
+        $this->program_increment_label           = $program_admin->program_increment_label;
+        $this->program_increment_sub_label       = $program_admin->program_increment_sub_label;
+        $this->iteration_label                   = $program_admin->iteration_label;
+        $this->iteration_sub_label               = $program_admin->iteration_sub_label;
         $this->aggregated_teams                  = $program_admin->aggregated_teams;
         $this->has_aggregated_teams              = count($program_admin->aggregated_teams) > 0;
         $this->is_project_used_in_plan           = $program_admin->is_project_used_in_plan;
