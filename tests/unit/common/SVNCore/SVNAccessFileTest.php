@@ -17,145 +17,222 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\SVNCore\CollectionOfSVNAccessFileFaults;
 use Tuleap\SVNCore\SVNAccessFile;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVNAccessFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testisGroupDefinedInvalidSyntax(): void
+    /**
+     * @dataProvider getRenameData
+     */
+    public function testRenameGroup(string $old_group, string $new_group, string $source_access_file, string $expected_access_file): void
     {
-        $saf    = new SVNAccessFile();
-        $groups = [];
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, 'uGroup1 = rw')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@uGroup1  rw')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@uGroup1')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@ uGroup1 = rw')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@@uGroup1 = rw')->unwrapOr(null));
+        $saf = new SVNAccessFile();
+        $saf->setPlatformBlock(<<<EOT
+        [groups]
+        members = user1, user2
+        ugroup1 = user1
+        ugroup2 = user2
+        ugroup3 = user1, user2
+
+        [/]
+        * =
+        @members = rw
+        EOT);
+
+
+        $saf->setRenamedGroup($new_group, $old_group);
+
+        $result = $saf->parseGroupLinesByRepositories('', $source_access_file);
+        self::assertEquals($expected_access_file, $result->contents);
     }
 
-    public function testisGroupDefinedNoUGroup(): void
+    public static function getRenameData(): iterable
     {
-        $groups = [];
-        $saf    = new SVNAccessFile();
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@uGroup3 = rw')->unwrapOr(null));
+        return [
+            'ugroup not redefined is renamed' => [
+                'ugroup1',
+                'ugroup11',
+                <<<EOT
+                [groups]
+                ugroup3 = user1
+
+                [/path]
+                @ugroup1 = rw
+                @ugroup2 = rw
+                EOT,
+                <<<EOT
+                [groups]
+                ugroup3 = user1
+
+                [/path]
+                @ugroup11 = rw
+                @ugroup2 = rw
+                EOT,
+            ],
+            'ugroup redefined by admin is not renamed' => [
+                'ugroup3',
+                'ugroup33',
+                <<<EOT
+                [groups]
+                ugroup3 = user1
+
+                [/path]
+                @ugroup3 = rw
+                @ugroup2 = rw
+                EOT,
+                <<<EOT
+                [groups]
+                ugroup3 = user1
+
+                [/path]
+                @ugroup3 = rw
+                @ugroup2 = rw
+                EOT,
+            ],
+        ];
     }
 
-    public function testisGroupDefined(): void
-    {
-        $groups = ['ugroup2' => true, 'a' => true];
-        $saf    = new SVNAccessFile();
-        self::assertNull($saf->isGroupDefined($groups, '@ugroup2=rw')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@uGroup2=rw')->unwrapOr(null));
-        self::assertInstanceOf(Fault::class, $saf->isGroupDefined($groups, '@uGroup3 = rw')->unwrapOr(null));
-        self::assertNull($saf->isGroupDefined($groups, '@a=rw')->unwrapOr(null));
-    }
-
-    public function testValidateUGroupLine(): void
-    {
-        $saf = \Mockery::mock(\Tuleap\SVNCore\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $saf->shouldReceive('isGroupDefined')->andReturns(\Tuleap\Option\Option::nothing(Fault::class));
-        $groups = ['uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true];
-        $this->assertEquals(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals(' @uGroup11 = rw', $saf->validateUGroupLine($groups, ' @uGroup11 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals(' @@uGroup1 = rw', $saf->validateUGroupLine($groups, ' @@uGroup1 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals('# @uGroup1 = rw', $saf->validateUGroupLine($groups, '# @uGroup1 = rw', new CollectionOfSVNAccessFileFaults()));
-
-        $this->assertEquals('@uGroup3 = rw', $saf->validateUGroupLine($groups, '@uGroup3 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals('@uGroup33 = rw', $saf->validateUGroupLine($groups, '@uGroup33 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals('@uGroup33	= rw', $saf->validateUGroupLine($groups, '@uGroup33	= rw', new CollectionOfSVNAccessFileFaults()));
-    }
-
-    public function testRenameGroup(): void
-    {
-        $groups = ['ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED];
-        $saf    = new SVNAccessFile();
-        $saf->setRenamedGroup('ugroup11', 'ugroup1');
-        $this->assertEquals('@ugroup11 = rw', $saf->renameGroup($groups, '@ugroup1 = rw'));
-        $this->assertEquals('@ugroup2 = rw', $saf->renameGroup($groups, '@ugroup2 = rw'));
-
-        $saf->setRenamedGroup('ugroup33', 'ugroup3');
-        $this->assertEquals('@ugroup3 = rw', $saf->renameGroup($groups, '@ugroup3 = rw'));
-        $this->assertEquals('@ugroup2 = rw', $saf->renameGroup($groups, '@ugroup2 = rw'));
-    }
-
-    public function testCommentInvalidLine(): void
-    {
-        $groups = ['ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED];
-        $saf    = new SVNAccessFile();
-        $this->assertEquals('@ugroup1 = rw', $saf->commentInvalidLine($groups, '@ugroup1 = rw', new CollectionOfSVNAccessFileFaults()));
-        $this->assertEquals('# @ugroup2', $saf->commentInvalidLine($groups, '@ugroup2', new CollectionOfSVNAccessFileFaults()));
-    }
-
-    public function testParseGroupLines(): void
+    /**
+     * @dataProvider getSvnAccessFileSamples
+     */
+    public function testParseGroupLines(string $source, string $expected): void
     {
         $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
         $saf = new SVNAccessFile();
-        $saf->setPlatformBlock("[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
+        $saf->setPlatformBlock(<<<EOT
+        [groups]
+        members = user1, user2
+        uGroup1 = user3
 
-        $this->assertEquals("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r")->contents);
-        $this->assertEquals("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw")->contents);
-        $this->assertEquals("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw")->contents);
+        [/]
+        *=
+        @members=rw
+        EOT);
+
+        $this->assertEquals($expected, $saf->parseGroupLines($project, $source)->contents);
     }
 
-    public function testAccumulateDefinedGroupsFromDeFaultGroupsSection(): void
+    public static function getSvnAccessFileSamples(): iterable
     {
-        $saf = new SVNAccessFile();
-        $this->assertEquals([], $saf->accumulateDefinedGroups([], '', true));
+        return [
+            'invalid ugroup syntax (was testisGroupDefinedInvalidSyntax)' => [
+                <<<EOT
+                [/path]
+                @uGroup1  rw
+                @ uGroup1 = rw
+                @@uGroup1 = rw
+                EOT,
+                <<<EOT
+                [/path]
+                # @uGroup1  rw
+                # @ uGroup1 = rw
+                # @@uGroup1 = rw
+                EOT,
+            ],
+            'permission uses a group not defined (was testisGroupDefinedNoUGroup)' => [
+                <<<EOT
+                [/path]
+                @uGroup3 = rw
+                EOT,
+                <<<EOT
+                [/path]
+                # @uGroup3 = rw
+                EOT,
+            ],
+            'comment line with ugroup that do not have permissions (was testCommentInvalidLine & testisGroupDefined)' => [
+                <<<EOT
+                [/path]
+                @ugroup1
+                EOT,
+                <<<EOT
+                [/path]
+                # @ugroup1
+                EOT,
+            ],
+            'comment ugroup line that do not respect case' => [
+                <<<EOT
+                [/]
+                @members = rw
+                @ugroup1 = r
+                EOT,
+                <<<EOT
+                [/]
+                @members = rw
+                # @ugroup1 = r
+                EOT,
+            ],
+            'groups are redefined in one user controlled section' => [
+                <<<EOT
+                [/]
+                @members=rw
+                @group1 = r
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups([], 'group1 = user1, user2', true));
+                [Groups]
+                group1=user1, user2
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group1 = user11, user22', true));
+                [/trunk]
+                @group1=r
+                user1=rw
+                EOT,
+                <<<EOT
+                [/]
+                @members=rw
+                # @group1 = r
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED, 'group2' => SVNAccessFile::UGROUP_DEFAULT], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_REDEFINED], 'group2 = user11, user22', true));
-    }
+                [Groups]
+                group1=user1, user2
 
-    public function testAccumulateDefinedGroups(): void
-    {
-        $saf = new SVNAccessFile();
-        $this->assertEquals([], $saf->accumulateDefinedGroups([], ''));
+                [/trunk]
+                @group1=r
+                user1=rw
+                EOT,
+            ],
+            'groups are redefined in several user controlled sections' => [
+                <<<EOT
+                [/]
+                @members=rw
+                @group1 = r
 
-        $this->assertEquals([], $saf->accumulateDefinedGroups([], 'blah'));
+                [Groups]
+                group1=user1, user2
 
-        $this->assertEquals([], $saf->accumulateDefinedGroups([], '[Groups]'));
+                [groups]
+                group2=user3
 
-        $this->assertEquals([], $saf->accumulateDefinedGroups([], '[/]'));
+                [/trunk]
+                @group1=r
+                user1=rw
+                @group2=rw
+                EOT,
+                <<<EOT
+                [/]
+                @members=rw
+                # @group1 = r
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups([], 'group1 = user1, user2', false));
-        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups([], 'Group1 = user1, user2', false));
+                [Groups]
+                group1=user1, user2
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group1 = user1, user2', false));
-        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'Group1 = user1, user2', false));
+                [groups]
+                group2=user3
 
-        $this->assertEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'group2 = user1, user2', false));
-        $this->assertNotEquals(['group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED], $saf->accumulateDefinedGroups(['group1' => SVNAccessFile::UGROUP_DEFAULT], 'Group2 = user1, user2', false));
-    }
-
-    public function testGetCurrentSection(): void
-    {
-        $saf = new SVNAccessFile();
-        $this->assertEquals(-1, $saf->getCurrentSection('', -1));
-        $this->assertEquals(-1, $saf->getCurrentSection('blah', -1));
-        $this->assertEquals('groups', $saf->getCurrentSection('[Groups]', -1));
-        $this->assertEquals('groups', $saf->getCurrentSection('[Groups]', 'groups'));
-        $this->assertEquals(-1, $saf->getCurrentSection('[/]', -1));
-        $this->assertEquals(-1, $saf->getCurrentSection('[/]', 'groups'));
-        $this->assertEquals('groups', $saf->getCurrentSection('Group1 = user1, user2', 'groups'));
-        $this->assertEquals(-1, $saf->getCurrentSection('Group1 = user1, user2', -1));
+                [/trunk]
+                @group1=r
+                user1=rw
+                @group2=rw
+                EOT,
+            ],
+        ];
     }
 
     public function testSvnAccessFileShouldCallSVNUtilsWithCaseSensitiveRepositoryName(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
-        $project->shouldReceive('getSVNRootPath')->andReturns('/svnroot/mytestproject');
+        $project = $this->createMock(Project::class);
+        $project->method('getSVNRootPath')->willReturn('/svnroot/mytestproject');
 
-        $saf = \Mockery::mock(\Tuleap\SVNCore\SVNAccessFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $saf->shouldReceive('getPlatformBlock')->with('/svnroot/mytestproject')->once();
+        $saf = $this->createPartialMock(SVNAccessFile::class, ['getPlatformBlock']);
+        $saf->expects($this->once())->method('getPlatformBlock')->with('/svnroot/mytestproject');
 
         $saf->parseGroupLines($project, '');
     }
