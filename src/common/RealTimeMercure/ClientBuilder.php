@@ -31,7 +31,7 @@ class ClientBuilder
     public static function build(string $path): Client
     {
         $mercure_jwt_generator = MercureJWTGeneratorBuilder::build($path);
-        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             return new NullClient();
         }
         return new MercureClient(

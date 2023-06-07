@@ -27,6 +27,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanDao;
@@ -209,7 +210,7 @@ class KanbanColumnsResource
                 $data
             );
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->kanban_structural_realtime->sendStructureUpdate($kanban);
             }
         }
@@ -282,7 +283,7 @@ class KanbanColumnsResource
             );
 
             $this->node_js_client->sendMessage($message);
-            if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
                 $this->kanban_structural_realtime->sendStructureUpdate($kanban);
             }
         }

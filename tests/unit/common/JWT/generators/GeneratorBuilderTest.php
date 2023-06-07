@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Tuleap\JWT\generators;
 
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\PHPUnit\TestCase;
 use org\bovigo\vfs\vfsStream;
 
@@ -30,7 +31,8 @@ final class GeneratorBuilderTest extends TestCase
 
     public function testnoError(): void
     {
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
+
         $structure = [
             'env' => [
                 'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 160),
@@ -44,7 +46,7 @@ final class GeneratorBuilderTest extends TestCase
 
     public function testNoFileError(): void
     {
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
         $root           = vfsStream::setup('root2');
         $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/mercure.env');
         $this->assertNull($mercure_client->getTokenBackend());
@@ -52,7 +54,7 @@ final class GeneratorBuilderTest extends TestCase
 
     public function testMalformedFileError(): void
     {
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
         $structure      = [
             'env' => [
                 'mercure.env' => 'testtes' . str_repeat('a', 3),
@@ -65,7 +67,7 @@ final class GeneratorBuilderTest extends TestCase
 
     public function testInvalidKeyError(): void
     {
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', true);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
         $structure      = [
             'env' => [
                 'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 3),
@@ -78,7 +80,7 @@ final class GeneratorBuilderTest extends TestCase
 
     public function testNoFeatureFlag(): void
     {
-        \ForgeConfig::setFeatureFlag('enable_mercure_dev', false);
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, false);
         $structure = [
             'env' => [
                 'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 160),
