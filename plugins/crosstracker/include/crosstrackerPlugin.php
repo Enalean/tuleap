@@ -31,6 +31,7 @@ use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users;
@@ -362,7 +363,8 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
                     $list_value_extractor,
                     $user_manager
                 )
-            )
+            ),
+            new ArtifactLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
         );
 
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(

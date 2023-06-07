@@ -75,12 +75,16 @@ LinkCondition
     = WithParent
         / WithoutParent
 
-WithParent = "with parent"i {
-        return new WithParent();
+WithParent = "with parent"i _ condition:ParentCondition? {
+        return new WithParent($condition);
     }
 
-WithoutParent = "without parent"i {
-        return new WithoutParent();
+WithoutParent = "without parent"i _ condition:ParentCondition? {
+        return new WithoutParent($condition);
+    }
+
+ParentCondition = "artifact"i _ "=" _ id:$[0-9]+ {
+        return new ParentArtifactCondition($id);
     }
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" {

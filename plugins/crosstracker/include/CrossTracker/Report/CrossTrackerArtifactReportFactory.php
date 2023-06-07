@@ -143,7 +143,7 @@ class CrossTrackerArtifactReportFactory
             new InvalidSearchablesCollectionBuilder($this->collector, $trackers, $current_user)
         );
         $parsed_expert_query   = $this->parser->parse($expert_query);
-        $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query, $trackers);
+        $additional_from_where = $this->query_builder->buildFromWhere($parsed_expert_query, $trackers, $current_user);
         $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(
             $additional_from_where,
             $this->getTrackersId($trackers),

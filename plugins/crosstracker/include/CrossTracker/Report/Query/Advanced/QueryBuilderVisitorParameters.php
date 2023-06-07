@@ -25,20 +25,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 final class QueryBuilderVisitorParameters implements VisitorParameters
 {
     /**
-     * @var Tracker[]
+     * @param Tracker[] $trackers
      */
-    private $trackers;
-
-    public function __construct(array $trackers)
+    public function __construct(public readonly array $trackers, public readonly \PFUser $user)
     {
-        $this->trackers = $trackers;
-    }
-
-    /**
-     * @return Tracker[]
-     */
-    public function getTrackers()
-    {
-        return $this->trackers;
     }
 }

@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -61,7 +62,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
-        $this->parameters = new QueryBuilderParameters($tracker);
+        $this->parameters = new QueryBuilderParameters($tracker, UserTestBuilder::buildWithDefaults());
         $field_text       = new Tracker_FormElement_Field_Text(
             1,
             null,
@@ -161,7 +162,8 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
             new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
-            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
+            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder(),
+            new QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilder(\Tracker_ArtifactFactory::instance())
         );
     }
 
