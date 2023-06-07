@@ -20,8 +20,7 @@
 import type { Card, Swimlane, Tracker, User } from "../../../type";
 import * as mutations from "./card-mutations";
 import type { SwimlaneState } from "../type";
-import type { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
-import type { UserForPeoplePicker } from "../../../store/swimlane/card/type";
+import type { UpdateCardPayload, NewRemainingEffortPayload, UserForPeoplePicker } from "./type";
 
 jest.useFakeTimers();
 

@@ -19,8 +19,11 @@
 
 import { downloadExportDocument } from "./download-export-document";
 import * as report_creator from "./Reporter/report-creator";
-import type { ExportDocument, Campaign } from "../../type";
-import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../type";
+import type {
+    ExportDocument,
+    Campaign,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../type";
 
 describe("Start download of export document", () => {
     it("generates the report and start the download of the document", async () => {

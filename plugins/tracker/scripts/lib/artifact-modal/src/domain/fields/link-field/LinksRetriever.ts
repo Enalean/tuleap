@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { errAsync } from "neverthrow";
-import { ResultAsync } from "neverthrow";
+import { errAsync, ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { Option } from "@tuleap/option";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";

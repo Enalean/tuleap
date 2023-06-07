@@ -26,8 +26,11 @@ import type {
     InlineCommentType,
     GlobalCommentType,
 } from "@tuleap/plugin-pullrequest-constants";
-import type { NewCommentOnFile, NewGlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { PullRequestComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    NewCommentOnFile,
+    NewGlobalComment,
+    PullRequestComment,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";
 
 export interface SaveNewComment {

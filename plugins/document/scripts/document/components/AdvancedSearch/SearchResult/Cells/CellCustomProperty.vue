@@ -31,11 +31,12 @@ import type {
     CustomPropertySearchResultList,
     CustomPropertySearchResultString,
     ItemSearchResult,
+    CustomPropertySearchResult,
+    CustomPropertySearchResultDate,
 } from "../../../../type";
 import CellString from "./CellString.vue";
 import CellDate from "./CellDate.vue";
 import { ref } from "vue";
-import type { CustomPropertySearchResult, CustomPropertySearchResultDate } from "../../../../type";
 
 const props = defineProps<{ item: ItemSearchResult; column_name: AdditionalFieldNumber }>();
 

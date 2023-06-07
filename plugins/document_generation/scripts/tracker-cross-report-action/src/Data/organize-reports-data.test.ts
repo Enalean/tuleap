@@ -20,9 +20,11 @@
 import { describe, it, expect, vi } from "vitest";
 import { organizeReportsData } from "./organize-reports-data";
 import * as rest_querier from "../rest-querier";
-import type { OrganizedReportsData } from "../type";
-import type { LinkedArtifactsResponse } from "../type";
-import type { ArtifactForCrossReportDocGen } from "../type";
+import type {
+    OrganizedReportsData,
+    LinkedArtifactsResponse,
+    ArtifactForCrossReportDocGen,
+} from "../type";
 
 describe("organize-reports-data", () => {
     it("organizes the reports data with all 3 levels that will be used to create the XLSX document", async (): Promise<void> => {

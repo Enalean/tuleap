@@ -25,9 +25,8 @@ import type {
 } from "./type";
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { Project, ItemDefinition } from "../type";
+import type { Project, ItemDefinition, QuickLink } from "../type";
 import { useFullTextStore } from "./fulltext";
-import type { QuickLink } from "../type";
 import { useRootStore } from "./root";
 
 export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () => {

@@ -73,7 +73,14 @@ import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
 
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 
-import "@tuleap/plugin-pullrequest-comments";
+import {
+    PullRequestCommentController,
+    PullRequestCommentTextareaFocusHelper,
+    PullRequestCommentRepliesStore,
+    PullRequestCommentNewReplySaver,
+    PullRequestDescriptionCommentSaver,
+    PullRequestDescriptionCommentController,
+} from "@tuleap/plugin-pullrequest-comments";
 
 import type {
     PullRequestCommentPresenter,
@@ -82,22 +89,12 @@ import type {
     PullRequestPresenter,
     SupportedTimelineItem,
     ControlPullRequestDescriptionComment,
-} from "@tuleap/plugin-pullrequest-comments";
-
-import {
-    PullRequestCommentController,
-    PullRequestCommentTextareaFocusHelper,
-    PullRequestCommentRepliesStore,
-    PullRequestCommentNewReplySaver,
-    PullRequestDescriptionCommentSaver,
-} from "@tuleap/plugin-pullrequest-comments";
-import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
-import type {
     StorePullRequestCommentReplies,
     PullRequestDescriptionCommentPresenter,
 } from "@tuleap/plugin-pullrequest-comments";
+
+import { TYPE_EVENT_REVIEWER_CHANGE } from "@tuleap/plugin-pullrequest-constants";
 import { DescriptionCommentPresenterBuilder } from "./DescriptionCommentPresenterBuilder";
-import { PullRequestDescriptionCommentController } from "@tuleap/plugin-pullrequest-comments";
 
 const { $gettext } = useGettext();
 

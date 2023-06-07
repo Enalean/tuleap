@@ -21,8 +21,8 @@ import type { FileDiffWidget } from "../../src/app/file-diff/types";
 import type {
     FileLineHandle,
     LineHandleWithWidgets,
+    LineWidgetWithNode,
 } from "../../src/app/file-diff/types-codemirror-overriden";
-import type { LineWidgetWithNode } from "../../src/app/file-diff/types-codemirror-overriden";
 
 const noop = (): void => {
     // Do nothing

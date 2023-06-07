@@ -18,11 +18,15 @@
  */
 
 import { get } from "@tuleap/tlp-fetch";
-import type { EmbeddedFileVersion, FileHistory, LinkVersion } from "../type";
+import type {
+    EmbeddedFileVersion,
+    FileHistory,
+    LinkVersion,
+    EmbeddedFileSpecificVersionContent,
+} from "../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getAllJSON, del, getJSON, uri } from "@tuleap/fetch-result";
-import type { EmbeddedFileSpecificVersionContent } from "../type";
 
 export async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
     const escaped_file_id = encodeURIComponent(id);

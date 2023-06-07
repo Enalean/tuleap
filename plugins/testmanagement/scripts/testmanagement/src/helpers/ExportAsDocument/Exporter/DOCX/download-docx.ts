@@ -24,6 +24,7 @@ import type {
     DateTimeLocaleInformation,
     ExportDocument,
     GenericGlobalExportProperties,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
 } from "../../../../type";
 import {
     HEADER_LEVEL_SECTION,
@@ -34,7 +35,6 @@ import {
 import { buildMilestoneBacklog } from "./backlog-builder";
 import { buildFooter, buildHeader } from "./header-footer";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
-import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 import { buildTraceabilityMatrix } from "./matrix-builder";
 import { buildMilestoneTestPlan } from "./testplan-builder";
 import type { GettextProvider } from "@tuleap/gettext";

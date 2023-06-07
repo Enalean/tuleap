@@ -20,9 +20,9 @@
 import type {
     FileDiffCommentWidget,
     FileDiffPlaceholderWidget,
+    InlineCommentWidget,
 } from "../../src/app/file-diff/types";
 import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
-import type { InlineCommentWidget } from "../../src/app/file-diff/types";
 
 const base_element = document.implementation.createHTMLDocument().createElement("div");
 

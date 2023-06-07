@@ -92,8 +92,7 @@ import Vue from "vue";
 import { namespace } from "vuex-class";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { Repository } from "../../../type";
-import type { GitLabRepository } from "../../../type";
+import type { Repository, GitLabRepository } from "../../../type";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
 
 const gitlab = namespace("gitlab");

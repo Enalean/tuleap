@@ -20,11 +20,10 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
-import type { Folder, Item, ItemFile, State } from "../../../../../type";
+import type { Folder, Item, ItemFile, State, RootState } from "../../../../../type";
 import TitleProperty from "./TitleProperty.vue";
 import emitter from "../../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import type { RootState } from "../../../../../type";
 import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");

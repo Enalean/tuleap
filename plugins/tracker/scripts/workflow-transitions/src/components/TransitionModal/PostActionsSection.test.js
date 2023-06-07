@@ -27,7 +27,7 @@ import SetValueAction from "./PostAction/SetValueAction.vue";
 import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";
 import HiddenFieldsetsAction from "./PostAction/HiddenFieldsetsAction.vue";
 import AddToBacklogAgileDashboardPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
-import AddToBacklogProgramManagementPostAction from "./Externals/AddToBacklogAgileDashboardPostAction.vue";
+import AddToBacklogProgramManagementPostAction from "./Externals/AddToBacklogProgramManagementPostAction.vue";
 
 describe("PostActionsSection", () => {
     let store;

@@ -27,7 +27,7 @@ import {
     getItem,
 } from "../api/rest-querier";
 import type { ActionContext } from "vuex";
-import type { CreatedItem, Folder, Item, RootState } from "../type";
+import type { CreatedItem, Folder, Item, RootState, State } from "../type";
 import {
     isEmbedded,
     isEmpty,
@@ -39,7 +39,6 @@ import {
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import emitter from "../helpers/emitter";
 import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
-import type { State } from "../type";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created";
 
 export interface RootActionsCreate {

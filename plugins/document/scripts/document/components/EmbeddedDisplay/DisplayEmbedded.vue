@@ -37,7 +37,7 @@
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
-import type { Embedded } from "../../type";
+import type { Embedded, EmbeddedFileSpecificVersionContent } from "../../type";
 import {
     useActions,
     useMutations,
@@ -49,7 +49,6 @@ import type { ErrorGetters } from "../../store/error/error-getters";
 import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
 import { isEmbedded } from "../../helpers/type-check-helper";
 import { getEmbeddedFileVersionContent } from "../../api/version-rest-querier";
-import type { EmbeddedFileSpecificVersionContent } from "../../type";
 
 const props = withDefaults(defineProps<{ item_id: number; version_id?: number | null }>(), {
     version_id: null,

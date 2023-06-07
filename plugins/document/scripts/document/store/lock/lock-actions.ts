@@ -30,11 +30,9 @@ import {
     postLockLink,
     postLockWiki,
 } from "../../api/lock-rest-querier";
-import type { ActionContext } from "vuex";
-import type { Item, State } from "../../type";
+import type { ActionContext, ActionTree } from "vuex";
+import type { Item, State, RootState } from "../../type";
 import { isEmbedded, isEmpty, isFile, isLink, isWiki } from "../../helpers/type-check-helper";
-import type { ActionTree } from "vuex";
-import type { RootState } from "../../type";
 
 export interface LockActions extends ActionTree<State, RootState> {
     readonly lockDocument: typeof lockDocument;

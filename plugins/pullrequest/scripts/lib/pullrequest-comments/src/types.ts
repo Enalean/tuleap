@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CommentType, PullRequestEventType } from "@tuleap/plugin-pullrequest-constants";
-import type { TYPE_EVENT_PULLREQUEST_ACTION } from "@tuleap/plugin-pullrequest-constants";
+import type {
+    CommentType,
+    PullRequestEventType,
+    TYPE_EVENT_PULLREQUEST_ACTION,
+} from "@tuleap/plugin-pullrequest-constants";
 import type {
     ActionOnPullRequestEvent,
     CommentOnFile,

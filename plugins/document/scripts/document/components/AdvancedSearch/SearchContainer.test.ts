@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { RouteLocationNormalizedLoaded } from "vue-router";
+import type { RouteLocationNormalizedLoaded, Router } from "vue-router";
 
 const searchInFolderMock = jest.fn();
 jest.mock("../../api/rest-querier", () => {
@@ -38,7 +38,6 @@ import { shallowMount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as router from "../../helpers/use-router";
-import type { Router } from "vue-router";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("SearchContainer", () => {

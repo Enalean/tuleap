@@ -53,12 +53,11 @@ import {
     doesFolderAlreadyExistsAtUpdate,
 } from "../../../../../helpers/properties-helpers/check-item-title";
 import { isFolder } from "../../../../../helpers/type-check-helper";
-import type { Folder, Item } from "../../../../../type";
+import type { Folder, Item, State } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 import { useState } from "vuex-composition-helpers";
 import { computed, onMounted, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { State } from "../../../../../type";
 
 const props = defineProps<{
     value: string;

@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Result } from "neverthrow";
-import { ResultAsync } from "neverthrow";
+import { Result, ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { AutoEncodedParameters } from "./auto-encoder";

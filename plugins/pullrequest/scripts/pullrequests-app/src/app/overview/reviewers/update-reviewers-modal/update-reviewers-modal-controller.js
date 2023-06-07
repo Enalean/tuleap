@@ -19,8 +19,7 @@
 
 import "./users-result-template.tpl.html";
 import { select2 } from "tlp";
-import angular from "angular";
-import { isDefined } from "angular";
+import angular, { isDefined } from "angular";
 
 export default UpdateReviewersModalController;
 

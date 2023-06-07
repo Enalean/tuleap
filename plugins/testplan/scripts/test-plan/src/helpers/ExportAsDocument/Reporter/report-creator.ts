@@ -43,8 +43,8 @@ import {
 import type {
     ExportDocument,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
+    LastExecutionsMap,
 } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
-import type { LastExecutionsMap } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/type";
 import { getLastExecutionForTest } from "@tuleap/plugin-testmanagement/scripts/testmanagement/src/helpers/ExportAsDocument/Reporter/last-executions-retriever";
 
 interface TrackerStructurePromiseTuple {

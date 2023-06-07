@@ -16,10 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { AdvancedSearchParams } from "../type";
+import type { AdvancedSearchParams, SearchDate } from "../type";
 import type { Dictionary } from "vue-router/types/router";
 import { isAdditionalFieldNumber } from "./additional-custom-properties";
-import type { SearchDate } from "../type";
 
 export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Dictionary<string> {
     const query: Dictionary<string> = {};

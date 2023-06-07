@@ -22,9 +22,9 @@ import { selectOrThrow } from "@tuleap/dom";
 import type {
     onWritingZoneContentChangeCallbackType,
     onWritingZoneStateChangeCallbackType,
+    WritingZoneState,
 } from "./WritingZoneTemplate";
 import { getWritingZoneTemplate } from "./WritingZoneTemplate";
-import type { WritingZoneState } from "./WritingZoneTemplate";
 import { GettextProviderStub } from "../../tests/stubs/GettextProviderStub";
 import { FocusTextareaStub } from "../../tests/stubs/FocusTextareaStub";
 import type { FocusTextArea } from "../helpers/textarea-focus-helper";

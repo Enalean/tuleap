@@ -18,9 +18,8 @@
  */
 import { createNewVersion } from "../../api/rest-querier";
 import type { ActionContext } from "vuex";
-import type { ApprovalTable, ItemFile, RootState } from "../../type";
+import type { ApprovalTable, ItemFile, RootState, CreatedItemFileProperties } from "../../type";
 import { uploadVersion } from "./upload-file";
-import type { CreatedItemFileProperties } from "../../type";
 
 export async function uploadNewVersion(
     context: ActionContext<RootState, RootState>,

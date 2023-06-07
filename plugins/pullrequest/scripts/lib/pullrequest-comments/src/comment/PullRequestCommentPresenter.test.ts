@@ -18,8 +18,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { CommentOnFile, GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User, CommentOnFile, GlobalComment } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import { TYPE_GLOBAL_COMMENT, TYPE_INLINE_COMMENT } from "@tuleap/plugin-pullrequest-constants";

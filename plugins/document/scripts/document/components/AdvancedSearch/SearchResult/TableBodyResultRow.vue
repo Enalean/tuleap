@@ -31,7 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ItemSearchResult, ListOfSearchResultColumnDefinition } from "../../../type";
+import type {
+    ItemSearchResult,
+    ListOfSearchResultColumnDefinition,
+    SearchResultColumnDefinition,
+} from "../../../type";
 
 defineProps<{ item: ItemSearchResult; columns: ListOfSearchResultColumnDefinition }>();
 </script>
@@ -49,7 +53,6 @@ import CellLocation from "./Cells/CellLocation.vue";
 import CellFilename from "./Cells/CellFilename.vue";
 import CellStatus from "./Cells/CellStatus.vue";
 import CellCustomProperty from "./Cells/CellCustomProperty.vue";
-import type { SearchResultColumnDefinition } from "../../../type";
 import { isAdditionalFieldNumber } from "../../../helpers/additional-custom-properties";
 
 export default defineComponent({

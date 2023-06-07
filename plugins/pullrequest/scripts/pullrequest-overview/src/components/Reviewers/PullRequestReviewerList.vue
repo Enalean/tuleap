@@ -70,12 +70,15 @@
 import { ref, computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { User, ReviewersCollection } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type {
+    User,
+    ReviewersCollection,
+    PullRequest,
+} from "@tuleap/plugin-pullrequest-rest-api-types";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import PropertySkeleton from "../ReadOnlyInfo/PropertySkeleton.vue";
 import { fetchReviewersInfo } from "../../api/tuleap-rest-querier";
 import PullRequestManageReviewersModal from "./PullRequestManageReviewersModal.vue";
-import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { isPullRequestInReview } from "../Actions/merge-status-helper";
 
 const { $gettext } = useGettext();

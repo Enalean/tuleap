@@ -34,9 +34,8 @@ import {
     putWikiPermissions,
 } from "../../api/permissions-rest-querier";
 import type { ActionContext } from "vuex";
-import type { Item, Permissions, RootState } from "../../type";
+import type { Item, Permissions, RootState, State } from "../../type";
 import type { PermissionsState } from "./permissions-default-state";
-import type { State } from "../../type";
 import { getItem } from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../helpers/permissions/ugroups";
 import emitter from "../../helpers/emitter";

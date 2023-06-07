@@ -41,9 +41,8 @@
 
 <script setup lang="ts">
 import EmptyFolderForReadersSvg from "../../svg/folder/EmptyFolderForReadersSvg.vue";
-import type { Item } from "../../../type";
+import type { Item, RootState } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
-import type { RootState } from "../../../type";
 import { computed } from "vue";
 
 interface RouterPayload {

@@ -17,14 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument, TraceabilityMatrixElement } from "../../../../type";
-import { InternalHyperlink, Table, TableCell } from "docx";
+import type {
+    ExportDocument,
+    TraceabilityMatrixElement,
+    ArtifactFieldValueStepDefinitionEnhancedWithResults,
+} from "../../../../type";
+import {
+    InternalHyperlink,
+    Table,
+    TableCell,
+    Bookmark,
+    TextRun,
+    Paragraph,
+    WidthType,
+    TableRow,
+} from "docx";
 import {
     HEADER_LEVEL_SECTION_TITLE,
     HEADER_STYLE_SECTION_TITLE,
     MAIN_TITLES_NUMBERING_ID,
 } from "./document-properties";
-import { Bookmark, TextRun, Paragraph, WidthType, TableRow } from "docx";
 import {
     buildCellContentOptions,
     getAnchorToArtifactContent,
@@ -33,7 +45,6 @@ import {
 import { buildCellContentResult, TABLE_BORDERS, TABLE_LABEL_SHADING } from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 
 export function getTraceabilityMatrixTitle(gettext_provider: GettextProvider): {
     id: string;

@@ -97,13 +97,12 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { GlobalExportProperties, SelectedReport } from "../type";
+import type { GlobalExportProperties, SelectedReport, SelectedTracker } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 import SecondLevelSelector from "./SecondLevelSelector.vue";
 import ThirdLevelSelector from "./ThirdLevelSelector.vue";
 import type { ExportSettings } from "../export-document";
-import type { SelectedTracker } from "../type";
 import FakeWorksheet from "./FakeWorksheet.vue";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();

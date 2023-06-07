@@ -35,9 +35,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
 import SwitchToFullscreen from "./SwitchToFullscreen.vue";
 import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
 

@@ -18,15 +18,16 @@
  */
 
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
-import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
-import type { TextCell } from "@tuleap/plugin-docgen-xlsx";
+import type { ReportCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
 import { organizeReportsData } from "./organize-reports-data";
-import type { OrganizedReportsData } from "../type";
+import type {
+    OrganizedReportsData,
+    TextCellWithMerges,
+    ArtifactForCrossReportDocGen,
+} from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 import { formatHeaders } from "./headers-formator";
-import type { TextCellWithMerges } from "../type";
-import type { ArtifactForCrossReportDocGen } from "../type";
 
 export interface ReportSection {
     readonly headers?: HeadersSection;

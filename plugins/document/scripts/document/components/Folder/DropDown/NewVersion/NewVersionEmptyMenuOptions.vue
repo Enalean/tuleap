@@ -89,7 +89,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Empty, ItemType, NewItemAlternative } from "../../../../type";
+import type {
+    Empty,
+    ItemType,
+    NewItemAlternative,
+    NewItemAlternativeArray,
+} from "../../../../type";
 import {
     ICON_EMBEDDED,
     TYPE_FILE,
@@ -104,11 +109,12 @@ import emitter from "../../../../helpers/emitter";
 import { useActions, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { inject } from "vue";
-import type { NewItemAlternativeArray } from "../../../../type";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
-import type { RootActionsUpdate } from "../../../../store/actions-update";
-import type { NewVersionFromEmptyInformation } from "../../../../store/actions-update";
+import type {
+    RootActionsUpdate,
+    NewVersionFromEmptyInformation,
+} from "../../../../store/actions-update";
 import { isFile } from "../../../../helpers/type-check-helper";
 
 const { createNewVersionFromEmpty } = useActions<

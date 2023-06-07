@@ -21,8 +21,7 @@ import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { GitlabApi } from "../../api/gitlab-api-querier";
-import type { GitlabCredentials } from "../../stores/types";
-import type { GitlabGroup } from "../../stores/types";
+import type { GitlabCredentials, GitlabGroup } from "../../stores/types";
 
 export interface GitlabApiQuerierStub extends GitlabApi {
     getUsedCredentials: () => GitlabCredentials | null;

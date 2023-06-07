@@ -101,7 +101,7 @@ import { createModal } from "@tuleap/tlp-modal";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import DeleteAssociatedWikiPageCheckbox from "./DeleteAssociatedWikiPageCheckbox.vue";
 import { isFolder, isWiki } from "../../../../helpers/type-check-helper";
-import type { Item } from "../../../../type";
+import type { Item, RootState } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
 import {
     useActions,
@@ -110,7 +110,6 @@ import {
     useNamespacedState,
     useState,
 } from "vuex-composition-helpers";
-import type { RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";

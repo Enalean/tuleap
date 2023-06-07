@@ -18,8 +18,7 @@
  */
 
 import type { LineWidgetOptions } from "codemirror";
-import type { FileLineHandle } from "../types-codemirror-overriden";
-import type { CommentWidgetCreationParams } from "../types-codemirror-overriden";
+import type { FileLineHandle, CommentWidgetCreationParams } from "../types-codemirror-overriden";
 import {
     doesHandleHaveWidgets,
     isCodeCommentPlaceholderWidget,

@@ -25,12 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import type { NewVersion } from "../../../../type";
+import type { NewVersion, DefaultFileNewVersionItem } from "../../../../type";
 import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
-import type { DefaultFileNewVersionItem } from "../../../../type";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
 import { isFile } from "../../../../helpers/type-check-helper";
 

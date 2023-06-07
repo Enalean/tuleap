@@ -23,6 +23,7 @@ import type {
     DateTimeLocaleInformation,
     ArtifactFieldValueStepDefinitionEnhancedWithResults,
     GenericGlobalExportProperties,
+    LastExecutionsMap,
 } from "../../../type";
 import type {
     ArtifactResponse,
@@ -46,7 +47,6 @@ import {
     buildStepDefinitionEnhancedWithResultsFunction,
     buildStepDefinitionFunction,
 } from "./step-test-definition-formatter";
-import type { LastExecutionsMap } from "../../../type";
 import { getLastExecutionForTest } from "./last-executions-retriever";
 
 interface TrackerStructurePromiseTuple {

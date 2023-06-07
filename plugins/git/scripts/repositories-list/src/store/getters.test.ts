@@ -25,8 +25,7 @@ import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
 } from "../constants";
-import type { Folder, State } from "../type";
-import type { RepositoriesForOwner, Repository } from "../type";
+import type { Folder, State, RepositoriesForOwner, Repository } from "../type";
 import * as filter from "../support/filter";
 
 describe("Store getters", () => {

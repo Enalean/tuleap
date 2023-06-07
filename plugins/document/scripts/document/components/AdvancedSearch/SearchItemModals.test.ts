@@ -37,8 +37,7 @@ import OngoingUploadModal from "./OngoingUploadModal.vue";
 import emitter from "../../helpers/emitter";
 import { nextTick } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { ItemFile, RootState } from "../../type";
-import type { FakeItem } from "../../type";
+import type { ItemFile, RootState, FakeItem } from "../../type";
 
 describe("SearchItemModals", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof SearchItemModals>> {

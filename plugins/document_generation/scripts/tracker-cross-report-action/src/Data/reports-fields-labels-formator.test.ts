@@ -18,10 +18,9 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { OrganizedReportsData } from "../type";
+import type { OrganizedReportsData, ArtifactForCrossReportDocGen } from "../type";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";
-import type { ArtifactForCrossReportDocGen } from "../type";
 
 describe("reports-fields-labels-formator", () => {
     it("formats field labels from all selected reports", (): void => {

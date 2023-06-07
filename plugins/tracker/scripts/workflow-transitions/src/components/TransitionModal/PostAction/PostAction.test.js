@@ -24,7 +24,7 @@ import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import AddToBacklogAgileDashboardPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
-import AddToBacklogProgramManagementPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
+import AddToBacklogProgramManagementPostActionOption from "../Externals/AddToBacklogProgramManagementPostActionOption.vue";
 
 describe("PostAction", () => {
     let store;

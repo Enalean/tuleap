@@ -21,8 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import QuickLookFile from "./QuickLookFile.vue";
 import { TYPE_FILE } from "../../constants";
-import type { ItemFile } from "../../type";
-import type { FileProperties } from "../../type";
+import type { ItemFile, FileProperties } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookFile", () => {

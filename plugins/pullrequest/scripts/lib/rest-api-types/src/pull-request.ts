@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BuildStatus, PullRequestMergeStatusType } from "@tuleap/plugin-pullrequest-constants";
-import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
+    BuildStatus,
+    PullRequestMergeStatusType,
     PullRequestStatusAbandonedType,
     PullRequestStatusMergedType,
     PullRequestStatusReviewType,
     PullRequestStatusType,
 } from "@tuleap/plugin-pullrequest-constants";
+import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
 
 export interface PullRequestStatusInfo {
     readonly status_type: PullRequestStatusType;

@@ -19,9 +19,12 @@
 
 import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import type { ExportSettings } from "../export-document";
-import type { OrganizedReportsData, OrganizedReportDataLevel } from "../type";
+import type {
+    OrganizedReportsData,
+    OrganizedReportDataLevel,
+    ArtifactForCrossReportDocGen,
+} from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
-import type { ArtifactForCrossReportDocGen } from "../type";
 
 export async function organizeReportsData(
     export_settings: ExportSettings

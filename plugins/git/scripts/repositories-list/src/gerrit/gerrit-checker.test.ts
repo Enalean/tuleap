@@ -18,8 +18,7 @@
  */
 
 import { isRepositoryHandledByGerrit } from "./gerrit-checker";
-import type { Repository } from "../type";
-import type { FormattedGitLabRepository } from "../type";
+import type { Repository, FormattedGitLabRepository } from "../type";
 
 describe("gitlabChecker", () => {
     describe("isRepositoryHandledByGerrit", () => {

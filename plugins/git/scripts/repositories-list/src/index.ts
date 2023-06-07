@@ -33,8 +33,7 @@ import {
 } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./constants";
-import type { State } from "./type";
-import type { RepositoriesForOwner } from "./type";
+import type { State, RepositoriesForOwner } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-repository-list");

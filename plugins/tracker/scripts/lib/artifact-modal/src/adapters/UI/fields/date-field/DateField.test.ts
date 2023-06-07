@@ -18,8 +18,7 @@
  */
 
 import { setCatalog } from "../../../../gettext-catalog";
-import { DateField } from "./DateField";
-import { onInput } from "./DateField";
+import { DateField, onInput } from "./DateField";
 
 import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { HostElement } from "./DateField";
