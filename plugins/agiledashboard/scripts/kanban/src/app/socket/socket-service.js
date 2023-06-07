@@ -49,8 +49,12 @@ function SocketService(
         listenKanbanColumnEdit,
         listenKanbanColumnDelete,
         listenKanban,
+        open,
     });
 
+    function open() {
+        SocketFactory.connect();
+    }
     function listenTokenExpired() {
         var expired_date = moment(locker.get("token-expired-date")).subtract(5, "m");
         var timeout = expired_date.diff(moment());

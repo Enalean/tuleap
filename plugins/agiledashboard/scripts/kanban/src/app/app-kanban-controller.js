@@ -140,6 +140,7 @@ function KanbanCtrl(
         if (SharedPropertiesService.getMercureEnabled()) {
             MercureService.init(loadColumns);
         } else {
+            SocketService.open();
             SocketService.listenNodeJSServer()
                 .then(function () {
                     if (FilterTrackerReportService.isFiltersTrackerReportSelected()) {
