@@ -23,7 +23,7 @@ import { CommentsController } from "./CommentsController";
 import type { RetrieveComments } from "./RetrieveComments";
 import { RetrieveCommentsStub } from "../../../tests/stubs/RetrieveCommentsStub";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { ProjectIdentifierStub } from "../../../tests/stubs/ProjectIdentifierStub";
+import { CurrentProjectIdentifierStub } from "../../../tests/stubs/CurrentProjectIdentifierStub";
 import { CommentUserPreferencesBuilder } from "../../../tests/builders/CommentUserPreferencesBuilder";
 import type { CommentUserPreferences } from "./CommentUserPreferences";
 import { FollowUpCommentBuilder } from "../../../tests/builders/FollowUpCommentBuilder";
@@ -52,7 +52,7 @@ describe(`CommentsController`, () => {
             comments_retriever,
             event_dispatcher,
             CurrentArtifactIdentifierStub.withId(45),
-            ProjectIdentifierStub.withId(PROJECT_ID),
+            CurrentProjectIdentifierStub.withId(PROJECT_ID),
             user_preferences
         );
 

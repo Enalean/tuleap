@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "./Identifier";
+import type { CurrentProjectIdentifier } from "../../src/domain/CurrentProjectIdentifier";
 
-export type ProjectIdentifier = Identifier<"ProjectIdentifier">;
+export const CurrentProjectIdentifierStub = {
+    withId: (project_id: number): CurrentProjectIdentifier => ({
+        _type: "CurrentProjectIdentifier",
+        id: project_id,
+    }),
+};

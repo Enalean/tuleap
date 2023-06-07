@@ -56,7 +56,7 @@ import { LinkTypesCollector } from "./adapters/REST/fields/link-field/LinkTypesC
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
-import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
+import { CurrentProjectIdentifierProxy } from "./adapters/REST/CurrentProjectIdentifierProxy";
 import { EventDispatcher } from "./domain/EventDispatcher";
 import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
 import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
@@ -111,7 +111,7 @@ function ArtifactModalController(
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
         modal_model.tracker_id
     );
-    const project_identifier = ProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
+    const project_identifier = CurrentProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
 

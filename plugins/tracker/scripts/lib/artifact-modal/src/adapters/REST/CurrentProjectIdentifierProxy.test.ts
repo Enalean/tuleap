@@ -18,11 +18,16 @@
  */
 
 import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
-import type { ProjectIdentifier } from "../../domain/ProjectIdentifier";
+import { CurrentProjectIdentifierProxy } from "./CurrentProjectIdentifierProxy";
 
-export const ProjectIdentifierProxy = {
-    fromTrackerModel: (tracker: TrackerWithChangesetValues): ProjectIdentifier => ({
-        id: tracker.project.id,
-        _type: "ProjectIdentifier",
-    }),
-};
+const PROJECT_ID = 161;
+
+describe(`CurrentProjectIdentifierProxy`, () => {
+    it(`builds from the current tracker's REST representation`, () => {
+        const tracker = {
+            project: { id: PROJECT_ID, label: "", icon: "" },
+        } as TrackerWithChangesetValues;
+        const identifier = CurrentProjectIdentifierProxy.fromTrackerModel(tracker);
+        expect(identifier.id).toBe(PROJECT_ID);
+    });
+});
