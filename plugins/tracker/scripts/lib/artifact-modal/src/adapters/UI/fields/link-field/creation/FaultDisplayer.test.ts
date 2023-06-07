@@ -21,6 +21,7 @@ import { setCatalog } from "../../../../../gettext-catalog";
 import { Fault } from "@tuleap/fault";
 import { FaultDisplayer } from "./FaultDisplayer";
 import { ProjectsRetrievalFault } from "../../../../../domain/fields/link-field/creation/ProjectsRetrievalFault";
+import { ProjectTrackersRetrievalFault } from "../../../../../domain/fields/link-field/creation/ProjectTrackersRetrievalFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -40,6 +41,10 @@ describe(`FaultDisplayer`, () => {
 
     function* generateSpecialFaults(): Generator<[string, Fault]> {
         yield ["ProjectsRetrievalFault", ProjectsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))];
+        yield [
+            "ProjectTrackersRetrievalFault",
+            ProjectTrackersRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
+        ];
     }
 
     it.each([...generateSpecialFaults()])(

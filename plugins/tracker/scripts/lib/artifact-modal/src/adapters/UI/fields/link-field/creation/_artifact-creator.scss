@@ -56,3 +56,12 @@ tuleap-artifact-modal-link-artifact-creator {
 #artifact-modal-link-creator-project-wrapper {
     margin: 0;
 }
+
+.artifact-modal-link-creator-container {
+    display: flex;
+    gap: 10px;
+}
+
+.artifact-modal-link-creator-container-tracker-select {
+    flex-grow: 1;
+}

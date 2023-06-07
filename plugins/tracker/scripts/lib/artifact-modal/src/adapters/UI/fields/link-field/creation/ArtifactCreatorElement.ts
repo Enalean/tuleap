@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, dispatch, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import { Option } from "@tuleap/option";
 import {
     getArtifactCreationFeedbackErrorMessage,
     getArtifactCreationInputPlaceholderText,
     getArtifactCreationProjectLabel,
+    getArtifactCreationTrackerLabel,
     getArtifactFeedbackShowMoreLabel,
     getCancelArtifactCreationLabel,
     getCreateArtifactButtonInCreatorLabel,
+    getProjectTrackersListPickerPlaceholder,
     getSubmitDisabledForProjectsAndTrackersReason,
 } from "../../../../../gettext-catalog";
 import type { ArtifactCreatorController } from "../../../../../domain/fields/link-field/creation/ArtifactCreatorController";
@@ -36,6 +38,11 @@ import type { CollectionOfAllowedLinksTypesPresenters } from "../CollectionOfAll
 import type { ArtifactCrossReference } from "../../../../../domain/ArtifactCrossReference";
 import "../LinkTypeSelectorElement";
 import { FaultDisplayer } from "./FaultDisplayer";
+import type { Tracker } from "../../../../../domain/Tracker";
+import { selectOrThrow } from "@tuleap/dom";
+import { ProjectIdentifierTrackerCreationProxy } from "./ProjectIdentifierTrackerCreationProxy";
+import { createListPicker } from "@tuleap/list-picker";
+import type { ListPicker } from "@tuleap/list-picker";
 
 export type ArtifactCreatorElement = {
     readonly controller: ArtifactCreatorController;
@@ -48,6 +55,7 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     error_message: Option<string>;
     show_error_details: boolean;
     projects: ReadonlyArray<Project>;
+    trackers: ReadonlyArray<Tracker>;
     content(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
@@ -91,8 +99,45 @@ export const onClickCancel = (host: HostElement): void => {
 };
 
 const getOptions = (host: InternalArtifactCreator): UpdateFunction<ArtifactCreatorElement>[] =>
-    host.projects.map((project) => html`<option>${project.label}</option>`);
+    host.projects.map((project) => html`<option value="${project.id}">${project.label}</option>`);
 
+const getTrackersOptions = (
+    host: InternalArtifactCreator
+): UpdateFunction<ArtifactCreatorElement>[] =>
+    host.trackers.map(
+        (tracker) =>
+            html`<option data-color-value="${tracker.color_name}">${tracker.label}</option>`
+    );
+
+const getTrackers = (host: InternalArtifactCreator, event: Event): void => {
+    host.is_loading = true;
+    const project_id = ProjectIdentifierTrackerCreationProxy.fromChangeEvent(event);
+
+    project_id.apply((id) =>
+        host.controller.getTrackers(id).then((trackers) => {
+            host.trackers = trackers;
+            host.is_loading = false;
+        })
+    );
+};
+
+let listPicker: ListPicker;
+const initListPicker = (
+    host: InternalArtifactCreator,
+    controller: ArtifactCreatorController
+): void => {
+    const select_element = selectOrThrow(
+        host.content(),
+        "#artifact-modal-link-creator-trackers",
+        HTMLSelectElement
+    );
+
+    listPicker = createListPicker(select_element, {
+        locale: controller.getUserLocale(),
+        placeholder: getProjectTrackersListPickerPlaceholder(),
+        is_filterable: true,
+    });
+};
 export const setErrorMessage = (
     host: HostElement,
     new_value: Option<string> | undefined
@@ -103,6 +148,12 @@ export const setErrorMessage = (
     }
     return Option.nothing();
 };
+
+function getDisconnectedCallback(): () => void {
+    return () => {
+        listPicker.destroy();
+    };
+}
 
 export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     tag: "tuleap-artifact-modal-link-artifact-creator",
@@ -117,8 +168,12 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                 host.projects = projects;
                 host.is_loading = false;
             });
+
+            initListPicker(host, controller);
+
             return controller;
         },
+        connect: () => getDisconnectedCallback(),
     },
     current_artifact_reference: undefined,
     available_types: undefined,
@@ -127,6 +182,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     error_message: { set: setErrorMessage },
     show_error_details: false,
     projects: { set: (host, new_value) => new_value ?? [] },
+    trackers: { set: (host, new_value) => new_value ?? [] },
     content: (host) =>
         html`${getErrorTemplate(host)}<span class="link-field-row-type"
                 ><tuleap-artifact-modal-link-type-selector
@@ -150,7 +206,7 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                         aria-hidden="true"
                         data-test="artifact-creator-spinner"
                     ></i>`}
-                    <div>
+                    <div class="artifact-modal-link-creator-container">
                         <div
                             class="tlp-form-element"
                             id="artifact-modal-link-creator-project-wrapper"
@@ -163,8 +219,20 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                                 form=""
                                 required
                                 id="artifact-modal-link-creator-projects"
+                                oninput="${getTrackers}"
                             >
                                 ${getOptions(host)}
+                            </select>
+                        </div>
+                        <div
+                            class="tlp-form-element artifact-modal-link-creator-container-tracker-select"
+                            id="artifact-modal-link-creator-tracker-wrapper"
+                        >
+                            <label for="artifact-modal-link-creator-trackers" class="tlp-label"
+                                >${getArtifactCreationTrackerLabel()}
+                                <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
+                            ><select class="" form="" id="artifact-modal-link-creator-trackers">
+                                ${getTrackersOptions(host)}
                             </select>
                         </div>
                     </div>

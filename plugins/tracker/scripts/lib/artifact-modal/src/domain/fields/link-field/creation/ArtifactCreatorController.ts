@@ -24,23 +24,42 @@ import { WillDisableSubmit } from "../../../submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../../../submit/WillEnableSubmit";
 import type { RetrieveProjects } from "./RetrieveProjects";
 import type { Project } from "../../../Project";
+import type { Tracker } from "../../../Tracker";
 import { ProjectsRetrievalFault } from "./ProjectsRetrievalFault";
+import type { RetrieveProjectTrackers } from "./RetrieveProjectTrackers";
+import { ProjectTrackersRetrievalFault } from "./ProjectTrackersRetrievalFault";
+import type { ProjectIdentifier } from "../../../ProjectIdentifier";
 
 type OnFaultHandler = (fault: Fault) => void;
 
 export type ArtifactCreatorController = {
     registerFaultListener(handler: OnFaultHandler): void;
     getProjects(): PromiseLike<readonly Project[]>;
+    getTrackers(project_id: ProjectIdentifier): PromiseLike<readonly Tracker[]>;
     disableSubmit(reason: string): void;
     enableSubmit(): void;
+    getUserLocale(): string;
 };
 
 export const ArtifactCreatorController = (
     event_dispatcher: DispatchEvents,
-    projects_retriever: RetrieveProjects
+    projects_retriever: RetrieveProjects,
+    project_trackers_retriever: RetrieveProjectTrackers,
+    user_locale: string
 ): ArtifactCreatorController => {
     let _handler: Option<OnFaultHandler> = Option.nothing();
+
     return {
+        getTrackers(project_id): PromiseLike<readonly Tracker[]> {
+            return project_trackers_retriever.getTrackersByProject(project_id).match(
+                (trackers) => trackers,
+                (fault) => {
+                    _handler.apply((handler) => handler(ProjectTrackersRetrievalFault(fault)));
+                    return [];
+                }
+            );
+        },
+
         registerFaultListener: (handler): void => {
             _handler = Option.fromValue(handler);
         },
@@ -60,6 +79,10 @@ export const ArtifactCreatorController = (
 
         enableSubmit(): void {
             event_dispatcher.dispatch(WillEnableSubmit());
+        },
+
+        getUserLocale(): string {
+            return user_locale;
         },
     };
 };

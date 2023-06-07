@@ -146,3 +146,8 @@ export const getProjectsRetrievalErrorMessage = (): string =>
 export const getArtifactCreationErrorMessage = (): string =>
     gettextCatalog.getString("Error while creating the new artifact: %s");
 export const getSubmitDisabledReason = (): string => gettextCatalog.getString("Artifact is saving");
+export const getArtifactCreationTrackerLabel = (): string => gettextCatalog.getString("Trackers");
+export const getProjectTrackersRetrievalErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the list of trackers: %s");
+export const getProjectTrackersListPickerPlaceholder = (): string =>
+    gettextCatalog.getString("Select the tracker");

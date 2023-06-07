@@ -86,6 +86,9 @@ msgstr "Erreur pendant la récupération des commentaires : %s"
 msgid "Error while retrieving the list of projects: %s"
 msgstr "Erreur pendant la récupération de la liste des projets : %s"
 
+msgid "Error while retrieving the list of trackers: %s"
+msgstr "Erreur pendant la récupération de la liste des outils de suivi : %s"
+
 msgid "Error while retrieving the possible parents: %s"
 msgstr "Erreur pendant la récupération des parents possibles : %s"
 
@@ -215,6 +218,9 @@ msgstr "Rechercher un artéfact..."
 msgid "Search results"
 msgstr "Résultats de recherche"
 
+msgid "Select the tracker"
+msgstr "Selectionner l'outil de suivi "
+
 msgid "Size: %s"
 msgstr "Taille: %s"
 
@@ -244,6 +250,9 @@ msgstr "Cet artéfact est déjà lié"
 
 msgid "Title"
 msgstr "Titre"
+
+msgid "Trackers"
+msgstr "Outils de suivi"
 
 msgid "Type..."
 msgstr "Ecrivez..."
