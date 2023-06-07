@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 final class WithParent implements Term
 {
-    public function __construct(public readonly ?ParentArtifactCondition $condition)
+    public function __construct(public readonly ?ParentCondition $condition)
     {
     }
 

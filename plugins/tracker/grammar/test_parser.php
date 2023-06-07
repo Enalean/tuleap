@@ -33,7 +33,7 @@ and (field3_int between (1, 10)
 AND field4_list in ("open", "closed", "blocked")
 AND field5_list not in ("blocked", "archive",))
 AND @comment = ""
-AND (WITHOUT PARENT OR WITH PARENT ARTIFACT = 123)
+AND (WITHOUT PARENT OR WITH PARENT ARTIFACT = 123 OR WITH PARENT TRACKER = 'epic')
 EOS;
 
 try {

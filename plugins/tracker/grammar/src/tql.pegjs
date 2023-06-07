@@ -83,8 +83,16 @@ WithoutParent = "without parent"i _ condition:ParentCondition? {
         return new WithoutParent($condition);
     }
 
-ParentCondition = "artifact"i _ "=" _ id:$[0-9]+ {
+ParentCondition
+    = ParentArtifactCondition
+        / ParentTrackerCondition
+
+ParentArtifactCondition = "artifact"i _ "=" _ id:$[0-9]+ {
         return new ParentArtifactCondition($id);
+    }
+
+ParentTrackerCondition = "tracker"i _ "=" _ tracker:String {
+        return new ParentTrackerCondition((string) $tracker->getValue());
     }
 
 ParenthesisTerm = "(" _ e:or_expression _ ")" {

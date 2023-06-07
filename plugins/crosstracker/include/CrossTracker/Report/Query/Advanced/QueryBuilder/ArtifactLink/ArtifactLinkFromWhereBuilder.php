@@ -25,10 +25,17 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentArtifactCondition;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentConditionVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\ParentTrackerCondition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutParent;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithParent;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ArtifactLinkFromWhereBuilderParameters;
 
-final class ArtifactLinkFromWhereBuilder
+/**
+ * @template-implements ParentConditionVisitor<ArtifactLinkFromWhereBuilderParameters, array{0: string, 1: array}>
+ */
+final class ArtifactLinkFromWhereBuilder implements ParentConditionVisitor
 {
     private const INVALID_ARTIFACT_ID = -1;
 
@@ -64,12 +71,8 @@ final class ArtifactLinkFromWhereBuilder
     {
         $suffix = spl_object_hash($term);
 
-        $artifact_condition = '';
-        $parameters         = [];
         if ($term->condition) {
-            $artifact           = $this->artifact_factory->getArtifactByIdUserCanView($user, $term->condition->artifact_id);
-            $artifact_condition = "AND TCA_$suffix.id = ?";
-            $parameters[]       = ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID);
+            return $term->condition->accept($this, new ArtifactLinkFromWhereBuilderParameters($user, $suffix));
         }
 
         return [
@@ -79,11 +82,62 @@ final class ArtifactLinkFromWhereBuilder
                     INNER JOIN tracker_changeset_value AS TCV_$suffix
                         ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
                     INNER JOIN tracker_artifact AS TCA_$suffix
-                        ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id $artifact_condition)
+                        ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
                 WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
                     AND TCVAL_$suffix.nature = '_is_child'
                 LIMIT 1",
-            $parameters,
+            [],
+        ];
+    }
+
+    public function visitParentArtifactCondition(ParentArtifactCondition $condition, $parameters)
+    {
+        $suffix = $parameters->suffix;
+
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($parameters->user, $condition->artifact_id);
+
+        return [
+            "SELECT 1
+            FROM
+                tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                INNER JOIN tracker_changeset_value AS TCV_$suffix
+                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                INNER JOIN tracker_artifact AS TCA_$suffix
+                    ON (
+                        TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id AND
+                        TCA_$suffix.id = ?
+                    )
+            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+                AND TCVAL_$suffix.nature = '_is_child'
+            LIMIT 1",
+            [
+                ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
+            ],
+        ];
+    }
+
+    public function visitParentTrackerCondition(ParentTrackerCondition $condition, $parameters)
+    {
+        $suffix = $parameters->suffix;
+
+        return [
+            "SELECT 1
+            FROM
+                tracker_changeset_value_artifactlink AS TCVAL_$suffix
+                INNER JOIN tracker_changeset_value AS TCV_$suffix
+                    ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
+                INNER JOIN tracker_artifact AS TCA_$suffix
+                    ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
+                INNER JOIN tracker AS T_$suffix
+                    ON (T_$suffix.id = TCA_$suffix.tracker_id AND
+                        T_$suffix.item_name = ?
+                    )
+            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+                AND TCVAL_$suffix.nature = '_is_child'
+            LIMIT 1",
+            [
+                $condition->tracker_name,
+            ],
         ];
     }
 }
