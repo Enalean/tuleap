@@ -41,36 +41,36 @@ reason = "Only used when targetting macOS."
 [[IgnoredVulns]]
 id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
 reason = "unplugin-vue2-script-setup must update its dependency. Reported upstream, waiting for a new release."
-ignoreUntil = 2023-07-05
+ignoreUntil = 2023-07-10
 
 # plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/pnpm-lock.yaml
 ## jsdom
 [[IgnoredVulns]]
 id = "GHSA-f4c9-cqv8-9v98" # CVE-2021-20066
 reason = "To be investigated/reported upstream."
-ignoreUntil = 2023-07-08
+ignoreUntil = 2023-07-10
 
 ## ms
 [[IgnoredVulns]]
 id = "GHSA-w9mr-4mfr-499f" # CVE-2017-20162
 reason = "ReDoS. To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-07-08
+ignoreUntil = 2023-07-10
 
 ## requestretry
 [[IgnoredVulns]]
 id = "GHSA-hjp8-2cm3-cc45" # CVE-2022-0654
 reason = "No external call in our setup. To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-07-08
+ignoreUntil = 2023-07-10
 
 ## request
 [[IgnoredVulns]]
 id = "GHSA-p8p7-x288-28g6" # CVE-2023-28155
 reason = "No outbound HTTP request in our situation. To be investigated/reported upstream/ignored."
-ignoreUntil = 2023-07-08
+ignoreUntil = 2023-07-10
 
 # src/additional-packages/tuleap-realtime/pnpm-lock.yaml
 ## simple-get
 [[IgnoredVulns]]
 id = "GHSA-wpg7-2c88-r8xv" # CVE-2022-0355
 reason = "To be investigated."
-ignoreUntil = 2023-06-08
+ignoreUntil = 2023-07-10
