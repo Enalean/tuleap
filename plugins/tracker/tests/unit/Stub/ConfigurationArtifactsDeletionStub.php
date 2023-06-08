@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,28 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Admin\ArtifactDeletion;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Test\Stub;
 
 use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 
-final class ArtifactsDeletionConfig implements ConfigurationArtifactsDeletion
+final class ConfigurationArtifactsDeletionStub implements ConfigurationArtifactsDeletion
 {
-    private int $cache_artifacts_limit;
-
-    public function __construct(public readonly ArtifactsDeletionConfigDAO $dao)
+    private function __construct(private int $deletion_limit)
     {
+    }
+
+    public static function withLimit(int $limit): self
+    {
+        return new self($limit);
     }
 
     public function getArtifactsDeletionLimit(): int
     {
-        if (! isset($this->cache_artifacts_limit)) {
-            $row = $this->dao->searchDeletableArtifactsLimit();
-
-            $this->cache_artifacts_limit = (count($row) > 0)
-                ? (int) $row[0]['value']
-                : 0;
-        }
-
-        return $this->cache_artifacts_limit;
+        return $this->deletion_limit;
     }
 }

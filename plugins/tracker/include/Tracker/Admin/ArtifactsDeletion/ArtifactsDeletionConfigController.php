@@ -31,38 +31,16 @@ use http\Exception;
 use PluginManager;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 
 class ArtifactsDeletionConfigController
 {
-    /**
-     * @var AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var ArtifactsDeletionConfig
-     */
-    private $config;
-
-    /**
-     * @var ArtifactsDeletionConfigDAO
-     */
-    private $dao;
-
-    /**
-     * @var PluginManager
-     */
-    private $plugin_manager;
-
     public function __construct(
-        AdminPageRenderer $admin_page_renderer,
-        ArtifactsDeletionConfig $config,
-        ArtifactsDeletionConfigDAO $dao,
-        PluginManager $plugin_manager,
+        private readonly AdminPageRenderer $admin_page_renderer,
+        private readonly ConfigurationArtifactsDeletion $config,
+        private readonly ArtifactsDeletionConfigDAO $dao,
+        private readonly PluginManager $plugin_manager,
     ) {
-        $this->admin_page_renderer = $admin_page_renderer;
-        $this->config              = $config;
-        $this->dao                 = $dao;
-        $this->plugin_manager      = $plugin_manager;
     }
 
     public function index(CSRFSynchronizerToken $csrf)

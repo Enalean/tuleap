@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use Luracast\Restler\RestException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
@@ -47,7 +47,7 @@ final class MovePatchAction
         private readonly RetrieveActionDeletionLimit $artifact_deletion_limit_retriever,
         private readonly CheckBeforeMove $before_move_checker,
         private readonly HeaderForMoveSender $header_for_move_sender,
-        private readonly ArtifactsDeletionConfig $artifacts_deletion_config,
+        private readonly ConfigurationArtifactsDeletion $artifacts_deletion_config,
     ) {
     }
 

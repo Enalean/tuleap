@@ -29,12 +29,13 @@ use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ConfigurationArtifactsDeletion;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation;
 use Tuleap\Tracker\REST\v1\MoveRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CheckBeforeMoveStub;
+use Tuleap\Tracker\Test\Stub\ConfigurationArtifactsDeletionStub;
 use Tuleap\Tracker\Test\Stub\MoveDryRunStub;
 use Tuleap\Tracker\Test\Stub\MoveRestArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveActionDeletionLimitStub;
@@ -48,7 +49,7 @@ final class MovePatchActionTest extends TestCase
     private CheckBeforeMove $before_move_checker;
     private MoveDryRun $dry_run_move;
     private HeaderForMoveSender & Stub $header_for_move_sender;
-    private ArtifactsDeletionConfig & Stub $artifact_deletion_config;
+    private ConfigurationArtifactsDeletion $artifact_deletion_config;
     private ArtifactPatchRepresentation $patch_representation;
     private \PFUser $user;
 
@@ -66,8 +67,7 @@ final class MovePatchActionTest extends TestCase
         $this->dry_run_move             = MoveDryRunStub::build();
         $this->before_move_checker      = CheckBeforeMoveStub::build();
         $this->header_for_move_sender   = $this->createStub(HeaderForMoveSender::class);
-        $this->artifact_deletion_config = $this->createStub(ArtifactsDeletionConfig::class);
-        $this->artifact_deletion_config->method('getArtifactsDeletionLimit')->willReturn(10);
+        $this->artifact_deletion_config = ConfigurationArtifactsDeletionStub::withLimit(10);
 
         $this->patch_representation                   = new ArtifactPatchRepresentation();
         $this->patch_representation->move             = new MoveRepresentation();
