@@ -125,6 +125,10 @@ export interface TrackerResponseWithColor extends MinimalTrackerResponse {
     readonly color_name: ColorName;
 }
 
+export interface TrackerResponseWithCannotCreateReason extends TrackerResponseWithColor {
+    readonly cannot_create_reasons: ReadonlyArray<string>;
+}
+
 /**
  * Do not use this type directly as it contains way too many things.
  * Instead, create your own type with Pick:

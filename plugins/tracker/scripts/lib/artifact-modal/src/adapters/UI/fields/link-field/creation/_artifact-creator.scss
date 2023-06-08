@@ -65,3 +65,18 @@ tuleap-artifact-modal-link-artifact-creator {
 .artifact-modal-link-creator-container-tracker-select {
     flex-grow: 1;
 }
+
+.artifact-modal-link-creator-list-picker-option-label {
+    display: flex;
+}
+
+.artifact-modal-link-creator-list-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.artifact-modal-link-creator-list-picker-tooltip {
+    cursor: pointer;
+}

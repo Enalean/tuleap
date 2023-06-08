@@ -18,6 +18,8 @@
  */
 
 export type Tracker = {
+    readonly id: number;
     readonly label: string;
     readonly color_name: string;
+    readonly cannot_create_reason: string;
 };
