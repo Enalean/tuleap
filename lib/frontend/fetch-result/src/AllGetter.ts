@@ -22,10 +22,11 @@ import type { Fault } from "@tuleap/fault";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { AutoEncodedParameters } from "./auto-encoder";
 import { getURI } from "./auto-encoder";
-import { JSONParseFault } from "./JSONParseFault";
+import { JSONParseFault } from "./faults/JSONParseFault";
 import type { RetrieveResponse } from "./ResponseRetriever";
 import { GET_METHOD } from "./constants";
 import type { EncodedURI } from "./uri-string-template";
+import { credentials } from "./headers";
 
 type GetAllLimitParameters = {
     readonly limit?: number;
@@ -78,8 +79,6 @@ export type GetAll = {
         options?: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem>
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
-
-const credentials: RequestCredentials = "same-origin";
 
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
     function getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(

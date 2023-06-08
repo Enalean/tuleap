@@ -10,8 +10,8 @@
   "types": "dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "dist/plugin-git-gitlab-api-querier.js",
-      "require": "dist/plugin-git-gitlab-api-querier.umd.cjs"
+      "import": "./dist/plugin-git-gitlab-api-querier.js",
+      "require": "./dist/plugin-git-gitlab-api-querier.umd.cjs"
     }
   },
   "dependencies": {

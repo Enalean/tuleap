@@ -20,20 +20,19 @@
 import type { RetrieveResponse, EncodedURI } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import { GitLabErrorHandler } from "./GitLabErrorHandler";
 
 export type GitLabCredentials = {
     readonly token: string;
 };
 
-type QueryGitlab = {
-    get: (uri: EncodedURI, credentials: GitLabCredentials) => ResultAsync<Response, Fault>;
-};
-
-export const Querier = (response_retriever: RetrieveResponse): QueryGitlab => ({
-    get: (uri, credentials): ResultAsync<Response, Fault> =>
-        response_retriever.retrieveResponse(uri, {
-            headers: new Headers({ Authorization: "Bearer " + credentials.token }),
-            method: "GET",
-            mode: "cors",
-        }),
-});
+export const buildGet =
+    (response_retriever: RetrieveResponse) =>
+    (uri: EncodedURI, credentials: GitLabCredentials): ResultAsync<Response, Fault> =>
+        response_retriever
+            .retrieveResponse(uri, {
+                headers: new Headers({ Authorization: "Bearer " + credentials.token }),
+                method: "GET",
+                mode: "cors",
+            })
+            .andThen(GitLabErrorHandler().handleErrorResponse);

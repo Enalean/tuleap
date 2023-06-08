@@ -54,8 +54,8 @@ describe(`RestlerErrorHandler`, () => {
         async (_explanation: string, json_content) => {
             const response = {
                 ok: false,
-                json: (): Promise<unknown> => Promise.resolve(json_content),
-            } as unknown as Response;
+                json: () => Promise.resolve(json_content),
+            } as Response;
 
             const result = await handle(response);
             if (!result.isErr()) {
@@ -69,8 +69,8 @@ describe(`RestlerErrorHandler`, () => {
         it will return an Err with a JSONParseFault`, async () => {
         const response = {
             ok: false,
-            json: (): Promise<never> => Promise.reject("Could not parse JSON"),
-        } as unknown as Response;
+            json: () => Promise.reject("Could not parse JSON"),
+        } as Response;
 
         const result = await handle(response);
         if (!result.isErr()) {

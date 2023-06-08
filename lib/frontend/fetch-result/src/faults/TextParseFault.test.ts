@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { JSONParseFault } from "./faults/JSONParseFault";
+import { isFault } from "@tuleap/fault";
+import { describe, expect, it } from "vitest";
+import { TextParseFault } from "./TextParseFault";
 
-export const decodeJSON = <TypeOfJSONPayload>(
-    response: Response
-): ResultAsync<TypeOfJSONPayload, Fault> =>
-    ResultAsync.fromPromise<TypeOfJSONPayload, Fault>(response.json(), JSONParseFault.fromError);
+const isTextParseFault = (fault: Fault): boolean =>
+    "isTextParseFault" in fault && fault.isTextParseFault() === true;
+
+describe(`TextParseFault`, () => {
+    it.each([[Error("Could not parse Text")], [null]])(
+        `coerce argument to Fault`,
+        (error: unknown) => {
+            const fault = TextParseFault.fromError(error);
+            expect(isFault(fault)).toBe(true);
+            expect(isTextParseFault(fault)).toBe(true);
+        }
+    );
+});

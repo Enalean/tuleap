@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,7 @@
 
 import { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { JSONParseFault } from "./faults/JSONParseFault";
+import { TextParseFault } from "./faults/TextParseFault";
 
-export const decodeJSON = <TypeOfJSONPayload>(
-    response: Response
-): ResultAsync<TypeOfJSONPayload, Fault> =>
-    ResultAsync.fromPromise<TypeOfJSONPayload, Fault>(response.json(), JSONParseFault.fromError);
+export const decodeAsText = (response: Response): ResultAsync<string, Fault> =>
+    ResultAsync.fromPromise(response.text(), TextParseFault.fromError);

@@ -20,7 +20,7 @@
 import { describe, expect, it } from "vitest";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { Querier } from "./Querier";
+import { buildGet } from "./Querier";
 import { RetrieveResponseStub } from "./RetrieveResponseStub";
 import { uri } from "@tuleap/fetch-result";
 
@@ -31,13 +31,12 @@ describe(`Querier`, () => {
     let response_retriever: RetrieveResponseStub;
     describe(`get()`, () => {
         const getResponse = (): ResultAsync<Response, Fault> => {
-            const querier = Querier(response_retriever);
-            return querier.get(uri`${URI}`, { token: TOKEN });
+            return buildGet(response_retriever)(uri`${URI}`, { token: TOKEN });
         };
 
         it(`makes a query to the given GitLab URI with the given credentials token
             in cross-origin mode and returns the response`, async () => {
-            const response = {} as Response;
+            const response = { ok: true } as Response;
             response_retriever = RetrieveResponseStub.withResponse(response);
 
             const result = await getResponse();

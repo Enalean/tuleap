@@ -3,5 +3,5 @@
     "compilerOptions": {
         "lib": ["ES2019", "DOM"]
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "tests/**/*"]
 }
