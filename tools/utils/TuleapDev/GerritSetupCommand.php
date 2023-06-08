@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace TuleapDev;
+namespace TuleapDev\TuleapDev;
 
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;

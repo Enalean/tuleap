@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapDev;
+namespace TuleapDev\TuleapDev;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
