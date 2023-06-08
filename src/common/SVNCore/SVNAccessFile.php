@@ -35,17 +35,17 @@ class SVNAccessFile
     /**
      * Value in $groups when the group is (re)defined by user
      */
-    public const UGROUP_REDEFINED = 0;
+    private const UGROUP_REDEFINED = 0;
 
     /**
      * Value in $groups when the group is defined only in default [groups] section
      */
-    public const UGROUP_DEFAULT = 1;
+    private const UGROUP_DEFAULT = 1;
 
     /**
      * Pattern used to find a line defining permission on group
      */
-    public const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
+    private const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
 
     /**
      * New name of the renamed group
@@ -64,7 +64,7 @@ class SVNAccessFile
      *
      * @psalm-return Option<Fault>
      */
-    public function isGroupDefined(array $groups, string $line): Option
+    private function isGroupDefined(array $groups, string $line): Option
     {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
         if (! empty($matches)) {
@@ -93,7 +93,7 @@ class SVNAccessFile
      * Update renamed ugroup line or comment invalid ugroup line.
      * This validation process cover all groups defined until the current line.
      */
-    public function validateUGroupLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
+    private function validateUGroupLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
     {
         $trimmedLine = ltrim($line);
         if (! empty($this->ugroupNewName) && $this->ugroupOldName !== null && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
@@ -106,7 +106,7 @@ class SVNAccessFile
     /**
      * If line contains a mention of renamed group, update it
      */
-    public function renameGroup(array $groups, string $line): string
+    private function renameGroup(array $groups, string $line): string
     {
         if ($this->ugroupOldName === null || $this->ugroupNewName === null) {
             return $line;
@@ -129,7 +129,7 @@ class SVNAccessFile
     /**
      * Comments the line corresponding to groups that are not defined
      */
-    public function commentInvalidLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
+    private function commentInvalidLine(array $groups, string $line, CollectionOfSVNAccessFileFaults $faults): string
     {
         $trimmedLine = ltrim($line);
         if (str_starts_with($trimmedLine, '@')) {
@@ -201,7 +201,7 @@ class SVNAccessFile
      * @param bool $defaultSection Distinguish list of groups retrieved from default [groups] section
      * and those retrieved from extra [groups] section.
      */
-    public function accumulateDefinedGroups(array $groups, string $line, bool $defaultSection = false): array
+    private function accumulateDefinedGroups(array $groups, string $line, bool $defaultSection = false): array
     {
         $trimmedLine = ltrim($line);
         if ($trimmedLine != '') {
@@ -220,7 +220,7 @@ class SVNAccessFile
     /**
      * For the moment it just tells if the current section is [groups] or not
      */
-    public function getCurrentSection(string $line, string|int $currentSection): string|int
+    private function getCurrentSection(string $line, string|int $currentSection): string|int
     {
         $trimmedLine = ltrim($line);
         if (strcasecmp(substr($trimmedLine, 0, 8), '[groups]') === 0) {
@@ -243,7 +243,7 @@ class SVNAccessFile
     /**
      * Match the pattern of a line defining permission on a group
      */
-    protected function getGroupMatcher(string $groupPattern): string
+    private function getGroupMatcher(string $groupPattern): string
     {
         return '/^@' . $groupPattern . '\s*=/i';
     }
